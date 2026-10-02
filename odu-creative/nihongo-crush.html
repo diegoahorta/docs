@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Chunk Crush ODU</title>
+<title>Nihongo Crush</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
@@ -38,7 +38,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 /* ---------- MAPA ---------- */
 .brand{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mist)}
 .brand b{color:var(--gold);font-weight:600}
-.logo{font-family:var(--f-display);font-weight:700;font-size:clamp(44px,13vw,64px);line-height:.95;margin:14px 0 6px;letter-spacing:-.01em;
+.logo{font-family:var(--f-display);font-weight:700;font-size:clamp(38px,11.5vw,64px);line-height:.95;margin:14px 0 6px;letter-spacing:-.01em;
   background:linear-gradient(180deg,#FFE9A8 0%,var(--gold) 45%,#E87060 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 3px 0 rgba(10,21,64,.9)) drop-shadow(0 8px 18px rgba(232,112,96,.35));text-wrap:balance}
 .tag{font-size:18px;font-weight:800;margin:0}
@@ -210,7 +210,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 <section id="mapScreen" class="screen">
   <div class="wrap">
     <div class="brand"><span><b>ODU Creative</b> · Japonês N5</span><span>Método ODU Chunking</span></div>
-    <h1 class="logo">Chunk Crush</h1>
+    <h1 class="logo">Nihongo Crush</h1>
     <p class="tag">いろいろな ぶん — monte frases do dia a dia<small>Junte os blocos na ordem certa e estoure as balas! 29 verbos da rotina, 9 níveis.</small></p>
     <div class="totals">
       <div class="pill"><span>Pontuação total</span><b id="totScore">0</b></div>
@@ -693,7 +693,7 @@ $('sayBtn').onclick=()=>speak($('dJp').textContent);
 function levelComplete(){
   st.busy=true; sfx.win();
   const gc=centerOf(gridEl);
-  floatText('チャンク クラッシュ！',gc[0],gc[1],'mega'); confetti(120);
+  floatText('にほんご クラッシュ！',gc[0],gc[1],'mega'); confetti(120);
   let n=st.moves, k=0;
   const step=()=>{
     if(k>=n){ setTimeout(showWin,500); return; }
