@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Chunk Crush ODU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
+<style>
+/* Layout: arcade de doces em coluna única — mapa de níveis em trilha; tela de jogo com missão, bandeja de blocos e tabuleiro 6×6.
+   Visual escolhido em tema único (noite ODU) para as balas coloridas brilharem. */
+:root{
+  --night:#0A1540; --navy:#1A2B6B; --teal:#0E8A8A; --coral:#E87060; --rose:#C05070; --gold:#D4AF37;
+  --cloud:#F5F7FB; --ink:#1F2937; --mist:#B9C3EA; --cell1:#DDE4F8; --cell2:#CBD4F0; --ok:#2FBF71; --bad:#E5484D;
+  --f-display:"Fredoka","Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-kana:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Noto Sans JP","Yu Gothic",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{
+  margin:0;color:var(--cloud);font-family:var(--f-kana);
+  background:
+    radial-gradient(60vmax 60vmax at 10% -10%, rgba(14,138,138,.35), transparent 60%),
+    radial-gradient(50vmax 50vmax at 110% 20%, rgba(192,80,112,.30), transparent 60%),
+    radial-gradient(60vmax 50vmax at 50% 120%, rgba(212,175,55,.18), transparent 60%),
+    linear-gradient(180deg, var(--night), var(--navy));
+  background-color:var(--night);
+  background-attachment:fixed;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:14px 40px}
+.screen[hidden]{display:none!important}
+
+/* ---------- MAPA ---------- */
+.brand{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mist)}
+.brand b{color:var(--gold);font-weight:600}
+.logo{font-family:var(--f-display);font-weight:700;font-size:clamp(44px,13vw,64px);line-height:.95;margin:14px 0 6px;letter-spacing:-.01em;
+  background:linear-gradient(180deg,#FFE9A8 0%,var(--gold) 45%,#E87060 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3px 0 rgba(10,21,64,.9)) drop-shadow(0 8px 18px rgba(232,112,96,.35));text-wrap:balance}
+.tag{font-size:18px;font-weight:800;margin:0}
+.tag small{display:block;font-size:13px;font-weight:500;color:var(--mist);margin-top:2px}
+.totals{display:flex;gap:10px;margin:16px 0 4px}
+.pill{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px 12px}
+.pill span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist)}
+.pill b{font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px 5px 6px;border-radius:999px;background:rgba(255,255,255,.07)}
+.chip i{width:16px;height:16px;border-radius:50%;display:block;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}
+.how{margin:14px 0 6px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.06);font-size:14px;line-height:1.55}
+.how h3{font-family:var(--f-display);font-weight:600;font-size:15px;margin:0 0 6px;color:var(--gold);letter-spacing:.04em}
+.how ol{margin:0;padding-left:20px}
+.how li+li{margin-top:3px}
+.map{position:relative;margin-top:10px}
+.map svg{position:absolute;inset:0;width:100%;pointer-events:none}
+.node{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:150px;background:none;border:0;padding:0}
+.node .ball{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;position:relative;font-family:var(--f-display);font-weight:700;font-size:28px;color:#fff;
+  background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.75) 0 10%, transparent 11%), radial-gradient(circle at 50% 40%, var(--c1), var(--c2));
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.25), 0 6px 0 rgba(0,0,0,.25), 0 10px 22px rgba(0,0,0,.35);text-shadow:0 2px 0 rgba(0,0,0,.3);transition:transform .2s}
+.node:hover .ball{transform:scale(1.07)}
+.node .ico{position:absolute;right:-6px;top:-6px;font-size:20px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.node .nm{font-family:var(--f-display);font-weight:600;font-size:14px;line-height:1.15;text-align:center;text-shadow:0 2px 4px rgba(0,0,0,.6)}
+.node .st{font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.25)}
+.node .st .on{color:var(--gold)}
+.node.locked{cursor:not-allowed}
+.node.locked .ball{--c1:#6A7396!important;--c2:#3A4266!important;color:rgba(255,255,255,.6)}
+.node.current .ball{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.1);box-shadow:inset 0 -6px 0 rgba(0,0,0,.25),0 6px 0 rgba(0,0,0,.25),0 0 0 10px rgba(212,175,55,.25)}}
+.teacher{display:block;margin:18px auto 0;background:none;border:0;color:var(--mist);font-size:12px;text-decoration:underline}
+.credit{text-align:center;font-size:12px;color:var(--mist);margin-top:10px;line-height:1.6}
+
+/* ---------- JOGO ---------- */
+.top{display:flex;align-items:center;gap:8px}
+.iconbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:7px 11px;font-family:var(--f-display);font-weight:600;font-size:14px}
+.lvname{flex:1;min-width:0;text-align:center;font-family:var(--f-display);font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;align-items:center;margin-top:10px}
+.box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px 10px;min-width:0}
+.box span{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mist)}
+.box b{font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums;line-height:1.1}
+.bar{position:relative;height:12px;border-radius:999px;background:rgba(0,0,0,.35);margin-top:6px;overflow:visible}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--gold));width:0;transition:width .5s}
+.bar .mk{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:14px;color:rgba(255,255,255,.35);line-height:1}
+.bar .mk.on{color:var(--gold);text-shadow:0 0 6px rgba(212,175,55,.8)}
+.moves{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:radial-gradient(circle at 35% 30%,#3C4FA0,var(--navy));border:3px solid var(--gold);box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.moves b{font-family:var(--f-display);font-size:24px;line-height:1;display:block}
+.moves span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
+.moves.low{border-color:var(--bad);animation:pulse 1s infinite}
+
+.mission{margin-top:10px;display:flex;gap:12px;align-items:center;background:var(--cloud);color:var(--ink);border-radius:18px;padding:10px 12px;box-shadow:0 5px 0 rgba(0,0,0,.25);position:relative;min-height:74px}
+.mission .em{font-size:36px;width:56px;height:56px;flex:none;display:grid;place-items:center;border-radius:16px;background:#E8EDFB}
+.mission .mid{flex:1;min-width:0}
+.mission .eb{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:800}
+.mission .pt{font-family:var(--f-display);font-weight:600;font-size:19px;line-height:1.2;text-wrap:balance}
+.mission .gp{font-size:12px;color:#5B6478;margin-top:2px}
+.hintb{flex:none;border:0;border-radius:14px;padding:6px 8px;background:#FFF3CC;color:#6B5310;font-weight:800;font-size:12px;display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.hintb .bulb{font-size:20px}
+.hintb:disabled{opacity:.4;cursor:default}
+.done{position:absolute;inset:0;border-radius:18px;background:linear-gradient(135deg,#E9F7EF,#F5F7FB);display:flex;align-items:center;gap:10px;padding:8px 12px;animation:flipin .35s ease-out}
+.done[hidden]{display:none}
+@keyframes flipin{from{transform:rotateX(70deg);opacity:0}to{transform:none;opacity:1}}
+.done .ck{font-size:30px}
+.done .jp{font-family:var(--f-kana);font-weight:800;font-size:20px;color:var(--navy)}
+.done .pol{font-size:12.5px;color:#4B5563}
+.done .pol b{color:var(--teal)}
+.say{margin-left:auto;flex:none;border:0;background:var(--navy);color:#fff;border-radius:12px;padding:8px 10px;font-size:16px}
+
+.tray{display:flex;gap:6px;justify-content:center;margin:12px 0 10px;flex-wrap:wrap}
+.slot{min-width:64px;flex:0 1 auto;height:58px;border-radius:14px;border:2px dashed var(--rc);background:rgba(255,255,255,.05);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 8px;transition:background .2s,transform .2s}
+.slot .lab{font-size:9px;letter-spacing:.1em;font-weight:800;color:var(--rc);text-transform:uppercase;filter:brightness(1.5)}
+.slot .wd{font-weight:800;font-size:18px;min-height:22px;white-space:nowrap}
+.slot.full{border-style:solid;background:var(--rc);transform:translateY(-2px)}
+.slot.full .lab{color:rgba(255,255,255,.85);filter:none}
+.slot.full.m .wd,.slot.full.m .lab{color:var(--night)}
+.slot.miss{border-color:var(--bad)!important;box-shadow:0 0 0 2px var(--bad)}
+.r-n{--rc:var(--teal)} .r-p{--rc:var(--coral)} .r-v{--rc:#4E66C8} .r-a{--rc:var(--rose)} .r-m{--rc:var(--gold)}
+.slot.full.r-v{background:var(--navy);box-shadow:inset 0 0 0 2px var(--gold)}
+
+.boardwrap{position:relative;display:flex;justify-content:center}
+.board{position:relative;border-radius:20px;padding:8px;
+  background:linear-gradient(145deg,#F7DE8A,var(--gold) 40%,#9C7A16);box-shadow:0 10px 0 rgba(0,0,0,.25),0 20px 40px rgba(0,0,0,.4)}
+.grid{position:relative;border-radius:14px;overflow:hidden;width:calc(var(--s)*6);height:calc(var(--s)*6);
+  background-color:var(--cell1);
+  background-image:conic-gradient(var(--cell2) 25%,transparent 0 50%,var(--cell2) 0 75%,transparent 0);
+  background-size:calc(var(--s)*2) calc(var(--s)*2)}
+.tile{position:absolute;left:0;top:0;width:var(--s);height:var(--s);padding:calc(var(--s)*.055);border:0;background:none;
+  transition:transform .42s cubic-bezier(.34,1.45,.5,1);will-change:transform}
+.tile.nt{transition:none}
+.candy{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;color:#fff;
+  font-family:var(--f-kana);font-weight:800;text-shadow:0 1px 1px rgba(0,0,0,.35);line-height:1.05;border-radius:30%;
+  background:linear-gradient(165deg,var(--c1),var(--c2));
+  box-shadow:inset 0 calc(var(--s)*-.07) 0 rgba(0,0,0,.22),inset 0 calc(var(--s)*.04) 0 rgba(255,255,255,.35),0 calc(var(--s)*.04) calc(var(--s)*.06) rgba(10,21,64,.35);
+  transition:transform .15s, box-shadow .15s}
+.candy::before{content:"";position:absolute;left:14%;top:9%;width:38%;height:22%;border-radius:50%;background:rgba(255,255,255,.55);transform:rotate(-20deg);filter:blur(.5px)}
+.candy .w{font-size:var(--fs);position:relative}
+.candy .r{font-size:calc(var(--s)*.11);opacity:.85;letter-spacing:.04em;margin-top:2px;position:relative;font-family:var(--f-display);font-weight:600}
+.tile.n .candy{--c1:#35C2C0;--c2:#0B6C6C}
+.tile.p .candy{--c1:#FFA48F;--c2:#D24F3A;border-radius:50%}
+.tile.v .candy{--c1:#4561C2;--c2:#13205A;border-radius:24%;box-shadow:inset 0 0 0 calc(var(--s)*.045) rgba(212,175,55,.95),inset 0 calc(var(--s)*-.07) 0 rgba(0,0,0,.25),0 calc(var(--s)*.04) calc(var(--s)*.06) rgba(10,21,64,.35)}
+.tile.a .candy{--c1:#EE8AA6;--c2:#9A3352;border-radius:50% 50% 42% 42%/58% 58% 42% 42%}
+.tile.m .candy{--c1:#F6DC7E;--c2:#B48F1C;color:var(--night);text-shadow:0 1px 0 rgba(255,255,255,.4);border-radius:22%;outline:2px dashed rgba(255,255,255,.7);outline-offset:-6px}
+.tile:hover .candy{transform:scale(1.05)}
+.tile.sel .candy{transform:scale(1.1);box-shadow:0 0 0 3px #fff,0 0 16px 5px rgba(255,255,255,.85)}
+.badge{position:absolute;right:0;top:0;width:calc(var(--s)*.34);height:calc(var(--s)*.34);border-radius:50%;background:#fff;color:var(--navy);font-family:var(--f-display);font-weight:700;font-size:calc(var(--s)*.21);display:none;place-items:center;box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.tile.sel .badge{display:grid}
+.tile.hint .candy{animation:wig .5s ease-in-out infinite;box-shadow:0 0 0 3px var(--gold),0 0 20px 6px rgba(212,175,55,.9)}
+@keyframes wig{25%{transform:rotate(-8deg) scale(1.08)}75%{transform:rotate(8deg) scale(1.08)}}
+.tile.pop .candy{animation:pop .42s ease-in forwards}
+@keyframes pop{30%{transform:scale(1.35) rotate(-8deg);filter:brightness(1.6)}100%{transform:scale(0) rotate(25deg);opacity:0}}
+.tile.spark .candy{animation:spark .6s ease-out}
+@keyframes spark{0%{transform:scale(.3);filter:brightness(2)}70%{transform:scale(1.12)}}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.tile.nope .candy{animation:shake .45s}
+.node.nope .ball{animation:shake .45s}
+
+.fb{position:absolute;left:8px;right:8px;bottom:8px;z-index:5;background:var(--cloud);color:var(--ink);border-radius:16px;padding:12px 14px 12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.45);border-top:5px solid var(--coral);animation:up .3s ease-out}
+.fb[hidden]{display:none}
+@keyframes up{from{transform:translateY(20px);opacity:0}}
+.fb h4{margin:0 0 4px;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--rose)}
+.fb p{margin:0;font-size:14px;line-height:1.5}
+.fb p b{color:var(--navy)}
+.fb .x{position:absolute;right:8px;top:6px;border:0;background:none;font-size:18px;color:#6B7280}
+
+.float{position:fixed;z-index:60;pointer-events:none;transform:translate(-50%,-50%);font-family:var(--f-display);font-weight:700;text-align:center;white-space:nowrap;
+  color:#fff;text-shadow:0 3px 0 var(--night),0 0 18px rgba(0,0,0,.4);animation:floatup 1.2s ease-out forwards}
+.float.big{font-size:44px;color:#FFE38A;-webkit-text-stroke:1px rgba(10,21,64,.6)}
+.float.big small{display:block;font-size:16px;color:#fff;-webkit-text-stroke:0}
+.float.pts{font-size:30px}
+.float.combo{font-size:22px;color:#9FF0E8}
+.float.mega{font-size:clamp(34px,11vw,56px);color:#FFE38A;animation:mega 1.8s ease-out forwards}
+@keyframes floatup{0%{transform:translate(-50%,-30%) scale(.4);opacity:0}18%{transform:translate(-50%,-50%) scale(1.15);opacity:1}30%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-150%) scale(1);opacity:0}}
+@keyframes mega{0%{transform:translate(-50%,-50%) scale(.2) rotate(-12deg);opacity:0}20%{transform:translate(-50%,-50%) scale(1.2) rotate(3deg);opacity:1}35%{transform:translate(-50%,-50%) scale(1) rotate(0)}80%{opacity:1}100%{transform:translate(-50%,-70%) scale(1.05);opacity:0}}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.shakey{animation:shake2 .35s}
+@keyframes shake2{25%{transform:translate(3px,-2px)}50%{transform:translate(-3px,2px)}75%{transform:translate(2px,1px)}}
+
+.ov{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;background:rgba(6,12,38,.72);backdrop-filter:blur(3px)}
+.ov[hidden]{display:none}
+.card{width:min(100%,380px);background:var(--cloud);color:var(--ink);border-radius:26px;padding:22px 20px 18px;text-align:center;box-shadow:0 12px 0 rgba(0,0,0,.25);border:4px solid var(--gold);animation:cardin .5s cubic-bezier(.34,1.45,.5,1)}
+@keyframes cardin{from{transform:scale(.6);opacity:0}}
+.card .jp{font-family:var(--f-kana);font-weight:800;font-size:28px;color:var(--rose)}
+.card h2{margin:2px 0 8px;font-family:var(--f-display);font-weight:700;font-size:24px;color:var(--navy)}
+.stars{display:flex;justify-content:center;gap:6px;margin:6px 0 4px}
+.stars span{font-size:52px;line-height:1;color:#D7DCEC;transition:transform .3s}
+.stars span.on{color:var(--gold);text-shadow:0 3px 0 #9C7A16,0 0 18px rgba(212,175,55,.7);animation:starin .5s cubic-bezier(.34,1.6,.5,1)}
+@keyframes starin{from{transform:scale(0) rotate(-90deg)}}
+.card .sc{font-family:var(--f-display);font-size:38px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.card .sub{font-size:13px;color:#5B6478;margin-bottom:12px;line-height:1.5}
+.btns{display:flex;flex-direction:column;gap:8px}
+.cta{border:0;border-radius:16px;padding:12px 16px;font-family:var(--f-display);font-weight:600;font-size:18px;color:#fff;background:linear-gradient(180deg,#F08A78,var(--coral) 50%,#C9533F);box-shadow:0 5px 0 #9E3E2E}
+.cta.alt{background:linear-gradient(180deg,#2E46A0,var(--navy));box-shadow:0 5px 0 var(--night)}
+.cta.ghost{background:#E5E9F5;color:var(--navy);box-shadow:0 4px 0 #C2C9DE}
+.cta:active{transform:translateY(3px);box-shadow:none}
+
+@media (prefers-reduced-motion:reduce){
+  .tile{transition-duration:.01s}
+  .node.current .ball,.moves.low,.tile.hint .candy{animation:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- ============ MAPA ============ -->
+<section id="mapScreen" class="screen">
+  <div class="wrap">
+    <div class="brand"><span><b>ODU Creative</b> · Japonês N5</span><span>Método ODU Chunking</span></div>
+    <h1 class="logo">Chunk Crush</h1>
+    <p class="tag">いろいろな ぶん — monte frases do dia a dia<small>Junte os blocos na ordem certa e estoure as balas! 29 verbos da rotina, 9 níveis.</small></p>
+    <div class="totals">
+      <div class="pill"><span>Pontuação total</span><b id="totScore">0</b></div>
+      <div class="pill"><span>Estrelas</span><b id="totStars">0 / 27</b></div>
+    </div>
+    <div class="legend" aria-label="Cores dos blocos">
+      <span class="chip"><i style="background:#1AA3A1"></i>名詞 OBJ/SUJ</span>
+      <span class="chip"><i style="background:#F07D68"></i>PARTÍCULA</span>
+      <span class="chip"><i style="background:#2C3F8E;box-shadow:inset 0 0 0 2px #D4AF37"></i>動詞 VERBO</span>
+      <span class="chip"><i style="background:#D06585"></i>ADJETIVO</span>
+      <span class="chip"><i style="background:#E3C04F"></i>MODIF.</span>
+    </div>
+    <div class="how">
+      <h3>Como jogar</h3>
+      <ol>
+        <li>Leia a missão em português (ex.: <b>lavar o rosto</b>).</li>
+        <li>Toque nas balas na ordem japonesa, seguindo as cores da bandeja: <b>かお → を → あらう</b>.</li>
+        <li>Acertou? As balas estouram! Balas vizinhas em sequência dão bônus <b>Corrente doce</b>, e acertos seguidos multiplicam os pontos.</li>
+      </ol>
+    </div>
+    <div class="map" id="map"></div>
+    <button class="teacher" id="unlockAll" type="button">Modo professor: liberar todos os níveis</button>
+    <p class="credit">Prof. Diego Horta · ODU Creative<br>Frases da ficha いろいろな ぶん (ちびむすドリル), reorganizadas em blocos.</p>
+  </div>
+</section>
+
+<!-- ============ JOGO ============ -->
+<section id="gameScreen" class="screen" hidden>
+  <div class="wrap">
+    <div class="top">
+      <button class="iconbtn" id="backBtn" type="button">◀ Mapa</button>
+      <div class="lvname" id="lvName">Nível</div>
+      <button class="iconbtn" id="sndBtn" type="button" aria-label="Som">🔊</button>
+    </div>
+    <div class="hud">
+      <div class="box"><span>Pontos</span><b id="score">0</b></div>
+      <div class="box"><span>Meta de estrelas</span><div class="bar" id="bar"><div class="fill" id="barFill"></div></div></div>
+      <div class="moves" id="movesBox"><div><b id="moves">0</b><span>jogadas</span></div></div>
+    </div>
+
+    <div class="mission" id="mission">
+      <div class="em" id="mEmoji">🧼</div>
+      <div class="mid">
+        <div class="eb" id="mCount">Missão 1/8</div>
+        <div class="pt" id="mText">lavar o rosto</div>
+        <div class="gp" id="mPoint">A · を</div>
+      </div>
+      <button class="hintb" id="hintBtn" type="button"><span class="bulb">💡</span><span id="hintN">3</span></button>
+      <div class="done" id="mDone" hidden>
+        <div class="ck">✅</div>
+        <div><div class="jp" id="dJp"></div><div class="pol" id="dPol"></div></div>
+        <button class="say" id="sayBtn" type="button" aria-label="Ouvir a frase">🔊</button>
+      </div>
+    </div>
+
+    <div class="tray" id="tray"></div>
+
+    <div class="boardwrap">
+      <div class="board" id="board">
+        <div class="grid" id="grid"></div>
+      </div>
+      <div class="fb" id="fb" hidden role="status">
+        <button class="x" id="fbX" type="button" aria-label="Fechar">✕</button>
+        <h4 id="fbT">Quase!</h4>
+        <p id="fbP"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTADO ============ -->
+<div class="ov" id="ov" hidden>
+  <div class="card" id="card">
+    <div class="jp" id="oJp">レベル クリア！</div>
+    <h2 id="oTitle">Nível concluído!</h2>
+    <div class="stars" id="oStars"><span>★</span><span>★</span><span>★</span></div>
+    <div class="sc" id="oScore">0</div>
+    <div class="sub" id="oSub"></div>
+    <div class="btns">
+      <button class="cta" id="oNext" type="button">Próximo nível ▶</button>
+      <button class="cta alt" id="oRetry" type="button">Jogar de novo</button>
+      <button class="cta ghost" id="oMap" type="button">Voltar ao mapa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+/* ================= DADOS (das fichas いろいろな ぶん + aula ODU) ================= */
+const VERBS = { // dicionário: [～ます, grupo, significado]
+  'さます':['さまします',1,'acordar, despertar'],'みがく':['みがきます',1,'escovar, polir'],'あらう':['あらいます',1,'lavar'],
+  'ふく':['ふきます',1,'enxugar, limpar; soprar (vento)'],'きる':['きます',2,'vestir (parte de cima)'],'はく':['はきます',1,'calçar/vestir (parte de baixo); varrer'],
+  'そそぐ':['そそぎます',1,'despejar, servir (líquido)'],'のむ':['のみます',1,'beber'],'もる':['もります',1,'servir (comida no prato)'],
+  'たべる':['たべます',2,'comer'],'ぬる':['ぬります',1,'passar (manteiga, tinta)'],'しぼる':['しぼります',1,'torcer, espremer'],
+  'はこぶ':['はこびます',1,'carregar, levar'],'たたむ':['たたみます',1,'dobrar (roupa)'],'すくう':['すくいます',1,'pegar com colher'],
+  'する':['します',3,'fazer'],'すてる':['すてます',2,'jogar fora'],'でる':['でます',2,'sair; atender (telefone); aparecer'],
+  'はいる':['はいります','1 (exceção)','entrar'],'やる':['やります',1,'dar (a animais e plantas)'],'なる':['なります',1,'tornar-se, ficar'],
+  'きこえる':['きこえます',2,'ser audível, ouvir-se'],'とる':['とります',1,'tirar (foto), pegar'],'はなす':['はなします',1,'falar, conversar'],
+  'かく':['かきます',1,'escrever; roncar (いびきを かく)'],'まわす':['まわします',1,'girar, rodar'],'つく':['つきます',1,'socar (mochi)'],
+  'はねる':['はねます',2,'pular, saltar'],'ほえる':['ほえます',2,'latir']
+};
+const MASU2DICT = {}; for (const d in VERBS) MASU2DICT[VERBS[d][0]] = d;
+const PARTS = new Set(['を','に','で','が','と','から','は','の']);
+const ADJS = new Set(['あかい','あおい','きいろい','しろい','くろい','ちゃいろい','まるい','しかくい','あまい','すっぱい','しょっぱい','からい','あつい','つめたい','おおきい','ちいさい']);
+const MODS = new Set(['みどりいろ','ピンクいろ','さんかく','ひしがた','まいあさ']);
+const GLOSS = {
+  'め':'olho','は|n':'dente','かお':'rosto','シャツ':'camisa','ズボン':'calça','ぎゅうにゅう':'leite','ごはん':'arroz / refeição','バター':'manteiga',
+  'ぞうきん':'pano de chão','さら':'prato','ふく|n':'roupa','せんたく':'lavagem de roupa','ごみ':'lixo','テーブル':'mesa','くつ':'sapato',
+  'へや':'quarto','でんわ':'telefone','ノート':'caderno','びょうき':'doença','むしば':'cárie','スプーン':'colher','ほうき':'vassoura',
+  'ともだち':'amigo','スープ':'sopa','しゃしん':'foto','にじ':'arco-íris','かぜ':'vento','いぬ':'cachorro','いるか':'golfinho','おと':'som',
+  'えさ':'ração','みず':'água','こま':'pião','もち':'mochi','いびき':'ronco','いねむり':'cochilo','うがい':'gargarejo','りんご':'maçã',
+  'ふうせん':'balão','かさ':'guarda-chuva','ねこ':'gato','うま':'cavalo','きゅうり':'pepino','くつした':'meia','だんご':'dango',
+  'はた':'bandeira','おりがみ':'origami','わたあめ':'algodão-doce','レモン':'limão','しょうゆ':'shoyu','とうがらし':'pimenta','おちゃ':'chá',
+  'こおり':'gelo','ぞう':'elefante','ねずみ':'rato','ばんごはん':'jantar','あかい':'vermelho','あおい':'azul','きいろい':'amarelo',
+  'しろい':'branco','ちゃいろい':'marrom','まるい':'redondo','しかくい':'quadrado','あまい':'doce','すっぱい':'azedo','しょっぱい':'salgado',
+  'からい':'picante','あつい':'quente','つめたい':'gelado','おおきい':'grande','ちいさい':'pequeno','みどりいろ':'cor verde',
+  'ピンクいろ':'cor-de-rosa','さんかく':'triângulo','まいあさ':'toda manhã','くろい':'preto'
+};
+const PFUNC = {
+  'を':'marca o OBJETO que recebe a ação (o quê?)','に':'marca o destino, o contato ou o resultado de uma mudança (para onde? vira o quê?)',
+  'で':'marca o INSTRUMENTO (com o quê?)','が':'marca o SUJEITO que age sozinho: natureza, animais, sons',
+  'と':'marca a COMPANHIA (com quem?)','から':'marca o PONTO DE PARTIDA (de onde?)','は':'marca o TEMA da frase (quanto a…)',
+  'の':'liga substantivo + substantivo (みどりいろの きゅうり)'
+};
+const ROLE_SHORT = {n:'OBJ/SUJ',p:'PART.',v:'VERBO',a:'ADJ.',m:'MODIF.'};
+const ROLE_FULL = {n:'OBJ/SUJ',p:'PARTÍCULA',v:'VERBO',a:'ADJETIVO',m:'MODIF.'};
+const ROLE_COLOR = {n:'#1AA3A1',p:'#F07D68',v:'#3550B5',a:'#D06585',m:'#E3C04F'};
+const ROLE_NAME = {n:'substantivo (verde-água)',p:'partícula (coral)',v:'verbo (azul-marinho)',a:'adjetivo (rosa)',m:'modificador (dourado)'};
+
+const LEVELS = [
+ {name:'Bom dia!',icon:'☀️',point:'A · Substantivo + を + Verbo',distract:['が','に','で'],c:['#FFB36B','#E2702E'],missions:[
+  ['⏰','acordar (abrir os olhos)','め を さます'],['🪥','escovar os dentes','は:n を みがく'],['🧼','lavar o rosto','かお を あらう'],
+  ['🧻','enxugar o rosto','かお を ふく'],['👕','vestir a camisa','シャツ を きる'],['👖','vestir a calça','ズボン を はく'],
+  ['🥛','beber leite','ぎゅうにゅう を のむ'],['🍚','comer a refeição','ごはん を たべる']]},
+ {name:'Ajudando em casa',icon:'🏠',point:'A · Substantivo + を + Verbo',distract:['が','に','から'],c:['#35C2C0','#0B6C6C'],missions:[
+  ['🥛','servir o leite (despejar)','ぎゅうにゅう を そそぐ'],['🍚','servir o arroz no prato','ごはん を もる'],['🧈','passar manteiga','バター を ぬる'],
+  ['🧽','torcer o pano','ぞうきん を しぼる'],['🍽️','levar os pratos','さら を はこぶ'],['👚','dobrar a roupa','ふく:n を たたむ'],
+  ['🧺','lavar a roupa','せんたく を する'],['🗑️','jogar o lixo fora','ごみ を すてる'],['✨','limpar a mesa','テーブル を ふく']]},
+ {name:'Entra e sai',icon:'🚪',point:'B · C · G — に (chegada, mudança) e から (partida)',distract:['を','で','が'],c:['#FFA48F','#D24F3A'],missions:[
+  ['🚪','entrar no quarto','へや に はいる'],['🚶','sair do quarto','へや から でる'],['📞','atender o telefone','でんわ に でる'],
+  ['📓','escrever no caderno','ノート に かく'],['🤒','ficar doente','びょうき に なる'],['🦷','ficar com cárie','むしば に なる']]},
+ {name:'Com o quê? Com quem?',icon:'🥄',point:'D · F — で (instrumento) e と (companhia)',distract:['に','が','から'],c:['#4561C2','#13205A'],missions:[
+  ['🥄','pegar com a colher','スプーン で すくう'],['🧹','varrer com a vassoura','ほうき で はく'],['🗣️','conversar com o amigo','ともだち と はなす'],
+  ['🧹','varrer o lixo com a vassoura','ほうき で ごみ を はく'],['🥣','pegar a sopa com a colher','スプーン で スープ を すくう'],
+  ['📸','tirar foto com o amigo','ともだち と しゃしん を とる']]},
+ {name:'Natureza viva',icon:'🌈',point:'E · Substantivo + が + Verbo',distract:['を','に','で'],c:['#7BD88F','#2E8B57'],missions:[
+  ['🌈','o arco-íris aparece','にじ が でる'],['🌬️','o vento sopra','かぜ が ふく'],['🐕','o cachorro late','いぬ が ほえる'],
+  ['🐬','o golfinho pula','いるか が はねる'],['👂','ouve-se um som','おと が きこえる'],['🐟','dar ração aos animais','えさ を やる'],
+  ['🪴','regar as plantas','みず を やる']]},
+ {name:'Uma palavra, vários sentidos',icon:'🎎',point:'A partícula decide o sentido',distract:['に','が','で','から'],c:['#EE8AA6','#9A3352'],missions:[
+  ['📷','tirar foto','しゃしん を とる'],['🪀','girar o pião','こま を まわす'],['🍡','socar o mochi','もち を つく'],
+  ['😴','roncar','いびき を かく'],['💤','cochilar','いねむり を する'],['🫧','gargarejar','うがい を する'],
+  ['👖','vestir a calça','ズボン を はく'],['🧹','varrer com a vassoura','ほうき で はく'],['🌬️','o vento sopra','かぜ が ふく'],
+  ['✨','limpar a mesa','テーブル を ふく']]},
+ {name:'Cores e formas',icon:'🎨',point:'H · Adjetivo い + substantivo / substantivo + の',distract:['を','が','は'],c:['#F6DC7E','#B48F1C'],missions:[
+  ['🍎','maçã vermelha','あかい りんご'],['🎈','balão azul','あおい ふうせん'],['☂️','guarda-chuva amarelo','きいろい かさ'],
+  ['🐈','gato branco','しろい ねこ'],['🐴','cavalo marrom','ちゃいろい うま'],['🥒','pepino verde','みどりいろ の きゅうり'],
+  ['🧦','meias cor-de-rosa','ピンクいろ の くつした'],['🍡','dango redondo','まるい だんご'],['🚩','bandeira triangular','さんかく の はた'],
+  ['🟧','origami quadrado','しかくい おりがみ']]},
+ {name:'Sabores e tamanhos',icon:'🍋',point:'H · Sabor, temperatura e は + adjetivo',distract:['を','が','の'],c:['#FFE36B','#D49A12'],missions:[
+  ['🍭','algodão-doce doce','あまい わたあめ'],['🍋','limão azedo','すっぱい レモン'],['🥢','shoyu salgado','しょっぱい しょうゆ'],
+  ['🌶️','pimenta picante','からい とうがらし'],['🍵','chá quente','あつい おちゃ'],['🧊','gelo gelado','つめたい こおり'],
+  ['🐘','o elefante é grande','ぞう は おおきい'],['🐭','o rato é pequeno','ねずみ は ちいさい']]},
+ {name:'Forma educada ～ます',icon:'🗣️',point:'Dicionário → ～ます (minha rotina)',distract:['あらう','のむ','きる','はいる','たべる','はなす','する','が'],c:['#B58CFF','#5B34B8'],missions:[
+  ['🌅','Toda manhã, lavo o rosto.','まいあさ かお を あらいます'],['🪥','Escovo os dentes.','は:n を みがきます'],
+  ['👕','Visto a camisa.','シャツ を きます'],['🚪','Entro no quarto.','へや に はいります'],['🍛','Janto.','ばんごはん を たべます'],
+  ['🥛','Bebo leite.','ぎゅうにゅう を のみます'],['🧺','Lavo a roupa.','せんたく を します'],['🗣️','Converso com o amigo.','ともだち と はなします']]}
+];
+
+const PITFALLS = {
+  'ぎゅうにゅう|が|のむ':'Quem bebe é você; o leite é o objeto → <b>を</b>. Com が, o leite viraria quem bebe!',
+  'ぎゅうにゅう|が|のみます':'Quem bebe é você; o leite é o objeto → <b>を</b>.',
+  'へや|を|はいる':'はいる exige o ponto de chegada → <b>に</b>. Pense: "entrar NO quarto".',
+  'へや|を|はいります':'はいります exige o ponto de chegada → <b>に</b>.',
+  'おと|を|きこえる':'きこえる = "ser audível". O som é o sujeito que chega aos ouvidos → <b>が</b>.',
+  'ともだち|で|はなす':'で é ferramenta (スプーンで). Pessoa com quem se faz algo = <b>と</b>.',
+  'ともだち|で|はなします':'で é ferramenta. Pessoa com quem se faz algo = <b>と</b>.',
+  'へや|に|でる':'に é chegada. Para SAIR de um lugar, use o ponto de partida → <b>から</b>.',
+  'へや|から|はいる':'から é ponto de partida. Para ENTRAR, use a chegada → <b>に</b>.'
+};
+const AMBIG = {'はく':'ほうきで はく = varrer · ズボンを はく = vestir a calça','ふく':'かぜが ふく = o vento sopra · テーブルを ふく = limpar a mesa',
+  'でる':'でんわに でる = atender · へやから でる = sair · にじが でる = aparecer','かく':'ノートに かく = escrever · いびきを かく = roncar'};
+const PRAISE = [['すごい！','Incrível!'],['じょうず！','Muito bem!'],['かんぺき！','Perfeito!'],['やったね！','Conseguiu!'],['さすが！','Mandou bem!'],['いいね！','Boa!']];
+const MULTS = [1,1.5,2,2.5,3];
+const COLS = 6, ROWS = 6;
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function roleOf(w){ if(PARTS.has(w))return 'p'; if(ADJS.has(w))return 'a'; if(MODS.has(w))return 'm'; if(VERBS[w]||MASU2DICT[w])return 'v'; return 'n'; }
+function tok(s){ const [w,r] = s.split(':'); return {w, r: r || roleOf(w), k: w+'|'+(r||roleOf(w))}; }
+function chunkText(toks){ let s=''; toks.forEach((t,i)=>{ s += (t.r==='p'||i===0) ? t.w : ' '+t.w; }); return s; }
+function gloss(t){ return GLOSS[t.k] || GLOSS[t.w] || (VERBS[t.w]&&VERBS[t.w][2]) || (MASU2DICT[t.w]&&VERBS[MASU2DICT[t.w]][2]) || ''; }
+const LV = LEVELS.map((L,i)=>{
+  const missions = L.missions.map(([e,pt,s])=>{ const toks=s.split(' ').map(tok); return {e,pt,toks,text:chunkText(toks)}; });
+  const pool = new Map(); missions.forEach(m=>m.toks.forEach(t=>pool.set(t.k,t))); L.distract.forEach(d=>{const t=tok(d); pool.set(t.k,t);});
+  const base = missions.reduce((a,m)=>a+m.toks.length*100,0);
+  return {...L, i, missions, pool:[...pool.values()], base, t2:Math.round(base*1.7/50)*50, t3:Math.round(base*2.5/50)*50};
+});
+
+/* ================= PROGRESSO ================= */
+const KEY='oduChunkCrush.v1';
+let prog = {unlocked:0, stars:{}, best:{}, sound:true};
+try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&typeof s==='object') prog={...prog,...s}; }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(prog)); }catch(e){} }
+
+/* ================= SOM ================= */
+let AC=null;
+function ac(){ if(!prog.sound) return null; try{ if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){ return null; } return AC; }
+function tone(f,d=.12,type='sine',v=.18,f2=null,delay=0){
+  const a=ac(); if(!a) return; const t=a.currentTime+delay, o=a.createOscillator(), g=a.createGain();
+  o.type=type; o.frequency.setValueAtTime(f,t); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t+d);
+  g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+d); o.connect(g).connect(a.destination); o.start(t); o.stop(t+d+.02);
+}
+const sfx = {
+  tick:i=>tone(520+i*110,.08,'triangle',.12),
+  pop:i=>{ tone(500+i*160,.18,'sine',.22,1400+i*200); tone(1800,.05,'square',.04); },
+  bad:()=>{ tone(220,.18,'sawtooth',.08,150); tone(160,.22,'square',.05,110,.08); },
+  win:()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,.25,'triangle',.16,null,i*.11)),
+  star:i=>tone(880+i*220,.3,'sine',.2,1760+i*300)
+};
+function speak(text){ if(!prog.sound) return; try{ const u=new SpeechSynthesisUtterance(text.replace(/ /g,'　')); u.lang='ja-JP'; u.rate=.85;
+  const v=speechSynthesis.getVoices().find(v=>/^ja/i.test(v.lang)); if(v) u.voice=v; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
+
+/* ================= EFEITOS (estouro) ================= */
+const fx=document.getElementById('fx'), ctx=fx.getContext('2d'); let P=[], RINGS=[], running=false;
+function sizeFx(){ const d=Math.min(2,devicePixelRatio||1); fx.width=innerWidth*d; fx.height=innerHeight*d; ctx.setTransform(d,0,0,d,0,0); }
+sizeFx(); addEventListener('resize',()=>{ sizeFx(); layout(); });
+const R=Math.random;
+function burst(x,y,color,n=30){
+  n=Math.round(n*(RM?.3:1));
+  for(let i=0;i<n;i++){ const a=R()*Math.PI*2, s=2+R()*7;
+    P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2.5,g:.22,life:1,dec:.014+R()*.02,sz:3+R()*6,
+      col:R()<.65?color:(R()<.5?'#FFFFFF':'#F4D35E'),sh:R()<.22?'star':(R()<.55?'rect':'circ'),rot:R()*6,vr:(R()-.5)*.35}); }
+  RINGS.push({x,y,r:8,life:1,col:color}); kick();
+}
+function confetti(n=180){
+  n=Math.round(n*(RM?.25:1)); const cols=['#1AA3A1','#F07D68','#3550B5','#D06585','#E3C04F','#FFFFFF'];
+  for(let i=0;i<n;i++) P.push({x:R()*innerWidth,y:-20-R()*innerHeight*.5,vx:(R()-.5)*3,vy:2+R()*3,g:.04,life:1,dec:.003+R()*.004,
+    sz:5+R()*7,col:cols[i%cols.length],sh:R()<.3?'star':'rect',rot:R()*6,vr:(R()-.5)*.25});
+  kick();
+}
+function star(x,y,r){ ctx.beginPath(); for(let i=0;i<10;i++){ const a=i*Math.PI/5-Math.PI/2, rr=i%2?r*.45:r; ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr);} ctx.closePath(); ctx.fill(); }
+function kick(){ if(!running){ running=true; requestAnimationFrame(loop);} }
+function loop(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  RINGS=RINGS.filter(r=>{ r.r+=7; r.life-=.05; if(r.life<=0) return false;
+    ctx.globalAlpha=r.life; ctx.strokeStyle=r.col; ctx.lineWidth=5*r.life; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,7); ctx.stroke();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2*r.life; ctx.beginPath(); ctx.arc(r.x,r.y,r.r*.7,0,7); ctx.stroke(); return true; });
+  P=P.filter(p=>{ p.vx*=.985; p.vy=p.vy*.985+p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life-=p.dec;
+    if(p.life<=0||p.y>innerHeight+40) return false;
+    ctx.globalAlpha=Math.min(1,p.life*1.4); ctx.fillStyle=p.col;
+    if(p.sh==='circ'){ ctx.beginPath(); ctx.arc(p.x,p.y,p.sz/2,0,7); ctx.fill(); }
+    else if(p.sh==='star'){ star(p.x,p.y,p.sz); }
+    else { ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillRect(-p.sz/2,-p.sz/4,p.sz,p.sz/2); ctx.restore(); }
+    return true; });
+  ctx.globalAlpha=1;
+  if(P.length||RINGS.length) requestAnimationFrame(loop); else { running=false; ctx.clearRect(0,0,innerWidth,innerHeight); }
+}
+function floatText(html,x,y,cls){ const d=document.createElement('div'); d.className='float '+cls; d.innerHTML=html; d.style.left=x+'px'; d.style.top=y+'px';
+  document.body.appendChild(d); d.addEventListener('animationend',()=>d.remove()); }
+function centerOf(el){ const r=el.getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]; }
+
+/* ================= DOM ================= */
+const $=id=>document.getElementById(id);
+const gridEl=$('grid');
+let S=60, grid=[], st=null, uid=0;
+
+/* ================= MAPA ================= */
+const XS=[50,24,44,76,56,26,46,76,50], ROWH=118;
+function renderMap(){
+  const m=$('map'); const n=LV.length; m.style.height=(n*ROWH+10)+'px';
+  let d=''; XS.slice(0,n).forEach((x,i)=>{ const y=i*ROWH+44; if(i===0) d+=`M${x} ${y}`; else { const px=XS[i-1], py=(i-1)*ROWH+44; d+=` C${px} ${py+ROWH/2}, ${x} ${y-ROWH/2}, ${x} ${y}`; } });
+  let html=`<svg viewBox="0 0 100 ${n*ROWH}" preserveAspectRatio="none" style="height:${n*ROWH}px"><path d="${d}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="16" vector-effect="non-scaling-stroke" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#D4AF37" stroke-width="4" stroke-dasharray="2 12" vector-effect="non-scaling-stroke" stroke-linecap="round"/></svg>`;
+  let tot=0, ts=0;
+  LV.forEach((L,i)=>{ const s=prog.stars[i]||0; tot+=prog.best[i]||0; ts+=s; const locked=i>prog.unlocked, cur=i===prog.unlocked && !prog.stars[i];
+    html+=`<button class="node ${locked?'locked':''} ${cur?'current':''}" data-i="${i}" style="left:${XS[i]}%;top:${i*ROWH+8}px" type="button" ${locked?'aria-disabled="true"':''} aria-label="Nível ${i+1}: ${L.name}${locked?' (bloqueado)':''}">
+      <span class="ball" style="--c1:${L.c[0]};--c2:${L.c[1]}">${locked?'🔒':i+1}<span class="ico">${L.icon}</span></span>
+      <span class="nm">${L.name}</span><span class="st">${[0,1,2].map(k=>`<span class="${k<s?'on':''}">★</span>`).join('')}</span></button>`; });
+  m.innerHTML=html; $('totScore').textContent=tot.toLocaleString('pt-BR'); $('totStars').textContent=`${ts} / ${LV.length*3}`;
+  m.querySelectorAll('.node').forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; if(i<=prog.unlocked){ ac(); startLevel(i);} else { b.classList.add('nope'); setTimeout(()=>b.classList.remove('nope'),450);} });
+}
+$('unlockAll').onclick=()=>{ prog.unlocked=LV.length-1; save(); renderMap(); };
+
+/* ================= JOGO ================= */
+function startLevel(i){
+  const L=LV[i];
+  st={L,mi:0,score:0,moves:L.missions.length+3,streak:0,hints:3,sel:[],busy:true,wrong:0,hintUsed:false,best:0};
+  $('mapScreen').hidden=true; $('gameScreen').hidden=false; $('ov').hidden=true; scrollTo(0,0);
+  $('lvName').textContent=`Nível ${i+1} · ${L.name}`;
+  const bar=$('bar'); bar.querySelectorAll('.mk').forEach(e=>e.remove());
+  const max=L.t3*1.15; [L.base,L.t2,L.t3].forEach((t,k)=>{ const s=document.createElement('span'); s.className='mk'; s.dataset.t=t; s.textContent='★'; s.style.left=Math.min(96,t/max*100)+'%'; bar.appendChild(s); });
+  hideFb(); $('mDone').hidden=true;
+  gridEl.innerHTML=''; grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
+  layout();
+  setMission(true);
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) grid[r][c]=newTile(randEntry(),r,c,r-ROWS-1);
+  ensureTiles();
+  hud();
+  setTimeout(()=>{ st.busy=false; },600);
+}
+function layout(){
+  const avail=Math.min(document.querySelector('#gameScreen .wrap').clientWidth||innerWidth-32, 480) - 16;
+  const byH=innerHeight-330;
+  S=Math.max(46, Math.floor(Math.min(avail, Math.max(byH,300))/COLS));
+  gridEl.style.setProperty('--s',S+'px');
+  grid.forEach(row=>row.forEach(t=>{ if(t){ t.el.classList.add('nt'); place(t); fontFor(t); t.el.offsetWidth; t.el.classList.remove('nt'); } }));
+}
+function cur(){ return st.L.missions[st.mi]; }
+function randEntry(){
+  const m=st.L.missions, nearby=[...(m[st.mi]?m[st.mi].toks:[]),...(m[st.mi+1]?m[st.mi+1].toks:[])];
+  if(R()<.45 && nearby.length) return nearby[Math.floor(R()*nearby.length)];
+  return st.L.pool[Math.floor(R()*st.L.pool.length)];
+}
+function fontFor(t){
+  const n=[...t.w].length; const f = n<=2?.34 : n===3?.28 : n===4?.23 : .22;
+  t.el.style.setProperty('--fs',(S*f)+'px');
+}
+function wordHTML(w){ const ch=[...w]; if(ch.length<5) return w; const h=Math.ceil(ch.length/2); return ch.slice(0,h).join('')+'<br>'+ch.slice(h).join(''); }
+function paint(t){
+  t.el.className='tile '+t.r; t.el.setAttribute('aria-label',`${t.w} — ${ROLE_FULL[t.r]}`);
+  t.el.innerHTML=`<span class="candy"><span class="w">${wordHTML(t.w)}</span><span class="r">${ROLE_SHORT[t.r]}</span></span><span class="badge"></span>`;
+  fontFor(t);
+}
+function place(t){ t.el.style.transform=`translate(${t.c*S}px,${t.row*S}px)`; }
+function newTile(e,row,c,fromRow){
+  const el=document.createElement('button'); el.type='button';
+  const t={id:++uid,w:e.w,r:e.r,k:e.k,row,c,el};
+  paint(t); el.classList.add('nt'); el.style.transform=`translate(${c*S}px,${fromRow*S}px)`; gridEl.appendChild(el);
+  el.offsetWidth; el.classList.remove('nt'); el.style.transitionDelay=(c*30+(ROWS-row)*12)+'ms'; place(t);
+  setTimeout(()=>{ el.style.transitionDelay=''; },700);
+  el.addEventListener('click',()=>tap(t));
+  return t;
+}
+function all(){ return grid.flat().filter(Boolean); }
+function ensureTiles(){
+  const m=cur(); if(!m) return;
+  const need={}; m.toks.forEach(t=>need[t.k]=(need[t.k]||0)+1);
+  const tiles=all();
+  for(const k in need){
+    let have=tiles.filter(t=>t.k===k).length;
+    while(have<need[k]){
+      const cand=tiles.filter(t=>!need[t.k]); const t=cand[Math.floor(R()*cand.length)]; if(!t) break;
+      const e=m.toks.find(x=>x.k===k); t.w=e.w; t.r=e.r; t.k=e.k; paint(t); t.el.classList.add('spark');
+      setTimeout(()=>t.el.classList.remove('spark'),650); have++;
+    }
+  }
+}
+function setMission(first){
+  const m=cur(), L=st.L;
+  $('mEmoji').textContent=m.e; $('mText').textContent=m.pt; $('mCount').textContent=`Missão ${st.mi+1}/${L.missions.length}`;
+  $('mPoint').textContent=L.point; $('mDone').hidden=true; st.wrong=0; st.hintUsed=false; st.sel=[];
+  $('tray').innerHTML=m.toks.map(t=>`<div class="slot r-${t.r} ${t.r}"><span class="lab">${ROLE_FULL[t.r]}</span><span class="wd"></span></div>`).join('');
+  hintState();
+}
+function hintState(){ $('hintN').textContent=st.hints; $('hintBtn').disabled=st.hints<=0; }
+function hud(){
+  $('score').textContent=st.score.toLocaleString('pt-BR'); $('moves').textContent=st.moves;
+  $('movesBox').classList.toggle('low',st.moves<=2);
+  const max=st.L.t3*1.15; $('barFill').style.width=Math.min(100,st.score/max*100)+'%';
+  $('bar').querySelectorAll('.mk').forEach(m=>m.classList.toggle('on',st.score>=+m.dataset.t));
+}
+function updSel(){
+  all().forEach(t=>t.el.classList.remove('sel'));
+  st.sel.forEach((t,i)=>{ t.el.classList.add('sel'); t.el.querySelector('.badge').textContent=i+1; });
+  const m=cur(); const slots=$('tray').children;
+  [...slots].forEach((s,i)=>{ const t=st.sel[i]; s.querySelector('.wd').textContent=t?t.w:''; s.classList.toggle('full',!!t);
+    s.classList.toggle('miss',!!t && t.r!==m.toks[i].r); });
+}
+function tap(t){
+  if(!st||st.busy) return; ac(); hideFb();
+  all().forEach(x=>x.el.classList.remove('hint'));
+  const i=st.sel.indexOf(t);
+  if(i>=0){ if(i===st.sel.length-1){ st.sel.pop(); updSel(); } return; }
+  const m=cur(); if(st.sel.length>=m.toks.length) return;
+  st.sel.push(t); sfx.tick(st.sel.length-1); updSel();
+  if(st.sel.length===m.toks.length){ st.busy=true; setTimeout(evaluate,260); }
+}
+function isChain(sel){ for(let i=1;i<sel.length;i++){ if(Math.max(Math.abs(sel[i].row-sel[i-1].row),Math.abs(sel[i].c-sel[i-1].c))>1) return false; } return true; }
+function evaluate(){
+  const m=cur(); const ok=st.sel.length===m.toks.length && st.sel.every((t,i)=>t.k===m.toks[i].k);
+  st.moves--; ok?success():fail();
+}
+function success(){
+  const m=cur(), sel=st.sel.slice();
+  const mult=MULTS[Math.min(st.streak,MULTS.length-1)];
+  let pts=Math.round(m.toks.length*100*mult); let chain=isChain(sel)?150:0;
+  if(st.hintUsed){ pts=Math.round(pts/2); chain=0; }
+  const total=pts+chain; st.score+=total; st.streak++;
+  // revelação do chunk
+  $('dJp').textContent=m.text;
+  const pol=politeAlt(m); $('dPol').innerHTML=pol; $('mDone').hidden=false; speak(m.text);
+  // estouro!
+  const gc=centerOf(gridEl);
+  sel.forEach((t,i)=>setTimeout(()=>{ const [x,y]=centerOf(t.el); t.el.classList.add('pop'); burst(x,y,ROLE_COLOR[t.r],34); sfx.pop(i); },i*110));
+  const after=sel.length*110+120;
+  setTimeout(()=>{
+    const p=PRAISE[Math.floor(R()*PRAISE.length)];
+    floatText(`${p[0]}<small>${p[1]}</small>`,gc[0],gc[1]-S*.6,'big');
+    floatText(`+${total}`,gc[0],gc[1]+S*.5,'pts');
+    if(chain) floatText('Corrente doce! +150',gc[0],gc[1]+S*1.3,'combo');
+    else if(mult>1) floatText(`Combo ×${mult}`,gc[0],gc[1]+S*1.3,'combo');
+    if(st.streak>=3){ document.getElementById('board').classList.add('shakey'); setTimeout(()=>$('board').classList.remove('shakey'),400); }
+    burst(gc[0],gc[1]-S*.6,'#F4D35E',RM?10:24);
+    hud();
+    sel.forEach(t=>{ grid[t.row][t.c]=null; t.el.remove(); });
+    st.sel=[]; collapse();
+  },after+260);
+  setTimeout(()=>{
+    st.mi++;
+    if(st.mi>=st.L.missions.length) return levelComplete();
+    if(st.moves<=0) return levelFail();
+    setMission(); ensureTiles(); hud(); st.busy=false;
+  },after+1700);
+}
+function politeAlt(m){
+  const v=m.toks.find(t=>t.r==='v'); if(!v) return m.toks.some(t=>t.w==='の')?'cor/forma que é substantivo + <b>の</b>':(m.toks.some(t=>t.w==='は')?'tema + <b>は</b> + adjetivo':'adjetivo vem <b>antes</b> do substantivo');
+  if(VERBS[v.w]) return 'educado: <b>'+chunkText(m.toks.map(t=>t===v?{...t,w:VERBS[v.w][0]}:t))+'</b>';
+  const d=MASU2DICT[v.w]; return d?`dicionário: <b>${d}</b> · grupo ${VERBS[d][1]}`:'';
+}
+function collapse(){
+  for(let c=0;c<COLS;c++){
+    let w=ROWS-1;
+    for(let r=ROWS-1;r>=0;r--){ const t=grid[r][c]; if(t){ if(r!==w){ grid[w][c]=t; grid[r][c]=null; t.row=w; place(t);} w--; } }
+    const gap=w+1;
+    for(let r=w;r>=0;r--) grid[r][c]=newTile(randEntry(),r,c,r-gap-1);
+  }
+}
+function fail(){
+  const m=cur(), sel=st.sel.slice(); st.streak=0; st.wrong++;
+  sfx.bad(); sel.forEach(t=>t.el.classList.add('nope')); $('tray').classList.add('shake');
+  const ex=explain(sel,m); showFb(ex[0],ex[1]); hud();
+  setTimeout(()=>{ sel.forEach(t=>t.el.classList.remove('nope')); $('tray').classList.remove('shake'); st.sel=[]; updSel();
+    if(st.moves<=0) return levelFail();
+    st.busy=false; if(st.wrong>=2) hint(true);
+  },650);
+}
+function explain(sel,m){
+  const exp=m.toks, got=sel.map(t=>({w:t.w,r:t.r,k:t.k}));
+  const sameSet=[...exp.map(t=>t.k)].sort().join()===[...got.map(t=>t.k)].sort().join();
+  const verb=exp.find(t=>t.r==='v');
+  if(sameSet){
+    if(exp[0].r==='a') return ['Ordem dos blocos','O adjetivo vem <b>SEMPRE antes</b> do que ele descreve: <b>あかい りんご</b>.'];
+    if(exp.some(t=>t.w==='の')) return ['Ordem dos blocos','Modificador + <b>の</b> + substantivo: <b>みどりいろの きゅうり</b>.'];
+    if(exp.some(t=>t.w==='は')&&!verb) return ['Ordem dos blocos','Primeiro o tema com <b>は</b>, depois o adjetivo: <b>ぞうは おおきい</b>.'];
+    return ['Ordem dos blocos','Em japonês a frase <b>termina no VERBO</b>, e a partícula vem logo depois do bloco que ela "cola": <b>かおを あらう</b> (rosto-o-lavar).'];
+  }
+  const i=exp.findIndex((e,j)=>!got[j]||got[j].k!==e.k); const e=exp[i], g=got[i];
+  if(g.r!==e.r) return ['Cor errada!',`O espaço ${i+1} pede um bloco de <b>${ROLE_NAME[e.r]}</b>, mas você colocou <b>${g.w}</b>, que é ${ROLE_NAME[g.r]}. Siga as cores da bandeja!`];
+  if(e.r==='p'){
+    const prev=exp[i-1]?exp[i-1].w:'', vw=verb?verb.w:'';
+    const pit=PITFALLS[`${prev}|${g.w}|${vw}`]; let amb=verb&&AMBIG[MASU2DICT[vw]||vw]?`<br>🎯 ${AMBIG[MASU2DICT[vw]||vw]}`:'';
+    if(pit) return [`✗ ${prev}${g.w} …`,pit+amb];
+    if(e.w==='の') return ['Partícula','Só algumas cores e formas são adjetivos い (あかい, まるい). <b>みどりいろ, ピンクいろ, さんかく</b> são substantivos e precisam de <b>の</b>.'];
+    return ['Partícula trocada',`<b>${g.w}</b> ${PFUNC[g.w]}. Aqui a missão "${m.pt}" pede a partícula que ${PFUNC[e.w]}.${amb}`];
+  }
+  if(e.r==='v'){
+    if(MASU2DICT[e.w]===g.w){ const v=VERBS[g.w]; return ['Forma educada!',`A missão pede <b>～ます</b>. <b>${g.w} → ${v[0]}</b> (grupo ${v[1]}). ${v[1]===1?'Grupo 1: troca -u → -i + ます.':v[1]===2?'Grupo 2: tira る + ます.':v[1]===3?'Grupo 3: irregular, decore!':'Parece grupo 2, mas é exceção do grupo 1!'}`]; }
+    const ed=MASU2DICT[e.w]||e.w, gd=MASU2DICT[g.w]||g.w;
+    if((ed==='きる'&&gd==='はく')||(ed==='はく'&&gd==='きる')) return ['Vestir depende do corpo','<b>きる</b> = parte de cima (シャツ) · <b>はく</b> = parte de baixo (ズボン, くつ).'];
+    return ['Verbo trocado',`<b>${g.w}</b> significa "${gloss(g)}". Releia a missão: "${m.pt}".`];
+  }
+  const gl=gloss(g); return ['Bloco trocado',`<b>${g.w}</b>${gl?` = "${gl}"`:''}. A missão pede: "${m.pt}".`];
+}
+function showFb(t,p){ $('fbT').innerHTML=t; $('fbP').innerHTML=p; $('fb').hidden=false; }
+function hideFb(){ $('fb').hidden=true; }
+$('fbX').onclick=hideFb;
+function hint(free){
+  if(!st||st.busy) return; if(!free){ if(st.hints<=0) return; st.hints--; hintState(); }
+  st.hintUsed=true; ac();
+  const m=cur(); let k=0; while(k<st.sel.length&&st.sel[k].k===m.toks[k].k) k++;
+  if(k<st.sel.length){ st.sel=st.sel.slice(0,k); updSel(); }
+  const need=m.toks[k]; if(!need) return;
+  let cands=all().filter(t=>t.k===need.k&&!st.sel.includes(t)); const last=st.sel[st.sel.length-1];
+  if(last){ const adj=cands.filter(t=>Math.max(Math.abs(t.row-last.row),Math.abs(t.c-last.c))<=1); if(adj.length) cands=adj; }
+  const t=cands[0]; if(t){ t.el.classList.add('hint'); tone(1200,.15,'sine',.12); }
+}
+$('hintBtn').onclick=()=>hint(false);
+$('sayBtn').onclick=()=>speak($('dJp').textContent);
+
+function levelComplete(){
+  st.busy=true; sfx.win();
+  const gc=centerOf(gridEl);
+  floatText('チャンク クラッシュ！',gc[0],gc[1],'mega'); confetti(120);
+  let n=st.moves, k=0;
+  const step=()=>{
+    if(k>=n){ setTimeout(showWin,500); return; }
+    const ts=all(); const t=ts[Math.floor(R()*ts.length)]; const [x,y]=centerOf(t.el);
+    t.el.classList.add('pop'); burst(x,y,ROLE_COLOR[t.r],26); sfx.pop(k%5); st.score+=250; st.moves--; hud();
+    floatText('+250',x,y,'pts');
+    setTimeout(()=>{ grid[t.row][t.c]=null; t.el.remove(); collapse(); },380);
+    k++; setTimeout(step,RM?120:330);
+  };
+  setTimeout(step,1200);
+}
+function showWin(){
+  const L=st.L, i=L.i, s=st.score>=L.t3?3:st.score>=L.t2?2:1;
+  prog.stars[i]=Math.max(prog.stars[i]||0,s); const rec=st.score>(prog.best[i]||0); prog.best[i]=Math.max(prog.best[i]||0,st.score);
+  if(i+1<LV.length) prog.unlocked=Math.max(prog.unlocked,i+1); save();
+  $('oJp').textContent='レベル クリア！'; $('oTitle').textContent='Nível concluído!';
+  $('oScore').textContent=st.score.toLocaleString('pt-BR');
+  $('oSub').innerHTML=`${rec?'🏆 Novo recorde! · ':''}Meta: ★★ ${L.t2.toLocaleString('pt-BR')} · ★★★ ${L.t3.toLocaleString('pt-BR')}<br>Você praticou: <b>${L.point}</b>`;
+  const sp=[...$('oStars').children]; sp.forEach(e=>e.classList.remove('on'));
+  $('oNext').hidden=i+1>=LV.length; $('ov').hidden=false; confetti(200);
+  sp.forEach((e,k)=>{ if(k<s) setTimeout(()=>{ e.classList.add('on'); const [x,y]=centerOf(e); burst(x,y,'#F4D35E',40); sfx.star(k); },500+k*450); });
+}
+function levelFail(){
+  st.busy=true; sfx.bad();
+  $('oJp').textContent='ざんねん…'; $('oTitle').textContent='Acabaram as jogadas';
+  [...$('oStars').children].forEach(e=>e.classList.remove('on'));
+  $('oScore').textContent=st.score.toLocaleString('pt-BR');
+  $('oSub').innerHTML=`Missão ${st.mi+1} de ${st.L.missions.length}. Revise: <b>${st.L.point}</b><br>Dica: o verbo sempre fecha o chunk, e cada partícula "cola" o bloco que vem antes.`;
+  $('oNext').hidden=true; $('ov').hidden=false;
+}
+$('oNext').onclick=()=>startLevel(st.L.i+1);
+$('oRetry').onclick=()=>startLevel(st.L.i);
+$('oMap').onclick=toMap;
+$('backBtn').onclick=toMap;
+function toMap(){ $('ov').hidden=true; $('gameScreen').hidden=true; $('mapScreen').hidden=false; st=null; renderMap(); scrollTo(0,0); }
+function sndUI(){ $('sndBtn').textContent=prog.sound?'🔊':'🔇'; }
+$('sndBtn').onclick=()=>{ prog.sound=!prog.sound; save(); sndUI(); if(!prog.sound) try{speechSynthesis.cancel();}catch(e){} };
+sndUI(); renderMap();
+})();
+</script>
+</body>
+</html>
