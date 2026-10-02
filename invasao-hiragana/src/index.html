@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0d0b1f" />
+    <meta
+      name="description"
+      content="Invasão Hiragana 3D — pilote a nave KANA-01, dispare o hiragana correto em cada invasor e salve o universo do esquecimento."
+    />
+    <title>Invasão Hiragana 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Noto+Sans+JP:wght@500;700&display=swap"
+    />
+    <style>
+      /*__CSS__*/
+    </style>
+  </head>
+  <body>
+    <canvas id="cena" aria-hidden="true"></canvas>
+    <div id="flash" aria-hidden="true"></div>
+    <div id="vinheta-dano" aria-hidden="true"></div>
+    <canvas id="confete" aria-hidden="true"></canvas>
+
+    <!-- Região lida por leitores de tela -->
+    <div
+      id="anuncio"
+      class="sr-only"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+    <div
+      id="anuncio-urgente"
+      class="sr-only"
+      aria-live="assertive"
+      aria-atomic="true"
+    ></div>
+
+    <!-- HUD -->
+    <div id="hud" hidden>
+      <div class="hud-topo">
+        <div class="painel hud-pontos" aria-label="Pontuação">
+          <div class="rotulo">Pontos</div>
+          <div class="valor" id="hud-pontos">0</div>
+          <div class="linha-pequena">
+            <span id="hud-setor">Setor 1</span>
+            <span id="hud-combo" class="combo" hidden>Combo ×1</span>
+          </div>
+        </div>
+
+        <div class="painel hud-missao" aria-label="Missão atual">
+          <div class="rotulo">Missão: restaure a palavra</div>
+          <div id="hud-palavra" class="palavra-caixas"></div>
+          <div id="hud-significado" class="significado"></div>
+          <div
+            id="hud-progresso-setor"
+            class="progresso-setor"
+            aria-hidden="true"
+          ></div>
+        </div>
+
+        <div class="painel hud-status">
+          <div class="rotulo">Escudo</div>
+          <div
+            id="hud-escudo"
+            class="escudo"
+            role="meter"
+            aria-label="Escudo"
+            aria-valuemin="0"
+          ></div>
+          <div class="rotulo">Memória do universo</div>
+          <div
+            class="barra"
+            role="meter"
+            aria-label="Memória do universo"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            id="hud-memoria-meter"
+          >
+            <div id="hud-memoria" class="barra-preenchida"></div>
+          </div>
+        </div>
+        <button
+          id="btn-pausa"
+          class="btn-icone"
+          aria-label="Pausar (Esc)"
+          title="Pausar (Esc)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="4" width="4" height="16" rx="1" />
+            <rect x="14" y="4" width="4" height="16" rx="1" />
+          </svg>
+        </button>
+      </div>
+
+      <div id="radio" class="painel radio" hidden>
+        <div class="radio-avatar" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <defs>
+              <linearGradient id="g-hoshi" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#8b7bff" />
+                <stop offset="1" stop-color="#31e3ff" />
+              </linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="12" fill="#120d2e" />
+            <path
+              d="M32 8 L38 24 L55 25 L42 36 L46 53 L32 44 L18 53 L22 36 L9 25 L26 24 Z"
+              fill="url(#g-hoshi)"
+            />
+            <circle cx="27" cy="31" r="3" fill="#0d0b1f" />
+            <circle cx="37" cy="31" r="3" fill="#0d0b1f" />
+            <path
+              d="M27 39 Q32 43 37 39"
+              stroke="#0d0b1f"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <div>
+          <div class="radio-nome">
+            Comandante Hoshi <span lang="ja">星</span>
+          </div>
+          <p id="radio-texto"></p>
+        </div>
+      </div>
+
+      <div id="avisos" aria-hidden="true"></div>
+
+      <div class="hud-base">
+        <div class="painel municao" aria-label="Munição hiragana">
+          <div class="municao-atual">
+            <span class="rotulo">Munição</span>
+            <span id="municao-kana" lang="ja">あ</span>
+            <span id="municao-romaji">a</span>
+          </div>
+          <div
+            id="municao-lista"
+            class="municao-lista"
+            role="radiogroup"
+            aria-label="Escolher munição"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        id="digitacao"
+        class="digitacao"
+        aria-hidden="true"
+        hidden
+      ></div>
+    </div>
+
+    <!-- Controles de toque -->
+    <div id="toque" hidden>
+      <div id="joystick" aria-hidden="true">
+        <div id="joystick-pino"></div>
+      </div>
+      <button id="btn-rolar" class="btn-toque" aria-label="Rolagem">
+        ⟲
+      </button>
+      <button id="btn-fogo" class="btn-toque fogo" aria-label="Disparar">
+        FOGO
+      </button>
+    </div>
+
+    <!-- Tela inicial -->
+    <section id="tela-inicio" class="tela" aria-labelledby="titulo">
+      <div class="cartao cartao-inicio">
+        <p class="sobretitulo">Missão de resgate cósmico</p>
+        <h1 id="titulo">
+          Invasão Hiragana <span class="tag-3d">3D</span>
+        </h1>
+        <p class="historia">
+          O <strong>Esquecimento</strong> está apagando os caracteres do
+          universo. Pilote a nave <strong>KANA-01</strong>, troque sua
+          munição para o <strong>mesmo hiragana</strong> de cada invasor e
+          dispare. Complete as <strong>palavras</strong> na ordem certa
+          para provocar uma explosão de memória e salvar o cosmos!
+        </p>
+        <div
+          id="chips-inicio"
+          class="chips"
+          lang="ja"
+          aria-label="Hiragana do primeiro setor"
+        ></div>
+
+        <fieldset class="dificuldade">
+          <legend>Dificuldade</legend>
+          <label
+            ><input type="radio" name="dificuldade" value="cadete" />
+            <span>Cadete<small>lento · mira assistida</small></span></label
+          >
+          <label
+            ><input type="radio" name="dificuldade" value="piloto" />
+            <span>Piloto<small>equilibrado</small></span></label
+          >
+          <label
+            ><input type="radio" name="dificuldade" value="as" />
+            <span>Ás<small>rápido · sem ajuda</small></span></label
+          >
+        </fieldset>
+
+        <div class="acoes">
+          <button id="btn-iniciar" class="btn-primario" disabled>
+            Carregando…
+          </button>
+          <button id="btn-ajuda" class="btn-secundario">Como jogar</button>
+          <button id="btn-config" class="btn-secundario">
+            Configurações
+          </button>
+        </div>
+        <p class="recorde" id="recorde"></p>
+        <p class="aviso-foto">
+          ⚠️ Contém explosões de luz e som. Ative
+          <em>Reduzir flashes</em> nas configurações se tiver
+          sensibilidade.
+        </p>
+      </div>
+    </section>
+
+    <!-- Briefing do setor -->
+    <section
+      id="tela-briefing"
+      class="tela"
+      hidden
+      aria-labelledby="briefing-titulo"
+    >
+      <div class="cartao">
+        <p class="sobretitulo" id="briefing-setor">Setor 1</p>
+        <h2 id="briefing-titulo">Nebulosa das Vogais</h2>
+        <p id="briefing-texto"></p>
+        <div id="briefing-chips" class="chips grande" lang="ja"></div>
+        <p class="dica" id="briefing-dica"></p>
+        <div class="acoes">
+          <button id="btn-decolar" class="btn-primario">Decolar ▸</button>
+        </div>
+        <p class="atalho">
+          Pressione <kbd>Enter</kbd> ou <kbd>Espaço</kbd>
+        </p>
+      </div>
+    </section>
+
+    <!-- Pausa -->
+    <section
+      id="tela-pausa"
+      class="tela"
+      hidden
+      aria-labelledby="pausa-titulo"
+    >
+      <div class="cartao estreito">
+        <h2 id="pausa-titulo">Pausado</h2>
+        <div class="acoes coluna">
+          <button id="btn-continuar" class="btn-primario">
+            Continuar
+          </button>
+          <button id="btn-pausa-config" class="btn-secundario">
+            Configurações
+          </button>
+          <button id="btn-pausa-ajuda" class="btn-secundario">
+            Como jogar
+          </button>
+          <button id="btn-sair" class="btn-secundario">
+            Voltar ao menu
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fim de jogo / vitória -->
+    <section
+      id="tela-fim"
+      class="tela"
+      hidden
+      aria-labelledby="fim-titulo"
+    >
+      <div class="cartao">
+        <p class="sobretitulo" id="fim-sobre">Fim da missão</p>
+        <h2 id="fim-titulo">O universo esqueceu…</h2>
+        <p id="fim-texto"></p>
+        <dl class="estatisticas" id="fim-estatisticas"></dl>
+        <h3 class="sub">Palavras restauradas</h3>
+        <ul id="fim-palavras" class="lista-palavras"></ul>
+        <div class="acoes">
+          <button id="btn-continuar-infinito" class="btn-primario" hidden>
+            Continuar (modo infinito)
+          </button>
+          <button id="btn-de-novo" class="btn-primario">
+            Jogar novamente
+          </button>
+          <button id="btn-menu" class="btn-secundario">Menu</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comemoração -->
+    <div id="celebracao" aria-hidden="true" hidden>
+      <div class="cel-exclamacao" lang="ja" id="cel-exclamacao">
+        すごい!
+      </div>
+      <div class="cel-palavra" lang="ja" id="cel-palavra">ねこ</div>
+      <div class="cel-romaji" id="cel-romaji">neko</div>
+      <div class="cel-significado" id="cel-significado">gato</div>
+      <div class="cel-faixa">
+        SEQUÊNCIA PERFEITA! <span id="cel-bonus">+1000</span>
+      </div>
+    </div>
+
+    <!-- Configurações -->
+    <dialog id="dlg-config" aria-labelledby="config-titulo">
+      <form method="dialog" class="form-config">
+        <h2 id="config-titulo">Configurações</h2>
+        <div class="grupo">
+          <h3>Áudio</h3>
+          <label class="deslizante"
+            >Música lo-fi
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              name="volMusica"
+          /></label>
+          <label class="deslizante"
+            >Efeitos sonoros
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              name="volEfeitos"
+          /></label>
+          <label class="chave"
+            ><input type="checkbox" name="voz" />
+            <span
+              >Pronunciar hiragana em japonês (voz do sistema)</span
+            ></label
+          >
+        </div>
+        <div class="grupo">
+          <h3>Jogabilidade</h3>
+          <label class="chave"
+            ><input type="checkbox" name="mira" />
+            <span
+              >Mira assistida (tiros curvam até o invasor certo)</span
+            ></label
+          >
+          <label class="chave"
+            ><input type="checkbox" name="autoTiro" />
+            <span
+              >Tiro automático quando a mira trava num invasor
+              compatível</span
+            ></label
+          >
+          <label class="chave"
+            ><input type="checkbox" name="digitacao" />
+            <span
+              >Trocar munição digitando o romaji (ex.: k + a = か)</span
+            ></label
+          >
+          <label class="chave"
+            ><input type="checkbox" name="inverterY" />
+            <span>Inverter eixo vertical (estilo piloto)</span></label
+          >
+        </div>
+        <div class="grupo">
+          <h3>Acessibilidade e visual</h3>
+          <label class="chave"
+            ><input type="checkbox" name="romaji" />
+            <span>Mostrar romaji nos invasores</span></label
+          >
+          <label class="chave"
+            ><input type="checkbox" name="altoContraste" />
+            <span>Alto contraste e rótulos maiores</span></label
+          >
+          <label class="chave"
+            ><input type="checkbox" name="reduzirFlash" />
+            <span>Reduzir flashes e tremores de tela</span></label
+          >
+          <label class="seletor"
+            >Qualidade gráfica
+            <select name="qualidade">
+              <option value="auto">Automática</option>
+              <option value="alta">Alta (brilho/bloom)</option>
+              <option value="baixa">Leve (aparelhos simples)</option>
+            </select>
+          </label>
+        </div>
+        <div class="acoes">
+          <button class="btn-primario" value="ok">Fechar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Ajuda -->
+    <dialog id="dlg-ajuda" aria-labelledby="ajuda-titulo">
+      <div class="form-config">
+        <h2 id="ajuda-titulo">Como jogar</h2>
+        <ol class="regras">
+          <li>
+            Cada invasor carrega um <strong>hiragana</strong>. Selecione a
+            <strong>mesma munição</strong> e dispare para destruí-lo.
+          </li>
+          <li>
+            A <strong>missão</strong> no topo mostra uma palavra. Destrua
+            os invasores com <span class="halo-ex">halo dourado</span> na
+            ordem das letras.
+          </li>
+          <li>
+            Completar a palavra dispara a
+            <strong>explosão de memória</strong>: limpa a tela e vale
+            muitos pontos.
+          </li>
+          <li>
+            Invasores que passam por você apagam a
+            <strong>memória do universo</strong>. Colisões, asteroides e
+            disparos gastam o <strong>escudo</strong>.
+          </li>
+          <li>
+            Atravesse <strong>portais dourados</strong> para recuperar
+            escudo e memória. Faça uma <strong>rolagem</strong> para
+            refletir disparos.
+          </li>
+          <li>
+            A mira fica <span class="cor-ouro">dourada</span> quando aponta
+            para um invasor da sua munição e
+            <span class="cor-vermelha">vermelha</span> quando a munição
+            está errada.
+          </li>
+        </ol>
+        <table class="controles">
+          <caption>
+            Controles
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Ação</th>
+              <th scope="col">Teclado</th>
+              <th scope="col">Gamepad / Toque</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mover</td>
+              <td>
+                <kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> (ou
+                <kbd>WASD</kbd> sem digitação)
+              </td>
+              <td>Analógico esquerdo / joystick na tela</td>
+            </tr>
+            <tr>
+              <td>Disparar</td>
+              <td><kbd>Espaço</kbd> ou clique</td>
+              <td>A / botão FOGO</td>
+            </tr>
+            <tr>
+              <td>Trocar munição</td>
+              <td>
+                Digite o romaji (<kbd>k</kbd><kbd>a</kbd>),
+                <kbd>1</kbd>–<kbd>0</kbd>, <kbd>Tab</kbd>, roda do mouse
+              </td>
+              <td>LB / RB, direcional ↑↓ / toque na barra</td>
+            </tr>
+            <tr>
+              <td>Rolagem</td>
+              <td><kbd>Shift</kbd></td>
+              <td>B ou X / botão ⟲</td>
+            </tr>
+            <tr>
+              <td>Pausar</td>
+              <td><kbd>Esc</kbd> ou <kbd>Enter</kbd></td>
+              <td>Start / botão ❚❚</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="acoes">
+          <button class="btn-primario" id="btn-fechar-ajuda">
+            Entendi!
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <div id="erro" class="tela" hidden role="alert">
+      <div class="cartao estreito">
+        <h2>Não foi possível iniciar o 3D</h2>
+        <p id="erro-texto">
+          Seu navegador não suporta WebGL ou ele está desativado. Tente
+          atualizar o navegador ou ativar a aceleração por hardware.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      /*__JS__*/
+    </script>
+  </body>
+</html>

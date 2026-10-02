@@ -1,0 +1,16 @@
+{
+  "name": "invasao-hiragana-3d",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Invasão Hiragana 3D — shooter de trilho para aprender hiragana (Three.js + modelos gerados no Blender)",
+  "type": "module",
+  "scripts": {
+    "modelos": "python3 blender/modelos.py --render",
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.186.1"
+  }
+}
