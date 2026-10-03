@@ -6,7 +6,9 @@ O Pongo, um dálmata, perdeu o osso no jardim de casa. A cada buraco no mapa, o 
 
 ## Como jogar
 
-O jogo usa módulos ES, então precisa de um servidor HTTP local (abrir via `file://` não funciona no Chrome):
+**Jeito mais fácil:** abra o arquivo único [`pongo-e-o-osso-perdido.html`](pongo-e-o-osso-perdido.html) com dois cliques. Ele já traz tudo embutido (CSS, JavaScript, Three.js e os modelos 3D) e funciona sem servidor e sem internet (só as fontes vêm do Google Fonts, com fonte reserva offline). Para regerar esse arquivo depois de mudar o código: `python3 pongo-game/build_single_html.py`.
+
+Para desenvolver, a versão em vários arquivos usa módulos ES, então precisa de um servidor HTTP local (abrir via `file://` não funciona no Chrome):
 
 ```bash
 cd pongo-game
