@@ -38,6 +38,17 @@ Cada bloco coletado e cada frase completa são lidos em voz alta (síntese de vo
 
 ## Rodando
 
+### Arquivo único (mais fácil)
+**`a-semana-do-finn.html`** tem tudo embutido (three.js, código e modelos 3D): basta dar **duplo clique** para abrir no navegador.
+Funciona offline (sem internet só as fontes mudam para as do sistema). Para regerar depois de mudar o código:
+
+```bash
+npm i three@0.160.0
+python3 tools/build_single_html.py --three node_modules/three
+```
+
+### Versão em pastas
+
 O jogo carrega modelos `.glb`, então precisa de um servidor web local (abrir o arquivo direto com `file://` não funciona):
 
 ```bash

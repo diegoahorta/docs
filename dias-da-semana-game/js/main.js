@@ -1360,7 +1360,7 @@ async function load() {
   let done = 0;
   const bar = document.querySelector('#loadbar i');
   await Promise.all(MODEL_NAMES.map((n) => new Promise((res, rej) => {
-    loader.load(`models/${n}.${window.MODEL_EXT || "glb"}`, (g) => {
+    loader.load(window.MODEL_DATA?.[n] || `models/${n}.${window.MODEL_EXT || "glb"}`, (g) => {
       models[n] = g.scene;
       done++;
       bar.style.width = `${(done / MODEL_NAMES.length) * 100}%`;
