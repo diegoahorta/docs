@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Lua à Paris</title>
+<meta name="description" content="Jogo 3D de francês para iniciantes: a viajante Lua chega a Paris e monta frases em blocos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+/* Layout: diorama 3D de Paris em tela cheia; HUD com cartões em tons pastel (rosa, creme, vermelho boina);
+   console de blocos fixo embaixo. Visual claro e único por escolha. */
+:root {
+  color-scheme: light;
+  --cream: #fff8f1;
+  --paper: rgba(255, 250, 246, 0.94);
+  --ink: #3a2230;
+  --muted: #8d6b7c;
+  --rose: #ff5f9e;
+  --rose-d: #d93a7a;
+  --blush: #ffd9e7;
+  --beret: #e8454f;
+  --bleu: #2b4fd8;
+  --gold: #e9b949;
+  --line: #f0d6e0;
+  --S: #3d7bea; --V: #e8454f; --C: #22a35f; --A: #9a5bd6; --L: #ff5f9e;
+  --display: "Playfair Display", Georgia, serif;
+  --body: "Quicksand", "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #f7dbe6; color: var(--ink); font-family: var(--body); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+[hidden] { display: none !important; }
+button { font-family: inherit; }
+button:focus-visible { outline: 3px solid var(--bleu); outline-offset: 2px; }
+#stage { position: fixed; inset: 0; }
+#game { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
+
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 10px 30px rgba(122, 30, 70, .14); }
+.btn { font-family: var(--body); font-weight: 700; border: 0; border-radius: 999px; padding: 12px 22px; font-size: 16px; cursor: pointer; background: #fff; color: var(--rose-d); box-shadow: 0 0 0 2px var(--blush) inset, 0 4px 0 var(--blush); }
+.btn:active:not(:disabled) { transform: translateY(2px); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.go { background: linear-gradient(180deg, #ff7aad, var(--rose-d)); color: #fff; box-shadow: 0 4px 0 #a92a5d; }
+.btn.small { padding: 8px 14px; font-size: 13px; }
+.icon { width: 42px; height: 42px; padding: 0; display: grid; place-items: center; font-size: 18px; }
+
+/* ---------- HUD ---------- */
+.hud { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+.hud > * { pointer-events: auto; }
+.topbar { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); left: 10px; right: 10px; display: flex; gap: 8px; justify-content: space-between; align-items: center; }
+.profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; min-width: 0; }
+.avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 50% 38%, #b07656 0 30%, transparent 31%), radial-gradient(circle at 50% 30%, #2e1c16 0 44%, transparent 45%), linear-gradient(#ffd9e7, #ff9cc4); border: 2px solid #fff; box-shadow: 0 0 0 2px var(--rose); position: relative; }
+.avatar::after { content: ""; position: absolute; left: 6px; right: 6px; top: 2px; height: 9px; border-radius: 50%; background: var(--beret); }
+.profile b { font-size: 14px; display: block; }
+.profile small { color: var(--muted); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tools { display: flex; gap: 8px; align-items: center; }
+.likes { padding: 8px 14px; border-radius: 999px; font-weight: 700; color: var(--rose-d); font-variant-numeric: tabular-nums; }
+#combo { color: var(--bleu); margin-left: 4px; }
+.maphelp { position: absolute; left: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); padding: 10px 14px; font-size: 14px; color: var(--muted); max-width: min(360px, calc(100% - 20px)); }
+.maphelp b { color: var(--ink); }
+#placePanel { position: absolute; right: 10px; top: 70px; width: min(340px, calc(100% - 20px)); padding: 16px; }
+#placePanel .num { font-size: 12px; letter-spacing: .14em; font-weight: 700; color: var(--rose-d); }
+#placePanel h2 { font-family: var(--display); font-size: 24px; margin: 2px 0; line-height: 1.15; text-wrap: balance; }
+#placePanel .topic { font-family: var(--display); font-style: italic; color: var(--bleu); font-size: 18px; margin-bottom: 8px; }
+#placePanel p { margin: 0 0 12px; font-size: 15px; line-height: 1.45; color: var(--muted); }
+#placePanel p b { color: var(--ink); }
+.stars { color: var(--gold); letter-spacing: 3px; font-size: 18px; margin-bottom: 8px; }
+
+/* ---------- missão ---------- */
+#chat { position: absolute; left: 50%; top: 66px; transform: translateX(-50%); width: min(600px, calc(100% - 20px)); padding: 12px 14px; display: grid; gap: 6px; }
+.bubble { display: flex; gap: 10px; align-items: flex-start; }
+.bubble .who { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; background: var(--blush); }
+.bubble .txt { background: #fff; border: 1px solid var(--line); border-radius: 4px 16px 16px 16px; padding: 8px 12px; min-width: 0; }
+.bubble .txt small { display: block; font-size: 11px; letter-spacing: .1em; color: var(--rose-d); font-weight: 700; }
+#ptLine { font-size: clamp(17px, 4.2vw, 22px); font-weight: 700; line-height: 1.3; }
+#tipLine { font-size: 14px; color: var(--bleu); font-weight: 700; }
+.dots { display: flex; gap: 6px; justify-content: center; }
+.dots i { width: 22px; height: 6px; border-radius: 4px; background: var(--line); }
+.dots i.on { background: var(--rose); }
+.dots i.cur { background: var(--gold); }
+#console { position: absolute; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(860px, calc(100% - 20px)); padding: 14px; }
+#slots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 56px; padding: 10px; border-radius: 14px; background: repeating-linear-gradient(45deg, #fff 0 12px, #fff4f8 12px 24px); border: 1px dashed #f3b6cd; }
+.slot { min-width: 62px; height: 44px; border-radius: 12px; border: 2px dashed var(--c, #e2bfcd); display: grid; place-items: center; color: var(--c, var(--muted)); font-weight: 700; font-size: 12px; padding: 0 10px; background: rgba(255,255,255,.7); }
+.block { position: relative; height: 44px; padding: 0 14px 0 34px; border-radius: 12px; border: 0; background: var(--c); color: #fff; font-family: var(--body); font-weight: 700; font-size: 18px; cursor: pointer; box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 70%, #000); }
+.block::before { content: attr(data-k); position: absolute; left: 7px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 6px; background: rgba(255,255,255,.9); color: var(--c); font-size: 12px; font-weight: 800; display: grid; place-items: center; }
+.block:active { transform: translateY(3px); box-shadow: 0 1px 0 color-mix(in srgb, var(--c) 70%, #000); }
+.block.used { visibility: hidden; }
+.block.bad { animation: shake .4s; box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--beret); }
+.block.hinted { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--gold); }
+.block.pop { animation: pop .3s cubic-bezier(.2,2,.4,1); }
+.hideCats .block::before { content: ""; width: 6px; }
+@keyframes pop { from { transform: scale(.4); } to { transform: scale(1); } }
+@keyframes shake { 25%, 75% { transform: translateX(-6px); } 50% { transform: translateX(6px); } }
+#tray { display: flex; flex-wrap: wrap; gap: 10px 8px; justify-content: center; margin: 12px 0; }
+.ctrl { display: flex; gap: 8px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.ctrl .left { display: flex; gap: 8px; }
+#toast { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); padding: 12px 18px; border-radius: 16px; background: #fff; color: var(--beret); font-weight: 700; font-size: 18px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.18); opacity: 0; transition: opacity .2s; pointer-events: none; width: min(460px, 90%); }
+#toast.show { opacity: 1; }
+
+/* ---------- telas ---------- */
+.screen { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 16px; background: linear-gradient(180deg, rgba(255,225,236,.55), rgba(255,240,230,.75)); overflow-y: auto; }
+.screen .card { width: min(600px, 100%); padding: 26px; text-align: center; }
+h1 { font-family: var(--display); font-style: italic; font-weight: 800; font-size: clamp(42px, 10vw, 74px); margin: 0; line-height: .95; color: var(--rose-d); }
+h1 span { color: var(--bleu); font-style: normal; }
+.kicker { letter-spacing: .3em; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.screen p { color: var(--muted); font-size: 17px; line-height: 1.5; margin: 12px 0 16px; }
+.screen p b { color: var(--ink); }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+#loadbar { height: 8px; border-radius: 8px; background: var(--blush); overflow: hidden; margin: 10px auto; width: 80%; }
+#loadbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--bleu), #fff, var(--beret)); transition: width .2s; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0 16px; }
+.legend span { color: #fff; font-weight: 700; font-size: 12px; padding: 3px 10px; border-radius: 999px; }
+.howto { text-align: left; color: var(--muted); line-height: 1.5; padding-left: 20px; margin: 0 0 12px; }
+.howto b { color: var(--ink); }
+.rule { text-align: left; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--rose); padding: 10px 14px; border-radius: 12px; font-size: 16px; line-height: 1.5; margin-bottom: 10px; }
+.ex { font-family: var(--display); font-style: italic; color: var(--bleu); font-size: 18px; margin: 4px 0; }
+.post { text-align: left; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff; margin: 12px 0; }
+.post .ph { height: 120px; display: grid; place-items: center; font-size: 64px; background: linear-gradient(135deg, #ffd9e7, #dfe7ff 60%, #fff3d6); }
+.post .meta { padding: 10px 14px; }
+.post .meta b { color: var(--ink); }
+.post .cap { font-family: var(--display); font-style: italic; color: var(--ink); font-size: 15px; line-height: 1.45; margin: 4px 0; }
+.bigstars { font-size: 40px; letter-spacing: 6px; color: var(--gold); }
+.linkbtn { background: none; border: 0; color: var(--muted); text-decoration: underline; font-size: 13px; cursor: pointer; margin-top: 10px; }
+
+@media (max-width: 640px) {
+  .profile b { display: none; }
+  #placePanel { top: auto; bottom: 10px; }
+  .maphelp { display: none; }
+  #chat { top: 62px; padding: 10px; }
+  .block { font-size: 15px; height: 40px; padding: 0 10px 0 30px; }
+  .slot { height: 40px; min-width: 46px; font-size: 10px; }
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="game"></canvas>
+
+  <div class="hud" id="mapHud" hidden>
+    <div class="topbar">
+      <div class="profile card"><span class="avatar"></span><div><b>@lua.aparis</b><small><span class="followers">0</span> seguidores</small></div></div>
+      <div class="tools">
+        <div class="likes card">❤ <span class="likesTotal">0</span></div>
+        <button class="btn icon musicBtn" title="Música (M)">♫</button>
+      </div>
+    </div>
+    <div class="maphelp card">🗺️ <b>Mapa de Paris:</b> arraste para girar, use a roda/pinça para zoom e <b>toque num lugar</b> para ver a missão.</div>
+    <div id="placePanel" class="card" hidden></div>
+  </div>
+
+  <div class="hud" id="missionHud" hidden>
+    <div class="topbar">
+      <div class="profile card"><span class="avatar"></span><div><b id="mPlace">Paris</b><small>❤ <span id="mLikes">0</span> <span id="combo"></span></small></div></div>
+      <div class="tools">
+        <button class="btn icon" id="ruleBtn" title="Ver a regra">📖</button>
+        <button class="btn icon musicBtn" title="Música (M)">♫</button>
+        <button class="btn icon" id="mapBtn" title="Voltar ao mapa">🗺️</button>
+      </div>
+    </div>
+    <div id="chat" class="card">
+      <div class="bubble"><span class="who" id="ctxEmo">💬</span><div class="txt"><small>COMO SE DIZ EM FRANCÊS?</small><div id="ptLine"></div><div id="tipLine" hidden></div></div></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div id="toast"></div>
+    <div id="console" class="card">
+      <div id="slots"></div>
+      <div id="tray"></div>
+      <div class="ctrl">
+        <div class="left">
+          <button class="btn small" id="clearBtn">⟲ Limpar</button>
+          <button class="btn small" id="hintBtn">💡 Dica −30</button>
+          <button class="btn small" id="sayBtn" title="Ouvir os blocos colocados">🔊</button>
+        </div>
+        <button class="btn go" id="checkBtn" disabled>Vérifier ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+<canvas id="fx"></canvas>
+
+<div class="screen" id="titleScreen">
+  <div class="card">
+    <div class="kicker">ODU CREATIVE • FRANÇAIS EN BLOCS</div>
+    <h1>Lua <span>à</span> Paris</h1>
+    <p>Lua acabou de desembarcar em Paris e <b>não sabe falar nada de francês</b>. Ajude-a a montar frases em <b>blocos</b> para conversar, fazer amigos e ganhar curtidas pela cidade!</p>
+    <div id="loadbar"><i></i></div>
+    <p id="loadTxt" style="font-size:14px;margin:4px 0 14px">Carregando Paris…</p>
+    <div class="row">
+      <button class="btn go" id="playBtn" disabled>Allons-y ! ▶</button>
+      <button class="btn" id="howBtn">Como jogar</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="howScreen" hidden>
+  <div class="card">
+    <h2 style="font-family:var(--display);margin:0 0 10px">Como jogar</h2>
+    <ol class="howto">
+      <li>No <b>mapa de Paris</b>, toque num lugar liberado e em <b>Y aller</b> (ir). Lua caminha até lá.</li>
+      <li>Leia a frase em português e toque nos <b>blocos</b> na ordem certa. Toque num bloco já colocado para tirá-lo.</li>
+      <li>Toque em <b>Vérifier</b>. Cada frase vira um post: acertos valem <b>curtidas ❤</b>, acertos seguidos de primeira fazem <b>combo</b>, erros tiram 25 e a dica custa 30.</li>
+      <li>As cores seguem a aula: troque um bloco de cada vez!</li>
+    </ol>
+    <div class="legend"><span style="background:var(--S)">S • SUJEITO</span><span style="background:var(--V)">V • VERBO</span><span style="background:var(--C)">C • COMPLEMENTO</span><span style="background:var(--A)">A • CONECTOR/ADVÉRBIO</span><span style="background:var(--L)">L • LUGAR/TEMPO</span></div>
+    <button class="btn go" id="howOk">D’accord !</button>
+  </div>
+</div>
+
+<div class="screen" id="briefScreen" hidden>
+  <div class="card">
+    <div class="kicker" id="bNum">MISSÃO 1 DE 8</div>
+    <h2 id="bTitle" style="font-family:var(--display);margin:0;font-size:28px"></h2>
+    <div id="bTopic" style="font-family:var(--display);font-style:italic;color:var(--bleu);font-size:20px;margin:2px 0 10px"></div>
+    <p id="bStory" style="margin-top:0"></p>
+    <div class="rule" id="bRule"></div>
+    <div id="bEx" style="margin-bottom:14px"></div>
+    <button class="btn go" id="bGo">Commencer ▶</button>
+  </div>
+</div>
+
+<div class="screen" id="doneScreen" hidden>
+  <div class="card">
+    <div class="kicker">POST PUBLICADO</div>
+    <div class="post">
+      <div class="ph" id="dPh">🗼</div>
+      <div class="meta"><b>@lua.aparis</b> • <span id="dPlace"></span>
+        <div class="cap" id="dCap"></div>
+        <div style="color:var(--rose-d);font-weight:700">❤ <span id="dLikes"></span> curtidas • +<span id="dFol"></span> seguidores</div>
+      </div>
+    </div>
+    <div class="bigstars" id="dStars"></div>
+    <p id="dInfo" style="margin:6px 0 14px"></p>
+    <div class="row"><button class="btn go" id="dMap">Voltar ao mapa ▶</button><button class="btn" id="dRetry">↻ Repetir</button></div>
+  </div>
+</div>
+
+<div class="screen" id="finalScreen" hidden>
+  <div class="card">
+    <div class="kicker">FÉLICITATIONS !</div>
+    <h1 style="font-size:clamp(34px,8vw,54px)">Lua parle français !</h1>
+    <div class="bigstars" id="fStars" style="margin-top:10px"></div>
+    <p id="fScore"></p>
+    <p><b>« Petit à petit, l’oiseau fait son nid. »</b><br>Pouco a pouco, o passarinho faz seu ninho. Você chegou sem falar nada e agora se apresenta em francês!</p>
+    <button class="btn go" id="fMap">Voltar ao mapa</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
