@@ -4,7 +4,9 @@ Jogo educativo de inglês (A1/A2) da **ODU Creative**, no estilo Duolingo, com o
 
 ## Como jogar
 
-Abra `index.html` no navegador (Chrome, Edge, Firefox ou Safari). Funciona direto do disco e sem internet, porque tudo está na pasta, inclusive o Three.js. Só as fontes vêm do Google Fonts; sem internet, o navegador usa uma fonte parecida.
+**Jeito mais fácil:** abra o arquivo único `pongo-english.html`. O jogo inteiro está nele (mapa 3D, imagens, música e lições), então dá para mandar por e-mail, WhatsApp ou pendrive. Para gerar o arquivo de novo depois de mudar alguma coisa, rode `python3 tools/build_single_html.py`.
+
+Versão em pastas: Abra `index.html` no navegador (Chrome, Edge, Firefox ou Safari). Funciona direto do disco e sem internet, porque tudo está na pasta, inclusive o Three.js. Só as fontes vêm do Google Fonts; sem internet, o navegador usa uma fonte parecida.
 
 Se preferir um servidor local:
 
