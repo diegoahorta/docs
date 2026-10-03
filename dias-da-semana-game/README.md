@@ -36,6 +36,13 @@ O jogador é o **Finn**, um tubarãozinho que precisa ir aos compromissos da sem
 Os blocos usam o **código de cores da aula**: azul = quem, verde = ação, laranja = complemento, roxo = quando, amarelo = dia.
 Cada bloco coletado e cada frase completa são lidos em voz alta (síntese de voz do navegador, em inglês).
 
+## Lições do Finn (versão estilo app de idiomas)
+
+**`licoes-do-finn.html`**: o mesmo conteúdo da aula em lições curtas, num único arquivo (duplo clique para abrir).
+Trilha com 4 unidades, 10 lições e baús de bônus; vidas ❤️, XP ⚡ e dias seguidos 🔥; barra de progresso e
+exercícios variados: escolher a palavra, ouvir e tocar, montar frases com peças coloridas (cores da aula), combinar pares,
+digitar o dia, completar a música e responder diálogos da agenda. Erros mostram a resposta e uma dica, e a questão volta no fim da lição.
+
 ## Rodando
 
 ### Arquivo único (mais fácil)
