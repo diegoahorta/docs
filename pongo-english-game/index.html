@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pongo Learns English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas id="world" aria-label="Mapa 3D do jardim e da casa do Pongo"></canvas>
+<div id="markers" hidden></div>
+
+<!-- ============ HUD ============ -->
+<header id="hud" hidden>
+  <button id="btn-home" class="hud-logo" type="button" aria-label="Ver o jardim inteiro">
+    <img src="assets/odu-creative-logo.png" alt="ODU Creative">
+  </button>
+  <div class="hud-stats">
+    <span class="stat stat-streak" title="Dias seguidos estudando">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2 .8-3.6 2-4.8.2 1.6 1 2.8 2.2 3.3C11 8.5 11.2 5 12 2Z"/></svg>
+      <b id="hud-streak">0</b>
+    </span>
+    <span class="stat stat-xp" title="Pontos de experiência">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7L12 2Z"/></svg>
+      <b id="hud-xp">0</b><small>XP</small>
+    </span>
+    <span class="stat stat-bones" title="Ossinhos: ganhe estrelas nas lições">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-30 12 12)"><rect x="6" y="9.6" width="12" height="4.8" rx="2"/><circle cx="6.2" cy="9.4" r="2.7"/><circle cx="6.2" cy="14.6" r="2.7"/><circle cx="17.8" cy="9.4" r="2.7"/><circle cx="17.8" cy="14.6" r="2.7"/></g></svg>
+      <b id="hud-bones">0</b>
+    </span>
+  </div>
+  <div class="hud-toggles">
+    <button id="btn-music" class="toggle" type="button" aria-pressed="true" aria-label="Música">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+    </button>
+    <button id="btn-sfx" class="toggle" type="button" aria-pressed="true" aria-label="Efeitos sonoros">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Pongo talking on the map -->
+<div id="map-tip" hidden>
+  <img src="assets/pongo.webp" alt="" class="tip-pongo">
+  <div class="tip-bubble">
+    <p id="tip-en" class="tip-en"></p>
+    <p id="tip-pt" class="tip-pt"></p>
+  </div>
+</div>
+
+<!-- Lesson start popover -->
+<div id="level-pop" role="dialog" aria-labelledby="pop-title" hidden>
+  <button id="pop-close" class="pop-close" type="button" aria-label="Fechar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+  </button>
+  <p class="pop-eyebrow" id="pop-eyebrow"></p>
+  <h2 id="pop-title"></h2>
+  <p id="pop-topic" class="pop-topic"></p>
+  <p id="pop-meta" class="pop-meta"></p>
+  <button id="pop-start" class="btn btn-primary btn-wide" type="button">Começar</button>
+</div>
+
+<!-- ============ START ============ -->
+<section id="start" class="screen">
+  <div class="start-sky" aria-hidden="true"></div>
+  <div class="start-card">
+    <img class="start-logo" src="assets/odu-creative-logo.png" alt="ODU Creative">
+    <div class="start-hero">
+      <img class="start-pongo" src="assets/pongo.webp" alt="Pongo, um filhote de Jack Russell com coleira azul e roupinha de ossinhos">
+      <div class="start-bubble">Woof! Hello! I'm Pongo!</div>
+    </div>
+    <h1 class="start-title"><span>Pongo</span> Learns English</h1>
+    <p class="start-lead">O Pongo é um cachorrinho muito sapeca que quer aprender a falar inglês. Ajude-o a atravessar o jardim até a casa do dono, aprendendo <strong>cumprimentos</strong> e o <strong>Present Continuous</strong>.</p>
+    <ul class="start-feats">
+      <li><b>7</b> paradas no jardim 3D</li>
+      <li><b id="feat-count">60</b> desafios</li>
+      <li>Frases em <b>blocos</b></li>
+    </ul>
+    <button id="btn-play" class="btn btn-primary btn-big" type="button" disabled>Carregando…</button>
+    <p class="start-status" id="load-status">Construindo o jardim 3D…</p>
+  </div>
+</section>
+
+<!-- ============ LESSON ============ -->
+<section id="lesson" class="screen" hidden>
+  <div class="lesson-top">
+    <button id="lesson-close" class="icon-btn" type="button" aria-label="Sair da lição">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+    </button>
+    <div class="progress" role="progressbar" aria-label="Progresso da lição" aria-valuemin="0" aria-valuemax="100">
+      <div id="lesson-progress"><span></span></div>
+    </div>
+    <div class="hearts" title="Vidas">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11Z"/></svg>
+      <b id="lesson-hearts">5</b>
+    </div>
+  </div>
+
+  <main class="lesson-body">
+    <div class="ex-head">
+      <p class="ex-kind" id="ex-kind"></p>
+      <p class="combo" id="combo" hidden></p>
+    </div>
+    <h2 class="ex-title" id="ex-title"></h2>
+    <div class="ex-pongo">
+      <img src="assets/pongo.webp" alt="" class="pongo-avatar" id="pongo-avatar">
+      <div class="bubble" id="ex-bubble"></div>
+    </div>
+    <div id="ex-area" class="ex-area"></div>
+  </main>
+
+  <footer class="lesson-foot" id="lesson-foot">
+    <div class="foot-inner">
+      <div class="feedback" id="feedback" hidden>
+        <div class="fb-icon" aria-hidden="true"></div>
+        <div class="fb-copy">
+          <p class="fb-title" id="fb-title"></p>
+          <p class="fb-text" id="fb-text"></p>
+          <p class="fb-tip" id="fb-tip"></p>
+        </div>
+      </div>
+      <button id="btn-check" class="btn btn-primary" type="button" disabled>Verificar</button>
+    </div>
+  </footer>
+
+  <div id="quit-sheet" class="quit-sheet" hidden>
+    <div class="quit-card" role="dialog" aria-labelledby="quit-title">
+      <img src="assets/pongo.webp" alt="" class="quit-pongo">
+      <h3 id="quit-title">Espera! Não vá embora!</h3>
+      <p>Se sair agora, você perde o progresso desta lição.</p>
+      <button id="quit-stay" class="btn btn-primary btn-wide" type="button">Continuar aprendendo</button>
+      <button id="quit-leave" class="btn btn-danger-text btn-wide" type="button">Sair da lição</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section id="result" class="screen" hidden>
+  <div class="result-card">
+    <img src="assets/pongo.webp" alt="" class="result-pongo" id="result-pongo">
+    <p class="result-eyebrow" id="res-eyebrow"></p>
+    <h2 class="result-title" id="res-title"></h2>
+    <p class="result-sub" id="res-sub"></p>
+    <div class="res-stars" id="res-stars" aria-label="Estrelas"></div>
+    <div class="res-stats">
+      <div class="res-stat res-xp"><span>XP ganho</span><b id="res-xp">0</b></div>
+      <div class="res-stat res-acc"><span>Acertos</span><b id="res-acc">0%</b></div>
+      <div class="res-stat res-combo"><span>Maior combo</span><b id="res-combo">0</b></div>
+    </div>
+    <button id="res-continue" class="btn btn-primary btn-wide" type="button">Continuar</button>
+    <button id="res-retry" class="btn btn-ghost btn-wide" type="button" hidden>Tentar de novo</button>
+  </div>
+</section>
+
+<!-- ============ CELEBRATION ============ -->
+<div id="celebrate" hidden aria-live="polite">
+  <div class="cel-rays" aria-hidden="true"></div>
+  <div class="cel-stripes" aria-hidden="true"></div>
+  <img src="assets/pongo.webp" alt="" class="cel-pongo">
+  <p class="cel-main"></p>
+  <p class="cel-sub"></p>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<script defer src="js/vendor/three.min.js"></script>
+<script defer src="js/vendor/GLTFLoader.js"></script>
+<script defer src="js/vendor/OrbitControls.js"></script>
+<script defer src="js/world-data.js"></script>
+<script defer src="js/audio.js"></script>
+<script defer src="js/levels.js"></script>
+<script defer src="js/fx.js"></script>
+<script defer src="js/map3d.js"></script>
+<script defer src="js/game.js"></script>
+</body>
+</html>
