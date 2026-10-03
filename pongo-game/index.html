@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pongo e o Osso Perdido</title>
+  <meta name="description" content="Jogo de chunking em japonês: monte frases com は e です e ajude o Pongo a achar o osso perdido no jardim." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/build/three.module.min.js",
+        "three/addons/": "./vendor/three/examples/jsm/"
+      }
+    }
+  </script>
+  <!-- Modelos 3D gerados no Blender (blender/build_models.py), embutidos em base64 -->
+  <script src="models/models-data.js"></script>
+</head>
+<body>
+  <canvas id="world" aria-label="Jardim 3D do Pongo"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <!-- HUD -->
+  <header class="hud" id="hud" hidden>
+    <div class="hud-score">
+      <span class="hud-label">Pontos</span>
+      <strong id="score">0</strong>
+    </div>
+    <ol class="journey" id="journey" aria-label="Jornada pelo jardim"></ol>
+    <div class="hud-right">
+      <div class="combo" id="combo" aria-live="polite">x1</div>
+      <button class="icon-btn" id="btnRomaji" title="Mostrar/ocultar romaji" aria-pressed="true">Aa</button>
+      <button class="icon-btn" id="btnMusic" title="Música" aria-pressed="true">♫</button>
+      <button class="icon-btn" id="btnSfx" title="Efeitos sonoros" aria-pressed="true">🔊</button>
+    </div>
+  </header>
+
+  <!-- Painel do quebra-cabeça -->
+  <section class="panel" id="panel" aria-live="polite">
+    <div class="panel-top">
+      <span class="badge" id="chunkLevel">Chunks inteiros</span>
+      <span class="clue-count" id="clueCount">Pista 1/12</span>
+    </div>
+    <p class="clue" id="clueText"></p>
+    <h2 class="target" id="targetText"></h2>
+
+    <div class="slots" id="slots"></div>
+    <div class="bank" id="bank"></div>
+
+    <div class="actions">
+      <button class="btn ghost" id="btnHint">💡 Dica <small>-40</small></button>
+      <button class="btn ghost" id="btnListen">🔈 Ouvir</button>
+      <button class="btn primary" id="btnCheck" disabled>Verificar</button>
+    </div>
+  </section>
+
+  <!-- Cartão de chunk após acerto -->
+  <section class="result" id="result" hidden>
+    <div class="result-card">
+      <div class="points" id="resultPoints">+150</div>
+      <div class="chunk-line" id="resultChunks"></div>
+      <p class="romaji-line" id="resultRomaji"></p>
+      <p class="pt-line" id="resultPt"></p>
+      <p class="note" id="resultNote"></p>
+      <button class="btn primary big" id="btnNext">Continuar 🐾</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <!-- Tela inicial -->
+  <section class="screen" id="intro">
+    <div class="screen-card">
+      <div class="logo">
+        <span class="logo-jp">ポンゴ と ほね</span>
+        <h1>Pongo e o <em>Osso Perdido</em></h1>
+      </div>
+      <p class="lead">O Pongo enterrou o osso favorito em algum lugar do jardim… e esqueceu onde! Cada buraco esconde uma pista. Monte as frases em japonês para ele cavar até achar o osso.</p>
+
+      <div class="lesson">
+        <h3>Método Chunking: frases em blocos</h3>
+        <div class="lesson-demo">
+          <div class="chunk topic"><span class="jp">わたし<b>は</b></span><span class="tag">TÓPICO · “quanto a mim…”</span></div>
+          <div class="plus">+</div>
+          <div class="chunk comment"><span class="jp">ポンゴ<b>です</b></span><span class="tag">COMENTÁRIO · “…sou o Pongo”</span></div>
+        </div>
+        <ul class="lesson-list">
+          <li><b class="wa">は</b> (lê-se <i>wa</i>) marca o <b>tema</b> da frase.</li>
+          <li><b class="desu">です</b> (<i>desu</i>) fecha a frase: “é / sou / está”.</li>
+          <li>Você começa com <b>blocos prontos</b> e, a cada buraco, eles se abrem até você montar <b>palavra por palavra</b>.</li>
+        </ul>
+      </div>
+
+      <button class="btn primary big" id="btnStart">Começar a aventura 🦴</button>
+      <p class="fine">Som ligado recomendado · música e efeitos podem ser desligados no topo</p>
+    </div>
+  </section>
+
+  <!-- Tela final -->
+  <section class="screen" id="finale" hidden>
+    <div class="screen-card">
+      <div class="logo">
+        <span class="logo-jp">ほねは ここです！</span>
+        <h1>Osso <em>encontrado!</em></h1>
+      </div>
+      <div class="stars" id="stars"></div>
+      <div class="final-score"><span>Pontuação final</span><strong id="finalScore">0</strong><small id="bestScore"></small></div>
+      <h3>Seu caderno de chunks</h3>
+      <ul class="notebook" id="notebook"></ul>
+      <button class="btn primary big" id="btnAgain">Jogar de novo 🔁</button>
+    </div>
+  </section>
+
+  <div class="loading" id="loading">Carregando o jardim…</div>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
