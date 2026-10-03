@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>A Semana do Finn</title>
+<meta name="description" content="Jogo 3D para aprender os dias da semana em inglês com o tubarãozinho Finn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+:root {
+  --sea-1: #0b4f86;
+  --sea-2: #1d86c4;
+  --ink: #0b2e4f;
+  --panel: rgba(255, 255, 255, 0.93);
+  --panel-ink: #17324d;
+  --accent: #ffcf1f;
+  --accent-2: #ff3d7f;
+  --ok: #22a447;
+  --who: #2f7de1; --verb: #22a447; --comp: #ff8a1f; --when: #8e4fd6; --day: #f2b800;
+  --font: "Baloo 2", "Fredoka", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --panel: rgba(240, 248, 255, 0.94); --sea-1: #073a66; }
+}
+:root[data-theme="dark"] { --panel: rgba(240, 248, 255, 0.94); --sea-1: #073a66; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--sea-1); color: var(--panel-ink); font-family: var(--font); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+#stage { position: fixed; inset: 0; }
+#game { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+.hidden { display: none !important; }
+
+/* ---------- HUD ---------- */
+#hud { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+.hud-top { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.pill { background: var(--panel); border-radius: 18px; padding: 6px 14px; box-shadow: 0 4px 0 rgba(0,0,0,.18); font-weight: 800; }
+.score { font-size: 28px; line-height: 1; color: var(--ink); min-width: 130px; }
+.score small { display: block; font-size: 12px; color: #4a6a88; font-weight: 700; letter-spacing: .04em; }
+#combo { display: inline-block; margin-left: 6px; font-size: 18px; color: #fff; background: var(--accent-2); border-radius: 10px; padding: 0 8px; transform-origin: center; }
+#combo.bump { animation: bump .35s ease; }
+@keyframes bump { 0% { transform: scale(1.8) rotate(-8deg);} 100% { transform: scale(1) rotate(0);} }
+.phase-pill { text-align: center; font-size: 16px; }
+.phase-pill b { display: block; font-size: 20px; color: #0d5ea8; }
+.btns { display: flex; gap: 8px; pointer-events: auto; }
+.icon-btn { width: 46px; height: 46px; border-radius: 14px; border: 0; background: var(--panel); font-size: 22px; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.icon-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.18); }
+
+#panel { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); width: min(760px, calc(100% - 24px)); background: var(--panel); border-radius: 22px; padding: 10px 14px 12px; box-shadow: 0 6px 0 rgba(0,0,0,.2); text-align: center; }
+#ask { font-size: 22px; font-weight: 800; color: #0d5ea8; line-height: 1.1; }
+#pt { font-size: 16px; color: #4a5f74; font-weight: 600; }
+#slots { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 8px; }
+.slot { min-width: 70px; padding: 4px 10px 2px; border-radius: 12px; border: 3px dashed var(--c); color: var(--c); font-weight: 800; font-size: 18px; background: rgba(255,255,255,.6); line-height: 1.1; }
+.slot small { display: block; font-size: 10px; letter-spacing: .06em; opacity: .85; }
+.slot.filled { background: var(--c); color: #fff; border-style: solid; border-color: rgba(0,0,0,.15); animation: pop .4s cubic-bezier(.2,2,.4,1); }
+.slot.next { box-shadow: 0 0 0 3px rgba(255,207,31,.8); }
+@keyframes pop { 0% { transform: scale(.3);} 100% { transform: scale(1);} }
+#goto { margin-top: 6px; font-size: 18px; font-weight: 800; color: #fff; background: linear-gradient(90deg, #ff3d7f, #ff8a1f); border-radius: 12px; padding: 4px 10px; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { transform: scale(1.04);} }
+
+#agenda { position: absolute; right: 10px; top: 72px; background: var(--panel); border-radius: 16px; padding: 8px 10px; font-size: 14px; box-shadow: 0 4px 0 rgba(0,0,0,.18); width: 190px; }
+#agenda h4 { margin: 0 0 4px; font-size: 15px; color: #0d5ea8; }
+#agenda .row { display: flex; justify-content: space-between; gap: 6px; padding: 1px 4px; border-radius: 8px; font-weight: 700; }
+#agenda .row.now { background: #ffe58a; }
+#agenda .row.done { opacity: .5; text-decoration: line-through; }
+
+#legend { position: absolute; left: 10px; top: 84px; display: flex; flex-direction: column; gap: 4px; }
+#legend span { font-size: 11px; font-weight: 800; color: #fff; padding: 1px 8px; border-radius: 8px; letter-spacing: .04em; box-shadow: 0 2px 0 rgba(0,0,0,.2); }
+
+#toast { position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%); font-size: 26px; font-weight: 800; color: #fff; text-shadow: 0 3px 0 #7a1036, 0 0 12px rgba(0,0,0,.4); text-align: center; opacity: 0; transition: opacity .2s; width: 90%; }
+#toast.show { opacity: 1; }
+#hintBtn { position: absolute; right: 12px; bottom: 150px; pointer-events: auto; width: auto; padding: 0 12px; font-size: 16px; font-weight: 800; font-family: var(--font); }
+
+/* ---------- telas ---------- */
+.screen { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 16px; background: radial-gradient(ellipse at 50% 20%, rgba(80,200,255,.55), rgba(5,40,80,.85)); overflow-y: auto; }
+.card { background: var(--panel); border-radius: 28px; padding: 22px 24px; width: min(640px, 100%); text-align: center; box-shadow: 0 10px 0 rgba(0,0,0,.25); max-height: 100%; overflow-y: auto; }
+h1 { margin: 0; font-size: clamp(38px, 8vw, 64px); line-height: .95; color: #ffcf1f; -webkit-text-stroke: 3px #5b1e8f; paint-order: stroke fill; text-shadow: 0 6px 0 #5b1e8f; letter-spacing: .01em; }
+h2 { margin: 4px 0 8px; font-size: clamp(24px, 5vw, 34px); color: #0d5ea8; line-height: 1.05; }
+.sub { font-size: 18px; color: #3a5770; margin: 8px 0 14px; }
+.big-btn { font-family: var(--font); font-size: 26px; font-weight: 800; color: #fff; background: linear-gradient(#ff5d95, #e0245f); border: 0; border-radius: 20px; padding: 10px 34px; cursor: pointer; box-shadow: 0 6px 0 #8e1440; margin: 6px; }
+.big-btn.alt { background: linear-gradient(#3fb4ff, #1677c9); box-shadow: 0 6px 0 #0b4f86; font-size: 20px; padding: 8px 22px; }
+.big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8e1440; }
+.big-btn:disabled { filter: grayscale(1); opacity: .6; cursor: default; }
+#loadbar { height: 14px; background: #d6ebf7; border-radius: 10px; overflow: hidden; margin: 14px auto 4px; width: 80%; }
+#loadbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #22a447, #7cff4f); transition: width .2s; }
+.howto { text-align: left; font-size: 16px; line-height: 1.35; }
+.howto li { margin: 4px 0; }
+.kbd { display: inline-block; border: 2px solid #9db6cc; border-bottom-width: 4px; border-radius: 6px; padding: 0 6px; font-size: 13px; font-weight: 800; background: #fff; }
+.levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 12px 0; }
+.lvl { font-family: var(--font); border: 0; border-radius: 20px; padding: 12px 8px; cursor: pointer; background: linear-gradient(#5fd0ff, #1a8ad6); color: #fff; box-shadow: 0 6px 0 #0b4f86; text-align: center; }
+.lvl b { display: block; font-size: 34px; line-height: 1; }
+.lvl span { display: block; font-size: 17px; font-weight: 800; }
+.lvl em { display: block; font-style: normal; font-size: 13px; opacity: .9; }
+.lvl .stars { font-size: 20px; letter-spacing: 2px; }
+.lvl:disabled { background: linear-gradient(#a9b9c6, #7d8e9c); box-shadow: 0 6px 0 #56626c; cursor: default; }
+.lvl:not(:disabled):active { transform: translateY(4px); box-shadow: 0 2px 0 #0b4f86; }
+.legend-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0; }
+.legend-row span { color: #fff; font-weight: 800; padding: 2px 10px; border-radius: 10px; font-size: 14px; }
+.tip { background: #fff6cf; border-radius: 14px; padding: 8px 12px; font-size: 16px; margin: 10px 0; }
+.stars-big { font-size: 56px; letter-spacing: 6px; margin: 4px 0; }
+.stars-big i { font-style: normal; display: inline-block; animation: starIn .6s cubic-bezier(.2,2,.4,1) both; }
+@keyframes starIn { from { transform: scale(0) rotate(-180deg);} to { transform: scale(1) rotate(0);} }
+.stat { font-size: 20px; font-weight: 700; }
+.small-link { background: none; border: 0; color: #3a5770; text-decoration: underline; font-family: var(--font); font-size: 14px; cursor: pointer; margin-top: 6px; }
+.pt-mini { font-size: 14px; color: #5a7086; }
+
+@media (max-width: 720px) {
+  .score { font-size: 22px; min-width: 96px; }
+  .phase-pill { display: none; }
+  #agenda { top: auto; bottom: 150px; right: 6px; width: 150px; font-size: 11px; padding: 6px; }
+  #agenda h4 { font-size: 12px; }
+  #agenda { width: 118px; }
+  #agenda .pn { display: none; }
+  #legend { display: none; }
+  #ask { font-size: 18px; }
+  #pt { font-size: 14px; }
+  .slot { font-size: 15px; min-width: 52px; padding: 2px 6px; }
+  .icon-btn { width: 40px; height: 40px; font-size: 19px; }
+  #hintBtn { bottom: auto; top: 64px; }
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="game"></canvas>
+  <div id="hud" class="hidden">
+    <div class="hud-top">
+      <div class="pill score"><small>PONTOS</small><span id="score">0</span><span id="combo" class="hidden">x2</span></div>
+      <div class="pill phase-pill"><b id="phaseName">Fase 1</b><span id="roundInfo">Frase 1/2</span></div>
+      <div class="btns">
+        <button class="icon-btn" id="musicBtn" title="Música (M)">🎵</button>
+        <button class="icon-btn" id="pauseBtn" title="Pausar (P)">⏸️</button>
+      </div>
+    </div>
+    <div id="legend"></div>
+    <div id="agenda" class="hidden"></div>
+    <div id="toast"></div>
+    <button class="icon-btn" id="hintBtn" title="Dica (H) custa 100 pontos">💡 Dica</button>
+    <div id="panel">
+      <div id="ask"></div>
+      <div id="pt"></div>
+      <div id="slots"></div>
+      <div id="goto" class="hidden"></div>
+    </div>
+  </div>
+</div>
+<canvas id="fx"></canvas>
+
+<!-- tela inicial -->
+<div class="screen" id="titleScreen">
+  <div class="card">
+    <h1>A Semana<br>do Finn</h1>
+    <h2 style="margin-top:10px">Days of the Week 🦈</h2>
+    <p class="sub">Ajude o tubarãozinho <b>Finn</b> a ir aos compromissos da semana montando frases em inglês!</p>
+    <div id="loadbar"><i></i></div>
+    <div class="pt-mini" id="loadtxt">Carregando o oceano 3D…</div>
+    <div style="margin-top:12px">
+      <button class="big-btn" id="playBtn" disabled>▶ JOGAR</button>
+      <button class="big-btn alt" id="howBtn">Como jogar</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen hidden" id="howScreen">
+  <div class="card">
+    <h2>Como jogar</h2>
+    <ul class="howto">
+      <li>🦈 Nade com <span class="kbd">←</span><span class="kbd">↑</span><span class="kbd">→</span><span class="kbd">↓</span> ou <span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span>. No celular/tablet ou com o mouse: <b>segure o dedo/clique</b> onde quer nadar.</li>
+      <li>⚡ <span class="kbd">ESPAÇO</span> (ou toque duplo) = turbo!</li>
+      <li>🫧 Toque nas bolhas de palavras <b>na ordem certa</b> para montar a frase. As cores seguem a aula:</li>
+    </ul>
+    <div class="legend-row">
+      <span style="background:var(--who)">AZUL • quem</span><span style="background:var(--verb)">VERDE • ação</span><span style="background:var(--comp)">LARANJA • complemento</span><span style="background:var(--when)">ROXO • quando</span><span style="background:var(--day)">AMARELO • dia</span>
+    </div>
+    <ul class="howto">
+      <li>📍 Com a frase completa, leve o Finn até o <b>compromisso</b> (siga a seta e a luz).</li>
+      <li>⭐ Acertos seguidos multiplicam os pontos (combo). Erros tiram pontos. Pérolas valem bônus.</li>
+      <li>🪼 Cuidado com as águas-vivas! • 💡 <span class="kbd">H</span> = dica (custa 100 pontos) • <span class="kbd">P</span> = pausa • <span class="kbd">M</span> = música</li>
+    </ul>
+    <button class="big-btn" id="howBack">OK!</button>
+  </div>
+</div>
+
+<div class="screen hidden" id="levelScreen">
+  <div class="card" style="width:min(760px,100%)">
+    <h2>Escolha a fase</h2>
+    <div class="pt-mini">Recorde: <b id="bestScore">0</b> pontos</div>
+    <div class="levels" id="levels"></div>
+    <button class="big-btn alt" id="levelBack">⬅ Voltar</button>
+    <br><button class="small-link" id="unlockAll">Modo professor: liberar todas as fases</button>
+  </div>
+</div>
+
+<div class="screen hidden" id="introScreen">
+  <div class="card">
+    <div class="pt-mini" id="introNum">FASE 1 DE 6</div>
+    <h2 id="introTitle"></h2>
+    <div style="font-size:22px;font-weight:800;color:#ff3d7f" id="introEn"></div>
+    <p class="sub" id="introGoal"></p>
+    <div class="tip" id="introTip"></div>
+    <div class="legend-row" id="introLegend"></div>
+    <button class="big-btn" id="introGo">VAMOS! 🦈</button>
+  </div>
+</div>
+
+<div class="screen hidden" id="pauseScreen">
+  <div class="card">
+    <h2>Pausa</h2>
+    <button class="big-btn" id="resumeBtn">▶ Continuar</button><br>
+    <button class="big-btn alt" id="restartBtn">↻ Recomeçar fase</button>
+    <button class="big-btn alt" id="menuBtn">☰ Fases</button>
+  </div>
+</div>
+
+<div class="screen hidden" id="completeScreen">
+  <div class="card">
+    <h2 id="compTitle">Fase completa!</h2>
+    <div class="stars-big" id="compStars"></div>
+    <div class="stat" id="compScore"></div>
+    <div class="pt-mini" id="compInfo"></div>
+    <div class="tip" id="compPhrase"></div>
+    <button class="big-btn" id="nextBtn">Próxima fase ▶</button>
+    <button class="big-btn alt" id="compMenu">☰ Fases</button>
+  </div>
+</div>
+
+<div class="screen hidden" id="finalScreen">
+  <div class="card">
+    <h1 style="font-size:clamp(34px,7vw,56px)">HURRAY!</h1>
+    <h2>Great job, everyone! 🏆</h2>
+    <p class="sub">O Finn foi a todos os compromissos da semana!</p>
+    <div class="stars-big" id="finalStars"></div>
+    <div class="stat" id="finalScore"></div>
+    <div class="tip">Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday. <b>One more time!</b></div>
+    <button class="big-btn" id="finalAgain">Jogar de novo</button>
+    <button class="big-btn alt" id="finalMenu">☰ Fases</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
