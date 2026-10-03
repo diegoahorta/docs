@@ -1,0 +1,2005 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dicionário ODU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Mulish:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: brand bar → search band → two panes (results list | sticky entry sheet); on phones the entry sheet opens full-screen. */
+:root {
+  --bg: #F5F7FB;
+  --surface: #FFFFFF;
+  --surface-2: #EEF1F8;
+  --ink: #0A1540;
+  --ink-2: #4E577C;
+  --ink-3: #7C84A3;
+  --line: #DCE1EE;
+  --teal: #0E8A8A;
+  --coral: #D9604F;
+  --rose: #C8394F;
+  --navy: #1A2B6B;
+  --gold: #A9851F;
+  --ring-a: #D13B50;
+  --ring-b: #3A8AAE;
+  --focus: #0E8A8A;
+  --shadow: 0 1px 2px rgba(10, 21, 64, .06), 0 8px 24px rgba(10, 21, 64, .06);
+  --f-brand: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Mulish", "Segoe UI", system-ui, sans-serif;
+  --f-jp: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #090F2B; --surface: #111A3F; --surface-2: #18234F; --ink: #E9EDF8; --ink-2: #AEB6D4; --ink-3: #7F88AD;
+    --line: #26315F; --teal: #3CC3C0; --coral: #F28C7C; --rose: #EF6B82; --navy: #95A8F2; --gold: #E2C062;
+    --ring-a: #E5546A; --ring-b: #4FA7CC; --focus: #3CC3C0; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #090F2B; --surface: #111A3F; --surface-2: #18234F; --ink: #E9EDF8; --ink-2: #AEB6D4; --ink-3: #7F88AD;
+  --line: #26315F; --teal: #3CC3C0; --coral: #F28C7C; --rose: #EF6B82; --navy: #95A8F2; --gold: #E2C062;
+  --ring-a: #E5546A; --ring-b: #4FA7CC; --focus: #3CC3C0; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
+.jp { font-family: var(--f-jp); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; }
+
+/* brand bar */
+.bar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; gap: 18px; padding-block: 12px; flex-wrap: wrap; }
+.logo { height: 46px; width: auto; color: var(--ink); display: block; }
+.bar .tag { font-family: var(--f-brand); font-weight: 600; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); border-left: 1px solid var(--line); padding-left: 18px; }
+.bar .spacer { flex: 1; }
+.bar .count { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* search band */
+.band { padding-block: 28px 18px; }
+.band h1 { font-family: var(--f-brand); font-weight: 800; font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; margin: 0 0 4px; letter-spacing: -.01em; text-wrap: balance; }
+.band h1 .jp { font-weight: 700; color: var(--rose); margin-right: .3em; }
+.band p.lead { margin: 0 0 18px; color: var(--ink-2); max-width: 62ch; }
+.searchbox { position: relative; }
+.searchbox input { width: 100%; font-size: 20px; padding: 16px 52px 16px 52px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); box-shadow: var(--shadow); transition: border-color .15s; }
+.searchbox input::placeholder { color: var(--ink-3); font-size: 16px; }
+.searchbox input:focus { outline: none; border-color: var(--teal); }
+.searchbox svg.mag { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-3); pointer-events: none; }
+.searchbox .clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: 0; background: var(--surface-2); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; color: var(--ink-2); font-size: 18px; line-height: 1; }
+.hint { margin-top: 8px; font-size: 13px; color: var(--ink-2); min-height: 1.4em; }
+.hint .jp { font-size: 15px; color: var(--ink); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-top: 12px; }
+.seg { display: inline-flex; background: var(--surface-2); border-radius: 999px; padding: 3px; }
+.seg button { border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.controls select { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 10px; font-size: 13px; max-width: 100%; }
+.favtoggle { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.favtoggle[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.kanarow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; align-items: center; }
+.kanarow span.lbl { font-size: 12px; color: var(--ink-3); margin-right: 4px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.kanarow button { font-family: var(--f-jp); font-size: 16px; width: 36px; height: 36px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; cursor: pointer; }
+.kanarow button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* panes */
+.panes { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px; padding-block: 8px 48px; align-items: start; }
+.list { min-width: 0; }
+.listhead { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 0 4px 8px; font-size: 13px; color: var(--ink-2); }
+.listhead b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.results { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.results li + li { border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; width: 100%; text-align: left; border: 0; background: transparent; padding: 11px 14px; cursor: pointer; }
+.row:hover { background: var(--surface-2); }
+.row[aria-current="true"] { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--rose); }
+.row .hw { font-family: var(--f-jp); font-size: 20px; font-weight: 700; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; }
+.row .hw small { font-size: 13px; font-weight: 400; color: var(--ink-2); margin-left: 8px; }
+.row .cls { font-size: 11px; color: var(--ink-3); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; align-self: center; }
+.row .gl { grid-column: 1 / -1; font-size: 14px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .gl .rm { color: var(--teal); font-weight: 600; margin-right: 6px; }
+.row .star { color: var(--gold); margin-left: 6px; font-size: 13px; }
+.more { display: block; width: 100%; margin-top: 10px; padding: 10px; border: 1px dashed var(--line); background: transparent; border-radius: var(--r); cursor: pointer; color: var(--ink-2); font-weight: 600; }
+.empty { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; color: var(--ink-2); }
+.empty b { color: var(--ink); }
+.wotd-mobile { display: none; }
+
+/* entry sheet */
+.sheet { min-width: 0; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); max-height: calc(100vh - 32px); overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.sheet-in { padding: 24px 26px 28px; display: grid; gap: 20px; }
+.btn.back { display: none; }
+[hidden] { display: none !important; }
+input[type=search]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.eyebrow { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-size: 12px; }
+.eyebrow .kind { font-family: var(--f-brand); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--rose); margin-right: 4px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 12px; color: var(--ink-2); background: transparent; cursor: pointer; white-space: nowrap; }
+.chip:hover { border-color: var(--teal); color: var(--teal); }
+.chip.g-A1 { border-color: color-mix(in srgb, var(--teal) 45%, var(--line)); }
+.chip.g-A2 { border-color: color-mix(in srgb, var(--navy) 45%, var(--line)); }
+.chip.g-AULA { border-color: color-mix(in srgb, var(--rose) 45%, var(--line)); }
+.chip.g-Y { border-color: color-mix(in srgb, var(--gold) 50%, var(--line)); }
+
+.head { display: grid; gap: 10px; }
+.grid-word { display: flex; flex-wrap: wrap; gap: 0; }
+.cell { --s: 74px; width: var(--s); height: var(--s); display: grid; place-items: center; font-family: var(--f-jp); font-weight: 500; font-size: calc(var(--s) * .66); line-height: 1; border: 1.5px solid color-mix(in srgb, var(--rose) 55%, var(--line)); margin: 0 -1.5px -1.5px 0; position: relative; color: var(--ink);
+  background:
+    linear-gradient(to right, transparent calc(50% - .5px), color-mix(in srgb, var(--rose) 22%, transparent) calc(50% - .5px), color-mix(in srgb, var(--rose) 22%, transparent) calc(50% + .5px), transparent calc(50% + .5px)),
+    linear-gradient(to bottom, transparent calc(50% - .5px), color-mix(in srgb, var(--rose) 22%, transparent) calc(50% - .5px), color-mix(in srgb, var(--rose) 22%, transparent) calc(50% + .5px), transparent calc(50% + .5px)),
+    var(--surface); }
+.cell.sp { border-color: transparent; background: transparent; width: calc(var(--s) * .35); }
+.grid-word.sm .cell { --s: 54px; }
+.grid-word.xs .cell { --s: 40px; }
+.reading { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.reading .kana { font-family: var(--f-jp); font-size: 22px; font-weight: 500; }
+.reading .rm { font-family: var(--f-brand); font-weight: 600; color: var(--teal); font-size: 16px; letter-spacing: .02em; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--ink); }
+.btn:hover { border-color: var(--teal); }
+.btn svg { width: 16px; height: 16px; }
+.btn.on { color: var(--gold); border-color: var(--gold); }
+
+.section-t { font-family: var(--f-brand); font-weight: 700; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 8px; }
+.conj-tbl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.conj-tbl > div { padding: 10px 14px; min-width: 0; }
+.conj-tbl > div + div { border-left: 1px solid var(--line); }
+.conj-tbl .k { font-size: 11px; color: var(--ink-3); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.conj-tbl .v { font-family: var(--f-jp); font-size: 19px; font-weight: 700; overflow-wrap: anywhere; }
+.conj-tbl .v small { display: block; font-family: var(--f-brand); font-size: 12px; color: var(--teal); font-weight: 600; }
+.conj-tbl .rule { grid-column: 1 / -1; border-left: 0 !important; border-top: 1px solid var(--line); background: var(--surface-2); font-size: 13px; color: var(--ink-2); }
+
+.senses { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 14px; }
+.senses li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 2px 8px; }
+.senses li::before { content: counter(s); font-family: var(--f-brand); font-weight: 800; color: var(--rose); font-size: 15px; line-height: 1.5; grid-row: span 3; }
+.senses .pt { font-size: 18px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+.senses .uso { font-family: var(--f-jp); font-size: 15px; color: var(--teal); }
+.senses .uso::before { content: "padrão  "; font-family: var(--f-body); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.senses .nota { font-size: 14px; color: var(--ink-2); }
+.senses .src { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+
+/* chunk blocks (Método ODU Chunking) */
+.chunks { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+.blk { --c: var(--navy); display: grid; justify-items: center; align-content: center; gap: 2px; padding: 6px 12px 5px; border-radius: 8px; background: color-mix(in srgb, var(--c) 13%, var(--surface)); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); border-bottom-width: 3px; font-family: var(--f-jp); font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1.25; cursor: default; }
+.blk em { font-style: normal; font-family: var(--f-brand); font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: var(--c); text-transform: uppercase; }
+button.blk { cursor: pointer; }
+button.blk:hover { background: color-mix(in srgb, var(--c) 22%, var(--surface)); }
+.blk.noun { --c: var(--navy); } .blk.part { --c: var(--coral); } .blk.conj-tbl { --c: var(--teal); } .blk.adj { --c: var(--rose); } .blk.mod { --c: var(--gold); }
+.chunks.small .blk { font-size: 15px; padding: 3px 8px 2px; border-bottom-width: 2px; }
+.chunks.small .blk em { display: none; }
+.phr { display: grid; gap: 4px; width: 100%; text-align: left; border: 1px solid var(--line); background: transparent; border-radius: var(--r); padding: 10px 12px; cursor: pointer; }
+.phr:hover { border-color: var(--teal); }
+.phr .t { font-size: 14px; color: var(--ink-2); }
+.phrlist { display: grid; gap: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.translation { font-size: 20px; font-weight: 600; }
+.wordlinks { display: flex; flex-wrap: wrap; gap: 8px; }
+.wordlinks button { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 10px; cursor: pointer; text-align: left; }
+.wordlinks button:hover { border-color: var(--teal); }
+.wordlinks .jp { font-weight: 700; font-size: 16px; }
+.wordlinks small { display: block; color: var(--ink-2); font-size: 12px; }
+.wotd-label { display: inline-flex; gap: 8px; align-items: center; font-family: var(--f-brand); font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
+.wotd-label .jp { letter-spacing: 0; font-size: 14px; }
+.foot { border-top: 1px solid var(--line); color: var(--ink-3); font-size: 12.5px; padding-block: 18px 28px; }
+.foot .wrap { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; z-index: 50; }
+
+@media (max-width: 860px) {
+  .panes { grid-template-columns: minmax(0, 1fr); }
+  .sheet { display: none; }
+  .sheet.open { display: block; position: fixed; inset: 0; max-height: none; border-radius: 0; border: 0; z-index: 40; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .sheet .btn.back { display: inline-flex; justify-self: start; }
+  .sheet-in { padding: 16px 16px 32px; }
+  .wotd-mobile { display: block; margin-bottom: 12px; }
+  .bar .tag { display: none; }
+  .wrap { padding-inline: 16px; }
+  .cell { --s: 60px; }
+  .grid-word.sm .cell { --s: 46px; }
+  .grid-word.xs .cell { --s: 34px; }
+  .searchbox input { font-size: 18px; padding: 14px 46px 14px 46px; }
+  .searchbox svg.mag { left: 15px; }
+}
+@media (max-width: 420px) {
+  .conj-tbl { grid-template-columns: minmax(0, 1fr); }
+  .conj-tbl > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .kanarow button { width: 32px; height: 32px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <svg class="logo" viewBox="0 0 300 172" role="img" aria-label="ODU Creative">
+      <defs>
+        <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="var(--ring-a)"/>
+          <stop offset=".45" stop-color="var(--ring-a)"/>
+          <stop offset=".62" stop-color="#6A4A86"/>
+          <stop offset=".75" stop-color="var(--ring-b)"/>
+          <stop offset="1" stop-color="var(--ring-b)"/>
+        </linearGradient>
+        <mask id="hole"><rect width="120" height="120" fill="#fff"/><ellipse cx="56" cy="47" rx="26" ry="27" fill="#000"/></mask>
+      </defs>
+      <circle cx="50" cy="52" r="50" fill="url(#ring)" mask="url(#hole)"/>
+      <text x="110" y="100" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="128" fill="currentColor" textLength="190" lengthAdjust="spacingAndGlyphs">DU</text>
+      <text x="0" y="168" font-family="Montserrat, Arial, sans-serif" font-weight="500" font-size="52" fill="currentColor" textLength="300" lengthAdjust="spacingAndGlyphs">CREATIVE</text>
+    </svg>
+    <span class="tag">Idiomas • Educação • Cultura • Design</span>
+    <span class="spacer"></span>
+    <span class="count" id="count"></span>
+  </div>
+</header>
+
+<section class="band">
+  <div class="wrap">
+    <h1><span class="jp">辞書</span>Dicionário Japonês ⇄ Português</h1>
+    <p class="lead">Vocabulário dos livros A1 e A2, da aula いろいろなぶん e da lista Yotsubato. Busque em japonês (kana ou kanji), em romaji ou em português.</p>
+    <form class="searchbox" id="searchform" role="search">
+      <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" aria-label="Buscar palavra" placeholder="Ex.: たべる, 学校, neko, lavar, obrigado">
+      <button type="button" class="clear" id="clear" aria-label="Limpar busca" hidden>×</button>
+    </form>
+    <div class="hint" id="hint" aria-live="polite"></div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Direção da busca" id="mode">
+        <button type="button" data-mode="all" aria-pressed="true">Tudo</button>
+        <button type="button" data-mode="jp">Japonês → PT</button>
+        <button type="button" data-mode="pt">PT → Japonês</button>
+      </div>
+      <select id="fgroup" aria-label="Material"></select>
+      <select id="flesson" aria-label="Lição ou categoria" hidden></select>
+      <select id="fcls" aria-label="Classe gramatical"></select>
+      <button type="button" class="favtoggle" id="ffav" aria-pressed="false">★ Favoritas</button>
+    </div>
+    <div class="kanarow" id="kanarow"><span class="lbl">Índice</span></div>
+  </div>
+</section>
+
+<main class="wrap panes">
+  <section class="list" aria-label="Resultados">
+    <div class="wotd-mobile" id="wotdMobile"></div>
+    <div class="listhead"><span id="listtitle"></span><span id="listcount"></span></div>
+    <ul class="results" id="results"></ul>
+    <div class="empty" id="empty" hidden></div>
+    <button type="button" class="more" id="more" hidden>Mostrar mais</button>
+  </section>
+  <article class="sheet" id="sheet" aria-live="polite"><div class="sheet-in" id="sheetIn"></div></article>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>ODU Creative · Prof. Diego Horta · Instagram @diegoahorta</span>
+    <span>Fontes: Livro de vocabulários A1 e A2 · Aula いろいろなぶん (ODU Creative) · Lista Japonês com Yotsubato</span>
+  </div>
+</footer>
+<div class="toast" id="toast" hidden></div>
+
+<script type="text/plain" id="dict-data">
+# Formato: kana|kanji|português|classe|uso|nota
+# Classes: s substantivo · v1/v2/v3 verbo (grupo) · ai adj-i · ana adj-na · adv · pron · int interrogativo · expr · suf · num · conj
+@A1-1
+わたし|私|Eu|pron
+あなた||Você|pron
+あの ひと|あの人|Aquela pessoa|pron||Forma polida: あの かた (あの方).
+あの かた|あの方|Aquela pessoa (forma polida de あの ひと)|pron
+～さん||Sr., Sra., Srta. (sufixo de polidez acrescentado ao nome)|suf
+～ちゃん||Sufixo carinhoso acrescentado ao nome de crianças, no lugar de ～さん|suf
+～じん|～人|Sufixo de nacionalidade|suf||Ex.: アメリカじん, americano.
+せんせい|先生|Professor, instrutor|s||Não se usa para falar da própria profissão.
+きょうし|教師|Professor, instrutor|s
+がくせい|学生|Estudante|s
+かいしゃいん|会社員|Funcionário de uma companhia|s
+しゃいん|社員|Funcionário da companhia ～|s||Usa-se com o nome da empresa. Ex.: IMCの しゃいん.
+ぎんこういん|銀行員|Bancário|s
+いしゃ|医者|Médico|s
+けんきゅうしゃ|研究者|Pesquisador|s
+だいがく|大学|Universidade, faculdade|s
+びょういん|病院|Hospital|s
+だれ|誰|Quem|int||Forma polida: どなた.
+どなた||Quem (forma polida de だれ)|int
+～さい|～歳|～ anos (de idade)|suf
+なんさい|何歳|Quantos anos|int||Forma polida: おいくつ.
+おいくつ||Quantos anos (forma polida de なんさい)|int
+はい||Sim|expr
+いいえ||Não|expr
+@A1-2
+これ||Isto (algo próximo ao falante)|pron
+それ||Isso (algo próximo ao ouvinte)|pron
+あれ||Aquilo (algo distante do falante e do ouvinte)|pron
+この ～||Este(s) ～, esta(s) ～|pron
+その ～||Esse(s) ～, essa(s) ～|pron
+あの ～||Aquele(s) ～, aquela(s) ～|pron
+ほん|本|Livro|s
+じしょ|辞書|Dicionário|s
+ざっし|雑誌|Revista|s
+しんぶん|新聞|Jornal|s
+ノート||Caderno|s
+てちょう|手帳|Agenda|s
+めいし|名刺|Cartão de visita|s
+カード||Cartão|s
+えんぴつ|鉛筆|Lápis|s
+ボールペン||Caneta esferográfica|s
+シャープペンシル||Lapiseira|s
+かぎ|鍵|Chave|s
+とけい|時計|Relógio|s
+かさ|傘|Guarda-chuva|s
+かばん||Mala, pasta, bolsa|s
+CD||CD, disco compacto|s
+テレビ||Televisor|s
+ラジオ||Rádio|s
+カメラ||Câmera, máquina fotográfica|s
+コンピューター||Computador|s
+くるま|車|Automóvel, carro|s
+つくえ|机|Escrivaninha|s
+いす||Cadeira|s
+チョコレート||Chocolate|s
+コーヒー||Café|s
+おみやげ|お土産|Suvenir, lembrança|s
+えいご|英語|Idioma inglês|s
+にほんご|日本語|Idioma japonês|s
+～ご|～語|Idioma ～|suf
+なん|何|Que, o que|int||Leitura usada antes de certos sons (なんさい, なんじ). Veja também なに.
+そう||Assim, é (concordância: そうです)|adv
+@A1-3
+ここ||Aqui|pron
+そこ||Aí|pron
+あそこ||Ali, lá|pron
+どこ||Onde|int
+こちら||Por aqui, aqui (forma polida de ここ)|pron
+そちら||Por aí, aí (forma polida de そこ)|pron
+あちら||Por lá, ali, lá (forma polida de あそこ)|pron
+どちら||Onde (forma polida de どこ)|int
+きょうしつ|教室|Sala de aula|s
+しょくどう|食堂|Refeitório, cantina|s
+じむしょ|事務所|Escritório|s
+かいぎしつ|会議室|Sala de reuniões|s
+うけつけ|受付|Recepção|s
+ロビー||Lobby, salão, vestíbulo|s
+へや|部屋|Sala, quarto (cômodo)|s
+トイレ||Banheiro, lavabo|s||Também: おてあらい (お手洗い).
+おてあらい|お手洗い|Banheiro, lavabo (mais polido que トイレ)|s
+かいだん|階段|Escada|s
+エレベーター||Elevador|s
+エスカレーター||Escada rolante|s
+じどうはんばいき|自動販売機|Máquina de venda automática|s
+でんわ|電話|Telefone, ligação telefônica|s
+くに|国|País|s||おくに (お国): o país de outra pessoa (polido).
+かいしゃ|会社|Companhia, empresa|s
+うち||Casa, lar|s
+くつ|靴|Sapatos|s
+ネクタイ||Gravata|s
+ワイン||Vinho|s
+ちか|地下|Subsolo|s
+うりば|売り場|Local de venda, balcão (de uma loja de departamentos)|s
+～かい|～階|～º andar|suf||Às vezes lido ～がい: さんがい (3º andar).
+なんがい|何階|Que andar|int
+～えん|～円|～ iene(s)|suf
+いくら||Quanto custa|int
+ひゃく|百|Cem (100)|num
+せん|千|Mil (1.000)|num
+まん|万|Dez mil (10.000)|num
+@A1-4
+おきます|起きます|Acordar, levantar-se|v2
+ねます|寝ます|Dormir, deitar-se|v2
+はたらきます|働きます|Trabalhar|v1
+やすみます|休みます|Descansar, tirar folga|v1
+べんきょうします|勉強します|Estudar|v3
+おわります|終わります|Terminar, acabar|v1
+デパート||Loja de departamentos|s
+ぎんこう|銀行|Banco|s
+ゆうびんきょく|郵便局|Agência de correio|s
+としょかん|図書館|Biblioteca|s
+びじゅつかん|美術館|Museu de arte|s
+いま|今|Agora|s
+～じ|～時|～ hora(s)|suf
+～ふん|～分|～ minuto(s)|suf||Também ～ぷん: いっぷん, さんぷん.
+はん|半|Meia (e meia)|s
+なんじ|何時|Que horas|int
+なんぷん|何分|Quantos minutos|int
+ごぜん|午前|Da manhã (a.m.)|s
+ごご|午後|Da tarde, da noite (p.m.)|s
+あさ|朝|Manhã|s
+ひる|昼|Meio-dia, período após o almoço|s
+ばん|晩|Noite|s
+よる|夜|Noite|s
+おととい|一昨日|Anteontem|s
+きのう|昨日|Ontem|s
+きょう|今日|Hoje|s
+あした|明日|Amanhã|s
+あさって|明後日|Depois de amanhã|s
+けさ|今朝|Esta manhã|s
+こんばん|今晩|Esta noite|s
+やすみ|休み|Folga, feriado, férias|s
+ひるやすみ|昼休み|Hora do almoço|s
+しけん|試験|Exame, teste|s
+かいぎ|会議|Reunião, conferência|s|～を します|かいぎを します: fazer uma reunião.
+えいが|映画|Filme|s
+まいあさ|毎朝|Todas as manhãs|adv
+まいばん|毎晩|Todas as noites|adv
+まいにち|毎日|Todos os dias|adv
+～から||De ～, a partir de ～|conj
+～まで||Até ～|conj
+～と ～||E (conecta substantivos)|conj
+なんようび|何曜日|Que dia da semana|int
+@A1-5
+いきます|行きます|Ir|v1
+きます|来ます|Vir|v3
+かえります|帰ります|Voltar, retornar|v1
+がっこう|学校|Escola|s
+スーパー||Supermercado|s
+えき|駅|Estação|s
+ひこうき|飛行機|Avião|s
+ふね|船|Navio, barco|s
+でんしゃ|電車|Trem|s
+ちかてつ|地下鉄|Metrô|s
+しんかんせん|新幹線|Shinkansen, trem-bala|s
+バス||Ônibus|s
+タクシー||Táxi|s
+じてんしゃ|自転車|Bicicleta|s
+あるいて|歩いて|A pé|adv||あるいて いきます: ir a pé.
+ひと|人|Pessoa|s
+ともだち|友達|Amigo|s
+かれ|彼|Ele, namorado|pron
+かのじょ|彼女|Ela, namorada|pron
+かぞく|家族|Família|s
+ひとりで|一人で|Sozinho, só|adv
+せんしゅう|先週|Semana passada|s
+こんしゅう|今週|Esta semana|s
+らいしゅう|来週|Semana que vem|s
+せんげつ|先月|Mês passado|s
+こんげつ|今月|Este mês|s
+らいげつ|来月|Mês que vem|s
+きょねん|去年|Ano passado|s
+ことし|今年|Este ano|s
+らいねん|来年|Ano que vem|s
+～ねん|～年|Ano ～|suf
+なんねん|何年|Que ano|int
+～がつ|～月|Mês de ～|suf||Ex.: いちがつ (janeiro), くがつ (setembro).
+なんがつ|何月|Que mês|int
+いつ||Quando|int
+たんじょうび|誕生日|Aniversário|s
+ついたち|1日|Dia 1º (do mês)|s
+ふつか|2日|Dia 2; dois dias|s
+みっか|3日|Dia 3; três dias|s
+よっか|4日|Dia 4; quatro dias|s
+いつか|5日|Dia 5; cinco dias|s
+むいか|6日|Dia 6; seis dias|s
+なのか|7日|Dia 7; sete dias|s
+ようか|8日|Dia 8; oito dias|s
+ここのか|9日|Dia 9; nove dias|s
+とおか|10日|Dia 10; dez dias|s
+じゅうよっか|14日|Dia 14; quatorze dias|s
+はつか|20日|Dia 20; vinte dias|s
+にじゅうよっか|24日|Dia 24; vinte e quatro dias|s
+～にち|～日|Dia ～; ～ dia(s)|suf
+なんにち|何日|Que dia; quantos dias|int
+@A1-6
+たべます|食べます|Comer|v2
+のみます|飲みます|Tomar, beber|v1
+すいます|吸います|Fumar (cigarros)|v1|たばこを～
+みます|見ます|Ver, assistir a, olhar|v2
+ききます|聞きます|Ouvir, escutar|v1
+よみます|読みます|Ler|v1
+かきます|書きます|Escrever|v1||No sentido de desenhar/pintar, escreve-se em hiragana: かきます.
+かいます|買います|Comprar|v1
+とります|撮ります|Tirar (fotografias)|v1|しゃしんを～
+します||Fazer|v3
+あいます|会います|Encontrar-se com (alguém)|v1|ともだちに～
+ごはん|ご飯|Refeição, arroz (cozido)|s
+あさごはん|朝ごはん|Café da manhã|s
+ひるごはん|昼ごはん|Almoço|s
+ばんごはん|晩ごはん|Jantar|s
+パン||Pão|s
+たまご|卵|Ovo|s
+にく|肉|Carne|s
+さかな|魚|Peixe|s
+やさい|野菜|Verduras e legumes|s
+くだもの|果物|Frutas|s
+みず|水|Água|s
+おちゃ|お茶|Chá, chá verde|s
+こうちゃ|紅茶|Chá preto|s
+ぎゅうにゅう|牛乳|Leite|s||Também: ミルク.
+ジュース||Suco|s
+ビール||Cerveja|s
+さけ|酒|Bebida alcoólica, saquê|s||Forma polida: おさけ (お酒).
+たばこ||Cigarro|s
+てがみ|手紙|Carta|s
+レポート||Relatório|s
+しゃしん|写真|Fotografia|s
+ビデオ||Vídeo; aparelho de vídeo|s
+みせ|店|Loja, estabelecimento comercial|s
+にわ|庭|Jardim|s
+しゅくだい|宿題|Lição de casa|s|～を します|しゅくだいを します: fazer a lição de casa.
+テニス||Tênis|s|～を します|テニスを します: jogar tênis.
+サッカー||Futebol|s|～を します|サッカーを します: jogar futebol.
+はなみ|花見|Apreciar as cerejeiras em flor|s||Forma polida: おはなみ (お花見).
+なに|何|Que, o que|int||Veja também なん.
+いっしょに|一緒に|Juntos|adv
+ちょっと||Um pouco|adv
+いつも||Sempre, normalmente|adv
+ときどき|時々|Às vezes|adv
+それから||Depois disso, em seguida|conj
+ええ||Sim (informal)|expr
+いいですね||Boa ideia! / Que bom!|expr
+わかりました|分かりました|Entendi|expr
+@A1-7
+きります|切ります|Cortar, fatiar|v1
+おくります|送ります|Enviar, remeter|v1
+あげます||Dar|v2||Para pessoas. Para animais e plantas usa-se やる.
+もらいます||Receber, ganhar|v1
+かします|貸します|Emprestar|v1
+かります|借ります|Pegar emprestado|v2
+おしえます|教えます|Ensinar|v2
+ならいます|習います|Aprender|v1
+かけます||Dar (um telefonema)|v2|でんわを～
+て|手|Mão|s
+はし|箸|Pauzinhos para comer (hashi)|s
+スプーン||Colher|s
+ナイフ||Faca|s
+フォーク||Garfo|s
+はさみ||Tesoura|s
+パソコン||Computador pessoal, notebook|s
+ケータイ||Telefone celular|s
+メール||E-mail|s
+ねんがじょう|年賀状|Cartão de felicitação de ano-novo|s
+パンチ||Furador de papel|s
+ホッチキス||Grampeador|s
+セロテープ||Fita adesiva, durex|s
+けしゴム|消しゴム|Borracha|s
+かみ|紙|Papel|s
+はな|花|Flor|s
+シャツ||Camisa|s
+プレゼント||Presente|s
+にもつ|荷物|Pacote, bagagem, carga|s
+おかね|お金|Dinheiro|s
+きっぷ|切符|Bilhete, passagem|s
+クリスマス||Natal|s
+ちち|父|(meu) pai|s
+はは|母|(minha) mãe|s
+おとうさん|お父さん|Pai (de outra pessoa); também para chamar o próprio pai|s
+おかあさん|お母さん|Mãe (de outra pessoa); também para chamar a própria mãe|s
+もう||Já|adv
+まだ||Ainda (não)|adv
+これから||A partir de agora, logo|adv
+@A1-8
+ハンサム||Bonito (homem)|ana
+きれい||Bonito; limpo|ana
+しずか|静か|Silencioso, tranquilo|ana
+にぎやか||Animado, movimentado|ana
+ゆうめい|有名|Famoso|ana
+しんせつ|親切|Gentil|ana
+げんき|元気|Saudável, bem-disposto|ana
+ひま|暇|Livre, com tempo de sobra|ana
+べんり|便利|Prático, conveniente|ana
+すてき||Bonito, maravilhoso|ana
+おおきい|大きい|Grande|ai
+ちいさい|小さい|Pequeno|ai
+あたらしい|新しい|Novo|ai
+ふるい|古い|Velho, antigo (não se usa para pessoas)|ai
+いい||Bom|ai||Forma de base: よい (良い).
+わるい|悪い|Ruim, mau|ai
+あつい|暑い・熱い|Quente|ai||暑い: clima quente. 熱い: objeto quente ao toque.
+さむい|寒い|Frio (temperatura do ambiente)|ai
+つめたい|冷たい|Frio, gelado (ao toque)|ai
+むずかしい|難しい|Difícil|ai
+やさしい|易しい|Fácil|ai
+たかい|高い|Caro (preço); alto (prédio, montanha)|ai
+やすい|安い|Barato|ai
+ひくい|低い|Baixo|ai
+おもしろい|面白い|Interessante, engraçado|ai
+おいしい||Delicioso, gostoso|ai
+いそがしい|忙しい|Ocupado|ai
+たのしい|楽しい|Divertido, agradável|ai
+しろい|白い|Branco|ai
+くろい|黒い|Preto|ai
+あかい|赤い|Vermelho|ai
+あおい|青い|Azul|ai
+さくら|桜|Flor de cerejeira|s
+やま|山|Montanha|s
+まち|町|Cidade, vila|s
+たべもの|食べ物|Comida|s
+ところ|所|Lugar, local|s
+りょう|寮|Dormitório|s
+レストラン||Restaurante|s
+せいかつ|生活|Vida cotidiana|s
+しごと|仕事|Trabalho, profissão|s|～を します|Forma polida: おしごと (お仕事).
+どう||Como|int
+どんな ～||Que tipo de ～|int
+とても||Muito|adv
+あまり||Não muito (com forma negativa)|adv
+そして||E (conecta orações)|conj
+～が、～||～, mas ～|conj
+@A1-9
+わかります|分かります|Entender|v1
+あります||Ter, possuir|v1
+すき|好き|Gostar|ana
+きらい|嫌い|Não gostar, detestar|ana
+じょうず|上手|Ser habilidoso em|ana
+へた|下手|Não ser habilidoso em|ana
+のみもの|飲み物|Bebida|s
+りょうり|料理|Comida, prato; culinária|s|～を します|りょうりを します: cozinhar.
+スポーツ||Esporte|s|～を します|スポーツを します: praticar esporte.
+やきゅう|野球|Beisebol|s|～を します
+ダンス||Dança|s|～を します
+りょこう|旅行|Viagem, excursão|s|～を します|りょこうを します: viajar.
+おんがく|音楽|Música|s
+うた|歌|Canção|s
+クラシック||Música clássica|s
+ジャズ||Jazz|s
+コンサート||Concerto, show|s
+カラオケ||Karaokê|s
+かぶき|歌舞伎|Kabuki (teatro tradicional do Japão)|s
+え|絵|Pintura, desenho, quadro|s
+じ|字|Letra, caractere|s
+かんじ|漢字|Kanji (caractere chinês)|s
+ひらがな||Hiragana (escrita)|s
+かたかな||Katakana (escrita)|s
+ローマじ|ローマ字|Alfabeto latino, romaji|s
+こまかい おかね|細かい お金|Trocado, dinheiro miúdo|expr
+チケット||Tíquete, ingresso|s
+じかん|時間|Tempo, hora, horário|s
+ようじ|用事|Coisa para fazer, compromisso|s
+やくそく|約束|Compromisso, promessa|s|～[を] します|やくそくを します: prometer.
+アルバイト||Bico, trabalho de meio período|s|～を します
+ごしゅじん|ご主人|Marido (de outra pessoa)|s
+おっと|夫|(meu) marido|s||Também: しゅじん (主人).
+しゅじん|主人|(meu) marido|s
+おくさん|奥さん|Esposa (de outra pessoa)|s
+つま|妻|(minha) esposa|s||Também: かない (家内).
+かない|家内|(minha) esposa|s
+こども|子ども|Criança, filho|s
+よく||Bem; com frequência|adv
+だいたい||Mais ou menos, em geral|adv
+たくさん||Bastante, muito|adv
+すこし|少し|Pouco, um pouco|adv
+ぜんぜん|全然|Nem um pouco (com forma negativa)|adv
+はやく|早く・速く|Cedo, rápido|adv
+～から||Porque ～|conj
+どうして||Por que|int
+@A1-10
+あります||Haver, existir, estar (coisas inanimadas)|v1
+います||Haver, existir, estar (seres animados)|v2
+いろいろ||Vários, diversos|ana
+おとこの ひと|男の人|Homem|s
+おんなの ひと|女の人|Mulher|s
+おとこの こ|男の子|Menino|s
+おんなの こ|女の子|Menina|s
+いぬ|犬|Cachorro|s
+ねこ|猫|Gato|s
+パンダ||Panda|s
+ぞう|象|Elefante|s
+き|木|Árvore, madeira|s
+もの|物|Coisa, objeto|s
+でんち|電池|Pilha|s
+はこ|箱|Caixa|s
+スイッチ||Interruptor|s
+れいぞうこ|冷蔵庫|Geladeira|s
+テーブル||Mesa|s
+ベッド||Cama|s
+たな|棚|Estante, prateleira|s
+ドア||Porta|s
+まど|窓|Janela|s
+ポスト||Caixa de correio|s
+ビル||Edifício, prédio|s
+ATM||Caixa eletrônico|s
+コンビニ||Loja de conveniência|s
+こうえん|公園|Parque|s
+きっさてん|喫茶店|Cafeteria|s
+～や|～屋|Loja de ～|suf||Ex.: ほんや (livraria), パンや (padaria).
+のりば|乗り場|Local de embarque, ponto (de táxi, trem etc.)|s
+けん|県|Província|s
+うえ|上|Sobre, em cima|s
+した|下|Sob, embaixo|s
+まえ|前|Em frente; antes|s
+うしろ||Atrás|s
+みぎ|右|Direita|s
+ひだり|左|Esquerda|s
+なか|中|Dentro|s
+そと|外|Fora|s
+となり|隣|Vizinho, ao lado|s
+ちかく|近く|Perto, proximidades|s
+あいだ|間|Entre|s
+～や ～[など]||～, ～ etc. (lista não exaustiva)|conj
+コーナー||Espaço, canto, seção|s
+@A2-11
+います||Ter (filho)|v2|こどもが～
+います||Estar, ficar (no Japão)|v2|にほんに～
+かかります||Levar (tempo), custar (dinheiro)|v1
+やすみます|休みます|Faltar (ao trabalho)|v1|かいしゃを～
+ひとつ|一つ|Um (para contar objetos)|num
+ふたつ|二つ|Dois (objetos)|num
+みっつ|三つ|Três (objetos)|num
+よっつ|四つ|Quatro (objetos)|num
+いつつ|五つ|Cinco (objetos)|num
+むっつ|六つ|Seis (objetos)|num
+ななつ|七つ|Sete (objetos)|num
+やっつ|八つ|Oito (objetos)|num
+ここのつ|九つ|Nove (objetos)|num
+とお|十|Dez (objetos)|num
+いくつ||Quantos|int
+ひとり|一人|Uma pessoa|num
+ふたり|二人|Duas pessoas|num
+～にん|～人|～ pessoas|suf
+～だい|～台|Contador de máquinas, carros etc.|suf
+～まい|～枚|Contador de coisas planas (folhas, selos etc.)|suf
+～かい|～回|～ vezes|suf
+りんご||Maçã|s
+みかん||Tangerina|s
+サンドイッチ||Sanduíche|s
+カレーライス||Curry com arroz|s
+アイスクリーム||Sorvete|s
+きって|切手|Selo|s
+はがき||Cartão-postal|s
+ふうとう|封筒|Envelope|s
+りょうしん|両親|Pais (pai e mãe)|s
+きょうだい|兄弟|Irmãos e irmãs|s
+がいこく|外国|País estrangeiro|s
+りゅうがくせい|留学生|Estudante estrangeiro, intercambista|s
+クラス||Classe, turma, aula|s
+～じかん|～時間|～ hora(s) (duração)|suf
+～しゅうかん|～週間|～ semana(s)|suf
+～かげつ|～か月|～ mês(es)|suf
+～ねん|～年|～ ano(s)|suf
+～ぐらい||Cerca de ～|suf
+どのくらい||Quanto tempo|int
+ぜんぶで|全部で|No total|adv
+みんな||Todos, tudo|pron
+～だけ||Apenas ～|suf
+@A2-12
+かんたん|簡単|Fácil, simples|ana
+ちかい|近い|Perto|ai
+とおい|遠い|Longe|ai
+はやい|速い・早い|Rápido; cedo|ai
+おそい|遅い|Lento; tarde|ai
+おおい|多い|Muitos (pessoas etc.)|ai|ひとが～
+すくない|少ない|Poucos (pessoas etc.)|ai|ひとが～
+あたたかい|暖かい・温かい|Morno, agradavelmente quente|ai
+すずしい|涼しい|Fresco|ai
+あまい|甘い|Doce|ai
+からい|辛い|Picante, apimentado|ai
+おもい|重い|Pesado|ai
+かるい|軽い|Leve|ai
+いい||Preferir (ex.: café)|ai|コーヒーが～
+きせつ|季節|Estação do ano|s
+はる|春|Primavera|s
+なつ|夏|Verão|s
+あき|秋|Outono|s
+ふゆ|冬|Inverno|s
+てんき|天気|Tempo, clima|s
+あめ|雨|Chuva|s
+ゆき|雪|Neve|s
+くもり|曇り|Nublado|s
+ホテル||Hotel|s
+くうこう|空港|Aeroporto|s
+うみ|海|Mar, oceano|s
+せかい|世界|Mundo|s
+パーティー||Festa|s|～を します|パーティーを します: dar uma festa.
+まつり|祭り|Festival|s||Forma polida: おまつり (お祭り).
+すきやき|すき焼き|Sukiyaki (carne e verduras cozidas na panela)|s
+さしみ|刺身|Sashimi (peixe cru em fatias)|s
+すし|寿司|Sushi|s||Também: おすし.
+てんぷら|天ぷら|Tempurá (frutos do mar e legumes fritos)|s
+ぶたにく|豚肉|Carne de porco|s
+とりにく|とり肉|Frango|s
+ぎゅうにく|牛肉|Carne de vaca|s
+レモン||Limão|s
+いけばな|生け花|Arranjo floral (ikebana)|s|～を します
+もみじ|紅葉|Bordo; folhas vermelhas de outono|s
+どちら||Qual (entre duas coisas)|int
+どちらも||Ambos|pron
+いちばん|一番|O mais, o primeiro|adv
+ずっと||Bem mais, muito mais|adv
+はじめて|初めて|Pela primeira vez|adv
+@A2-13
+あそびます|遊びます|Brincar, divertir-se|v1
+およぎます|泳ぎます|Nadar|v1
+むかえます|迎えます|Receber, ir buscar (alguém)|v2
+つかれます|疲れます|Cansar-se|v2||Para dizer "estou cansado": つかれました.
+けっこんします|結婚します|Casar-se|v3
+かいものします|買い物します|Fazer compras|v3
+しょくじします|食事します|Fazer uma refeição|v3
+さんぽします|散歩します|Passear (pelo parque)|v3|こうえんを～
+たいへん|大変|Árduo, difícil, duro|ana
+ほしい|欲しい|Querer (algo), desejar|ai
+ひろい|広い|Largo, espaçoso|ai
+せまい|狭い|Estreito, apertado|ai
+プール||Piscina|s
+かわ|川|Rio|s
+びじゅつ|美術|Belas-artes|s
+つり|釣り|Pesca|s|～を します|つりを します: pescar.
+スキー||Esqui|s|～を します
+しゅうまつ|週末|Fim de semana|s
+～ごろ||Por volta de ～ (horário)|suf
+なにか|何か|Alguma coisa|pron
+どこか||Algum lugar|pron
+@A2-14
+つけます||Acender, ligar|v2
+けします|消します|Apagar, desligar|v1
+あけます|開けます|Abrir|v2
+しめます|閉めます|Fechar|v2
+いそぎます|急ぎます|Apressar-se, ter pressa|v1
+まちます|待ちます|Esperar|v1
+もちます|持ちます|Segurar, carregar, ter em mãos|v1
+とります|取ります|Pegar, passar (algo a alguém)|v1
+てつだいます|手伝います|Ajudar (em uma tarefa)|v1
+よびます|呼びます|Chamar|v1
+はなします|話します|Falar, conversar|v1
+つかいます|使います|Usar|v1
+とめます|止めます|Parar, estacionar|v2
+みせます|見せます|Mostrar|v2
+おしえます|教えます|Informar (o endereço)|v2|じゅうしょを～
+すわります|座ります|Sentar-se|v1
+たちます|立ちます|Ficar de pé, levantar-se|v1
+はいります|入ります|Entrar (na cafeteria)|v1|きっさてんに～
+でます|出ます|Sair (da cafeteria)|v2|きっさてんを～
+ふります|降ります|Cair (chuva), chover|v1|あめが～
+コピーします||Copiar, tirar cópias|v3
+でんき|電気|Eletricidade, luz|s
+エアコン||Ar-condicionado|s
+パスポート||Passaporte|s
+なまえ|名前|Nome|s
+じゅうしょ|住所|Endereço|s
+ちず|地図|Mapa|s
+しお|塩|Sal|s
+さとう|砂糖|Açúcar|s
+もんだい|問題|Questão, problema|s
+こたえ|答え|Resposta|s
+よみかた|読み方|Modo de ler, leitura|s
+～かた|～方|Modo de ～, como ～|suf
+まっすぐ||Reto, direto|adv
+ゆっくり||Devagar|adv
+すぐ||Imediatamente, logo|adv
+また||De novo|adv
+あとで||Mais tarde|adv
+もう すこし|もう 少し|Mais um pouco|adv
+もう ～||Mais ～, outro ～|adv
+@A2-15
+おきます|置きます|Colocar, pôr|v1
+つくります|作ります・造ります|Fazer, produzir|v1
+うります|売ります|Vender|v1
+しります|知ります|Saber, conhecer, ficar sabendo|v1
+すみます|住みます|Morar, viver|v1
+けんきゅうします|研究します|Pesquisar|v3
+しりょう|資料|Materiais, dados|s
+カタログ||Catálogo|s
+じこくひょう|時刻表|Tabela de horários|s
+ふく|服|Roupa|s
+せいひん|製品|Produto|s
+ソフト||Software, programa|s
+でんしじしょ|電子辞書|Dicionário eletrônico|s
+けいざい|経済|Economia|s
+しやくしょ|市役所|Prefeitura|s
+こうこう|高校|Ensino médio, colégio|s
+はいしゃ|歯医者|Dentista|s
+どくしん|独身|Solteiro|s
+すみません||Sinto muito; desculpe-me|expr
+@A2-16
+のります|乗ります|Embarcar, subir (no trem)|v1|でんしゃに～
+おります|降ります|Descer (do trem)|v2|でんしゃを～
+のりかえます|乗り換えます|Fazer baldeação|v2
+あびます|浴びます|Tomar (banho de chuveiro)|v2|シャワーを～
+いれます|入れます|Colocar dentro, inserir|v2
+だします|出します|Tirar, entregar|v1
+おろします|下ろします|Sacar (dinheiro)|v1|おかねを～
+はいります|入ります|Ingressar (na faculdade)|v1|だいがくに～
+でます|出ます|Formar-se (na faculdade)|v2|だいがくを～
+おします|押します|Apertar, empurrar|v1
+のみます|飲みます|Beber (bebidas alcoólicas)|v1
+はじめます|始めます|Começar, iniciar|v2
+けんがくします|見学します|Fazer visita de estudo|v3
+でんわします|電話します|Telefonar|v3
+わかい|若い|Jovem|ai
+ながい|長い|Comprido, longo|ai
+みじかい|短い|Curto|ai
+あかるい|明るい|Claro, iluminado|ai
+くらい|暗い|Escuro|ai
+からだ|体|Corpo|s
+あたま|頭|Cabeça|s
+かみ|髪|Cabelo|s
+かお|顔|Rosto|s
+め|目|Olho|s
+みみ|耳|Orelha, ouvido|s
+はな|鼻|Nariz|s
+くち|口|Boca|s
+は|歯|Dente|s
+おなか||Barriga|s
+あし|足|Perna, pé|s
+せ|背|Altura (estatura)|s
+サービス||Serviço|s
+ジョギング||Corrida (jogging)|s|～を します
+シャワー||Chuveiro|s
+みどり|緑|Verde; área verde|s
+てら|寺|Templo budista|s||Forma polida: おてら (お寺).
+じんじゃ|神社|Santuário xintoísta|s
+～ばん|～番|Número ～|suf
+どうやって||Como, de que modo|int
+どの ～||Qual ～ (entre três ou mais)|int
+どれ||Qual (entre três ou mais)|int
+@A2-17
+おぼえます|覚えます|Memorizar, decorar|v2
+わすれます|忘れます|Esquecer|v2
+なくします||Perder|v1
+はらいます|払います|Pagar|v1
+かえします|返します|Devolver|v1
+でかけます|出かけます|Sair (de casa)|v2
+ぬぎます|脱ぎます|Tirar (roupa, sapatos), despir-se|v1
+もっていきます|持って行きます|Levar (alguma coisa)|v1
+もってきます|持って来ます|Trazer (alguma coisa)|v3
+しんぱいします|心配します|Preocupar-se|v3
+ざんぎょうします|残業します|Fazer hora extra|v3
+しゅっちょうします|出張します|Viajar a negócios|v3
+のみます|飲みます|Tomar (remédio)|v1|くすりを～
+はいります|入ります|Tomar (banho de ofurô)|v1|おふろに～
+たいせつ|大切|Importante, precioso|ana
+だいじょうぶ|大丈夫|Tudo bem, sem problemas|ana
+あぶない|危ない|Perigoso|ai
+きんえん|禁煙|Proibido fumar|s
+ほけんしょう|保険証|Carteirinha do seguro de saúde|s||Completo: けんこうほけんしょう (健康保険証).
+ねつ|熱|Febre|s
+びょうき|病気|Doença|s
+くすり|薬|Remédio|s
+ふろ|風呂|Banho (ofurô), banheira|s||Forma polida: おふろ (お風呂).
+うわぎ|上着|Jaqueta, paletó|s
+したぎ|下着|Roupa íntima|s
+に、さんにち|2、3日|Dois ou três dias|expr
+～までに||Até ～, antes de ～ (prazo)|conj
+ですから||Portanto, por isso|conj
+@A2-18
+できます||Poder, ser capaz de|v2
+あらいます|洗います|Lavar|v1
+ひきます|弾きます|Tocar (instrumento de corda, piano)|v1
+うたいます|歌います|Cantar|v1
+あつめます|集めます|Juntar, colecionar|v2
+すてます|捨てます|Jogar fora|v2
+かえます|換えます|Trocar|v2
+うんてんします|運転します|Dirigir|v3
+よやくします|予約します|Reservar|v3
+ピアノ||Piano|s
+～メートル||～ metro(s)|suf
+げんきん|現金|Dinheiro vivo|s
+しゅみ|趣味|Passatempo, hobby|s
+にっき|日記|Diário|s
+おいのり|お祈り|Oração|s|～を します
+かちょう|課長|Chefe de seção|s
+ぶちょう|部長|Diretor de departamento|s
+しゃちょう|社長|Presidente da empresa|s
+どうぶつ|動物|Animal|s
+うま|馬|Cavalo|s
+インターネット||Internet|s
+@A2-19
+のぼります|登ります・上ります|Subir, escalar|v1
+とまります|泊まります|Hospedar-se (em um hotel)|v1|ホテルに～
+そうじします|掃除します|Limpar (o quarto)|v3
+せんたくします|洗濯します|Lavar (roupa)|v3
+なります||Tornar-se, ficar; chegar (a primavera)|v1
+ねむい|眠い|Sonolento|ai
+つよい|強い|Forte|ai
+よわい|弱い|Fraco|ai
+れんしゅう|練習|Prática, treino|s|～[を] します|れんしゅうを します: praticar.
+ゴルフ||Golfe|s|～を します
+すもう|相撲|Sumô|s|～を します
+おちゃ|お茶|Cerimônia do chá|s
+ひ|日|Dia|s
+ちょうし|調子|Condição, estado|s
+いちど|一度|Uma vez|adv
+いちども|一度も|Nenhuma vez, nunca (com forma negativa)|adv
+だんだん||Gradualmente, aos poucos|adv
+もうすぐ||Logo, daqui a pouco|adv
+おかげさまで||Graças a você/Deus (gratidão pela ajuda recebida)|expr
+でも||Mas|conj
+@A2-20
+いります|要ります|Precisar, necessitar (um visto)|v1|ビザが～
+しらべます|調べます|Verificar, pesquisar|v2
+しゅうりします|修理します|Consertar|v3
+ぼく|僕|Eu (forma informal masculina de わたし)|pron
+きみ|君|Você (forma informal masculina de あなた)|pron
+～くん|～君|Sufixo informal masculino; usado com nomes de meninos|suf
+うん||Sim (informal)|expr
+ううん||Não (informal)|expr
+ことば|言葉|Palavra, idioma|s
+きもの|着物|Quimono (vestimenta tradicional)|s
+ビザ||Visto|s
+はじめ|初め|Início|s
+おわり|終わり|Fim|s
+こっち||Aqui, por aqui (informal de こちら)|pron
+そっち||Aí, por aí (informal de そちら)|pron
+あっち||Lá, por lá (informal de あちら)|pron
+どっち||Qual (entre dois); que direção (informal de どちら)|int
+みんなで||Todos juntos|adv
+～けど||～, mas (informal de が)|conj
+おなかが いっぱいです||(Estou) satisfeito, de barriga cheia|expr
+@AULA
+さます|覚ます|Acordar, despertar|v1|めを～
+みがく|磨く|Escovar, polir|v1|はを～
+あらう|洗う|Lavar|v1|かおを～
+ふく|拭く|Enxugar, limpar (passando pano)|v1|かおを～ / テーブルを～
+ふく|吹く|Soprar (vento)|v1|かぜが～|Com が, porque o vento é o sujeito.
+きる|着る|Vestir (parte de cima do corpo)|v2|シャツを～|Pegadinha: きる (vestir) é grupo 2 → きます.
+はく|履く|Calçar, vestir (da cintura para baixo)|v1|ズボンを～ / くつを～
+はく|掃く|Varrer|v1|ほうきで～
+かぶる|被る|Pôr (na cabeça)|v1|ぼうしを～
+そそぐ|注ぐ|Despejar, servir (líquido)|v1|ぎゅうにゅうを～
+のむ|飲む|Beber|v1|ぎゅうにゅうを～
+もる|盛る|Servir (comida no prato)|v1|ごはんを～
+たべる|食べる|Comer|v2|ごはんを～
+ぬる|塗る|Passar (manteiga, tinta)|v1|バターを～
+しぼる|絞る|Torcer, espremer|v1|ぞうきんを～
+はこぶ|運ぶ|Carregar, levar|v1|さらを～
+たたむ|畳む|Dobrar (roupa)|v1|ふくを～
+すくう|掬う|Pegar com colher, escavar|v1|スプーンで～
+する||Fazer|v3|せんたくを～ / うがいを～
+すてる|捨てる|Jogar fora|v2|ごみを～
+でる|出る|Sair; atender (telefone); aparecer|v2|でんわに～ / へやから～ / にじが～
+はいる|入る|Entrar|v1|へやに～|Termina em -iru, mas é grupo 1 (exceção) → はいります.
+やる||Dar (a animais e plantas)|v1|えさを～ / みずを～|Para pessoas usa-se あげる. Hoje muitos dizem えさを あげる, que soa mais gentil.
+なる||Tornar-se, ficar|v1|びょうきに～ / むしばに～
+きこえる|聞こえる|Ser audível, ouvir-se|v2|おとが～|O som é o sujeito → が (o mesmo vale para みえる).
+とる|撮る|Tirar (foto)|v1|しゃしんを～
+はなす|話す|Falar, conversar|v1|ともだちと～
+かく|書く|Escrever|v1|ノートに～
+かく||Fazer (ronco, suor): いびきを かく = roncar|v1|いびきを～
+まわす|回す|Girar, rodar|v1|こまを～
+つく|搗く|Socar (mochi no pilão)|v1|もちを～
+はねる|跳ねる|Pular, saltar|v2|いるかが～
+ほえる|吠える|Latir|v2|いぬが～
+くる|来る|Vir|v3
+あげる||Dar (a pessoas)|v2|ともだちに～
+め|目|Olho|s
+は|歯|Dente|s
+かお|顔|Rosto|s
+シャツ||Camisa|s
+ズボン||Calça|s
+くつ|靴|Sapatos|s
+くつした|靴下|Meias|s
+ぼうし|帽子|Chapéu, boné|s
+コート||Casaco|s
+ぎゅうにゅう|牛乳|Leite|s
+ごはん|ご飯|Arroz cozido, refeição|s
+バター||Manteiga|s
+ぞうきん|雑巾|Pano de chão, pano de limpeza|s
+さら|皿|Prato|s
+ふく|服|Roupa|s
+スプーン||Colher|s
+スープ||Sopa|s
+テーブル||Mesa|s
+ほうき|箒|Vassoura|s
+ごみ||Lixo|s
+せんたく|洗濯|Lavagem de roupa|s|～を する
+うがい||Gargarejo|s|～を する
+いねむり|居眠り|Cochilo|s|～を する
+でんわ|電話|Telefone|s
+へや|部屋|Quarto, cômodo|s
+えさ|餌|Ração, comida de animal|s
+みず|水|Água|s
+びょうき|病気|Doença|s
+むしば|虫歯|Cárie|s
+おと|音|Som, barulho|s
+しゃしん|写真|Foto|s
+ともだち|友達|Amigo|s
+ノート||Caderno|s
+いびき||Ronco|s
+こま||Pião|s
+もち|餅|Mochi (bolinho de arroz socado)|s
+いるか||Golfinho|s
+いぬ|犬|Cachorro|s
+にじ|虹|Arco-íris|s
+かぜ|風|Vento|s
+まいあさ|毎朝|Todas as manhãs|adv
+ばんごはん|晩ごはん|Jantar|s
+りんご||Maçã|s
+ふうせん|風船|Balão, bexiga|s
+かさ|傘|Guarda-chuva|s
+ねこ|猫|Gato|s
+きんぎょ|金魚|Peixinho dourado|s
+うま|馬|Cavalo|s
+きゅうり||Pepino|s
+だんご|団子|Dango (bolinho de arroz no espeto)|s
+はた|旗|Bandeira|s
+おりがみ|折り紙|Origami (papel de dobradura)|s
+わたあめ|綿あめ|Algodão-doce|s
+レモン||Limão|s
+しょうゆ|醤油|Shoyu, molho de soja|s
+とうがらし|唐辛子|Pimenta|s
+おちゃ|お茶|Chá|s
+こおり|氷|Gelo|s
+ぞう|象|Elefante|s
+ねずみ||Rato|s
+あかい|赤い|Vermelho|ai
+あおい|青い|Azul|ai
+きいろい|黄色い|Amarelo|ai
+しろい|白い|Branco|ai
+くろい|黒い|Preto|ai
+ちゃいろい|茶色い|Marrom|ai
+みどりいろ|緑色|Verde (cor)|s||Cor-substantivo: precisa de の → みどりいろの きゅうり. Nunca "みどりい".
+ピンクいろ|ピンク色|Cor-de-rosa|s||Cor-substantivo: ピンクいろの くつした.
+まるい|丸い|Redondo|ai
+しかくい|四角い|Quadrado|ai
+さんかく|三角|Triângulo, triangular|s||Substantivo: precisa de の → さんかくの はた.
+ひしがた|ひし形|Losango|s||Substantivo: precisa de の → ひしがたの もち.
+あまい|甘い|Doce|ai
+すっぱい|酸っぱい|Azedo|ai
+しょっぱい||Salgado|ai
+からい|辛い|Picante|ai
+あつい|暑い・熱い|Quente|ai
+つめたい|冷たい|Gelado, frio (ao toque)|ai
+おおきい|大きい|Grande|ai
+ちいさい|小さい|Pequeno|ai
+@Y-Família
+ちち|父|Pai (ao falar do próprio pai)|s
+はは|母|Mãe (ao falar da própria mãe)|s
+おとうさん|お父さん|Pai (ao chamar o pai ou falar do pai de outros)|s
+おかあさん|お母さん|Mãe (ao chamar a mãe ou falar da mãe de outros)|s
+おとうさま|お父様|Pai (formal, muito respeitoso)|s
+あに|兄|Irmão mais velho|s
+あね|姉|Irmã mais velha|s
+おとうと|弟|Irmão mais novo|s
+いもうと|妹|Irmã mais nova|s
+ともだち|友達|Amigo(s)|s
+おんなの こ|女の子|Menina|s
+おとこの こ|男の子|Menino|s
+@Y-Alimentos
+ごはん|ご飯|Arroz, refeição|s
+たべもの|食べ物|Comida|s
+のみもの|飲み物|Bebida|s
+ケーキ||Bolo|s
+アイスクリーム||Sorvete|s
+ピザ||Pizza|s
+コーヒー||Café|s
+ちゃ|茶|Chá|s
+ぎゅうにゅう|牛乳|Leite|s
+パン||Pão|s
+おにぎり||Bolinho de arroz (onigiri)|s
+みそしる|みそ汁|Sopa de missô|s
+つけもの|漬物|Legumes em conserva|s
+やきざかな|焼き魚|Peixe grelhado|s
+@Y-Cores
+いろ|色|Cor|s
+あか|赤|Vermelho (substantivo)|s
+あかい|赤い|Vermelho|ai
+あおい|青い|Azul|ai
+きいろい|黄色い|Amarelo|ai
+みどり|緑|Verde|s
+くろい|黒い|Preto|ai
+しろい|白い|Branco|ai
+ちゃいろ|茶色|Marrom|s
+むらさき|紫|Roxo|s
+ピンク||Rosa (cor)|s
+だいだい|橙|Laranja (cor)|s||Hoje é comum dizer オレンジ.
+はいいろ|灰色|Cinza|s
+@Y-Números
+いち|一|Um (1)|num
+に|二|Dois (2)|num
+さん|三|Três (3)|num
+し|四|Quatro (4)|num||Também よん, mais comum na fala.
+ご|五|Cinco (5)|num
+ろく|六|Seis (6)|num
+しち|七|Sete (7)|num||Também なな.
+はち|八|Oito (8)|num
+きゅう|九|Nove (9)|num||Também く.
+じゅう|十|Dez (10)|num
+ひとつ|一つ|Um (objeto)|num
+ふたつ|二つ|Dois (objetos)|num
+みっつ|三つ|Três (objetos)|num
+よっつ|四つ|Quatro (objetos)|num
+いつつ|五つ|Cinco (objetos)|num
+むっつ|六つ|Seis (objetos)|num
+ななつ|七つ|Sete (objetos)|num
+やっつ|八つ|Oito (objetos)|num
+ここのつ|九つ|Nove (objetos)|num
+とお|十|Dez (objetos)|num
+ひゃく|百|Cem (100)|num
+せん|千|Mil (1.000)|num
+まん|万|Dez mil (10.000)|num
+ひゃくまん|百万|Um milhão (1.000.000)|num
+@Y-Animais
+どうぶつ|動物|Animal|s
+ねこ|猫|Gato|s
+いぬ|犬|Cachorro|s
+とり|鳥|Pássaro|s
+さかな|魚|Peixe|s
+うし|牛|Vaca, boi|s
+うま|馬|Cavalo|s
+ほたる|蛍|Vaga-lume|s
+ちょう|蝶|Borboleta|s
+むし|虫|Inseto|s
+@Y-Natureza
+しぜん|自然|Natureza|s
+たいよう|太陽|Sol|s
+つき|月|Lua|s
+ほし|星|Estrela|s
+そら|空|Céu|s
+くも|雲|Nuvem|s
+あめ|雨|Chuva|s
+ゆき|雪|Neve|s
+かぜ|風|Vento|s
+ひ|火|Fogo|s
+みず|水|Água|s
+やま|山|Montanha|s
+かわ|川|Rio|s
+うみ|海|Mar|s
+はな|花|Flor|s
+き|木|Árvore|s
+くさ|草|Grama, capim|s
+つち|土|Terra, solo|s
+@Y-Tempo
+じかん|時間|Tempo, hora|s
+きょう|今日|Hoje|s
+きのう|昨日|Ontem|s
+あした|明日|Amanhã|s
+あさ|朝|Manhã|s
+ひる|昼|Meio-dia, tarde|s
+ゆうがた|夕方|Entardecer, fim de tarde|s
+よる|夜|Noite|s
+はる|春|Primavera|s
+なつ|夏|Verão|s
+あき|秋|Outono|s
+ふゆ|冬|Inverno|s
+にちようび|日曜日|Domingo|s
+げつようび|月曜日|Segunda-feira|s
+かようび|火曜日|Terça-feira|s
+すいようび|水曜日|Quarta-feira|s
+もくようび|木曜日|Quinta-feira|s
+きんようび|金曜日|Sexta-feira|s
+どようび|土曜日|Sábado|s
+@Y-Casa e lugares
+いえ|家|Casa|s
+へや|部屋|Quarto|s
+もん|門|Portão|s
+まど|窓|Janela|s
+だいどころ|台所|Cozinha|s
+げんかん|玄関|Entrada (hall onde se tiram os sapatos)|s
+にわ|庭|Jardim, quintal|s
+がっこう|学校|Escola|s
+こうえん|公園|Parque|s
+みせ|店|Loja|s
+@Y-Pronomes
+わたし|私|Eu (formal)|pron
+おれ|俺|Eu (informal, masculino)|pron
+ぼく|僕|Eu (informal, masculino jovem)|pron
+きみ|君|Você (informal)|pron
+あなた||Você|pron
+かれ|彼|Ele|pron
+かのじょ|彼女|Ela|pron
+これ||Isto|pron
+それ||Isso|pron
+あれ||Aquilo|pron
+ここ||Aqui|pron
+そこ||Aí|pron
+あそこ||Ali|pron
+どこ||Onde|int
+なに|何|O quê|int
+だれ|誰|Quem|int
+@Y-Frases cotidianas
+おはよう||Bom dia (informal)|expr
+おはようございます||Bom dia (formal)|expr
+こんにちは||Boa tarde; olá|expr
+こんばんは||Boa noite (saudação)|expr
+おやすみ||Boa noite (antes de dormir)|expr||Formal: おやすみなさい.
+ありがとう||Obrigado (informal)|expr
+ありがとうございます||Obrigado (formal)|expr
+すみません||Com licença; desculpe|expr
+ごめん||Desculpa (informal)|expr
+ごめんなさい||Desculpe|expr
+いただきます||Dito antes de comer (agradecimento pela refeição)|expr
+ごちそうさま||Dito depois de comer (obrigado pela refeição)|expr||Formal: ごちそうさまでした.
+いってきます||Já vou! (ao sair de casa: "vou e volto")|expr
+いってらっしゃい||Vá e volte bem (resposta a いってきます)|expr
+ただいま||Cheguei! (ao voltar para casa)|expr
+おかえり||Bem-vindo de volta (resposta a ただいま)|expr||Formal: おかえりなさい.
+おねがい||Por favor (informal)|expr
+おねがいします||Por favor (formal)|expr
+@Y-Frases da Yotsuba
+なに これ？||O que é isso?|expr
+すごい！||Incrível!|expr
+すげー！||Nooossa! (informal, alongado)|expr
+たのしい！||Que divertido!|expr
+おなか すいた！||Estou com fome!|expr
+ねえ ねえ！||Ei, ei! (chamando atenção)|expr
+わーい！||Eba! Oba!|expr
+えー！||Ehhh?! (surpresa)|expr
+ついた！||Chegamos!|expr
+あそびたい！||Quero brincar!|expr
+きれい！||Que lindo!|expr
+おいしい！||Que delícia!|expr
+@Y-Verbos
+いく|行く|Ir|v1
+くる|来る|Vir|v3
+たべる|食べる|Comer|v2
+のむ|飲む|Beber|v1
+みる|見る|Ver|v2
+きく|聞く|Ouvir; perguntar|v1
+よむ|読む|Ler|v1
+かく|書く|Escrever|v1
+はなす|話す|Falar|v1
+まなぶ|学ぶ|Aprender, estudar|v1
+しる|知る|Saber, conhecer|v1
+おもう|思う|Pensar, achar|v1
+しりません|知りません|Não sei|expr
+わかる|分かる|Entender|v1
+あるく|歩く|Andar, caminhar|v1
+はしる|走る|Correr|v1||Parece grupo 2, mas é grupo 1 → はしります.
+ねる|寝る|Dormir|v2
+おきる|起きる|Acordar, levantar-se|v2
+うたう|歌う|Cantar|v1
+およぐ|泳ぐ|Nadar|v1
+@FRASES
+# japonês|português|verbo/palavra final (desambiguação)|nota
+めを さます|acordar (abrir os olhos)
+はを みがく|escovar os dentes
+かおを あらう|lavar o rosto
+かおを ふく|enxugar o rosto|拭く
+シャツを きる|vestir a camisa
+ズボンを はく|vestir a calça|履く
+くつを はく|calçar os sapatos|履く
+ぎゅうにゅうを そそぐ|servir (despejar) o leite
+ぎゅうにゅうを のむ|beber leite
+ごはんを もる|servir o arroz
+ごはんを たべる|comer arroz, comer a refeição
+バターを ぬる|passar manteiga
+ぞうきんを しぼる|torcer o pano
+さらを はこぶ|levar os pratos
+ふくを たたむ|dobrar a roupa
+スプーンで すくう|pegar com a colher
+せんたくを する|lavar roupa
+うがいを する|gargarejar
+いねむりを する|cochilar
+ごみを すてる|jogar o lixo fora
+テーブルを ふく|limpar a mesa|拭く
+ほうきで はく|varrer com a vassoura|掃く
+でんわに でる|atender o telefone
+へやに はいる|entrar no quarto
+へやから でる|sair do quarto
+えさを やる|dar ração
+みずを やる|regar (dar água)
+びょうきに なる|ficar doente
+むしばに なる|ficar com cárie
+おとが きこえる|ouve-se um som
+しゃしんを とる|tirar foto|撮る
+ともだちと はなす|conversar com o amigo
+ノートに かく|escrever no caderno|書く
+いびきを かく|roncar|かく
+こまを まわす|girar o pião
+もちを つく|socar mochi
+にじが でる|o arco-íris aparece
+かぜが ふく|o vento sopra|吹く
+いぬが ほえる|o cachorro late
+いるかが はねる|o golfinho pula
+あかい りんご|maçã vermelha
+あおい ふうせん|balão azul
+きいろい かさ|guarda-chuva amarelo
+しろい ねこ|gato branco
+くろい きんぎょ|peixinho preto
+ちゃいろい うま|cavalo marrom
+みどりいろの きゅうり|pepino verde
+ピンクいろの くつした|meias cor-de-rosa
+まるい だんご|dango redondo
+さんかくの はた|bandeira triangular
+しかくい おりがみ|origami quadrado
+ひしがたの もち|mochi em losango
+あまい わたあめ|algodão-doce doce
+すっぱい レモン|limão azedo
+しょっぱい しょうゆ|shoyu salgado
+からい とうがらし|pimenta picante
+あつい おちゃ|chá quente
+つめたい こおり|gelo gelado
+ぞうは おおきい|o elefante é grande
+ねずみは ちいさい|o rato é pequeno
+ほうきで ごみを はく|varrer o lixo com a vassoura|掃く
+スプーンで スープを すくう|pegar a sopa com a colher
+ともだちに あげる|dar ao amigo
+ぼうしを かぶる|pôr o chapéu
+コートを きる|vestir o casaco
+くつしたを はく|calçar as meias|履く
+まいあさ かおを あらいます|Todo dia de manhã, lavo o rosto.
+ばんごはんを たべます|Janto (como o jantar).
+</script>
+<script>
+(function () {
+  'use strict';
+
+  // ---------- kana utilities ----------
+  const toHira = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  const isJP = s => /[぀-ヿ一-鿿々]/.test(s);
+  const R = {
+    'あ':'a','い':'i','う':'u','え':'e','お':'o','か':'ka','き':'ki','く':'ku','け':'ke','こ':'ko',
+    'さ':'sa','し':'shi','す':'su','せ':'se','そ':'so','た':'ta','ち':'chi','つ':'tsu','て':'te','と':'to',
+    'な':'na','に':'ni','ぬ':'nu','ね':'ne','の':'no','は':'ha','ひ':'hi','ふ':'fu','へ':'he','ほ':'ho',
+    'ま':'ma','み':'mi','む':'mu','め':'me','も':'mo','や':'ya','ゆ':'yu','よ':'yo',
+    'ら':'ra','り':'ri','る':'ru','れ':'re','ろ':'ro','わ':'wa','を':'o','ん':'n',
+    'が':'ga','ぎ':'gi','ぐ':'gu','げ':'ge','ご':'go','ざ':'za','じ':'ji','ず':'zu','ぜ':'ze','ぞ':'zo',
+    'だ':'da','ぢ':'ji','づ':'zu','で':'de','ど':'do','ば':'ba','び':'bi','ぶ':'bu','べ':'be','ぼ':'bo',
+    'ぱ':'pa','ぴ':'pi','ぷ':'pu','ぺ':'pe','ぽ':'po','ぁ':'a','ぃ':'i','ぅ':'u','ぇ':'e','ぉ':'o','ゔ':'vu'
+  };
+  const R2 = { 'ふぁ':'fa','ふぃ':'fi','ふぇ':'fe','ふぉ':'fo','てぃ':'ti','でぃ':'di','うぃ':'wi','うぇ':'we','うぉ':'wo','しぇ':'she','ちぇ':'che','じぇ':'je' };
+  'きぎしじちにひびぴみりぢ'.split('').forEach(k => {
+    const r = R[k];
+    const stem = k === 'し' ? 'sh' : k === 'ち' ? 'ch' : (k === 'じ' || k === 'ぢ') ? 'j' : r.slice(0, -1) + 'y';
+    R2[k + 'ゃ'] = stem + 'a'; R2[k + 'ゅ'] = stem + 'u'; R2[k + 'ょ'] = stem + 'o';
+  });
+  const PUNCT = { '？':'?', '！':'!', '～':'~', '、':', ', '。':'.', '　':' ', '・':' / ' };
+
+  function kanaToRomaji(src) {
+    const h = toHira(src);
+    let out = '';
+    let i = 0;
+    while (i < h.length) {
+      const two = h.substr(i, 2);
+      const c = h[i];
+      if (R2[two]) { out += R2[two]; i += 2; continue; }
+      if (c === 'っ') {
+        const nx = R2[h.substr(i + 1, 2)] || R[h[i + 1]] || '';
+        out += nx.startsWith('ch') ? 't' : (nx[0] || '');
+        i++; continue;
+      }
+      if (c === 'ん') {
+        const nx = R2[h.substr(i + 1, 2)] || R[h[i + 1]] || '';
+        out += /^[aiueoy]/.test(nx) ? "n'" : 'n';
+        i++; continue;
+      }
+      if (c === 'ー') { const m = out.match(/[aiueo](?=[^aiueo]*$)/); out += m ? m[0] : ''; i++; continue; }
+      if (R[c]) { out += R[c]; i++; continue; }
+      out += PUNCT[c] !== undefined ? PUNCT[c] : c;
+      i++;
+    }
+    return out;
+  }
+  // romaji with particle は read as "wa"
+  function romajiOf(kana, isPhrase) {
+    const toks = kana.split(/\s+/);
+    return toks.map((t, i) => {
+      if (isPhrase && i < toks.length - 1) {
+        const pp = ['から', 'を', 'に', 'で', 'が', 'と', 'は', 'の'].find(x => t.length > x.length && t.endsWith(x));
+        if (pp) return kanaToRomaji(t.slice(0, -pp.length)) + ' ' + (pp === 'は' ? 'wa' : pp === 'を' ? 'o' : kanaToRomaji(pp));
+      }
+      let r = kanaToRomaji(t);
+      const waEnd = /(んにちは|んばんは)$/.test(t) || (isPhrase && i < toks.length - 1 && t.length > 1 && t.endsWith('は'));
+      if (waEnd) r = r.replace(/ha$/, 'wa');
+      return r;
+    }).join(' ');
+  }
+
+  // romaji → hiragana (for search)
+  const INV = {};
+  Object.entries(R).forEach(([k, v]) => { if (!(v in INV) && !'ぁぃぅぇぉ'.includes(k)) INV[v] = k; });
+  Object.entries(R2).forEach(([k, v]) => { if (!(v in INV)) INV[v] = k; });
+  Object.assign(INV, { si:'し', ti:'ち', tu:'つ', hu:'ふ', zi:'じ', wo:'を', sya:'しゃ', syu:'しゅ', syo:'しょ', tya:'ちゃ', tyu:'ちゅ', tyo:'ちょ', cya:'ちゃ', cyu:'ちゅ', cyo:'ちょ', zya:'じゃ', zyu:'じゅ', zyo:'じょ', jya:'じゃ', jyu:'じゅ', jyo:'じょ', la:'ら', li:'り', lu:'る', le:'れ', lo:'ろ', 'ti':'ち', 'di':'ぢ', 'du':'づ', ca:'か', co:'こ', cu:'く' });
+  const VY = /[aiueoy]/;
+  function romajiToHira(q) {
+    const s = q.toLowerCase().replace(/[āâ]/g, 'aa').replace(/[īî]/g, 'ii').replace(/[ūû]/g, 'uu').replace(/[ēê]/g, 'ee').replace(/[ōô]/g, 'ou');
+    let out = '';
+    let i = 0;
+    while (i < s.length) {
+      const c = s[i];
+      if (/[\s'’.,!?]/.test(c)) { i++; continue; }
+      if (c === '-') { out += 'ー'; i++; continue; }
+      if (c === 'n') {
+        const n1 = s[i + 1];
+        if (n1 === 'n' && !(s[i + 2] && VY.test(s[i + 2]))) { out += 'ん'; i += 2; continue; }
+        if (!n1 || !VY.test(n1)) { out += 'ん'; i++; continue; }
+      }
+      if (s.startsWith('tch', i)) { out += 'っ'; i++; continue; }
+      if (c === s[i + 1] && /[bcdfghjkmpqrstvwxz]/.test(c)) { out += 'っ'; i++; continue; }
+      let hit = false;
+      for (let L = 3; L >= 1; L--) {
+        const part = s.substr(i, L);
+        if (part.length === L && INV[part]) { out += INV[part]; i += L; hit = true; break; }
+      }
+      if (!hit) return null;
+    }
+    return out || null;
+  }
+
+  const normPt = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim();
+  const normJP = s => toHira(s).replace(/[\s～~？！?!、。・「」\[\]()（）]/g, '');
+  const normR = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '')
+    .replace(/ou/g, 'o').replace(/oo/g, 'o').replace(/uu/g, 'u').replace(/aa/g, 'a').replace(/ii/g, 'i').replace(/ee/g, 'e');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+  // ---------- verb forms ----------
+  const I2U = { 'い':'う','き':'く','ぎ':'ぐ','し':'す','ち':'つ','に':'ぬ','び':'ぶ','み':'む','り':'る' };
+  const U2I = Object.fromEntries(Object.entries(I2U).map(([a, b]) => [b, a]));
+  function masuToDict(str, t) {
+    return str.split('・').map(p => {
+      if (!p.endsWith('ます')) return p;
+      const b = p.slice(0, -2);
+      if (t === 'v2') return b + 'る';
+      if (t === 'v3') {
+        if (b.endsWith('し')) return b.slice(0, -1) + 'する';
+        if (b.endsWith('来')) return b + 'る';
+        if (b.endsWith('き')) return b.slice(0, -1) + 'くる';
+      }
+      const last = b.slice(-1);
+      return b.slice(0, -1) + (I2U[last] || last);
+    }).join('・');
+  }
+  function dictToMasu(str, t) {
+    return str.split('・').map(p => {
+      if (!p) return p;
+      if (t === 'v2') return p.slice(0, -1) + 'ます';
+      if (t === 'v3') {
+        if (p.endsWith('する')) return p.slice(0, -2) + 'します';
+        if (p.endsWith('来る')) return p.slice(0, -1) + 'ます';
+        if (p.endsWith('くる')) return p.slice(0, -2) + 'きます';
+      }
+      const last = p.slice(-1);
+      return p.slice(0, -1) + (U2I[last] || last) + 'ます';
+    }).join('・');
+  }
+
+  // ---------- labels ----------
+  const TYPE = {
+    s:'substantivo', v1:'verbo · grupo 1', v2:'verbo · grupo 2', v3:'verbo · grupo 3', ai:'adjetivo い', ana:'adjetivo な',
+    adv:'advérbio', pron:'pronome', int:'interrogativo', expr:'expressão', suf:'sufixo · contador', num:'numeral', conj:'conectivo · partícula', frase:'frase · chunk'
+  };
+  const SHORT = { s:'subst.', v1:'verbo', v2:'verbo', v3:'verbo', ai:'adj. い', ana:'adj. な', adv:'adv.', pron:'pron.', int:'interr.', expr:'expr.', suf:'sufixo', num:'num.', conj:'conect.', frase:'frase' };
+  const CLASSES = [
+    ['', 'Todas as classes'], ['s', 'Substantivos'], ['v', 'Verbos'], ['adj', 'Adjetivos'], ['adv', 'Advérbios'],
+    ['pron', 'Pronomes e interrogativos'], ['expr', 'Expressões'], ['num', 'Números e contadores'], ['conj', 'Conectivos e partículas'], ['frase', 'Frases (chunks)']
+  ];
+  const clsOf = t => t[0] === 'v' ? 'v' : (t === 'ai' || t === 'ana') ? 'adj' : t === 'int' ? 'pron' : t === 'suf' ? 'num' : t;
+  const GROUPS = { A1:'Livro A1', A2:'Livro A2', AULA:'Aula いろいろなぶん', Y:'Lista Yotsubato' };
+  function srcInfo(code) {
+    if (code.startsWith('A1-') || code.startsWith('A2-')) return { g: code.slice(0, 2), sub: code.slice(3), label: code.slice(0, 2) + ' · Lição ' + code.slice(3) };
+    if (code === 'AULA') return { g: 'AULA', sub: '', label: 'Aula いろいろなぶん' };
+    return { g: 'Y', sub: code.slice(2), label: 'Yotsubato · ' + code.slice(2) };
+  }
+  const VRULE = {
+    v1: 'Grupo 1 (godan): a última sílaba muda de -u para -i + ます. Ex.: のむ → のみます.',
+    v2: 'Grupo 2 (ichidan): tira る e acrescenta ます. Ex.: たべる → たべます.',
+    v3: 'Grupo 3 (irregular): する → します · くる → きます.'
+  };
+
+  // ---------- parse data ----------
+  const entries = [];
+  const byKey = new Map();
+  const phrasesRaw = [];
+  let src = '';
+  let line = 0;
+  document.getElementById('dict-data').textContent.split('\n').forEach(raw => {
+    const ln = raw.trim();
+    if (!ln || ln.startsWith('#')) return;
+    if (ln.startsWith('@')) { src = ln.slice(1); return; }
+    line++;
+    const f = ln.split('|').map(x => (x || '').trim());
+    if (src === 'FRASES') { phrasesRaw.push({ jp: f[0], pt: f[1], hint: f[2] || '', nota: f[3] || '', line }); return; }
+    const [kana0, kanji0, pt, type = 's', uso = '', nota = ''] = f;
+    let kana = kana0, kanji = kanji0, mKana = '', mKanji = '';
+    if (type[0] === 'v') {
+      const givenMasu = kana0.endsWith('ます');
+      if (givenMasu) { mKana = kana0; mKanji = kanji0; kana = masuToDict(kana0, type); kanji = kanji0 ? masuToDict(kanji0, type) : ''; }
+      else { mKana = dictToMasu(kana0, type); mKanji = kanji0 ? dictToMasu(kanji0, type) : ''; }
+    }
+    const key = (type[0] === 'v' ? 'v' : 'x') + '|' + normJP(kana) + '|' + kanji.replace(/\s/g, '');
+    let e = byKey.get(key);
+    if (!e) {
+      e = { id: entries.length + 1, kana, kanji, mKana, mKanji, type, senses: [], srcs: [], order: {}, phrases: [] };
+      entries.push(e); byKey.set(key, e);
+    }
+    if (!(src in e.order)) e.order[src] = line;
+    if (!e.srcs.includes(src)) e.srcs.push(src);
+    const sk = normPt(pt).replace(/\(.*?\)/g, '').trim();
+    let s = e.senses.find(x => x.k === sk && (x.uso === uso || !uso || !x.uso));
+    if (s) {
+      if (!s.src.includes(src)) s.src.push(src);
+      if (pt.length > s.pt.length) s.pt = pt;
+      if (uso && !s.uso) s.uso = uso;
+      if (nota && !s.nota.includes(nota)) s.nota = s.nota ? s.nota + ' ' + nota : nota;
+    } else {
+      e.senses.push({ k: sk, pt, uso, nota, src: [src] });
+    }
+  });
+
+  // phrase entries + chunk links
+  const kanaIdx = new Map();
+  const addIdx = (k, e) => { if (!k) return; const n = normJP(k); if (!kanaIdx.has(n)) kanaIdx.set(n, []); kanaIdx.get(n).push(e); };
+  entries.forEach(e => { addIdx(e.kana, e); if (e.mKana) addIdx(e.mKana, e); });
+  const PARTS = ['から', 'を', 'に', 'で', 'が', 'と', 'は', 'の'];
+  phrasesRaw.forEach(p => {
+    const e = { id: entries.length + 1, kana: p.jp, kanji: '', mKana: '', mKanji: '', type: 'frase', senses: [{ k: normPt(p.pt), pt: p.pt, uso: '', nota: p.nota, src: ['AULA'] }], srcs: ['AULA'], order: { AULA: p.line }, phrases: [], blocks: [], links: [] };
+    const toks = p.jp.split(/\s+/);
+    toks.forEach((tok, i) => {
+      const last = i === toks.length - 1;
+      let base = tok, part = '';
+      if (!last) {
+        for (const pp of PARTS) { if (tok.length > pp.length && tok.endsWith(pp)) { base = tok.slice(0, -pp.length); part = pp; break; } }
+      }
+      let cands = (kanaIdx.get(normJP(base)) || []).slice();
+      if (!last) cands = cands.filter(c => c.type[0] !== 'v');
+      if (last && p.hint) {
+        const h = cands.filter(c => (c.kanji || c.kana) === p.hint || c.mKanji === p.hint);
+        if (h.length) cands = h;
+      }
+      if (cands.some(c => c.type[0] === 'v' || c.type === 'ai') && last) cands = cands.filter(c => c.type[0] === 'v' || c.type === 'ai');
+      const t = cands[0] ? cands[0].type : '';
+      const role = t[0] === 'v' ? 'verb' : (t === 'ai' || t === 'ana') ? 'adj' : (t === 'adv' || !t) ? 'mod' : 'noun';
+      const modif = !last && part === 'の' && role === 'noun';
+      e.blocks.push({ text: base, role: modif ? 'mod' : role, ids: cands.map(c => c.id) });
+      if (part) e.blocks.push({ text: part, role: 'part' });
+      cands.forEach(c => { if (!e.links.includes(c)) e.links.push(c); if (!c.phrases.includes(e)) c.phrases.push(e); });
+    });
+    entries.push(e);
+  });
+
+  // search fields
+  entries.forEach(e => {
+    const isP = e.type === 'frase';
+    e.romaji = romajiOf(e.kana, isP);
+    e.mRomaji = e.mKana ? romajiOf(e.mKana) : '';
+    e.jpKeys = [e.kana, e.mKana].filter(Boolean).map(normJP);
+    e.kjKeys = [e.kanji, e.mKanji].filter(Boolean).flatMap(k => k.split('・')).map(normJP);
+    e.rKeys = [e.romaji, e.mRomaji].filter(Boolean).map(normR);
+    e.ptN = e.senses.map(s => normPt(s.pt));
+    e.extraN = normPt(e.senses.map(s => s.nota).join(' '));
+    e.hw = e.kanji || e.kana;
+    e.sortKey = normJP(e.kana);
+  });
+  const byId = new Map(entries.map(e => [e.id, e]));
+  const collator = new Intl.Collator('ja');
+  const words = entries.filter(e => e.type !== 'frase');
+
+  // ---------- state ----------
+  const $ = id => document.getElementById(id);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('odu-dic-' + k); return v ? JSON.parse(v) : d; } catch (_) { return d; } },
+    set(k, v) { try { localStorage.setItem('odu-dic-' + k, JSON.stringify(v)); } catch (_) { /* storage indisponível */ } }
+  };
+  const favs = new Set(store.get('favs', []));
+  const state = { q: '', mode: store.get('mode', 'all'), group: '', lesson: '', cls: '', fav: false, row: '', limit: 80, sel: null };
+  const KANA_ROWS = { 'あ':'あいうえおぁぃぅぇぉゔ', 'か':'かきくけこがぎぐげご', 'さ':'さしすせそざじずぜぞ', 'た':'たちつてとだぢづでどっ', 'な':'なにぬねの', 'は':'はひふへほばびぶべぼぱぴぷぺぽ', 'ま':'まみむめも', 'や':'やゆよゃゅょ', 'ら':'らりるれろ', 'わ':'わをん' };
+
+  // ---------- search ----------
+  function scoreEntry(e, q) {
+    let best = 0;
+    if (q.jp) {
+      const qq = q.jp;
+      for (const k of e.jpKeys.concat(e.kjKeys)) {
+        if (k === qq) best = Math.max(best, 100);
+        else if (k.startsWith(qq)) best = Math.max(best, 80 - Math.min(10, k.length - qq.length));
+        else if (k.includes(qq)) best = Math.max(best, 55);
+      }
+      return best;
+    }
+    if (state.mode !== 'pt' && q.r) {
+      for (const k of e.rKeys) {
+        if (k === q.r) best = Math.max(best, 92);
+        else if (q.r.length >= 2 && k.startsWith(q.r)) best = Math.max(best, 72 - Math.min(10, k.length - q.r.length));
+        else if (q.r.length >= 5 && k.includes(q.r)) best = Math.max(best, 42);
+      }
+      if (q.hira) for (const k of e.jpKeys) { if (k === q.hira) best = Math.max(best, 92); }
+    }
+    if (state.mode !== 'jp' && q.pt) {
+      const qp = q.pt;
+      for (const n of e.ptN) {
+        const segs = n.split(/[,;\/()]|\s-\s|\.\s/).map(x => x.trim()).filter(Boolean);
+        if (segs.includes(qp) || n === qp) { best = Math.max(best, 98); continue; }
+        if (segs.some(sg => sg.replace(/^(o|a|os|as|um|uma) /, '') === qp)) { best = Math.max(best, 90); continue; }
+        const ws = n.split(/[^a-z0-9ç-]+/);
+        if (ws.includes(qp)) { best = Math.max(best, 82); continue; }
+        if (qp.length >= 3 && ws.some(w => w.startsWith(qp))) { best = Math.max(best, 64); continue; }
+        if (qp.length >= 3 && n.includes(qp)) best = Math.max(best, 45);
+      }
+      if (!best && qp.length >= 4 && e.extraN.includes(qp)) best = 18;
+    }
+    if (best && e.type === 'frase') best -= 6;
+    return best;
+  }
+  function parseQuery(raw) {
+    const s = raw.trim();
+    if (!s) return null;
+    if (isJP(s)) return { jp: normJP(s) };
+    const hira = romajiToHira(s);
+    const r = hira ? normR(kanaToRomaji(hira)) : normR(s);
+    return { r, hira: hira ? normJP(hira) : '', pt: normPt(s) };
+  }
+  function passesFilters(e) {
+    if (state.group && !e.srcs.some(s => srcInfo(s).g === state.group)) return false;
+    if (state.lesson && !e.srcs.includes(state.lesson)) return false;
+    if (state.cls && clsOf(e.type) !== state.cls) return false;
+    if (state.fav && !favs.has(e.id)) return false;
+    if (state.row && !(KANA_ROWS[state.row] || '').includes(e.sortKey.replace(/^[～~]/, '')[0])) return false;
+    return true;
+  }
+  function compute() {
+    const q = parseQuery(state.q);
+    let list;
+    if (q) {
+      list = [];
+      for (const e of entries) {
+        if (!passesFilters(e)) continue;
+        const sc = scoreEntry(e, q);
+        if (sc > 0) list.push([sc, e]);
+      }
+      list.sort((a, b) => b[0] - a[0] || a[1].sortKey.length - b[1].sortKey.length || collator.compare(a[1].sortKey, b[1].sortKey));
+      list = list.map(x => x[1]);
+    } else {
+      list = entries.filter(passesFilters);
+      if (state.lesson) list.sort((a, b) => a.order[state.lesson] - b.order[state.lesson]);
+      else list.sort((a, b) => (a.type === 'frase') - (b.type === 'frase') || collator.compare(a.sortKey.replace(/^[～~]/, ''), b.sortKey.replace(/^[～~]/, '')));
+    }
+    return { q, list };
+  }
+
+  // ---------- rendering ----------
+  const glossOf = e => e.senses.map(s => s.pt).join('; ');
+  function rowHTML(e) {
+    const sub = e.kanji ? `<small>${esc(e.kana)}</small>` : '';
+    return `<li><button type="button" class="row" data-id="${e.id}" aria-current="${state.sel === e.id}">
+      <span class="hw jp">${esc(e.hw)}${sub}${favs.has(e.id) ? '<span class="star" aria-label="favorita">★</span>' : ''}</span>
+      <span class="cls">${SHORT[e.type] || ''}</span>
+      <span class="gl"><span class="rm">${esc(e.romaji)}</span>${esc(glossOf(e))}</span>
+    </button></li>`;
+  }
+  function renderList() {
+    const { q, list } = compute();
+    const shown = list.slice(0, state.limit);
+    $('results').innerHTML = shown.map(rowHTML).join('');
+    $('results').hidden = !shown.length;
+    $('more').hidden = list.length <= state.limit;
+    $('more').textContent = `Mostrar mais (${list.length - state.limit} restantes)`;
+    let title = 'Todos os verbetes';
+    if (q) title = `Resultados para “${state.q.trim()}”`;
+    else if (state.lesson) title = srcInfo(state.lesson).label;
+    else if (state.group) title = GROUPS[state.group];
+    if (!q && state.row) title += ` · ${state.row}行`;
+    $('listtitle').textContent = title;
+    $('listcount').innerHTML = `<b>${list.length}</b> ${list.length === 1 ? 'verbete' : 'verbetes'}`;
+    const empty = $('empty');
+    if (!list.length) {
+      empty.hidden = false;
+      empty.innerHTML = q
+        ? `Nada encontrado para <b>${esc(state.q.trim())}</b>${(state.group || state.cls || state.fav || state.row) ? ' com os filtros atuais. <button type="button" class="chip" id="resetF">Limpar filtros</button>' : '. Tente outra grafia: em kana (たべる), em romaji (taberu) ou em português (comer).'}`
+        : (state.fav ? 'Você ainda não marcou favoritas. Abra uma palavra e toque em <b>★ Favoritar</b>.' : 'Nenhum verbete com esses filtros.');
+      const rb = $('resetF');
+      if (rb) rb.onclick = resetFilters;
+    } else empty.hidden = true;
+    // hint
+    const hint = $('hint');
+    if (q && !q.jp && q.hira && state.mode !== 'pt') hint.innerHTML = `Lendo em romaji como <span class="jp">${esc(q.hira)}</span>`;
+    else hint.textContent = '';
+    return list;
+  }
+
+  function chip(code) {
+    const i = srcInfo(code);
+    return `<button type="button" class="chip g-${i.g}" data-src="${esc(code)}" title="Ver todos de ${esc(i.label)}">${esc(i.label)}</button>`;
+  }
+  function blocksHTML(e, small, clickable) {
+    const LBL = { noun:'subst.', part:'partícula', verb:'verbo', adj:'adjetivo', mod:'modif.' };
+    return `<div class="chunks jp${small ? ' small' : ''}">` + e.blocks.map(b => {
+      const tag = clickable && b.ids && b.ids.length ? 'button' : 'span';
+      const attr = tag === 'button' ? ` type="button" data-open="${b.ids[0]}" title="Abrir ${esc(b.text)}"` : '';
+      return `<${tag} class="blk ${b.role}"${attr}>${esc(b.text)}<em>${LBL[b.role]}</em></${tag}>`;
+    }).join('') + '</div>';
+  }
+  function gridHTML(text) {
+    const chars = Array.from(text.replace(/[～~]/g, '～'));
+    const cls = chars.length > 9 ? ' xs' : chars.length > 5 ? ' sm' : '';
+    return `<div class="grid-word${cls}" aria-hidden="true">` + chars.map(c => c === ' ' ? '<span class="cell sp"></span>' : `<span class="cell">${esc(c)}</span>`).join('') + '</div>';
+  }
+  const ICON = {
+    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>'
+  };
+  const canSpeak = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+
+  function entryHTML(e, wotd) {
+    const isP = e.type === 'frase';
+    const allSrc = e.srcs.map(chip).join('');
+    let h = `<button type="button" class="btn back" data-close>← Voltar</button>`;
+    if (wotd) h += `<div class="wotd-label"><span class="jp">今日の言葉</span> Palavra do dia</div>`;
+    h += `<div class="eyebrow"><span class="kind">${TYPE[e.type] || ''}</span>${allSrc}</div>`;
+    h += `<div class="head">`;
+    if (isP) {
+      h += blocksHTML(e, false, true);
+      h += `<div class="reading"><span class="rm">${esc(e.romaji)}</span></div>`;
+      h += `<div class="translation">${esc(e.senses[0].pt)}</div>`;
+    } else {
+      h += gridHTML(e.hw);
+      h += `<div class="reading">${e.kanji ? `<span class="kana jp">${esc(e.kana)}</span>` : ''}<span class="rm">${esc(e.romaji)}</span></div>`;
+    }
+    h += `<div class="actions">`;
+    if (canSpeak) h += `<button type="button" class="btn" data-speak="${esc(e.kanji ? e.kanji.split('・')[0] : e.kana)}">${ICON.play} Ouvir</button>`;
+    h += `<button type="button" class="btn${favs.has(e.id) ? ' on' : ''}" data-fav="${e.id}">${favs.has(e.id) ? '★ Favorita' : '☆ Favoritar'}</button>`;
+    h += `<button type="button" class="btn" data-copy="${esc((e.kanji ? e.kanji + ' (' + e.kana + ')' : e.kana) + ' — ' + glossOf(e))}">${ICON.copy} Copiar</button>`;
+    h += `</div></div>`;
+
+    if (e.type[0] === 'v') {
+      h += `<div><h3 class="section-t">Conjugação</h3><div class="conj-tbl">
+        <div><div class="k">Dicionário</div><div class="v jp">${esc(e.kanji || e.kana)}<small>${esc(e.romaji)}</small></div></div>
+        <div><div class="k">Forma ～ます</div><div class="v jp">${esc(e.mKanji || e.mKana)}<small>${esc(e.mRomaji)}</small></div></div>
+        <div><div class="k">Grupo</div><div class="v">${e.type.slice(1)}</div></div>
+        <div class="rule">${VRULE[e.type]}</div></div></div>`;
+    }
+    if (!isP) {
+      h += `<div><h3 class="section-t">${e.senses.length > 1 ? 'Significados' : 'Significado'}</h3><ol class="senses">` + e.senses.map(s => `<li>
+        <div class="pt">${esc(s.pt)}</div>
+        ${s.uso ? `<div class="uso">${esc(s.uso)}</div>` : ''}
+        ${s.nota ? `<div class="nota">${esc(s.nota)}</div>` : ''}
+        ${e.srcs.length > 1 ? `<div class="src">${s.src.map(chip).join('')}</div>` : ''}
+      </li>`).join('') + `</ol></div>`;
+    } else if (e.senses[0].nota) {
+      h += `<p class="nota">${esc(e.senses[0].nota)}</p>`;
+    }
+    if (isP && e.links.length) {
+      h += `<div><h3 class="section-t">Palavras nesta frase</h3><div class="wordlinks">` + e.links.map(w =>
+        `<button type="button" data-open="${w.id}"><span class="jp">${esc(w.hw)}</span><small>${esc(w.senses[0].pt)}</small></button>`).join('') + `</div></div>`;
+    }
+    if (e.phrases.length) {
+      h += `<div><h3 class="section-t">Em blocos · frases da aula</h3><div class="phrlist">` + e.phrases.map(p =>
+        `<button type="button" class="phr" data-open="${p.id}">${blocksHTML(p, true, false)}<span class="t">${esc(p.senses[0].pt)}</span></button>`).join('') + `</div></div>`;
+    }
+    if (isP || e.phrases.length) {
+      h += `<div class="legend"><span><i style="background:var(--navy)"></i>substantivo</span><span><i style="background:var(--coral)"></i>partícula</span><span><i style="background:var(--teal)"></i>verbo</span><span><i style="background:var(--rose)"></i>adjetivo</span><span><i style="background:var(--gold)"></i>modificador</span></div>`;
+    }
+    return h;
+  }
+
+  function wotdEntry() {
+    const pool = words.filter(e => e.type !== 'suf' && e.type !== 'conj');
+    const d = new Date();
+    const n = d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate();
+    return pool[(n * 2654435761 >>> 0) % pool.length];
+  }
+  const WOTD = wotdEntry();
+
+  function showEntry(id, opts = {}) {
+    const e = byId.get(id) || WOTD;
+    const isW = !id;
+    state.sel = id || null;
+    $('sheetIn').innerHTML = entryHTML(e, isW);
+    $('sheet').scrollTop = 0;
+    document.querySelectorAll('.row').forEach(r => r.setAttribute('aria-current', String(Number(r.dataset.id) === state.sel)));
+    if (opts.open) $('sheet').classList.add('open');
+    if (!opts.noHash) {
+      try { history.replaceState(null, '', id ? '#p' + id : location.pathname + location.search); } catch (_) { /* sem histórico */ }
+    }
+  }
+  function renderWotdMobile() {
+    const e = WOTD;
+    $('wotdMobile').innerHTML = `<button type="button" class="phr" data-open="${e.id}"><span class="wotd-label"><span class="jp">今日の言葉</span> Palavra do dia</span><span class="jp" style="font-size:24px;font-weight:700">${esc(e.hw)} <small style="font-size:14px;font-weight:400;color:var(--ink-2)">${esc(e.kanji ? e.kana : '')} ${esc(e.romaji)}</small></span><span class="t">${esc(glossOf(e))}</span></button>`;
+  }
+
+  // ---------- controls ----------
+  function fillSelects() {
+    $('fgroup').innerHTML = `<option value="">Todos os materiais</option>` + Object.entries(GROUPS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+    $('fcls').innerHTML = CLASSES.map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+  }
+  function fillLessons() {
+    const sel = $('flesson');
+    if (!state.group || state.group === 'AULA') { sel.hidden = true; sel.innerHTML = ''; return; }
+    const codes = [];
+    entries.forEach(e => e.srcs.forEach(s => { if (srcInfo(s).g === state.group && !codes.includes(s)) codes.push(s); }));
+    if (state.group !== 'Y') codes.sort((a, b) => Number(srcInfo(a).sub) - Number(srcInfo(b).sub));
+    const isY = state.group === 'Y';
+    sel.innerHTML = `<option value="">${isY ? 'Todas as categorias' : 'Todas as lições'}</option>` + codes.map(c => `<option value="${esc(c)}">${esc(isY ? srcInfo(c).sub : 'Lição ' + srcInfo(c).sub)}</option>`).join('');
+    sel.value = state.lesson;
+    sel.hidden = false;
+  }
+  function syncControls() {
+    document.querySelectorAll('#mode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
+    $('fgroup').value = state.group;
+    $('fcls').value = state.cls;
+    $('ffav').setAttribute('aria-pressed', String(state.fav));
+    document.querySelectorAll('#kanarow button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.row === state.row)));
+    $('clear').hidden = !state.q;
+    fillLessons();
+  }
+  function update(resetLimit = true) {
+    if (resetLimit) state.limit = 80;
+    syncControls();
+    const list = renderList();
+    return list;
+  }
+  function resetFilters() { state.group = ''; state.lesson = ''; state.cls = ''; state.fav = false; state.row = ''; update(); }
+  function filterBySource(code) {
+    const i = srcInfo(code);
+    state.q = ''; $('q').value = '';
+    state.group = i.g; state.lesson = i.g === 'AULA' ? '' : code; state.cls = ''; state.row = ''; state.fav = false;
+    $('sheet').classList.remove('open');
+    update();
+    $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  let toastT;
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 1800); }
+
+  Object.keys(KANA_ROWS).forEach(k => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.dataset.row = k; b.textContent = k; b.setAttribute('aria-pressed', 'false'); b.title = `Palavras da linha ${k}`;
+    $('kanarow').appendChild(b);
+  });
+  fillSelects();
+  $('count').textContent = `${words.length} palavras · ${entries.length - words.length} frases`;
+
+  let debounce;
+  $('q').addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      state.q = $('q').value;
+      if (state.q.trim()) state.row = '';
+      const list = update();
+      if (list.length && window.matchMedia('(min-width: 861px)').matches && state.q.trim()) showEntry(list[0].id);
+    }, 120);
+  });
+  $('searchform').addEventListener('submit', ev => {
+    ev.preventDefault();
+    state.q = $('q').value;
+    const list = update();
+    if (list.length) showEntry(list[0].id, { open: true });
+    $('q').blur();
+  });
+  $('clear').addEventListener('click', () => { $('q').value = ''; state.q = ''; update(); $('q').focus(); });
+  $('mode').addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    state.mode = b.dataset.mode; store.set('mode', state.mode); update();
+  });
+  $('fgroup').addEventListener('change', ev => { state.group = ev.target.value; state.lesson = ''; update(); });
+  $('flesson').addEventListener('change', ev => { state.lesson = ev.target.value; update(); });
+  $('fcls').addEventListener('change', ev => { state.cls = ev.target.value; update(); });
+  $('ffav').addEventListener('click', () => { state.fav = !state.fav; update(); });
+  $('kanarow').addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    state.row = state.row === b.dataset.row ? '' : b.dataset.row;
+    if (state.row) { state.q = ''; $('q').value = ''; }
+    update();
+  });
+  $('more').addEventListener('click', () => { state.limit += 120; renderList(); });
+
+  document.addEventListener('click', ev => {
+    const row = ev.target.closest('.row');
+    if (row) { showEntry(Number(row.dataset.id), { open: true }); return; }
+    const op = ev.target.closest('[data-open]');
+    if (op) { showEntry(Number(op.dataset.open), { open: true }); return; }
+    const sc = ev.target.closest('[data-src]');
+    if (sc) { filterBySource(sc.dataset.src); return; }
+    if (ev.target.closest('[data-close]')) { $('sheet').classList.remove('open'); return; }
+    const sp = ev.target.closest('[data-speak]');
+    if (sp && canSpeak) {
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(sp.dataset.speak.replace(/[～~]/g, ''));
+        u.lang = 'ja-JP'; u.rate = 0.85;
+        const v = speechSynthesis.getVoices().find(x => /^ja/i.test(x.lang));
+        if (v) u.voice = v;
+        speechSynthesis.speak(u);
+      } catch (_) { toast('Áudio indisponível neste navegador'); }
+      return;
+    }
+    const fv = ev.target.closest('[data-fav]');
+    if (fv) {
+      const id = Number(fv.dataset.fav);
+      if (favs.has(id)) { favs.delete(id); toast('Removida das favoritas'); } else { favs.add(id); toast('Adicionada às favoritas'); }
+      store.set('favs', [...favs]);
+      showEntry(id, { noHash: true, open: $('sheet').classList.contains('open') });
+      renderList();
+      return;
+    }
+    const cp = ev.target.closest('[data-copy]');
+    if (cp) {
+      const text = cp.dataset.copy;
+      const done = () => toast('Copiado');
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => toast(text));
+      else toast(text);
+    }
+  });
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape' && $('sheet').classList.contains('open')) $('sheet').classList.remove('open');
+    if (ev.key === '/' && document.activeElement !== $('q')) { ev.preventDefault(); $('q').focus(); }
+  });
+
+  // boot
+  syncControls();
+  renderList();
+  renderWotdMobile();
+  const m = /^#p(\d+)$/.exec(location.hash);
+  if (m && byId.has(Number(m[1]))) showEntry(Number(m[1]), { open: true, noHash: true });
+  else showEntry(null, { noHash: true });
+})();
+
+</script>
+
+</body>
+</html>
