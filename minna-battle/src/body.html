@@ -1,0 +1,156 @@
+<div id="app">
+
+  <!-- ============ TÍTULO ============ -->
+  <section class="screen" id="title">
+    <canvas class="bg" id="titleBg"></canvas>
+    <div class="credit">Odu Creative · Método Chunk</div>
+    <div class="logo-jp">みんなの<br>にほんご</div>
+    <div class="logo-pt">Batalha dos Reinos</div>
+    <p class="tagline">Monte frases com os blocos coloridos da aula, envie samurais pela ponte e derrube o castelo do Time Oni. Cada lição do Minna no Nihongo 初級 I é uma batalha; só a vitória abre a próxima.</p>
+    <div class="legend" aria-label="Legenda de cores">
+      <span class="t-S">S Sujeito</span><span class="t-V">V Verbo</span><span class="t-O">O Objeto</span><span class="t-A">AUX Partícula</span><span class="t-D">ADV Tempo/Lugar</span>
+    </div>
+    <div class="title-actions">
+      <button class="btn gold big" id="btnStart">Começar</button>
+      <button class="btn ghost" id="btnSettings1">Configurações</button>
+    </div>
+    <p class="small">🎧 Música lo-fi e efeitos sonoros: use fones ou caixa de som.</p>
+  </section>
+
+  <!-- ============ MAPA ============ -->
+  <section class="screen" id="map" hidden>
+    <div class="map-head">
+      <h2>第1〜25課 · Campanha</h2>
+      <div class="stats"><span>Pontos <b id="totScore">0</b></span><span>Estrelas <b id="totStars">0</b>/75</span><span>Vitórias <b id="totWins">0</b>/25</span></div>
+      <div class="hud-btns">
+        <div class="mode-switch" role="group" aria-label="Modo de jogo">
+          <button id="modeSolo" aria-pressed="true">Solo vs. Oni</button>
+          <button id="modeDuel" aria-pressed="false">2 Times</button>
+        </div>
+        <button class="icon-btn" id="btnMusic2" title="Música" aria-label="Ligar ou desligar música"></button>
+        <button class="icon-btn" id="btnSettings2" title="Configurações" aria-label="Configurações">⚙</button>
+      </div>
+    </div>
+    <div class="scroll">
+      <p class="mode-note" id="modeNote"></p>
+      <div class="lesson-grid" id="lessonGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ BRIEFING ============ -->
+  <section class="screen" id="brief" hidden>
+    <div class="scroll">
+      <div class="brief-card">
+        <div class="eyebrow" id="briefEyebrow"></div>
+        <h2 id="briefTitle"></h2>
+        <div class="mission" id="briefMission"></div>
+        <div class="team-names" id="teamNames" hidden>
+          <label>Time azul (embaixo)<input id="nameP" maxlength="16" value="Time Sakura 桜"></label>
+          <label>Time vermelho (em cima)<input id="nameE" maxlength="16" value="Time Oni 鬼"></label>
+        </div>
+        <div>
+          <div class="eyebrow" style="margin-bottom:6px">Objetivos da aula</div>
+          <ul class="objs" id="briefObjs"></ul>
+        </div>
+        <div>
+          <div class="eyebrow" style="margin-bottom:6px">文法 · Pontos gramaticais</div>
+          <div class="points" id="briefPoints"></div>
+        </div>
+        <div class="legend">
+          <span class="t-S">S Sujeito</span><span class="t-V">V Verbo</span><span class="t-O">O Objeto / Complemento</span><span class="t-A">AUX Auxiliar / Partícula</span><span class="t-D">ADV Advérbio / Tempo</span>
+        </div>
+        <div class="brief-actions">
+          <button class="btn ghost" id="btnBriefBack">← Mapa</button>
+          <button class="btn gold big" id="btnFight">Batalhar!</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ JOGO ============ -->
+  <section class="screen" id="game" hidden>
+    <header class="hud">
+      <div class="side p">
+        <div class="crowns" id="crownsP"></div>
+        <div class="team-tag"><span class="nm" id="hudNameP">Time Sakura</span><span class="score" id="scoreP">0</span><small id="subP"></small></div>
+      </div>
+      <div class="clock"><div class="time" id="clock">3:30</div><div class="lesson-tag" id="lessonTag">第1課</div></div>
+      <div class="side e">
+        <div class="team-tag"><span class="nm" id="hudNameE">Time Oni</span><span class="score" id="scoreE"></span><small id="subE"></small></div>
+        <div class="crowns" id="crownsE"></div>
+        <div class="hud-btns">
+          <button class="icon-btn" id="btnMusic" title="Música (M)" aria-label="Ligar ou desligar música"></button>
+          <button class="icon-btn" id="btnPause" title="Pausa (Esc)" aria-label="Pausar">❚❚</button>
+        </div>
+      </div>
+    </header>
+    <div class="arena" id="arena"><canvas id="three"></canvas></div>
+    <div class="wave" id="wave"><span class="label" id="waveLabel">Ataque Oni em 20s</span><span class="track"><i id="waveFill"></i></span><span class="combo" id="combo"></span></div>
+    <div class="builder" id="builder">
+      <div class="prompt">
+        <span class="turn-banner" id="turnBanner" hidden></span>
+        <span class="pt" id="ptText">…</span>
+        <span class="review" id="reviewTag" hidden>Revisão</span>
+        <span class="pform" id="pForm"></span>
+      </div>
+      <div class="slots" id="slots" aria-label="Sua frase"></div>
+      <div class="deck" id="deck" aria-label="Blocos disponíveis"></div>
+      <div class="actions">
+        <button class="btn ghost" id="btnClear" title="Limpar (Backspace apaga o último)">Limpar</button>
+        <button class="btn ghost" id="btnHint" title="Revela o próximo bloco (custa metade dos pontos)">Dica</button>
+        <div class="legend"><span class="t-S">S</span><span class="t-V">V</span><span class="t-O">O</span><span class="t-A">AUX</span><span class="t-D">ADV</span></div>
+        <button class="btn gold big" id="btnAttack" disabled>Atacar!</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CORREÇÃO ============ -->
+  <div class="overlay" id="ovWrong" hidden>
+    <div class="sheet" role="dialog" aria-labelledby="wrongTitle">
+      <h3 class="bad" id="wrongTitle">ざんねん！ A frase não está certa</h3>
+      <div class="cmp">
+        <div class="row"><span class="lbl">SUA FRASE</span><div class="mini" id="wrongYours"></div></div>
+        <div class="row"><span class="lbl">FRASE CORRETA</span><div class="mini" id="wrongRight"></div></div>
+      </div>
+      <div class="tip" id="wrongTip"></div>
+      <button class="btn gold" id="btnWrongOk">Entendi, continuar</button>
+    </div>
+  </div>
+
+  <!-- ============ PAUSA ============ -->
+  <div class="overlay" id="ovPause" hidden>
+    <div class="sheet">
+      <h3>Pausa</h3>
+      <button class="btn gold" id="btnResume">Continuar</button>
+      <button class="btn" id="btnRestart">Reiniciar batalha</button>
+      <button class="btn ghost" id="btnQuit">Sair para o mapa</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTADO ============ -->
+  <div class="overlay" id="ovResult" hidden>
+    <div class="sheet" id="resultSheet"></div>
+  </div>
+
+  <!-- ============ CONFIGURAÇÕES ============ -->
+  <div class="overlay" id="ovSettings" hidden>
+    <div class="sheet">
+      <h3>Configurações</h3>
+      <div class="set-row"><label for="volMusic">Música lo-fi</label><input type="range" id="volMusic" min="0" max="1" step="0.05"></div>
+      <div class="set-row"><label for="volSfx">Efeitos sonoros</label><input type="range" id="volSfx" min="0" max="1" step="0.05"></div>
+      <div class="set-row"><label for="optFx">Efeitos visuais intensos</label><input type="checkbox" id="optFx"></div>
+      <div class="set-row"><label for="optTeacher">Modo professor (todas as lições abertas)</label><input type="checkbox" id="optTeacher"></div>
+      <p class="small">O progresso fica salvo neste navegador. O modo professor libera qualquer lição para usar em aula.</p>
+      <div class="set-row">
+        <button class="btn red" id="btnReset">Zerar progresso</button>
+        <button class="btn gold" id="btnSettingsOk">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="vignette" id="vignette"></div>
+</div>
+<div id="flash"></div>
+<div id="burst"></div>
+<div id="splash"></div>
+<canvas id="fx"></canvas>
