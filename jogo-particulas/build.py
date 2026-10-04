@@ -1,6 +1,7 @@
 """Monta o jogo: injeta os assets gerados no Blender (base64) em src/jogo.html.
 
     python3 build.py            -> index.html (documento completo; usa vendor/three.min.js, funciona offline exceto as fontes)
+    python3 build.py --standalone OUT.html  -> arquivo HTML único (Three.js e assets embutidos)
     python3 build.py --fragment  OUT.html  -> versão sem <html>/<head> (para publicar como Artifact)
 """
 import base64, json, os, sys
@@ -19,7 +20,17 @@ src = open(os.path.join(AQUI, "src", "jogo.html"), encoding="utf-8").read()
 src = src.replace("__ASSETS__", json.dumps(assets))
 head, body = src.split("<!--HEAD-END-->", 1)
 
-if len(sys.argv) > 2 and sys.argv[1] == "--fragment":
+if len(sys.argv) > 2 and sys.argv[1] == "--standalone":
+    # arquivo único: Three.js embutido, nenhuma pasta extra necessária
+    for url, local in (("https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js", "three.min.js"),
+                       ("https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js", "GLTFLoader.js")):
+        code = open(os.path.join(AQUI, "vendor", local), encoding="utf-8").read().replace("</script", "<\\/script")
+        body = body.replace(f'<script src="{url}"></script>', f"<script>{code}</script>")
+    doc = ('<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n'
+           '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+           f'{head}</head>\n<body>{body}</body>\n</html>\n')
+    open(sys.argv[2], "w", encoding="utf-8").write(doc)
+elif len(sys.argv) > 2 and sys.argv[1] == "--fragment":
     open(sys.argv[2], "w", encoding="utf-8").write(head + body)
 else:
     # versão do repositório: Three.js local (pasta vendor/) para funcionar sem internet

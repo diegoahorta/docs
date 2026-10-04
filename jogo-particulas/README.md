@@ -11,7 +11,8 @@ e os "erros comuns" de cada ponto gramatical.
 
 ## Como jogar
 
-Abra `index.html` no navegador. Ele funciona offline, com o Three.js na pasta `vendor/`.
+Abra `particula-quest.html` no navegador: é um arquivo único, com tudo embutido (pode ser copiado sozinho para qualquer lugar).
+O `index.html` é a mesma versão, mas carrega o Three.js da pasta `vendor/`.
 Só as fontes do Google Fonts precisam de internet; sem elas o navegador usa fontes do sistema.
 
 ## Metodologia (Chunking em blocos coloridos)
