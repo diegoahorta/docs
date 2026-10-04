@@ -7,11 +7,27 @@ export const GATE_Z = [-16, -32, -48];
 const END_Z = -58;
 const SPEED = 3.4;
 const MODELS = 'assets/models/';
+// A versão publicada como artifact não pode servir .glb: lá cada modelo vai como JSON
+// { "glb": "<base64>" } e é decodificado aqui (window.PONGO_MODEL_EXT = '.glb.json').
+const EXT = window.PONGO_MODEL_EXT || '.glb';
+
+async function loadPacked(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  const { glb } = await res.json();
+  const bin = atob(glb);
+  const buf = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return loader.parseAsync(buf.buffer, MODELS);
+}
 
 const loader = new GLTFLoader();
 const cache = new Map();
 function load(name) {
-  if (!cache.has(name)) cache.set(name, loader.loadAsync(MODELS + name));
+  if (!cache.has(name)) {
+    const url = MODELS + name.replace('.glb', EXT);
+    cache.set(name, EXT === '.glb' ? loader.loadAsync(url) : loadPacked(url));
+  }
   return cache.get(name);
 }
 
