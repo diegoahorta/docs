@@ -15,9 +15,21 @@ python3 -m http.server 8000
 # abra http://localhost:8000
 ```
 
-O jogo precisa de um servidor web porque carrega os modelos `.glb` com `fetch`. Abrir o
-`index.html` direto no navegador (`file://`) não funciona. Qualquer hospedagem estática serve:
-Netlify, Vercel, GitHub Pages ou similar.
+O `index.html` precisa de um servidor web porque carrega os modelos `.glb` com `fetch`.
+Qualquer hospedagem estática serve: Netlify, Vercel, GitHub Pages ou similar.
+
+### Versão em arquivo único
+
+`dist/pongo-vai-a-china.html` (cerca de 2,4 MB) traz o jogo inteiro num só arquivo: CSS,
+JavaScript, Three.js, os modelos 3D e as imagens embutidos. Ele abre com duplo clique, sem
+servidor, e pode ser enviado por e-mail ou colocado num pendrive. Só as fontes vêm da internet;
+sem conexão, o navegador usa fontes parecidas. Para gerar o arquivo de novo depois de mudar o jogo:
+
+```bash
+cd pongo-mandarim
+npm install --no-save esbuild
+node tools/build-single-html.mjs
+```
 
 - **走 Andar:** toque no botão, toque no cenário ou segure ↑ / W / espaço.
 - **Portais 牌坊:** cada fase tem 3 portais. Em cada um há uma lição curta e depois de 6 a 9 desafios.

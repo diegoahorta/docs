@@ -11,10 +11,16 @@ const MODELS = 'assets/models/';
 // { "glb": "<base64>" } e é decodificado aqui (window.PONGO_MODEL_EXT = '.glb.json').
 const EXT = window.PONGO_MODEL_EXT || '.glb';
 
-async function loadPacked(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-  const { glb } = await res.json();
+// A versão em arquivo HTML único traz os modelos embutidos em window.PONGO_EMBEDDED_MODELS.
+const EMBEDDED = window.PONGO_EMBEDDED_MODELS || null;
+
+async function loadPacked(url, name) {
+  let glb = EMBEDDED?.[name];
+  if (!glb) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+    ({ glb } = await res.json());
+  }
   const bin = atob(glb);
   const buf = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
@@ -26,7 +32,7 @@ const cache = new Map();
 function load(name) {
   if (!cache.has(name)) {
     const url = MODELS + name.replace('.glb', EXT);
-    cache.set(name, EXT === '.glb' ? loader.loadAsync(url) : loadPacked(url));
+    cache.set(name, EXT === '.glb' && !EMBEDDED ? loader.loadAsync(url) : loadPacked(url, name));
   }
   return cache.get(name);
 }
