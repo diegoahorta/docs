@@ -88,3 +88,11 @@ Tudo fica em `js/levels.js`. Exemplo de frase em blocos:
   tip: 'is shining = ação em andamento.',
 }
 ```
+
+## Versão em mandarim: Pongo Aprende Mandarim (中文)
+
+- **Arquivo único:** `pongo-mandarim.html`. Versão em pastas: `mandarim.html`.
+- **Conteúdo:** gerado do manual **Mandarim Básico I — Método Chunk** (`../odu-mandarim/content.json`) por `tools/gen_levels_zh.py`. As 25 lições do manual viram 7 paradas e 63 desafios.
+- As frases do manual já vêm divididas em chunks; no jogo elas viram os blocos coloridos, com as mesmas cores do manual (S azul, ADV laranja, V verde, O amarelo, partícula lilás).
+- Voz em chinês (zh-CN) do aparelho; sem voz, aparece o pinyin.
+- Para mudar o conteúdo: edite o manual (`odu-mandarim/content_*.py`), gere o `content.json` e rode `python3 tools/gen_levels_zh.py` e `python3 tools/build_single_html.py`.

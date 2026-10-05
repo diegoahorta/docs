@@ -1,7 +1,8 @@
 """Bundles each game into one self-contained file (CSS, JS, Three.js, the
 Blender map and the images are all inlined):
   index.html   -> pongo-english.html  (inglês)
-  coreano.html -> pongo-coreano.html  (coreano / hangul)"""
+  coreano.html -> pongo-coreano.html  (coreano / hangul)
+  mandarim.html -> pongo-mandarim.html (mandarim / 中文)"""
 import base64, os, re
 
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
@@ -36,3 +37,4 @@ def build(src, dst):
 
 build("index.html", "pongo-english.html")
 build("coreano.html", "pongo-coreano.html")
+build("mandarim.html", "pongo-mandarim.html")

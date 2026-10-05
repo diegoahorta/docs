@@ -564,6 +564,19 @@ body.lang-ko { word-break: keep-all; }
   .bank.jamo .block, .answer-line.jamo .block { font-size: 1.45rem; min-width: 48px; }
 }
 
+/* ---------------------------------------------------------------- Mandarin pack (中文) */
+body.lang-zh {
+  --hanzi: 'ZCOOL KuaiLe', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'WenQuanYi Zen Hei', var(--body);
+}
+.lang-zh .block, .lang-zh .choice, .lang-zh .bubble, .lang-zh .tip-en, .lang-zh .cel-main,
+.lang-zh .result-title, .lang-zh .start-bubble, .lang-zh .start-title .zh, .lang-zh #pop-title, .lang-zh .fb-text {
+  font-family: var(--hanzi);
+}
+.lang-zh .start-title .zh { color: var(--odu-red); font-weight: 400; }
+.lang-zh .block { font-size: 1.25rem; }
+.lang-zh .fb-text { font-size: 1.2rem; font-weight: 400; }
+.lang-zh .fb-tip { font-style: normal; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
