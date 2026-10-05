@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mayu e o Gato de Nekomori</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Grenze+Gotisch:wght@600;800&display=swap">
+<style>
+/* Layout: full-screen dark-fantasy forest painted on canvas; the giant cat and the white-brick road sit in the free area,
+   the mission panel floats on the right (desktop) or the lower half (phone). Single dark look by design. */
+:root{
+  color-scheme: dark;
+  --night:#0c0a22;        /* forest sky */
+  --ink:#f6efff;          /* text */
+  --muted:#b6a8dc;        /* secondary text */
+  --sakura:#ff6fb5;       /* pink mist, ribbons, main accent */
+  --neko:#7fd3ff;         /* the giant cat's glow */
+  --gold:#ffd54a;         /* cat eyes, stars */
+  --dress:#2f5bd3;        /* Mayu's blue dress */
+  --good:#7dffb2;
+  --warn:#ffb36b;
+  --panel:rgba(22,16,52,.84);
+  --panel-edge:rgba(255,111,181,.45);
+  --tile:#f3ecff;
+  --tile-ink:#2a1f55;
+  --display:"Mochiy Pop One","M PLUS Rounded 1c","Hiragino Maru Gothic ProN",system-ui,sans-serif;
+  --body:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --gothic:"Grenze Gotisch","Mochiy Pop One",serif;
+}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--body);font-size:15px;overflow:hidden;-webkit-tap-highlight-color:transparent}
+#app{position:fixed;inset:0;overflow:hidden}
+#app.shake{animation:shake .55s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:translate(-3px,2px) rotate(-.4deg)}20%,80%{transform:translate(6px,-4px) rotate(.5deg)}30%,50%,70%{transform:translate(-10px,5px) rotate(-.8deg)}40%,60%{transform:translate(10px,-6px) rotate(.8deg)}}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#fx{pointer-events:none;z-index:40}
+#flash{position:absolute;inset:0;pointer-events:none;z-index:39;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.95),rgba(255,111,181,.6) 40%,rgba(127,211,255,0) 75%)}
+#flash.on{animation:flash .6s ease-out}
+@keyframes flash{0%{opacity:.95}100%{opacity:0}}
+
+/* Mayu */
+#mayu{position:absolute;z-index:5;transform-origin:50% 100%;pointer-events:none;filter:drop-shadow(0 0 14px rgba(127,211,255,.35))}
+#mayu svg{width:100%;height:100%;overflow:visible}
+#mayu .body{transform-origin:100px 290px;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+#mayu.walk .body{animation:walkbob .36s ease-in-out infinite}
+@keyframes walkbob{50%{transform:translateY(-7px) rotate(1deg)}}
+#mayu.walk #legL{animation:legA .36s ease-in-out infinite}
+#mayu.walk #legR{animation:legA .36s ease-in-out infinite reverse}
+@keyframes legA{0%{transform:translateY(0)}50%{transform:translateY(-9px)}100%{transform:translateY(0)}}
+#mayu.jump .body{animation:jump .8s cubic-bezier(.3,1.6,.5,1)}
+@keyframes jump{0%{transform:translateY(0) scale(1,1)}15%{transform:translateY(4px) scale(1.08,.9)}45%{transform:translateY(-60px) scale(.95,1.06) rotate(-6deg)}75%{transform:translateY(0) scale(1.06,.94)}100%{transform:translateY(0)}}
+#mayu.sad .body{animation:sad .7s ease-in-out}
+@keyframes sad{25%{transform:rotate(-5deg)}50%{transform:rotate(4deg)}75%{transform:rotate(-2deg)}}
+#mayu.fall{animation:fall 2.2s cubic-bezier(.55,0,.6,1) both}
+@keyframes fall{0%{transform:translate(-50%,-100%) translateY(-120vh) rotate(-900deg) scale(.4)}70%{transform:translate(-50%,-100%) translateY(0) rotate(0) scale(1.05,.85)}82%{transform:translate(-50%,-100%) translateY(-30px) scale(.95,1.05)}100%{transform:translate(-50%,-100%) translateY(0) scale(1)}}
+#mayu .mouth{display:none}
+#mayu[data-face="smile"] .m-smile,#mayu[data-face="happy"] .m-happy,#mayu[data-face="oh"] .m-oh,#mayu[data-face="worry"] .m-worry{display:inline}
+#mayu[data-face="happy"] .eyes-open{display:none}
+#mayu .eyes-happy{display:none}
+#mayu[data-face="happy"] .eyes-happy{display:inline}
+
+/* Cat speech */
+#catSay{position:absolute;z-index:6;max-width:min(300px,70vw);padding:10px 14px;border-radius:18px;background:rgba(240,250,255,.95);color:#1f2a5c;font-weight:700;font-size:14px;line-height:1.45;box-shadow:0 0 24px rgba(127,211,255,.6);transform:translate(-50%,-100%) scale(.6);opacity:0;transition:opacity .3s,transform .35s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+#catSay.on{opacity:1;transform:translate(-50%,-100%) scale(1)}
+#catSay::after{content:"";position:absolute;left:50%;bottom:-9px;border:10px solid transparent;border-top-color:rgba(240,250,255,.95);border-bottom:0;transform:translateX(-50%)}
+#catSay .jp{font-family:var(--display);font-weight:400;color:#2f5bd3}
+
+/* HUD */
+#hud{position:absolute;z-index:20;top:calc(env(safe-area-inset-top,0px) + 10px);left:16px;right:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;pointer-events:none}
+#hud > *{pointer-events:auto}
+.brand{font-family:var(--gothic);font-size:22px;letter-spacing:.02em;color:var(--ink);text-shadow:0 0 12px rgba(255,111,181,.7);margin-right:auto;white-space:nowrap}
+.brand small{font-family:var(--display);font-size:12px;color:var(--neko);margin-left:6px;text-shadow:none}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(15,10,40,.7);border:1px solid rgba(255,255,255,.14);font-weight:800;font-variant-numeric:tabular-nums;font-size:14px;backdrop-filter:blur(6px)}
+.pill .ic{color:var(--gold)}
+.pill.combo{color:var(--sakura)}
+.pill.combo.hot{animation:pulse .6s ease-in-out infinite alternate;box-shadow:0 0 16px var(--sakura)}
+@keyframes pulse{to{transform:scale(1.08)}}
+.iconbtn{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(15,10,40,.7);color:var(--ink);width:38px;height:38px;border-radius:12px;font-size:17px;cursor:pointer;display:grid;place-items:center}
+.iconbtn[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+.iconbtn:focus-visible,.btn:focus-visible,.tile:focus-visible,.opt:focus-visible,.mission:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Panel */
+#panel{position:absolute;z-index:10;right:24px;top:calc(env(safe-area-inset-top,0px) + 64px);bottom:calc(env(safe-area-inset-bottom,0px) + 20px);width:min(540px,44vw);overflow-y:auto;overscroll-behavior:contain;
+  background:var(--panel);border:1.5px solid var(--panel-edge);border-radius:26px;padding:22px 22px 26px;backdrop-filter:blur(10px);
+  box-shadow:0 0 0 1px rgba(127,211,255,.12) inset,0 20px 60px rgba(0,0,0,.55),0 0 40px rgba(255,111,181,.18)}
+@media (max-width:899px){
+  #panel{left:16px;right:16px;width:auto;top:46%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);padding:16px 16px 20px;border-radius:22px}
+  .brand{font-size:18px}.brand small{display:none}
+  .pill{padding:5px 9px;font-size:13px}
+  .iconbtn{width:34px;height:34px}
+  #catSay{font-size:12.5px;max-width:58vw;padding:8px 11px}
+}
+@media (max-width:520px){ .brand{display:none} #hud{justify-content:flex-end} }
+.screen{display:flex;flex-direction:column;gap:14px;animation:rise .45s cubic-bezier(.2,1.2,.4,1)}
+@keyframes rise{from{opacity:.0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--neko);font-weight:800}
+h1,h2,h3{margin:0;text-wrap:balance}
+.logo{display:flex;flex-direction:column;gap:4px}
+.logo .jp{font-family:var(--display);font-size:clamp(30px,5vw,46px);line-height:1.1;background:linear-gradient(90deg,#ffd1ea,var(--sakura) 40%,var(--neko));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(255,111,181,.45))}
+.logo .pt{font-family:var(--gothic);font-size:clamp(22px,3.2vw,30px);font-weight:800;letter-spacing:.02em}
+p{margin:0;line-height:1.6;max-width:62ch}
+.lede{color:#e3d9ff}
+.chip{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(127,211,255,.14);color:var(--neko);border:1px solid rgba(127,211,255,.35)}
+.chip.pink{background:rgba(255,111,181,.14);color:#ffb3d9;border-color:rgba(255,111,181,.4)}
+.lesson{font-family:var(--display);font-size:14px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.2);line-height:1.6}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{appearance:none;border:0;cursor:pointer;font-family:var(--display);font-size:16px;padding:13px 22px;border-radius:16px;color:#2a0f2f;
+  background:linear-gradient(180deg,#ffd0ea,var(--sakura));box-shadow:0 5px 0 #b23a7c,0 0 24px rgba(255,111,181,.45);transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b23a7c,0 0 12px rgba(255,111,181,.45)}
+.btn.blue{color:#0c1d3d;background:linear-gradient(180deg,#d5f2ff,var(--neko));box-shadow:0 5px 0 #3a7fae,0 0 24px rgba(127,211,255,.4)}
+.btn.blue:active{box-shadow:0 1px 0 #3a7fae}
+.btn.ghost{background:rgba(255,255,255,.08);color:var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18);font-size:14px;padding:10px 16px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.big{font-size:19px;padding:15px 26px}
+.how{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.how li{display:flex;gap:10px;align-items:baseline;color:#d9cff5;line-height:1.5}
+.how b{color:var(--gold);font-family:var(--display);font-weight:400;min-width:1.4em}
+
+/* Odu sequence */
+.odu{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:10.5px;font-weight:800;letter-spacing:.08em}
+.odu span{padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.06);color:var(--muted)}
+.odu span.on{background:var(--sakura);color:#2a0f2f;box-shadow:0 0 14px var(--sakura)}
+.odu span.done{color:var(--good)}
+.odu i{color:var(--muted);font-style:normal}
+
+/* Map */
+.missions{list-style:none;margin:0;padding:0;display:grid;gap:10px;position:relative}
+.missions::before{content:"";position:absolute;left:25px;top:10px;bottom:10px;border-left:3px dotted rgba(255,255,255,.25)}
+.mission{position:relative;display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;appearance:none;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--ink);border-radius:18px;padding:10px 12px 10px 0;cursor:pointer;font-family:var(--body)}
+.mission .num{width:40px;height:40px;margin-left:6px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:16px;background:#1d1645;border:2px solid rgba(255,255,255,.25);z-index:1}
+.mission .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.mission .t strong{font-size:15px}
+.mission .t small{color:var(--muted);font-size:12px}
+.mission .st{font-size:13px;color:var(--gold);font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mission.locked{opacity:.45;cursor:not-allowed}
+.mission.current{border-color:var(--sakura);background:rgba(255,111,181,.12);box-shadow:0 0 22px rgba(255,111,181,.3)}
+.mission.current .num{background:var(--sakura);color:#2a0f2f;border-color:#ffd0ea;animation:pulse .9s ease-in-out infinite alternate}
+.mission.done .num{background:var(--neko);color:#0c1d3d;border-color:#d5f2ff}
+
+/* Task */
+.taskhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pips{display:flex;gap:5px;margin-left:auto}
+.pips i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
+.pips i.done{background:var(--neko);box-shadow:0 0 8px var(--neko)}
+.pips i.now{background:var(--sakura);box-shadow:0 0 10px var(--sakura)}
+.say{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:16px;background:rgba(127,211,255,.08);border:1px solid rgba(127,211,255,.25)}
+.say .who{flex:none;width:38px;height:38px}
+.say .line{min-width:0}
+.say .line .jp{font-family:var(--display);font-size:17px;color:#d5f2ff}
+.say .line small{display:block;color:var(--muted);font-size:12.5px}
+.orb{align-self:center;width:132px;height:132px;border-radius:50%;display:grid;place-items:center;font-size:50px;letter-spacing:-.05em;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.55),rgba(127,211,255,.25) 30%,rgba(60,30,120,.6) 70%,rgba(255,111,181,.35));
+  box-shadow:0 0 30px rgba(127,211,255,.5),inset 0 0 30px rgba(255,111,181,.4);animation:orb 4s ease-in-out infinite}
+@keyframes orb{50%{transform:translateY(-6px);box-shadow:0 0 44px rgba(255,111,181,.55),inset 0 0 30px rgba(127,211,255,.5)}}
+.prompt{font-size:18px;font-weight:800;line-height:1.45}
+.prompt .hint-pt{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.formula{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--display);font-size:15px}
+.formula span{padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
+.formula span.k{background:rgba(255,111,181,.18);border-color:rgba(255,111,181,.5)}
+.formula em{font-style:normal;color:var(--muted);font-family:var(--body);font-size:12px}
+.model{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.model .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-right:4px}
+.model span{font-family:var(--display);padding:5px 10px;border-radius:10px;background:rgba(127,211,255,.12);border:1px solid rgba(127,211,255,.3);font-size:15px}
+.answer{min-height:64px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;border-radius:18px;border:2px dashed rgba(255,255,255,.28);background:rgba(0,0,0,.22);transition:border-color .2s,box-shadow .2s}
+.answer.empty::before{content:"Toque nos blocos para montar a frase…";color:var(--muted);font-size:13px;padding-left:4px}
+.answer.ok{border-color:var(--good);border-style:solid;box-shadow:0 0 26px rgba(125,255,178,.45)}
+.answer.bad{border-color:var(--warn);animation:wob .4s}
+@keyframes wob{25%{transform:translateX(-8px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+.tray{display:flex;flex-wrap:wrap;gap:8px}
+.tile{appearance:none;cursor:pointer;border:0;border-radius:14px;padding:8px 13px 6px;background:var(--tile);color:var(--tile-ink);display:inline-flex;flex-direction:column;align-items:center;gap:1px;
+  box-shadow:0 4px 0 #a98ad8,0 0 14px rgba(255,111,181,.25);font-family:var(--body);transition:transform .12s;animation:pop .3s cubic-bezier(.3,1.7,.5,1)}
+.tile .j{font-family:var(--display);font-size:19px;line-height:1.25}
+.tile .r{font-size:11px;color:#6d5aa8;font-weight:700}
+.noro .tile .r{display:none}
+.tile:hover{transform:translateY(-2px) rotate(-1deg)}
+.tile:active{transform:translateY(3px)}
+.tile.in{background:linear-gradient(180deg,#fff,#ffe0f1);box-shadow:0 4px 0 #d0609c,0 0 16px rgba(255,111,181,.5)}
+.tile.hinted{box-shadow:0 4px 0 #c9a227,0 0 18px var(--gold)}
+.tile[disabled]{opacity:.25;cursor:default;transform:none}
+@keyframes pop{from{transform:scale(.6)}to{transform:scale(1)}}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.controls .grow{margin-left:auto}
+.opts{display:grid;gap:10px}
+.opt{appearance:none;cursor:pointer;text-align:left;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink);border-radius:16px;padding:12px 14px;font-family:var(--body);display:flex;flex-direction:column;gap:2px;transition:transform .12s,background .2s}
+.opt .j{font-family:var(--display);font-size:19px}
+.opt .r{font-size:12px;color:var(--muted)}
+.opt:hover{background:rgba(255,111,181,.12);transform:translateX(3px)}
+.opt.ok{border-color:var(--good);background:rgba(125,255,178,.14);box-shadow:0 0 22px rgba(125,255,178,.35)}
+.opt.no{opacity:.35;border-color:var(--warn);cursor:not-allowed;text-decoration:line-through;transform:none}
+.opt.gone{display:none}
+.feedback{min-height:0;border-radius:14px;padding:0;font-size:14px;line-height:1.55}
+.feedback.show{padding:12px 14px}
+.feedback.good{background:rgba(125,255,178,.12);border:1px solid rgba(125,255,178,.4)}
+.feedback.bad{background:rgba(255,179,107,.1);border:1px solid rgba(255,179,107,.4)}
+.feedback .jp{font-family:var(--display);font-size:17px}
+.feedback .stars{color:var(--gold);font-size:18px;letter-spacing:.1em}
+.speak{appearance:none;border:0;background:rgba(127,211,255,.18);color:var(--neko);border-radius:10px;padding:4px 9px;cursor:pointer;font-weight:800;font-size:12px;margin-left:6px;vertical-align:middle}
+.rubric{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;font-size:12px;color:var(--muted)}
+.rubric div{padding:7px 9px;border-radius:10px;background:rgba(255,255,255,.05)}
+.rubric b{display:block;color:var(--gold);letter-spacing:.08em}
+.slot-machine{align-self:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.slot-machine .reel{width:120px;height:120px;border-radius:24px;display:grid;place-items:center;font-size:62px;background:#120d30;border:3px solid var(--gold);box-shadow:0 0 30px rgba(255,213,74,.4),inset 0 0 20px rgba(0,0,0,.6)}
+.slot-machine .lab{font-family:var(--display);font-size:20px}
+.done-stars{font-size:38px;color:var(--gold);letter-spacing:.08em;text-shadow:0 0 18px rgba(255,213,74,.7);font-variant-numeric:tabular-nums}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{padding:10px;border-radius:14px;background:rgba(255,255,255,.06);text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:22px;font-weight:400;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.review{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:13px}
+.review-wrap{overflow-x:auto}
+.review th{text-align:left;color:var(--neko);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:0 6px}
+.review td{padding:8px 6px;background:rgba(255,255,255,.05)}
+.review td:first-child{border-radius:10px 0 0 10px;font-weight:800}
+.review td:last-child{border-radius:0 10px 10px 0}
+.review label{display:inline-flex;gap:4px;align-items:center;margin-right:8px;white-space:nowrap;cursor:pointer}
+.toggle-ro{font-size:12px;color:var(--muted);display:inline-flex;gap:6px;align-items:center;cursor:pointer;margin-left:auto}
+
+/* Hype overlay */
+#hype{position:absolute;inset:0;z-index:45;pointer-events:none;display:grid;place-items:center;overflow:hidden}
+#hype .big{text-align:center;opacity:0}
+#hype .big.on{animation:hype 1.9s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes hype{0%{opacity:0;transform:scale(.2) rotate(-25deg)}18%{opacity:1;transform:scale(1.25) rotate(6deg)}30%{transform:scale(1) rotate(-3deg)}80%{opacity:1;transform:scale(1.04) rotate(0)}100%{opacity:0;transform:scale(1.6) rotate(0)}}
+#hype .big .j{display:block;font-family:var(--display);font-size:clamp(54px,12vw,130px);line-height:1;
+  background:linear-gradient(90deg,#fff36b,#ff6fb5,#7fd3ff,#b98bff,#7dffb2,#fff36b);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-stroke:2px rgba(255,255,255,.6);filter:drop-shadow(0 0 22px rgba(255,111,181,.9)) drop-shadow(0 6px 0 #3b0f4a);animation:rainbow 1s linear infinite}
+@keyframes rainbow{to{background-position:300% 0}}
+#hype .big .p{display:inline-block;margin-top:10px;font-family:var(--display);font-size:clamp(18px,3.4vw,30px);color:#fff;padding:8px 18px;border-radius:999px;background:rgba(43,10,60,.75);border:2px solid var(--gold);box-shadow:0 0 30px rgba(255,213,74,.6)}
+.stamp{position:absolute;font-family:var(--display);font-size:clamp(20px,4vw,40px);color:#fff;padding:4px 12px;border-radius:12px;white-space:nowrap;animation:stamp 1.6s ease-out forwards;text-shadow:0 3px 0 rgba(0,0,0,.4)}
+@keyframes stamp{0%{opacity:0;transform:scale(3) rotate(var(--r))}12%{opacity:1;transform:scale(1) rotate(var(--r))}75%{opacity:1}100%{opacity:0;transform:scale(1.2) translateY(-40px) rotate(var(--r))}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  #hype .big.on{animation:none;opacity:1}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div id="mayu" data-face="smile" aria-hidden="true">
+    <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="skin" cx="45%" cy="40%" r="65%"><stop offset="0" stop-color="#c98a5e"/><stop offset="1" stop-color="#a5683f"/></radialGradient>
+        <linearGradient id="dressG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b6ae6"/><stop offset="1" stop-color="#1f3f9e"/></linearGradient>
+        <radialGradient id="iris" cx="50%" cy="60%" r="60%"><stop offset="0" stop-color="#a0612f"/><stop offset=".6" stop-color="#5a2f14"/><stop offset="1" stop-color="#22110a"/></radialGradient>
+      </defs>
+      <ellipse cx="100" cy="292" rx="46" ry="8" fill="rgba(10,5,30,.45)"/>
+      <g class="body">
+        <!-- back hair -->
+        <g fill="#24140d">
+          <circle cx="52" cy="120" r="22"/><circle cx="148" cy="120" r="22"/><circle cx="46" cy="96" r="22"/><circle cx="154" cy="96" r="22"/>
+          <circle cx="58" cy="146" r="18"/><circle cx="142" cy="146" r="18"/><circle cx="64" cy="166" r="14"/><circle cx="136" cy="166" r="14"/>
+          <circle cx="100" cy="40" r="34"/><circle cx="62" cy="58" r="28"/><circle cx="138" cy="58" r="28"/><circle cx="48" cy="76" r="22"/><circle cx="152" cy="76" r="22"/>
+        </g>
+        <!-- legs -->
+        <g id="legL"><rect x="80" y="246" width="13" height="34" rx="6" fill="url(#skin)"/><ellipse cx="85" cy="283" rx="12" ry="7" fill="#1b2d6b"/></g>
+        <g id="legR"><rect x="107" y="246" width="13" height="34" rx="6" fill="url(#skin)"/><ellipse cx="115" cy="283" rx="12" ry="7" fill="#1b2d6b"/></g>
+        <!-- arms -->
+        <rect x="52" y="140" width="13" height="58" rx="6.5" fill="url(#skin)" transform="rotate(10 58 140)"/>
+        <rect x="135" y="140" width="13" height="58" rx="6.5" fill="url(#skin)" transform="rotate(-10 142 140)"/>
+        <!-- dress -->
+        <path d="M70 166 Q58 212 42 254 Q100 272 158 254 Q142 212 130 166 Z" fill="url(#dressG)"/>
+        <path d="M76 128 Q100 120 124 128 L131 170 L69 170 Z" fill="#2f5bd3"/>
+        <path d="M58 240 Q100 254 142 240" stroke="#8fb0ff" stroke-width="2" fill="none" opacity=".7"/>
+        <path d="M90 140 Q100 152 110 140 M86 150 Q100 166 114 150" stroke="#b9cdff" stroke-width="1.6" fill="none" opacity=".75"/>
+        <g fill="#cfe0ff"><circle cx="70" cy="220" r="1.8"/><circle cx="128" cy="230" r="1.8"/><circle cx="96" cy="236" r="1.4"/><circle cx="114" cy="206" r="1.4"/><circle cx="82" cy="200" r="1.2"/></g>
+        <rect x="68" y="164" width="64" height="7" rx="3" fill="#5a3a22"/><rect x="95" y="162" width="10" height="11" rx="2" fill="#d9b25a"/>
+        <circle cx="68" cy="138" r="16" fill="#3a68e0"/><circle cx="132" cy="138" r="16" fill="#3a68e0"/>
+        <path d="M56 148 Q68 156 80 148 M120 148 Q132 156 144 148" stroke="#1f3f9e" stroke-width="2" fill="none"/>
+        <!-- neck + face -->
+        <rect x="92" y="118" width="16" height="14" fill="#a5683f"/>
+        <ellipse cx="100" cy="90" rx="44" ry="41" fill="url(#skin)"/>
+        <!-- bangs & curls -->
+        <g fill="#2b1810">
+          <circle cx="70" cy="56" r="17"/><circle cx="88" cy="50" r="16"/><circle cx="106" cy="48" r="16"/><circle cx="124" cy="52" r="16"/><circle cx="136" cy="64" r="13"/><circle cx="62" cy="70" r="12"/>
+          <circle cx="56" cy="92" r="10"/><circle cx="144" cy="92" r="10"/>
+        </g>
+        <g stroke="#6b402a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".9">
+          <path d="M64 52 q6 -6 12 0"/><path d="M84 46 q6 -6 12 0"/><path d="M104 44 q6 -6 12 0"/><path d="M122 48 q6 -6 12 0"/>
+          <path d="M42 98 q6 -6 12 0"/><path d="M146 98 q6 -6 12 0"/><path d="M50 128 q6 -6 12 0"/><path d="M138 128 q6 -6 12 0"/><path d="M58 152 q5 -5 10 0"/><path d="M132 152 q5 -5 10 0"/>
+        </g>
+        <!-- blue flower clips -->
+        <g><g fill="#8fb0ff"><circle cx="62" cy="62" r="4"/><circle cx="70" cy="60" r="4"/><circle cx="68" cy="68" r="4"/><circle cx="60" cy="70" r="4"/></g><circle cx="65" cy="65" r="2.5" fill="#ffd54a"/></g>
+        <g><g fill="#8fb0ff"><circle cx="134" cy="60" r="4"/><circle cx="142" cy="62" r="4"/><circle cx="140" cy="70" r="4"/><circle cx="132" cy="68" r="4"/></g><circle cx="137" cy="65" r="2.5" fill="#ffd54a"/></g>
+        <!-- brows -->
+        <path d="M72 78 q9 -5 17 0 M111 78 q9 -5 17 0" stroke="#2b1810" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <!-- eyes -->
+        <g class="eyes-open">
+          <ellipse cx="81" cy="97" rx="10.5" ry="13" fill="url(#iris)"/><ellipse cx="119" cy="97" rx="10.5" ry="13" fill="url(#iris)"/>
+          <circle cx="85" cy="92" r="4.2" fill="#fff"/><circle cx="123" cy="92" r="4.2" fill="#fff"/>
+          <circle cx="78" cy="103" r="2" fill="#fff" opacity=".9"/><circle cx="116" cy="103" r="2" fill="#fff" opacity=".9"/>
+          <path d="M69 88 q12 -9 24 0 M107 88 q12 -9 24 0" stroke="#1a0d07" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="eyes-happy" stroke="#1a0d07" stroke-width="3.2" fill="none" stroke-linecap="round"><path d="M71 99 q10 -12 20 0"/><path d="M109 99 q10 -12 20 0"/></g>
+        <ellipse cx="70" cy="112" rx="8" ry="4.5" fill="#ff7aa8" opacity=".5"/><ellipse cx="130" cy="112" rx="8" ry="4.5" fill="#ff7aa8" opacity=".5"/>
+        <circle cx="100" cy="108" r="1.4" fill="#7a4326"/>
+        <g class="mouth m-smile"><path d="M93 115 Q100 121 107 115" stroke="#6b2525" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+        <g class="mouth m-happy"><path d="M91 114 Q100 128 109 114 Z" fill="#7a2030"/><path d="M95 120 Q100 124 105 120" fill="#ff8aa8"/></g>
+        <g class="mouth m-oh"><ellipse cx="100" cy="118" rx="4.5" ry="5.5" fill="#7a2030"/></g>
+        <g class="mouth m-worry"><path d="M93 119 Q100 114 107 119" stroke="#6b2525" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+      </g>
+    </svg>
+  </div>
+  <div id="catSay" role="status" aria-live="polite"></div>
+
+  <header id="hud">
+    <div class="brand">マユと猫の森 <small>Lição 29</small></div>
+    <span class="pill" title="Pontos"><span class="ic">✦</span><span id="hScore">0</span></span>
+    <span class="pill" title="Estrelas"><span class="ic">★</span><span id="hStars">0</span></span>
+    <span class="pill combo" id="hComboWrap" title="Sequência de acertos de primeira">連 <span id="hCombo">0</span></span>
+    <button class="iconbtn" id="bMap" title="Mapa da estrada" aria-label="Mapa da estrada">⌘</button>
+    <button class="iconbtn" id="bMusic" title="Trilha sonora" aria-label="Trilha sonora" aria-pressed="true">♫</button>
+    <button class="iconbtn" id="bSfx" title="Efeitos sonoros" aria-label="Efeitos sonoros" aria-pressed="true">🔊</button>
+  </header>
+
+  <main id="panel" aria-live="polite"></main>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div id="flash"></div>
+  <div id="hype" aria-hidden="true"><div class="big" id="hypeBig"><span class="j"></span><span class="p"></span></div></div>
+</div>
+
+<script>
+(() => {
+'use strict';
+/* ============================================================
+   DATA — Lição 29 (Odu Creative): ～ています (estado resultante) e ～てしまいました
+   ============================================================ */
+const R = { // leitura (romaji) de cada bloco
+  '窓が':'mado ga','窓を':'mado o','閉まって':'shimatte','閉めて':'shimete','います':'imasu','開いて':'aite','開けて':'akete',
+  'かぎが':'kagi ga','かぎを':'kagi o','掛かって':'kakatte','掛けて':'kakete','パソコンが':'pasokon ga','パソコンを':'pasokon o',
+  '故障して':'koshō shite','壊れて':'kowarete','しまいました':'shimaimashita','しまいます':'shimaimasu','本を':'hon o','全部':'zenbu','読んで':'yonde','読みて':'yomite (✗)',
+  '電車に':'densha ni','電車を':'densha o','傘を':'kasa o','傘が':'kasa ga','忘れて':'wasurete','忘れって':'wasurette (✗)','忘れた':'wasureta',
+  '遅れて':'okurete','遅れって':'okurette (✗)','遅れた':'okureta','タクシーに':'takushī ni','荷物を':'nimotsu o','学校に':'gakkō ni','携帯を':'keitai o',
+  '財布を':'saifu o','財布が':'saifu ga','かばんを':'kaban o','忘れてしまいました':'wasurete shimaimashita','きのう':'kinō (ontem)',
+  '落として':'otoshite','落とした':'otoshita','しまったんです':'shimatta n desu','道を':'michi o','道が':'michi ga','まちがえたんです':'machigaeta n desu',
+  'まちがえて':'machigaete','壊れたんです':'kowareta n desu','ドアが':'doa ga','網棚の上に':'amidana no ue ni','座席の下に':'zaseki no shita ni',
+  '置きました':'okimashita','置いています':'oite imasu','座席を':'zaseki o','たぶん':'tabun (talvez)','です':'desu','大きくて':'ōkikute (grande e…)',
+  'の':'no','が':'ga'
+};
+const OBJ = [
+  {jp:'傘',ro:'kasa',e:'☂️',pt:'guarda-chuva',adj:'青い',adjRo:'aoi',adjPt:'azul'},
+  {jp:'携帯',ro:'keitai',e:'📱',pt:'celular',adj:'黒い',adjRo:'kuroi',adjPt:'preto'},
+  {jp:'財布',ro:'saifu',e:'👛',pt:'carteira',adj:'赤い',adjRo:'akai',adjPt:'vermelha'},
+  {jp:'本',ro:'hon',e:'📕',pt:'livro',adj:'白い',adjRo:'shiroi',adjPt:'branco'},
+  {jp:'かばん',ro:'kaban',e:'👜',pt:'bolsa',adj:'黄色い',adjRo:'kiiroi',adjPt:'amarela'}
+];
+const combos = (a,b,tail,both=true) => { const out=[]; a.forEach(x=>b.forEach(y=>{out.push(x+y+tail); if(both) out.push(y+x+tail);})); return out; };
+
+const MISSIONS = [
+ { stage:'INPUT', sec:'1. Input', title:'O Bosque dos Estados', jp:'見る森', goal:'Observe a cena, leia em voz alta e ligue a frase ao que está acontecendo. A regra vem depois.',
+   say:['よく見て。','Olhe bem, humana. Primeiro a gente vê; depois a gente explica.'],
+   tasks:[
+    {type:'choice', scene:'🪟🌬️', q:'Observe a cena. Qual frase combina?', opts:[['窓が開いています。','mado ga aite imasu'],['パソコンが壊れています。','pasokon ga kowarete imasu'],['傘を忘れてしまいました。','kasa o wasurete shimaimashita']], a:0, pt:'A janela está aberta.'},
+    {type:'choice', scene:'💻⚡💥', q:'E esta cena?', opts:[['傘を忘れてしまいました。','kasa o wasurete shimaimashita'],['パソコンが壊れています。','pasokon ga kowarete imasu'],['窓が開いています。','mado ga aite imasu']], a:1, pt:'O computador está quebrado.'},
+    {type:'choice', scene:'🚃💨☂️❓', q:'O trem partiu… e o guarda-chuva ficou lá dentro.', opts:[['窓が開いています。','mado ga aite imasu'],['パソコンが壊れています。','pasokon ga kowarete imasu'],['傘を忘れてしまいました。','kasa o wasurete shimaimashita']], a:2, pt:'Acabei esquecendo o guarda-chuva.'},
+    {type:'choice', scene:'👁️✨', q:'Pergunta de percepção: qual frase descreve um ESTADO que vemos agora?', opts:[['傘を忘れてしまいました。','algo aconteceu'],['窓が開いています。','algo está assim']], a:1, pt:'～ています mostra o resultado que continua visível.'},
+    {type:'choice', scene:'⌛✔️', q:'E qual descreve algo que ACONTECEU e foi concluído?', opts:[['傘を忘れてしまいました。','kasa o wasurete shimaimashita'],['窓が開いています。','mado ga aite imasu']], a:0, pt:'～てしまいました: aconteceu, terminou (e infelizmente…).'}
+   ]},
+ { stage:'INTAKE', sec:'2. Intake', title:'A Ponte do Estado Resultante', jp:'～ています', goal:'Com certos verbos intransitivos, ～ています não é “estar fazendo”: é o estado que fica depois de uma mudança.',
+   formula:[['N が','algo / sujeito'],['Vて','mudança'],['います','estado atual']],
+   say:['変わった後の状態。','O que mudou… e ficou assim. Monte as frases, bloco por bloco.'],
+   tasks:[
+    {type:'build', scene:'🪟🔒', q:'A janela está fechada.', chunks:['窓が','閉まって','います'], extra:['窓を','閉めて']},
+    {type:'build', scene:'🚪🔐', q:'Está trancado (a chave está passada).', chunks:['かぎが','掛かって','います'], extra:['かぎを','掛けて']},
+    {type:'build', scene:'💻🛠️', q:'O computador está com defeito.', chunks:['パソコンが','故障して','います'], extra:['パソコンを','しまいました']},
+    {type:'choice', scene:'🚪✨', q:'“A porta está aberta.” → resultado visível agora', opts:[['ドアが開きました。','doa ga akimashita'],['ドアが開いています。','doa ga aite imasu'],['ドアを開けています。','doa o akete imasu']], a:1, pt:'が + intransitivo + ています = estado resultante.'},
+    {type:'choice', scene:'🚪💨', q:'“A porta abriu.” → mudança / evento', opts:[['ドアが開いています。','doa ga aite imasu'],['ドアを開けています。','doa o akete imasu'],['ドアが開きました。','doa ga akimashita']], a:2, pt:'～ました conta o evento: a mudança aconteceu.'},
+    {type:'choice', scene:'🙋🚪', q:'“Estou abrindo / mantendo a porta aberta.” → ação do agente', opts:[['ドアを開けています。','doa o akete imasu'],['ドアが開きました。','doa ga akimashita'],['ドアが開いています。','doa ga aite imasu']], a:0, pt:'を + transitivo (開ける) + ています = alguém está fazendo.'}
+   ]},
+ { stage:'INTAKE', sec:'3. Intake', title:'A Torre do “Já Era”', jp:'～てしまいました', goal:'～てしまう marca conclusão completa. Em problemas, traz a nuance “acabei fazendo / infelizmente aconteceu”.',
+   formula:[['Vて','forma て'],['しまいました','conclusão / “já era”']],
+   say:['しまった…！','Quando algo termina… ou dá errado de vez. Construa.'],
+   tasks:[
+    {type:'build', scene:'📖✅', q:'Terminei de ler o livro inteiro.', chunks:['本を','全部','読んで','しまいました'], extra:['読みて','います'], accept:['本を全部読んでしまいました','全部本を読んでしまいました']},
+    {type:'build', scene:'🚃☂️😱', q:'Acabei esquecendo o guarda-chuva no trem.', chunks:['電車に','傘を','忘れて','しまいました'], extra:['電車を','忘れって'], accept:['電車に傘を忘れてしまいました','傘を電車に忘れてしまいました']},
+    {type:'build', scene:'⏰🏃‍♀️', q:'Acabei me atrasando.', chunks:['遅れて','しまいました'], extra:['遅れって','います']},
+    {type:'choice', scene:'🤔', q:'Em 「傘を忘れてしまいました」, o que しまいました acrescenta?', opts:[['Lamento: “acabei esquecendo”','conclusão + nuance de problema'],['Ação em andamento','“estou esquecendo”'],['Pedido educado','“por favor, esqueça”']], a:0, pt:'Conclusão completa com sabor de “infelizmente”.'}
+   ]},
+ { stage:'OUTPUT', sec:'4. Chunking Odu', title:'O Mercado dos Blocos', jp:'チャンク', goal:'Uma estrutura produtiva, não quatro frases soltas. Troque um bloco por vez.',
+   model:['電車に','傘を','忘れてしまいました'],
+   say:['一つずつ変えて。','Troque um bloco de cada vez. A frase continua viva.'],
+   tasks:[
+    {type:'build', scene:'🚕 + 🧳', q:'Acabei esquecendo a bagagem no táxi.', chunks:['タクシーに','荷物を','忘れてしまいました'], extra:['電車に','傘を'], showModel:true},
+    {type:'build', scene:'🏫 + 📕', q:'Acabei esquecendo o livro na escola.', chunks:['学校に','本を','忘れてしまいました'], extra:['タクシーに','携帯を'], showModel:true},
+    {type:'build', scene:'🚃 + 📱', q:'Acabei esquecendo o celular no trem.', chunks:['電車に','携帯を','忘れてしまいました'], extra:['学校に','本を'], showModel:true},
+    {type:'build', scene:'✍️✨', q:'Escreva uma frase nova! Um lugar + um objeto + 忘れてしまいました.', sub:'Bônus ★★★★: comece com きのう (ontem) para acrescentar informação.', free:true,
+     chunks:['電車に','荷物を','忘れてしまいました'], tiles:['電車に','タクシーに','学校に','傘を','荷物を','本を','携帯を','財布を','忘れてしまいました','きのう'],
+     accept:combos(['電車に','タクシーに','学校に'],['傘を','荷物を','本を','携帯を','財布を'],'忘れてしまいました'),
+     bonus:combos(['電車に','タクシーに','学校に'],['傘を','荷物を','本を','携帯を','財布を'],'忘れてしまいました').map(s=>'きのう'+s)}
+   ]},
+ { stage:'RETRIEVAL', sec:'5. Escrita manual', title:'Construir, Cobrir, Recuperar', jp:'書いて覚える', goal:'Etapa A: monte com o modelo. Etapa B: complete as lacunas. Etapa C: o modelo some, e você recupera a frase inteira.',
+   model:['電車に','傘を','忘れて','しまいました'],
+   say:['隠すよ…','Vou cobrir o modelo daqui a pouco. Grave bem.'],
+   tasks:[
+    {type:'build', tag:'Etapa A · Monte', scene:'🧩', q:'Monte a frase seguindo o modelo.', chunks:['電車に','傘を','忘れて','しまいました'], extra:[], showModel:true},
+    {type:'choice', tag:'Etapa B · Complete', scene:'✏️', q:'電車に → ＿＿＿ → 忘れて → しまいました。', opts:[['傘を','kasa o'],['傘が','kasa ga'],['傘に','kasa ni']], a:0, pt:'O objeto esquecido leva を.'},
+    {type:'choice', tag:'Etapa B · Complete', scene:'✏️✏️', q:'＿＿＿ → 傘を → ＿＿＿ → しまいました。', opts:[['電車に … 忘れて','densha ni … wasurete'],['電車を … 忘れた','densha o … wasureta'],['電車で … 忘れって','densha de … wasurette']], a:0, pt:'Lugar onde ficou + に; しまう pede a forma て.'},
+    {type:'build', tag:'Etapa C · Recupere', scene:'🙈', q:'Sem modelo: “Acabei esquecendo o guarda-chuva no trem.”', chunks:['電車に','傘を','忘れて','しまいました'], extra:['電車を','傘が','忘れた','います'], accept:['電車に傘を忘れてしまいました','傘を電車に忘れてしまいました']}
+   ]},
+ { stage:'OUTPUT', sec:'6. Missão 忘れ物', title:'Estação Nekomori', jp:'忘れ物センター', goal:'Você esqueceu um objeto no trem. O gato gigante é o funcionário da estação (駅員). Sorteie o objeto e recupere-o usando os chunks.',
+   say:['いらっしゃいませ。','Achados e perdidos de Nekomori. Sorteie o que você perdeu.'],
+   dynamic:true, tasks:[{type:'draw'}]},
+ { stage:'OUTPUT', sec:'7. Jogo', title:'O Oráculo do Gato', jp:'どうしたんですか？', goal:'Sorteie uma situação e transforme-a numa resposta natural para「どうしたんですか。」(O que aconteceu?).',
+   say:['どうしたんですか。','O que aconteceu, humana? Conte do jeito natural.'], rubric:true,
+   tasks:[
+    {type:'build', scene:'👛⬇️', base:'財布を落としました。', q:'Transforme numa resposta natural.', chunks:['財布を','落として','しまったんです'], extra:['しまいました','落とした']},
+    {type:'build', scene:'🧳❓', base:'荷物を忘れました。', q:'Transforme numa resposta natural.', chunks:['荷物を','忘れて','しまったんです'], extra:['忘れた','います']},
+    {type:'build', scene:'⏰💦', base:'遅れました。', q:'Transforme numa resposta natural.', chunks:['遅れて','しまったんです'], extra:['遅れた','しまいます']},
+    {type:'build', scene:'🗺️🌀', base:'道をまちがえました。', q:'Transforme numa resposta natural.', chunks:['道を','まちがえたんです'], extra:['道が','まちがえて','しまったんです'], accept:['道をまちがえたんです','道をまちがえてしまったんです']},
+    {type:'build', scene:'💻💥', base:'パソコンが壊れました。', q:'Transforme numa resposta natural.', chunks:['パソコンが','壊れたんです'], extra:['パソコンを','壊れて','しまったんです'], accept:['パソコンが壊れたんです','パソコンが壊れてしまったんです']}
+   ]},
+ { stage:'RETRIEVAL', sec:'8. Retrieval', title:'Livro Fechado', jp:'思い出して', goal:'Pistas graduais. Só use a próxima pista se precisar: cada nível tira um apoio.',
+   say:['本を閉じて。','Feche o livro. Tudo o que você precisa já está aí dentro.'],
+   tasks:[
+    {type:'build', tag:'Nível 1 · Situação', scene:'🪟💨', q:'Janela aberta →', chunks:['窓が','開いて','います'], extra:['窓を','開けて']},
+    {type:'choice', tag:'Nível 2 · Lacuna', scene:'🪟', q:'窓が ＿＿＿ います。', opts:[['開いて','aite'],['開けて','akete'],['開き','aki']], a:0, pt:'開く (intransitivo) → 開いています.'},
+    {type:'build', tag:'Nível 3 · Produção', scene:'👛😱', q:'Diga: “Acabei esquecendo a carteira.”', chunks:['財布を','忘れて','しまいました'], extra:['財布が','忘れた','います']}
+   ]},
+ { stage:'CHECKOUT', sec:'9. Checkout', title:'Três Coisas que Ficaram', jp:'ポストイット', goal:'Sem consultar. Três post-its: um estado, um “acabei fazendo”, e uma frase sua.',
+   say:['最後の門だ。','O último portão. Três frases suas e a estrada é toda sua.'],
+   tasks:[
+    {type:'build', tag:'Post-it 1 · ～ています', scene:'📝💙', q:'Uma frase de estado resultante (qualquer uma que seja verdade no Bosque).', free:true,
+     chunks:['窓が','開いて','います'], tiles:['窓が','ドアが','パソコンが','開いて','閉まって','壊れて','います'],
+     accept:['窓が開いています','窓が閉まっています','ドアが開いています','ドアが閉まっています','パソコンが壊れています']},
+    {type:'build', tag:'Post-it 2 · ～てしまいました', scene:'📝💗', q:'Uma frase sobre algo que acabou acontecendo.', sub:'Bônus ★★★★: diga onde, com 電車に.', free:true,
+     chunks:['傘を','忘れて','しまいました'], tiles:['電車に','傘を','財布を','本を','忘れて','落として','しまいました'],
+     accept:['傘を','財布を','本を'].flatMap(o=>['忘れて','落として'].map(v=>o+v+'しまいました')),
+     bonus:['傘を','財布を','本を'].flatMap(o=>['忘れて','落として'].flatMap(v=>['電車に'+o+v+'しまいました',o+'電車に'+v+'しまいました']))},
+    {type:'build', tag:'Post-it 3 · Minha frase', scene:'📝💛', q:'Uma situação pessoal ou inventada.', sub:'Bônus ★★★★: comece com きのう.', free:true,
+     chunks:['学校に','かばんを','忘れて','しまいました'], tiles:['きのう','学校に','タクシーに','携帯を','かばんを','忘れて','しまいました'],
+     accept:combos(['学校に','タクシーに'],['携帯を','かばんを'],'忘れてしまいました'),
+     bonus:combos(['学校に','タクシーに'],['携帯を','かばんを'],'忘れてしまいました').map(s=>'きのう'+s)}
+   ]}
+];
+function genStation(o){
+  return [
+    {type:'build', tag:'駅員：何を忘れたんですか。', say:['何を忘れたんですか。','O que você esqueceu?'], scene:o.e, q:`Responda: “Acabei esquecendo o(a) ${o.pt}.”`,
+     chunks:[o.jp+'を','忘れて','しまいました'], extra:[OBJ.find(x=>x!==o).jp+'を','います'], ro:{[o.jp+'を']:o.ro+' o'}},
+    {type:'build', tag:'駅員：どんな'+o.jp+'ですか。', say:['どんな'+o.jp+'ですか。',`Como é o(a) ${o.pt}?`], scene:o.e+'🎨', q:`É um(a) ${o.pt} ${o.adjPt}.`, sub:'Bônus ★★★★: acrescente 大きくて (grande e…) no começo.',
+     chunks:[o.adj,o.jp,'です'], extra:['の','が','大きくて'], ro:{[o.adj]:o.adjRo,[o.jp]:o.ro},
+     accept:[o.adj+o.jp+'です'], bonus:['大きくて'+o.adj+o.jp+'です']},
+    {type:'build', tag:'駅員：どの辺に置きましたか。', say:['どの辺に置きましたか。','Onde você colocou?'], scene:'🚃⬆️', q:'Coloquei em cima do bagageiro (ou embaixo do assento).', sub:'Bônus ★★★★: comece com たぶん (talvez).',
+     chunks:['網棚の上に','置きました'], extra:['座席の下に','置いています','座席を','たぶん'],
+     accept:['網棚の上に置きました','座席の下に置きました'], bonus:['たぶん網棚の上に置きました','たぶん座席の下に置きました']}
+  ];
+}
+const HYPE = [
+  ['すごい！','Incrível, Mayu! O gato gigante ficou de boca aberta!'],['やったね！','Você arrasou! A estrada brilhou!'],['天才！','Gênio do japonês detectado!'],
+  ['完璧！','Perfeito! Nem o livro sabe tanto!'],['最高！','O melhor! Os vaga-lumes estão dançando por você!'],['その調子！','É assim! Continue nesse ritmo!'],
+  ['かっこいい！','Que estilo! Esse chunk ficou lindo!'],['魔法だ！','Isso foi magia pura!'],['ニャー！','Até o gato aplaudiu com as patas!'],['よくできました！','Muito bem feito! Mais um tijolo na sua estrada!']
+];
+const STAMPS = ['すごい!!','★★★','やった!','神!','天才','✨100✨','にゃ〜!','最高!','GO!','完璧','💥','🎉','うまい!','LV UP'];
+const STAGES = ['INPUT','INTAKE','RETRIEVAL','OUTPUT','SPACED REVIEW'];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const SAVE_KEY='mayu-nekomori-v1';
+let S = fresh();
+function fresh(){ return {score:0, stars:0, unlocked:0, done:{}, combo:0, bestCombo:0, showRo:true, story:false, review:{}}; }
+try { const raw = localStorage.getItem(SAVE_KEY); if(raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch(e){}
+function save(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch(e){} }
+let run = null; // current mission run
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================================
+   AUDIO — trilha dark fantasy procedural + efeitos
+   ============================================================ */
+const A = {ctx:null, musicOn:true, sfxOn:true};
+function impulse(ctx, sec, decay){
+  const len = Math.floor(ctx.sampleRate*sec), b = ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let c=0;c<2;c++){ const d=b.getChannelData(c); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay); }
+  return b;
+}
+function audioInit(){
+  if(A.ctx){ if(A.ctx.state==='suspended') A.ctx.resume(); return; }
+  const C = window.AudioContext||window.webkitAudioContext; if(!C) return;
+  const ctx = A.ctx = new C();
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value=-14; comp.ratio.value=4; comp.connect(ctx.destination);
+  A.master = ctx.createGain(); A.master.gain.value=.9; A.master.connect(comp);
+  A.music = ctx.createGain(); A.music.gain.value = A.musicOn?.5:0; A.music.connect(A.master);
+  A.sfx = ctx.createGain(); A.sfx.gain.value = A.sfxOn?.75:0; A.sfx.connect(A.master);
+  A.rev = ctx.createConvolver(); A.rev.buffer = impulse(ctx,5,2.4); A.rev.connect(A.music);
+  A.sfxRev = ctx.createConvolver(); A.sfxRev.buffer = impulse(ctx,1.8,3); const sr=ctx.createGain(); sr.gain.value=.35; A.sfxRev.connect(sr); sr.connect(A.sfx);
+  A.noise = ctx.createBuffer(1, ctx.sampleRate*1, ctx.sampleRate); const nd=A.noise.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+  startMusic();
+}
+const hz = m => 440*Math.pow(2,(m-69)/12);
+function env(g,t,a,peak,hold,rel){ g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(peak,t+a); g.gain.setValueAtTime(peak,t+a+hold); g.gain.exponentialRampToValueAtTime(0.0001,t+a+hold+rel); }
+function osc(type,f,t,dur,dest){ const o=A.ctx.createOscillator(); o.type=type; o.frequency.setValueAtTime(f,t); o.connect(dest); o.start(t); o.stop(t+dur+.05); return o; }
+
+const CHORDS = [[50,53,57],[46,50,53],[43,46,50],[45,49,52]]; // Dm  B♭  Gm  A  (ré menor harmônico)
+const MOTIF = [74,null,77,76, 74,null,73,74, 69,null,null,70, 69,null,65,null];
+const STEP = .3;
+let mus = {next:0, step:0, timer:null};
+function startMusic(){
+  const ctx=A.ctx, t=ctx.currentTime+.1;
+  // drone
+  const dg=ctx.createGain(); dg.gain.value=.16; const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=170; lp.Q.value=6;
+  lp.connect(dg); dg.connect(A.music); const dsend=ctx.createGain(); dsend.gain.value=.3; dg.connect(dsend); dsend.connect(A.rev);
+  [26,38,38.07,45].forEach(m=>{ const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=hz(m); o.connect(lp); o.start(t); });
+  const lfo=ctx.createOscillator(); lfo.frequency.value=.05; const lg=ctx.createGain(); lg.gain.value=70; lfo.connect(lg); lg.connect(lp.frequency); lfo.start(t);
+  mus.next=t; mus.step=0;
+  mus.timer=setInterval(schedule,90);
+}
+function schedule(){
+  const ctx=A.ctx; if(!ctx) return;
+  while(mus.next < ctx.currentTime+.35){
+    const s=mus.step, t=mus.next, bar=Math.floor(s/16), inBar=s%16, chord=CHORDS[Math.floor(bar/2)%4];
+    if(inBar===0 && bar%2===0) pad(chord,t,STEP*32);
+    if(inBar===0 && bar%2===0) choir(chord[2]+12,t,STEP*32);
+    if(inBar===0 || inBar===8 || (bar%2===1 && inBar===10)) drum(t, inBar===0?.7:.45);
+    if(bar%4===0 && inBar===0) bell(hz(50),t);
+    let n = null;
+    if(bar%2===0) n = MOTIF[inBar];
+    else if(Math.random()<.55 && inBar%2===0){ const c=chord[Math.floor(Math.random()*3)]; n = c+24 + (Math.random()<.3?12:0); }
+    if(n) musicBox(hz(n),t);
+    mus.next += STEP; mus.step++;
+  }
+}
+function pad(ch,t,dur){
+  const ctx=A.ctx, g=ctx.createGain(), f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=750; f.Q.value=2;
+  f.connect(g); const dry=ctx.createGain(); dry.gain.value=.35; g.connect(dry); dry.connect(A.music); g.connect(A.rev);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.09,t+2.5); g.gain.setValueAtTime(.09,t+dur-1); g.gain.exponentialRampToValueAtTime(.0001,t+dur+2.5);
+  ch.forEach(m=>{ [-7,7].forEach(dt=>{ const o=osc('sawtooth',hz(m),t,dur+2.6,f); o.detune.value=dt; }); });
+}
+function choir(m,t,dur){
+  const ctx=A.ctx, g=ctx.createGain(); g.connect(A.rev);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.05,t+3); g.gain.setValueAtTime(.05,t+dur-2); g.gain.exponentialRampToValueAtTime(.0001,t+dur+1.5);
+  [700,1150,2600].forEach((fr,i)=>{ const b=ctx.createBiquadFilter(); b.type='bandpass'; b.frequency.value=fr; b.Q.value=9; const bg=ctx.createGain(); bg.gain.value=[1,.6,.25][i]; b.connect(bg); bg.connect(g);
+    const o=osc('sawtooth',hz(m),t,dur+1.6,b); const v=ctx.createOscillator(); v.frequency.value=5; const vg=ctx.createGain(); vg.gain.value=4; v.connect(vg); vg.connect(o.detune); v.start(t); v.stop(t+dur+1.6); });
+}
+function musicBox(f,t){
+  const ctx=A.ctx, g=ctx.createGain(); env(g,t,.005,.11,0,1.3);
+  const dry=ctx.createGain(); dry.gain.value=.5; g.connect(dry); dry.connect(A.music); g.connect(A.rev);
+  osc('sine',f,t,1.4,g); const g2=ctx.createGain(); g2.gain.value=.25; g2.connect(g); osc('sine',f*3.01,t,.6,g2);
+}
+function drum(t,v){
+  const ctx=A.ctx, g=ctx.createGain(); env(g,t,.004,v,0,.55); g.connect(A.music); const s=ctx.createGain(); s.gain.value=.4; g.connect(s); s.connect(A.rev);
+  const o=osc('sine',95,t,.6,g); o.frequency.exponentialRampToValueAtTime(38,t+.45);
+}
+function bell(f,t){
+  const ctx=A.ctx; [1,2,2.76,5.4,8.9].forEach((p,i)=>{ const g=ctx.createGain(); env(g,t,.01,.07/(i+1),0,5-i*.6); g.connect(A.rev); const d=ctx.createGain(); d.gain.value=.3; g.connect(d); d.connect(A.music); osc('sine',f*p,t,5.2,g); });
+}
+// ----- SFX
+function sfxOk(){ return A.ctx && A.sfxOn; }
+function blip(f1,f2,dur,type='sine',vol=.25,when=0){ if(!sfxOk()) return; const t=A.ctx.currentTime+when, g=A.ctx.createGain(); env(g,t,.005,vol,0,dur); g.connect(A.sfx); g.connect(A.sfxRev); const o=osc(type,f1,t,dur+.05,g); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t+dur); }
+function noiseBurst(when,freq,dur,vol){ if(!sfxOk()) return; const ctx=A.ctx, t=ctx.currentTime+when, s=ctx.createBufferSource(); s.buffer=A.noise; const b=ctx.createBiquadFilter(); b.type='bandpass'; b.frequency.value=freq; b.Q.value=1.2; const g=ctx.createGain(); env(g,t,.002,vol,0,dur); s.connect(b); b.connect(g); g.connect(A.sfx); s.start(t); s.stop(t+dur+.05); }
+const sfx = {
+  tap(){ blip(880,1320,.08,'triangle',.18); },
+  place(){ blip(660,990,.12,'triangle',.22); blip(1320,null,.15,'sine',.08,.04); },
+  back(){ blip(700,420,.1,'triangle',.15); },
+  hint(){ [1568,1976,2349,2637].forEach((f,i)=>blip(f,null,.4,'sine',.07,i*.06)); },
+  wrong(){ if(!sfxOk()) return; blip(220,180,.25,'square',.06); blip(196,140,.35,'square',.06,.16); },
+  step(i){ noiseBurst(i*.18,300,.08,.12); },
+  tick(){ blip(1200,null,.04,'square',.05); },
+  celebrate(big){
+    if(!sfxOk()) return;
+    // pops & crackles
+    for(let i=0;i<(big?44:28);i++) noiseBurst(Math.random()*1.1, 600+Math.random()*5000, .05+Math.random()*.08, .25+Math.random()*.35);
+    // fanfare (ré maior, triunfante)
+    [74,78,81,86,90].forEach((m,i)=>{ blip(hz(m),null,.18,'square',.09,i*.07); blip(hz(m),null,.25,'sawtooth',.05,i*.07); });
+    [62,66,69,74,78].forEach(m=>blip(hz(m),null,1.1,'sawtooth',.045,.38));
+    // air horn BWAA BWAA BWAAAA
+    [[0,.16],[.22,.16],[.44,.5]].forEach(([w,d])=>[0,8,-9].forEach(dt=>blip(466+dt,440+dt,d,'sawtooth',.06,.95+w)));
+    // party whistle
+    if(A.ctx){ const t=A.ctx.currentTime+.2, g=A.ctx.createGain(); env(g,t,.02,.08,.3,.2); g.connect(A.sfx); const o=osc('triangle',900,t,.6,g); o.frequency.linearRampToValueAtTime(2200,t+.5); const v=A.ctx.createOscillator(); v.frequency.value=22; const vg=A.ctx.createGain(); vg.gain.value=120; v.connect(vg); vg.connect(o.frequency); v.start(t); v.stop(t+.6); }
+    // sparkles
+    for(let i=0;i<16;i++) blip(2000+Math.random()*2600,null,.25,'sine',.06,.1+Math.random()*1.3);
+    if(big){ bellSfx(); [74,77,81,86].forEach((m,i)=>blip(hz(m+12),null,.6,'sine',.08,1.6+i*.12)); }
+  }
+};
+function bellSfx(){ if(!sfxOk()) return; const t=A.ctx.currentTime; [1,2,2.76,5.4].forEach((p,i)=>{ const g=A.ctx.createGain(); env(g,t,.01,.12/(i+1),0,3); g.connect(A.sfx); g.connect(A.sfxRev); osc('sine',hz(62)*p,t,3.1,g); }); }
+function speak(text){
+  try{ if(!A.sfxOn || !('speechSynthesis' in window)) return; const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=.85; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){}
+}
+function setMusic(on){ A.musicOn=on; bMusic.setAttribute('aria-pressed',on); if(A.music) A.music.gain.setTargetAtTime(on?.5:0,A.ctx.currentTime,.4); }
+function setSfx(on){ A.sfxOn=on; bSfx.setAttribute('aria-pressed',on); bSfx.textContent=on?'🔊':'🔈'; if(A.sfx) A.sfx.gain.setTargetAtTime(on?.75:0,A.ctx.currentTime,.05); }
+
+/* ============================================================
+   SCENE — floresta, gato gigante, estrada de tijolos brancos
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const app=$('app'), cv=$('scene'), g=cv.getContext('2d'), fxc=$('fx'), fg=fxc.getContext('2d'), panel=$('panel'), mayu=$('mayu'), catSay=$('catSay');
+const bMusic=$('bMusic'), bSfx=$('bSfx');
+let W=0,H=0,DPR=1, SC={};
+let rnd = (seed => () => (seed = (seed*16807)%2147483647)/2147483647)(29);
+const TREES={far:[],mid:[],fore:[]}, STARS=[], FLIES=[], PETALS=[], KANJI=[], MIST=[];
+const world = {roadScroll:0, walking:0, glow:0, happy:0, portal:0, catAwake:1, blinkT:3, blink:0, pointer:null, pointerT:0, look:0};
+
+function sprite(r,stops){ const c=document.createElement('canvas'); c.width=c.height=r*2; const x=c.getContext('2d'); const gr=x.createRadialGradient(r,r,0,r,r,r); stops.forEach(([o,col])=>gr.addColorStop(o,col)); x.fillStyle=gr; x.fillRect(0,0,r*2,r*2); return c; }
+const SP_MIST = sprite(64,[[0,'rgba(255,120,190,.55)'],[.5,'rgba(255,111,181,.22)'],[1,'rgba(255,111,181,0)']]);
+const SP_FLY = sprite(16,[[0,'rgba(255,255,220,1)'],[.25,'rgba(220,255,160,.7)'],[1,'rgba(160,255,200,0)']]);
+const SP_FLY2 = sprite(16,[[0,'rgba(255,255,255,1)'],[.25,'rgba(127,211,255,.7)'],[1,'rgba(127,211,255,0)']]);
+
+function initWorld(){
+  rnd = (seed => () => (seed = (seed*16807)%2147483647)/2147483647)(29);
+  TREES.far.length=TREES.mid.length=TREES.fore.length=0;
+  for(let i=0;i<22;i++) TREES.far.push({x:rnd(), w:.012+rnd()*.02, lean:(rnd()-.5)*.04});
+  for(let i=0;i<12;i++){ let x=rnd(); TREES.mid.push({x, w:.03+rnd()*.03, lean:(rnd()-.5)*.06}); }
+  TREES.fore.push({x:.02,w:.09,lean:.03},{x:.13,w:.045,lean:-.05},{x:.95,w:.1,lean:-.04},{x:.84,w:.05,lean:.06});
+  STARS.length=0; for(let i=0;i<130;i++) STARS.push({x:Math.random(),y:Math.random()*.6,r:Math.random()*1.3+.3,p:Math.random()*6});
+  FLIES.length=0; for(let i=0;i<46;i++) FLIES.push({x:Math.random(),y:.3+Math.random()*.7,p:Math.random()*10,s:.3+Math.random()*.7,c:Math.random()<.5});
+  PETALS.length=0; for(let i=0;i<38;i++) PETALS.push(newPetal(true));
+  KANJI.length=0; '魔猫夢星月忘開閉森光'.split('').forEach((k,i)=>KANJI.push({k,x:Math.random(),y:Math.random(),v:.004+Math.random()*.008,s:14+Math.random()*22,p:Math.random()*6}));
+  MIST.length=0; for(let i=0;i<22;i++) MIST.push({u:(i/21-.5)*1.5+(Math.random()-.5)*.1, v:Math.random()*.25, s:.5+Math.random()*.7, p:Math.random()*6});
+}
+function newPetal(any){ return {x:Math.random()*1.1-.05, y:any?Math.random():-.05, vx:(Math.random()-.3)*.0008, vy:.0008+Math.random()*.0012, r:Math.random()*6, vr:(Math.random()-.5)*.06, s:4+Math.random()*5, sw:Math.random()*6}; }
+
+function layout(){
+  DPR=Math.min(2,window.devicePixelRatio||1); W=innerWidth; H=innerHeight;
+  [cv,fxc].forEach(c=>{ c.width=Math.round(W*DPR); c.height=Math.round(H*DPR); });
+  const pr=panel.getBoundingClientRect(), desktop=W>=900;
+  SC = desktop ? {x:0,y:0,w:Math.max(260,pr.left-10),h:H,bottom:H} : {x:0,y:0,w:W,h:Math.max(170,pr.top),bottom:Math.max(170,pr.top)};
+  SC.desktop=desktop; SC.cx=SC.x+SC.w/2;
+  SC.top = desktop?60:54;
+  SC.hor = SC.top + (SC.h-SC.top)*(desktop?.58:.6);
+  SC.catS = Math.min((SC.hor-SC.top)*.92, SC.w*.85);
+  SC.mayuH = Math.max(80, Math.min(240, (SC.bottom-SC.hor)*(desktop?.62:.9)));
+  SC.mayuY = SC.hor + (SC.bottom-SC.hor)*(desktop?.82:.9);
+  mayu.style.width = (SC.mayuH*200/300)+'px'; mayu.style.height = SC.mayuH+'px';
+  mayu.style.left = SC.cx+'px'; mayu.style.top = SC.mayuY+'px';
+  if(!mayu.classList.contains('fall')) mayu.style.transform='translate(-50%,-100%)';
+  catSay.style.left = Math.min(Math.max(SC.cx + SC.catS*.38, 160), W-160)+'px';
+  catSay.style.top = (desktop ? Math.max(SC.top+70, SC.hor - SC.catS*.5) : Math.max(SC.top+110, SC.hor - SC.catS*.3))+'px';
+}
+
+function drawTree(t, color, rim, H0){
+  const x = t.x*W + (world.par||0)*t.depth, w=t.w*W, top=-20, bot=H0+20, lean=t.lean*H;
+  g.fillStyle=color; g.beginPath();
+  g.moveTo(x-w/2,bot); g.lineTo(x-w*.32+lean,top); g.lineTo(x+w*.32+lean,top); g.lineTo(x+w/2,bot); g.closePath(); g.fill();
+  if(rim){ g.strokeStyle=rim; g.lineWidth=Math.max(1,w*.06); g.beginPath(); g.moveTo(x+w*.42,bot); g.lineTo(x+w*.28+lean,top); g.stroke(); }
+}
+
+function drawCat(t){
+  const S=SC.catS, x0=SC.cx, by=SC.hor+S*.02;
+  const br=1+Math.sin(t*1.1)*.012;
+  g.save(); g.translate(x0,by); g.scale(br,br);
+  // aura
+  let gr=g.createRadialGradient(0,-S*.55,S*.05,0,-S*.55,S*.8); gr.addColorStop(0,`rgba(127,211,255,${.28+world.glow*.3})`); gr.addColorStop(1,'rgba(127,211,255,0)');
+  g.fillStyle=gr; g.fillRect(-S,-S*1.4,S*2,S*1.5);
+  const body=g.createLinearGradient(0,-S*.95,0,0); body.addColorStop(0,'#a9e8ff'); body.addColorStop(.55,'#6cc3f4'); body.addColorStop(1,'rgba(90,150,240,.15)');
+  // tail
+  const sw=Math.sin(t*.8)*.1;
+  g.lineCap='round'; g.strokeStyle=body; g.lineWidth=S*.075; g.shadowColor='rgba(127,211,255,.8)'; g.shadowBlur=S*.06;
+  g.beginPath(); g.moveTo(S*.22,-S*.06); g.bezierCurveTo(S*.5,-S*.04,S*(.5+sw),-S*.36,S*(.4+sw*1.6),-S*.66); g.stroke();
+  // body
+  g.fillStyle=body; g.beginPath();
+  g.moveTo(-S*.15,-S*.66); g.bezierCurveTo(-S*.31,-S*.52,-S*.37,-S*.22,-S*.33,0); g.lineTo(S*.33,0); g.bezierCurveTo(S*.37,-S*.22,S*.31,-S*.52,S*.15,-S*.66); g.closePath(); g.fill();
+  g.shadowBlur=0;
+  // chest fluff + paws
+  g.strokeStyle='rgba(225,247,255,.6)'; g.lineWidth=S*.008;
+  g.beginPath(); for(let i=0;i<5;i++){ const y=-S*(.55-i*.05); g.moveTo(-S*.06,y); g.lineTo(0,y+S*.03); g.lineTo(S*.06,y); } g.stroke();
+  g.fillStyle='rgba(200,240,255,.35)'; [-1,1].forEach(s=>{ g.beginPath(); g.ellipse(s*S*.09,-S*.16,S*.05,S*.16,0,0,Math.PI*2); g.fill(); });
+  // head
+  g.save(); g.translate(0,-S*.76); g.rotate(Math.sin(t*.45)*.05 + world.look*.04);
+  const hf=g.createLinearGradient(0,-S*.25,0,S*.15); hf.addColorStop(0,'#b8edff'); hf.addColorStop(1,'#78c9f6');
+  g.fillStyle=hf; g.shadowColor='rgba(127,211,255,.9)'; g.shadowBlur=S*.07;
+  [-1,1].forEach(s=>{ const tw=Math.sin(t*2.3+s)*.01; g.beginPath(); g.moveTo(s*S*.05,-S*.11); g.lineTo(s*S*(.19+tw),-S*.27); g.lineTo(s*S*.2,-S*.03); g.closePath(); g.fill(); });
+  g.beginPath(); g.ellipse(0,0,S*.205,S*.158,0,0,Math.PI*2); g.fill();
+  [-1,1].forEach(s=>{ g.beginPath(); g.moveTo(s*S*.19,-S*.02); g.lineTo(s*S*.25,S*.03); g.lineTo(s*S*.18,S*.06); g.lineTo(s*S*.22,S*.09); g.lineTo(s*S*.14,S*.11); g.closePath(); g.fill(); });
+  g.shadowBlur=0;
+  g.fillStyle='#ff7fbf'; [-1,1].forEach(s=>{ g.beginPath(); g.moveTo(s*S*.08,-S*.12); g.lineTo(s*S*.175,-S*.23); g.lineTo(s*S*.18,-S*.07); g.closePath(); g.fill(); });
+  // blush
+  g.fillStyle='rgba(255,127,191,.35)'; [-1,1].forEach(s=>{ g.beginPath(); g.ellipse(s*S*.12,S*.05,S*.035,S*.018,0,0,Math.PI*2); g.fill(); });
+  // eyes
+  const ey=-S*.01, ex=S*.078, open=Math.max(.06, 1-world.blink) * world.catAwake;
+  // look target: Mayu (or pointer for a moment)
+  let tx=SC.cx, ty=SC.mayuY-SC.mayuH*.8;
+  if(world.pointer && performance.now()-world.pointerT<2500){ tx=world.pointer.x; ty=world.pointer.y; }
+  const hx=x0, hy=by-S*.76, ang=Math.atan2(ty-hy, tx-hx), dist=Math.min(1, Math.hypot(tx-hx,ty-hy)/(S*.6));
+  world.look += (Math.cos(ang)*dist*.5 - world.look)*.05;
+  const px=Math.cos(ang)*S*.014*dist, py=Math.sin(ang)*S*.016*dist;
+  if(world.happy>0){
+    g.strokeStyle='#1d3f7a'; g.lineWidth=S*.014; g.lineCap='round';
+    [-1,1].forEach(s=>{ g.beginPath(); g.arc(s*ex,ey+S*.012,S*.03,Math.PI*1.1,Math.PI*1.9); g.stroke(); });
+  } else {
+    [-1,1].forEach(s=>{
+      g.save(); g.translate(s*ex,ey); g.scale(1,open);
+      g.fillStyle='#ffd54a'; g.shadowColor='rgba(255,213,74,.95)'; g.shadowBlur=S*.05;
+      g.beginPath(); g.ellipse(0,0,S*.034,S*.043,0,0,Math.PI*2); g.fill(); g.shadowBlur=0;
+      g.fillStyle='#1a1030'; g.beginPath(); g.ellipse(px,py,S*.009+world.glow*S*.008,S*.032,0,0,Math.PI*2); g.fill();
+      g.fillStyle='#fff'; g.beginPath(); g.arc(px+S*.01,py-S*.016,S*.006,0,Math.PI*2); g.fill();
+      g.restore();
+    });
+  }
+  // nose + ω mouth + whiskers
+  g.fillStyle='#ff8fc8'; g.beginPath(); g.moveTo(-S*.012,S*.03); g.lineTo(S*.012,S*.03); g.lineTo(0,S*.045); g.closePath(); g.fill();
+  g.strokeStyle='#2a4f8a'; g.lineWidth=S*.006; g.lineCap='round';
+  g.beginPath(); g.arc(-S*.013,S*.05,S*.013,0,Math.PI); g.moveTo(S*.026,S*.05); g.arc(S*.013,S*.05,S*.013,0,Math.PI); g.stroke();
+  g.strokeStyle='rgba(230,248,255,.75)'; g.lineWidth=S*.004;
+  [-1,1].forEach(s=>{ for(let i=0;i<3;i++){ g.beginPath(); g.moveTo(s*S*.08,S*(.04+i*.015)); g.lineTo(s*S*.24,S*(.02+i*.03)+Math.sin(t*2+i)*S*.004); g.stroke(); } });
+  g.restore();
+  g.restore();
+}
+function drawRibbons(t, front){
+  const S=SC.catS, x0=SC.cx, by=SC.hor;
+  for(let i=0;i<9;i++){
+    const a0=t*.55+i*2.2, h=-S*(.12+((i*.37)%1)*.62), rx=S*(.36+(i%3)*.05), ry=S*.07;
+    const segs=12, len=.7;
+    const mid=Math.sin(a0+len/2); if((mid>0)!==front) continue;
+    for(let k=0;k<segs;k++){
+      const a=a0+len*k/segs, b=a0+len*(k+1)/segs;
+      g.strokeStyle=`rgba(255,${110+k*6},${180+k*3},${(front?.85:.4)*(k/segs)})`; g.lineWidth=S*.004+S*.016*Math.sin(Math.PI*k/segs); g.lineCap='round';
+      g.beginPath(); g.moveTo(x0+Math.cos(a)*rx, by+h+Math.sin(a)*ry); g.lineTo(x0+Math.cos(b)*rx, by+h+Math.sin(b)*ry); g.stroke();
+    }
+  }
+}
+function roadEdges(y){ const f=(y-SC.hor)/(SC.bottom+4-SC.hor), tw=SC.catS*.42, bw=Math.min(SC.w*1.05,900), w=tw+(bw-tw)*f; return [SC.cx-w/2, SC.cx+w/2]; }
+function drawRoad(t){
+  const top=SC.hor, bot=SC.bottom+4;
+  const [l0,r0]=roadEdges(top), [l1,r1]=roadEdges(bot);
+  const gr=g.createLinearGradient(0,top,0,bot); gr.addColorStop(0,'#f3c8e6'); gr.addColorStop(.35,'#e8e2fb'); gr.addColorStop(1,'#cfcbe8');
+  g.fillStyle=gr; g.beginPath(); g.moveTo(l0,top); g.lineTo(r0,top); g.lineTo(r1,bot); g.lineTo(l1,bot); g.closePath(); g.fill();
+  // bricks
+  const N=13, off=world.roadScroll%1, base=Math.floor(world.roadScroll);
+  g.strokeStyle='rgba(110,90,170,.5)';
+  const ys=[]; for(let i=-1;i<=N+1;i++){ const f=Math.pow(Math.max(0,(i+off)/N),2.1); ys.push({y:top+(bot-top)*f, id:i-base}); }
+  for(let k=0;k<ys.length-1;k++){
+    const y0=ys[k].y, y1=Math.min(bot,ys[k+1].y); if(y0>=bot||y1<=top) continue;
+    const ff=(y0-top)/(bot-top); g.lineWidth=.5+ff*2.4;
+    const [a0,b0]=roadEdges(y0), [a1,b1]=roadEdges(y1);
+    g.beginPath(); g.moveTo(a0,y0); g.lineTo(b0,y0); g.stroke();
+    const shift = (ys[k].id & 1) ? .5 : 0;
+    // subtle brick shading
+    for(let j=0;j<8;j++){
+      const u0=(j+shift)/8, u1=(j+1+shift)/8; if(u0>=1) continue;
+      const lit = ((j*7+ys[k].id*3)&3)===0;
+      if(lit){ g.fillStyle='rgba(255,255,255,.35)'; g.beginPath(); g.moveTo(a0+(b0-a0)*u0,y0); g.lineTo(a0+(b0-a0)*Math.min(1,u1),y0); g.lineTo(a1+(b1-a1)*Math.min(1,u1),y1); g.lineTo(a1+(b1-a1)*u0,y1); g.closePath(); g.fill(); }
+      if(u1<1){ g.beginPath(); g.moveTo(a0+(b0-a0)*u1,y0); g.lineTo(a1+(b1-a1)*u1,y1); g.stroke(); }
+    }
+  }
+  // edges glow
+  g.strokeStyle='rgba(127,211,255,.55)'; g.lineWidth=2; g.shadowColor='#7fd3ff'; g.shadowBlur=10;
+  g.beginPath(); g.moveTo(l0,top); g.lineTo(l1,bot); g.moveTo(r0,top); g.lineTo(r1,bot); g.stroke(); g.shadowBlur=0;
+  // side shadow
+  const sh=g.createLinearGradient(0,top,0,top+(bot-top)*.35); sh.addColorStop(0,'rgba(255,111,181,.45)'); sh.addColorStop(1,'rgba(255,111,181,0)');
+  g.fillStyle=sh; g.beginPath(); g.moveTo(l0,top); g.lineTo(r0,top); g.lineTo(r1,bot); g.lineTo(l1,bot); g.closePath(); g.fill();
+}
+function drawMagicCircle(t){
+  const x=SC.cx, y=SC.mayuY-2, rx=SC.mayuH*.48, ry=rx*.26, a=.35+world.glow*.65;
+  g.save(); g.translate(x,y); g.scale(1,ry/rx);
+  g.shadowColor='#ff6fb5'; g.shadowBlur=14;
+  g.strokeStyle=`rgba(255,111,181,${a})`; g.lineWidth=2.4; g.beginPath(); g.arc(0,0,rx,0,Math.PI*2); g.stroke();
+  g.strokeStyle=`rgba(127,211,255,${a})`; g.lineWidth=1.6; g.beginPath(); g.arc(0,0,rx*.78,0,Math.PI*2); g.stroke();
+  g.rotate(t*.4);
+  g.beginPath(); for(let i=0;i<6;i++){ const q=i*Math.PI*2/6; g.lineTo(Math.cos(q)*rx*.78, Math.sin(q)*rx*.78); const q2=q+Math.PI*2/6*2; g.lineTo(Math.cos(q2)*rx*.78,Math.sin(q2)*rx*.78); } g.closePath(); g.stroke();
+  g.fillStyle=`rgba(255,230,250,${a})`; g.font=`${Math.max(9,rx*.16)}px "Mochiy Pop One", sans-serif`; g.textAlign='center'; g.textBaseline='middle';
+  '忘開閉猫夢星月光'.split('').forEach((k,i)=>{ const q=i*Math.PI*2/8; g.save(); g.translate(Math.cos(q)*rx*.89,Math.sin(q)*rx*.89); g.rotate(q+Math.PI/2); g.fillText(k,0,0); g.restore(); });
+  g.restore(); g.shadowBlur=0;
+}
+function drawPortal(t){
+  if(world.portal<=0) return;
+  const x=SC.cx, y=SC.top+40, r=Math.min(SC.w,SC.h)*.22*world.portal;
+  g.save(); g.translate(x,y); g.globalAlpha=Math.min(1,world.portal);
+  for(let i=0;i<7;i++){ g.rotate(t*(.8+i*.15)); g.strokeStyle=i%2?'rgba(255,111,181,.8)':'rgba(185,139,255,.8)'; g.lineWidth=3; g.beginPath(); g.arc(0,0,r*(1-i*.12),0,Math.PI*1.3); g.stroke(); }
+  const gr=g.createRadialGradient(0,0,0,0,0,r); gr.addColorStop(0,'rgba(20,0,40,.9)'); gr.addColorStop(.7,'rgba(90,30,140,.4)'); gr.addColorStop(1,'rgba(90,30,140,0)'); g.fillStyle=gr; g.beginPath(); g.arc(0,0,r,0,Math.PI*2); g.fill();
+  g.restore();
+}
+let last=performance.now();
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now; const t=now/1000;
+  world.glow=Math.max(0,world.glow-dt*.6); world.happy=Math.max(0,world.happy-dt); world.portal=Math.max(0,world.portal-dt*.25);
+  if(world.walking>0){ world.walking-=dt; world.roadScroll+=dt*2.2; }
+  world.blinkT-=dt; if(world.blinkT<0){ world.blink=1; if(world.blinkT<-.14){ world.blinkT=2.5+Math.random()*4; world.blink=0; } }
+  g.setTransform(DPR,0,0,DPR,0,0);
+  // sky
+  const sky=g.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#090720'); sky.addColorStop(.45,'#1e1748'); sky.addColorStop(.75,'#3a2063'); sky.addColorStop(1,'#151033');
+  g.fillStyle=sky; g.fillRect(0,0,W,H);
+  STARS.forEach(s=>{ g.fillStyle=`rgba(255,255,255,${.3+.7*Math.abs(Math.sin(t*.8+s.p))})`; g.fillRect(s.x*W,s.y*H,s.r,s.r); });
+  // moon
+  const mx=SC.x+SC.w*.22, my=SC.top+SC.h*.08, mr=Math.max(18,SC.h*.05);
+  const mg=g.createRadialGradient(mx,my,mr*.3,mx,my,mr*4); mg.addColorStop(0,'rgba(255,240,220,.35)'); mg.addColorStop(1,'rgba(255,240,220,0)'); g.fillStyle=mg; g.fillRect(mx-mr*4,my-mr*4,mr*8,mr*8);
+  g.fillStyle='#fff3dc'; g.beginPath(); g.arc(mx,my,mr,0,Math.PI*2); g.fill(); g.fillStyle='#1e1748'; g.globalAlpha=.85; g.beginPath(); g.arc(mx+mr*.4,my-mr*.15,mr*.9,0,Math.PI*2); g.fill(); g.globalAlpha=1;
+  drawPortal(t);
+  world.par = world.pointer ? (world.pointer.x/W-.5)*-14 : 0;
+  TREES.far.forEach(tr=>{ tr.depth=.3; drawTree(tr,'rgba(48,40,110,.75)',null,SC.bottom); });
+  // pink glow behind cat
+  const pg=g.createRadialGradient(SC.cx,SC.hor,10,SC.cx,SC.hor,SC.catS*.9); pg.addColorStop(0,'rgba(255,111,181,.45)'); pg.addColorStop(1,'rgba(255,111,181,0)'); g.fillStyle=pg; g.fillRect(SC.cx-SC.catS,SC.hor-SC.catS,SC.catS*2,SC.catS*1.6);
+  drawRibbons(t,false); drawCat(t); drawRibbons(t,true);
+  drawRoad(t);
+  // mist
+  MIST.forEach(m=>{ const s=SC.catS*.32*m.s*(1+Math.sin(t*.6+m.p)*.08), x=SC.cx+m.u*SC.catS*.55+Math.sin(t*.3+m.p)*12, y=SC.hor-SC.catS*.02+m.v*SC.catS*.15; g.drawImage(SP_MIST,x-s,y-s*.6,s*2,s*1.2); });
+  TREES.mid.forEach(tr=>{ tr.depth=.7; const x=tr.x*W; const [l,r]=roadEdges(SC.bottom); if(x>l-tr.w*W&&x<r+tr.w*W) return; drawTree(tr,'#1a1546','rgba(127,140,255,.18)',H); });
+  drawMagicCircle(t);
+  // fireflies
+  FLIES.forEach(f=>{ f.p+=dt*f.s; const x=(f.x+Math.sin(f.p*.7)*.03)*W, y=(f.y+Math.cos(f.p*.5)*.04)*H, a=.4+.6*Math.abs(Math.sin(f.p*2)), s=10*a+4; g.globalAlpha=a; g.drawImage(f.c?SP_FLY:SP_FLY2,x-s,y-s,s*2,s*2); }); g.globalAlpha=1;
+  // floating kanji
+  g.textAlign='center'; g.textBaseline='middle';
+  KANJI.forEach(k=>{ k.y-=k.v*dt*(world.walking>0?4:1); if(k.y<-.05){ k.y=1.05; k.x=Math.random(); } g.font=`${k.s}px "Mochiy Pop One", sans-serif`; g.fillStyle=`rgba(200,230,255,${.12+.12*Math.sin(t+k.p)})`; g.fillText(k.k,k.x*W+Math.sin(t*.5+k.p)*10,k.y*H); });
+  // petals
+  PETALS.forEach((p,i)=>{ p.x+=p.vx+Math.sin(t+p.sw)*.0004+(world.walking>0?.002:0); p.y+=p.vy; p.r+=p.vr; if(p.y>1.05||p.x>1.1){ PETALS[i]=newPetal(false); }
+    g.save(); g.translate(p.x*W,p.y*H); g.rotate(p.r); g.fillStyle='rgba(255,150,200,.85)'; g.beginPath(); g.ellipse(0,0,p.s,p.s*.55,0,0,Math.PI*2); g.fill(); g.restore(); });
+  TREES.fore.forEach(tr=>{ tr.depth=1.4; drawTree(tr,'#08061a','rgba(255,111,181,.12)',H); });
+  // vignette
+  const vg=g.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,2,16,.65)'); g.fillStyle=vg; g.fillRect(0,0,W,H);
+  drawFx(dt);
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================
+   FX — explosão de confetes com poluição visual
+   ============================================================ */
+const P=[];
+const CONF_COLS=['#ff6fb5','#7fd3ff','#ffd54a','#7dffb2','#b98bff','#ffffff','#ff8a5c','#5cf0ff'];
+const GLYPHS=['★','✦','♥','✿','すごい','!!','🎉','✨','🐱','🌸','💖','⭐','やった'];
+function burst(x,y,n,power,spread=Math.PI*2,dir=-Math.PI/2){
+  for(let i=0;i<n;i++){
+    const a=dir+(Math.random()-.5)*spread, v=power*(.35+Math.random()*.9);
+    const shape=Math.random(); const glyph = shape>.86 ? GLYPHS[Math.floor(Math.random()*GLYPHS.length)] : null;
+    P.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,rot:Math.random()*6,vr:(Math.random()-.5)*.4,s:5+Math.random()*8,c:CONF_COLS[Math.floor(Math.random()*CONF_COLS.length)],
+      sh: glyph?'g':shape<.4?'r':shape<.6?'c':shape<.75?'s':'h', glyph, life:1, dec:.25+Math.random()*.3, wob:Math.random()*6});
+  }
+}
+function star(ctx,r){ ctx.beginPath(); for(let i=0;i<10;i++){ const q=i*Math.PI/5-Math.PI/2, rr=i%2?r*.45:r; ctx.lineTo(Math.cos(q)*rr,Math.sin(q)*rr); } ctx.closePath(); ctx.fill(); }
+function heart(ctx,r){ ctx.beginPath(); ctx.moveTo(0,r*.35); ctx.bezierCurveTo(-r,-r*.4,-r*.4,-r,0,-r*.35); ctx.bezierCurveTo(r*.4,-r,r,-r*.4,0,r*.35); ctx.fill(); }
+function drawFx(dt){
+  fg.setTransform(DPR,0,0,DPR,0,0); fg.clearRect(0,0,W,H);
+  for(let i=P.length-1;i>=0;i--){
+    const p=P[i]; p.vy+=.28; p.vx*=.985; p.vy*=.985; p.x+=p.vx+Math.sin(p.wob+=.15)*.8; p.y+=p.vy; p.rot+=p.vr; p.life-=dt*p.dec;
+    if(p.life<=0||p.y>H+40){ P.splice(i,1); continue; }
+    fg.save(); fg.globalAlpha=Math.min(1,p.life*2); fg.translate(p.x,p.y); fg.rotate(p.rot); fg.fillStyle=p.c;
+    if(p.sh==='r') fg.fillRect(-p.s/2,-p.s/4,p.s,p.s/2*Math.abs(Math.cos(p.wob)));
+    else if(p.sh==='c'){ fg.beginPath(); fg.arc(0,0,p.s/2.4,0,Math.PI*2); fg.fill(); }
+    else if(p.sh==='s') star(fg,p.s*.8); else if(p.sh==='h') heart(fg,p.s*.8);
+    else { fg.font=`${p.s*2.2}px "Mochiy Pop One", sans-serif`; fg.textAlign='center'; fg.fillText(p.glyph,0,0); }
+    fg.restore();
+  }
+}
+function celebrate(big){
+  const k = reduced ? .2 : 1;
+  const cx0 = W/2, cy0 = H*.45;
+  burst(cx0,cy0, Math.round((big?260:170)*k), big?26:20);
+  burst(0,H, Math.round(120*k), 30, .7, -Math.PI/3);
+  burst(W,H, Math.round(120*k), 30, .7, -Math.PI*2/3);
+  burst(SC.cx, SC.mayuY-SC.mayuH*.5, Math.round(70*k), 16);
+  for(let i=0;i<(big?6:3);i++) setTimeout(()=>burst(Math.random()*W, Math.random()*H*.5, Math.round(70*k), 16), 250+i*220);
+  for(let i=0;i<Math.round(90*k);i++) P.push({x:Math.random()*W,y:-20-Math.random()*200,vx:(Math.random()-.5)*2,vy:Math.random()*3,rot:0,vr:(Math.random()-.5)*.3,s:6+Math.random()*7,c:CONF_COLS[i%CONF_COLS.length],sh:Math.random()<.5?'r':'s',life:1.4,dec:.3,wob:Math.random()*6});
+  const fl=$('flash'); fl.classList.remove('on'); void fl.offsetWidth; fl.classList.add('on');
+  if(!reduced){ app.classList.remove('shake'); void app.offsetWidth; app.classList.add('shake'); }
+  const [j,p] = HYPE[Math.floor(Math.random()*HYPE.length)];
+  const hb=$('hypeBig'); hb.querySelector('.j').textContent = big ? '門が開いた！' : j; hb.querySelector('.p').textContent = big ? 'Portão aberto! Você é incrível, Mayu!' : p;
+  hb.classList.remove('on'); void hb.offsetWidth; hb.classList.add('on');
+  const hype=$('hype');
+  for(let i=0;i<(big?14:8)*(reduced?0:1);i++){
+    const s=document.createElement('span'); s.className='stamp'; s.textContent=STAMPS[Math.floor(Math.random()*STAMPS.length)];
+    s.style.left=(5+Math.random()*80)+'%'; s.style.top=(5+Math.random()*80)+'%'; s.style.setProperty('--r',(Math.random()*50-25)+'deg');
+    s.style.background=CONF_COLS[Math.floor(Math.random()*6)]; s.style.color='#1a0d2e'; s.style.animationDelay=(Math.random()*.5)+'s';
+    hype.appendChild(s); setTimeout(()=>s.remove(),2300);
+  }
+  sfx.celebrate(big);
+  world.glow=1; world.happy=2.2;
+  setFace('happy'); mayuAnim('jump'); setTimeout(()=>setFace('smile'),2000);
+}
+
+/* ============================================================
+   UI helpers
+   ============================================================ */
+let sayTimer=null;
+function catTalk(jp, pt, ms=4200){
+  catSay.innerHTML = `<span class="jp">${jp}</span>${pt?'<br>'+pt:''}`; catSay.classList.add('on');
+  clearTimeout(sayTimer); sayTimer=setTimeout(()=>catSay.classList.remove('on'), ms);
+}
+function setFace(f){ mayu.dataset.face=f; }
+function mayuAnim(c){ mayu.classList.remove('jump','sad'); void mayu.offsetWidth; mayu.classList.add(c); setTimeout(()=>mayu.classList.remove(c),900); }
+function hud(){
+  const sc = S.score + (run?run.score:0), st = S.stars + (run?run.stars:0);
+  $('hScore').textContent = sc.toLocaleString('pt-BR'); $('hStars').textContent = st; $('hCombo').textContent = S.combo;
+  $('hComboWrap').classList.toggle('hot', S.combo>=3);
+}
+const ro = (jp, extra) => (extra&&extra[jp]) || R[jp] || '';
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const strip = s => s.replace(/[。、\s]/g,'');
+const catIcon = `<svg class="who" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 15 L9 3 L17 10 Z M33 15 L31 3 L23 10 Z" fill="#9fe2ff"/><path d="M9 13 L10 6 L15 10Z M31 13 L30 6 L25 10Z" fill="#ff7fbf"/><ellipse cx="20" cy="21" rx="15" ry="12" fill="#9fe2ff"/><ellipse cx="14" cy="20" rx="2.6" ry="3.4" fill="#ffd54a"/><ellipse cx="26" cy="20" rx="2.6" ry="3.4" fill="#ffd54a"/><rect x="13.4" y="17.6" width="1.2" height="5" rx=".6" fill="#1a1030"/><rect x="25.4" y="17.6" width="1.2" height="5" rx=".6" fill="#1a1030"/><path d="M17.5 26 q1.25 1.6 2.5 0 q1.25 1.6 2.5 0" stroke="#2a4f8a" stroke-width="1" fill="none"/></svg>`;
+function oduStrip(stage){
+  const map={INPUT:0,INTAKE:1,RETRIEVAL:2,OUTPUT:3,CHECKOUT:2,'SPACED REVIEW':4};
+  const cur = stage==null ? -1 : map[stage];
+  return `<div class="odu" aria-label="Sequência Odu Creative">${STAGES.map((s,i)=>`<span class="${i===cur?'on':''}">${s}</span>`).join('<i>→</i>')}</div>`;
+}
+function maxStars(m){ return m.dynamic ? 3+4+4 : m.tasks.reduce((a,t)=>a+(t.type==='choice'?1:t.bonus?4:3),0); }
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+function show(html){ panel.innerHTML = `<div class="screen">${html}</div>`; panel.scrollTop=0; }
+
+function screenTitle(){
+  const has = S.unlocked>0 || Object.keys(S.done).length>0;
+  show(`
+    <div class="eyebrow">Odu Creative · 日本語 · 第29課</div>
+    <h1 class="logo"><span class="jp">マユと猫の森</span><span class="pt">Mayu e o Gato de Nekomori</span></h1>
+    <p class="lede">Mayu, a menina mais esperta da turma, tropeçou numa raiz brilhante e caiu num mundo mágico. Um gato gigante observa cada passo dela na estrada de tijolos brancos. Para atravessar, ela precisa construir frases em japonês, bloco por bloco.</p>
+    <div class="lesson">あっ、忘れてしまいました！<br><small style="color:var(--muted);font-family:var(--body)">Estados resultantes · ～ています · ～てしまいます／～てしまいました</small></div>
+    <ul class="how">
+      <li><b>壱</b><span>Nove portões em sequência. Cada missão só abre quando a anterior termina.</span></li>
+      <li><b>弐</b><span>Pistas graduais quando precisar. Erros não tiram pontos.</span></li>
+      <li><b>参</b><span>★ reconheceu · ★★ produziu com ajuda · ★★★ sem ajuda · ★★★★ acrescentou informação.</span></li>
+    </ul>
+    <div class="row">
+      ${has ? `<button class="btn big" data-act="continue">Continuar a jornada</button><button class="btn ghost" data-act="reset">Recomeçar do zero</button>`
+            : `<button class="btn big" data-act="start">Começar a aventura ✦</button>`}
+    </div>
+    <p style="font-size:12.5px;color:var(--muted)">Com som: trilha dark fantasy e efeitos. Use ♫ e 🔊 no topo para ligar ou desligar.</p>
+  `);
+}
+const STORY = [
+  {face:'oh', text:'Era uma tarde comum. Mayu voltava da aula de japonês, lendo as anotações da Lição 29 enquanto andava pelo parque…', btn:'E então…'},
+  {face:'oh', text:'…até tropeçar numa raiz que brilhava cor-de-rosa. あっ！ O chão sumiu, e ela caiu, caiu, caiu.', btn:'Continuar', fall:true},
+  {face:'worry', text:'Mayu aterrissou numa estrada de tijolos brancos, no meio de uma floresta escura. Entre as árvores, dois olhos amarelos se abriram. Enormes.', btn:'Olhar para cima', wake:true},
+  {face:'smile', cat:['ようこそ、猫の森へ。','Bem-vinda a Nekomori, menina de vestido azul.'], text:'“Na queda, você esqueceu suas coisas pelo caminho: o guarda-chuva, o celular, a carteira… Aqui, só atravessa a estrada quem fala a língua das frases mágicas. Nove portões. Um de cada vez.”', btn:'Ver a estrada'}
+];
+function screenStory(i){
+  const s=STORY[i]; setFace(s.face);
+  if(i===0){ mayu.style.opacity='0'; world.catAwake=.05; }
+  if(s.fall){ mayu.style.opacity='1'; world.portal=1.4; mayu.classList.remove('fall'); void mayu.offsetWidth; mayu.style.transform=''; mayu.classList.add('fall'); blip(1200,120,1.6,'sine',.12); setTimeout(()=>{ noiseBurst(0,200,.3,.6); blip(90,40,.5,'sine',.5); mayu.classList.remove('fall'); mayu.style.transform='translate(-50%,-100%)'; mayuAnim('sad'); },2200); }
+  if(s.wake){ world.catAwake=.05; let k=0; const iv=setInterval(()=>{ k+=.05; world.catAwake=Math.min(1,k); if(k>=1) clearInterval(iv); },60); bellSfx(); }
+  if(s.cat) catTalk(s.cat[0], s.cat[1], 6000);
+  show(`
+    <div class="eyebrow">Prólogo · ${i+1} de ${STORY.length}</div>
+    ${s.cat?`<div class="say">${catIcon}<div class="line"><div class="jp">${s.cat[0]}</div><small>${s.cat[1]}</small></div></div>`:''}
+    <p class="lede" style="font-size:17px">${s.text}</p>
+    <div class="row"><button class="btn" data-act="story" data-i="${i+1}">${s.btn} →</button></div>
+  `);
+}
+function screenMap(){
+  run=null; hud(); setFace('smile');
+  const next = MISSIONS.findIndex((m,i)=>!S.done[i]);
+  const allDone = next===-1;
+  show(`
+    <div class="eyebrow">A estrada de tijolos brancos</div>
+    <h2 style="font-family:var(--gothic);font-size:28px">Mapa de Nekomori</h2>
+    ${oduStrip(allDone?'SPACED REVIEW':MISSIONS[next].stage)}
+    <ol class="missions">
+      ${MISSIONS.map((m,i)=>{
+        const done=S.done[i]!=null, locked=i>S.unlocked, cur=i===S.unlocked && !done;
+        return `<li><button class="mission ${done?'done':''} ${locked?'locked':''} ${cur?'current':''}" data-act="mission" data-i="${i}" ${locked?'aria-disabled="true"':''}>
+          <span class="num">${locked?'🔒':i+1}</span>
+          <span class="t"><strong>${m.title}</strong><small>${m.sec} · ${m.jp}</small></span>
+          <span class="st">${done?`★ ${S.done[i]}/${maxStars(m)}`:cur?'Agora':locked?'':'Refazer'}</span></button></li>`; }).join('')}
+    </ol>
+    ${allDone?`<button class="btn big blue" data-act="final">Revisão espaçada e final ✦</button>`:''}
+  `);
+  if(!allDone) catTalk('次の門へ。', `Próximo portão: ${MISSIONS[next].title}.`, 3500);
+}
+function screenMissionIntro(i){
+  const m=MISSIONS[i];
+  show(`
+    <div class="taskhead"><span class="chip">${m.stage}</span><span class="chip pink">${m.sec}</span></div>
+    <div class="eyebrow">Missão ${i+1} de ${MISSIONS.length}</div>
+    <h2 style="font-family:var(--gothic);font-size:30px">${m.title}</h2>
+    <div class="say">${catIcon}<div class="line"><div class="jp">${m.say[0]}</div><small>${m.say[1]}</small></div></div>
+    <p>${m.goal}</p>
+    ${m.formula?`<div class="formula">${m.formula.map((f,k)=>`<span class="${k===m.formula.length-1?'k':''}">${f[0]}</span>`).join('<em>+</em>')}</div><p style="font-size:12.5px;color:var(--muted)">${m.formula.map(f=>f[1]).join('  +  ')}</p>`:''}
+    ${m.model?`<div class="model"><span class="lbl">Modelo</span>${m.model.map(c=>`<span>${c}</span>`).join('')}</div>`:''}
+    ${m.rubric?rubric():''}
+    <div class="row"><button class="btn big" data-act="begin" data-i="${i}">Iniciar missão ✦</button><button class="btn ghost" data-act="map">Mapa</button></div>
+  `);
+  catTalk(m.say[0], m.say[1]);
+}
+function rubric(){ return `<div class="rubric"><div><b>★</b>reconheceu</div><div><b>★★</b>produziu com ajuda</div><div><b>★★★</b>produziu sem ajuda</div><div><b>★★★★</b>acrescentou informação</div></div>`; }
+
+function beginMission(i){
+  const m=MISSIONS[i];
+  run = {mi:i, ti:0, tasks:m.tasks.slice(), score:0, stars:0, obj:null};
+  renderTask();
+}
+function taskHeader(){
+  const m=MISSIONS[run.mi], n=run.mi===5?4:run.tasks.length;
+  return `<div class="taskhead"><span class="chip">${m.stage}</span><strong style="font-size:14px">${m.title}</strong>
+    <div class="pips" aria-label="Tarefa ${run.ti+1} de ${n}">${Array.from({length:n},(_,k)=>`<i class="${k<run.ti?'done':k===run.ti?'now':''}"></i>`).join('')}</div></div>`;
+}
+function renderTask(){
+  const t=run.tasks[run.ti]; run.cur={hints:0, tries:0, solved:false, answer:[]};
+  hud(); setFace('smile');
+  if(t.say) catTalk(t.say[0], t.say[1]);
+  if(t.type==='choice') renderChoice(t); else if(t.type==='build') renderBuild(t); else if(t.type==='draw') renderDraw();
+}
+function sceneBits(t){
+  return `${t.tag?`<span class="chip pink">${t.tag}</span>`:''}
+    ${t.say?`<div class="say">${catIcon}<div class="line"><div class="jp">駅員：${t.say[0]}</div><small>${t.say[1]}</small></div></div>`:''}
+    ${t.scene?`<div class="orb" aria-hidden="true">${t.scene}</div>`:''}
+    ${t.base?`<div class="say">${catIcon}<div class="line"><div class="jp">どうしたんですか。</div><small>Situação sorteada: <span class="jp" style="font-size:16px;color:var(--ink)">${t.base}</span></small></div></div>`:''}`;
+}
+function renderChoice(t){
+  show(`${taskHeader()}${sceneBits(t)}
+    <div class="prompt">${t.q}</div>
+    <div class="opts">${t.opts.map((o,k)=>`<button class="opt" data-act="opt" data-k="${k}"><span class="j">${o[0]}</span><span class="r" ${S.showRo?'':'style="display:none"'}>${o[1]}</span></button>`).join('')}</div>
+    <div class="controls"><button class="btn ghost" data-act="hint">💡 Pista</button>${roToggle()}</div>
+    <div class="feedback" id="fb"></div>
+    <div class="row"><button class="btn blue" id="next" data-act="next" hidden>Próximo →</button></div>`);
+}
+function roToggle(){ return `<label class="toggle-ro grow"><input type="checkbox" id="roChk" data-act="ro" ${S.showRo?'checked':''}> leitura (romaji)</label>`; }
+function renderBuild(t){
+  const pool = t.tiles ? t.tiles : [...t.chunks, ...(t.extra||[])];
+  run.cur.tiles = shuffle(pool.map((jp,k)=>({id:k, jp, ro:ro(jp,t.ro), used:false})));
+  const showModel = t.showModel && MISSIONS[run.mi].model;
+  show(`${taskHeader()}${sceneBits(t)}
+    <div class="prompt">${t.q}${t.sub?`<span class="hint-pt">${t.sub}</span>`:''}</div>
+    ${showModel?`<div class="model"><span class="lbl">Modelo</span>${MISSIONS[run.mi].model.map(c=>`<span>${c}</span>`).join('')}</div>`:''}
+    <div class="answer empty ${S.showRo?'':'noro'}" id="ans" aria-label="Sua frase"></div>
+    <div class="tray ${S.showRo?'':'noro'}" id="tray"></div>
+    <div class="controls"><button class="btn ghost" data-act="hint">💡 Pista</button><button class="btn ghost" data-act="clear">↺ Limpar</button>${roToggle()}</div>
+    <div class="row"><button class="btn" id="check" data-act="check" disabled>Verificar ✦</button><button class="btn blue" id="next" data-act="next" hidden>Próximo →</button></div>
+    <div class="feedback" id="fb"></div>`);
+  drawTiles();
+}
+function tileHTML(tl, where){ return `<button class="tile ${where==='ans'?'in':''} ${tl.hinted?'hinted':''}" data-act="${where==='ans'?'untile':'tile'}" data-id="${tl.id}" ${where==='tray'&&tl.used?'disabled':''}><span class="j">${tl.jp}</span><span class="r">${tl.ro}</span></button>`; }
+function drawTiles(){
+  const c=run.cur, ans=$('ans'), tray=$('tray'); if(!ans) return;
+  ans.innerHTML = c.answer.map(id=>tileHTML(c.tiles.find(x=>x.id===id),'ans')).join('');
+  ans.classList.toggle('empty', c.answer.length===0);
+  tray.innerHTML = c.tiles.map(tl=>tileHTML(tl,'tray')).join('');
+  $('check').disabled = c.answer.length===0 || c.solved;
+}
+function answerStr(){ const c=run.cur; return c.answer.map(id=>c.tiles.find(x=>x.id===id).jp).join(''); }
+function accepts(t){ return (t.accept || [t.chunks.join('')]).map(strip); }
+
+function renderDraw(){
+  show(`${taskHeader()}
+    <span class="chip pink">Sorteio · 忘れ物</span>
+    <p>Cenário: você esqueceu um objeto no trem. O gato gigante é o funcionário da estação. Sorteie o que ficou para trás.</p>
+    <div class="slot-machine"><div class="reel" id="reel">❔</div><div class="lab" id="reelLab">？？？</div></div>
+    <div class="row" style="justify-content:center"><button class="btn big" data-act="draw" id="drawBtn">Sortear objeto 🎲</button></div>
+    <div class="row"><button class="btn blue" id="next" data-act="next" hidden>Ir ao balcão →</button></div>`);
+}
+function doDraw(){
+  const b=$('drawBtn'); if(!b||b.disabled) return; b.disabled=true;
+  const o = OBJ[Math.floor(Math.random()*OBJ.length)];
+  let k=0, total=16;
+  const spin=()=>{
+    const x=OBJ[k%OBJ.length]; $('reel').textContent=x.e; $('reelLab').textContent=x.jp; sfx.tick(); k++;
+    if(k<total) setTimeout(spin, 40+k*k*.6);
+    else { $('reel').textContent=o.e; $('reelLab').textContent=`${o.jp}（${o.ro}）· ${o.pt}`; run.obj=o; run.tasks.push(...genStation(o));
+      burst(W/2,H/2,60,14); blip(hz(74),null,.3,'square',.08); blip(hz(81),null,.4,'square',.08,.1);
+      catTalk(o.jp+'ですね。', `Um(a) ${o.pt}! Venha ao balcão.`); run.cur.solved=true; $('next').hidden=false; }
+  };
+  spin();
+}
+
+/* ---------- answer handling ---------- */
+function award(stars, firstTry){
+  if(firstTry){ S.combo++; S.bestCombo=Math.max(S.bestCombo,S.combo); } else S.combo=0;
+  const pts = stars*100 + (firstTry ? Math.min(10,S.combo)*25 : 0);
+  run.score += pts; run.stars += stars; hud(); save();
+  return pts;
+}
+function correct(t, stars, sentence, note){
+  const c=run.cur; c.solved=true;
+  const first = c.tries===0 && c.hints===0;
+  const pts = award(stars, first);
+  celebrate(false);
+  const fb=$('fb'); fb.className='feedback show good';
+  fb.innerHTML = `<div class="stars">${'★'.repeat(stars)}<span style="color:var(--muted);letter-spacing:0;font-size:13px">  +${pts} pontos${first&&S.combo>1?` · sequência ${S.combo}`:''}</span></div>
+    <div><span class="jp">${sentence}</span><button class="speak" data-act="speak" data-s="${sentence}">🔈 ouvir</button></div>
+    ${note?`<div style="color:#d9cff5">${note}</div>`:''}`;
+  $('next').hidden=false; const ch=$('check'); if(ch) ch.disabled=true;
+  panel.querySelectorAll('.tray .tile,.opt').forEach(b=>b.disabled=true);
+  catTalk(['にゃ〜！','すごい！','いいね！','完璧！'][Math.floor(Math.random()*4)], ['Até meus bigodes tremeram!','A estrada brilhou mais um pouco.','Isso! Mais um tijolo.','Perfeito, humana.'][Math.floor(Math.random()*4)], 2600);
+  if(/[\u3040-\u30ff\u4e00-\u9faf]/.test(sentence)) setTimeout(()=>speak(sentence), 1300);
+  setTimeout(()=>$('next')&&$('next').focus({preventScroll:true}), 400);
+}
+function wrong(msg){
+  const c=run.cur; c.tries++; S.combo=0; hud(); sfx.wrong(); setFace('worry'); mayuAnim('sad'); setTimeout(()=>setFace('smile'),1400);
+  const fb=$('fb'); fb.className='feedback show bad'; fb.innerHTML = msg + '<div style="color:var(--muted);font-size:12.5px;margin-top:4px">Erros não tiram pontos. Tente de novo ou peça uma pista.</div>';
+  const ans=$('ans'); if(ans){ ans.classList.remove('bad'); void ans.offsetWidth; ans.classList.add('bad'); }
+  catTalk('おしい！', ['Quase! Olhe as partículas.','Hmm… um bloco está fora do lugar.','Respire. Os blocos não fogem.'][Math.floor(Math.random()*3)], 2600);
+}
+function checkBuild(){
+  const t=run.tasks[run.ti], c=run.cur; if(c.solved) return;
+  const s=strip(answerStr()), acc=accepts(t), bon=(t.bonus||[]).map(strip);
+  if(bon.includes(s)) return correct(t, 4, answerStr()+'。', 'Você acrescentou informação. ★★★★');
+  if(acc.includes(s)){
+    const stars = c.hints>0 ? 2 : 3;
+    return correct(t, stars, answerStr()+'。', c.hints>0 ? 'Produziu com ajuda. Na próxima, tente sem pista!' : (t.free?'Frase sua, sem ajuda!':'Produziu sem ajuda!'));
+  }
+  // diagnóstico: quantos blocos iniciais estão certos
+  let good=0, acc0='';
+  for(const id of c.answer){ const nxt=acc0+c.tiles.find(x=>x.id===id).jp; if([...acc,...bon].some(a=>a.startsWith(strip(nxt)))){ acc0=nxt; good++; } else break; }
+  const tips=[];
+  if(/忘れって|遅れって|読みて/.test(s)) tips.push('Cuidado com a forma て: 忘れる → 忘れて, 遅れる → 遅れて, 読む → 読んで.');
+  if(s.includes('を') && /開いて|閉まって|掛かって|壊れて|故障して/.test(s)) tips.push('Estado resultante pede が + verbo intransitivo.');
+  if(/が開けて|が閉めて|が掛けて/.test(s)) tips.push('開ける, 閉める e 掛ける são ações de alguém (transitivos). Para estado, use 開く→開いて, 閉まる→閉まって.');
+  wrong(`${good>0?`Os primeiros <b>${good}</b> bloco(s) estão certos. `:''}A frase ainda não fecha.${tips.length?'<br>'+tips.join('<br>'):''}`);
+}
+function hintBuild(){
+  const t=run.tasks[run.ti], c=run.cur; if(c.solved) return;
+  const all=[...accepts(t)];
+  let cur=strip(answerStr());
+  // remove blocos até o prefixo ser válido
+  while(c.answer.length && !all.some(a=>a.startsWith(cur))){ const id=c.answer.pop(); c.tiles.find(x=>x.id===id).used=false; cur=strip(answerStr()); }
+  const target = all.find(a=>a.startsWith(cur));
+  const cands = c.tiles.filter(x=>!x.used && target.startsWith(cur+strip(x.jp)) && strip(x.jp));
+  // prefere o bloco mais longo que ainda permita completar
+  cands.sort((a,b)=>b.jp.length-a.jp.length);
+  const tl=cands[0];
+  if(tl){ tl.used=true; tl.hinted=true; c.answer.push(tl.id); c.hints++; sfx.hint(); }
+  drawTiles();
+  const fb=$('fb'); fb.className='feedback show'; fb.style.background='rgba(255,213,74,.1)'; fb.style.border='1px solid rgba(255,213,74,.4)';
+  fb.innerHTML = tl ? `💡 Pista ${c.hints}: o próximo bloco é <b class="jp" style="font-family:var(--display)">${tl.jp}</b>. Com pista, a tarefa vale ★★.` : '💡 A frase já está completa. Toque em Verificar.';
+}
+function hintChoice(){
+  const t=run.tasks[run.ti], c=run.cur; if(c.solved) return;
+  const wrongs=[...panel.querySelectorAll('.opt')].filter(b=>+b.dataset.k!==t.a && !b.classList.contains('gone') && !b.classList.contains('no'));
+  if(wrongs.length){ wrongs[0].classList.add('gone'); c.hints++; sfx.hint(); }
+  const fb=$('fb'); fb.className='feedback show'; fb.style.background='rgba(255,213,74,.1)'; fb.style.border='1px solid rgba(255,213,74,.4)';
+  fb.innerHTML = wrongs.length ? '💡 Uma opção errada sumiu na névoa.' : '💡 Só sobrou a certa!';
+}
+function pickOpt(k){
+  const t=run.tasks[run.ti], c=run.cur; if(c.solved) return;
+  const b=panel.querySelector(`.opt[data-k="${k}"]`); if(!b||b.classList.contains('no')) return;
+  if(k===t.a){ b.classList.add('ok'); const s=t.opts[k][0]; correct(t, 1, s, `${t.pt} · ★ reconheceu`); }
+  else { b.classList.add('no'); b.disabled=true; wrong(`<span class="jp">${t.opts[k][0]}</span> não combina aqui.`); }
+}
+function nextTask(){
+  if(!run.cur.solved) return;
+  run.ti++;
+  if(run.ti < run.tasks.length) { sfx.tap(); renderTask(); }
+  else missionDone();
+}
+function missionDone(){
+  const i=run.mi, m=MISSIONS[i], prev=S.done[i];
+  const replay = prev!=null;
+  // ao refazer, guarda a melhor marca de estrelas e soma só a diferença
+  if(replay){ const gain=Math.max(0,run.stars-prev); S.stars+=gain; S.done[i]=Math.max(prev,run.stars); S.score+=Math.round(run.score*.25); }
+  else { S.stars+=run.stars; S.score+=run.score; S.done[i]=run.stars; }
+  S.unlocked=Math.max(S.unlocked, Math.min(MISSIONS.length-1, i+1)); if(i===MISSIONS.length-1) S.unlocked=MISSIONS.length;
+  save();
+  const r=run; run=null; hud();
+  celebrate(true);
+  const isLast = i===MISSIONS.length-1;
+  show(`
+    <div class="eyebrow">Missão ${i+1} completa</div>
+    <h2 style="font-family:var(--gothic);font-size:32px">Portão aberto!</h2>
+    <div class="done-stars">${'★'.repeat(Math.min(r.stars,12))}${r.stars>12?' +'+(r.stars-12):''}</div>
+    <div class="statgrid"><div class="stat"><b>${r.stars}/${maxStars(m)}</b><small>Estrelas</small></div><div class="stat"><b>${replay?Math.round(r.score*.25):r.score}</b><small>Pontos</small></div><div class="stat"><b>${S.bestCombo}</b><small>Melhor sequência</small></div></div>
+    ${r.obj?`<div class="say">${catIcon}<div class="line"><div class="jp">はい、${r.obj.jp}です。見つかりましたよ！</div><small>Aqui está seu(sua) ${r.obj.pt}. Encontramos! ${r.obj.e}</small></div></div>`:''}
+    <p>${isLast?'Os nove portões estão abertos. Falta só a revisão espaçada, que é o que faz os chunks ficarem.':`Próximo portão desbloqueado: <b>${MISSIONS[i+1].title}</b>.`}</p>
+    <div class="row"><button class="btn big blue" data-act="walk">${isLast?'Ir para o final ✦':'Seguir pela estrada →'}</button></div>
+  `);
+  catTalk('よくできました！', isLast?'Você atravessou Nekomori inteira!':'Pode seguir. Eu estou de olho.', 3500);
+}
+function walkOn(){
+  setFace('happy'); mayu.classList.add('walk'); world.walking=2.4;
+  for(let k=0;k<12;k++) sfx.step(k);
+  setTimeout(()=>{ mayu.classList.remove('walk'); setFace('smile'); if(Object.keys(S.done).length===MISSIONS.length) screenFinal(); else screenMap(); }, 2400);
+}
+function screenFinal(){
+  hud();
+  const today=new Date(), fmt=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+  const plus=n=>{ const d=new Date(today); d.setDate(d.getDate()+n); return fmt(d); };
+  const rows=[['Hoje',fmt(today)],['Próxima aula','—'],['+7 dias',plus(7)],['+14 dias',plus(14)],['+30 dias',plus(30)]];
+  const max = MISSIONS.reduce((a,m)=>a+maxStars(m),0);
+  const rank = S.stars>=max*.9?'Mestra dos Chunks 魔法使い':S.stars>=max*.7?'Guardiã da Estrada 守り人':'Aprendiz de Nekomori 見習い';
+  show(`
+    ${oduStrip('SPACED REVIEW')}
+    <div class="eyebrow">10. Revisão espaçada</div>
+    <h2 style="font-family:var(--gothic);font-size:32px">${rank}</h2>
+    <div class="statgrid"><div class="stat"><b>${S.score.toLocaleString('pt-BR')}</b><small>Pontos</small></div><div class="stat"><b>${S.stars}/${max}</b><small>Estrelas</small></div><div class="stat"><b>${S.bestCombo}</b><small>Melhor sequência</small></div></div>
+    <div class="say">${catIcon}<div class="line"><div class="jp">また来てね。</div><small>Volte nas datas abaixo e o portal de casa vai continuar aberto. Marque como foi cada revisão.</small></div></div>
+    <div class="review-wrap"><table class="review"><thead><tr><th>Quando</th><th>Data</th><th>Como foi</th></tr></thead><tbody>
+      ${rows.map((r,k)=>`<tr><td>${r[0]}</td><td style="font-variant-numeric:tabular-nums">${r[1]}</td><td>${['recuperei','com pista','revisar'].map(o=>`<label><input type="radio" name="rv${k}" id="rv${k}-${o.replace(' ','')}" data-act="rv" data-k="${k}" value="${o}" ${S.review[k]===o?'checked':''}> ${o}</label>`).join('')}</td></tr>`).join('')}
+    </tbody></table></div>
+    <p style="font-size:13px;color:#d9cff5"><b style="color:var(--gold)">Critério de sucesso:</b> não é preciso lembrar de tudo. O objetivo é recuperar alguns chunks úteis com menos apoio do que no início e perceber esse progresso.</p>
+    <div class="lesson">窓が開いています ・ 傘を忘れてしまいました ・ 道をまちがえたんです</div>
+    <div class="row"><button class="btn" data-act="map">Rever o mapa</button><button class="btn ghost" data-act="reset">Jogar de novo do zero</button></div>
+  `);
+  world.portal=2; celebrate(true);
+  catTalk('おめでとう、マユ！','O portal para casa está aberto. Você conseguiu!', 6000);
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+panel.addEventListener('click', e=>{
+  const b=e.target.closest('[data-act]'); if(!b||b.disabled) return;
+  const act=b.dataset.act; audioInit();
+  if(act==='ro'){ S.showRo=b.checked; save(); panel.querySelectorAll('.answer,.tray').forEach(x=>x.classList.toggle('noro',!S.showRo)); panel.querySelectorAll('.opt .r').forEach(x=>x.style.display=S.showRo?'':'none'); return; }
+  if(act==='rv'){ S.review[b.dataset.k]=b.value; save(); return; }
+  switch(act){
+    case 'start': sfx.tap(); screenStory(0); break;
+    case 'continue': sfx.tap(); screenMap(); break;
+    case 'reset': { const k=b.dataset.confirm; if(!k){ b.dataset.confirm='1'; b.textContent='Toque de novo para apagar o progresso'; return; } S=fresh(); save(); sfx.back(); screenStory(0); break; }
+    case 'story': { const i=+b.dataset.i; sfx.tap(); if(i<STORY.length) screenStory(i); else { S.story=true; save(); screenMap(); } break; }
+    case 'map': sfx.tap(); screenMap(); break;
+    case 'final': sfx.tap(); screenFinal(); break;
+    case 'mission': { const i=+b.dataset.i; if(i>S.unlocked){ sfx.wrong(); catTalk('まだだ。','Termine a missão anterior primeiro. Um portão de cada vez.'); return; } sfx.tap(); screenMissionIntro(i); break; }
+    case 'begin': sfx.place(); beginMission(+b.dataset.i); break;
+    case 'tile': { const c=run.cur; if(c.solved) return; const tl=c.tiles.find(x=>x.id===+b.dataset.id); if(!tl||tl.used) return; tl.used=true; c.answer.push(tl.id); sfx.place(); drawTiles(); break; }
+    case 'untile': { const c=run.cur; if(c.solved) return; const id=+b.dataset.id; c.answer=c.answer.filter(x=>x!==id); const tl=c.tiles.find(x=>x.id===id); tl.used=false; sfx.back(); drawTiles(); break; }
+    case 'clear': { const c=run.cur; if(c.solved) return; c.answer=[]; c.tiles.forEach(x=>x.used=false); sfx.back(); drawTiles(); break; }
+    case 'check': checkBuild(); break;
+    case 'hint': run.tasks[run.ti].type==='choice' ? hintChoice() : hintBuild(); break;
+    case 'opt': pickOpt(+b.dataset.k); break;
+    case 'next': nextTask(); break;
+    case 'draw': doDraw(); break;
+    case 'walk': walkOn(); break;
+    case 'speak': speak(b.dataset.s); break;
+  }
+});
+$('bMap').addEventListener('click',()=>{ audioInit(); if(!S.story){ screenTitle(); return; } sfx.tap(); screenMap(); });
+bMusic.addEventListener('click',()=>{ audioInit(); setMusic(!A.musicOn); });
+bSfx.addEventListener('click',()=>{ audioInit(); setSfx(!A.sfxOn); });
+addEventListener('pointermove',e=>{ world.pointer={x:e.clientX,y:e.clientY}; world.pointerT=performance.now(); },{passive:true});
+addEventListener('pointerdown',()=>audioInit(),{once:true});
+addEventListener('resize',layout);
+if(window.ResizeObserver) new ResizeObserver(layout).observe(panel);
+
+initWorld(); layout(); hud(); screenTitle();
+requestAnimationFrame(frame);
+setTimeout(()=>catTalk('…にゃ。','Uma visitante? Toque em começar.',4000),900);
+})();
+</script>
+</body>
+</html>
