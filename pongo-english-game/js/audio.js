@@ -1,4 +1,4 @@
-/* Pongo Learns English - procedural audio (Web Audio API).
+/* Pongo - procedural audio (Web Audio API).
  * Everything is synthesized live, so there are no audio files and no
  * licensing issues: a looping jungle groove (congas, shaker, marimba,
  * breakbeat drums, bass, birds), the celebration fanfare and the SFX. */
@@ -294,14 +294,19 @@
     sfx((t, bus) => osc('triangle', 440, t, 0.4, 0.25, bus, { slideTo: 110, slideTime: 0.35 }));
 
   // ------------------------------------------------------------ speech (TTS)
+  // The language comes from the content pack (en-US for English, ko-KR for Korean).
   let voice = null;
+  const lang = () => (window.PongoPack && window.PongoPack.lang) || 'en-US';
   function pickVoice() {
     if (!('speechSynthesis' in window)) return;
     const vs = speechSynthesis.getVoices();
+    const full = lang();
+    const base = full.split('-')[0];
+    const exact = new RegExp('^' + full.replace('-', '[-_]'), 'i');
     voice =
-      vs.find((v) => /en[-_]US/i.test(v.lang) && /Google|Samantha|Aria|Jenny|Natural/i.test(v.name)) ||
-      vs.find((v) => /en[-_]US/i.test(v.lang)) ||
-      vs.find((v) => /^en/i.test(v.lang)) ||
+      vs.find((v) => exact.test(v.lang) && /Google|Samantha|Aria|Jenny|Natural|Yuna|SunHi|Heami/i.test(v.name)) ||
+      vs.find((v) => exact.test(v.lang)) ||
+      vs.find((v) => new RegExp('^' + base, 'i').test(v.lang)) ||
       null;
   }
   if ('speechSynthesis' in window) {
@@ -309,12 +314,19 @@
     speechSynthesis.onvoiceschanged = pickVoice;
   }
   A.canSpeak = () => 'speechSynthesis' in window;
+  /** true when the device has a voice for the pack's language */
+  A.hasVoice = () => {
+    if (!A.canSpeak()) return false;
+    if (!voice) pickVoice();
+    return !!voice;
+  };
   A.speak = function (text, slow) {
     if (!A.canSpeak()) return;
     try {
+      if (!voice) pickVoice();
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US';
+      u.lang = lang();
       if (voice) u.voice = voice;
       u.rate = slow ? 0.6 : 0.92;
       u.pitch = 1.1;

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Pongo Learns English</title>
+<title>Pongo Aprende Hangul</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Jua&family=Noto+Sans+KR:wght@500;700;900&family=Nunito:wght@600;700;800;900&display=swap">
 <style>
 /* Pongo Learns English
  * Layout: full-bleed 3D garden map with a floating HUD; lessons slide over it as a
@@ -6098,479 +6098,353 @@ window.PONGO_WORLD_GLB = "Z2xURgIAAADI1CwArFwMAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvci
 
 </script>
 <script>
-/* Pongo Learns English - lesson content.
- * Based on "ODU Creative - Cumprimentos e rotina diária em inglês" (A1/A2):
- * greetings, verb BE, Present Continuous and daily-routine vocabulary.
+/* Pongo Aprende Hangul - Korean content pack.
+ * Based on the ODU Creative booklet "한글 — Hangul em Blocos" (6 modules x 3 topics):
+ * history and logic of Hangul, simple vowels, simple consonants, double
+ * consonants / compound vowels / batchim, reading real words and first
+ * expressions, pronunciation and study plan.
  *
- * Block roles follow the colour code of the class material:
- *   s = sujeito (azul)  v = verbo / grupo verbal (verde)
- *   c = complemento (amarelo)  t = tempo, lugar ou circunstância (lilás)
- *   e = expressão fixa (laranja) - learned as one whole block
+ * Romanization is adapted to Brazilian Portuguese, with one consistent table:
+ *   ㅏ a  ㅓ ó  ㅗ ô  ㅜ u  ㅡ û  ㅣ i  ㅐ é  ㅔ ê  ㅑ ia  ㅕ ió  ㅛ iô  ㅠ iu
+ *   ㅘ uá  ㅝ uó  ㅚ uê  ㅟ ui  ㅢ ûi
+ *   ㄱ g/k  ㄴ n  ㄷ d/t  ㄹ r/l  ㅁ m  ㅂ b/p  ㅅ s/ch  ㅇ (mudo)/ng  ㅈ dj
+ *   ㅊ tch  ㅋ k  ㅌ t  ㅍ p  ㅎ r (áspero)
  *
- * Exercise types:
- *   choice  prompt + options, answer = index
- *   fill    sentence with ___, options, answer = index
- *   build   Portuguese sentence -> order the English blocks
- *   listen  hear the sentence (TTS) -> order the blocks
- *   match   tap the pairs (English <-> Portuguese)
- *   type    write the answer (accept = list of accepted answers)
+ * Block colours (roles): s = consoante (azul), v = vogal (verde),
+ * t = sílaba pronta (lilás), e = expressão / palavra (laranja).
+ * Exercises with `compose: true` build Hangul blocks from letters (jamo);
+ * the game shows the block forming live (js/hangul.js).
  */
 (function () {
   'use strict';
 
-  const B = (str) =>
-    // "The sun/s | is shining/v | today/t" -> [["The sun","s"],...]
-    str.split('|').map((p) => {
-      const i = p.lastIndexOf('/');
-      return [p.slice(0, i).trim(), p.slice(i + 1).trim()];
-    });
+  const VOWELS = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ';
+  // "ㅎ ㅏ ㄴ" -> [["ㅎ","s"],["ㅏ","v"],["ㄴ","s"]]
+  const J = (str) => str.split(' ').filter(Boolean).map((c) => [c, VOWELS.includes(c) ? 'v' : 's']);
+  // "감 사 합" -> syllable blocks
+  const S = (str, role = 't') => str.split(' ').filter(Boolean).map((c) => [c, role]);
+
+  // building a block from letters, showing the target in Hangul
+  const block = (target, rom, meaning, letters, extra, tip) => ({
+    type: 'build', compose: true, kind: 'Oficina de blocos', title: 'Monte o bloco com as letras',
+    pt: `${target}  ·  ${rom}${meaning ? ' — ' + meaning : ''}`,
+    target, meaning: meaning ? `${rom} · ${meaning}` : rom, blocks: J(letters), extra: J(extra), tip,
+  });
+  // writing from sound + meaning only (no Hangul shown)
+  const write = (target, rom, meaning, letters, extra, tip) => ({
+    type: 'build', compose: true, kind: 'Escreva em hangul', title: 'Escreva em hangul',
+    pt: `Como se escreve “${meaning}” (${rom})?`,
+    target, meaning: '', blocks: J(letters), extra: J(extra), tip,
+  });
+  // listening, then building from letters
+  const hear = (target, rom, meaning, letters, extra, tip) => ({
+    type: 'listen', compose: true, kind: 'Ouça e monte', title: 'Ouça e monte o bloco',
+    say: target, sayHint: rom, prompt: meaning ? `(${meaning})` : '', target, meaning: '',
+    blocks: J(letters), extra: J(extra), tip,
+  });
 
   const UNITS = [
     {
-      id: 1,
-      node: 'LVL_1',
-      place: 'Portão',
-      title: 'Hello, Pongo!',
-      topic: 'Cumprimentos do dia',
-      color: '#2f86c9',
-      intro: { en: 'Woof! Hello! Good morning! Let\'s learn greetings!', pt: 'Au! Olá! Bom dia! Vamos aprender cumprimentos!' },
+      id: 1, node: 'LVL_1', place: 'Portão', color: '#2f86c9',
+      title: '한글 · O Hangul', topic: 'Módulo 1 · História e lógica dos blocos',
+      intro: { en: '멍멍! 안녕하세요! 저는 퐁고예요!', pt: 'Au-au! Olá! Eu sou o Pongo (퐁고). O hangul foi projetado para ser fácil: vamos descobrir como ele funciona!' },
       exercises: [
         {
-          type: 'choice', pic: '🌅', clock: '8:00',
-          prompt: 'Você encontra uma pessoa às 8h da manhã. O que você diz?',
-          options: ['Good morning!', 'Good night!', 'Good evening!', 'Goodbye!'], answer: 0,
-          tip: '“Good morning” é o cumprimento da manhã.',
+          type: 'choice', pic: '👑', prompt: 'Quem mandou criar o hangul, em 1443?',
+          options: ['O rei Sejong, o Grande', 'O imperador Qin', 'O rei Taejo'], answer: 0,
+          tip: 'Os eruditos da Academia dos Dignos criaram o hangul sob o comando do rei Sejong. Ele foi promulgado em 1446, no Hunminjeongeum (훈민정음).',
         },
         {
-          type: 'choice', pic: '🌆', clock: '19:00',
-          prompt: 'Às 19h você encontra seu vizinho. Como cumprimentar?',
-          options: ['Good night!', 'Good evening!', 'Good afternoon!'], answer: 1,
-          tip: '“Good evening” inicia um encontro à noite. “Good night” encerra o contato ou anuncia que alguém vai dormir.',
+          type: 'choice', pic: '📜', prompt: '훈민정음 (Hunminjeongeum) significa…',
+          options: ['“Os sons corretos para instruir o povo”', '“A grande escrita do rei”', '“As letras da China”'], answer: 0,
+          tip: 'Antes do hangul, escrevia-se com caracteres chineses, difíceis demais para o povo comum.',
+        },
+        {
+          type: 'choice', pic: '🔤', prompt: 'Quantas letras tem o hangul atual?',
+          options: ['40: 19 consoantes + 21 vogais', '26: como o alfabeto latino', '24: só as letras básicas'], answer: 0,
+          tip: 'São 14 consoantes simples + 5 duplas e 10 vogais simples + 11 compostas.',
+        },
+        {
+          type: 'choice', pic: '👄', prompt: 'A consoante ㅁ desenha…',
+          options: ['a boca fechada', 'a garganta', 'os dentes'], answer: 0,
+          tip: 'As consoantes básicas imitam a boca: ㄱ e ㄴ mostram a língua, ㅁ a boca, ㅅ os dentes e ㅇ a garganta.',
         },
         {
           type: 'match', prompt: 'Toque nos pares correspondentes',
-          pairs: [['Hi / Hello', 'Oi / Olá'], ['Good morning', 'Bom dia'], ['Good afternoon', 'Boa tarde'],
-            ['Goodbye', 'Tchau'], ['How are you?', 'Como você está?']],
+          pairs: [['한글', 'escrita coreana'], ['한국어', 'língua coreana'], ['한류', 'onda coreana'], ['자음', 'consoantes'], ['모음', 'vogais']],
         },
+        block('아', 'a', '', 'ㅇ ㅏ', 'ㅓ ㄴ', 'Quando a sílaba começa com som de vogal, o ㅇ entra mudo, só para segurar o lugar.'),
+        block('한', 'han', 'grande', 'ㅎ ㅏ ㄴ', 'ㅓ ㄱ', 'Consoante + vogal + consoante final (batchim): ㅎ + ㅏ + ㄴ.'),
+        block('글', 'gûl', 'escrita', 'ㄱ ㅡ ㄹ', 'ㅏ ㄴ', 'ㅡ é uma vogal horizontal: ela fica embaixo da consoante.'),
         {
-          type: 'build', pt: 'Olá, Pongo! Como você está?',
-          blocks: B('Hello,/e | Pongo!/e | How/e | are/v | you?/s'),
-          extra: B('is/v | Good night/e'),
-          tip: 'Em perguntas com be, o verbo (are) vem antes do sujeito (you).',
-        },
-        {
-          type: 'listen', say: 'Good afternoon, everyone!',
-          blocks: B('Good afternoon,/e | everyone!/e'),
-          extra: B('Good evening,/e | Goodbye/e'),
-        },
-        {
-          type: 'choice', pic: '☀️',
-          prompt: '“Hello” pode ser usado à tarde?',
-          options: ['Sim, “Hello” funciona em vários horários', 'Não, “Hello” significa só “bom dia”', 'Não, “Hello” é uma despedida'],
-          answer: 0,
-          tip: '“Hello” funciona também à tarde, mas não significa especificamente “boa tarde”.',
-        },
-        {
-          type: 'build', pt: 'Bom dia, pessoal!',
-          blocks: B('Good morning,/e | everyone!/e'),
-          extra: B('Good night,/e | people/c'),
-        },
-        {
-          type: 'choice', pic: '🌙',
-          prompt: 'Quando usamos “Good night”?',
-          options: ['Ao chegar em uma festa à noite', 'Para encerrar o contato ou ir dormir', 'Ao acordar'], answer: 1,
-          tip: '“Good night” normalmente encerra o contato ou anuncia que alguém vai dormir.',
+          type: 'choice', pic: '🧱', prompt: 'Num bloco, onde fica a vogal ㅗ?',
+          options: ['Embaixo da consoante', 'À direita da consoante', 'Antes da consoante'], answer: 0,
+          tip: 'Vogais verticais (ㅏ ㅓ ㅣ) ficam à direita; vogais horizontais (ㅗ ㅜ ㅡ) ficam embaixo.',
         },
       ],
     },
     {
-      id: 2,
-      node: 'LVL_2',
-      place: 'Canteiro de flores',
-      title: 'Nice to meet you!',
-      topic: 'Conhecer, agradecer, desculpar-se',
-      color: '#d23a4f',
-      intro: { en: 'Look! Our next-door neighbor! Let\'s say: nice to meet you!', pt: 'Olha! Nosso vizinho da casa ao lado! Vamos dizer: prazer em conhecer você!' },
+      id: 2, node: 'LVL_2', place: 'Canteiro de flores', color: '#d23a4f',
+      title: '모음 · Vogais', topic: 'Módulo 2 · As vogais simples',
+      intro: { en: '아, 어, 오, 우, 으, 이!', pt: 'a, ó, ô, u, û, i! As vogais são o coração de cada bloco. Quase todas existem no português!' },
       exercises: [
         {
-          type: 'choice', pic: '🤝',
-          prompt: 'Você conhece um colega pela primeira vez. O que você diz?',
-          options: ['Nice to meet you!', 'It\'s been a while!', 'I\'m home!'], answer: 0,
-          tip: 'Aprenda “Nice to meet you” como expressão pronta, em um bloco só.',
+          type: 'match', prompt: 'Vogal ↔ som',
+          pairs: [['ㅏ', 'a (pai)'], ['ㅓ', 'ó (avó)'], ['ㅗ', 'ô (avô)'], ['ㅜ', 'u (luz)'], ['ㅡ', 'û (sem arredondar)'], ['ㅣ', 'i (filho)']],
         },
         {
-          type: 'choice', pic: '🍓',
-          prompt: 'Um amigo oferece comida para você.',
-          options: ['You\'re welcome!', 'Thank you!', 'I\'m sorry!'], answer: 1,
-          tip: '“Thank you” agradece.',
+          type: 'choice', pic: '😁', prompt: 'Qual vogal é um “u” dito sorrindo, sem arredondar os lábios?',
+          options: ['ㅡ', 'ㅜ', 'ㅗ'], answer: 0,
+          tip: 'Diga “i” e, sem mexer a língua, estique os lábios para os lados: esse é o ㅡ.',
         },
         {
-          type: 'choice', pic: '😊',
-          prompt: 'Alguém agradece pela sua ajuda: “Thank you!”. Você responde:',
-          options: ['Thank you!', 'Good night!', 'You\'re welcome!'], answer: 2,
-          tip: '“You’re welcome” = de nada. É a resposta a um agradecimento.',
+          type: 'choice', say: '오이', sayHint: 'ô-i', title: 'Ouça e escolha', prompt: 'Qual palavra o Pongo disse?',
+          options: ['오이', '어이', '우이'], answer: 0, tip: '오이 (ô-i) = pepino. ㅗ é o “ô” fechado.',
+        },
+        block('우유', 'u-iu', 'leite', 'ㅇ ㅜ ㅇ ㅠ', 'ㅗ ㅛ', 'Dois blocos com ㅇ mudo: 우 + 유.'),
+        {
+          type: 'choice', pic: '➕', prompt: 'Regra do traço: ㅏ + mais um traço vira…',
+          options: ['ㅑ (ia)', 'ㅓ (ó)', 'ㅐ (é)'], answer: 0,
+          tip: '1 traço = vogal pura; 2 traços = a mesma vogal com “i” na frente: ㅏ→ㅑ, ㅓ→ㅕ, ㅗ→ㅛ, ㅜ→ㅠ.',
+        },
+        block('요가', 'iô-ga', 'ioga', 'ㅇ ㅛ ㄱ ㅏ', 'ㅕ ㅑ', 'ㅛ = “i” + ㅗ (iô).'),
+        {
+          type: 'choice', pic: '🐶', prompt: 'Como se escreve “cachorro” (ké)? Igual ao Pongo!',
+          options: ['개', '게', '가'], answer: 0,
+          tip: '개 usa ㅐ (é aberto). 게 (com ㅔ, ê fechado) é “caranguejo”: na fala os dois sons quase se fundiram.',
+        },
+        write('아이', 'a-i', 'criança', 'ㅇ ㅏ ㅇ ㅣ', 'ㅓ ㅡ', 'ㅇ mudo + ㅏ, depois ㅇ mudo + ㅣ.'),
+        hear('여우', 'ió-u', 'raposa', 'ㅇ ㅕ ㅇ ㅜ', 'ㅛ ㅗ', '여우 = raposa. ㅕ = “i” + ㅓ (ió).'),
+      ],
+    },
+    {
+      id: 3, node: 'LVL_3', place: 'Lago', color: '#1cb0f6',
+      title: '자음 · Consoantes', topic: 'Módulo 3 · Suaves, aspiradas e nasais',
+      intro: { en: '가, 나, 다, 라, 마!', pt: 'ga, na, da, ra, ma! O coreano tem três famílias de consoantes. Vamos conhecer as simples.' },
+      exercises: [
+        {
+          type: 'match', prompt: 'Consoante ↔ som',
+          pairs: [['ㄱ', 'g / k'], ['ㄴ', 'n'], ['ㄷ', 'd / t'], ['ㄹ', 'r / l'], ['ㅁ', 'm'], ['ㅂ', 'b / p']],
         },
         {
-          type: 'match', prompt: 'Toque nos pares correspondentes',
-          pairs: [['Thank you', 'Obrigado(a)'], ['You\'re welcome', 'De nada'], ['I\'m sorry', 'Desculpe'],
-            ['It\'s been a while', 'Faz tempo'], ['Nice to meet you', 'Prazer em conhecer você']],
+          type: 'choice', pic: '🗣️', prompt: 'Antes de ㅣ, a consoante ㅅ soa como…',
+          options: ['“ch” (시 = chi)', '“s” (시 = si)', '“t” (시 = ti)'], answer: 0,
+          tip: 'ㅅ é “s”, mas vira “ch” antes de sons de i: 시간 (chi-gan) = tempo, 시계 (chi-guê) = relógio.',
         },
         {
-          type: 'build', pt: 'Eu sou o Pongo. Prazer em conhecer você!',
-          blocks: B('I/s | am/v | Pongo./c | Nice to meet you!/e'),
-          extra: B('is/v | Thank you/e'),
-          tip: 'I é o sujeito; am é a forma de be para I.',
+          type: 'choice', say: '카', sayHint: 'ka (com sopro)', title: 'Ouça e escolha', prompt: 'Suave ou aspirada? Qual sílaba o Pongo disse?',
+          options: ['가', '카'], answer: 1, tip: 'Teste da mão: em ㅋ você sente o jato de ar; em ㄱ, quase nada.',
+        },
+        block('나무', 'na-mu', 'árvore', 'ㄴ ㅏ ㅁ ㅜ', 'ㄹ ㅓ', 'ㄴ é o “n” de nada; ㅁ é o “m” de mão.'),
+        block('사랑', 'sa-rang', 'amor', 'ㅅ ㅏ ㄹ ㅏ ㅇ', 'ㄴ ㅈ', 'No fim do bloco, ㅇ soa “ng”: 랑 = rang.'),
+        {
+          type: 'choice', pic: '🔔', prompt: 'No final do bloco (como em 강), ㅇ soa…',
+          options: ['“ng”, como em “sing”', 'mudo', '“o”'], answer: 0,
+          tip: 'ㅇ tem dupla personalidade: mudo no início, “ng” no final.',
+        },
+        hear('포도', 'pô-dô', 'uva', 'ㅍ ㅗ ㄷ ㅗ', 'ㅂ ㅌ', 'ㅍ é o “p” com sopro.'),
+        write('하늘', 'ra-nûl', 'céu', 'ㅎ ㅏ ㄴ ㅡ ㄹ', 'ㅜ ㅓ', 'ㅎ é um sopro áspero, como o “r” de “carro”.'),
+        write('다리', 'da-ri', 'perna / ponte', 'ㄷ ㅏ ㄹ ㅣ', 'ㅌ ㄴ', 'ㄹ entre vogais é um “r” de um toque só, como em “para”.'),
+      ],
+    },
+    {
+      id: 4, node: 'LVL_4', place: 'Árvore grande', color: '#ff9600',
+      title: '받침 · Duplas e batchim', topic: 'Módulo 4 · Tensas, compostas e consoante final',
+      intro: { en: '가, 카, 까!', pt: 'ga, ka, kka! Suave, aspirada e tensa. Hoje você fecha o alfabeto inteiro!' },
+      exercises: [
+        {
+          type: 'choice', say: '까', sayHint: 'kka (tensa, sem sopro)', title: 'Ouça e escolha', prompt: 'O trio: qual delas o Pongo disse?',
+          options: ['가', '카', '까'], answer: 2, tip: 'As duplas são tensas: garganta apertada e nenhum sopro.',
         },
         {
-          type: 'choice', pic: '⏳',
-          prompt: 'Em “It\'s been a while”, a contração it\'s significa…',
-          options: ['it is', 'it has', 'it was'], answer: 1,
-          tip: 'Aqui, it’s = it has (Present Perfect): “It has been a while” = faz tempo.',
+          type: 'match', prompt: 'Consoante dupla ↔ som',
+          pairs: [['ㄲ', 'kk'], ['ㄸ', 'tt'], ['ㅃ', 'pp'], ['ㅆ', 'ss'], ['ㅉ', 'djj']],
+        },
+        block('딸기', 'ttal-gui', 'morango', 'ㄸ ㅏ ㄹ ㄱ ㅣ', 'ㄷ ㅌ', 'ㄸ = ㄷ dobrado: o mesmo “t”, só que tenso.'),
+        block('사과', 'sa-guá', 'maçã / desculpa', 'ㅅ ㅏ ㄱ ㅘ', 'ㅗ ㅏ', 'ㅘ = ㅗ + ㅏ (uá). Em vogal composta, a consoante fica no canto esquerdo.'),
+        {
+          type: 'choice', pic: '7️⃣', prompt: 'Quantos sons diferentes o batchim (consoante final) pode ter?',
+          options: ['7', '14', '27'], answer: 0,
+          tip: 'Regra dos 7: no final, tudo vira ㄱ, ㄴ, ㄷ, ㄹ, ㅁ, ㅂ ou ㅇ (k, n, t, l, m, p, ng).',
         },
         {
-          type: 'listen', say: 'Thank you, my friend!',
-          blocks: B('Thank you,/e | my friend!/c'),
-          extra: B('You\'re welcome,/e | your/c'),
+          type: 'choice', pic: '👕', prompt: 'Em 옷 (roupa), o ㅅ final soa como…',
+          options: ['um “t” travado', '“s”', '“ch”'], answer: 0,
+          tip: 'ㅅ, ㅈ, ㅊ, ㅌ e ㅎ no final soam como “t” travado, sem soltar o ar: 옷 = ôt.',
+        },
+        hear('밥', 'pap', 'arroz / refeição', 'ㅂ ㅏ ㅂ', 'ㅍ ㅁ', 'ㅂ final: lábios fechados, sem estourar.'),
+        block('의사', 'ûi-sa', 'médico', 'ㅇ ㅢ ㅅ ㅏ', 'ㅡ ㅟ', 'ㅢ = ㅡ + ㅣ falados juntos, rápido: “ûi”.'),
+        write('원', 'uón', 'won, a moeda', 'ㅇ ㅝ ㄴ', 'ㅘ ㅁ', 'ㅝ = ㅜ + ㅓ (uó).'),
+      ],
+    },
+    {
+      id: 5, node: 'LVL_5', place: 'Casinha do Pongo', color: '#8e44ad',
+      title: '단어 · Primeiras palavras', topic: 'Módulo 5 · Oficina de blocos e 12 palavras',
+      intro: { en: '물, 집, 책, 친구!', pt: 'Água, casa, livro, amigo! Alfabeto completo: agora é ler palavras de verdade.' },
+      exercises: [
+        block('산', 'san', 'montanha', 'ㅅ ㅏ ㄴ', 'ㅓ ㅁ', 'Ritual: (1) consoante, (2) vogal, (3) batchim embaixo de tudo.'),
+        {
+          type: 'match', prompt: 'Palavra ↔ significado',
+          pairs: [['물', 'água'], ['집', 'casa'], ['책', 'livro'], ['친구', 'amigo(a)'], ['커피', 'café']],
         },
         {
-          type: 'build', pt: 'Faz tempo! Como você está?',
-          blocks: B('It\'s been a while!/e | How/e | are/v | you?/s'),
-          extra: B('is/v | Nice to meet you/e'),
+          type: 'choice', pic: '🏫', prompt: 'Qual destas palavras é “escola” (rak-kkiô)?',
+          options: ['학교', '한국', '시간'], answer: 0,
+          tip: '학교 se escreve hak-gyo, mas soa “rak-kkiô”: o batchim ㄱ deixa o ㄱ seguinte tenso.',
+        },
+        {
+          type: 'build', joined: true, kind: 'Monte a palavra', title: 'Monte a palavra com as sílabas',
+          pt: 'Língua coreana (ran-gu-gó)', blocks: S('한 국 어'), extra: S('글 거'),
+          tip: '한국어 = 한 + 국 + 어: três blocos, três sílabas. Na fala, o ㄱ de 국 passa para a sílaba seguinte: “ran-gu-gó”.',
+        },
+        write('커피', 'kó-pi', 'café', 'ㅋ ㅓ ㅍ ㅣ', 'ㅗ ㅂ', 'Palavra emprestada do inglês “coffee”: ㅋ e ㅍ com sopro.'),
+        hear('친구', 'tchin-gu', 'amigo', 'ㅊ ㅣ ㄴ ㄱ ㅜ', 'ㅈ ㅋ', 'ㅊ é o “tch” de “tchau” com sopro.'),
+        {
+          type: 'choice', pic: '🇧🇷', prompt: '“Brasil” escrito em hangul é…',
+          options: ['브라질', '부라질', '브라실'], answer: 0,
+          tip: 'Para consoantes sem vogal, o coreano usa ㅡ: 브-라-질 (bû-ra-djil).',
+        },
+        write('시간', 'chi-gan', 'tempo / hora', 'ㅅ ㅣ ㄱ ㅏ ㄴ', 'ㅈ ㅓ', 'ㅅ antes de ㅣ soa “ch”.'),
+        {
+          type: 'choice', pic: '📅', prompt: '내일 (né-il) significa…',
+          options: ['amanhã', 'hoje', 'ontem'], answer: 0, tip: '내일 = amanhã.',
         },
       ],
     },
     {
-      id: 3,
-      node: 'LVL_3',
-      place: 'Lago',
-      title: 'I am happy!',
-      topic: 'Verbo BE: am, is, are',
-      color: '#1cb0f6',
-      intro: { en: 'I am happy! You are ready! The duck is yellow!', pt: 'Eu estou feliz! Você está pronto! O pato é amarelo! Vamos estudar o verbo BE.' },
+      id: 6, node: 'LVL_6', place: 'Horta de frutinhas', color: '#6a2bd9',
+      title: '안녕하세요 · Expressões', topic: 'Módulo 5 · Fale desde o dia 1',
+      intro: { en: '안녕하세요! 감사합니다!', pt: 'Olá! Obrigado! As expressões educadas terminam em 요 ou em 니다. Decore como blocos inteiros.' },
       exercises: [
         {
-          type: 'fill', sentence: 'I ___ happy.', options: ['am', 'is', 'are'], answer: 0,
-          tip: 'I → am · You/We/They → are · He/She/It → is',
+          type: 'match', prompt: 'Expressão ↔ significado',
+          pairs: [['안녕하세요', 'Olá'], ['감사합니다', 'Obrigado(a)'], ['죄송합니다', 'Desculpe'], ['네', 'Sim'], ['아니요', 'Não']],
         },
         {
-          type: 'fill', sentence: 'The sun ___ shining.', options: ['am', 'is', 'are'], answer: 1,
-          tip: '“The sun” = it → is.',
+          type: 'choice', pic: '👋', prompt: 'Você encontra o vizinho. Como cumprimentar com educação?',
+          options: ['안녕하세요', '감사합니다', '죄송합니다'], answer: 0,
+          tip: '안녕하세요 (an-nióng-ra-sê-iô) = olá / como vai?',
         },
         {
-          type: 'fill', sentence: 'We ___ home.', options: ['am', 'is', 'are'], answer: 2,
-          tip: 'We → are.',
+          type: 'build', joined: true, kind: 'Monte a expressão', title: 'Monte a expressão com as sílabas',
+          pt: 'Olá! (an-nióng-ra-sê-iô)', blocks: S('안 녕 하 세 요'), extra: S('새 효'),
+          tip: '안녕하세요 pergunta, ao pé da letra: “você está em paz?”.',
         },
         {
-          type: 'fill', sentence: 'My friends ___ walking.', options: ['am', 'is', 'are'], answer: 2,
-          tip: '“My friends” é plural (they) → are.',
+          type: 'listen', joined: true, kind: 'Ouça e monte', title: 'Ouça e monte com as sílabas',
+          say: '감사합니다', sayHint: 'kam-sa-ram-ni-da', blocks: S('감 사 합 니 다'), extra: S('삼 함'),
+          tip: '감사합니다 = obrigado(a), formal. O ㅂ de 합 soa “m” antes de ㄴ.',
         },
         {
-          type: 'build', pt: 'Eu estou feliz hoje.',
-          blocks: B('I/s | am/v | happy/c | today./t'),
-          extra: B('is/v | are/v'),
-          tip: 'Troque happy por hungry, tired ou drowsy para fazer novas frases!',
+          type: 'choice', pic: '🙇', prompt: 'Nas expressões educadas, o final 요 indica…',
+          options: ['fala educada', 'uma pergunta', 'o passado'], answer: 0,
+          tip: '요 é a marca da fala educada do dia a dia: 아니요, 안녕하세요, 뭐예요?',
         },
         {
-          type: 'build', pt: 'Você está pronto?',
-          blocks: B('Are/v | you/s | ready?/c'),
-          extra: B('Do/v | is/v'),
-          tip: 'Na pergunta com be, o verbo vem antes do sujeito. Não usamos “do”.',
+          type: 'choice', pic: '🤝', prompt: 'Alguém diz “안녕하세요!”. Uma boa resposta é…',
+          options: ['네, 안녕하세요!', '아니요!', '죄송합니다!'], answer: 0,
+          tip: '네, 안녕하세요 = “sim, olá!”.',
         },
         {
-          type: 'choice', pic: '🙅',
-          prompt: 'Coloque na negativa: “I am ready.”',
-          options: ['I don\'t ready.', 'I\'m not ready.', 'I amn\'t ready.'], answer: 1,
-          tip: 'Na negativa acrescentamos not: I’m not ready.',
+          type: 'build', kind: 'Monte a pergunta', title: 'Monte a pergunta',
+          pt: 'Qual é o seu nome? (i-rû-mi muó-iê-iô)', blocks: [['이름이', 'e'], ['뭐예요?', 'e']], extra: [['감사합니다', 'e']],
+          tip: '이름 = nome; 이 marca o sujeito; 뭐예요? = o que é?',
         },
         {
-          type: 'type', prompt: 'Escreva a contração de “You are”', placeholder: 'You…',
-          accept: ['you\'re', 'you’re'], tip: 'You are → You’re · We are → We’re · It is → It’s',
-        },
-        {
-          type: 'build', pt: 'Nós estamos felizes hoje.',
-          blocks: B('We/s | are/v | happy/c | today./t'),
-          extra: B('am/v | is/v'),
-          tip: 'A mudança de sujeito pode exigir mudança no verbo: I am → We are.',
+          type: 'choice', say: '죄송합니다', sayHint: 'djuê-song-ram-ni-da', title: 'Ouça e escolha', prompt: 'O que o Pongo disse?',
+          options: ['Desculpe', 'Obrigado', 'Olá'], answer: 0, tip: '죄송합니다 = desculpe (formal).',
         },
       ],
     },
     {
-      id: 4,
-      node: 'LVL_4',
-      place: 'Árvore grande',
-      title: 'The sun is shining!',
-      topic: 'Present Continuous',
-      color: '#ff9600',
-      intro: { en: 'Look up! The sun is shining! I am playing under the tree!', pt: 'Olhe para cima! O sol está brilhando! Eu estou brincando debaixo da árvore!' },
+      id: 7, node: 'LVL_7', place: 'Porta da frente', color: '#36912a',
+      title: '화이팅! · Revisão', topic: 'Módulo 6 · Pronúncia e revisão final',
+      intro: { en: '불, 풀, 뿔! 화이팅!', pt: 'Fogo, grama, chifre! Treine os contrastes que o português não tem. Força!' },
       exercises: [
         {
-          type: 'choice', pic: '🧩',
-          prompt: 'Qual é a estrutura do Present Continuous?',
-          options: ['sujeito + verbo + -ed', 'sujeito + am/is/are + verbo-ing', 'sujeito + do/does + verbo'], answer: 1,
-          tip: 'Sujeito + am/is/are + verbo com -ing: descreve ações em andamento.',
+          type: 'choice', say: '불', sayHint: 'pul (suave)', title: 'Ouça e escolha', prompt: 'Suave, aspirada ou tensa?',
+          options: ['불 (fogo)', '풀 (grama)', '뿔 (chifre)'], answer: 0, tip: '불 = fogo: ㅂ suave, quase sem ar.',
         },
         {
-          type: 'type', prompt: 'Escreva a forma -ing de “walk”', placeholder: 'walk…',
-          accept: ['walking'], tip: 'Em geral, acrescente -ing: walk → walking.',
+          type: 'choice', say: '풀', sayHint: 'pul (com sopro)', title: 'Ouça e escolha', prompt: 'E agora?',
+          options: ['불 (fogo)', '풀 (grama)', '뿔 (chifre)'], answer: 1, tip: '풀 = grama / cola: ㅍ com jato de ar.',
         },
         {
-          type: 'type', prompt: 'Escreva a forma -ing de “shine”', placeholder: 'shin…',
-          accept: ['shining'], tip: 'Retire o e final silencioso: shine → shining.',
+          type: 'choice', say: '뿔', sayHint: 'ppul (tensa)', title: 'Ouça e escolha', prompt: 'Última do trio!',
+          options: ['불 (fogo)', '풀 (grama)', '뿔 (chifre)'], answer: 2, tip: '뿔 = chifre: ㅃ tenso, garganta apertada.',
         },
         {
-          type: 'type', prompt: 'Escreva a forma -ing de “get”', placeholder: 'get…',
-          accept: ['getting'], tip: 'Em get, dobre a consoante: get → getting.',
+          type: 'choice', pic: '🌬️', prompt: 'Em 바람 (pa-ram, vento), o ㄹ soa como…',
+          options: ['um “r” de um toque só, como em “para”', 'o “rr” de “carro”', 'um “l” bem forte'], answer: 0,
+          tip: 'Entre vogais, ㄹ é um toque rápido da língua no céu da boca.',
         },
         {
-          type: 'build', pt: 'O sol está brilhando intensamente hoje.',
-          blocks: B('The sun/s | is shining/v | brightly/c | today./t'),
-          extra: B('are shining/v | shine/v'),
-          tip: '“is shining” = ação em andamento. “Brightly” diz como; “today” diz quando.',
+          type: 'choice', pic: '🩼', prompt: 'Qual é o jeito certo de usar a romanização?',
+          options: ['Como muleta nas primeiras semanas, e depois largar', 'Sempre, no lugar do hangul', 'Nunca: só áudio'], answer: 0,
+          tip: 'Romanização embaixo, hangul em cima. Cubra a romanização antes de ler em voz alta.',
         },
         {
-          type: 'listen', say: 'You are walking down the street.',
-          blocks: B('You/s | are walking/v | down the street./t'),
-          extra: B('is walking/v | walk/v'),
+          type: 'match', prompt: 'Palavra ↔ significado',
+          pairs: [['읽기', 'leitura'], ['쓰기', 'escrita'], ['듣기', 'escuta'], ['바람', 'vento'], ['마음', 'coração / mente']],
         },
+        write('한글', 'ran-gûl', 'escrita coreana', 'ㅎ ㅏ ㄴ ㄱ ㅡ ㄹ', 'ㅓ ㅜ', 'Você já escreve o nome do alfabeto!'),
+        hear('마음', 'ma-ûm', 'coração / mente', 'ㅁ ㅏ ㅇ ㅡ ㅁ', 'ㅜ ㄴ', 'ㅇ mudo no início do segundo bloco; ㅁ final.'),
         {
-          type: 'fill', sentence: 'Pongo is ___ in the garden.', options: ['play', 'playing', 'plays'], answer: 1,
-          tip: 'Depois de am/is/are vem o verbo com -ing: is playing.',
-        },
-        {
-          type: 'build', pt: 'Está ficando tarde.',
-          blocks: B('It/s | is getting/v | late./c'),
-          extra: B('are getting/v | get/v'),
-          tip: '“It” é sujeito gramatical; não traduzimos por “isso”. Get + adjetivo = mudança de estado.',
-        },
-        {
-          type: 'choice', pic: '🐶🦴',
-          prompt: 'What is Pongo doing? (O que o Pongo está fazendo?)',
-          options: ['Pongo are eating.', 'Pongo is eating.', 'Pongo eating is.'], answer: 1,
-          tip: 'Pongo = he → is eating.',
-        },
-      ],
-    },
-    {
-      id: 5,
-      node: 'LVL_5',
-      place: 'Casinha do Pongo',
-      title: 'Are you sleeping?',
-      topic: 'Perguntas e negativas no Present Continuous',
-      color: '#8e44ad',
-      intro: { en: 'Are you sleeping? No, I\'m not! I\'m playing!', pt: 'Você está dormindo? Não! Eu estou brincando! Vamos fazer perguntas e negativas.' },
-      exercises: [
-        {
-          type: 'choice', pic: '❓',
-          prompt: 'Transforme em pergunta: “You are walking.”',
-          options: ['Do you walking?', 'Are you walking?', 'You walking are?'], answer: 1,
-          tip: 'Não acrescente do/does: be já funciona como auxiliar.',
-        },
-        {
-          type: 'build', pt: 'Você está caminhando?',
-          blocks: B('Are/v | you/s | walking?/v'),
-          extra: B('Do/v | walk/v'),
-        },
-        {
-          type: 'choice', pic: '🌥️',
-          prompt: 'Negativa de: “The sun is shining.”',
-          options: ['The sun doesn\'t shining.', 'The sun isn\'t shining.', 'The sun not is shining.'], answer: 1,
-          tip: 'Negativa: is not / isn’t + verbo-ing.',
-        },
-        {
-          type: 'build', pt: 'O sol não está brilhando.',
-          blocks: B('The sun/s | isn\'t shining./v'),
-          extra: B('doesn\'t/v | shine/v'),
-        },
-        {
-          type: 'choice', pic: '💬',
-          prompt: '“Are you ready?” — Resposta curta afirmativa:',
-          options: ['Yes, I do.', 'Yes, I am.', 'Yes, I\'m.'], answer: 1,
-          tip: 'Respostas curtas: Yes, I am. / No, I’m not. (Não use contração no “Yes, I am”.)',
-        },
-        {
-          type: 'fill', sentence: '___ Pongo sleeping? No, he isn\'t.', options: ['Is', 'Are', 'Does'], answer: 0,
-          tip: 'Pongo = he → Is he sleeping?',
-        },
-        {
-          type: 'listen', say: 'Is the dog playing outside?',
-          blocks: B('Is/v | the dog/s | playing/v | outside?/t'),
-          extra: B('Are/v | Does/v'),
-        },
-        {
-          type: 'build', pt: 'Eu não estou dormindo. Eu estou brincando!',
-          blocks: B('I/s | am not sleeping./v | I\'m playing!/v'),
-          extra: B('don\'t sleep/v | is playing/v'),
-        },
-      ],
-    },
-    {
-      id: 6,
-      node: 'LVL_6',
-      place: 'Horta de frutinhas',
-      title: 'Let\'s share berries!',
-      topic: 'Ações da rotina e convites',
-      color: '#6a2bd9',
-      intro: { en: 'Yummy berries! Let\'s share! Long walks make me very hungry!', pt: 'Frutinhas gostosas! Vamos compartilhar! Caminhadas longas me deixam com muita fome!' },
-      exercises: [
-        {
-          type: 'match', prompt: 'Toque nos pares de verbos',
-          pairs: [['eat', 'comer'], ['share', 'compartilhar'], ['play', 'brincar'], ['chew', 'mastigar'], ['sleep', 'dormir']],
-        },
-        {
-          type: 'build', pt: 'Pongo está comendo frutinhas no jardim.',
-          blocks: B('Pongo/s | is eating/v | berries/c | in the garden./t'),
-          extra: B('are eating/v | eat/v'),
-        },
-        {
-          type: 'fill', sentence: 'Let\'s ___ together!', options: ['practice', 'practicing', 'to practice'], answer: 0,
-          tip: 'Let’s + verbo na forma base: Let’s practice = vamos praticar.',
-        },
-        {
-          type: 'fill', sentence: 'Finish ___ breakfast.', options: ['eat', 'eating', 'to eat'], answer: 1,
-          tip: 'Depois de finish, a atividade recebe -ing. Aqui não é Present Continuous: falta o be.',
-        },
-        {
-          type: 'build', pt: 'Você vai compartilhar suas frutinhas conosco.',
-          blocks: B('You/s | are going to share/v | your berries/c | with us./t'),
-          extra: B('going share/v | my/c'),
-          tip: 'Be going to + verbo base expressa uma intenção.',
-        },
-        {
-          type: 'listen', say: 'We are sharing our berries.',
-          blocks: B('We/s | are sharing/v | our berries./c'),
-          extra: B('is sharing/v | your/c'),
-        },
-        {
-          type: 'build', pt: 'Caminhadas longas me deixam com fome.',
-          blocks: B('Long walks/s | make/v | me hungry./c'),
-          extra: B('makes/v | I/s'),
-          tip: 'make + pessoa + adjetivo. Sujeito plural → make.',
-        },
-        {
-          type: 'fill', sentence: 'Long walks always make ___ very hungry.', options: ['I', 'me', 'my'], answer: 1,
-          tip: 'Me é pronome objeto: I → me, we → us, they → them.',
-        },
-        {
-          type: 'build', pt: 'Meus amigos estão brincando juntos.',
-          blocks: B('My friends/s | are playing/v | together./t'),
-          extra: B('is playing/v | plays/v'),
-        },
-      ],
-    },
-    {
-      id: 7,
-      node: 'LVL_7',
-      place: 'Porta da frente',
-      title: 'I\'m home!',
-      topic: 'Despedidas e revisão final',
-      color: '#36912a',
-      intro: { en: 'We are home! It\'s getting late. Let\'s say good night!', pt: 'Chegamos em casa! Está ficando tarde. Vamos dizer boa noite! Revisão final!' },
-      exercises: [
-        {
-          type: 'choice', pic: '🏠',
-          prompt: 'Você entra em casa e anuncia que chegou:',
-          options: ['I\'m home!', 'Goodbye!', 'Nice to meet you!'], answer: 0,
-          tip: '“I’m home” anuncia uma chegada: “Cheguei!”. Usamos home sem “at”.',
-        },
-        {
-          type: 'match', prompt: 'Toque nos pares de despedidas',
-          pairs: [['Take care', 'Cuide-se'], ['See you tomorrow', 'Até amanhã'], ['Have a nice day', 'Tenha um bom dia'],
-            ['Good night', 'Boa noite (despedida)'], ['I\'m home', 'Cheguei']],
-        },
-        {
-          type: 'choice', pic: '😴',
-          prompt: 'Você vai dormir. O que você diz para a família?',
-          options: ['Good evening!', 'Good morning!', 'Good night!'], answer: 2,
-          tip: '“Good night” anuncia que alguém vai dormir.',
-        },
-        {
-          type: 'build', pt: 'Está ficando tarde. Boa noite, Pongo!',
-          blocks: B('It/s | is getting/v | late./c | Good night, Pongo!/e'),
-          extra: B('Good evening/e | get/v'),
-        },
-        {
-          type: 'listen', say: 'See you tomorrow, my friend!',
-          blocks: B('See you tomorrow,/e | my friend!/c'),
-          extra: B('Take care/e | your/c'),
-        },
-        {
-          type: 'choice', pic: '🚪',
-          prompt: '“I\'m going to go.” — o que essa frase faz?',
-          options: ['É uma fórmula de cumprimento', 'Anuncia uma intenção: “Vou sair”', 'Significa “Cheguei”'], answer: 1,
-          tip: 'Ela anuncia uma intenção. Para encerrar a conversa, combine com “Bye” ou “See you later”.',
-        },
-        {
-          type: 'build', pt: 'As estrelas estão cintilando no céu.',
-          blocks: B('The stars/s | are twinkling/v | in the sky./t'),
-          extra: B('is twinkling/v | twinkle/v'),
-        },
-        {
-          type: 'build', pt: 'O que você está fazendo?',
-          blocks: B('What/c | are/v | you/s | doing?/v'),
-          extra: B('do/v | is/v'),
-        },
-        {
-          type: 'build', pt: 'Pongo está aprendendo inglês com você!',
-          blocks: B('Pongo/s | is learning/v | English/c | with you!/t'),
-          extra: B('are learning/v | learn/v'),
-          tip: 'You did it! Você conseguiu!',
+          type: 'build', joined: true, kind: 'Monte a palavra', title: 'Monte a palavra com as sílabas',
+          pt: 'Força! Você consegue! (hwa-i-ting)', blocks: S('화 이 팅'), extra: S('하 땅'),
+          tip: '화이팅! Vem do inglês “fighting” e é o grito de torcida coreano.',
         },
       ],
     },
   ];
 
   const MOTIVATION = [
-    'PAWSOME!', 'GREAT JOB!', 'YOU DID IT!', 'AMAZING!', 'WOOF-TASTIC!', 'NAILED IT!',
-    'YOU\'RE ON FIRE!', 'SUPERSTAR!', 'HERE WE GO!', 'KEEP GOING!', 'FANTASTIC!', 'BRILLIANT!',
-    'WAY TO GO!', 'YOU ROCK!', 'UNSTOPPABLE!',
+    ['화이팅!', 'hwa-i-ting · Força!'], ['잘했어요!', 'tchal-ré-ssó-iô · Muito bem!'], ['대박!', 'té-bak · Incrível!'],
+    ['최고!', 'tchuê-gô · O melhor!'], ['짱!', 'tchang · Demais!'], ['멋져요!', 'mót-djó-iô · Que legal!'],
+    ['완벽해요!', 'uan-bió-ké-iô · Perfeito!'], ['좋아요!', 'djô-a-iô · Ótimo!'], ['천재!', 'tchón-djé · Gênio!'],
   ];
-  const MOTIVATION_SUB = [
-    'Pongo is so proud of you!', 'You are learning so fast!', 'Your English is getting better!',
-    'Keep shining like the sun!', 'Let\'s give it another try!', 'You are doing a great job!',
-    'Pongo is wagging his tail!', 'One more step to the house!',
-  ];
-  const OK_SHORT = ['Great job!', 'Awesome!', 'Correct!', 'Nice!', 'Woof, yes!', 'Excellent!', 'Perfect!'];
+  const OK_SHORT = ['잘했어요! Muito bem!', '맞아요! Isso mesmo!', '좋아요! Ótimo!', '정답! Resposta certa!', '최고! O melhor!'];
 
-  window.PongoContent = { UNITS, MOTIVATION, MOTIVATION_SUB, OK_SHORT };
+  window.PongoContent = { UNITS, MOTIVATION, MOTIVATION_SUB: [], OK_SHORT };
 
-  // Language pack: everything the game engine says that depends on the language.
   window.PongoPack = {
-    id: 'en',
-    lang: 'en-US',
-    saveKey: 'pongo-english-v1',
-    docTitle: 'Pongo Learns English',
+    id: 'ko',
+    lang: 'ko-KR',
+    saveKey: 'pongo-hangul-v1',
+    docTitle: 'Pongo Aprende Hangul',
+    bodyClass: 'lang-ko',
     start: {
-      title: '<span>Pongo</span> Learns English',
-      lead: 'O Pongo é um cachorrinho muito sapeca que quer aprender a falar inglês. Ajude-o a atravessar o jardim até a casa do dono, aprendendo <strong>cumprimentos</strong> e o <strong>Present Continuous</strong>.',
-      bubble: 'Woof! Hello! I\'m Pongo!',
+      title: '<span>Pongo</span> aprende <span class="ko">한글</span>',
+      lead: 'Agora o Pongo quer aprender <strong>coreano</strong>! Ajude-o a atravessar o jardim montando <strong>blocos em hangul</strong>: das vogais e consoantes até as primeiras palavras e expressões.',
+      bubble: '멍멍! 저는 퐁고예요!',
+      feat: 'Sílabas em <b>blocos</b>',
     },
-    roles: { s: 'Sujeito', v: 'Verbo', c: 'Complemento', t: 'Tempo / lugar', e: 'Expressão' },
-    buildTitle: 'Traduza: monte a frase em inglês',
-    typeTitle: 'Escreva em inglês',
-    isTarget: (s) => /[a-z]/i.test(s) && !/[ãçéêíóúâõà+]/i.test(s) && !/\b(o|a|para|ou|de|não|sim|que|uma|um|com)\b/i.test(s),
+    roles: { s: 'Consoante', v: 'Vogal', t: 'Sílaba', e: 'Palavra' },
+    buildTitle: 'Monte com os blocos',
+    typeTitle: 'Escreva',
+    isTarget: (s) => /[가-힣]/.test(s) && !/[a-zà-ú]/i.test(s),
     lines: [
-      ['Woof! Hello, friend!', 'Au! Olá, amigo!'],
-      ['I am wagging my tail!', 'Estou abanando o rabo!'],
-      ['Let\'s practice together!', 'Vamos praticar juntos!'],
-      ['The sun is shining today!', 'O sol está brilhando hoje!'],
-      ['I am getting hungry!', 'Estou ficando com fome!'],
-      ['Are you ready? Here we go!', 'Você está pronto? Vamos lá!'],
-      ['Nice to meet you!', 'Prazer em conhecer você!'],
+      ['멍멍! 안녕하세요!', 'meong-meong! an-nióng-ra-sê-iô · Au-au! Olá!'],
+      ['저는 퐁고예요!', 'djó-nûn pông-gô-iê-iô · Eu sou o Pongo!'],
+      ['같이 공부해요!', 'ka-tchi kông-bu-ré-iô · Vamos estudar juntos!'],
+      ['한글은 재미있어요!', 'ran-gû-rûn djé-mi-i-ssó-iô · Hangul é divertido!'],
+      ['배고파요!', 'pé-gô-pa-iô · Estou com fome!'],
+      ['화이팅!', 'hwa-i-ting · Força!'],
     ],
     say: {
-      notYet: ['Not yet! Finish the lesson before.', 'Ainda não! Termine a lição anterior primeiro.'],
-      garden: ['Look! My big garden and my house!', 'Olha! Meu jardim grande e minha casa!'],
-      first: ['Woof! Hello! I am Pongo! Let\'s learn English!', 'Au! Olá! Eu sou o Pongo! Vamos aprender inglês! Toque no número 1.'],
-      allDone: ['I\'m home! You did it!', 'Cheguei em casa! Você conseguiu! Pratique de novo quando quiser.'],
-      welcome: (n, u) => ['Welcome back! Here we go!', `Que bom te ver! Vamos para a lição ${n}: ${u.place}.`],
-      next: (i, u) => [`Here we go! Next stop: lesson ${i + 1}!`, `Lá vamos nós! Próxima parada: ${u.place} — “${u.title}”`],
-      homeEnd: ['I\'m home! Thank you, my friend!', 'Cheguei! Obrigado, amigo! Você pode praticar qualquer lição de novo.'],
-      practice: ['Let\'s practice together!', 'Escolha uma lição no mapa.'],
+      notYet: ['아직이요!', 'a-dji-gi-iô · Ainda não! Termine a lição anterior primeiro.'],
+      garden: ['우리 집이에요!', 'u-ri dji-bi-ê-iô · É a minha casa! Olha o jardim inteiro!'],
+      first: ['멍멍! 안녕하세요! 저는 퐁고예요!', 'Au-au! Olá! Eu sou o Pongo e quero aprender coreano! Toque no número 1.'],
+      allDone: ['다 했어요! 대박!', 'ta ré-ssó-iô! té-bak! · Terminamos tudo! Incrível!'],
+      welcome: (n, u) => ['다시 만나서 반가워요!', `Que bom te ver de novo! Vamos para a lição ${n}: ${u.place}.`],
+      next: (i, u) => ['가자! 화이팅!', `ka-dja! · Vamos! Próxima parada: ${u.place} — ${u.title}`],
+      homeEnd: ['집에 왔어요! 고마워요!', 'Cheguei em casa! Obrigado, amigo! Pratique qualquer lição de novo.'],
+      practice: ['같이 연습해요!', 'Vamos praticar juntos! Escolha uma lição no mapa.'],
     },
     result: {
-      1: 'You did it!', 2: 'Great job!', 3: 'Perfect! Pawsome!',
-      fail: 'Let\'s give it a try!',
-      speak: { 1: 'Great job! You did it!', 2: 'Great job! You did it!', 3: 'Perfect! Pawsome!' },
+      1: '잘했어요!', 2: '대박!', 3: '완벽해요!',
+      fail: '다시 해요!',
+      speak: { 1: '잘했어요!', 2: '대박! 잘했어요!', 3: '완벽해요! 최고!' },
     },
   };
 })();

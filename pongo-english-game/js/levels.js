@@ -432,4 +432,45 @@
   const OK_SHORT = ['Great job!', 'Awesome!', 'Correct!', 'Nice!', 'Woof, yes!', 'Excellent!', 'Perfect!'];
 
   window.PongoContent = { UNITS, MOTIVATION, MOTIVATION_SUB, OK_SHORT };
+
+  // Language pack: everything the game engine says that depends on the language.
+  window.PongoPack = {
+    id: 'en',
+    lang: 'en-US',
+    saveKey: 'pongo-english-v1',
+    docTitle: 'Pongo Learns English',
+    start: {
+      title: '<span>Pongo</span> Learns English',
+      lead: 'O Pongo é um cachorrinho muito sapeca que quer aprender a falar inglês. Ajude-o a atravessar o jardim até a casa do dono, aprendendo <strong>cumprimentos</strong> e o <strong>Present Continuous</strong>.',
+      bubble: 'Woof! Hello! I\'m Pongo!',
+    },
+    roles: { s: 'Sujeito', v: 'Verbo', c: 'Complemento', t: 'Tempo / lugar', e: 'Expressão' },
+    buildTitle: 'Traduza: monte a frase em inglês',
+    typeTitle: 'Escreva em inglês',
+    isTarget: (s) => /[a-z]/i.test(s) && !/[ãçéêíóúâõà+]/i.test(s) && !/\b(o|a|para|ou|de|não|sim|que|uma|um|com)\b/i.test(s),
+    lines: [
+      ['Woof! Hello, friend!', 'Au! Olá, amigo!'],
+      ['I am wagging my tail!', 'Estou abanando o rabo!'],
+      ['Let\'s practice together!', 'Vamos praticar juntos!'],
+      ['The sun is shining today!', 'O sol está brilhando hoje!'],
+      ['I am getting hungry!', 'Estou ficando com fome!'],
+      ['Are you ready? Here we go!', 'Você está pronto? Vamos lá!'],
+      ['Nice to meet you!', 'Prazer em conhecer você!'],
+    ],
+    say: {
+      notYet: ['Not yet! Finish the lesson before.', 'Ainda não! Termine a lição anterior primeiro.'],
+      garden: ['Look! My big garden and my house!', 'Olha! Meu jardim grande e minha casa!'],
+      first: ['Woof! Hello! I am Pongo! Let\'s learn English!', 'Au! Olá! Eu sou o Pongo! Vamos aprender inglês! Toque no número 1.'],
+      allDone: ['I\'m home! You did it!', 'Cheguei em casa! Você conseguiu! Pratique de novo quando quiser.'],
+      welcome: (n, u) => ['Welcome back! Here we go!', `Que bom te ver! Vamos para a lição ${n}: ${u.place}.`],
+      next: (i, u) => [`Here we go! Next stop: lesson ${i + 1}!`, `Lá vamos nós! Próxima parada: ${u.place} — “${u.title}”`],
+      homeEnd: ['I\'m home! Thank you, my friend!', 'Cheguei! Obrigado, amigo! Você pode praticar qualquer lição de novo.'],
+      practice: ['Let\'s practice together!', 'Escolha uma lição no mapa.'],
+    },
+    result: {
+      1: 'You did it!', 2: 'Great job!', 3: 'Perfect! Pawsome!',
+      fail: 'Let\'s give it a try!',
+      speak: { 1: 'Great job! You did it!', 2: 'Great job! You did it!', 3: 'Perfect! Pawsome!' },
+    },
+  };
 })();

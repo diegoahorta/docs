@@ -27,6 +27,21 @@ python3 -m http.server 8000   # depois abra http://localhost:8000
 | **Explosão de comemoração** | Ao acertar uma frase: confete, emojis, fogos, raios coloridos girando, tremida na tela, fanfarra e uma frase motivadora gigante em inglês (*PAWSOME!*, *YOU DID IT!*, *WOOF-TASTIC!*…). |
 | **Música estilo jungle** | Trilha animada gerada ao vivo pelo navegador, com congas, shaker, marimba, breakbeat, baixo e passarinhos. Por isso não há arquivo de áudio nem problema de direitos autorais. Botões para ligar e desligar a música e os efeitos. |
 
+## Versão em coreano: Pongo Aprende Hangul (한글)
+
+O mesmo jogo, com o conteúdo da apostila **한글 — Hangul em Blocos** (6 módulos):
+
+- **Arquivo único:** `pongo-coreano.html`. Versão em pastas: `coreano.html`.
+- **7 paradas e 62 desafios:** O Hangul → Vogais → Consoantes → Duplas e batchim → Primeiras palavras → Expressões → Revisão (화이팅!).
+- **Oficina de blocos:** o aluno toca as letras (ㅎ + ㅏ + ㄴ) e vê o bloco (한) se formar na hora (`js/hangul.js`).
+- **Voz coreana** do próprio aparelho. Se o aparelho não tiver voz em coreano, aparece a pronúncia escrita.
+- **Conteúdo:** `js/levels-ko.js`. O progresso fica salvo separado do inglês.
+
+O motor (`js/game.js`) é o mesmo para os dois idiomas. Cada idioma é um pacote (`js/levels.js` ou `js/levels-ko.js`) com as lições e as falas do Pongo.
+
+Para gerar os dois arquivos únicos de novo: `python3 tools/build_single_html.py`.
+Teste automático que joga todas as lições: `NODE_PATH=$(npm root -g) node tools/playtest.cjs pongo-coreano.html`.
+
 ## Estrutura
 
 ```

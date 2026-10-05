@@ -521,6 +521,39 @@ body.shake { animation: shake 0.5s; }
   .res-stat b { font-size: 1.3rem; }
 }
 
+/* ---------------------------------------------------------------- Korean pack (한글) */
+body.lang-ko {
+  --hangul: 'Jua', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'NanumGothic', var(--body);
+}
+.lang-ko .block, .lang-ko .choice, .lang-ko .bubble, .lang-ko .tip-en, .lang-ko .cel-main,
+.lang-ko .result-title, .lang-ko .start-bubble, .lang-ko .start-title .ko, .lang-ko #pop-title {
+  font-family: var(--hangul);
+}
+body.lang-ko { word-break: keep-all; }
+.lang-ko .start-title .ko { color: var(--odu-red); font-weight: 400; }
+.lang-ko .cel-main { letter-spacing: 0.04em; }
+.lang-ko .fb-text { font-family: var(--hangul); font-size: 1.15rem; font-weight: 500; }
+.compose { display: flex; align-items: center; gap: 16px; justify-content: center; }
+.compose-block {
+  display: grid; place-items: center; min-width: 108px; height: 108px; padding-inline: 14px;
+  font-family: var(--hangul, var(--display)); font-size: 4.2rem; line-height: 1; color: var(--ink);
+  background:
+    linear-gradient(var(--line), var(--line)) center / 2px 100% no-repeat,
+    linear-gradient(var(--line), var(--line)) center / 100% 2px no-repeat,
+    var(--cloud);
+  border: 3px dashed var(--pongo); border-radius: 20px;
+}
+.compose-block.empty { color: var(--locked-deep); font-size: 2.6rem; }
+.compose-block.pulse { animation: bump 0.35s; }
+.compose-goal { font-weight: 800; color: var(--ink-soft); max-width: 18ch; }
+.answer-line.jamo { min-height: 72px; background-size: 100% 2px; background-position: 0 62px; background-image: linear-gradient(var(--line), var(--line)); }
+.bank.jamo .block, .answer-line.jamo .block { font-size: 1.7rem; min-width: 56px; padding: 6px 12px; font-family: var(--hangul, var(--body)); }
+.say-hint { font-weight: 800; color: var(--odu-teal); margin-left: 4px; }
+@media (max-width: 560px) {
+  .compose-block { min-width: 88px; height: 88px; font-size: 3.4rem; }
+  .bank.jamo .block, .answer-line.jamo .block { font-size: 1.45rem; min-width: 48px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

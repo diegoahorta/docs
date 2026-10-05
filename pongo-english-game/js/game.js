@@ -1,4 +1,6 @@
-/* Pongo Learns English - game controller.
+/* Pongo - game controller (language-independent).
+ * The language comes from a content pack: js/levels.js (English) or
+ * js/levels-ko.js (Korean), which define PongoContent and PongoPack.
  * Screens: start -> 3D map -> lesson (exercises) -> result -> map.
  * Scoring: XP per correct answer (+combo bonus), hearts, stars per lesson,
  * bones (stars collected) and a daily streak, saved in localStorage. */
@@ -11,18 +13,19 @@
   const Map3D = window.PongoMap || null;
   const $ = (id) => document.getElementById(id);
   const pick = (a) => a[(Math.random() * a.length) | 0];
-  const ROLE_NAMES = { s: 'Sujeito', v: 'Verbo', c: 'Complemento', t: 'Tempo / lugar', e: 'Expressão' };
-  const KIND = {
+  const P = window.PongoPack;
+  const ROLE_NAMES = P.roles;
+  const KIND = Object.assign({
     choice: 'Escolha a resposta', fill: 'Complete a frase', build: 'Monte a frase em blocos',
     listen: 'Ouça e monte', match: 'Pares', type: 'Escreva',
-  };
+  }, P.kinds || {});
   const XP_BASE = { choice: 10, fill: 10, match: 10, type: 12, build: 15, listen: 15 };
   const MAX_HEARTS = 5;
   const SPEAKER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
   const TURTLE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15c0-4 3-7 7-7s7 3 7 7H5Zm14-1h2.5a1.5 1.5 0 0 0 0-3H20M7 15l-1 3h3l.5-3m5 0l.5 3h3l-1-3"/></svg>';
 
   // ------------------------------------------------------------ save data
-  const KEY = 'pongo-english-v1';
+  const KEY = P.saveKey;
   const fresh = () => ({ xp: 0, bones: 0, streak: 0, lastDay: '', units: {}, music: true, sfx: true });
   let save = fresh();
   try {
@@ -115,15 +118,16 @@
     tipTimer = setTimeout(() => { tip.hidden = true; }, ms);
   }
 
-  const PONGO_LINES = [
-    ['Woof! Hello, friend!', 'Au! Olá, amigo!'],
-    ['I am wagging my tail!', 'Estou abanando o rabo!'],
-    ['Let\'s practice together!', 'Vamos praticar juntos!'],
-    ['The sun is shining today!', 'O sol está brilhando hoje!'],
-    ['I am getting hungry!', 'Estou ficando com fome!'],
-    ['Are you ready? Here we go!', 'Você está pronto? Vamos lá!'],
-    ['Nice to meet you!', 'Prazer em conhecer você!'],
-  ];
+  const PONGO_LINES = P.lines;
+  const say = (pair, ...rest) => pongoSays(pair[0], pair[1], ...rest);
+
+  // start screen texts come from the pack
+  document.title = P.docTitle;
+  $('start-title').innerHTML = P.start.title;
+  $('start-lead').innerHTML = P.start.lead;
+  $('start-bubble').textContent = P.start.bubble;
+  if (P.bodyClass) document.body.classList.add(P.bodyClass);
+  if (P.start.feat) $('feat-blocks').innerHTML = P.start.feat;
 
   let selected = -1;
   function selectLevel(i, el) {
@@ -131,7 +135,7 @@
     if (i >= open) {
       if (el) { el.classList.remove('nope'); void el.offsetWidth; el.classList.add('nope'); }
       Audio.wrong();
-      pongoSays('Not yet! Finish the lesson before.', 'Ainda não! Termine a lição anterior primeiro.', false, 3500);
+      say(P.say.notYet, false, 3500);
       return;
     }
     Audio.tap();
@@ -156,7 +160,7 @@
   });
   $('btn-home').addEventListener('click', () => {
     if (mapOk) Map3D.overview();
-    pongoSays('Look! My big garden and my house!', 'Olha! Meu jardim grande e minha casa!');
+    say(P.say.garden);
   });
 
   // ------------------------------------------------------------ start
@@ -208,9 +212,9 @@
     if (mapOk) Map3D.setActive(true);
     const n = unlockedCount();
     setTimeout(() => {
-      if (save.xp === 0) pongoSays('Woof! Hello! I am Pongo! Let\'s learn English!', 'Au! Olá! Eu sou o Pongo! Vamos aprender inglês! Toque no número 1.');
-      else if (allDone()) pongoSays('I\'m home! You did it!', 'Cheguei em casa! Você conseguiu! Pratique de novo quando quiser.');
-      else pongoSays('Welcome back! Here we go!', `Que bom te ver! Vamos para a lição ${n}: ${UNITS[n - 1].place}.`);
+      if (save.xp === 0) say(P.say.first);
+      else if (allDone()) say(P.say.allDone);
+      else say(P.say.welcome(n, UNITS[n - 1]));
     }, 600);
   });
 
@@ -285,9 +289,6 @@
     document.querySelector('.progress').setAttribute('aria-valuenow', String(pct));
   }
 
-  function isEnglish(s) {
-    return /[a-z]/i.test(s) && !/[ãçéêíóúâõà+]/i.test(s) && !/\b(o|a|para|ou|de|não|sim|que|uma|um|com)\b/i.test(s);
-  }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   }
@@ -330,12 +331,13 @@
   function renderExercise(ex) {
     const area = $('ex-area');
     const bubble = $('ex-bubble');
-    $('ex-kind').textContent = (L.current.retry ? 'Erro anterior · ' : '') + KIND[ex.type];
+    $('ex-kind').textContent = (L.current.retry ? 'Erro anterior · ' : '') + (ex.kind || KIND[ex.type]);
     area.innerHTML = '';
 
     if (ex.type === 'choice') {
-      $('ex-title').textContent = 'Escolha a resposta certa';
-      bubble.innerHTML = `${ex.pic ? `<span class="pic" aria-hidden="true">${ex.pic}</span>` : ''}${ex.clock ? `<span class="clock">${ex.clock}</span>` : ''}${esc(ex.prompt)}`;
+      $('ex-title').textContent = ex.title || 'Escolha a resposta certa';
+      bubble.innerHTML = `${ex.say ? speakButtons(ex) : ''}${ex.pic ? `<span class="pic" aria-hidden="true">${ex.pic}</span>` : ''}${ex.clock ? `<span class="clock">${ex.clock}</span>` : ''}${esc(ex.prompt)}`;
+      if (ex.say) wireSpeak(bubble, ex);
       area.appendChild(choiceList(ex.options, false));
     } else if (ex.type === 'fill') {
       $('ex-title').textContent = 'Complete a frase';
@@ -343,16 +345,12 @@
       area.appendChild(choiceList(ex.options, true));
     } else if (ex.type === 'build' || ex.type === 'listen') {
       if (ex.type === 'build') {
-        $('ex-title').textContent = 'Traduza: monte a frase em inglês';
+        $('ex-title').textContent = ex.title || P.buildTitle;
         bubble.innerHTML = esc(ex.pt);
       } else {
-        $('ex-title').textContent = 'Toque no que você ouvir';
-        bubble.innerHTML = `<button class="speak" type="button" aria-label="Ouvir a frase">${SPEAKER}</button><button class="speak slow" type="button" aria-label="Ouvir devagar">${TURTLE}</button>`;
-        const [b1, b2] = bubble.querySelectorAll('.speak');
-        b1.onclick = () => Audio.speak(ex.say);
-        b2.onclick = () => Audio.speak(ex.say, true);
-        setTimeout(() => Audio.speak(ex.say), 350);
-        if (!Audio.canSpeak()) bubble.insertAdjacentHTML('beforeend', `<span>${esc(ex.say)}</span>`);
+        $('ex-title').textContent = ex.title || 'Toque no que você ouvir';
+        bubble.innerHTML = speakButtons(ex) + (ex.prompt ? `<span>${esc(ex.prompt)}</span>` : '');
+        wireSpeak(bubble, ex);
       }
       area.appendChild(builder(ex));
     } else if (ex.type === 'match') {
@@ -361,7 +359,7 @@
       area.appendChild(matcher(ex));
       $('btn-check').disabled = true;
     } else if (ex.type === 'type') {
-      $('ex-title').textContent = 'Escreva em inglês';
+      $('ex-title').textContent = P.typeTitle;
       bubble.innerHTML = esc(ex.prompt);
       const inp = document.createElement('input');
       inp.className = 'type-input';
@@ -377,6 +375,19 @@
       area.appendChild(inp);
       setTimeout(() => inp.focus(), 50);
     }
+  }
+
+  // speaker buttons for anything Pongo reads aloud; when the device has no
+  // voice for the language, the hint (pronunciation) is shown instead
+  function speakButtons(ex) {
+    const hint = Audio.hasVoice() ? '' : `<span class="say-hint">${esc(ex.sayHint || ex.say)}</span>`;
+    return `<button class="speak" type="button" aria-label="Ouvir">${SPEAKER}</button><button class="speak slow" type="button" aria-label="Ouvir devagar">${TURTLE}</button>${hint}`;
+  }
+  function wireSpeak(el, ex) {
+    const [b1, b2] = el.querySelectorAll('.speak');
+    b1.onclick = () => Audio.speak(ex.say);
+    b2.onclick = () => Audio.speak(ex.say, true);
+    setTimeout(() => Audio.speak(ex.say), 350);
   }
 
   function choiceList(options, row) {
@@ -410,7 +421,8 @@
     const correct = norm(ex.blocks.map((b) => b[0]).join(' '));
     for (let k = 0; k < 5 && norm(order.slice(0, ex.blocks.length).map((b) => b.t).join(' ')) === correct; k++) order = shuffle(all);
 
-    wrap.innerHTML = `<div class="legend">${legendHtml()}</div><div class="answer-line" id="answer-line" aria-label="Sua resposta"></div><div class="bank" id="bank" aria-label="Blocos"></div>`;
+    const preview = ex.compose ? `<div class="compose" aria-live="polite"><span class="compose-block" id="compose-block"></span><span class="compose-goal">${ex.meaning ? esc(ex.meaning) : ''}</span></div>` : '';
+    wrap.innerHTML = `<div class="legend">${legendHtml()}</div>${preview}<div class="answer-line${ex.compose ? ' jamo' : ''}" id="answer-line" aria-label="Sua resposta"></div><div class="bank${ex.compose ? ' jamo' : ''}" id="bank" aria-label="Blocos"></div>`;
     const line = wrap.querySelector('.answer-line');
     const bank = wrap.querySelector('.bank');
     const chosen = [];
@@ -419,7 +431,15 @@
       L.answer = chosen.map((c) => c.t);
       $('btn-check').disabled = chosen.length === 0;
       line.querySelectorAll('.block').forEach((b, i) => b.style.setProperty('--i', i));
+      if (ex.compose) {
+        const out = window.Hangul.compose(L.answer);
+        const blk = wrap.querySelector('.compose-block');
+        blk.textContent = out || '?';
+        blk.classList.toggle('empty', !out);
+        blk.classList.remove('pulse'); void blk.offsetWidth; blk.classList.add('pulse');
+      }
     };
+    if (ex.compose) setTimeout(sync, 0);
 
     order.forEach((blk) => {
       const src = document.createElement('button');
@@ -516,7 +536,12 @@
       case 'build':
       case 'listen': {
         const right = ex.blocks.map((b) => b[0]).join(' ');
-        return { ok: norm((L.answer || []).join(' ')) === norm(right), right };
+        const ok = ex.compose
+          ? window.Hangul.compose(L.answer || []) === ex.target
+          : norm((L.answer || []).join(' ')) === norm(right);
+        if (ex.compose) return { ok, right: `${ex.target} (${ex.blocks.map((b) => b[0]).join(' + ')})`, spoken: ex.target };
+        if (ex.joined) return { ok, right: ex.blocks.map((b) => b[0]).join(''), spoken: ex.blocks.map((b) => b[0]).join('') };
+        return { ok, right };
       }
       case 'type': {
         const a = norm(L.answer || '').replace(/'/g, '');
@@ -583,8 +608,10 @@
         const line = document.getElementById('answer-line');
         if (line) line.classList.add('right');
         Audio.fanfare();
-        FX.explode(pick(MOTIVATION), pick(MOTIVATION_SUB));
-        setTimeout(() => Audio.speak(res.right), 2300);
+        const m = pick(MOTIVATION);
+        if (Array.isArray(m)) FX.explode(m[0], m[1]);
+        else FX.explode(m, pick(MOTIVATION_SUB));
+        setTimeout(() => Audio.speak(res.spoken || res.right), 2300);
       } else {
         Audio.correct();
         const sel = document.querySelector('.choice.sel');
@@ -592,8 +619,8 @@
         const r = (sel || btn).getBoundingClientRect();
         FX.pop(r.left + r.width / 2, r.top + r.height / 2);
         if (ex.type === 'fill' || ex.type === 'choice') {
-          const say = ex.type === 'fill' ? res.right : ex.options[ex.answer];
-          if (isEnglish(say)) setTimeout(() => Audio.speak(say), 400);
+          const sayIt = ex.type === 'fill' ? res.right : ex.options[ex.answer];
+          if (P.isTarget(sayIt)) setTimeout(() => Audio.speak(sayIt), 400);
         }
       }
     } else {
@@ -651,7 +678,7 @@
       unlockedNew = unlockedCount() > before;
       persist();
       $('res-eyebrow').textContent = `Lição ${L.index + 1} concluída · +${bonus} XP bônus`;
-      $('res-title').textContent = stars === 3 ? 'Perfect! Pawsome!' : stars === 2 ? 'Great job!' : 'You did it!';
+      $('res-title').textContent = P.result[stars];
       $('res-sub').textContent = L.index === UNITS.length - 1
         ? 'Pongo chegou em casa: “I’m home!” Você completou o jardim inteiro!'
         : `Pongo está pronto para ir até: ${UNITS[L.index + 1].place}.`;
@@ -659,11 +686,11 @@
       pongoImg.className = 'result-pongo';
       Audio.lessonComplete();
       setTimeout(() => FX.party(), 200);
-      setTimeout(() => Audio.speak(stars === 3 ? 'Perfect! Pawsome!' : 'Great job! You did it!'), 1500);
+      setTimeout(() => Audio.speak(P.result.speak[stars]), 1500);
     } else {
       persist();
       $('res-eyebrow').textContent = 'Acabaram as vidas';
-      $('res-title').textContent = 'Let\'s give it a try!';
+      $('res-title').textContent = P.result.fail;
       $('res-sub').textContent = 'Não tem problema! Errar faz parte. Vamos tentar de novo?';
       $('res-stars').innerHTML = '<span>★</span><span>★</span><span>★</span>';
       pongoImg.className = 'result-pongo sad';
@@ -694,15 +721,18 @@
           Map3D.walkTo(walkTo).then(() => {
             Audio.correct();
             const u = UNITS[walkTo];
-            pongoSays(`Here we go! Next stop: lesson ${walkTo + 1}!`, `Lá vamos nós! Próxima parada: ${u.place} — “${u.title}”`);
+            say(P.say.next(walkTo, u));
           });
         }, 500);
         return;
       }
     }
-    if (allDone()) pongoSays('I\'m home! Thank you, my friend!', 'Cheguei! Obrigado, amigo! Você pode praticar qualquer lição de novo.');
-    else pongoSays('Let\'s practice together!', 'Escolha uma lição no mapa.');
+    if (allDone()) say(P.say.homeEnd);
+    else say(P.say.practice);
   }
+
+  // read-only hook used by the automated play-test (tools/playtest.cjs)
+  window.PongoDebug = () => (L && L.current ? L.current.ex : null);
 
   // ------------------------------------------------------------ quit + keyboard
   $('lesson-close').addEventListener('click', () => { $('quit-sheet').hidden = false; });
