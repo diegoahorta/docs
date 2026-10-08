@@ -1,0 +1,906 @@
+<title>Pongo no Mundo do Hangul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Jua&family=Monoton&family=Noto+Sans+KR:wght@500;800&display=swap">
+<style>
+/* Layout: trilha vertical de fases (mapa do "mundo do Hangul") + tela de lição por cima, em coluna única que serve no celular.
+   Cores dos blocos (modelo Odu do coreano): azul = consoante inicial, rosa = vogal, amarelo = batchim. */
+:root{
+  color-scheme: light;
+  --ink:#1D2547; --ink-soft:#5B6385; --paper:#FFF8EA; --paper-2:#FFEFD3; --line:#E9D9BC;
+  --teal:#0B8290; --teal-deep:#075E69; --neon:#FF4F9A; --sun:#FF7A59; --gold:#F2A900;
+  --c-fill:#D9EFFA; --c-edge:#3389C9;   /* consoante inicial */
+  --v-fill:#FCE1EB; --v-edge:#D9417B;   /* vogal */
+  --t-fill:#FFF0C6; --t-edge:#D99A12;   /* batchim (consoante final) */
+  --ok:#1E9E6A; --bad:#D6453D;
+  --f-display:'Monoton', 'Jua', system-ui, sans-serif;
+  --f-title:'Jua', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --f-han:'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; /* letras com desenho padrão, boas para alfabetização */
+  --f-ui:'Baloo 2', 'Jua', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--neon);outline-offset:2px}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;padding:.45rem 16px;
+  background:var(--teal);color:#fff;border-bottom:4px solid var(--teal-deep)}
+.brand{display:flex;align-items:baseline;gap:.5rem;margin-right:auto;min-width:0}
+.brand .ko{font-family:var(--f-title);font-size:1.3rem}
+.brand .pt{font-size:.82rem;opacity:.85;white-space:nowrap}
+.tbtn{display:inline-flex;align-items:center;gap:.35rem;border:2px solid rgba(255,255,255,.55);background:rgba(255,255,255,.1);border-radius:999px;
+  padding:.15rem .7rem;font-weight:700;font-size:.85rem;color:#fff}
+.tbtn[aria-pressed="true"]{background:#fff;color:var(--teal-deep);border-color:#fff}
+.tbtn svg{width:16px;height:16px}
+.stars-total{font-weight:800;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;gap:.25rem}
+
+/* mapa */
+#map{max-width:760px;margin:0 auto;padding:1rem 16px 4rem}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:1rem;align-items:center;border-radius:20px;padding:1rem 1.2rem;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#2C67D8 0%,#58A9EE 55%,#FFC59A 100%);border:3px solid var(--ink);box-shadow:0 6px 0 var(--ink)}
+.hero::after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;background:var(--sun);right:110px;bottom:-100px}
+.hero > *{position:relative;z-index:1}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.8rem,6vw,3rem);margin:0;line-height:1;letter-spacing:.04em;text-wrap:balance;text-shadow:0 3px 0 rgba(29,37,71,.35)}
+.hero .kosub{font-family:var(--f-title);font-size:1.4rem;margin:.3rem 0}
+.hero p{margin:0;max-width:44ch;font-weight:600;line-height:1.4}
+.hero img{width:170px;filter:drop-shadow(0 6px 0 rgba(29,37,71,.35))}
+.startrow{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}
+.legend{display:flex;flex-wrap:wrap;gap:.35rem .9rem;font-size:.8rem;font-weight:700;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:.3rem}
+.legend i{width:14px;height:14px;border-radius:4px;border:2px solid}
+.legend .c{background:var(--c-fill);border-color:var(--c-edge)} .legend .v{background:var(--v-fill);border-color:var(--v-edge)} .legend .t{background:var(--t-fill);border-color:var(--t-edge)}
+
+.land{margin-top:1.6rem;border-radius:22px;padding:1rem 1rem 1.4rem;border:3px solid var(--ink);background:var(--land-bg);position:relative;overflow:hidden}
+.land header{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.land h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:1.6rem}
+.land header span{font-weight:800;color:var(--ink-soft)}
+.land .eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--land-ink)}
+.path{display:flex;flex-direction:column;gap:.9rem;margin-top:.8rem}
+.node{--off:0px;align-self:center;transform:translateX(var(--off));display:flex;align-items:center;gap:.7rem}
+.nbtn{width:78px;height:78px;border-radius:50%;border:4px solid var(--ink);background:#fff;box-shadow:0 5px 0 var(--ink);display:grid;place-items:center;
+  font-family:var(--f-han);font-weight:800;font-size:1.9rem;position:relative;flex:none}
+.nbtn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.node.done .nbtn{background:var(--land-ink);color:#fff}
+.node.now .nbtn{background:var(--neon);color:#fff;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 5px 0 var(--ink),0 0 0 10px rgba(255,79,154,.25)}}
+.node.lock .nbtn{background:#EEE7DA;color:#B9AE99;border-color:#B9AE99;box-shadow:0 5px 0 #B9AE99;cursor:not-allowed}
+.ninfo{display:flex;flex-direction:column;min-width:0;max-width:200px;width:44vw}
+.ninfo b{font-family:var(--f-han);font-size:1rem}
+.ninfo small{color:var(--ink-soft);font-weight:700;line-height:1.2}
+.nst{color:var(--gold);letter-spacing:.06em;font-size:.95rem}
+.nst .off{color:var(--line)}
+.pongo-pin{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;background:#fff}
+.pongo-pin img{width:100%;height:100%;object-fit:cover}
+.paws{align-self:center;color:var(--land-ink);opacity:.5;font-size:.8rem;letter-spacing:.4em}
+.castle{display:flex;flex-direction:column;align-items:center;gap:.4rem;margin-top:1rem;text-align:center}
+.castle img{width:110px;filter:drop-shadow(0 4px 0 rgba(29,37,71,.3))}
+.castle .hidden{filter:brightness(0) opacity(.35)}
+
+/* lição */
+#lesson{position:fixed;inset:0;z-index:20;background:var(--paper);display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.lbar{display:flex;align-items:center;gap:.8rem;padding:.7rem 16px;max-width:760px;width:100%;margin:0 auto;box-sizing:border-box}
+.xbtn{border:0;background:none;font-size:1.6rem;line-height:1;color:var(--ink-soft);padding:.2rem .4rem}
+.prog{flex:1;height:14px;border-radius:999px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--teal);border-radius:999px;transition:width .3s}
+.lbody{overflow:auto;padding:.4rem 16px 1.2rem;max-width:760px;width:100%;margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:1rem}
+.ask{display:flex;align-items:center;gap:.7rem}
+.ask img{width:62px;height:62px;border-radius:14px;border:2px solid var(--ink);object-fit:cover;flex:none;background:#fff}
+.ask p{margin:0;font-size:1.1rem;font-weight:700;line-height:1.3}
+.ask small{display:block;color:var(--ink-soft);font-weight:600;font-size:.85rem}
+.big{font-family:var(--f-han);font-weight:800;font-size:clamp(4.5rem,22vw,8rem);line-height:1.05;text-align:center}
+.big.word{font-size:clamp(3rem,14vw,5.5rem)}
+.center{display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.rom{font-weight:800;font-size:1.3rem;color:var(--teal-deep)}
+.card{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:1rem;box-shadow:0 5px 0 var(--ink)}
+.learn .letter{font-family:var(--f-han);font-weight:800;font-size:clamp(6rem,30vw,10rem);line-height:1;text-align:center}
+.learn .letter.c{color:var(--c-edge)} .learn .letter.v{color:var(--v-edge)} .learn .letter.t{color:#B07B00}
+.learn dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem .8rem;margin:.6rem 0 0}
+.learn dt{font-weight:800;color:var(--ink-soft);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;padding-top:.15rem}
+.learn dd{margin:0;font-weight:600;line-height:1.35}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:2px solid var(--ink);background:var(--paper);border-radius:12px;padding:.2rem .7rem;font-family:var(--f-han);font-weight:800;font-size:1.3rem;display:inline-flex;align-items:center;gap:.3rem}
+.chip small{font-family:var(--f-ui);font-size:.75rem;color:var(--ink-soft)}
+.spk{border:0;background:var(--teal);color:#fff;border-radius:999px;padding:.35rem .9rem;font-weight:800;display:inline-flex;align-items:center;gap:.35rem}
+.spk.huge{padding:1rem 1.6rem;font-size:1.2rem}
+.spk svg{width:20px;height:20px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+.opt{border:3px solid var(--ink);background:#fff;border-radius:16px;padding:.9rem .5rem;box-shadow:0 4px 0 var(--ink);font-weight:800;font-size:1.3rem;min-height:64px}
+.opt.han{font-family:var(--f-han);font-size:2rem}
+.opt.pic{font-size:2.6rem;line-height:1}
+.opt.pic small{display:block;font-size:.8rem;font-weight:700;color:var(--ink-soft);margin-top:.25rem}
+.opt.sel{border-color:var(--teal);background:#E6F6F4;box-shadow:0 4px 0 var(--teal)}
+.opt.good{border-color:var(--ok);background:#E3F7EC;box-shadow:0 4px 0 var(--ok)}
+.opt.wrong{border-color:var(--bad);background:#FDEBE9;box-shadow:0 4px 0 var(--bad)}
+
+/* montador de sílabas */
+.builder{display:flex;flex-direction:column;gap:.8rem;align-items:center}
+.target{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:center}
+.pic{font-size:3.4rem;line-height:1}
+.cells{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.cell{width:84px;height:84px;border-radius:16px;border:3px dashed var(--ink-soft);display:grid;place-items:center;font-family:var(--f-han);font-weight:800;font-size:3rem;background:#fff}
+.cell.now{border-style:solid;border-color:var(--neon)}
+.cell.ok{border-style:solid;border-color:var(--ok);background:#E3F7EC}
+.block{display:grid;gap:4px;width:150px;height:150px;padding:6px;border-radius:18px;border:3px solid var(--ink);background:#fff;box-sizing:border-box}
+.block.vert{grid-template-areas:"c v" "t t";grid-template-columns:1fr 1fr;grid-template-rows:1.4fr 1fr}
+.block.hori{grid-template-areas:"c" "v" "t";grid-template-rows:1fr .8fr .8fr}
+.block.mix{grid-template-areas:"c v" "h v" "t t";grid-template-columns:1.2fr 1fr;grid-template-rows:1fr .8fr .8fr}
+.slot{border-radius:10px;border:2px dashed;display:grid;place-items:center;font-family:var(--f-han);font-weight:800;font-size:1.9rem;min-width:0;min-height:0;cursor:pointer;background:none}
+.slot.c{grid-area:c;border-color:var(--c-edge);color:var(--c-edge);background:color-mix(in srgb,var(--c-fill) 60%,transparent)}
+.slot.v{grid-area:v;border-color:var(--v-edge);color:var(--v-edge);background:color-mix(in srgb,var(--v-fill) 60%,transparent)}
+.slot.h{grid-area:h;border-color:var(--v-edge);color:var(--v-edge);background:color-mix(in srgb,var(--v-fill) 60%,transparent)}
+.slot.t{grid-area:t;border-color:var(--t-edge);color:#A87406;background:color-mix(in srgb,var(--t-fill) 60%,transparent)}
+.slot.filled{border-style:solid}
+.slot.bad{background:#FDEBE9;border-color:var(--bad)}
+.composed{font-family:var(--f-han);font-weight:800;font-size:5rem;line-height:1;min-width:1.2em;text-align:center}
+.brow{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center}
+.keys{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;max-width:560px}
+.key{width:58px;height:58px;border-radius:14px;border:3px solid;font-family:var(--f-han);font-weight:800;font-size:1.7rem;display:grid;place-items:center;background:#fff}
+.key.c{background:var(--c-fill);border-color:var(--c-edge);box-shadow:0 4px 0 var(--c-edge)}
+.key.v{background:var(--v-fill);border-color:var(--v-edge);box-shadow:0 4px 0 var(--v-edge)}
+.key.t{background:var(--t-fill);border-color:var(--t-edge);box-shadow:0 4px 0 var(--t-edge)}
+.key:active{transform:translateY(2px)}
+.keyhint{font-size:.8rem;color:var(--ink-soft);font-weight:700;text-align:center}
+
+.lfoot{border-top:3px solid var(--line);background:var(--paper)}
+.lfoot.ok{background:#E3F7EC;border-color:var(--ok)} .lfoot.bad{background:#FDEBE9;border-color:var(--bad)}
+.lfoot > div{max-width:760px;margin:0 auto;padding:.8rem 16px;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.fmsg{flex:1;min-width:200px;font-weight:700;line-height:1.35}
+.fmsg b{display:block;font-size:1.15rem}
+.lfoot.ok .fmsg b{color:#0E6B45} .lfoot.bad .fmsg b{color:#8E2420}
+.fmsg .han{font-family:var(--f-han);font-weight:800}
+.btn{border:3px solid var(--ink);border-radius:14px;padding:.6rem 1.4rem;font-weight:800;background:#fff;box-shadow:0 4px 0 var(--ink);font-size:1.05rem}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--ink)}
+.btn.primary{background:var(--neon);color:#fff}
+.btn.go{background:var(--teal);color:#fff}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+/* janelas */
+.overlay{position:fixed;inset:0;z-index:30;background:rgba(18,24,52,.62);display:grid;place-items:center;padding:16px;overflow:auto}
+.modal{background:var(--paper);border:4px solid var(--ink);border-radius:22px;box-shadow:0 8px 0 var(--ink);width:min(560px,100%);max-height:100%;overflow:auto;padding:1.2rem;text-align:center;box-sizing:border-box}
+.modal img.face{width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid var(--ink)}
+.modal h3{font-family:var(--f-title);font-weight:400;font-size:1.8rem;margin:.5rem 0 .2rem}
+.modal p{line-height:1.45;font-weight:600;margin:.4rem 0}
+.bigstars{font-size:2.4rem;color:var(--gold);letter-spacing:.1em}
+.bigstars .off{color:var(--line)}
+.modal .actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:.8rem}
+.chart{background:var(--paper);border:4px solid var(--ink);border-radius:22px;width:min(860px,100%);max-height:100%;overflow:auto;padding:1rem 1.2rem;box-sizing:border-box}
+.chart h3{margin:1rem 0 .4rem;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.chart .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:.45rem}
+.jbtn{border:2px solid;border-radius:12px;padding:.3rem .2rem;display:flex;flex-direction:column;align-items:center;background:#fff}
+.jbtn b{font-family:var(--f-han);font-size:1.8rem}
+.jbtn small{font-size:.72rem;font-weight:700;color:var(--ink-soft)}
+.jbtn.c{border-color:var(--c-edge);background:var(--c-fill)} .jbtn.v{border-color:var(--v-edge);background:var(--v-fill)} .jbtn.t{border-color:var(--t-edge);background:var(--t-fill)}
+.jbtn.lock{opacity:.35}
+.closex{float:right;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:.1rem .7rem;font-weight:800}
+.note{font-size:.8rem;color:var(--ink-soft);margin:.8rem 0 0}
+
+@media (max-width:560px){
+  .brand .pt{display:none}
+  .hero{grid-template-columns:minmax(0,1fr) 100px}
+  .hero img{width:100px}
+  .key{width:52px;height:52px;font-size:1.5rem}
+  .block{width:132px;height:132px}
+  .composed{font-size:4rem}
+  .cell{width:70px;height:70px;font-size:2.4rem}
+}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+
+<header class="top">
+  <div class="brand"><span class="ko">한글 나라의 퐁고</span><span class="pt">Pongo no Mundo do Hangul · Odu Creative</span></div>
+  <span class="stars-total" title="Estrelas conquistadas"><svg viewBox="0 0 24 24" width="18" height="18" fill="#FFD84D" stroke="#1D2547" stroke-width="1.5"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.3L12 17.1l-5.7 3.1 1.2-6.3L2.8 9.5l6.4-.8z"/></svg><span id="starCount">0</span></span>
+  <button class="tbtn" id="btnChart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Alfabeto</button>
+  <button class="tbtn" id="btnMusic" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Música</span></button>
+</header>
+
+<main id="map"></main>
+
+<section id="lesson" hidden aria-live="polite">
+  <div class="lbar"><button class="xbtn" id="btnQuit" aria-label="Sair da fase">×</button><div class="prog"><i id="progBar" style="width:0%"></i></div></div>
+  <div class="lbody" id="lbody"></div>
+  <div class="lfoot" id="lfoot"><div><div class="fmsg" id="fmsg"></div><button class="btn primary" id="btnMain">Verificar</button></div></div>
+</section>
+
+<div class="overlay" id="modalOv" hidden><div class="modal" id="modal"></div></div>
+<div class="overlay" id="chartOv" hidden><div class="chart" id="chart"></div></div>
+
+<script>
+"use strict";
+const IMG = /*__ASSETS__*/{};
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v; else if (k === 'html') e.innerHTML = v; else if (k === 'style') e.setAttribute('style', v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids) if (k != null && k !== false) e.append(k);
+  return e;
+};
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('pongo-hangul:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('pongo-hangul:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+const shuffle = a => { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const pick = (a, n) => shuffle(a).slice(0, n);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ============================================================
+   HANGUL — composição e decomposição de sílabas (Unicode)
+   sílaba = 0xAC00 + (inicial × 21 + vogal) × 28 + final
+   ============================================================ */
+const L = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'.split('');
+const V = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ'.split('');
+const T = ['', ...'ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ'.split('')];
+const compose = (l, v, t = '') => String.fromCharCode(0xAC00 + (L.indexOf(l) * 21 + V.indexOf(v)) * 28 + T.indexOf(t));
+function decompose(s) {
+  const c = s.charCodeAt(0) - 0xAC00; if (c < 0 || c > 11171) return null;
+  return { l: L[Math.floor(c / 588)], v: V[Math.floor((c % 588) / 28)], t: T[c % 28] };
+}
+const isSyl = ch => { const c = ch.charCodeAt(0); return c >= 0xAC00 && c <= 0xD7A3; };
+const VERT = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅣ', HORI = 'ㅗㅛㅜㅠㅡ';
+const VSPLIT = { 'ㅘ': ['ㅗ', 'ㅏ'], 'ㅙ': ['ㅗ', 'ㅐ'], 'ㅚ': ['ㅗ', 'ㅣ'], 'ㅝ': ['ㅜ', 'ㅓ'], 'ㅞ': ['ㅜ', 'ㅔ'], 'ㅟ': ['ㅜ', 'ㅣ'], 'ㅢ': ['ㅡ', 'ㅣ'] };
+const layoutOf = v => !v ? 'vert' : VERT.includes(v) ? 'vert' : HORI.includes(v) ? 'hori' : 'mix';
+// romanização revisada (com som representativo do batchim)
+const RL = { 'ㄱ': 'g', 'ㄲ': 'kk', 'ㄴ': 'n', 'ㄷ': 'd', 'ㄸ': 'tt', 'ㄹ': 'r', 'ㅁ': 'm', 'ㅂ': 'b', 'ㅃ': 'pp', 'ㅅ': 's', 'ㅆ': 'ss', 'ㅇ': '', 'ㅈ': 'j', 'ㅉ': 'jj', 'ㅊ': 'ch', 'ㅋ': 'k', 'ㅌ': 't', 'ㅍ': 'p', 'ㅎ': 'h' };
+const RV = { 'ㅏ': 'a', 'ㅐ': 'ae', 'ㅑ': 'ya', 'ㅒ': 'yae', 'ㅓ': 'eo', 'ㅔ': 'e', 'ㅕ': 'yeo', 'ㅖ': 'ye', 'ㅗ': 'o', 'ㅘ': 'wa', 'ㅙ': 'wae', 'ㅚ': 'oe', 'ㅛ': 'yo', 'ㅜ': 'u', 'ㅝ': 'wo', 'ㅞ': 'we', 'ㅟ': 'wi', 'ㅠ': 'yu', 'ㅡ': 'eu', 'ㅢ': 'ui', 'ㅣ': 'i' };
+const RT = { '': '', 'ㄱ': 'k', 'ㄲ': 'k', 'ㅋ': 'k', 'ㄳ': 'k', 'ㄺ': 'k', 'ㄴ': 'n', 'ㄵ': 'n', 'ㄶ': 'n', 'ㄷ': 't', 'ㅅ': 't', 'ㅆ': 't', 'ㅈ': 't', 'ㅊ': 't', 'ㅌ': 't', 'ㅎ': 't',
+  'ㄹ': 'l', 'ㄼ': 'l', 'ㄽ': 'l', 'ㄾ': 'l', 'ㅀ': 'l', 'ㅁ': 'm', 'ㄻ': 'm', 'ㅂ': 'p', 'ㅍ': 'p', 'ㅄ': 'p', 'ㄿ': 'p', 'ㅇ': 'ng' };
+const FINAL_SOUND = { k: 'ㄱ', n: 'ㄴ', t: 'ㄷ', l: 'ㄹ', m: 'ㅁ', p: 'ㅂ', ng: 'ㅇ' };
+function romSyl(s) { const d = decompose(s); if (!d) return s; return RL[d.l] + RV[d.v] + RT[d.t]; }
+const rom = w => [...w].map(ch => isSyl(ch) ? romSyl(ch) : ch === ' ' ? ' ' : '').join('');
+
+/* ============================================================
+   AS LETRAS (jamo): som em português, ajuda para lembrar e nome
+   ============================================================ */
+const JAMO = {
+  'ㅏ': ['a', '“a” de casa', 'Uma linha em pé com um tracinho para fora, à direita.'],
+  'ㅓ': ['eo', '“ó” bem aberto, com a boca relaxada (quase “â”)', 'O tracinho vira para dentro: ㅓ é o espelho de ㅏ.'],
+  'ㅗ': ['o', '“ô” fechado, com os lábios redondos', 'Linha deitada com o tracinho para cima.'],
+  'ㅜ': ['u', '“u”, com os lábios redondos', 'Tracinho para baixo: ㅜ é o ㅗ de cabeça para baixo.'],
+  'ㅡ': ['eu', '“u” sem arredondar os lábios: sorria e diga “u”', 'Uma linha deitada, reta como um sorriso parado.'],
+  'ㅣ': ['i', '“i”', 'Uma linha em pé, como um palito: i.'],
+  'ㅑ': ['ya', '“iá”', 'Dois tracinhos = um “i” escondido antes: ㅏ vira “iá”.'],
+  'ㅕ': ['yeo', '“ió” aberto', 'ㅓ com dois tracinhos.'],
+  'ㅛ': ['yo', '“iô”', 'ㅗ com dois tracinhos.'],
+  'ㅠ': ['yu', '“iú”', 'ㅜ com dois tracinhos.'],
+  'ㅐ': ['ae', '“é” aberto', 'ㅏ + ㅣ grudados.'],
+  'ㅔ': ['e', '“ê” (hoje soa quase igual a ㅐ)', 'ㅓ + ㅣ grudados.'],
+  'ㅒ': ['yae', '“ié”', 'ㅑ + ㅣ grudados.'],
+  'ㅖ': ['ye', '“iê”', 'ㅕ + ㅣ grudados.'],
+  'ㅘ': ['wa', '“uá”', 'ㅗ + ㅏ: o + a = wa.'],
+  'ㅙ': ['wae', '“ué” aberto', 'ㅗ + ㅐ.'],
+  'ㅚ': ['oe', '“ué”', 'ㅗ + ㅣ (hoje soa como “ué”).'],
+  'ㅝ': ['wo', '“uó”', 'ㅜ + ㅓ: u + eo = wo.'],
+  'ㅞ': ['we', '“ué”', 'ㅜ + ㅔ.'],
+  'ㅟ': ['wi', '“uí”', 'ㅜ + ㅣ.'],
+  'ㅢ': ['ui', '“ㅡ” seguido de “i”, rapidinho', 'ㅡ + ㅣ.'],
+  'ㅇ': ['- / ng', 'No começo da sílaba não tem som: é só um “suporte” para a vogal. No final soa “ng”.', 'Um círculo, como um zero: no começo, som zero!', '이응'],
+  'ㄱ': ['g / k', 'Entre “g” e “k” (no meio da palavra soa mais “g”)', 'Parece uma arma (gun) apontando: g.', '기역'],
+  'ㄴ': ['n', '“n”', 'Parece um nariz de perfil: n.', '니은'],
+  'ㄷ': ['d / t', 'Entre “d” e “t”', 'Uma porta (door) com a dobradiça: d.', '디귿'],
+  'ㄹ': ['r / l', '“r” de “caro” entre vogais; “l” no final', 'Uma estrada cheia de curvas (road): r.', '리을'],
+  'ㅁ': ['m', '“m”', 'Uma boca (mouth) fechada, quadrada: m.', '미음'],
+  'ㅂ': ['b / p', 'Entre “b” e “p”', 'Um balde (bucket) com as alças para cima: b.', '비읍'],
+  'ㅅ': ['s', '“s”; antes de ㅣ soa “xi” (시)', 'Um chapéu pontudo: s.', '시옷'],
+  'ㅈ': ['j', '“dj”, como o “di” de “dia” no Rio', 'ㅅ com um chapéu reto em cima.', '지읒'],
+  'ㅊ': ['ch', '“tch” com um sopro de ar', 'ㅈ com mais um tracinho: mais ar!', '치읓'],
+  'ㅋ': ['k', '“k” com um sopro de ar', 'ㄱ com mais um tracinho: mais ar!', '키읔'],
+  'ㅌ': ['t', '“t” com um sopro de ar', 'ㄷ com mais um tracinho: mais ar!', '티읕'],
+  'ㅍ': ['p', '“p” com um sopro de ar', 'Uma mesinha de pernas abertas: p.', '피읖'],
+  'ㅎ': ['h', '“h” aspirado, como um “rr” carioca bem suave', 'Uma pessoa de chapéu (hat): h.', '히읗'],
+  'ㄲ': ['kk', '“k” apertado, sem ar, com a garganta firme', 'ㄱ dobrado = som tenso.', '쌍기역'],
+  'ㄸ': ['tt', '“t” apertado, sem ar', 'ㄷ dobrado = som tenso.', '쌍디귿'],
+  'ㅃ': ['pp', '“p” apertado, sem ar', 'ㅂ dobrado = som tenso.', '쌍비읍'],
+  'ㅆ': ['ss', '“s” forte e apertado', 'ㅅ dobrado = som tenso.', '쌍시옷'],
+  'ㅉ': ['jj', '“tch” apertado, sem ar', 'ㅈ dobrado = som tenso.', '쌍지읒']
+};
+const isVowel = j => V.includes(j);
+const sayOf = j => isVowel(j) ? compose('ㅇ', j) : L.includes(j) ? compose(j, 'ㅏ') : j; // como pronunciar a letra sozinha
+
+/* ============================================================
+   O MUNDO DO HANGUL — 7 terras, 17 fases
+   letters: letras novas · c / v: consoantes e vogais usadas nos exercícios · syl: sílabas de treino
+   words: palavras { w, pt, e (figura) } · extra: exercícios especiais · clue: pista do Tromba no fim da terra
+   ============================================================ */
+const LANDS = [
+  { ko: '모음 마을', pt: 'Vila das Vogais', bg: '#FFE3EC', ink: '#C2185B', story: 'O Senhor Tromba sumiu! Pegadas de elefante levam ao Mundo do Hangul. Para segui-lo, o Pongo precisa aprender a ler. Primeiro, as vogais.' },
+  { ko: '자음 숲', pt: 'Floresta das Consoantes', bg: '#DDEFFC', ink: '#1F6FB2', story: 'A raposa contou que o Tromba entrou na floresta. Aqui moram as consoantes: cada uma se junta a uma vogal para formar uma sílaba.' },
+  { ko: '음절 다리', pt: 'Ponte das Sílabas', bg: '#E2F4DA', ink: '#3A8A2E', story: 'O Tromba atravessou a ponte! Na ponte, aprenda onde a vogal fica: à direita da consoante ou embaixo dela.' },
+  { ko: '쌍자음 언덕', pt: 'Colina das Consoantes Duplas', bg: '#FFE9D6', ink: '#C25A12', story: 'O chapéu do Tromba estava no caminho da colina. Aqui as consoantes aparecem dobradas e o som fica apertado.' },
+  { ko: '이중모음 호수', pt: 'Lago das Vogais Compostas', bg: '#D8F3F1', ink: '#0B7C76', story: 'Um elefante foi visto no lago! No lago, duas vogais se juntam para formar uma nova.' },
+  { ko: '받침 동굴', pt: 'Caverna do Batchim', bg: '#ECE3FA', ink: '#6A40B0', story: 'Migalhas de biscoito levam à caverna escura. Lá mora o batchim: a consoante que fica embaixo, no final da sílaba.' },
+  { ko: '단어 성', pt: 'Castelo das Palavras', bg: '#FFF3C4', ink: '#9A6B00', story: 'O Tromba está no castelo! Use tudo o que aprendeu para montar palavras e ler as pistas finais.' }
+];
+const VOW_BASIC = ['ㅏ', 'ㅓ', 'ㅗ', 'ㅜ', 'ㅡ', 'ㅣ', 'ㅑ', 'ㅕ', 'ㅛ', 'ㅠ'];
+const CON_BASIC = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+const W = (w, pt, e) => ({ w, pt, e });
+const STAGES = [
+  { land: 0, title: '아 어 오 우', pt: 'Primeiras vogais e o ㅇ mudo', letters: ['ㅇ', 'ㅏ', 'ㅓ', 'ㅗ', 'ㅜ'], c: ['ㅇ'], v: ['ㅏ', 'ㅓ', 'ㅗ', 'ㅜ'],
+    words: [W('오', 'cinco', '5️⃣')], note: 'Toda sílaba começa com uma consoante. Quando a vogal vem sozinha, usamos ㅇ, que no começo não tem som: 아 = a.' },
+  { land: 0, title: '으 이', pt: 'Vogais ㅡ e ㅣ', letters: ['ㅡ', 'ㅣ'], c: ['ㅇ'], v: ['ㅏ', 'ㅓ', 'ㅗ', 'ㅜ', 'ㅡ', 'ㅣ'],
+    words: [W('아이', 'criança', '🧒'), W('오이', 'pepino', '🥒'), W('이', 'dois', '2️⃣')] },
+  { land: 0, title: '야 여 요 유', pt: 'Vogais com “i”: dois tracinhos', letters: ['ㅑ', 'ㅕ', 'ㅛ', 'ㅠ'], c: ['ㅇ'], v: VOW_BASIC,
+    words: [W('우유', 'leite', '🥛'), W('여우', 'raposa', '🦊'), W('요요', 'ioiô', '🪀')],
+    clue: { w: '여우', pt: 'raposa', e: '🦊', story: 'Um bilhete na porta da vila diz uma palavra. Quem viu o Tromba?', opts: [['🦊', 'raposa'], ['🥛', 'leite'], ['🥒', 'pepino'], ['🧒', 'criança']] } },
+  { land: 1, title: 'ㄱ ㄴ ㄷ ㄹ', pt: 'Consoantes g, n, d, r', letters: ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ'], c: ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ'], v: VOW_BASIC,
+    words: [W('고기', 'carne', '🍖'), W('다리', 'ponte / perna', '🌉'), W('오리', 'pato', '🦆'), W('누나', 'irmã mais velha', '👧'), W('라디오', 'rádio', '📻')] },
+  { land: 1, title: 'ㅁ ㅂ ㅅ', pt: 'Consoantes m, b, s', letters: ['ㅁ', 'ㅂ', 'ㅅ'], c: ['ㅁ', 'ㅂ', 'ㅅ'], v: VOW_BASIC,
+    words: [W('나무', 'árvore', '🌳'), W('나비', 'borboleta', '🦋'), W('바나나', 'banana', '🍌'), W('소', 'vaca', '🐄'), W('버스', 'ônibus', '🚌'), W('바다', 'mar', '🌊'), W('고구마', 'batata-doce', '🍠')] },
+  { land: 1, title: 'ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ', pt: 'As consoantes com sopro', letters: ['ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'], c: ['ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'], v: VOW_BASIC,
+    words: [W('모자', 'chapéu', '🎩'), W('사자', 'leão', '🦁'), W('기차', 'trem', '🚆'), W('코', 'nariz', '👃'), W('포도', 'uva', '🍇'), W('토마토', 'tomate', '🍅'), W('피자', 'pizza', '🍕'), W('하마', 'hipopótamo', '🦛'), W('커피', 'café', '☕')],
+    clue: { w: '다리', pt: 'ponte', e: '🌉', story: 'Na saída da floresta, o Tromba riscou uma palavra no chão. Para onde ele foi?', opts: [['🌉', 'ponte'], ['🌳', 'árvore'], ['🌊', 'mar'], ['🍌', 'banana']] } },
+  { land: 2, title: '가 거 기', pt: 'Vogal em pé: fica à direita', rule: 'vert', c: CON_BASIC, v: ['ㅏ', 'ㅓ', 'ㅣ', 'ㅑ', 'ㅕ'],
+    note: 'Vogais em pé (ㅏ ㅓ ㅣ ㅑ ㅕ) ficam do lado direito da consoante: ㄱ + ㅏ = 가.',
+    words: [W('어머니', 'mãe', '👩'), W('아버지', 'pai', '👨'), W('기차', 'trem', '🚆')] },
+  { land: 2, title: '고 구 그', pt: 'Vogal deitada: fica embaixo', rule: 'hori', c: CON_BASIC, v: ['ㅗ', 'ㅜ', 'ㅡ', 'ㅛ', 'ㅠ'],
+    note: 'Vogais deitadas (ㅗ ㅜ ㅡ ㅛ ㅠ) ficam embaixo da consoante: ㄱ + ㅗ = 고.',
+    words: [W('두부', 'tofu', '🧈'), W('구두', 'sapato social', '👞'), W('도로', 'estrada', '🛣️')] },
+  { land: 2, title: '가나다라', pt: 'A tabela de sílabas', rule: 'mix', c: CON_BASIC, v: VOW_BASIC,
+    note: 'Agora tudo junto: leia sílabas com qualquer consoante e vogal básica.',
+    words: [W('고추', 'pimenta', '🌶️'), W('하나', 'um', '1️⃣'), W('투수', 'arremessador', '⚾'), W('모기', 'mosquito', '🦟')],
+    clue: { w: '모자', pt: 'chapéu', e: '🎩', story: 'Do outro lado da ponte há algo do Tromba caído no chão. O que é?', opts: [['🎩', 'chapéu'], ['🦁', 'leão'], ['🚆', 'trem'], ['🍕', 'pizza']] } },
+  { land: 3, title: 'ㄲ ㄸ ㅃ ㅆ ㅉ', pt: 'Consoantes duplas: som apertado', letters: ['ㄲ', 'ㄸ', 'ㅃ', 'ㅆ', 'ㅉ'], c: ['ㄲ', 'ㄸ', 'ㅃ', 'ㅆ', 'ㅉ'], v: ['ㅏ', 'ㅓ', 'ㅗ', 'ㅜ', 'ㅣ', 'ㅡ'],
+    note: 'Três irmãs: ㄱ (normal), ㅋ (com sopro) e ㄲ (apertada). O mesmo vale para ㄷ ㅌ ㄸ, ㅂ ㅍ ㅃ, ㅈ ㅊ ㅉ e ㅅ ㅆ.',
+    words: [W('토끼', 'coelho', '🐰'), W('아빠', 'papai', '👨‍👧'), W('꼬리', 'rabo', '🐕'), W('아저씨', 'moço, senhor', '🧔'), W('코끼리', 'elefante', '🐘'), W('뿌리', 'raiz', '🌱')],
+    extra: [{ t: 'triple', opts: ['가', '카', '까'] }, { t: 'triple', opts: ['다', '타', '따'] }, { t: 'triple', opts: ['바', '파', '빠'] }, { t: 'triple', opts: ['자', '차', '짜'] }, { t: 'triple', opts: ['사', '싸', '자'] }],
+    clue: { w: '코끼리', pt: 'elefante', e: '🐘', story: 'Um morador da colina gritou uma palavra apontando para o lago. O que ele viu?', opts: [['🐘', 'elefante'], ['🐰', 'coelho'], ['🦛', 'hipopótamo'], ['🦁', 'leão']] } },
+  { land: 4, title: 'ㅐ ㅔ ㅒ ㅖ', pt: 'Vogal + ㅣ', letters: ['ㅐ', 'ㅔ', 'ㅒ', 'ㅖ'], c: ['ㅇ', 'ㄱ', 'ㄴ', 'ㅅ', 'ㅂ', 'ㄹ', 'ㅁ'], v: ['ㅐ', 'ㅔ', 'ㅒ', 'ㅖ'],
+    words: [W('개', 'cachorro (como o Pongo!)', '🐕'), W('게', 'caranguejo', '🦀'), W('새', 'pássaro', '🐦'), W('배', 'barco / pera', '⛵'), W('시계', 'relógio', '⏰'), W('노래', 'música, canção', '🎵'), W('세', 'três', '3️⃣')] },
+  { land: 4, title: '와 워 위 의', pt: 'Vogais que deslizam', letters: ['ㅘ', 'ㅙ', 'ㅚ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅢ'], c: ['ㅇ', 'ㄱ', 'ㅅ', 'ㄷ', 'ㅈ', 'ㅎ', 'ㅁ'], v: ['ㅘ', 'ㅙ', 'ㅚ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅢ'],
+    words: [W('사과', 'maçã', '🍎'), W('돼지', 'porco', '🐷'), W('회사', 'empresa', '🏢'), W('귀', 'orelha', '👂'), W('의자', 'cadeira', '🪑'), W('가위', 'tesoura', '✂️'), W('바퀴', 'roda', '🛞'), W('과자', 'biscoito', '🍪')],
+    clue: { w: '과자', pt: 'biscoito', e: '🍪', story: 'Na beira do lago há um rastro de migalhas até a caverna. Migalhas de quê?', opts: [['🍪', 'biscoito'], ['🍎', 'maçã'], ['🐷', 'porco'], ['✂️', 'tesoura']] } },
+  { land: 5, title: '산 곰 공 물', pt: 'Batchim que continua: ㄴ ㅁ ㅇ ㄹ', bat: ['ㄴ', 'ㅁ', 'ㅇ', 'ㄹ'], batLearn: ['ㄴ', 'ㅁ', 'ㅇ', 'ㄹ'], c: CON_BASIC, v: VOW_BASIC,
+    note: 'Batchim é a consoante que fica embaixo, no fim da sílaba: 사 + ㄴ = 산. ㄴ ㅁ ㅇ ㄹ têm som que continua: [n] [m] [ng] [l].',
+    words: [W('산', 'montanha', '⛰️'), W('문', 'porta', '🚪'), W('곰', 'urso', '🐻'), W('밤', 'noite / castanha', '🌰'), W('공', 'bola', '⚽'), W('빵', 'pão', '🍞'), W('물', 'água', '💧'), W('달', 'lua', '🌙'), W('가방', 'mochila', '🎒'), W('사람', 'pessoa', '🧍'), W('사랑', 'amor', '❤️')],
+    extra: [{ t: 'final', s: '산' }, { t: 'final', s: '곰' }, { t: 'final', s: '공' }, { t: 'final', s: '물' }] },
+  { land: 5, title: '책 옷 밥', pt: 'Batchim que para: [k] [t] [p]', bat: ['ㄱ', 'ㄷ', 'ㅂ', 'ㅅ', 'ㅈ', 'ㅊ', 'ㅌ', 'ㅍ', 'ㄲ', 'ㅋ', 'ㅎ', 'ㅆ'], batLearn: ['ㄱ', 'ㄷ', 'ㅂ'], c: CON_BASIC, v: VOW_BASIC,
+    note: 'No final, muitas consoantes param o som e viram só 3 sons: ㄱ ㅋ ㄲ → [k] · ㅂ ㅍ → [p] · ㄷ ㅅ ㅆ ㅈ ㅊ ㅌ ㅎ → [t]. Por isso 옷, 낮 e 꽃 terminam com o mesmo som [t].',
+    words: [W('책', 'livro', '📚'), W('약', 'remédio', '💊'), W('옷', 'roupa', '👕'), W('꽃', 'flor', '🌸'), W('밥', 'arroz, comida', '🍚'), W('집', 'casa', '🏠'), W('입', 'boca', '👄'), W('숲', 'floresta', '🌲'), W('밖', 'fora', '🚪')],
+    extra: [{ t: 'final', s: '책' }, { t: 'final', s: '옷' }, { t: 'final', s: '꽃' }, { t: 'final', s: '밥' }, { t: 'final', s: '숲' }, { t: 'final', s: '낮' }, { t: 'final', s: '밖' }] },
+  { land: 5, title: '닭 값 음악', pt: 'Batchim duplo e ligação', bat: ['ㄺ', 'ㅄ', 'ㄵ', 'ㅀ', 'ㄼ'], batLearn: ['ㄺ', 'ㅄ'], c: CON_BASIC, v: VOW_BASIC,
+    note: 'Batchim duplo: duas consoantes embaixo, mas só uma é lida (닭 = [닥], 값 = [갑]). Ligação: se a próxima sílaba começa com ㅇ, o batchim passa para ela: 음악 = [으막].',
+    words: [W('닭', 'galinha', '🐔'), W('값', 'preço', '💰'), W('음악', 'música', '🎵'), W('한국어', 'língua coreana', '🇰🇷')],
+    extra: [{ t: 'pron', w: '닭', a: '[닥]', o: ['[닥]', '[달]', '[다]'] }, { t: 'pron', w: '값', a: '[갑]', o: ['[갑]', '[갓]', '[가]'] }, { t: 'pron', w: '음악', a: '[으막]', o: ['[으막]', '[음악]', '[으마]'] },
+      { t: 'pron', w: '옷이', a: '[오시]', o: ['[오시]', '[옷이]', '[오디]'] }, { t: 'pron', w: '한국어', a: '[한구거]', o: ['[한구거]', '[한국어]', '[하구거]'] }, { t: 'pron', w: '읽어요', a: '[일거요]', o: ['[일거요]', '[읽어요]', '[이거요]'] }],
+    clue: { w: '성', pt: 'castelo', e: '🏰', story: 'No fundo da caverna, uma placa com uma palavra de batchim ㅇ. Para onde o Tromba foi?', opts: [['🏰', 'castelo'], ['⛰️', 'montanha'], ['🏠', 'casa'], ['🌲', 'floresta']] } },
+  { land: 6, title: '친구 학교', pt: 'Montando palavras', c: CON_BASIC, v: VOW_BASIC, build: true,
+    words: [W('친구', 'amigo', '🤝'), W('강아지', 'cachorrinho', '🐶'), W('학교', 'escola', '🏫'), W('한글', 'Hangul', '🔤'), W('선생님', 'professor(a)', '🧑‍🏫'), W('퐁고', 'Pongo', '🐕'), W('트롬바', 'Tromba', '🐘')] },
+  { land: 6, title: '트롬바는 어디에?', pt: 'A pista final', final: true, c: CON_BASIC, v: VOW_BASIC,
+    words: [W('상자', 'caixa', '📦'), W('찾았다', 'achei!', '🎉')],
+    extra: [
+      { t: 'sentence', s: '트롬바는 성에 있어요.', q: 'O que diz a placa do castelo?', a: 'O Tromba está no castelo.', o: ['O Tromba está no castelo.', 'O Tromba está na escola.', 'O Pongo está no castelo.'] },
+      { t: 'sentence', s: '트롬바는 상자 안에 있어요.', q: 'Onde ele está escondido?', a: 'Dentro da caixa. 📦', o: ['Dentro da caixa. 📦', 'Embaixo da cadeira. 🪑', 'Em cima da mesa. 🍽️'] }
+    ] }
+];
+STAGES.forEach((s, i) => s.id = i);
+
+/* ============================================================
+   ÁUDIO — trilha city pop + efeitos (mesmo motor dos outros jogos do Pongo) e voz coreana
+   ============================================================ */
+const Audio = {
+  ctx: null, master: null, music: null, sfx: null, rev: null, on: false, timer: null,
+  init() {
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const c = this.ctx = new AC();
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(c.destination);
+    this.master = c.createGain(); this.master.gain.value = .9; this.master.connect(comp);
+    this.music = c.createGain(); this.music.gain.value = 0; this.music.connect(this.master);
+    this.sfx = c.createGain(); this.sfx.gain.value = .7; this.sfx.connect(this.master);
+    // reverb
+    const len = c.sampleRate * 2.2, ir = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+    this.rev = c.createConvolver(); this.rev.buffer = ir; const rg = c.createGain(); rg.gain.value = .32; this.rev.connect(rg); rg.connect(this.music);
+    // chorus para o piano elétrico
+    this.ep = c.createGain(); this.ep.gain.value = .55;
+    const dl = c.createDelay(); dl.delayTime.value = .018; const lfo = c.createOscillator(), lg = c.createGain();
+    lfo.frequency.value = .9; lg.gain.value = .004; lfo.connect(lg); lg.connect(dl.delayTime); lfo.start();
+    this.ep.connect(this.music); this.ep.connect(dl); dl.connect(this.music); this.ep.connect(this.rev);
+    this.noise = c.createBuffer(1, c.sampleRate, c.sampleRate); const nd = this.noise.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+  },
+  mtof: n => 440 * Math.pow(2, (n - 69) / 12),
+  // acordes estilo city pop (C maior com 7ª/9ª/13ª)
+  CH: { Fmaj9: [41, [57, 60, 64, 67]], Em7: [40, [55, 59, 62, 64]], A7: [45, [55, 61, 64, 67]], Dm9: [38, [53, 57, 60, 64]],
+        G13: [43, [53, 57, 59, 64]], Cmaj9: [36, [55, 59, 62, 64]], Bb9: [46, [56, 60, 62, 65]] },
+  PROG: [['Fmaj9'], ['Em7', 'A7'], ['Dm9'], ['G13'], ['Fmaj9'], ['Em7', 'A7'], ['Dm9', 'G13'], ['Cmaj9'],
+         ['Fmaj9'], ['Em7', 'A7'], ['Dm9'], ['G13', 'Bb9'], ['Fmaj9'], ['Em7', 'A7'], ['Dm9', 'G13'], ['Cmaj9']],
+  bpm: 104,
+  start() {
+    this.init(); if (!this.ctx) return; this.ctx.resume();
+    this.on = true; const now = this.ctx.currentTime;
+    this.music.gain.cancelScheduledValues(now); this.music.gain.setTargetAtTime(.5, now, .4);
+    if (this.timer) return;
+    this.step = 0; this.next = now + .1;
+    this.timer = setInterval(() => this.sched(), 25);
+  },
+  stop() {
+    this.on = false; if (!this.ctx) return; const now = this.ctx.currentTime;
+    this.music.gain.setTargetAtTime(0, now, .25);
+    setTimeout(() => { if (!this.on && this.timer) { clearInterval(this.timer); this.timer = null; } }, 1200);
+  },
+  duck(v) { if (this.ctx && this.on) this.music.gain.setTargetAtTime(v, this.ctx.currentTime, .15); },
+  sched() {
+    const c = this.ctx, st = 60 / this.bpm / 4;
+    while (this.next < c.currentTime + .15) { this.play(this.step, this.next, st); this.next += st; this.step++; }
+  },
+  play(step, t, st) {
+    const bar = Math.floor(step / 16) % this.PROG.length, s = step % 16, chords = this.PROG[bar];
+    const name = chords.length > 1 && s >= 8 ? chords[1] : chords[0], [root, voicing] = this.CH[name];
+    const swing = s % 2 ? st * .08 : 0; t += swing;
+    // bateria
+    if ([0, 7, 10].includes(s) || (s === 14 && bar % 2)) this.kick(t);
+    if (s === 4 || s === 12) this.snare(t, 1);
+    if (s === 15 && bar % 4 === 3) this.snare(t, .4);
+    if (s % 2 === 0) this.hat(t, s % 4 === 2 ? .13 : .08, .035);
+    else this.hat(t, .035, .02);
+    if (s === 14) this.hat(t, .07, .18);
+    // baixo funk com oitavas
+    const bp = { 0: [0, .32], 3: [12, .1], 6: [0, .18], 8: [7, .2], 10: [12, .1], 11: [10, .1], 14: [0, .18] };
+    if (bp[s]) this.bass(t, root + bp[s][0], bp[s][1] * 1.6);
+    if (s === 8 && chords.length > 1) this.bass(t, root, .3);
+    // Rhodes sincopado
+    const ep = { 0: .9, 6: .45, 10: .5, 14: .35 };
+    if (ep[s] || (s === 8 && chords.length > 1)) for (const n of voicing) this.rhodes(t, n, ep[s] || .9, (ep[s] || .6) * .9);
+    // pad nas trocas de acorde
+    if (s === 0 || (s === 8 && chords.length > 1)) this.pad(t, voicing, chords.length > 1 ? st * 8 : st * 16);
+    // sininhos (melodia pentatônica) na segunda metade
+    if (bar >= 8) {
+      const mel = [[0, 76], [3, 79], [6, 81], [8, 84], [11, 81], [14, 79]], alt = [[0, 84], [2, 81], [4, 79], [7, 76], [10, 74], [12, 76]];
+      for (const [ms, n] of (bar % 2 ? alt : mel)) if (ms === s) this.bell(t, n);
+    }
+  },
+  env(g, t, a, peak, d) { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); },
+  kick(t) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + .14);
+    this.env(g, t, .002, .9, .32); o.connect(g); g.connect(this.music); o.start(t); o.stop(t + .4);
+  },
+  snare(t, v) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1900; f.Q.value = .7;
+    const g = c.createGain(); this.env(g, t, .001, .42 * v, .2);
+    n.connect(f); f.connect(g); g.connect(this.music); g.connect(this.rev); n.start(t); n.stop(t + .3);
+    const o = c.createOscillator(), og = c.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(160, t + .08);
+    this.env(og, t, .001, .3 * v, .1); o.connect(og); og.connect(this.music); o.start(t); o.stop(t + .15);
+  },
+  hat(t, v, d) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500;
+    const g = c.createGain(); this.env(g, t, .001, v, d); n.connect(f); f.connect(g); g.connect(this.music); n.start(t, Math.random() * .5); n.stop(t + d + .05);
+  },
+  bass(t, n, d) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(); f.type = 'lowpass'; f.Q.value = 6;
+    f.frequency.setValueAtTime(1600, t); f.frequency.exponentialRampToValueAtTime(260, t + .12);
+    for (const [type, det] of [['square', 0], ['sawtooth', 6]]) { const o = c.createOscillator(); o.type = type; o.frequency.value = this.mtof(n); o.detune.value = det; o.connect(f); o.start(t); o.stop(t + d + .1); }
+    this.env(g, t, .004, .32, d); f.connect(g); g.connect(this.music);
+  },
+  rhodes(t, n, d, v) {
+    const c = this.ctx, fr = this.mtof(n), car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), g = c.createGain();
+    car.frequency.value = fr; mod.frequency.value = fr; mg.gain.setValueAtTime(fr * 2.2, t); mg.gain.exponentialRampToValueAtTime(fr * .25, t + .5);
+    mod.connect(mg); mg.connect(car.frequency); this.env(g, t, .004, .085 * v, d + .4);
+    car.connect(g); g.connect(this.ep); car.start(t); mod.start(t); car.stop(t + d + .6); mod.stop(t + d + .6);
+  },
+  pad(t, notes, d) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(); f.type = 'lowpass'; f.frequency.value = 1100;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.035, t + .25); g.gain.setValueAtTime(.035, t + d - .1); g.gain.linearRampToValueAtTime(0, t + d + .3);
+    for (const n of notes) for (const det of [-9, 9]) { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = this.mtof(n); o.detune.value = det; o.connect(f); o.start(t); o.stop(t + d + .4); }
+    f.connect(g); g.connect(this.music); g.connect(this.rev);
+  },
+  bell(t, n) {
+    const c = this.ctx, fr = this.mtof(n), car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), g = c.createGain();
+    car.frequency.value = fr; mod.frequency.value = fr * 3.5; mg.gain.setValueAtTime(fr * 1.5, t); mg.gain.exponentialRampToValueAtTime(1, t + .8);
+    mod.connect(mg); mg.connect(car.frequency); this.env(g, t, .002, .05, .9); car.connect(g); g.connect(this.music); g.connect(this.rev);
+    car.start(t); mod.start(t); car.stop(t + 1); mod.stop(t + 1);
+  },
+  // efeitos
+  tone(f, d, type = 'sine', v = .2, when = 0, slide) {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
+    this.env(g, t, .005, v, d); o.connect(g); g.connect(this.sfx); o.start(t); o.stop(t + d + .05);
+  },
+  click() { this.tone(880, .06, 'triangle', .12); },
+  pop() { this.tone(520, .07, 'triangle', .1, 0, 300); },
+  good() { [72, 76, 79, 84].forEach((n, i) => this.tone(this.mtof(n), .25, 'triangle', .16, i * .08)); },
+  bad() { this.tone(220, .18, 'square', .07); this.tone(185, .25, 'square', .07, .15); },
+  step() { this.tone(160 + Math.random() * 40, .04, 'triangle', .05); },
+  bark() {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime;
+    for (const k of [0, .17]) { this.tone(620, .09, 'sawtooth', .07, k, 330); }
+    const n = c.createBufferSource(); n.buffer = this.noise; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900;
+    const g = c.createGain(); this.env(g, t, .002, .08, .08); n.connect(f); f.connect(g); g.connect(this.sfx); n.start(t); n.stop(t + .12);
+  },
+  fanfare() { [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => this.tone(this.mtof(n), .3, 'triangle', .14, i * .09)); }
+};
+let koVoice = null;
+function pickVoice() { try { koVoice = speechSynthesis.getVoices().find(v => /^ko/i.test(v.lang)) || null; } catch (e) {} }
+if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text, rate = .75) {
+  if (!('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; if (koVoice) u.voice = koVoice; u.rate = rate;
+    Audio.duck(.15); u.onend = u.onerror = () => Audio.duck(.5); speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const ICON_SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg>';
+const spkBtn = (text, label = 'Ouvir', huge) => el('button', { class: 'spk' + (huge ? ' huge' : ''), onclick: () => speak(text) }, el('span', { html: ICON_SPK }), label);
+
+/* ============================================================
+   EXERCÍCIOS — gerados a partir de cada fase
+   ============================================================ */
+function learnedBefore(id) {
+  const c = new Set(), v = new Set();
+  for (const s of STAGES.slice(0, id + 1)) { (s.letters || []).forEach(j => (isVowel(j) ? v : c).add(j)); }
+  return { c: [...c], v: [...v] };
+}
+function stageSyllables(s) {
+  const out = new Set();
+  if (s.rule) for (const c of s.c) for (const v of s.v) out.add(compose(c, v));
+  else if (s.bat) for (const w of s.words) for (const ch of w.w) out.add(ch);
+  else for (const c of s.c) for (const v of s.v) out.add(compose(c, v));
+  return [...out];
+}
+function makeItems(s) {
+  const items = [];
+  for (const j of s.letters || []) items.push({ t: 'learn', j });
+  for (const b of s.batLearn || []) items.push({ t: 'learnBat', j: b });
+  if (s.note && !(s.letters || []).length && !s.bat) items.unshift({ t: 'rule', note: s.note });
+  if (s.final) return [s.extra[0], { t: 'word', w: s.words[0] }, s.extra[1], { t: 'word', w: s.words[1], last: true }];
+  const syl = stageSyllables(s), sylNew = s.letters && s.letters.length ? syl.filter(x => { const d = decompose(x); return s.letters.includes(d.l) || s.letters.includes(d.v); }) : syl;
+  const practice = [];
+  if (!s.final) {
+    pick(sylNew, 3).forEach(x => practice.push({ t: 'read', s: x }));
+    pick(sylNew, 3).forEach(x => practice.push({ t: 'listen', s: x }));
+    pick(s.bat ? syl : sylNew, s.build ? 1 : 2).forEach(x => practice.push({ t: 'build', s: x }));
+  }
+  const words = pick(s.words, s.build ? 5 : 3);
+  words.slice(0, s.build ? 5 : 2).forEach(w => practice.push({ t: 'word', w }));
+  if (!s.build && s.words.length >= 2) pick(s.words, Math.min(2, s.words.length)).forEach(w => practice.push({ t: 'pick', w }));
+  (s.extra || []).forEach(x => practice.push(Object.assign({}, x)));
+  const out = items.concat(shuffle(practice));
+  if (s.clue) out.push({ t: 'clue', ...s.clue });
+  return out;
+}
+// distratores: sílabas "vizinhas" (trocando uma peça)
+function neighborsOf(x, pool) {
+  const d = decompose(x), out = new Set();
+  for (const y of pool) if (y !== x) { const e = decompose(y); if (e && ((e.l === d.l) + (e.v === d.v) + (e.t === d.t)) >= 2) out.add(y); }
+  for (const y of shuffle(pool)) { if (out.size >= 6) break; if (y !== x) out.add(y); }
+  return [...out];
+}
+
+/* ============================================================
+   LIÇÃO
+   ============================================================ */
+const G = { stage: null, queue: [], idx: 0, total: 0, mistakes: 0, cur: null, state: 'answer', answer: null, b: null,
+  stars: store.get('stars', {}), unlocked: store.get('unlockAll', false) };
+function setFace(f) { G.face = f; const im = $('#lbody .ask img'); if (im && IMG[f]) im.src = IMG[f]; }
+function startStage(id) {
+  const s = STAGES[id]; G.stage = s; G.queue = makeItems(s); G.total = G.queue.length; G.idx = 0; G.mistakes = 0; G.done = 0;
+  Audio.init();
+  $('#lesson').hidden = false; document.body.style.overflow = 'hidden';
+  if (s.land !== (STAGES[id - 1] || {}).land) showStory(LANDS[s.land], () => nextItem()); else nextItem();
+}
+function quitStage() { $('#lesson').hidden = true; document.body.style.overflow = ''; if (window.speechSynthesis) speechSynthesis.cancel(); renderMap(); }
+function nextItem() {
+  if (!G.queue.length) return finishStage();
+  G.cur = G.queue.shift(); G.answer = null; G.state = 'answer';
+  $('#progBar').style.width = Math.round(100 * G.done / G.total) + '%';
+  renderItem();
+}
+function footer(kind, msg, btn, enabled = true) {
+  const f = $('#lfoot'); f.className = 'lfoot' + (kind ? ' ' + kind : '');
+  $('#fmsg').innerHTML = ''; if (msg) $('#fmsg').append(msg);
+  const b = $('#btnMain'); b.textContent = btn; b.disabled = !enabled; b.className = 'btn ' + (kind === 'ok' ? 'go' : kind === 'bad' ? 'primary' : btn === 'Continuar' || btn === 'Entendi!' ? 'go' : 'primary');
+}
+function ask(text, sub, face = 'feliz') {
+  G.face = face;
+  return el('div', { class: 'ask' }, el('img', { src: IMG[face], alt: 'Pongo' }), el('p', {}, text, sub ? el('small', {}, sub) : null));
+}
+function renderItem() {
+  const it = G.cur, B = $('#lbody'); B.innerHTML = ''; B.scrollTop = 0;
+  const R = RENDER[it.t]; R(it, B);
+}
+function onMain() {
+  if (G.state === 'next') { G.done++; return nextItem(); }
+  const it = G.cur, res = CHECK[it.t] ? CHECK[it.t](it) : { ok: true };
+  if (res == null) return;
+  if (res.ok) {
+    Audio.good(); setFace(pick(['feliz', 'empolgado', 'piscando', 'carinhoso'], 1)[0]);
+    footer('ok', el('span', {}, el('b', {}, pick(['정답! Isso!', '잘했어요! Muito bem!', '좋아요! Ótimo!'], 1)[0]), res.msg || ''), 'Continuar');
+    if (res.say) speak(res.say);
+  } else {
+    G.mistakes++; Audio.bad(); setFace(pick(['triste', 'curioso', 'pensativo'], 1)[0]);
+    footer('bad', el('span', {}, el('b', {}, 'Ainda não…'), res.msg || ''), 'Continuar');
+    if (res.say) speak(res.say);
+    if (!it.retried) { G.queue.push(Object.assign({}, it, { retried: true })); G.total++; } // volta no fim da fase
+  }
+  G.state = 'next';
+}
+function finishStage() {
+  const s = G.stage, stars = G.mistakes === 0 ? 3 : G.mistakes <= 3 ? 2 : 1;
+  G.stars[s.id] = Math.max(G.stars[s.id] || 0, stars); store.set('stars', G.stars); updateStars();
+  $('#progBar').style.width = '100%'; Audio.fanfare();
+  const finale = s.final, landEnd = s.clue || finale;
+  const m = $('#modal'); m.innerHTML = '';
+  m.append(el('img', { class: 'face', src: finale ? IMG.t_companhia : landEnd ? IMG.t_curioso : IMG.empolgado, alt: 'Pongo' }),
+    el('h3', {}, finale ? '찾았다! Achei!' : '잘했어요! Muito bem!'),
+    el('div', { class: 'bigstars', 'aria-label': `${stars} de 3 estrelas` }, '★'.repeat(stars), el('span', { class: 'off' }, '★'.repeat(3 - stars))),
+    el('p', {}, finale ? 'O Pongo encontrou o Senhor Tromba dentro da caixa, no castelo! Você aprendeu todo o Hangul: vogais, consoantes, consoantes duplas, vogais compostas, batchim e a montar palavras. 퐁고와 트롬바, 항상 같이!'
+      : landEnd ? `Fase “${s.title}” completa. Pista encontrada: o Pongo segue o Tromba para ${LANDS[s.land + 1] ? LANDS[s.land + 1].pt : 'o castelo'}!` : `Fase “${s.title}” completa.`));
+  const acts = el('div', { class: 'actions' });
+  if (STAGES[s.id + 1]) acts.append(el('button', { class: 'btn primary', onclick: () => { $('#modalOv').hidden = true; startStage(s.id + 1); } }, 'Próxima fase'));
+  acts.append(el('button', { class: 'btn', onclick: () => { $('#modalOv').hidden = true; quitStage(); } }, 'Voltar ao mapa'));
+  m.append(acts); $('#modalOv').hidden = false;
+  if (finale) speak('찾았다! 퐁고와 트롬바, 항상 같이!');
+}
+function showStory(land, then) {
+  const m = $('#modal'); m.innerHTML = '';
+  m.append(el('img', { class: 'face', src: IMG.t_curioso, alt: 'Pongo procurando o Tromba' }), el('h3', {}, land.ko), el('p', { style: 'color:var(--ink-soft);margin:0' }, land.pt), el('p', {}, land.story),
+    el('div', { class: 'actions' }, el('button', { class: 'btn primary', onclick: () => { $('#modalOv').hidden = true; then(); } }, 'Vamos!')));
+  $('#modalOv').hidden = false; speak(land.ko);
+}
+
+/* ---------- telas de cada tipo ---------- */
+const RENDER = {
+  learn(it, B) {
+    const j = it.j, [r, pt, mn, name] = JAMO[j], role = isVowel(j) ? 'v' : 'c';
+    B.append(ask(isVowel(j) ? 'Nova vogal!' : 'Nova consoante!', name ? `Nome da letra: ${name}` : 'Toque para ouvir o som.', 'atento'));
+    const ex = isVowel(j) ? [compose('ㅇ', j), ...['ㄱ', 'ㄴ', 'ㅁ'].map(c => compose(c, j))] : j === 'ㅇ' ? ['아', '오', '우'] : ['ㅏ', 'ㅗ', 'ㅣ', 'ㅜ'].map(v => compose(j, v));
+    const card = el('div', { class: 'card learn' }, el('div', { class: 'letter ' + role }, j),
+      el('div', { class: 'center' }, el('div', { class: 'rom' }, r), spkBtn(sayOf(j), 'Ouvir ' + sayOf(j))),
+      el('dl', {}, el('dt', {}, 'Som'), el('dd', {}, pt), el('dt', {}, 'Lembre'), el('dd', {}, mn)),
+      el('div', { class: 'lbl', style: 'margin-top:.6rem;font-weight:800;color:var(--ink-soft);font-size:.8rem' }, 'Exemplos (toque para ouvir)'),
+      el('div', { class: 'chips' }, ...ex.map(x => el('button', { class: 'chip', onclick: () => speak(x) }, x, el('small', {}, romSyl(x))))));
+    if (G.stage.note && G.stage.letters[0] === j) card.append(el('p', { style: 'font-weight:700;color:var(--teal-deep);margin:.8rem 0 0' }, G.stage.note));
+    B.append(card); speak(sayOf(j)); G.state = 'next'; footer('', null, 'Entendi!');
+  },
+  learnBat(it, B) {
+    const j = it.j, snd = RT[j], group = Object.keys(RT).filter(k => k && RT[k] === snd && k.length === 1 && !'ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ'.includes(k));
+    const ex = G.stage.words.filter(w => [...w.w].some(ch => { const d = decompose(ch); return d && d.t === j; })).slice(0, 4);
+    B.append(ask('Batchim ' + j, 'A consoante que fica embaixo, no fim da sílaba.', 'atento'));
+    B.append(el('div', { class: 'card learn' }, el('div', { class: 'letter t' }, j),
+      el('div', { class: 'center' }, el('div', { class: 'rom' }, `som final [${snd}]`)),
+      el('dl', {}, el('dt', {}, 'Som'), el('dd', {}, j.length && 'ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ'.includes(j) ? `Batchim duplo: só uma das duas consoantes soa, e o final fica [${snd}].` : `No final da sílaba, ${j} soa [${snd}].`),
+        group.length > 1 ? el('dt', {}, 'Grupo') : null, group.length > 1 ? el('dd', {}, `${group.join(' ')} → todas soam [${snd}] no final`) : null),
+      ex.length ? el('div', { class: 'chips', style: 'margin-top:.6rem' }, ...ex.map(w => el('button', { class: 'chip', onclick: () => speak(w.w) }, w.w, el('small', {}, w.e + ' ' + w.pt)))) : null,
+      G.stage.note && G.stage.bat[0] === j ? el('p', { style: 'font-weight:700;color:var(--teal-deep);margin:.8rem 0 0' }, G.stage.note) : null));
+    if (ex[0]) speak(ex[0].w);
+    G.state = 'next'; footer('', null, 'Entendi!');
+  },
+  rule(it, B) {
+    const s = G.stage;
+    B.append(ask('Regra da fase', s.pt, 'pensativo'));
+    const demo = s.rule === 'hori' ? [['ㄱ', 'ㅗ'], ['ㄴ', 'ㅜ'], ['ㅅ', 'ㅡ']] : s.rule === 'vert' ? [['ㄱ', 'ㅏ'], ['ㄴ', 'ㅓ'], ['ㅅ', 'ㅣ']] : [['ㄱ', 'ㅏ'], ['ㄱ', 'ㅗ'], ['ㅎ', 'ㅏ']];
+    const card = el('div', { class: 'card' }, el('p', { style: 'font-weight:700;font-size:1.05rem;line-height:1.4;margin-top:0' }, it.note),
+      el('div', { class: 'brow' }, ...demo.map(([c, v]) => el('div', { class: 'center' }, blockView(c, v, ''), el('button', { class: 'chip', onclick: () => speak(compose(c, v)) }, compose(c, v), el('small', {}, romSyl(compose(c, v))))))));
+    B.append(card); G.state = 'next'; footer('', null, 'Entendi!');
+  },
+  read(it, B) {
+    B.append(ask('Como se lê?', 'Escolha a pronúncia certa.', 'curioso'), el('div', { class: 'big' }, it.s));
+    const opts = shuffle([it.s, ...pick(neighborsOf(it.s, stageSyllables(G.stage).concat(allLearnedSyl())), 3)].filter(uniqRom())).slice(0, 4);
+    B.append(optionGrid(shuffle(opts), x => romSyl(x), x => x === it.s, ''));
+    footer('', null, 'Verificar', false);
+  },
+  listen(it, B) {
+    B.append(ask('O que você ouve?', 'Toque no alto-falante e escolha a sílaba.', 'atento'), el('div', { class: 'center' }, spkBtn(it.s, 'Ouvir', true),
+      el('button', { class: 'spk', style: 'background:var(--ink-soft)', onclick: e => { e.currentTarget.textContent = romSyl(it.s); } }, 'Sem som? Ver dica')));
+    const opts = it.opts || [it.s, ...pick(neighborsOf(it.s, stageSyllables(G.stage)), 3)];
+    B.append(optionGrid(shuffle(opts), x => x, x => x === (it.target || it.s), 'han'));
+    speak(it.s); footer('', null, 'Verificar', false);
+  },
+  triple(it, B) { it.target = it.target || pick(it.opts, 1)[0]; it.s = it.target; RENDER.listen(it, B); $('#lbody .ask p').firstChild.textContent = 'Normal, com sopro ou apertado?'; },
+  build(it, B) {
+    B.append(ask('Monte a sílaba', 'Toque nas peças: azul = consoante, rosa = vogal, amarelo = batchim.', 'pensativo'));
+    B.append(el('div', { class: 'target' }, el('div', { class: 'rom', style: 'font-size:1.8rem' }, romSyl(it.s)), spkBtn(it.s)));
+    it.parts = [it.s]; mountBuilder(it, B); speak(it.s);
+  },
+  word(it, B) {
+    const w = it.w;
+    B.append(ask(it.last ? 'Escreva a palavra final!' : 'Escreva a palavra', it.last ? 'Quando encontramos algo, dizemos 찾았다!' : 'Monte uma sílaba de cada vez.', 'pensativo'));
+    B.append(el('div', { class: 'target' }, el('span', { class: 'pic' }, w.e), el('div', {}, el('div', { style: 'font-weight:800;font-size:1.2rem' }, w.pt), el('div', { class: 'rom' }, rom(w.w))), spkBtn(w.w)));
+    it.parts = [...w.w].filter(isSyl); mountBuilder(it, B); speak(w.w);
+  },
+  pick(it, B) {
+    B.append(ask('Leia a palavra', 'Qual é a figura?', 'curioso'), el('div', { class: 'big word' }, it.w.w));
+    const others = pick(G.stage.words.filter(w => w.w !== it.w.w).concat(allWords().filter(w => w.w !== it.w.w)), 6).filter((w, i, a) => a.findIndex(x => x.e === w.e) === i && w.e !== it.w.e).slice(0, 3);
+    B.append(optionGrid(shuffle([it.w, ...others]), w => el('span', {}, w.e), w => w.w === it.w.w, 'pic', w => w.pt));
+    footer('', null, 'Verificar', false);
+  },
+  clue(it, B) {
+    B.append(ask('Pista do Tromba!', it.story, 't_curioso'), el('div', { class: 'big word' }, it.w));
+    B.append(optionGrid(shuffle(it.opts), o => el('span', {}, o[0]), o => o[1] === it.pt, 'pic', o => o[1]));
+    footer('', null, 'Verificar', false);
+  },
+  final(it, B) {
+    const d = decompose(it.s);
+    B.append(ask('Qual é o som final?', `${d.t} embaixo da sílaba: como ela termina?`, 'pensativo'), el('div', { class: 'big' }, it.s), el('div', { class: 'center' }, spkBtn(it.s)));
+    const opts = [RT[d.t], ...pick(['k', 't', 'p', 'n', 'm', 'ng', 'l'].filter(x => x !== RT[d.t]), 3)];
+    B.append(optionGrid(shuffle(opts), x => `[${x}]  ${FINAL_SOUND[x]}`, x => x === RT[d.t], ''));
+    footer('', null, 'Verificar', false);
+  },
+  pron(it, B) {
+    B.append(ask('Como se pronuncia?', 'Escrita e som nem sempre são iguais. Escolha como se fala.', 'pensativo'), el('div', { class: 'big word' }, it.w), el('div', { class: 'center' }, spkBtn(it.w)));
+    B.append(optionGrid(shuffle(it.o), x => x, x => x === it.a, 'han'));
+    footer('', null, 'Verificar', false);
+  },
+  sentence(it, B) {
+    B.append(ask('Leia a frase', it.q, 't_curioso'), el('div', { class: 'big word', style: 'font-size:clamp(1.8rem,7vw,3rem)' }, it.s), el('div', { class: 'center' }, spkBtn(it.s)));
+    B.append(optionGrid(shuffle(it.o), x => x, x => x === it.a, ''));
+    footer('', null, 'Verificar', false);
+  }
+};
+function uniqRom() { const seen = new Set(); return x => { const r = romSyl(x); if (seen.has(r)) return false; seen.add(r); return true; }; }
+function allLearnedSyl() { const { c, v } = learnedBefore(G.stage.id); const out = []; for (const a of c) for (const b of v) out.push(compose(a, b)); return out.length ? out : ['아']; }
+function allWords() { return STAGES.slice(0, G.stage.id + 1).flatMap(s => s.words); }
+function optionGrid(opts, label, isRight, cls, sub) {
+  const grid = el('div', { class: 'opts' });
+  for (const o of opts) {
+    const b = el('button', { class: 'opt ' + cls, onclick: () => {
+      if (G.state !== 'answer') return; grid.querySelectorAll('.opt').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); G.answer = { o, b }; Audio.click();
+      if (cls === 'han') speak(typeof o === 'string' ? o.replace(/[\[\]]/g, '') : '');
+      footer('', null, 'Verificar', true);
+    } }, label(o), sub && cls === 'pic' ? null : null);
+    b._right = isRight(o); b._sub = sub ? sub(o) : null; grid.append(b);
+  }
+  G.grid = grid; return grid;
+}
+const CHECK = {
+  choice() {
+    if (!G.answer) return null;
+    const ok = G.answer.b._right;
+    G.grid.querySelectorAll('.opt').forEach(b => { if (b._right) b.classList.add('good'); if (b._sub) b.append(el('small', {}, b._sub)); });
+    if (!ok) G.answer.b.classList.add('wrong');
+    return { ok };
+  }
+};
+CHECK.read = it => { const r = CHECK.choice(); if (!r) return r; return Object.assign(r, { say: it.s, msg: el('span', {}, el('span', { class: 'han' }, it.s), ` = ${romSyl(it.s)}`) }); };
+CHECK.listen = it => { const r = CHECK.choice(); if (!r) return r; const s = it.target || it.s; return Object.assign(r, { msg: el('span', {}, 'Era ', el('span', { class: 'han' }, s), ` (${romSyl(s)})`) }); };
+CHECK.triple = it => { const r = CHECK.listen(it); if (!r) return r; const d = decompose(it.s); const kind = 'ㄲㄸㅃㅆㅉ'.includes(d.l) ? 'apertada (dupla)' : 'ㅋㅌㅍㅊ'.includes(d.l) ? 'com sopro' : 'normal'; r.msg.append(` · consoante ${kind}`); return r; };
+CHECK.pick = it => { const r = CHECK.choice(); if (!r) return r; return Object.assign(r, { say: it.w.w, msg: el('span', {}, el('span', { class: 'han' }, it.w.w), ` (${rom(it.w.w)}) = ${it.w.pt}`) }); };
+CHECK.clue = it => { const r = CHECK.choice(); if (!r) return r; return Object.assign(r, { say: it.w, msg: el('span', {}, el('span', { class: 'han' }, it.w), ` = ${it.pt}. ${r.ok ? 'O Pongo segue a pista!' : ''}`) }); };
+CHECK.final = it => { const r = CHECK.choice(); if (!r) return r; const d = decompose(it.s); return Object.assign(r, { say: it.s, msg: el('span', {}, `${d.t} no final soa [${RT[d.t]}]: `, el('span', { class: 'han' }, it.s), ` = ${romSyl(it.s)}`) }); };
+CHECK.pron = it => { const r = CHECK.choice(); if (!r) return r; return Object.assign(r, { say: it.w, msg: el('span', {}, el('span', { class: 'han' }, it.w), ' se fala ', el('span', { class: 'han' }, it.a)) }); };
+CHECK.sentence = it => { const r = CHECK.choice(); if (!r) return r; return Object.assign(r, { say: it.s, msg: el('span', {}, it.a) }); };
+CHECK.build = CHECK.word = it => {
+  const b = G.b, want = it.parts[b.i], got = b.l && b.v ? compose(b.l, b.v, b.t || '') : '';
+  if (!got) { footer('', el('span', {}, 'Coloque pelo menos uma consoante (azul) e uma vogal (rosa).'), 'Verificar', true); return null; }
+  if (got === want) {
+    b.cells[b.i].textContent = got; b.cells[b.i].className = 'cell ok'; speak(got); Audio.click();
+    b.i++;
+    if (b.i < it.parts.length) { resetBlock(b); footer('', el('span', {}, el('b', { style: 'color:var(--ok)' }, `✓ ${got}`), 'Agora a próxima sílaba.'), 'Verificar', true); return null; }
+    const word = it.parts.join('');
+    return { ok: true, say: it.w ? it.w.w : word, msg: el('span', {}, el('span', { class: 'han' }, word), ` = ${rom(word)}${it.w ? ' · ' + it.w.pt : ''}`) };
+  }
+  // erro: mostra qual peça está errada
+  const d = decompose(want), wrong = [];
+  if (b.l !== d.l) wrong.push('consoante'); if (b.v !== d.v) wrong.push('vogal'); if ((b.t || '') !== d.t) wrong.push(d.t ? 'batchim' : 'batchim (esta sílaba não tem)');
+  b.tries = (b.tries || 0) + 1;
+  for (const [k, cls] of [['l', 'c'], ['v', 'v'], ['t', 't']]) { const sl = b.slots[cls]; if (sl && (b[k] || '') !== (d[k] || '')) sl.classList.add('bad'); }
+  if (b.tries < 2) { Audio.bad(); footer('bad', el('span', {}, el('b', {}, 'Quase!'), `Confira: ${wrong.join(', ')}. Toque na peça vermelha para trocar.`), 'Verificar', true); return null; }
+  b.cells[b.i].textContent = want; b.cells[b.i].className = 'cell ok';
+  return { ok: false, say: want, msg: el('span', {}, 'A sílaba é ', el('span', { class: 'han' }, want), ` = ${d.l} + ${d.v}${d.t ? ' + ' + d.t : ''}`) };
+};
+
+/* ---------- montador de sílabas (blocos coloridos) ---------- */
+function blockView(l, v, t) {
+  const lay = layoutOf(v), blk = el('div', { class: 'block ' + lay, 'aria-hidden': 'true' });
+  const sp = VSPLIT[v];
+  blk.append(el('div', { class: 'slot c filled' }, l || ''));
+  if (lay === 'mix') { blk.append(el('div', { class: 'slot h filled' }, sp[0]), el('div', { class: 'slot v filled' }, sp[1])); }
+  else blk.append(el('div', { class: 'slot v filled' }, v || ''));
+  if (t !== undefined && t !== '') blk.append(el('div', { class: 'slot t filled' }, t));
+  return blk;
+}
+function mountBuilder(it, B) {
+  const s = G.stage, needBat = it.parts.some(p => decompose(p).t);
+  const b = G.b = { i: 0, l: '', v: '', t: '', tries: 0, cells: [], slots: {}, allowT: needBat || !!s.bat };
+  const wrap = el('div', { class: 'builder' });
+  if (it.parts.length > 1) { const cells = el('div', { class: 'cells' }); it.parts.forEach((_, k) => { const c = el('div', { class: 'cell' + (k === 0 ? ' now' : '') }, '?'); b.cells.push(c); cells.append(c); }); wrap.append(cells); }
+  else { const c = el('div', { class: 'cell', hidden: true }); b.cells.push(c); }
+  b.row = el('div', { class: 'brow' }); wrap.append(b.row);
+  // teclas: peças da resposta + algumas parecidas já aprendidas
+  const need = { c: new Set(), v: new Set(), t: new Set() };
+  for (const p of it.parts) { const d = decompose(p); need.c.add(d.l); need.v.add(d.v); if (d.t) need.t.add(d.t); }
+  const { c: lc, v: lv } = learnedBefore(s.id);
+  const poolC = (lc.length ? lc : ['ㅇ']).filter(x => !need.c.has(x)), poolV = (lv.length ? lv : ['ㅏ']).filter(x => !need.v.has(x));
+  const keysC = shuffle([...need.c, ...pick(poolC, Math.max(2, 6 - need.c.size))]);
+  const keysV = shuffle([...need.v, ...pick(poolV, Math.max(2, 5 - need.v.size))]);
+  const batPool = (s.bat || ['ㄴ', 'ㅁ', 'ㅇ', 'ㄹ', 'ㄱ', 'ㅂ']).filter(x => !need.t.has(x) && !need.c.has(x));
+  const keysT = b.allowT ? shuffle([...need.t].concat(pick(batPool, 2))) : [];
+  const keys = el('div', { class: 'keys' });
+  for (const j of keysC) keys.append(el('button', { class: 'key c', onclick: () => tapKey(j, 'c'), 'aria-label': 'consoante ' + j }, j));
+  for (const j of keysV) keys.append(el('button', { class: 'key v', onclick: () => tapKey(j, 'v'), 'aria-label': 'vogal ' + j }, j));
+  for (const j of keysT) keys.append(el('button', { class: 'key t', onclick: () => tapKey(j, 't'), 'aria-label': 'batchim ' + j }, j));
+  wrap.append(keys, el('div', { class: 'keyhint' }, b.allowT ? 'Azul vai no começo · rosa é a vogal · amarelo vai embaixo (batchim). Uma consoante azul tocada depois da vogal também vira batchim.' : 'Azul vai no começo · rosa é a vogal. Toque numa peça do bloco para tirar.'));
+  B.append(wrap); drawBlock(); footer('', null, 'Verificar', true);
+}
+function tapKey(j, kind) {
+  const b = G.b; if (G.state !== 'answer') return; Audio.click();
+  if (kind === 'v') b.v = j;
+  else if (kind === 't') { if (b.l && b.v) b.t = j; else b.l = L.includes(j) ? j : b.l; }
+  else if (!b.l || !b.v) b.l = j;
+  else if (b.allowT && T.includes(j)) b.t = j; else b.l = j;
+  drawBlock();
+}
+function resetBlock(b) { b.l = b.v = b.t = ''; b.tries = 0; b.cells.forEach((c, k) => { if (k === b.i) c.classList.add('now'); }); drawBlock(); }
+function drawBlock() {
+  const b = G.b, lay = layoutOf(b.v), blk = el('div', { class: 'block ' + lay });
+  const slot = (cls, val, clear, label) => { const s = el('button', { class: 'slot ' + cls + (val ? ' filled' : ''), onclick: clear, 'aria-label': label }, val || ''); return s; };
+  b.slots = {};
+  b.slots.c = slot('c', b.l, () => { b.l = ''; drawBlock(); }, 'consoante inicial');
+  blk.append(b.slots.c);
+  if (lay === 'mix') { const sp = VSPLIT[b.v]; b.slots.v = slot('v', sp[1], () => { b.v = ''; drawBlock(); }, 'vogal'); blk.append(slot('h', sp[0], () => { b.v = ''; drawBlock(); }, 'vogal'), b.slots.v); }
+  else { b.slots.v = slot('v', b.v, () => { b.v = ''; drawBlock(); }, 'vogal'); blk.append(b.slots.v); }
+  if (b.allowT) { b.slots.t = slot('t', b.t, () => { b.t = ''; drawBlock(); }, 'batchim'); blk.append(b.slots.t); }
+  const got = b.l && b.v ? compose(b.l, b.v, b.t || '') : (b.l || b.v || '');
+  b.row.innerHTML = ''; b.row.append(blk, el('div', { class: 'center' }, el('div', { class: 'composed' }, got || ' '), el('div', { class: 'rom' }, b.l && b.v ? romSyl(got) : '')));
+}
+
+/* ============================================================
+   MAPA
+   ============================================================ */
+const isOpen = id => G.unlocked || id === 0 || (G.stars[id - 1] || 0) > 0;
+function updateStars() { $('#starCount').textContent = Object.values(G.stars).reduce((a, b) => a + b, 0); }
+function renderMap() {
+  const M = $('#map'); M.innerHTML = '';
+  const cur = STAGES.findIndex(s => !(G.stars[s.id] > 0)), found = cur === -1;
+  M.append(el('div', { class: 'hero' },
+    el('div', {}, el('h1', {}, 'HANGUL'), el('div', { class: 'kosub' }, '트롬바를 찾아라!'),
+      el('p', {}, 'O Senhor Tromba sumiu no Mundo do Hangul! Aprenda a ler e a escrever em coreano, letra por letra, para seguir as pistas e encontrá-lo.')),
+    el('img', { src: IMG.hero_tromba, alt: 'Pongo e o Senhor Tromba' })));
+  M.append(el('div', { class: 'startrow' },
+    el('button', { class: 'btn primary', onclick: () => { Audio.init(); setMusic(true); startStage(found ? 0 : cur); } }, found ? 'Jogar de novo com música' : cur > 0 ? 'Continuar com música' : 'Começar com música'),
+    el('button', { class: 'btn', onclick: () => { Audio.init(); startStage(found ? 0 : cur); } }, 'Jogar sem música')),
+    el('div', { class: 'legend' }, el('span', {}, el('i', { class: 'c' }), 'consoante'), el('span', {}, el('i', { class: 'v' }), 'vogal'), el('span', {}, el('i', { class: 't' }), 'batchim (final)')));
+  LANDS.forEach((land, li) => {
+    const sec = el('section', { class: 'land', style: `--land-bg:${land.bg};--land-ink:${land.ink}` },
+      el('div', { class: 'eyebrow' }, `Terra ${li + 1} de ${LANDS.length}`), el('header', {}, el('h2', {}, land.ko), el('span', {}, land.pt)));
+    const path = el('div', { class: 'path' });
+    STAGES.filter(s => s.land === li).forEach((s, k) => {
+      const st = G.stars[s.id] || 0, open = isOpen(s.id), now = s.id === cur;
+      const glyph = (s.letters && s.letters.find(j => j !== 'ㅇ')) || (s.bat && s.bat[0]) || [...s.title].find(isSyl) || s.title[0];
+      const node = el('div', { class: 'node ' + (now ? 'now' : st ? 'done' : open ? '' : 'lock'), style: `--off:${[0, -18, 14, -10, 18][k % 5]}%` },
+        el('button', { class: 'nbtn', 'aria-label': `Fase ${s.id + 1}: ${s.pt}`, disabled: !open, onclick: () => open && startStage(s.id) }, glyph,
+          now ? el('span', { class: 'pongo-pin' }, el('img', { src: IMG.feliz, alt: 'Pongo está aqui' })) : null),
+        el('div', { class: 'ninfo' }, el('b', {}, s.title), el('small', {}, s.pt), el('span', { class: 'nst' }, '★'.repeat(st), el('span', { class: 'off' }, '★'.repeat(3 - st)))));
+      path.append(node);
+      if (s.clue) path.append(el('div', { class: 'paws', title: 'Pegadas do Tromba' }, '● ● ●'));
+    });
+    sec.append(path);
+    if (li === LANDS.length - 1) sec.append(el('div', { class: 'castle' }, el('img', { src: IMG.tromba, class: found ? '' : 'hidden', alt: found ? 'Senhor Tromba encontrado' : 'Senhor Tromba escondido' }),
+      el('b', {}, found ? '찾았다! O Tromba está com o Pongo.' : 'O Senhor Tromba está escondido aqui…')));
+    M.append(sec);
+  });
+  M.append(el('p', { class: 'note' }, 'As fases liberam uma a uma. ', el('button', { class: 'closex', style: 'float:none;font-size:.75rem', onclick: () => { G.unlocked = !G.unlocked; store.set('unlockAll', G.unlocked); renderMap(); } }, G.unlocked ? 'Modo professor: ligado' : 'Modo professor: liberar todas')));
+  const now = M.querySelector('.node.now'); if (now && cur > 0) setTimeout(() => now.scrollIntoView({ block: 'center', behavior: 'smooth' }), 200);
+}
+function openChart() {
+  const C = $('#chart'); C.innerHTML = '';
+  const known = new Set(); STAGES.forEach(s => { if (G.stars[s.id] > 0 || G.unlocked) (s.letters || []).forEach(j => known.add(j)); });
+  const sec = (title, list, cls, say) => { C.append(el('h3', {}, title)); const g = el('div', { class: 'grid' });
+    for (const j of list) { const info = JAMO[j]; g.append(el('button', { class: 'jbtn ' + cls + (cls !== 't' && !known.has(j) ? ' lock' : ''), onclick: () => speak(say(j)) }, el('b', {}, j), el('small', {}, cls === 't' ? `[${RT[j]}]` : info[0]))); } C.append(g); };
+  C.append(el('button', { class: 'closex', onclick: () => { $('#chartOv').hidden = true; } }, 'Fechar'), el('h2', { style: 'font-family:var(--f-title);font-weight:400;margin:0' }, '한글 · O alfabeto'),
+    el('p', { style: 'margin:.2rem 0;color:var(--ink-soft);font-weight:600' }, 'Toque para ouvir. As letras ficam coloridas quando você as aprende no jogo.'));
+  sec('Vogais básicas', VOW_BASIC, 'v', sayOf); sec('Vogais compostas', ['ㅐ', 'ㅔ', 'ㅒ', 'ㅖ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅢ'], 'v', sayOf);
+  sec('Consoantes', CON_BASIC, 'c', sayOf); sec('Consoantes duplas', ['ㄲ', 'ㄸ', 'ㅃ', 'ㅆ', 'ㅉ'], 'c', sayOf);
+  sec('Batchim: os 7 sons finais', ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅇ'], 't', j => compose('ㅇ', 'ㅏ', j));
+  $('#chartOv').hidden = false;
+}
+function setMusic(on) { if (on) Audio.start(); else Audio.stop(); $('#btnMusic').setAttribute('aria-pressed', !!on); }
+
+/* ============================================================
+   INÍCIO
+   ============================================================ */
+$('#btnMain').onclick = onMain;
+$('#btnQuit').onclick = quitStage;
+$('#btnChart').onclick = openChart;
+$('#chartOv').addEventListener('click', e => { if (e.target.id === 'chartOv') $('#chartOv').hidden = true; });
+$('#btnMusic').onclick = () => { Audio.init(); setMusic($('#btnMusic').getAttribute('aria-pressed') !== 'true'); };
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && !$('#lesson').hidden && $('#modalOv').hidden && !$('#btnMain').disabled) onMain(); if (e.key === 'Escape') $('#chartOv').hidden = true; });
+updateStars(); renderMap();
+</script>
