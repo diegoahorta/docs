@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Trailer · Pongo no Mundo do Hangul</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Jua&family=Monoton&family=Noto+Sans+KR:wght@800&display=swap">
+<style>
+  html,body{margin:0;background:#1D2547}
+  canvas{display:block;width:min(100vw,56.25vh);height:auto;margin:0 auto}
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+"use strict";
+/* Trailer do jogo "Pongo no Mundo do Hangul".
+   draw(t) desenha o quadro do segundo t (determinístico): o script tools/render_video.cjs chama draw() para cada quadro
+   e renderAudio() para gravar a trilha city pop + efeitos com OfflineAudioContext. Abrir no navegador também toca a animação. */
+const W = 1080, H = 1920, DUR = 34;
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+const IM = {};
+const IMGS = ['hero_tromba.png', 'tromba.png', 'pongo_em_pe.png', 'pongo_correndo.png', 'feliz.jpg', 'surpreso.jpg', 'triste.jpg', 'empolgado.jpg', 't_companhia.jpg', 't_feliz.jpg'];
+const INK = '#1D2547', PAPER = '#FFF8EA', NEON = '#FF4F9A', TEAL = '#0B8290';
+const ROLE = { c: ['#D9EFFA', '#3389C9'], v: ['#FCE1EB', '#D9417B'], t: ['#FFF0C6', '#D99A12'] };
+const LANDS = [['모음 마을', '#FFE3EC', '#C2185B', 'ㅏ'], ['자음 숲', '#DDEFFC', '#1F6FB2', 'ㄱ'], ['음절 다리', '#E2F4DA', '#3A8A2E', '가'], ['쌍자음 언덕', '#FFE9D6', '#C25A12', 'ㄲ'],
+  ['이중모음 호수', '#D8F3F1', '#0B7C76', 'ㅘ'], ['받침 동굴', '#ECE3FA', '#6A40B0', '산'], ['단어 성', '#FFF3C4', '#9A6B00', '성']];
+
+/* ---------- utilitários ---------- */
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = x => 1 - Math.pow(1 - x, 3);
+const eBack = x => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const eIO = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const lerp = (a, b, k) => a + (b - a) * k;
+const win = (t, a, b, f = .45) => clamp((t - a) / f) * clamp((b - t) / f);
+function rr(x, y, w, h, r, fill, stroke, lw) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  if (fill) { g.fillStyle = fill; g.fill(); } if (stroke) { g.strokeStyle = stroke; g.lineWidth = lw || 6; g.stroke(); }
+}
+function text(s, x, y, font, color, align = 'center', base = 'middle') { g.font = font; g.fillStyle = color; g.textAlign = align; g.textBaseline = base; g.fillText(s, x, y); }
+function img(name, cx, cy, w, opts = {}) {
+  const im = IM[name]; if (!im) return; const h = w * im.height / im.width;
+  g.save(); g.translate(cx, cy); if (opts.rot) g.rotate(opts.rot); if (opts.flip) g.scale(-1, 1);
+  if (opts.shadow !== false) { g.shadowColor = 'rgba(29,37,71,.35)'; g.shadowOffsetY = 14; }
+  g.drawImage(im, -w / 2, -h / 2, w, h); g.restore();
+}
+function face(name, cx, cy, r, ring = INK) {
+  const im = IM[name]; if (!im) return;
+  g.save(); g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fillStyle = '#fff'; g.fill(); g.clip();
+  const k = Math.max(2 * r / im.width, 2 * r / im.height); g.drawImage(im, cx - im.width * k / 2, cy - im.height * k / 2, im.width * k, im.height * k); g.restore();
+  g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.lineWidth = 10; g.strokeStyle = ring; g.stroke();
+}
+function tile(x, y, s, ch, role, o = {}) {
+  const [f, e] = ROLE[role]; g.save(); g.globalAlpha *= (o.alpha ?? 1); g.translate(x, y); g.rotate(o.rot || 0); const sc = o.sc ?? 1; g.scale(sc, sc);
+  rr(-s / 2, -s / 2 + s * .09, s, s, s * .2, e); rr(-s / 2, -s / 2, s, s, s * .2, f, e, s * .055);
+  text(ch, 0, s * .03, `800 ${s * .6}px "Noto Sans KR"`, e); g.restore();
+}
+function caption(t, a, b, ko, pt) {
+  const k = win(t, a, b, .35); if (k <= 0) return;
+  const y = lerp(1960, 1560, eOut(clamp((t - a) / .45)));
+  g.save(); g.globalAlpha = k;
+  rr(70, y + 12, 940, 250, 40, INK); rr(70, y, 940, 250, 40, PAPER, INK, 8);
+  text(ko, 540, y + 92, '76px Jua', INK); text(pt, 540, y + 182, '800 46px "Baloo 2"', TEAL);
+  g.restore();
+}
+function sparkle(x, y, t0, t, n = 10, col = '#FFD84D') {
+  const k = prog(t, t0, t0 + .7); if (k <= 0 || k >= 1) return;
+  g.save(); g.globalAlpha = 1 - k;
+  for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, r = 60 + 220 * eOut(k); g.save(); g.translate(x + Math.cos(a) * r, y + Math.sin(a) * r); g.rotate(a + k * 3);
+    g.beginPath(); for (let j = 0; j < 8; j++) { const rad = j % 2 ? 9 : 26; g.lineTo(Math.cos(j * Math.PI / 4) * rad, Math.sin(j * Math.PI / 4) * rad); } g.closePath(); g.fillStyle = col; g.fill(); g.restore(); }
+  g.restore();
+}
+
+/* ---------- cenário city pop (céu, sol listrado, mar e palmeiras) ---------- */
+function palm(x, y, s, sway, flip) {
+  g.save(); g.translate(x, y); g.scale(flip ? -s : s, s); g.fillStyle = '#123F5A'; g.strokeStyle = '#123F5A';
+  g.lineWidth = 26; g.lineCap = 'round'; g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(40, -260, 10 + sway * 10, -520); g.stroke();
+  g.translate(10 + sway * 10, -520);
+  for (let i = 0; i < 7; i++) { const a = -Math.PI / 2 + (i - 3) * .48 + sway * .05; g.save(); g.rotate(a); g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(120, -60, 260, 40); g.quadraticCurveTo(120, -10, 0, 0); g.fill(); g.restore(); }
+  g.restore();
+}
+function background(t) {
+  const sky = g.createLinearGradient(0, 0, 0, 1350); sky.addColorStop(0, '#1E56C8'); sky.addColorStop(.55, '#6CC5F0'); sky.addColorStop(.85, '#FFD7A6'); sky.addColorStop(1, '#FF9E7A');
+  g.fillStyle = sky; g.fillRect(0, 0, W, 1350);
+  // nuvens
+  g.fillStyle = 'rgba(255,255,255,.85)';
+  for (const [x0, y, s] of [[200, 260, 1], [760, 420, .8], [420, 640, .6]]) { const x = ((x0 + t * 22 * s) % 1400) - 160; g.beginPath(); g.ellipse(x, y, 110 * s, 34 * s, 0, 0, 7); g.ellipse(x + 70 * s, y - 24 * s, 70 * s, 40 * s, 0, 0, 7); g.ellipse(x - 60 * s, y - 10 * s, 60 * s, 30 * s, 0, 0, 7); g.fill(); }
+  // sol listrado
+  const sy = 1240 - 140 * eOut(prog(t, 0, 2.2)); g.save(); g.beginPath(); g.rect(0, 0, W, 1350); g.clip();
+  g.beginPath(); g.arc(540, sy, 300, 0, Math.PI * 2); const sg = g.createLinearGradient(0, sy - 300, 0, sy + 300); sg.addColorStop(0, '#FFC15E'); sg.addColorStop(1, '#FF5E7E'); g.fillStyle = sg; g.fill();
+  g.fillStyle = '#FFB59A'; for (let i = 0; i < 6; i++) g.fillRect(200, sy + 40 + i * 44, 680, 8 + i * 4);
+  g.restore();
+  // mar
+  const sea = g.createLinearGradient(0, 1350, 0, H); sea.addColorStop(0, '#2FA2DD'); sea.addColorStop(1, '#1A5FA8'); g.fillStyle = sea; g.fillRect(0, 1350, W, H - 1350);
+  g.fillStyle = 'rgba(255,255,255,.55)'; for (let i = 0; i < 9; i++) { const y = 1380 + i * 60, w = 120 + (i % 3) * 60, x = ((i * 233 + t * (30 + i * 6)) % 1300) - 150; g.fillRect(x, y, w, 6); }
+  g.fillStyle = '#F4DDB0'; g.beginPath(); g.moveTo(0, 1350); g.quadraticCurveTo(200, 1310, 330, 1350); g.lineTo(0, 1350); g.fill();
+  const sway = Math.sin(t * 1.4);
+  palm(70, 1400, 1, sway, false); palm(1010, 1420, .9, -sway, true);
+}
+
+/* ---------- montagem de sílaba: peças voando para o bloco ---------- */
+const RECT = {
+  vert: { c: [.06, .06, .44, .88], v: [.56, .06, .38, .88] },
+  vertT: { c: [.06, .06, .44, .56], v: [.56, .06, .38, .56], t: [.06, .66, .88, .28] },
+  hori: { c: [.06, .06, .88, .5], v: [.06, .6, .88, .34] },
+  horiT: { c: [.06, .06, .88, .36], v: [.06, .46, .88, .22], t: [.06, .72, .88, .22] }
+};
+function syllable(t, t0, cx, cy, S, parts, layout, result, starts) {
+  // parts: { c, v, t } · starts: posições de onde cada peça vem
+  const R = RECT[layout], bx = cx - S / 2, by = cy - S / 2;
+  const appear = eBack(prog(t, t0, t0 + .4));
+  if (appear <= 0) return;
+  const merge = prog(t, t0 + 1.5, t0 + 1.9);
+  g.save(); g.globalAlpha = 1;
+  // bloco
+  g.save(); g.translate(cx, cy); g.scale(appear, appear); rr(-S / 2, -S / 2 + 14, S, S, 40, INK); rr(-S / 2, -S / 2, S, S, 40, '#fff', INK, 10); g.restore();
+  const order = Object.keys(parts);
+  order.forEach((k, i) => {
+    const role = k === 't' ? 't' : k === 'c' ? 'c' : 'v', [rx, ry, rw, rh] = R[k];
+    const tx = bx + (rx + rw / 2) * S, ty = by + (ry + rh / 2) * S, slotS = Math.min(rw, rh) * S;
+    const a = t0 + .35 + i * .38, p = eOut(prog(t, a, a + .55));
+    if (p <= 0) return;
+    // vaga colorida
+    g.save(); g.globalAlpha = (1 - merge) * clamp(p * 3);
+    rr(bx + rx * S, by + ry * S, rw * S, rh * S, 22, ROLE[role][0], ROLE[role][1], 6); g.restore();
+    const [sx, sy] = starts[i], x = lerp(sx, tx, p), y = lerp(sy, ty, p) - Math.sin(p * Math.PI) * 160;
+    if (p < 1) tile(x, y, lerp(210, slotS * .9, p), parts[k], role, { rot: (1 - p) * (i % 2 ? .6 : -.6) });
+    else { g.save(); g.globalAlpha = 1 - merge; text(parts[k], tx, ty + 6, `800 ${slotS * .78}px "Noto Sans KR"`, ROLE[role][1]); g.restore(); }
+  });
+  if (merge > 0) { g.save(); g.globalAlpha = merge; const sc = .7 + .3 * eBack(merge); text(result, cx, cy + 20, `800 ${S * .82 * sc}px "Noto Sans KR"`, INK); g.restore(); }
+  sparkle(cx, cy, t0 + 1.6, t);
+  g.restore();
+}
+
+/* ---------- cenas ---------- */
+function scene1(t) { // título
+  const k = win(t, 0, 4.6); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  const p = eBack(prog(t, .2, .9));
+  g.save(); g.translate(540, 330); g.scale(p, p);
+  g.shadowColor = '#FF4F9A'; g.shadowBlur = 40 + 20 * Math.sin(t * 6);
+  text('PONGO', 0, 0, '210px Monoton', '#FFF8EA'); g.restore();
+  const p2 = eBack(prog(t, 1, 1.5)); g.save(); g.translate(540, 520); g.scale(p2, p2); rr(-380, -70, 760, 140, 70, INK); text('한글 나라의 퐁고', 0, 6, '96px Jua', '#FFD84D'); g.restore();
+  const p3 = prog(t, 2.1, 2.6); g.save(); g.globalAlpha *= p3; text('Pongo no Mundo do Hangul', 540, 640, '800 56px "Baloo 2"', INK); g.restore();
+  const p4 = eBack(prog(t, 1.5, 2.2)); const bob = Math.sin(t * 5) * 12;
+  if (p4 > 0) img('hero_tromba.png', 540, lerp(1900, 1080, p4) + bob, 760);
+  g.restore();
+}
+function scene2(t) { // o Tromba sumiu
+  const k = win(t, 4.5, 9.2); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  const appear = eBack(prog(t, 4.6, 5.1)), gone = prog(t, 6, 6.5);
+  if (gone < 1) { g.save(); g.translate(540, 760); g.rotate(gone * 4); g.scale(appear * (1 - gone), appear * (1 - gone)); img('tromba.png', 0, 0, 380); g.restore(); }
+  sparkle(540, 760, 6, t, 14, '#FFFFFF');
+  if (t > 6.3) {
+    const q = eBack(prog(t, 6.3, 6.8));
+    for (let i = 0; i < 3; i++) { g.save(); g.translate(330 + i * 210, 600 - i * 40 + Math.sin(t * 4 + i) * 16); g.scale(q, q); text('?', 0, 0, '800 170px "Baloo 2"', '#FFF8EA'); g.restore(); }
+    face(t < 7.6 ? 'surpreso.jpg' : 'triste.jpg', 540, 1010, 230 * eBack(prog(t, 6.4, 6.9)));
+  }
+  // pegadas do Tromba
+  if (t > 7.6) for (let i = 0; i < 7; i++) { const a = prog(t, 7.6 + i * .12, 7.8 + i * .12); if (!a) continue; g.save(); g.globalAlpha *= a; g.fillStyle = 'rgba(29,37,71,.55)';
+    const x = 760 + (i % 2) * 70 + i * 30, y = 1320 - i * 150; g.beginPath(); g.ellipse(x, y, 34, 24, 0, 0, 7); g.fill(); for (const d of [-26, 0, 26]) { g.beginPath(); g.arc(x + d, y - 34, 9, 0, 7); g.fill(); } g.restore(); }
+  caption(t, 6.3, 9.2, '트롬바가 없어요!', 'O Senhor Tromba sumiu!');
+  g.restore();
+}
+function scene3(t) { // vogais
+  const k = win(t, 9, 13.8); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  const VOW = ['ㅏ', 'ㅓ', 'ㅗ', 'ㅜ', 'ㅡ', 'ㅣ', 'ㅑ', 'ㅕ', 'ㅛ', 'ㅠ'];
+  VOW.forEach((v, i) => { const a = 9.2 + i * .12, p = eBack(prog(t, a, a + .45)); if (p <= 0) return;
+    const x = 150 + (i % 5) * 195, y = 360 + Math.floor(i / 5) * 230 + Math.sin(t * 3 + i) * 10; tile(x, y, 170, v, 'v', { sc: p, rot: Math.sin(t * 2 + i) * .06 }); });
+  syllable(t, 10.9, 540, 1080, 460, { c: 'ㅇ', v: 'ㅏ' }, 'vert', '아', [[150, 1700], [930, 1700]]);
+  if (t > 12.6) text('= a', 540, 1360, '800 64px "Baloo 2"', INK);
+  caption(t, 9.3, 13.8, '모음 · ㅇ + ㅏ = 아', 'As vogais (o ㅇ no começo é mudo)');
+  g.restore();
+}
+function scene4(t) { // consoantes e sílabas
+  const k = win(t, 13.6, 19.4); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  const CON = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+  CON.forEach((c, i) => { const a = 13.7 + i * .07, p = eOut(prog(t, a, a + .5)); if (p <= 0) return;
+    const x = 115 + (i % 7) * 142, y = lerp(-120, 250 + Math.floor(i / 7) * 170, p); tile(x, y, 128, c, 'c', { rot: (1 - p) * 1.2 }); });
+  syllable(t, 14.6, 300, 900, 380, { c: 'ㄱ', v: 'ㅏ' }, 'vert', '가', [[-100, 700], [1180, 700]]);
+  syllable(t, 16.6, 780, 900, 380, { c: 'ㄱ', v: 'ㅗ' }, 'hori', '고', [[540, -200], [1180, 1300]]);
+  if (t > 16.2) text('ga', 300, 1150, '800 60px "Baloo 2"', INK);
+  if (t > 18.2) text('go', 780, 1150, '800 60px "Baloo 2"', INK);
+  caption(t, 14.2, 19.4, '자음 + 모음 = 음절', 'Consoante + vogal = sílaba');
+  g.restore();
+}
+function scene5(t) { // batchim
+  const k = win(t, 19.2, 24.4); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  syllable(t, 19.4, 300, 760, 400, { c: 'ㅅ', v: 'ㅏ', t: 'ㄴ' }, 'vertT', '산', [[-120, 500], [1200, 500], [300, -260]]);
+  syllable(t, 21.3, 780, 760, 400, { c: 'ㄱ', v: 'ㅗ', t: 'ㅁ' }, 'horiT', '곰', [[1200, 300], [1200, 900], [780, -260]]);
+  const e1 = eBack(prog(t, 21.2, 21.7)), e2 = eBack(prog(t, 23.1, 23.6));
+  if (e1 > 0) { g.save(); g.translate(300, 1140); g.scale(e1, e1); text('⛰️', 0, 0, '150px "Noto Color Emoji"', INK); g.restore(); text('san · montanha', 300, 1280, '800 48px "Baloo 2"', INK); }
+  if (e2 > 0) { g.save(); g.translate(780, 1140); g.scale(e2, e2); text('🐻', 0, 0, '150px "Noto Color Emoji"', INK); g.restore(); text('gom · urso', 780, 1280, '800 48px "Baloo 2"', INK); }
+  caption(t, 19.5, 24.4, '받침', 'Batchim: a consoante que fica embaixo');
+  g.restore();
+}
+function scene6(t) { // mapa das 7 terras
+  const k = win(t, 24.2, 29.4); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  const p = prog(t, 24.6, 28.8), scroll = eIO(p) * 6 * 300;
+  g.save(); g.globalAlpha *= .9; rr(60, 120, 960, 1400, 50, 'rgba(255,248,234,.92)', INK, 8); g.restore();
+  g.save(); g.beginPath(); g.rect(60, 120, 960, 1400); g.clip();
+  const pos = i => [540 + [0, -230, 200, -160, 230, -200, 0][i], 1340 - i * 300 + scroll];
+  g.strokeStyle = '#C9B796'; g.lineWidth = 16; g.setLineDash([2, 34]); g.lineCap = 'round'; g.beginPath(); for (let i = 0; i < 7; i++) { const [x, y] = pos(i); i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.setLineDash([]);
+  LANDS.forEach(([ko, bg, ink, gl], i) => { const [x, y] = pos(i); if (y < 0 || y > 1700) return;
+    g.beginPath(); g.arc(x, y + 12, 105, 0, 7); g.fillStyle = INK; g.fill(); g.beginPath(); g.arc(x, y, 105, 0, 7); g.fillStyle = bg; g.fill(); g.lineWidth = 10; g.strokeStyle = ink; g.stroke();
+    text(gl, x, y + 6, '800 100px "Noto Sans KR"', ink); text(ko, x + (x < 540 ? 150 : -150), y, '58px Jua', INK, x < 540 ? 'left' : 'right'); });
+  // Pongo pulando de terra em terra
+  const fi = clamp(p * 6, 0, 6), i0 = Math.floor(fi), f = fi - i0, [x0, y0] = pos(i0), [x1, y1] = pos(Math.min(6, i0 + 1));
+  const hop = Math.sin(f * Math.PI) * 140;
+  face('feliz.jpg', lerp(x0, x1, eIO(f)), lerp(y0, y1, eIO(f)) - 150 - hop, 80, NEON);
+  g.restore();
+  caption(t, 24.5, 29.4, '7개 나라 · 17단계', '7 terras · 17 fases · todo o Hangul');
+  g.restore();
+}
+function scene7(t) { // o reencontro
+  const k = win(t, 29.2, DUR + 1); if (k <= 0) return; g.save(); g.globalAlpha = k;
+  // castelo
+  g.save(); g.fillStyle = '#E9D9BC'; g.strokeStyle = INK; g.lineWidth = 8;
+  for (const [x, w, h] of [[170, 160, 520], [460, 160, 640], [750, 160, 520]]) { g.fillRect(x, 1250 - h, w, h); g.strokeRect(x, 1250 - h, w, h); g.beginPath(); g.moveTo(x - 20, 1250 - h); g.lineTo(x + w / 2, 1250 - h - 150); g.lineTo(x + w + 20, 1250 - h); g.closePath(); g.fillStyle = '#FF7B63'; g.fill(); g.stroke(); g.fillStyle = '#E9D9BC'; }
+  g.restore();
+  const open = prog(t, 30.6, 31), shake = t > 29.8 && t < 30.6 ? Math.sin(t * 60) * .06 : 0;
+  // Tromba saindo da caixa
+  const rise = eBack(prog(t, 30.8, 31.5));
+  if (rise > 0) img('tromba.png', 540, 1190 - rise * 230, 300);
+  g.save(); g.translate(540, 1300); g.rotate(shake);
+  rr(-210, -150, 420, 280, 18, '#E7B074', INK, 10); g.fillStyle = '#C98B52'; g.fillRect(-20, -150, 40, 280);
+  g.save(); g.translate(-230 + open * -120, -160 - open * 260); g.rotate(-open * 1.2); rr(0, -40, 460, 70, 14, '#F2C48D', INK, 10); g.restore();
+  g.restore();
+  sparkle(540, 960, 30.9, t, 14);
+  const f1 = eBack(prog(t, 31.2, 31.7));
+  if (f1 > 0) { g.save(); g.translate(540, 360); g.scale(f1, f1); g.shadowColor = NEON; g.shadowBlur = 30; text('찾았다!', 0, 0, '190px Jua', '#FFF8EA'); g.restore(); text('Achei!', 540, 500, '800 64px "Baloo 2"', INK); }
+  // cartão final
+  const e = eOut(prog(t, 32.2, 32.8));
+  if (e > 0) {
+    g.save(); g.globalAlpha *= e; g.fillStyle = 'rgba(29,37,71,.55)'; g.fillRect(0, 0, W, H); g.restore();
+    g.save(); g.translate(0, (1 - e) * 300); g.globalAlpha *= e;
+    rr(80, 520, 920, 1000, 60, INK); rr(80, 500, 920, 1000, 60, PAPER, INK, 10);
+    face('t_companhia.jpg', 540, 760, 200);
+    text('한글 나라의 퐁고', 540, 1060, '92px Jua', INK); text('Pongo no Mundo do Hangul', 540, 1160, '800 54px "Baloo 2"', TEAL);
+    text('Aprenda todo o Hangul brincando', 540, 1260, '800 44px "Baloo 2"', '#5B6385');
+    rr(300, 1330, 480, 100, 50, NEON); text('Odu Creative', 540, 1382, '800 50px "Baloo 2"', '#fff');
+    g.restore();
+  }
+  const fade = prog(t, DUR - .6, DUR); if (fade > 0) { g.fillStyle = `rgba(29,37,71,${fade})`; g.fillRect(0, 0, W, H); }
+  g.restore();
+}
+function draw(t) {
+  g.save(); g.clearRect(0, 0, W, H); background(t);
+  scene1(t); scene2(t); scene3(t); scene4(t); scene5(t); scene6(t); scene7(t);
+  g.restore();
+}
+
+/* ---------- efeitos sonoros sincronizados (segundos) ---------- */
+function sfxList() {
+  const L = [];
+  const pop = (t, f = 520) => L.push(['tone', f, .08, 'triangle', .1, t, f * .6]);
+  const chime = t => [72, 76, 79, 84].forEach((n, i) => L.push(['note', n, .25, 'triangle', .14, t + i * .07]));
+  const fan = t => [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => L.push(['note', n, .3, 'triangle', .13, t + i * .08]));
+  L.push(['tone', 300, .5, 'sawtooth', .05, .2, 1200]); pop(1.0, 700); pop(1.6, 400);
+  pop(4.7, 600); L.push(['tone', 900, .5, 'sine', .12, 6.0, 120]); L.push(['tone', 700, .25, 'square', .05, 6.35, 900]);
+  for (let i = 0; i < 10; i++) pop(9.2 + i * .12, 500 + i * 30);
+  for (const t0 of [10.9, 14.6, 16.6]) { [0, 1].forEach(i => pop(t0 + .35 + i * .38 + .5, 380)); chime(t0 + 1.55); }
+  for (let i = 0; i < 14; i++) pop(13.7 + i * .07 + .45, 300 + i * 15);
+  for (const t0 of [19.4, 21.3]) { [0, 1, 2].forEach(i => pop(t0 + .35 + i * .38 + .5, 360)); chime(t0 + 1.55); }
+  for (let i = 0; i < 6; i++) L.push(['tone', 420, .12, 'triangle', .1, 24.6 + (i + .5) * (4.2 / 6), 720]);
+  for (let i = 0; i < 8; i++) pop(29.8 + i * .1, 200);
+  fan(30.8); fan(31.25); chime(32.3);
+  return L;
+}
+// trilha city pop (mesmo motor do jogo) renderizada fora do tempo real
+const Audio = {
+  ctx: null, master: null, music: null, sfx: null, rev: null, on: false, timer: null,
+  init() {
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const c = this.ctx = window.__OFFLINE || new AC();
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(c.destination);
+    this.master = c.createGain(); this.master.gain.value = .9; this.master.connect(comp);
+    this.music = c.createGain(); this.music.gain.value = 0; this.music.connect(this.master);
+    this.sfx = c.createGain(); this.sfx.gain.value = .7; this.sfx.connect(this.master);
+    // reverb
+    const len = c.sampleRate * 2.2, ir = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+    this.rev = c.createConvolver(); this.rev.buffer = ir; const rg = c.createGain(); rg.gain.value = .32; this.rev.connect(rg); rg.connect(this.music);
+    // chorus para o piano elétrico
+    this.ep = c.createGain(); this.ep.gain.value = .55;
+    const dl = c.createDelay(); dl.delayTime.value = .018; const lfo = c.createOscillator(), lg = c.createGain();
+    lfo.frequency.value = .9; lg.gain.value = .004; lfo.connect(lg); lg.connect(dl.delayTime); lfo.start();
+    this.ep.connect(this.music); this.ep.connect(dl); dl.connect(this.music); this.ep.connect(this.rev);
+    this.noise = c.createBuffer(1, c.sampleRate, c.sampleRate); const nd = this.noise.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+  },
+  mtof: n => 440 * Math.pow(2, (n - 69) / 12),
+  // acordes estilo city pop (C maior com 7ª/9ª/13ª)
+  CH: { Fmaj9: [41, [57, 60, 64, 67]], Em7: [40, [55, 59, 62, 64]], A7: [45, [55, 61, 64, 67]], Dm9: [38, [53, 57, 60, 64]],
+        G13: [43, [53, 57, 59, 64]], Cmaj9: [36, [55, 59, 62, 64]], Bb9: [46, [56, 60, 62, 65]] },
+  PROG: [['Fmaj9'], ['Em7', 'A7'], ['Dm9'], ['G13'], ['Fmaj9'], ['Em7', 'A7'], ['Dm9', 'G13'], ['Cmaj9'],
+         ['Fmaj9'], ['Em7', 'A7'], ['Dm9'], ['G13', 'Bb9'], ['Fmaj9'], ['Em7', 'A7'], ['Dm9', 'G13'], ['Cmaj9']],
+  bpm: 104,
+  start() {
+    this.init(); if (!this.ctx) return; this.ctx.resume();
+    this.on = true; const now = this.ctx.currentTime;
+    this.music.gain.cancelScheduledValues(now); this.music.gain.setTargetAtTime(.5, now, .4);
+    if (this.timer) return;
+    this.step = 0; this.next = now + .1;
+    this.timer = setInterval(() => this.sched(), 25);
+  },
+  stop() {
+    this.on = false; if (!this.ctx) return; const now = this.ctx.currentTime;
+    this.music.gain.setTargetAtTime(0, now, .25);
+    setTimeout(() => { if (!this.on && this.timer) { clearInterval(this.timer); this.timer = null; } }, 1200);
+  },
+  duck(v) { if (this.ctx && this.on) this.music.gain.setTargetAtTime(v, this.ctx.currentTime, .15); },
+  sched() {
+    const c = this.ctx, st = 60 / this.bpm / 4;
+    while (this.next < c.currentTime + .15) { this.play(this.step, this.next, st); this.next += st; this.step++; }
+  },
+  play(step, t, st) {
+    const bar = Math.floor(step / 16) % this.PROG.length, s = step % 16, chords = this.PROG[bar];
+    const name = chords.length > 1 && s >= 8 ? chords[1] : chords[0], [root, voicing] = this.CH[name];
+    const swing = s % 2 ? st * .08 : 0; t += swing;
+    // bateria
+    if ([0, 7, 10].includes(s) || (s === 14 && bar % 2)) this.kick(t);
+    if (s === 4 || s === 12) this.snare(t, 1);
+    if (s === 15 && bar % 4 === 3) this.snare(t, .4);
+    if (s % 2 === 0) this.hat(t, s % 4 === 2 ? .13 : .08, .035);
+    else this.hat(t, .035, .02);
+    if (s === 14) this.hat(t, .07, .18);
+    // baixo funk com oitavas
+    const bp = { 0: [0, .32], 3: [12, .1], 6: [0, .18], 8: [7, .2], 10: [12, .1], 11: [10, .1], 14: [0, .18] };
+    if (bp[s]) this.bass(t, root + bp[s][0], bp[s][1] * 1.6);
+    if (s === 8 && chords.length > 1) this.bass(t, root, .3);
+    // Rhodes sincopado
+    const ep = { 0: .9, 6: .45, 10: .5, 14: .35 };
+    if (ep[s] || (s === 8 && chords.length > 1)) for (const n of voicing) this.rhodes(t, n, ep[s] || .9, (ep[s] || .6) * .9);
+    // pad nas trocas de acorde
+    if (s === 0 || (s === 8 && chords.length > 1)) this.pad(t, voicing, chords.length > 1 ? st * 8 : st * 16);
+    // sininhos (melodia pentatônica) na segunda metade
+    if (bar >= 8) {
+      const mel = [[0, 76], [3, 79], [6, 81], [8, 84], [11, 81], [14, 79]], alt = [[0, 84], [2, 81], [4, 79], [7, 76], [10, 74], [12, 76]];
+      for (const [ms, n] of (bar % 2 ? alt : mel)) if (ms === s) this.bell(t, n);
+    }
+  },
+  env(g, t, a, peak, d) { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); },
+  kick(t) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + .14);
+    this.env(g, t, .002, .9, .32); o.connect(g); g.connect(this.music); o.start(t); o.stop(t + .4);
+  },
+  snare(t, v) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1900; f.Q.value = .7;
+    const g = c.createGain(); this.env(g, t, .001, .42 * v, .2);
+    n.connect(f); f.connect(g); g.connect(this.music); g.connect(this.rev); n.start(t); n.stop(t + .3);
+    const o = c.createOscillator(), og = c.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(160, t + .08);
+    this.env(og, t, .001, .3 * v, .1); o.connect(og); og.connect(this.music); o.start(t); o.stop(t + .15);
+  },
+  hat(t, v, d) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500;
+    const g = c.createGain(); this.env(g, t, .001, v, d); n.connect(f); f.connect(g); g.connect(this.music); n.start(t, Math.random() * .5); n.stop(t + d + .05);
+  },
+  bass(t, n, d) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(); f.type = 'lowpass'; f.Q.value = 6;
+    f.frequency.setValueAtTime(1600, t); f.frequency.exponentialRampToValueAtTime(260, t + .12);
+    for (const [type, det] of [['square', 0], ['sawtooth', 6]]) { const o = c.createOscillator(); o.type = type; o.frequency.value = this.mtof(n); o.detune.value = det; o.connect(f); o.start(t); o.stop(t + d + .1); }
+    this.env(g, t, .004, .32, d); f.connect(g); g.connect(this.music);
+  },
+  rhodes(t, n, d, v) {
+    const c = this.ctx, fr = this.mtof(n), car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), g = c.createGain();
+    car.frequency.value = fr; mod.frequency.value = fr; mg.gain.setValueAtTime(fr * 2.2, t); mg.gain.exponentialRampToValueAtTime(fr * .25, t + .5);
+    mod.connect(mg); mg.connect(car.frequency); this.env(g, t, .004, .085 * v, d + .4);
+    car.connect(g); g.connect(this.ep); car.start(t); mod.start(t); car.stop(t + d + .6); mod.stop(t + d + .6);
+  },
+  pad(t, notes, d) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(); f.type = 'lowpass'; f.frequency.value = 1100;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.035, t + .25); g.gain.setValueAtTime(.035, t + d - .1); g.gain.linearRampToValueAtTime(0, t + d + .3);
+    for (const n of notes) for (const det of [-9, 9]) { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = this.mtof(n); o.detune.value = det; o.connect(f); o.start(t); o.stop(t + d + .4); }
+    f.connect(g); g.connect(this.music); g.connect(this.rev);
+  },
+  bell(t, n) {
+    const c = this.ctx, fr = this.mtof(n), car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), g = c.createGain();
+    car.frequency.value = fr; mod.frequency.value = fr * 3.5; mg.gain.setValueAtTime(fr * 1.5, t); mg.gain.exponentialRampToValueAtTime(1, t + .8);
+    mod.connect(mg); mg.connect(car.frequency); this.env(g, t, .002, .05, .9); car.connect(g); g.connect(this.music); g.connect(this.rev);
+    car.start(t); mod.start(t); car.stop(t + 1); mod.stop(t + 1);
+  },
+  // efeitos
+  tone(f, d, type = 'sine', v = .2, when = 0, slide) {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
+    this.env(g, t, .005, v, d); o.connect(g); g.connect(this.sfx); o.start(t); o.stop(t + d + .05);
+  },
+  click() { this.tone(880, .06, 'triangle', .12); },
+  pop() { this.tone(520, .07, 'triangle', .1, 0, 300); },
+  good() { [72, 76, 79, 84].forEach((n, i) => this.tone(this.mtof(n), .25, 'triangle', .16, i * .08)); },
+  bad() { this.tone(220, .18, 'square', .07); this.tone(185, .25, 'square', .07, .15); },
+  step() { this.tone(160 + Math.random() * 40, .04, 'triangle', .05); },
+  bark() {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime;
+    for (const k of [0, .17]) { this.tone(620, .09, 'sawtooth', .07, k, 330); }
+    const n = c.createBufferSource(); n.buffer = this.noise; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900;
+    const g = c.createGain(); this.env(g, t, .002, .08, .08); n.connect(f); f.connect(g); g.connect(this.sfx); n.start(t); n.stop(t + .12);
+  },
+  fanfare() { [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => this.tone(this.mtof(n), .3, 'triangle', .14, i * .09)); }
+};
+async function renderAudio() {
+  const sr = 44100, c = new OfflineAudioContext(2, Math.ceil(sr * DUR), sr);
+  window.__OFFLINE = c; Audio.ctx = null; Audio.init();
+  const A = Audio, st = 60 / A.bpm / 4;
+  A.music.gain.setValueAtTime(.55, 0); A.music.gain.setValueAtTime(.55, DUR - 2); A.music.gain.linearRampToValueAtTime(0, DUR);
+  for (let s = 0; s * st < DUR - .1; s++) A.play(s, .05 + s * st, st);
+  for (const e of sfxList()) {
+    if (e[0] === 'note') A.tone(A.mtof(e[1]), e[2], e[3], e[4], e[5]); else A.tone(e[1], e[2], e[3], e[4], e[5], e[6]);
+  }
+  const buf = await c.startRendering();
+  const L = buf.getChannelData(0), R = buf.getChannelData(1), n = buf.length, out = new DataView(new ArrayBuffer(44 + n * 4));
+  const ws = (o, s) => [...s].forEach((ch, i) => out.setUint8(o + i, ch.charCodeAt(0)));
+  ws(0, 'RIFF'); out.setUint32(4, 36 + n * 4, true); ws(8, 'WAVE'); ws(12, 'fmt '); out.setUint32(16, 16, true); out.setUint16(20, 1, true); out.setUint16(22, 2, true);
+  out.setUint32(24, sr, true); out.setUint32(28, sr * 4, true); out.setUint16(32, 4, true); out.setUint16(34, 16, true); ws(36, 'data'); out.setUint32(40, n * 4, true);
+  for (let i = 0; i < n; i++) { out.setInt16(44 + i * 4, clamp(L[i], -1, 1) * 32767, true); out.setInt16(46 + i * 4, clamp(R[i], -1, 1) * 32767, true); }
+  const bytes = new Uint8Array(out.buffer); let bin = ''; for (let i = 0; i < bytes.length; i += 32768) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 32768));
+  return btoa(bin);
+}
+
+/* ---------- carregamento ---------- */
+window.ready = (async () => {
+  await Promise.all(IMGS.map(n => new Promise(res => { const im = new Image(); im.onload = () => { IM[n] = im; res(); }; im.onerror = res; im.src = 'img/' + n; })));
+  try { await Promise.all([document.fonts.load('210px Monoton', 'PONGO'), document.fonts.load('96px Jua', '한글 나라의 퐁고 찾았다 트롬바가 없어요 모음 자음 받침 나라 단계 성 숲 마을 다리 언덕 호수 동굴 이중 쌍 음절'),
+    document.fonts.load('800 100px "Noto Sans KR"', 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㅏㅓㅗㅜㅡㅣㅑㅕㅛㅠㅘ아가고산곰성'), document.fonts.load('800 50px "Baloo 2"', 'Pongo')]); } catch (e) {}
+  return true;
+})();
+if (!/render/.test(location.hash)) window.ready.then(() => { const t0 = performance.now(); const loop = () => { draw(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; loop(); });
+</script>
+</body>
+</html>

@@ -19,3 +19,9 @@ onde cada peça fica), escrever palavras com figura, ler e escolher a figura, so
 real e pistas do Tromba. Erros voltam no fim da fase. Botão "Alfabeto" com a tabela completa para ouvir.
 
 Abra `index.html` no navegador. Editar: `src/game.html`, depois `python3 tools/build.py`.
+
+## Trailer em vídeo
+
+`video/pongo-hangul-trailer.mp4`: animação vertical (1080×1920, 34 s, 30 fps) com trilha city pop.
+A animação está em `video/trailer.html` (abre no navegador e toca em loop). Para gerar o MP4 de novo:
+`node tools/render_video.cjs` (precisa de Playwright com Chromium e de ffmpeg).
