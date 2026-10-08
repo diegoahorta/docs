@@ -695,9 +695,27 @@ const ICON_SPK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" st
 const Pongo = { x: 0, z: 0, node: 'd:학교', heading: 0, facing: 1, walking: false, showArrow: false, face: 'feliz', bob: 0, poof: 0 };
 let curMap = MAPS.city;
 let walkQ = null;
+let lastFrame = 0;
 function walkPoints(pts) {
-  return new Promise(res => { walkQ = { pts: pts.slice(), res, stepT: 0 }; Pongo.walking = true; });
+  if (walkQ) finishWalk(); // nunca deixa uma caminhada anterior pendurada
+  let len = 0, px = Pongo.x, pz = Pongo.z;
+  for (const p of pts) { len += Math.hypot(p.x - px, p.z - pz); px = p.x; pz = p.z; }
+  const speed = Math.max(12, len / 3.2); // qualquer trajeto leva no máximo ~3 s
+  return new Promise(res => {
+    walkQ = { pts: pts.slice(), res, stepT: 0, speed, deadline: performance.now() + len / speed * 1000 + 1500 }; Pongo.walking = true;
+  });
 }
+// termina a caminhada na hora (botão "Pular", prazo estourado ou aba pausada)
+function finishWalk() {
+  if (!walkQ) return;
+  const end = walkQ.pts[walkQ.pts.length - 1]; if (end) { Pongo.x = end.x; Pongo.z = end.z; }
+  const r = walkQ.res; walkQ = null; Pongo.walking = false; r();
+}
+// vigia: se o navegador parar de desenhar quadros, a caminhada continua e nunca trava o jogo
+setInterval(() => {
+  if (!walkQ) return; const now = performance.now();
+  if (now > walkQ.deadline) finishWalk(); else if (now - lastFrame > 300) updateWalk(.25);
+}, 200);
 async function goTo(placeK) {
   const target = 'd:' + placeK; if (!curMap.byK[placeK]) return;
   const path = bfs(curMap, Pongo.node, target);
@@ -711,7 +729,7 @@ function teleport(i, j, h) {
 }
 function updateWalk(dt) {
   if (!walkQ) return;
-  const speed = 9, tgt = walkQ.pts[0];
+  const speed = walkQ.speed, tgt = walkQ.pts[0];
   const dx = tgt.x - Pongo.x, dz = tgt.z - Pongo.z, d = Math.hypot(dx, dz);
   if (Math.abs(dx) > .01) Pongo.facing = dx > 0 ? 1 : -1;
   if (d > .05) {
@@ -1300,6 +1318,7 @@ function renderPanel(feedback) {
   } else {
     const last = G.si === M.steps.length - 1;
     act.append(el('button', { class: 'btn go', id: 'btnNext', onclick: nextStep, ...(G.busy ? { disabled: '' } : {}) }, G.busy ? 'O Pongo está andando…' : last ? 'Concluir missão' : 'Continuar'));
+    if (G.busy) act.append(el('button', { class: 'btn', onclick: finishWalk }, 'Pular caminhada'));
   }
   P.append(act);
   if (feedback && G.solved) setTimeout(() => { const n = $('#btnNext'); n && n.focus({ preventScroll: true }); }, 50);
@@ -1485,12 +1504,18 @@ async function boot() {
   openStart();
   // painel de fundo enquanto o menu está aberto: primeira missão como exemplo
   G.mi = 0; G.si = 0; G.ctx = (MISSIONS[0].ctx || []).slice(); G.built = []; setMap(MISSIONS[0].map); beginStep();
-  let last = performance.now();
+  let last = performance.now(), fails = 0;
   const loop = now => {
-    const dt = Math.min(.05, (now - last) / 1000); last = now; const t = now / 1000;
-    updateWalk(dt); if (Pongo.poof > 0) Pongo.poof = Math.max(0, Pongo.poof - dt * 2.5);
-    if (View.mode === '3d' && three.renderer) render3D(t, dt); else render2D(t);
-    requestAnimationFrame(loop);
+    requestAnimationFrame(loop); // agenda antes de desenhar: um erro no desenho não para o jogo
+    const raw = Math.max(0, (now - last) / 1000), dt = Math.min(.05, raw), t = now / 1000; last = now; lastFrame = performance.now();
+    updateWalk(Math.min(.25, raw)); if (Pongo.poof > 0) Pongo.poof = Math.max(0, Pongo.poof - dt * 2.5);
+    try {
+      if (View.mode === '3d' && three.renderer) render3D(t, dt); else render2D(t);
+      fails = 0;
+    } catch (e) {
+      // se o 3D falhar várias vezes seguidas neste aparelho, passa para o mapa 2D
+      if (++fails > 3 && View.mode === '3d') { console.warn('3D falhou, usando 2D', e); setView('2d'); fails = 0; }
+    }
   };
   requestAnimationFrame(loop);
 }
