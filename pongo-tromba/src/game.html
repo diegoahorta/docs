@@ -1,0 +1,1644 @@
+<title>Pongo e o Senhor Tromba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=M+PLUS+Rounded+1c:wght@500;800&family=Monoton&display=swap">
+<style>
+/* Layout: tela única de jogo — cidade (3D/2D) à esquerda, prancheta de missão à direita; empilha no celular.
+   Visual city pop anos 80 (céu cobalto, sol coral, prédios pastel) + blocos coloridos do modelo Odu Creative. */
+:root{
+  color-scheme: light;
+  --ink:#1D2547;          /* tinta azul-marinho */
+  --ink-soft:#5B6385;
+  --paper:#FFF8EA;        /* papel creme da prancheta */
+  --paper-2:#FFEFD3;
+  --line:#E9D9BC;
+  --teal:#0B8290;         /* cor da Odu Creative */
+  --teal-deep:#075E69;
+  --sky:#2C67D8;
+  --sky-2:#7ED3F4;
+  --sun:#FF7A59;
+  --neon:#FF4F9A;
+  /* legenda de cores das aulas Odu (Minna no Nihongo): preenchimento do caderno + contorno mais forte */
+  --s-fill:#D6E4F0; --s-edge:#3D78B8;   /* S — sujeito */
+  --v-fill:#E2EFDA; --v-edge:#4E9A3A;   /* V — verbo */
+  --o-fill:#FFF2CC; --o-edge:#C98F00;   /* O — objeto / complemento / lugar */
+  --a-fill:#E4D9F0; --a-edge:#7D58B5;   /* AUX — partícula */
+  --d-fill:#FDE9D9; --d-edge:#D2622F;   /* ADV — tempo / advérbio */
+  --k-fill:#ECEAF4; --k-edge:#7C7A99;   /* cinza: expressões prontas e conectores */
+  --ok:#1E9E6A; --bad:#D6453D;
+  --f-display:'Monoton', 'M PLUS Rounded 1c', system-ui, sans-serif;
+  --f-jp:'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+  --f-ui:'Baloo 2', 'M PLUS Rounded 1c', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,.blk:focus-visible{outline:3px solid var(--neon);outline-offset:2px}
+#app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr)}
+
+/* barra superior */
+.top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;padding:.45rem 16px;background:var(--teal);color:#fff;
+  border-bottom:4px solid var(--teal-deep)}
+.brand{display:flex;align-items:baseline;gap:.55rem;margin-right:auto;min-width:0}
+.brand .ko{font-family:var(--f-jp);font-size:1.35rem;letter-spacing:.02em}
+.brand .pt{font-size:.85rem;opacity:.85;white-space:nowrap}
+.tbtn{display:inline-flex;align-items:center;gap:.35rem;border:2px solid rgba(255,255,255,.55);background:rgba(255,255,255,.1);
+  border-radius:999px;padding:.15rem .7rem;font-weight:700;font-size:.85rem;color:#fff}
+.tbtn[aria-pressed="true"]{background:#fff;color:var(--teal-deep);border-color:#fff}
+.tbtn svg{width:16px;height:16px}
+.stars-total{font-weight:800;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;gap:.25rem}
+
+main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);min-height:0}
+#view{position:relative;min-height:0;overflow:hidden;background:linear-gradient(#2C67D8,#7ED3F4 70%,#FFD9A8)}
+#view canvas{display:block;width:100%;height:100%;touch-action:none}
+#c2d{position:absolute;inset:0}
+.viewhud{position:absolute;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;gap:.5rem;pointer-events:none}
+.viewhud > *{pointer-events:auto}
+.seg{display:inline-flex;background:rgba(29,37,71,.78);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:#fff;font-weight:800;padding:.2rem .8rem;border-radius:999px;font-size:.85rem}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink)}
+.hudbtn{border:0;background:rgba(29,37,71,.78);color:#fff;border-radius:999px;padding:.25rem .75rem;font-weight:700;font-size:.8rem}
+.say{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 32px);background:#fff;color:var(--ink);
+  border:3px solid var(--ink);border-radius:18px;padding:.35rem .9rem;font-family:var(--f-jp);font-size:1.15rem;box-shadow:0 4px 0 var(--ink);
+  display:flex;gap:.5rem;align-items:center}
+.say small{font-family:var(--f-ui);color:var(--ink-soft);font-size:.8rem}
+.compass{position:absolute;right:12px;bottom:14px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.9);border:2px solid var(--ink);
+  display:grid;place-items:center;font-family:var(--f-jp);font-size:.75rem}
+
+/* prancheta da missão */
+#panel > *{flex-shrink:0}
+#panel{overflow:auto;min-height:0;padding:.9rem 16px 1.4rem;background:var(--paper);border-left:4px solid var(--ink);display:flex;flex-direction:column;gap:.8rem}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--teal)}
+.mtitle{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin:0}
+.mtitle .ko{font-family:var(--f-jp);font-size:1.7rem;font-weight:400;line-height:1.1}
+.mtitle .pt{color:var(--ink-soft);font-weight:700}
+.dots{display:flex;gap:.35rem}
+.dots i{width:22px;height:6px;border-radius:3px;background:var(--line)}
+.dots i.done{background:var(--teal)} .dots i.now{background:var(--neon)}
+
+.chat{display:flex;flex-direction:column;gap:.4rem}
+.line{display:flex;gap:.5rem;align-items:flex-start}
+.av{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-jp);font-size:.85rem;color:#fff;
+  border:2px solid var(--ink);overflow:hidden;background:var(--ink-soft)}
+.av img{width:100%;height:100%;object-fit:cover}
+.bubble{background:#fff;border:2px solid var(--line);border-radius:4px 14px 14px 14px;padding:.25rem .6rem;min-width:0}
+.bubble .ko{font-family:var(--f-jp);font-size:1.1rem}
+.bubble .pt{font-size:.8rem;color:var(--ink-soft)}
+.bubble button{border:0;background:none;padding:0 0 0 .25rem;vertical-align:middle;color:var(--teal)}
+
+.task{display:grid;grid-template-columns:88px minmax(0,1fr);gap:.75rem;align-items:center;background:var(--paper-2);border:2px solid var(--ink);
+  border-radius:16px;padding:.6rem .7rem}
+.task img{width:88px;height:88px;object-fit:cover;border-radius:14px;border:2px solid var(--ink);background:#fff}
+.task p{margin:0;font-size:1.02rem;line-height:1.35;font-weight:600}
+.task .tip{display:block;margin-top:.25rem;font-size:.82rem;color:var(--teal-deep);font-weight:700}
+.scene{background:#fff;border:2px solid var(--ink);border-radius:14px;overflow:hidden}
+.scene svg{display:block;width:100%;height:auto}
+
+.trayWrap{display:flex;flex-direction:column;gap:.4rem}
+.lbl{font-size:.75rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.tray{min-height:64px;display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;padding:.6rem;border-radius:14px;background:#fff;
+  border:3px dashed var(--ink-soft)}
+.tray.ok{border-style:solid;border-color:var(--ok);background:#F0FBF5}
+.tray.bad{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ghost{border:2px dashed;border-radius:10px;padding:.35rem .7rem;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.ghost.s{border-color:var(--s-edge);color:var(--s-edge);background:color-mix(in srgb,var(--s-fill) 55%,transparent)}
+.ghost.v{border-color:var(--v-edge);color:var(--v-edge);background:color-mix(in srgb,var(--v-fill) 55%,transparent)}
+.ghost.o{border-color:var(--o-edge);color:#9A6E00;background:color-mix(in srgb,var(--o-fill) 55%,transparent)}
+.ghost.a{border-color:var(--a-edge);color:var(--a-edge);background:color-mix(in srgb,var(--a-fill) 55%,transparent)}
+.ghost.d{border-color:var(--d-edge);color:var(--d-edge);background:color-mix(in srgb,var(--d-fill) 55%,transparent)}
+.ghost.k{border-color:var(--k-edge);color:var(--k-edge)}
+.preview{font-family:var(--f-jp);font-size:1.3rem;min-height:1.6rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.preview .empty{font-family:var(--f-ui);font-size:.9rem;color:var(--ink-soft)}
+
+.bank{display:flex;flex-wrap:wrap;gap:.5rem}
+.blk{font-family:var(--f-jp);font-size:1.25rem;line-height:1.1;padding:.45rem .8rem;border-radius:11px;border:2.5px solid;cursor:pointer;
+  display:inline-flex;flex-direction:column;align-items:center;gap:.05rem;transition:transform .12s, opacity .12s;user-select:none;background:#fff}
+.blk small{font-family:var(--f-ui);font-size:.68rem;font-weight:700;opacity:.8;letter-spacing:.02em}
+.blk:hover{transform:translateY(-2px)}
+.blk:active{transform:translateY(1px)}
+.blk.s{background:var(--s-fill);border-color:var(--s-edge);box-shadow:0 3px 0 var(--s-edge)}
+.blk.v{background:var(--v-fill);border-color:var(--v-edge);box-shadow:0 3px 0 var(--v-edge)}
+.blk.o{background:var(--o-fill);border-color:var(--o-edge);box-shadow:0 3px 0 var(--o-edge)}
+.blk.d{background:var(--d-fill);border-color:var(--d-edge);box-shadow:0 3px 0 var(--d-edge)}
+.blk.k{background:var(--k-fill);border-color:var(--k-edge);box-shadow:0 3px 0 var(--k-edge)}
+.blk.a{background:var(--a-fill);border-color:var(--a-edge);box-shadow:0 3px 0 var(--a-edge);border-radius:6px 11px 11px 6px;border-left:6px double var(--a-edge);padding-left:.55rem}
+.tray .blk.a{margin-left:-.55rem}
+.blk.used{opacity:.25;pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:.35rem .8rem;font-size:.78rem;font-weight:700;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:.3rem}
+.legend i{width:14px;height:14px;border-radius:4px;border:2px solid}
+.legend .s{background:var(--s-fill);border-color:var(--s-edge)} .legend .v{background:var(--v-fill);border-color:var(--v-edge)}
+.legend .o{background:var(--o-fill);border-color:var(--o-edge)} .legend .a{background:var(--a-fill);border-color:var(--a-edge)}
+.legend .d{background:var(--d-fill);border-color:var(--d-edge)} .legend .k{background:var(--k-fill);border-color:var(--k-edge)}
+
+.actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.btn{border:3px solid var(--ink);border-radius:12px;padding:.4rem 1rem;font-weight:800;background:#fff;box-shadow:0 3px 0 var(--ink);display:inline-flex;align-items:center;gap:.4rem}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.btn.primary{background:var(--neon);color:#fff}
+.btn.go{background:var(--teal);color:#fff}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn svg{width:18px;height:18px}
+.feedback{border-radius:12px;padding:.55rem .75rem;font-weight:700;line-height:1.35}
+.feedback.ok{background:#E3F7EC;color:#0E6B45;border:2px solid var(--ok)}
+.feedback.bad{background:#FDEBE9;color:#8E2420;border:2px solid var(--bad)}
+.feedback .ko{font-family:var(--f-jp);font-size:1.15rem;font-weight:400}
+
+/* sobreposições */
+.overlay{position:fixed;inset:0;z-index:20;background:rgba(18,24,52,.62);display:grid;place-items:center;padding:16px;overflow:auto}
+.card{background:var(--paper);border:4px solid var(--ink);border-radius:22px;box-shadow:0 8px 0 var(--ink);width:min(920px,100%);max-height:100%;overflow:auto;
+  padding:1.2rem 1.2rem 1.4rem}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:1rem;align-items:center;
+  background:linear-gradient(180deg,#2C67D8 0%,#58A9EE 55%,#FFC59A 100%);border-radius:16px;padding:1rem 1.2rem;color:#fff;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:var(--sun);right:120px;bottom:-110px;opacity:.9}
+.hero > *{position:relative;z-index:1}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(2rem,6vw,3.4rem);margin:0;line-height:1;letter-spacing:.04em;text-wrap:balance;
+  text-shadow:0 3px 0 rgba(29,37,71,.35)}
+.hero .kosub{font-family:var(--f-jp);font-size:1.5rem;margin:.35rem 0 .2rem}
+.hero p{margin:.2rem 0 0;max-width:46ch;font-weight:600;line-height:1.4}
+.hero img{width:200px;filter:drop-shadow(0 6px 0 rgba(29,37,71,.35))}
+.startrow{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0 .6rem}
+.chapters{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.8rem}
+.chap{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:.7rem .8rem;display:flex;flex-direction:column;gap:.45rem;min-width:0}
+.chap h3{margin:0;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.chap .ko{font-family:var(--f-jp);font-size:1.25rem}
+.mbtn{display:grid;grid-template-columns:2.4rem minmax(0,1fr) auto;align-items:center;gap:.5rem;text-align:left;border:2px solid var(--line);
+  background:var(--paper);border-radius:10px;padding:.3rem .5rem}
+.mbtn:hover{border-color:var(--ink)}
+.mbtn b{font-variant-numeric:tabular-nums;color:var(--teal-deep)}
+.mbtn .t{min-width:0}
+.mbtn .t span{display:block;font-family:var(--f-jp);font-size:1rem;line-height:1.1}
+.mbtn .t small{display:block;color:var(--ink-soft);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbtn[disabled]{opacity:.45;cursor:not-allowed}
+.st{color:#F2A900;letter-spacing:.05em;font-size:.95rem;white-space:nowrap}
+.st .off{color:var(--line)}
+.done-card{text-align:center;width:min(520px,100%)}
+.done-card img{width:150px;height:150px;border-radius:50%;object-fit:cover;border:4px solid var(--ink)}
+.bigstars{font-size:2.6rem;color:#F2A900;letter-spacing:.1em}
+.learned{text-align:left;display:flex;flex-direction:column;gap:.3rem;margin:.6rem 0 1rem}
+.learned div{background:#fff;border:2px solid var(--line);border-radius:10px;padding:.25rem .6rem;display:flex;justify-content:space-between;gap:.5rem;align-items:center}
+.learned .ko{font-family:var(--f-jp);font-size:1.1rem}
+.vocab{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem}
+.vocab section{min-width:0}
+.vocab h3{margin:.2rem 0 .4rem;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.vocab button{display:flex;justify-content:space-between;width:100%;gap:.5rem;border:0;border-bottom:1px dashed var(--line);background:none;padding:.3rem .1rem;text-align:left}
+.vocab button .ko{font-family:var(--f-jp);font-size:1.1rem}
+.vocab button .pt{color:var(--ink-soft);font-size:.85rem}
+.closex{float:right;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:.1rem .7rem;font-weight:800}
+.note{font-size:.8rem;color:var(--ink-soft);margin:.6rem 0 0}
+
+@media (max-width:860px){
+  main{grid-template-columns:1fr;grid-template-rows:minmax(0,42%) minmax(0,58%)}
+  #panel{border-left:0;border-top:4px solid var(--ink)}
+  .brand .pt{display:none}
+  .hero{grid-template-columns:minmax(0,1fr) 110px}
+  .hero img{width:110px}
+  .task{grid-template-columns:64px minmax(0,1fr)}
+  .task img{width:64px;height:64px}
+}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+
+<div id="app">
+  <header class="top">
+    <div class="brand"><span class="ko">トロンバさんを さがせ!</span><span class="pt">Pongo e o Senhor Tromba · Japonês com a Odu Creative</span></div>
+    <span class="stars-total" title="Estrelas conquistadas"><svg viewBox="0 0 24 24" width="18" height="18" fill="#FFD84D" stroke="#1D2547" stroke-width="1.5"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.3L12 17.1l-5.7 3.1 1.2-6.3L2.8 9.5l6.4-.8z"/></svg><span id="starCount">0</span></span>
+    <button class="tbtn" id="btnMissions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Missões</button>
+    <button class="tbtn" id="btnVocab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11"/></svg>Palavras</button>
+    <button class="tbtn" id="btnPT" aria-pressed="true" title="Mostrar a tradução nas placas">PT</button>
+    <button class="tbtn" id="btnMusic" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Música</span></button>
+  </header>
+  <main>
+    <section id="view" aria-label="Cidade">
+      <canvas id="c3d"></canvas>
+      <canvas id="c2d" hidden></canvas>
+      <div class="viewhud">
+        <div class="seg" role="group" aria-label="Visão"><button id="v3" aria-pressed="true">3D</button><button id="v2" aria-pressed="false">2D</button></div>
+        <button class="hudbtn" id="btnRecenter">Recentrar</button>
+      </div>
+      <div class="say" id="say" hidden></div>
+      <div class="compass" id="compass" title="Norte (北, きた) fica para cima no mapa">北 ↑</div>
+    </section>
+    <section id="panel" aria-live="polite"></section>
+  </main>
+</div>
+
+<div class="overlay" id="startOv">
+  <div class="card">
+    <div class="hero">
+      <div>
+        <h1>TROMBA</h1>
+        <div class="kosub">トロンバさんは どこに いますか</div>
+        <p>O Senhor Tromba, o elefante de pelúcia e melhor amigo do Pongo, sumiu! Monte frases em japonês com os blocos coloridos, leia as pistas das testemunhas e siga o Tromba pela casa, pela estação, pela loja e pelas ruas até encontrá-lo.</p>
+      </div>
+      <img id="heroImg" alt="Pongo e o Senhor Tromba, melhores amigos">
+    </div>
+    <div class="startrow">
+      <button class="btn primary" id="btnPlay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>Jogar com música</button>
+      <button class="btn" id="btnPlayQuiet">Jogar sem som</button>
+      <button class="btn go" id="btnFree">Passeio livre</button>
+    </div>
+    <div class="legend" style="margin-bottom:.8rem">
+      <span><i class="s"></i>S: sujeito</span>
+      <span><i class="v"></i>V: verbo</span>
+      <span><i class="o"></i>O: objeto / lugar</span>
+      <span><i class="a"></i>AUX: partícula</span>
+      <span><i class="d"></i>ADV: tempo</span>
+      <span><i class="k"></i>expressões prontas</span>
+    </div>
+    <div class="chapters" id="chapters"></div>
+    <p class="note">Baseado nas aulas Odu Creative das Lições 2 a 6 do Minna no Nihongo Shokyu I (ここ・どこ, ～ます・～ました, へ・を・で) e nas lições 8 (いい へやですね) e 13 (どうやって いきますか) do livro. <button class="closex" id="btnUnlock" style="float:none;font-size:.75rem">Modo professor: liberar todas</button></p>
+  </div>
+</div>
+
+<div class="overlay" id="doneOv" hidden><div class="card done-card" id="doneCard"></div></div>
+<div class="overlay" id="vocabOv" hidden><div class="card" id="vocabCard"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+const IMG = /*__ASSETS__*/{};
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v; else if (k === 'html') e.innerHTML = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids) if (k != null) e.append(k);
+  return e;
+};
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('pongo:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('pongo:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ============================================================
+   MAPAS — casa nova (livro L8, いい へやですね) e cidade (livro L13, どうやって いきますか)
+   Norte = para cima/fundo. Cada lote tem a "porta" na rua de baixo (sul).
+   ============================================================ */
+const S = 12, ROAD = 3.4;
+const MAPS = {
+  house: { id: 'house', cols: 3, rows: 2, start: 'd:げんかん', lots: [
+    { k: 'へや', pt: 'quarto', c: 0, r: 0, type: 'room' },
+    { k: 'だいどころ', pt: 'cozinha', c: 1, r: 0, type: 'kitchen' },
+    { k: 'おふろ', pt: 'banheira (ofurô)', c: 2, r: 0, type: 'bath' },
+    { k: 'げんかん', pt: 'entrada', c: 0, r: 1, type: 'genkan' },
+    { k: 'トイレ', pt: 'banheiro', c: 1, r: 1, type: 'toilet' },
+    { k: 'にわ', pt: 'jardim', c: 2, r: 1, type: 'garden' } ] },
+  city: { id: 'city', cols: 4, rows: 4, start: 'd:うち', lots: [
+    { k: 'ゆうびんきょく', pt: 'correio', c: 0, r: 0, type: 'post' },
+    { k: 'ぎんこう', pt: 'banco', c: 1, r: 0, type: 'bank' },
+    { k: 'びょういん', pt: 'hospital', c: 2, r: 0, type: 'hospital' },
+    { k: 'うち', pt: 'casa', c: 3, r: 0, type: 'house' },
+    { k: 'がっこう', pt: 'escola', c: 0, r: 1, type: 'school' },
+    { k: 'えき', pt: 'estação', c: 1, r: 1, type: 'station' },
+    { k: 'デパート', pt: 'loja de departamentos', c: 2, r: 1, type: 'dept' },
+    { k: 'かいしゃ', pt: 'empresa', c: 3, r: 1, type: 'office' },
+    { k: 'こうえん', pt: 'parque', c: 0, r: 2, type: 'park' },
+    { k: 'としょかん', pt: 'biblioteca', c: 1, r: 2, type: 'library' },
+    { k: 'しょくどう', pt: 'restaurante', c: 2, r: 2, type: 'restaurant' },
+    { k: 'だいがく', pt: 'universidade', c: 3, r: 2, type: 'univ' },
+    { k: 'バスてい', pt: 'ponto de ônibus', c: 0, r: 3, type: 'bus' },
+    { k: 'タクシーのりば', pt: 'ponto de táxi', c: 1, r: 3, type: 'taxi' },
+    { k: 'ちかてつ', pt: 'metrô', c: 2, r: 3, type: 'subway' },
+    { k: 'くうこう', pt: 'aeroporto', c: 3, r: 3, type: 'airport' } ] }
+};
+for (const m of Object.values(MAPS)) { m.byK = {}; for (const l of m.lots) m.byK[l.k] = l; }
+const ix = (m, i) => (i - m.cols / 2) * S, jz = (m, j) => (j - m.rows / 2) * S;
+const lotCenter = (m, l) => ({ x: ix(m, l.c + .5), z: jz(m, l.r + .5) });
+function nodePos(m, id) {
+  if (id.startsWith('d:')) { const l = m.byK[id.slice(2)]; return { x: ix(m, l.c + .5), z: jz(m, l.r + 1) }; }
+  const [i, j] = id.split(',').map(Number); return { x: ix(m, i), z: jz(m, j) };
+}
+function neighbors(m, id) {
+  if (id.startsWith('d:')) { const l = m.byK[id.slice(2)]; return [`${l.c},${l.r + 1}`, `${l.c + 1},${l.r + 1}`]; }
+  const [i, j] = id.split(',').map(Number), out = [];
+  for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    const a = i + di, b = j + dj; if (a >= 0 && b >= 0 && a <= m.cols && b <= m.rows) out.push(`${a},${b}`);
+  }
+  for (const l of m.lots) if (l.r + 1 === j && (l.c === i || l.c + 1 === i)) out.push('d:' + l.k);
+  return out;
+}
+function bfs(m, from, to) {
+  const prev = { [from]: null }, q = [from];
+  while (q.length) {
+    const n = q.shift(); if (n === to) break;
+    for (const nb of neighbors(m, n)) if (!(nb in prev) && (!nb.startsWith('d:') || nb === to)) { prev[nb] = n; q.push(nb); }
+  }
+  if (!(to in prev)) return [from];
+  const path = []; for (let n = to; n != null; n = prev[n]) path.unshift(n); return path;
+}
+
+/* ============================================================
+   MISSÕES — a caça ao Senhor Tromba. Mesma gramática das aulas Odu (Minna no Nihongo L3, L5, L6)
+   e dos livros (L8, L13), com foco em います / いません (seres vivos) e nas pistas de lugar.
+   Blocos: "s:" S sujeito · "v:" V verbo · "o:" O objeto/lugar · "a:" AUX partícula · "d:" ADV tempo · "k:" expressão pronta
+   Tipos de etapa: frase (padrão) · "route" (instruções de caminho) · "find" (ler a pista e tocar no lugar certo)
+   ============================================================ */
+const CHAPTERS = [
+  { n: 1, ko: 'いません!', pt: 'O Tromba sumiu' },
+  { n: 2, ko: 'えきと こうえん', pt: 'Pistas na cidade' },
+  { n: 3, ko: 'なんじ? なに?', pt: 'Testemunhas' },
+  { n: 4, ko: 'おいかけっこ', pt: 'A perseguição' },
+  { n: 5, ko: 'みつけた!', pt: 'Achei!' }
+];
+const MISSIONS = [
+  { id: '1-1', ch: 1, map: 'house', start: 'd:へや', ko: 'トロンバさんが いません', pt: 'Cadê o Senhor Tromba?',
+    steps: [
+      { who: 'ポンゴ', face: 'triste', prompt: 'O Pongo acorda… e o Senhor Tromba, seu elefante de pelúcia, sumiu! Diga: “O Senhor Tromba não está.”',
+        bank: ['s:トロンバさん', 'a:が', 'a:を', 'v:いません', 'v:ありません'], ans: ['トロンバさんが いません'], tr: 'O Senhor Tromba não está.', tip: 'O Tromba é da família: seres vivos usam います / いません' },
+      { who: 'ポンゴ', face: 'curioso', prompt: 'Pergunte: “Onde está o Senhor Tromba?”',
+        bank: ['s:トロンバさん', 'a:は', 'o:どこ', 'a:に', 'v:いますか', 'v:ありますか'], ans: ['トロンバさんは どこに いますか'], tr: 'Onde está o Senhor Tromba?', tip: 'どこに いますか = onde está?' },
+      { who: 'ポンゴ', face: 'atento', prompt: 'Procure na cozinha: “Vou à cozinha.”',
+        bank: ['o:だいどころ', 'a:へ', 'a:を', 'v:いきます'], ans: ['だいどころへ いきます'], tr: 'Vou à cozinha.', go: ['だいどころ'] },
+      { who: 'ポンゴ', face: 'surpreso', scene: 'footprints', prompt: 'Ele não está aqui, mas há pegadas no chão! Diga: “Há pegadas.”',
+        bank: ['o:あしあと', 'a:が', 'a:を', 'v:あります', 'v:います'], ans: ['あしあとが あります'], tr: 'Há pegadas.', tip: 'Coisas usam あります' },
+      { who: 'ポンゴ', face: 'brincalhao', prompt: 'As pegadas vão até o jardim: “Vou ao jardim.”',
+        bank: ['o:にわ', 'a:へ', 'v:いきます', 'v:きます'], ans: ['にわへ いきます'], tr: 'Vou ao jardim.', go: ['にわ'] }
+    ] },
+  { id: '1-2', ch: 1, map: 'house', start: 'd:にわ', ko: 'てがみが あります', pt: 'Um bilhete no jardim',
+    steps: [
+      { who: 'ポンゴ', face: 'atento', scene: 'letter', prompt: 'No jardim há um bilhete. Diga: “Há uma carta em cima da mesa.”',
+        bank: ['o:テーブルの うえ', 'o:テーブルの した', 'a:に', 's:てがみ', 'a:が', 'v:あります', 'v:います'], ans: ['テーブルの うえに てがみが あります'], tr: 'Há uma carta em cima da mesa.', tip: 'lugar + に + coisa + が + あります' },
+      { who: 'ポンゴ', face: 'pensativo', pre: [{ who: 'トロンバ', ko: 'えきへ いきます。', pt: 'Vou à estação. (o bilhete)' }],
+        prompt: 'O bilhete diz えきへ いきます. Conte o que aconteceu: “O Senhor Tromba foi à estação.”',
+        bank: ['s:トロンバさん', 'a:は', 'o:えき', 'a:へ', 'v:いきました', 'v:いきます'], ans: ['トロンバさんは えきへ いきました'], tr: 'O Senhor Tromba foi à estação.', tip: 'Ação que já aconteceu: ～ました' },
+      { who: 'ポンゴ', face: 'empolgado', prompt: '“Eu também vou à estação!”',
+        bank: ['s:わたし', 'a:も', 'a:は', 'o:えき', 'a:へ', 'v:いきます'], ans: ['わたしも えきへ いきます'], tr: 'Eu também vou à estação!', tip: 'も = também (entra no lugar de は)' }
+    ] },
+
+  { id: '2-1', ch: 2, map: 'city', start: 'd:うち', ko: 'えきで ききます', pt: 'Perguntando na estação',
+    steps: [
+      { who: 'ポンゴ', face: 'feliz', prompt: 'O Pongo sai de casa. “Vou à estação.”',
+        bank: ['o:えき', 'a:へ', 'a:で', 'v:いきます'], ans: ['えきへ いきます'], tr: 'Vou à estação.', go: ['えき'] },
+      { who: 'ポンゴ', face: 'curioso', prompt: 'Pergunte ao funcionário da estação: “Com licença. O senhor viu um elefante?”',
+        bank: ['k:すみません。', 'o:ぞう', 'a:を', 'a:が', 'v:みましたか', 'v:みますか'], ans: ['すみません。ぞうを みましたか'], tr: 'Com licença. O senhor viu um elefante?', tip: 'みます = ver · みましたか = viu?' },
+      { who: 'えきいん', face: 'atento', prompt: 'O funcionário responde: “Sim, vi.”',
+        bank: ['k:はい、', 'k:いいえ、', 'v:みました', 'v:みます'], ans: ['はい、みました'], tr: 'Sim, vi.' },
+      { who: 'えきいん', face: 'surpreso', prompt: '“Ele foi ao parque de ônibus.”',
+        bank: ['o:バス', 'a:で', 'o:こうえん', 'a:へ', 'a:を', 'v:いきました', 'v:いきます'], ans: ['バスで こうえんへ いきました'], tr: 'Ele foi ao parque de ônibus.', tip: 'meio de transporte + で · destino + へ' }
+    ] },
+  { id: '2-2', ch: 2, map: 'city', start: 'd:えき', ko: 'こうえんを さがします', pt: 'Procurando no parque',
+    steps: [
+      { who: 'ポンゴ', face: 'empolgado', prompt: '“Eu vou ao parque de ônibus.”',
+        bank: ['s:わたし', 'a:は', 'o:バス', 'a:で', 'o:こうえん', 'a:へ', 'v:いきます'], ans: ['わたしは バスで こうえんへ いきます'], tr: 'Eu vou ao parque de ônibus.', go: ['バスてい', 'こうえん'] },
+      { who: 'ポンゴ', face: 'pensativo', scene: 'park', prompt: 'No parque, nada do Tromba. Diga: “Estou procurando o Senhor Tromba.”',
+        bank: ['s:トロンバさん', 'a:を', 'a:が', 'v:さがします', 'v:みます'], ans: ['トロンバさんを さがします'], tr: 'Procuro o Senhor Tromba.', tip: 'さがします = procurar · objeto + を' },
+      { type: 'find', who: 'こども', face: 'curioso', answer: 'としょかん', flee: 'デパート',
+        clue: { ko: 'ぞうは えきの まえに いましたよ。', pt: 'O elefante estava em frente à estação.' },
+        prompt: 'Uma criança viu o Tromba! Leia a pista e toque no lugar certo, no mapa ou na lista.',
+        tip: 'まえ = em frente (no mapa, para baixo, ao sul)' }
+    ] },
+
+  { id: '3-1', ch: 3, map: 'city', start: 'd:としょかん', ko: 'なんじに きましたか', pt: 'Na biblioteca: a que horas?',
+    steps: [
+      { who: 'ポンゴ', face: 'curioso', prompt: 'O Tromba fugiu! Pergunte à bibliotecária: “A que horas o Senhor Tromba veio?”',
+        bank: ['s:トロンバさん', 'a:は', 'd:なんじ', 'a:に', 'v:きましたか', 'v:きますか'], ans: ['トロンバさんは なんじに きましたか'], tr: 'A que horas o Senhor Tromba veio?', tip: 'なんじに = a que horas' },
+      { who: 'としょかんいん', face: 'atento', prompt: 'A bibliotecária responde: “Veio às 10 horas.”',
+        bank: ['d:10時', 'a:に', 'a:を', 'v:きました', 'v:きます'], ans: ['10時に きました'], tr: 'Veio às 10 horas.', tip: 'Hora exata + に' },
+      { who: 'としょかんいん', face: 'pensativo', prompt: '“Ele leu um livro.”',
+        bank: ['o:ほん', 'a:を', 'a:が', 'v:よみました', 'v:よみます'], ans: ['ほんを よみました'], tr: 'Ele leu um livro.', tip: 'よみます = ler · objeto + を' },
+      { who: 'としょかんいん', face: 'surpreso', prompt: '“Depois, foi à loja de departamentos.”',
+        bank: ['k:それから', 'o:デパート', 'a:へ', 'a:で', 'v:いきました'], ans: ['それから デパートへ いきました'], tr: 'Depois, foi à loja de departamentos.', tip: 'それから = depois' },
+      { type: 'find', who: 'としょかんいん', face: 'atento', answer: 'デパート', flee: 'くうこう',
+        clue: { ko: 'デパートは えきの みぎに あります。', pt: 'A loja de departamentos fica à direita da estação.' },
+        prompt: 'Onde fica a loja de departamentos? Leia a pista e toque no lugar.', tip: 'みぎ = direita · ひだり = esquerda' }
+    ] },
+  { id: '3-2', ch: 3, map: 'city', start: 'd:デパート', ko: 'なにを かいましたか', pt: 'Na loja: o que ele comprou?',
+    steps: [
+      { who: 'ポンゴ', face: 'curioso', prompt: 'Ele fugiu de novo! Pergunte à vendedora: “O que o Senhor Tromba comprou?”',
+        bank: ['s:トロンバさん', 'a:は', 'o:なに', 'a:を', 'a:が', 'v:かいましたか'], ans: ['トロンバさんは なにを かいましたか'], tr: 'O que o Senhor Tromba comprou?', tip: 'かいます = comprar · なにを = o quê' },
+      { who: 'てんいん', face: 'piscando', prompt: 'A vendedora responde: “Comprou um chapéu.”',
+        bank: ['o:ぼうし', 'a:を', 'a:が', 'v:かいました', 'v:かいます'], ans: ['ぼうしを かいました'], tr: 'Comprou um chapéu.' },
+      { who: 'てんいん', face: 'assustado', prompt: '“Depois, foi ao aeroporto de táxi.”',
+        bank: ['k:それから', 'o:タクシー', 'a:で', 'o:くうこう', 'a:へ', 'v:いきました'], ans: ['それから タクシーで くうこうへ いきました'], tr: 'Depois, foi ao aeroporto de táxi.' },
+      { who: 'ポンゴ', face: 'empolgado', prompt: '“Eu também vou de táxi!”',
+        bank: ['s:わたし', 'a:も', 'a:は', 'o:タクシー', 'a:で', 'v:いきます'], ans: ['わたしも タクシーで いきます'], tr: 'Eu também vou de táxi!', go: ['タクシーのりば', 'くうこう'] }
+    ] },
+
+  { id: '4-1', ch: 4, map: 'city', start: 'd:くうこう', ko: 'あそこに います!', pt: 'Ali está ele!',
+    steps: [
+      { who: 'ポンゴ', face: 'surpreso', trombaAt: 'しょくどう', hl: ['しょくどう'], prompt: 'No aeroporto, o Pongo vê o Tromba de chapéu novo perto do restaurante! Diga: “Ali está o Senhor Tromba!”',
+        bank: ['o:あそこ', 'a:に', 's:トロンバさん', 'a:が', 'v:います', 'v:あります'], ans: ['あそこに トロンバさんが います'], tr: 'Ali está o Senhor Tromba!', tip: 'lugar + に + ser vivo + が + います' },
+      { type: 'route', who: 'ポンゴ', face: 'atento', start: { i: 1, j: 4, h: 0 }, target: 'しょくどう', opt: 2, trombaAt: 'しょくどう', flee: 'ゆうびんきょく',
+        prompt: 'O Pongo pegou o metrô e saiu perto do ponto de táxi. Guie-o até a しょくどう (restaurante), onde está o Tromba. Cada instrução anda um quarteirão.',
+        tip: 'まっすぐ いってください = siga reto · みぎへ まがってください = vire à direita · ひだりへ まがってください = vire à esquerda' }
+    ] },
+  { id: '4-2', ch: 4, map: 'city', ko: 'ゆうびんきょくは どこですか', pt: 'Rumo ao correio', startRoute: { i: 3, j: 3, h: 3 },
+    steps: [
+      { who: 'ポンゴ', face: 'curioso', trombaAt: 'ゆうびんきょく', prompt: 'O Tromba correu para o correio! Pergunte ao Sr. Miller: “Com licença. Onde fica o correio?”',
+        bank: ['k:すみません。', 's:ゆうびんきょく', 'a:は', 'a:を', 'o:どこ', 'v:ですか'], ans: ['すみません。ゆうびんきょくは どこですか'], tr: 'Com licença. Onde fica o correio?' },
+      { type: 'route', who: 'ミラー', face: 'pensativo', start: { i: 3, j: 3, h: 3 }, target: 'ゆうびんきょく', opt: 4, trombaAt: 'ゆうびんきょく', flee: 'うち',
+        prompt: 'Agora você é o Sr. Miller e explica o caminho. O Pongo está olhando para a esquerda (oeste, 西): a direita e a esquerda são as dele!',
+        tip: 'Olhe a seta rosa antes de escolher みぎ ou ひだり.' },
+      { who: 'ポンゴ', face: 'carinhoso', prompt: '“Muito obrigado!”',
+        bank: ['k:ありがとうございます', 'k:すみません', 'k:いただきます'], ans: ['ありがとうございます'], tr: 'Muito obrigado!' }
+    ] },
+
+  { id: '5-1', ch: 5, map: 'city', start: 'd:ゆうびんきょく', ko: 'みつけました!', pt: 'Achei você!',
+    steps: [
+      { type: 'find', who: 'ゆうびんきょくいん', face: 'pensativo', answer: 'うち',
+        clue: { ko: 'トロンバさんは びょういんの みぎへ いきましたよ。', pt: 'O Senhor Tromba foi para a direita do hospital.' },
+        prompt: 'O funcionário do correio viu para onde o Tromba foi. Leia a pista e toque no lugar.', tip: 'Ache a びょういん (hospital) e olhe o lugar à direita (みぎ).' },
+      { who: 'ポンゴ', face: 'curioso', scene: 'trombabox', prompt: 'Ele voltou para casa e se escondeu! Olhe a cena e diga onde ele está.',
+        bank: ['s:トロンバさん', 'a:は', 'o:はこの なか', 'o:はこの うえ', 'a:に', 'v:います', 'v:あります'], ans: ['トロンバさんは はこの なかに います'], tr: 'O Senhor Tromba está dentro da caixa.', tip: 'なか = dentro · ser vivo → います' },
+      { who: 'ポンゴ', face: 't_feliz', follow: true, prompt: '“Oba! Achei!”',
+        bank: ['k:やった!', 'v:みつけました', 'v:みつけます'], ans: ['やった! みつけました'], tr: 'Oba! Achei!', tip: 'みつけます = encontrar · みつけました = encontrei' },
+      { who: 'ポンゴ', face: 't_brincando', prompt: '“Vamos juntos ao parque.”',
+        bank: ['d:いっしょに', 'o:こうえん', 'a:へ', 'a:を', 'v:いきます'], ans: ['いっしょに こうえんへ いきます'], tr: 'Vamos juntos ao parque.', go: ['こうえん'], tip: 'いっしょに = juntos' }
+    ] }
+];
+const ROUTE_BANK = ['d:ここから', 'd:まっすぐ', 'o:みぎ', 'o:ひだり', 'a:へ', 'v:いってください', 'v:まがってください', 'k:そして'];
+
+/* ---------- tradução rápida dos blocos (aparece embaixo do japonês) ---------- */
+const GLOSS = {
+  'トロンバさん': 'Senhor Tromba', 'いません': 'não está (ser vivo)', 'ありません': 'não há (coisa)', 'いますか': 'está? (ser vivo)', 'ありますか': 'há? (coisa)',
+  'あしあと': 'pegadas', 'てがみ': 'carta / bilhete', 'も': 'também', 'ぞう': 'elefante', 'みましたか': 'viu?', 'みますか': 'vê?', 'みました': 'vi', 'みます': 'vejo',
+  'いきました': 'foi', 'さがします': 'procuro', 'なんじ': 'que horas', 'きましたか': 'veio?', 'きますか': 'vem?', 'きました': 'veio', '10時': '10 horas',
+  'ほん': 'livro', 'よみました': 'leu', 'よみます': 'lê', 'それから': 'depois', 'なに': 'o quê', 'かいましたか': 'comprou?', 'ぼうし': 'chapéu',
+  'かいました': 'comprou', 'かいます': 'compra', 'あそこ': 'ali', 'やった!': 'oba!', 'みつけました': 'encontrei', 'みつけます': 'encontro', 'いっしょに': 'juntos',
+  'はこの なか': 'dentro da caixa', 'はこの うえ': 'em cima da caixa',
+  'ここ': 'aqui', 'そこ': 'aí', 'あそこ': 'ali', 'どこ': 'onde', 'は': 'tópico', 'を': 'objeto', 'へ': 'para (destino)', 'に': 'em / às / para',
+  'で': 'de / em (meio)', 'が': 'sujeito', 'と': 'com', 'まで': 'até', 'です': 'é', 'ですか': 'é?', 'ですね': 'é, né?', 'わたし': 'eu', 'ポンゴ': 'Pongo',
+  'ミラーさん': 'Sr. Miller', 'ともだち': 'amigo(a)', 'いぬ': 'cachorro', 'あの たてもの': 'aquele prédio', 'わたしの うち': 'minha casa',
+  'いきます': 'vou', 'きます': 'venho', 'かえります': 'volto', 'おきます': 'acordo', 'やすみます': 'descanso', 'やすみました': 'descansei',
+  'べんきょうします': 'estudo', 'かえりました': 'voltei', 'かきました': 'escrevi', 'かきませんでした': 'não escrevi', 'たべます': 'como', 'たべました': 'comi',
+  'いきました': 'fui', 'のります': 'pego / embarco', 'あります': 'há (coisa)', 'います': 'há (ser vivo)', 'おねがいします': 'por favor',
+  'まいあさ': 'toda manhã', 'まいばん': 'toda noite', 'にちようび': 'domingo', 'あした': 'amanhã', 'きのう': 'ontem', '6時': '6 horas', 'ひとり': 'uma pessoa',
+  'にほんご': 'japonês', 'てがみ': 'carta', 'パン': 'pão', 'バス': 'ônibus', 'でんしゃ': 'trem', 'ちかてつ': 'metrô', 'タクシー': 'táxi',
+  'カップ': 'xícara', 'ほん': 'livro', 'にんぎょう': 'boneca', 'テーブルの うえ': 'em cima da mesa', 'テーブルの した': 'debaixo da mesa',
+  'はこの なか': 'dentro da caixa', 'はこの うえ': 'em cima da caixa', 'いすの よこ': 'ao lado da cadeira', 'いすの うえ': 'em cima da cadeira',
+  'いい': 'bom', 'へや': 'quarto', 'とおい': 'longe', 'ちかい': 'perto', 'べんり': 'prático', 'ふべん': 'pouco prático', 'たかい': 'caro', 'やすい': 'barato',
+  'いいえ、': 'não', 'はい、': 'sim', 'でも': 'mas', 'すみません。': 'com licença', 'すみません': 'com licença / desculpe', 'ありがとうございます': 'muito obrigado',
+  'どういたしまして': 'de nada', 'いただきます': 'bom apetite', 'おはようございます': 'bom dia', 'じゃあ、': 'então', 'また': 'de novo / até',
+  'ここから': 'daqui', 'まっすぐ': 'reto', 'みぎ': 'direita', 'ひだり': 'esquerda', 'いってください': 'vá, por favor', 'まがってください': 'vire, por favor', 'そして': 'e então'
+};
+function glossOf(t) {
+  if (GLOSS[t]) return GLOSS[t];
+  for (const m of Object.values(MAPS)) for (const l of m.lots) if (t === l.k) return l.pt;
+  return '';
+}
+
+/* ============================================================
+   ÁUDIO — trilha city pop anos 80 gerada ao vivo (Rhodes FM, baixo funk,
+   bateria eletrônica com reverb "gated", pad e sininhos) + efeitos + voz coreana
+   ============================================================ */
+const Audio = {
+  ctx: null, master: null, music: null, sfx: null, rev: null, on: false, timer: null,
+  init() {
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const c = this.ctx = new AC();
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(c.destination);
+    this.master = c.createGain(); this.master.gain.value = .9; this.master.connect(comp);
+    this.music = c.createGain(); this.music.gain.value = 0; this.music.connect(this.master);
+    this.sfx = c.createGain(); this.sfx.gain.value = .7; this.sfx.connect(this.master);
+    // reverb
+    const len = c.sampleRate * 2.2, ir = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+    this.rev = c.createConvolver(); this.rev.buffer = ir; const rg = c.createGain(); rg.gain.value = .32; this.rev.connect(rg); rg.connect(this.music);
+    // chorus para o piano elétrico
+    this.ep = c.createGain(); this.ep.gain.value = .55;
+    const dl = c.createDelay(); dl.delayTime.value = .018; const lfo = c.createOscillator(), lg = c.createGain();
+    lfo.frequency.value = .9; lg.gain.value = .004; lfo.connect(lg); lg.connect(dl.delayTime); lfo.start();
+    this.ep.connect(this.music); this.ep.connect(dl); dl.connect(this.music); this.ep.connect(this.rev);
+    this.noise = c.createBuffer(1, c.sampleRate, c.sampleRate); const nd = this.noise.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+  },
+  mtof: n => 440 * Math.pow(2, (n - 69) / 12),
+  // acordes estilo city pop (C maior com 7ª/9ª/13ª)
+  CH: { Fmaj9: [41, [57, 60, 64, 67]], Em7: [40, [55, 59, 62, 64]], A7: [45, [55, 61, 64, 67]], Dm9: [38, [53, 57, 60, 64]],
+        G13: [43, [53, 57, 59, 64]], Cmaj9: [36, [55, 59, 62, 64]], Bb9: [46, [56, 60, 62, 65]] },
+  PROG: [['Fmaj9'], ['Em7', 'A7'], ['Dm9'], ['G13'], ['Fmaj9'], ['Em7', 'A7'], ['Dm9', 'G13'], ['Cmaj9'],
+         ['Fmaj9'], ['Em7', 'A7'], ['Dm9'], ['G13', 'Bb9'], ['Fmaj9'], ['Em7', 'A7'], ['Dm9', 'G13'], ['Cmaj9']],
+  bpm: 104,
+  start() {
+    this.init(); if (!this.ctx) return; this.ctx.resume();
+    this.on = true; const now = this.ctx.currentTime;
+    this.music.gain.cancelScheduledValues(now); this.music.gain.setTargetAtTime(.5, now, .4);
+    if (this.timer) return;
+    this.step = 0; this.next = now + .1;
+    this.timer = setInterval(() => this.sched(), 25);
+  },
+  stop() {
+    this.on = false; if (!this.ctx) return; const now = this.ctx.currentTime;
+    this.music.gain.setTargetAtTime(0, now, .25);
+    setTimeout(() => { if (!this.on && this.timer) { clearInterval(this.timer); this.timer = null; } }, 1200);
+  },
+  duck(v) { if (this.ctx && this.on) this.music.gain.setTargetAtTime(v, this.ctx.currentTime, .15); },
+  sched() {
+    const c = this.ctx, st = 60 / this.bpm / 4;
+    while (this.next < c.currentTime + .15) { this.play(this.step, this.next, st); this.next += st; this.step++; }
+  },
+  play(step, t, st) {
+    const bar = Math.floor(step / 16) % this.PROG.length, s = step % 16, chords = this.PROG[bar];
+    const name = chords.length > 1 && s >= 8 ? chords[1] : chords[0], [root, voicing] = this.CH[name];
+    const swing = s % 2 ? st * .08 : 0; t += swing;
+    // bateria
+    if ([0, 7, 10].includes(s) || (s === 14 && bar % 2)) this.kick(t);
+    if (s === 4 || s === 12) this.snare(t, 1);
+    if (s === 15 && bar % 4 === 3) this.snare(t, .4);
+    if (s % 2 === 0) this.hat(t, s % 4 === 2 ? .13 : .08, .035);
+    else this.hat(t, .035, .02);
+    if (s === 14) this.hat(t, .07, .18);
+    // baixo funk com oitavas
+    const bp = { 0: [0, .32], 3: [12, .1], 6: [0, .18], 8: [7, .2], 10: [12, .1], 11: [10, .1], 14: [0, .18] };
+    if (bp[s]) this.bass(t, root + bp[s][0], bp[s][1] * 1.6);
+    if (s === 8 && chords.length > 1) this.bass(t, root, .3);
+    // Rhodes sincopado
+    const ep = { 0: .9, 6: .45, 10: .5, 14: .35 };
+    if (ep[s] || (s === 8 && chords.length > 1)) for (const n of voicing) this.rhodes(t, n, ep[s] || .9, (ep[s] || .6) * .9);
+    // pad nas trocas de acorde
+    if (s === 0 || (s === 8 && chords.length > 1)) this.pad(t, voicing, chords.length > 1 ? st * 8 : st * 16);
+    // sininhos (melodia pentatônica) na segunda metade
+    if (bar >= 8) {
+      const mel = [[0, 76], [3, 79], [6, 81], [8, 84], [11, 81], [14, 79]], alt = [[0, 84], [2, 81], [4, 79], [7, 76], [10, 74], [12, 76]];
+      for (const [ms, n] of (bar % 2 ? alt : mel)) if (ms === s) this.bell(t, n);
+    }
+  },
+  env(g, t, a, peak, d) { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); },
+  kick(t) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + .14);
+    this.env(g, t, .002, .9, .32); o.connect(g); g.connect(this.music); o.start(t); o.stop(t + .4);
+  },
+  snare(t, v) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1900; f.Q.value = .7;
+    const g = c.createGain(); this.env(g, t, .001, .42 * v, .2);
+    n.connect(f); f.connect(g); g.connect(this.music); g.connect(this.rev); n.start(t); n.stop(t + .3);
+    const o = c.createOscillator(), og = c.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(160, t + .08);
+    this.env(og, t, .001, .3 * v, .1); o.connect(og); og.connect(this.music); o.start(t); o.stop(t + .15);
+  },
+  hat(t, v, d) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500;
+    const g = c.createGain(); this.env(g, t, .001, v, d); n.connect(f); f.connect(g); g.connect(this.music); n.start(t, Math.random() * .5); n.stop(t + d + .05);
+  },
+  bass(t, n, d) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(); f.type = 'lowpass'; f.Q.value = 6;
+    f.frequency.setValueAtTime(1600, t); f.frequency.exponentialRampToValueAtTime(260, t + .12);
+    for (const [type, det] of [['square', 0], ['sawtooth', 6]]) { const o = c.createOscillator(); o.type = type; o.frequency.value = this.mtof(n); o.detune.value = det; o.connect(f); o.start(t); o.stop(t + d + .1); }
+    this.env(g, t, .004, .32, d); f.connect(g); g.connect(this.music);
+  },
+  rhodes(t, n, d, v) {
+    const c = this.ctx, fr = this.mtof(n), car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), g = c.createGain();
+    car.frequency.value = fr; mod.frequency.value = fr; mg.gain.setValueAtTime(fr * 2.2, t); mg.gain.exponentialRampToValueAtTime(fr * .25, t + .5);
+    mod.connect(mg); mg.connect(car.frequency); this.env(g, t, .004, .085 * v, d + .4);
+    car.connect(g); g.connect(this.ep); car.start(t); mod.start(t); car.stop(t + d + .6); mod.stop(t + d + .6);
+  },
+  pad(t, notes, d) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(); f.type = 'lowpass'; f.frequency.value = 1100;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.035, t + .25); g.gain.setValueAtTime(.035, t + d - .1); g.gain.linearRampToValueAtTime(0, t + d + .3);
+    for (const n of notes) for (const det of [-9, 9]) { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = this.mtof(n); o.detune.value = det; o.connect(f); o.start(t); o.stop(t + d + .4); }
+    f.connect(g); g.connect(this.music); g.connect(this.rev);
+  },
+  bell(t, n) {
+    const c = this.ctx, fr = this.mtof(n), car = c.createOscillator(), mod = c.createOscillator(), mg = c.createGain(), g = c.createGain();
+    car.frequency.value = fr; mod.frequency.value = fr * 3.5; mg.gain.setValueAtTime(fr * 1.5, t); mg.gain.exponentialRampToValueAtTime(1, t + .8);
+    mod.connect(mg); mg.connect(car.frequency); this.env(g, t, .002, .05, .9); car.connect(g); g.connect(this.music); g.connect(this.rev);
+    car.start(t); mod.start(t); car.stop(t + 1); mod.stop(t + 1);
+  },
+  // efeitos
+  tone(f, d, type = 'sine', v = .2, when = 0, slide) {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
+    this.env(g, t, .005, v, d); o.connect(g); g.connect(this.sfx); o.start(t); o.stop(t + d + .05);
+  },
+  click() { this.tone(880, .06, 'triangle', .12); },
+  pop() { this.tone(520, .07, 'triangle', .1, 0, 300); },
+  good() { [72, 76, 79, 84].forEach((n, i) => this.tone(this.mtof(n), .25, 'triangle', .16, i * .08)); },
+  bad() { this.tone(220, .18, 'square', .07); this.tone(185, .25, 'square', .07, .15); },
+  step() { this.tone(160 + Math.random() * 40, .04, 'triangle', .05); },
+  bark() {
+    if (!this.ctx) return; const c = this.ctx, t = c.currentTime;
+    for (const k of [0, .17]) { this.tone(620, .09, 'sawtooth', .07, k, 330); }
+    const n = c.createBufferSource(); n.buffer = this.noise; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900;
+    const g = c.createGain(); this.env(g, t, .002, .08, .08); n.connect(f); f.connect(g); g.connect(this.sfx); n.start(t); n.stop(t + .12);
+  },
+  fanfare() { [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => this.tone(this.mtof(n), .3, 'triangle', .14, i * .09)); }
+};
+let jaVoice = null;
+function pickVoice() { try { const vs = speechSynthesis.getVoices(); jaVoice = vs.find(v => /^ja/i.test(v.lang)) || null; } catch (e) {} }
+if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[·]/g, ' ').replace(/ /g, '')); u.lang = 'ja-JP'; if (jaVoice) u.voice = jaVoice; u.rate = .82;
+    Audio.duck(.15); u.onend = u.onerror = () => Audio.duck(.5); speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const ICON_SPK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg>';
+
+/* ============================================================
+   ESTADO DO PONGO + CAMINHADA
+   ============================================================ */
+const Pongo = { x: 0, z: 0, node: 'd:うち', heading: 0, facing: 1, walking: false, showArrow: false, face: 'feliz', bob: 0, poof: 0 };
+let curMap = MAPS.city;
+/* Senhor Tromba: aparece num lugar, foge correndo para outro e, no fim, segue o Pongo */
+const Tromba = { x: 0, z: 0, visible: false, follow: false, anim: null, bob: 0, poof: 0 };
+function trombaSpot(k) { const p = nodePos(curMap, 'd:' + k); return { x: p.x + 1.6, z: p.z - .6 }; }
+function showTromba(k) { if (!curMap.byK[k]) return; Object.assign(Tromba, trombaSpot(k), { visible: true, poof: 1, anim: null }); }
+function hideTromba() { Tromba.visible = false; Tromba.anim = null; Tromba.follow = false; }
+function fleeTromba(k) {
+  if (!curMap.byK[k]) { hideTromba(); return Promise.resolve(); }
+  const to = trombaSpot(k), dur = 1.6;
+  return new Promise(res => {
+    Tromba.anim = { fx: Tromba.x, fz: Tromba.z, tx: to.x, tz: to.z, t: 0, dur, res };
+    setTimeout(() => { if (Tromba.anim && Tromba.anim.res === res) { Tromba.anim = null; Tromba.visible = false; res(); } }, dur * 1000 + 800);
+  });
+}
+function updateTromba(dt) {
+  Tromba.bob += dt * 10; if (Tromba.poof > 0) Tromba.poof = Math.max(0, Tromba.poof - dt * 2.5);
+  const A = Tromba.anim;
+  if (A) {
+    A.t = Math.min(1, A.t + dt / A.dur); Tromba.x = A.fx + (A.tx - A.fx) * A.t; Tromba.z = A.fz + (A.tz - A.fz) * A.t;
+    if (A.t >= 1) { Tromba.anim = null; Tromba.visible = false; A.res(); }
+  } else if (Tromba.follow) {
+    const tx = Pongo.x - Pongo.facing * 1.8, tz = Pongo.z + .5, k = Math.min(1, dt * 6);
+    Tromba.x += (tx - Tromba.x) * k; Tromba.z += (tz - Tromba.z) * k;
+  }
+}
+let walkQ = null;
+let lastFrame = 0;
+function walkPoints(pts) {
+  if (walkQ) finishWalk(); // nunca deixa uma caminhada anterior pendurada
+  let len = 0, px = Pongo.x, pz = Pongo.z;
+  for (const p of pts) { len += Math.hypot(p.x - px, p.z - pz); px = p.x; pz = p.z; }
+  const speed = Math.max(12, len / 3.2); // qualquer trajeto leva no máximo ~3 s
+  return new Promise(res => {
+    walkQ = { pts: pts.slice(), res, stepT: 0, speed, deadline: performance.now() + len / speed * 1000 + 1500 }; Pongo.walking = true;
+  });
+}
+// termina a caminhada na hora (botão "Pular", prazo estourado ou aba pausada)
+function finishWalk() {
+  if (!walkQ) return;
+  const end = walkQ.pts[walkQ.pts.length - 1]; if (end) { Pongo.x = end.x; Pongo.z = end.z; }
+  const r = walkQ.res; walkQ = null; Pongo.walking = false; r();
+}
+// vigia: se o navegador parar de desenhar quadros, a caminhada continua e nunca trava o jogo
+setInterval(() => {
+  if (!walkQ) return; const now = performance.now();
+  if (now > walkQ.deadline) finishWalk(); else if (now - lastFrame > 300) updateWalk(.25);
+}, 200);
+async function goTo(placeK) {
+  const target = 'd:' + placeK; if (!curMap.byK[placeK]) return;
+  const path = bfs(curMap, Pongo.node, target);
+  const pts = path.slice(1).map(id => nodePos(curMap, id));
+  if (pts.length) await walkPoints(pts);
+  Pongo.node = target; Audio.bark();
+}
+function teleport(i, j, h) {
+  const p = nodePos(curMap, `${i},${j}`); Pongo.x = p.x; Pongo.z = p.z; Pongo.node = `${i},${j}`; Pongo.heading = h; Pongo.poof = 1;
+  Pongo.facing = h === 3 ? -1 : 1;
+}
+function updateWalk(dt) {
+  if (!walkQ) return;
+  const speed = walkQ.speed, tgt = walkQ.pts[0];
+  const dx = tgt.x - Pongo.x, dz = tgt.z - Pongo.z, d = Math.hypot(dx, dz);
+  if (Math.abs(dx) > .01) Pongo.facing = dx > 0 ? 1 : -1;
+  if (d > .05) {
+    if (Math.abs(dx) > Math.abs(dz)) Pongo.heading = dx > 0 ? 1 : 3; else Pongo.heading = dz > 0 ? 2 : 0;
+  }
+  walkQ.stepT += dt; if (walkQ.stepT > .22) { walkQ.stepT = 0; Audio.step(); }
+  if (d <= speed * dt) {
+    Pongo.x = tgt.x; Pongo.z = tgt.z; walkQ.pts.shift();
+    if (!walkQ.pts.length) { const r = walkQ.res; walkQ = null; Pongo.walking = false; r(); }
+  } else { Pongo.x += dx / d * speed * dt; Pongo.z += dz / d * speed * dt; }
+  Pongo.bob += dt * 14;
+}
+
+/* ============================================================
+   3D — Three.js
+   ============================================================ */
+const View = { mode: '3d', showPT: true, hl: [], forcedNoPT: false };
+const three = {};
+const PAL = { white: 0xF7F3EC, cream: 0xFFF1D6, pink: 0xF6A9C2, mint: 0x86D8C4, butter: 0xFFDA7A, coral: 0xFF7B63, sky: 0x7CC6F0,
+  lav: 0xB7A5EA, navy: 0x23315C, red: 0xE5484D, green: 0x4FB86A, leaf: 0x3FA45B, wood: 0xC98B52, glass: 0x9FDDF5, grey: 0xC9CBD6 };
+const matCache = {};
+const mat = (c, extra) => { const k = c + (extra ? JSON.stringify(extra) : ''); return matCache[k] || (matCache[k] = new THREE.MeshLambertMaterial(Object.assign({ color: c }, extra || {}))); };
+function canvasTex(w, h, draw) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; draw(cv.getContext('2d'), w, h); const t = new THREE.CanvasTexture(cv); t.anisotropy = 4; return t; }
+function windowsTex(wall, glass, cols, rows) {
+  return canvasTex(128, 128, (g, w, h) => {
+    g.fillStyle = wall; g.fillRect(0, 0, w, h); const cw = w / cols, rh = h / rows;
+    for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { g.fillStyle = glass; g.fillRect(i * cw + cw * .22, j * rh + rh * .25, cw * .56, rh * .5); }
+  });
+}
+function box(w, h, d, m, x = 0, y = 0, z = 0, parent) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), typeof m === 'number' ? mat(m) : m);
+  mesh.position.set(x, y + h / 2, z); mesh.castShadow = true; mesh.receiveShadow = true; if (parent) parent.add(mesh); return mesh;
+}
+function cyl(rt, rb, h, m, x, y, z, parent, seg = 14) {
+  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), typeof m === 'number' ? mat(m) : m);
+  mesh.position.set(x, y + h / 2, z); mesh.castShadow = true; if (parent) parent.add(mesh); return mesh;
+}
+function roof(w, h, d, color, y, parent, x = 0, z = 0) {
+  const g = new THREE.ConeGeometry(1, 1, 4); g.rotateY(Math.PI / 4);
+  const m = new THREE.Mesh(g, mat(color)); m.scale.set(w * .72, h, d * .72); m.position.set(x, y + h / 2, z); m.castShadow = true; parent.add(m); return m;
+}
+function tree(parent, x, z, s = 1, palm = false) {
+  if (palm) {
+    cyl(.12 * s, .2 * s, 3.4 * s, PAL.wood, x, 0, z, parent, 6);
+    for (let k = 0; k < 6; k++) {
+      const leaf = new THREE.Mesh(new THREE.BoxGeometry(2.2 * s, .08, .5 * s), mat(PAL.leaf));
+      leaf.position.set(x + Math.cos(k * 1.05) * .9 * s, 3.3 * s, z + Math.sin(k * 1.05) * .9 * s); leaf.rotation.y = -k * 1.05; leaf.rotation.z = -.35; leaf.castShadow = true; parent.add(leaf);
+    }
+    return;
+  }
+  cyl(.15 * s, .2 * s, 1 * s, PAL.wood, x, 0, z, parent, 6);
+  const top = new THREE.Mesh(new THREE.SphereGeometry(.9 * s, 10, 8), mat(PAL.leaf)); top.position.set(x, 1.6 * s, z); top.castShadow = true; parent.add(top);
+}
+function signCross(parent, color, x, y, z) { box(.35, 1.3, .12, color, x, y, z, parent); box(1.3, .35, .12, color, x, y + .48, z, parent); }
+
+function makeBuilding(type) {
+  const g = new THREE.Group(), fz = 3.9; // fz = fachada (frente sul)
+  switch (type) {
+    case 'school': {
+      box(8, 4.2, 5.2, new THREE.MeshLambertMaterial({ map: windowsTex('#FFF1D6', '#7CC6F0', 6, 2) }), 0, 0, -.6, g);
+      box(8.4, .5, 5.6, PAL.coral, 0, 4.2, -.6, g); box(2.4, 6, 2.4, PAL.cream, 0, 0, -.6, g); box(2.6, .4, 2.6, PAL.coral, 0, 6, -.6, g);
+      const clock = new THREE.Mesh(new THREE.CylinderGeometry(.7, .7, .15, 20), mat(0xffffff)); clock.rotation.x = Math.PI / 2; clock.position.set(0, 5, .62); g.add(clock);
+      box(1.6, 2, .3, PAL.navy, 0, 0, 2.05, g); cyl(.06, .06, 6, 0x888888, 3.6, 0, 2.5, g, 6); box(1.2, .7, .05, PAL.red, 4.2, 5.2, 2.5, g); break; }
+    case 'library': {
+      box(7.5, 4, 5, new THREE.MeshLambertMaterial({ map: windowsTex('#EAD9FF', '#FFFFFF', 5, 2) }), 0, 0, -.5, g);
+      const books = [PAL.red, PAL.butter, PAL.mint, PAL.sky, PAL.pink]; books.forEach((c, k) => box(1.3, 1.6 + (k % 2) * .5, 4, c, -2.8 + k * 1.4, 4, -.5, g));
+      for (let k = 0; k < 4; k++) cyl(.25, .25, 3.6, 0xffffff, -2.4 + k * 1.6, 0, 2.2, g, 10); box(7, .4, 1.4, 0xffffff, 0, 3.6, 2.2, g); break; }
+    case 'hospital': {
+      box(7, 7, 5.5, new THREE.MeshLambertMaterial({ map: windowsTex('#FFFFFF', '#9FDDF5', 5, 4) }), 0, 0, -.8, g);
+      box(7.3, .4, 5.8, PAL.sky, 0, 7, -.8, g); signCross(g, PAL.red, 0, 4.6, 2.05); box(3, 2.2, 1.2, PAL.glass, 0, 0, 2.3, g); break; }
+    case 'church': {
+      box(5, 4, 6.5, PAL.white, 0, 0, -.4, g); roof(5.4, 2.6, 6.8, PAL.coral, 4, g, 0, -.4);
+      box(2.2, 7, 2.2, PAL.white, 0, 0, 2.2, g); const sp = new THREE.Mesh(new THREE.ConeGeometry(1.3, 3, 4), mat(PAL.coral)); sp.rotation.y = Math.PI / 4; sp.position.set(0, 8.5, 2.2); g.add(sp);
+      box(.25, 1.6, .25, PAL.butter, 0, 10, 2.2, g); box(1, .25, .25, PAL.butter, 0, 10.9, 2.2, g); box(1.2, 1.8, .2, PAL.wood, 0, 0, 3.35, g); break; }
+    case 'apt': {
+      const t1 = windowsTex('#F6A9C2', '#FFFFFF', 4, 8), t2 = windowsTex('#86D8C4', '#FFFFFF', 4, 10);
+      box(3.6, 9, 4, new THREE.MeshLambertMaterial({ map: t1 }), -2.2, 0, -.6, g); box(3.6, 11, 4, new THREE.MeshLambertMaterial({ map: t2 }), 2.2, 0, .2, g);
+      box(3.8, .3, 4.2, 0xffffff, -2.2, 9, -.6, g); box(3.8, .3, 4.2, 0xffffff, 2.2, 11, .2, g); break; }
+    case 'kinder': {
+      box(6.5, 3, 4.5, PAL.butter, 0, 0, -.4, g); roof(7, 2.4, 5, PAL.red, 3, g, 0, -.4); box(1.4, 1.8, .2, PAL.sky, 0, 0, 1.9, g);
+      box(.3, 2.2, 1.6, PAL.coral, 3.6, 0, 2.6, g); const sl = box(.9, .15, 3, PAL.sky, 3.6, 1, 3.4, g); sl.rotation.x = .55; break; }
+    case 'house': {
+      box(5, 3.2, 4.5, PAL.white, 0, 0, -.2, g); roof(6.2, 2.6, 5.6, PAL.lav, 3.2, g, 0, -.2); box(1.2, 2, .2, PAL.wood, -1, 0, 2.1, g);
+      box(1.3, 1, .2, PAL.glass, 1.2, 1.2, 2.1, g); box(.7, 1.6, .7, 0xB55D4C, 1.4, 4.2, -1, g);
+      for (let k = -2; k <= 2; k++) box(.15, .8, .15, 0xffffff, k * 1.1, 0, 3.6, g); box(4.6, .12, .12, 0xffffff, 0, .6, 3.6, g); break; }
+    case 'bank': {
+      box(7, 4.5, 5, PAL.cream, 0, 0, -.6, g); for (let k = 0; k < 5; k++) cyl(.3, .3, 4, 0xffffff, -2.8 + k * 1.4, 0, 2.1, g, 10);
+      box(7.4, .6, 1.6, 0xffffff, 0, 4, 2.1, g); const ped = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 1.6, 3, 1), mat(0xffffff)); ped.rotation.x = Math.PI / 2; ped.rotation.z = Math.PI / 2; ped.scale.set(.42, 1, 1);
+      ped.position.set(0, 5.2, .6); g.add(ped); const coin = new THREE.Mesh(new THREE.CylinderGeometry(.6, .6, .15, 20), mat(PAL.butter)); coin.rotation.x = Math.PI / 2; coin.position.set(0, 5.1, 2.95); g.add(coin); break; }
+    case 'cafe': {
+      box(5.5, 3.4, 4.5, PAL.mint, 0, 0, -1, g); box(5.8, .4, 4.8, 0xffffff, 0, 3.4, -1, g);
+      const aw = new THREE.Mesh(new THREE.BoxGeometry(5.6, .15, 1.6), new THREE.MeshLambertMaterial({ map: canvasTex(64, 16, (c, w, h) => { for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#fff' : '#FF7B63'; c.fillRect(i * 8, 0, 8, h); } }) }));
+      aw.position.set(0, 2.8, 2); aw.rotation.x = .3; g.add(aw); box(3.6, 1.6, .15, PAL.glass, 0, .3, 1.27, g);
+      for (const x of [-1.8, 1.8]) { cyl(.5, .5, .1, 0xffffff, x, .9, 3.4, g); cyl(.05, .05, 2.2, 0xffffff, x, 0, 3.4, g); const um = new THREE.Mesh(new THREE.ConeGeometry(1.1, .6, 8), mat(PAL.coral)); um.position.set(x, 2.4, 3.4); g.add(um); } break; }
+    case 'park': {
+      const lawn = new THREE.Mesh(new THREE.BoxGeometry(8.4, .15, 8.4), mat(0x8FD16A)); lawn.position.y = .08; lawn.receiveShadow = true; g.add(lawn);
+      cyl(1.6, 1.8, .6, 0xffffff, 0, 0, 0, g, 20); const w = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.35, .1, 20), mat(0x58C3F0)); w.position.y = .62; g.add(w);
+      cyl(.2, .3, 1.6, 0xffffff, 0, .5, 0, g, 10); cyl(.7, .5, .25, 0xffffff, 0, 2, 0, g, 14);
+      for (const [x, z] of [[-3, -3], [3, -3], [-3, 2.6], [3.2, 2], [0, -3.4], [-3.4, -.2]]) tree(g, x, z, 1);
+      box(1.8, .5, .6, PAL.wood, 1.2, 0, 3, g); box(1.8, .1, .6, PAL.coral, -1.4, .6, 3.2, g); break; }
+    case 'pharmacy': {
+      box(5.5, 3.6, 4.5, PAL.white, 0, 0, -.8, g); box(5.8, .4, 4.8, PAL.green, 0, 3.6, -.8, g); box(3.5, 1.7, .15, PAL.glass, 0, .3, 1.5, g);
+      signCross(g, PAL.green, 0, 4.4, 1); box(.15, 1.6, 1.6, 0xffffff, 3, 2.2, 1.6, g); break; }
+    case 'restaurant': {
+      box(6, 3.6, 5, PAL.butter, 0, 0, -.8, g); box(6.3, .5, 5.3, PAL.red, 0, 3.6, -.8, g);
+      const aw = new THREE.Mesh(new THREE.BoxGeometry(6, .15, 1.4), mat(PAL.red)); aw.position.set(0, 2.9, 2.2); aw.rotation.x = .3; g.add(aw);
+      box(3.6, 1.6, .15, PAL.glass, 0, .3, 1.75, g); const bowl = new THREE.Mesh(new THREE.SphereGeometry(.9, 12, 8, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), mat(0xffffff)); bowl.position.set(0, 5.1, -.8); g.add(bowl); break; }
+    case 'shop': {
+      box(6, 3.4, 5, PAL.sky, 0, 0, -.8, g); box(6.2, .35, 5.2, 0xffffff, 0, 3.4, -.8, g); box(4.6, 2, .15, PAL.glass, 0, .3, 1.75, g);
+      const aw = new THREE.Mesh(new THREE.BoxGeometry(6, .15, 1.4), new THREE.MeshLambertMaterial({ map: canvasTex(64, 16, (c, w, h) => { for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#fff' : '#23315C'; c.fillRect(i * 8, 0, 8, h); } }) }));
+      aw.position.set(0, 2.9, 2.2); aw.rotation.x = .3; g.add(aw); box(1, .8, .8, PAL.butter, 2.4, 0, 2.8, g); box(1, .6, .8, PAL.pink, 1.2, 0, 3, g); break; }
+    case 'bus': {
+      box(4, .15, 1.8, PAL.navy, -1, 2.6, 1.2, g); for (const x of [-2.8, .8]) box(.15, 2.6, .15, 0x888888, x, 0, 2, g); box(3.6, 1.8, .1, PAL.glass, -1, .6, .4, g);
+      box(.5, .5, .1, PAL.butter, 1.6, 2.8, 2.1, g); cyl(.05, .05, 3, 0x888888, 1.6, 0, 2.1, g, 6);
+      box(7, 2.6, 2.4, PAL.coral, 0, .4, -2.4, g); box(6.4, .9, 2.45, PAL.glass, 0, 1.6, -2.4, g);
+      for (const x of [-2.4, 2.4]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, 2.5, 12), mat(0x222222)); wh.rotation.x = Math.PI / 2; wh.position.set(x, .5, -2.4); g.add(wh); } break; }
+    case 'subway': {
+      box(5, .4, 4, PAL.grey, 0, 0, 0, g); box(3.4, .1, 2.8, 0x555b6e, 0, .4, .2, g);
+      for (const x of [-1.9, 1.9]) box(.2, 2.6, 3.2, PAL.white, x, .4, 0, g); const gl = box(4.2, .15, 3.6, new THREE.MeshLambertMaterial({ color: PAL.glass, transparent: true, opacity: .7 }), 0, 3, 0, g); gl.rotation.x = -.15;
+      cyl(.08, .08, 4, 0x888888, 3, 0, 2.6, g, 6); const sg = new THREE.Mesh(new THREE.CylinderGeometry(.8, .8, .12, 20), mat(0x2E7DE0)); sg.rotation.x = Math.PI / 2; sg.position.set(3, 4.6, 2.6); g.add(sg);
+      for (let k = 0; k < 4; k++) box(3.2, .12, .5, 0xdddddd, 0, .3 - k * .02, 1.6 - k * .55, g); break; }
+    case 'pool': {
+      box(8.4, .2, 8.4, 0xFFF4E0, 0, 0, 0, g); const water = new THREE.Mesh(new THREE.BoxGeometry(6, .1, 4.6), mat(0x34B6F0)); water.position.set(0, .25, -.6); g.add(water);
+      for (const x of [-2, 0, 2]) { const ch = box(.9, .2, 1.9, x === 0 ? PAL.pink : PAL.butter, x, .2, 2.9, g); ch.rotation.x = -.1; }
+      tree(g, -3.6, 3.4, 1, true); tree(g, 3.6, -3.4, 1.1, true); tree(g, 3.6, 3.2, .9, true);
+      cyl(.04, .04, 2.4, 0xffffff, -1, .2, 2.9, g, 6); const um = new THREE.Mesh(new THREE.ConeGeometry(1.2, .5, 8), mat(PAL.mint)); um.position.set(-1, 2.6, 2.9); g.add(um); break; }
+    case 'station': {
+      box(9, 3.6, 4.2, PAL.cream, 0, 0, 0, g); box(10, .4, 5.4, PAL.navy, 0, 3.6, .3, g); box(3, 1, .2, PAL.white, 0, 2.5, 2.2, g);
+      box(1.6, 2.2, .2, PAL.glass, -2.5, 0, 2.15, g); box(1.6, 2.2, .2, PAL.glass, 2.5, 0, 2.15, g);
+      box(10.4, .15, 1.6, 0x8A8F9E, 0, 0, -3.1, g); box(9, 1.9, 1.5, PAL.mint, 0, .2, -3.1, g); box(8.6, .7, 1.55, PAL.glass, 0, 1.1, -3.1, g); box(9, .25, 1.55, PAL.coral, 0, .55, -3.1, g);
+      cyl(.06, .06, 3, 0x888888, 4.4, 0, 2.8, g, 6); box(1.6, .7, .1, 0x2E7DE0, 4.4, 2.9, 2.8, g); break; }
+    case 'dept': {
+      box(7, 9, 5.5, new THREE.MeshLambertMaterial({ map: windowsTex('#F6A9C2', '#FFF8EA', 5, 6) }), 0, 0, -.6, g); box(7.4, .5, 5.9, PAL.white, 0, 9, -.6, g);
+      box(7.2, .9, .3, PAL.coral, 0, 7.6, 2.2, g); box(3.4, 2.4, .3, PAL.glass, 0, 0, 2.2, g); box(4.4, .2, 1.4, PAL.coral, 0, 2.6, 2.9, g); break; }
+    case 'office': {
+      box(5, 13, 5, new THREE.MeshLambertMaterial({ map: windowsTex('#9FDDF5', '#2C67D8', 4, 10) }), 0, 0, -.5, g); box(5.3, .4, 5.3, PAL.navy, 0, 13, -.5, g);
+      box(2.2, 2, .3, PAL.navy, 0, 0, 2.1, g); box(.6, 1.6, .6, PAL.grey, 1.5, 13.4, -1.5, g); break; }
+    case 'univ': {
+      box(8.4, 4.2, 4.6, new THREE.MeshLambertMaterial({ map: windowsTex('#FFE7C4', '#7CC6F0', 7, 2) }), 0, 0, -.8, g); box(8.8, .4, 5, PAL.wood, 0, 4.2, -.8, g);
+      box(2.4, 7.4, 2.4, 0xFFE7C4, 0, 0, .6, g); const dome = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), mat(PAL.mint)); dome.position.set(0, 7.4, .6); g.add(dome);
+      const clock = new THREE.Mesh(new THREE.CylinderGeometry(.75, .75, .15, 20), mat(0xffffff)); clock.rotation.x = Math.PI / 2; clock.position.set(0, 5.9, 1.85); g.add(clock);
+      tree(g, -3.4, 3, .9); tree(g, 3.4, 3, .9); break; }
+    case 'post': {
+      box(6, 3.8, 4.6, PAL.white, 0, 0, -.8, g); box(6.3, .9, 4.9, PAL.red, 0, 3.8, -.8, g); box(3.4, 1.8, .15, PAL.glass, 0, .3, 1.55, g);
+      box(1.4, .22, .1, PAL.red, 0, 3.2, 1.55, g); box(1.4, .22, .1, PAL.red, 0, 2.85, 1.55, g); box(.22, .8, .1, PAL.red, 0, 2.2, 1.55, g);
+      cyl(.45, .45, 1.4, PAL.red, 2.5, 0, 3, g, 14); cyl(.5, .5, .2, PAL.red, 2.5, 1.4, 3, g, 14); break; }
+    case 'taxi': {
+      box(2.4, 2.6, 2, PAL.white, -2.8, 0, -2.2, g); box(2.6, .3, 2.2, PAL.butter, -2.8, 2.6, -2.2, g);
+      cyl(.06, .06, 3, 0x888888, 2.8, 0, 2.6, g, 6); box(1.4, .6, .1, PAL.butter, 2.8, 2.9, 2.6, g);
+      for (const [x, z] of [[.8, -.4], [.8, 2.4]]) { box(3.6, 1, 1.8, PAL.butter, x, .35, z, g); box(2, .8, 1.7, PAL.glass, x - .2, 1.35, z, g); box(.7, .35, .4, PAL.red, x - .2, 2.15, z, g);
+        for (const dx of [-1.2, 1.2]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(.35, .35, 1.9, 10), mat(0x222222)); wh.rotation.x = Math.PI / 2; wh.position.set(x + dx, .35, z); g.add(wh); } } break; }
+    case 'airport': {
+      box(8.4, .2, 8.4, 0x9EA3B0, 0, 0, 0, g); for (let k = -3; k <= 3; k += 1.5) box(.8, .05, .25, 0xffffff, k, .2, 1.8, g);
+      cyl(.6, .8, 6, PAL.white, -3, 0, -3, g, 12); cyl(1.4, 1.1, 1.3, PAL.glass, -3, 6, -3, g, 12); cyl(1.5, 1.5, .25, PAL.navy, -3, 7.3, -3, g, 12);
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(.55, .55, 6.4, 14), mat(0xffffff)); body.rotation.z = Math.PI / 2; body.position.set(1, 1.6, 1.8); body.castShadow = true; g.add(body);
+      const nose = new THREE.Mesh(new THREE.SphereGeometry(.55, 12, 10), mat(0xffffff)); nose.position.set(4.2, 1.6, 1.8); g.add(nose);
+      box(1.6, .12, 6.4, 0xffffff, .8, 1.4, 1.8, g); box(1, .12, 2.2, 0xffffff, -1.9, 1.7, 1.8, g); box(1, 1.5, .12, PAL.coral, -1.9, 1.6, 1.8, g);
+      box(6, .2, .1, PAL.sky, 1, 1.75, 2.36, g); break; }
+    // salas da escola (vista de cima, sem teto)
+    default: return makeRoom(type);
+  }
+  return g;
+}
+function makeRoom(type) {
+  const g = new THREE.Group(), W = 8.4, H = 2.6, floorCol = { room: 0xD9E6A2, kitchen: 0xF5E6C8, bath: 0xCFEAF5, genkan: 0xC9C4BC, garden: 0xA9DB7E, classroom: 0xFFE7A8, toilet: 0xBFE6F7, libroom: 0xE9DCFF, teachers: 0xFAD2C4, canteen: 0xD6F1D8, yard: 0xB8E08E }[type];
+  const fl = new THREE.Mesh(new THREE.BoxGeometry(W, .12, W), mat(floorCol)); fl.position.y = .06; fl.receiveShadow = true; g.add(fl);
+  if (type !== 'yard' && type !== 'garden') {
+    const wc = 0xFFFFFF; box(W, H, .3, wc, 0, 0, -W / 2, g); box(.3, H, W, wc, -W / 2, 0, 0, g); box(.3, H, W, wc, W / 2, 0, 0, g);
+    box(3, H, .3, wc, -2.7, 0, W / 2, g); box(3, H, .3, wc, 2.7, 0, W / 2, g);
+  }
+  switch (type) {
+    case 'room': for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) box(3.6, .05, 1.8, 0xC7D98A, -1.9 + a * 3.8, .12, -2.8 + b * 2, g);
+      box(2.6, .7, 1.6, PAL.wood, 0, 0, .8, g); box(.6, .1, .6, 0xffffff, .5, .7, .8, g); box(3, 2.2, .9, PAL.wood, -2, 0, -3.5, g);
+      for (let k = 0; k < 4; k++) box(.5, .7, .7, [PAL.red, PAL.sky, PAL.butter, PAL.mint][k], -3.2 + k * .8, 1.2, -3.5, g); box(1.2, .9, 1.2, 0xF2F2F2, 2.6, 0, -2.6, g); break;
+    case 'kitchen': box(6, 1.2, 1.2, 0xffffff, -.6, 0, -3.4, g); box(1.6, 2.6, 1.2, PAL.sky, 3, 0, -3.4, g); box(3, .8, 1.6, PAL.wood, 0, 0, 1, g);
+      cyl(.35, .35, .3, PAL.coral, -2, 1.2, -3.4, g, 10); cyl(.35, .35, .3, 0x555555, -.8, 1.2, -3.4, g, 10); break;
+    case 'bath': { box(4.2, 1, 2.6, 0xffffff, 0, 0, -2.4, g); const w = new THREE.Mesh(new THREE.BoxGeometry(3.6, .1, 2), mat(0x58C3F0)); w.position.set(0, .95, -2.4); g.add(w);
+      box(.6, .4, .6, PAL.wood, -2.6, 0, .8, g); cyl(.3, .3, .3, PAL.butter, 2.4, 0, .8, g, 10); break; }
+    case 'genkan': box(8, .3, 2.4, 0xE9DCC6, 0, 0, -2.8, g); box(1.6, 1.8, .8, PAL.wood, -3.2, 0, 0, g);
+      for (const [x, c] of [[.4, PAL.red], [1.2, PAL.navy], [2.2, PAL.coral]]) box(.35, .2, .8, c, x, 0, 1.6, g); break;
+    case 'garden': tree(g, -2.8, -2.6, 1.1); tree(g, 2.8, 2.6, .9); { const pond = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, .1, 20), mat(0x58C3F0)); pond.position.set(1.4, .15, -1.6); g.add(pond); }
+      for (let k = 0; k < 4; k++) box(.6, .1, .6, 0xBDB6AA, -2 + k * .9, .1, 1 + k * .5, g); box(1, .5, 1, PAL.grey, -2.6, 0, 2.6, g); break;
+    case 'classroom': box(5, 2, .1, 0x2F6B4F, 0, .8, -4, g); for (let a = 0; a < 3; a++) for (let b = 0; b < 2; b++) { box(1.3, .8, .9, PAL.wood, -2.2 + a * 2.2, 0, -1.2 + b * 2, g); box(.7, .5, .6, PAL.sky, -2.2 + a * 2.2, 0, -.4 + b * 2, g); } break;
+    case 'toilet': for (let a = 0; a < 3; a++) box(.15, 2, 2, 0x2E7DE0, -2.5 + a * 2.5, 0, -3, g); for (let a = 0; a < 3; a++) box(.8, .6, .8, 0xffffff, -1.3 + a * 2.5, 0, -3.2, g); box(3, .8, .8, 0xffffff, 0, 0, 1.5, g); break;
+    case 'libroom': for (let a = 0; a < 3; a++) { box(1, 2.2, 5, PAL.wood, -2.8 + a * 2.8, 0, -.8, g); for (let k = 0; k < 3; k++) box(1.05, .35, 4.6, [PAL.red, PAL.butter, PAL.sky][k], -2.8 + a * 2.8, .3 + k * .65, -.8, g); } break;
+    case 'teachers': box(4, .9, 1.6, PAL.wood, -1, 0, -1.5, g); box(1.2, .8, 1.2, PAL.navy, 2.3, 0, -1.5, g); tree(g, 3, 2.5, .6); box(1.5, .1, 1, 0xffffff, -1, .9, -1.5, g); break;
+    case 'canteen': for (const z of [-2, 1]) { box(6, .8, 1.3, 0xffffff, 0, 0, z, g); for (let a = 0; a < 4; a++) cyl(.3, .3, .1, PAL.coral, -2.2 + a * 1.5, .8, z, g, 10); } break;
+    case 'yard': box(.3, 2.5, .3, 0xffffff, -2.5, 0, -2.5, g); box(4, .2, .2, 0xffffff, -.5, 2.5, -2.5, g); box(.3, 2.5, .3, 0xffffff, 1.5, 0, -2.5, g);
+      const sl = box(1, .15, 3.4, PAL.coral, 2.6, 1, 1.6, g); sl.rotation.x = .5; box(.6, 2, .6, PAL.butter, 2.6, 0, .1, g); tree(g, -3, 2.8, .9); { const ball = new THREE.Mesh(new THREE.SphereGeometry(.45, 12, 10), mat(PAL.red)); ball.position.set(-.5, .45, 1.5); g.add(ball); } break;
+  }
+  return g;
+}
+
+function labelCanvas(l, hidePT) {
+  const cv = document.createElement('canvas'); cv.width = 512; cv.height = 176; const g = cv.getContext('2d');
+  const showPT = !hidePT; g.font = '800 64px "M PLUS Rounded 1c", sans-serif'; const kw = g.measureText(l.k).width;
+  g.font = '700 34px "Baloo 2", sans-serif'; const pw = showPT ? g.measureText(l.pt).width : 0;
+  const w = Math.min(500, Math.max(kw, pw) + 70), h = showPT ? 150 : 108, x = (512 - w) / 2, y = (176 - h) / 2;
+  g.fillStyle = '#1D2547'; roundRect(g, x, y + 6, w, h, 30); g.fill();
+  g.fillStyle = '#FFF8EA'; roundRect(g, x, y, w, h, 30); g.fill(); g.lineWidth = 6; g.strokeStyle = '#1D2547'; g.stroke();
+  g.fillStyle = '#1D2547'; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.font = '800 64px "M PLUS Rounded 1c", sans-serif'; g.fillText(l.k, 256, y + 82);
+  if (showPT) { g.fillStyle = '#0B8290'; g.font = '700 34px "Baloo 2", sans-serif'; g.fillText(l.pt, 256, y + 128); }
+  return cv;
+}
+function roundRect(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+/* chão: o mesmo desenho serve de textura 3D e de base do mapa 2D */
+function drawBase(g, m, ppu, ox, oz) {
+  const W = (m.cols + 1.2) * S, Hh = (m.rows + 1.2) * S, P = v => v * ppu;
+  const X = x => P(x - ox), Z = z => P(z - oz), school = m.id !== 'city';
+  g.fillStyle = school ? '#F2E6CC' : '#9BD46C'; g.fillRect(0, 0, P(W), P(Hh));
+  // ruas / corredores
+  const road = school ? '#E3C99A' : '#5B6078';
+  g.fillStyle = road;
+  for (let i = 0; i <= m.cols; i++) g.fillRect(X(ix(m, i) - ROAD / 2), Z(jz(m, 0) - ROAD / 2), P(ROAD), P(m.rows * S + ROAD));
+  for (let j = 0; j <= m.rows; j++) g.fillRect(X(ix(m, 0) - ROAD / 2), Z(jz(m, j) - ROAD / 2), P(m.cols * S + ROAD), P(ROAD));
+  if (school) {
+    // corredor de madeira: tábuas
+    g.strokeStyle = 'rgba(120,80,30,.25)'; g.lineWidth = Math.max(1, P(.06));
+    for (let j = 0; j <= m.rows; j++) for (let k = -1; k <= 1; k++) { g.beginPath(); g.moveTo(X(ix(m, 0) - ROAD / 2), Z(jz(m, j) + k * 1.1)); g.lineTo(X(ix(m, m.cols) + ROAD / 2), Z(jz(m, j) + k * 1.1)); g.stroke(); }
+  } else {
+    g.strokeStyle = '#F5E6A8'; g.lineWidth = Math.max(1, P(.15)); g.setLineDash([P(1.1), P(1.1)]);
+    for (let i = 0; i <= m.cols; i++) for (let j = 0; j < m.rows; j++) { g.beginPath(); g.moveTo(X(ix(m, i)), Z(jz(m, j) + ROAD / 2 + .6)); g.lineTo(X(ix(m, i)), Z(jz(m, j + 1) - ROAD / 2 - .6)); g.stroke(); }
+    for (let j = 0; j <= m.rows; j++) for (let i = 0; i < m.cols; i++) { g.beginPath(); g.moveTo(X(ix(m, i) + ROAD / 2 + .6), Z(jz(m, j))); g.lineTo(X(ix(m, i + 1) - ROAD / 2 - .6), Z(jz(m, j))); g.stroke(); }
+    g.setLineDash([]);
+    // faixas de pedestres (おうだんほどう)
+    g.fillStyle = '#FFFFFF';
+    for (let i = 0; i <= m.cols; i++) for (let j = 0; j <= m.rows; j++) {
+      const cx = ix(m, i), cz = jz(m, j);
+      for (let k = -2; k <= 2; k++) {
+        const o = k * .62;
+        if (j < m.rows) g.fillRect(X(cx + o - .2), Z(cz + ROAD / 2 + .05), P(.4), P(.9));
+        if (j > 0) g.fillRect(X(cx + o - .2), Z(cz - ROAD / 2 - .95), P(.4), P(.9));
+        if (i < m.cols) g.fillRect(X(cx + ROAD / 2 + .05), Z(cz + o - .2), P(.9), P(.4));
+        if (i > 0) g.fillRect(X(cx - ROAD / 2 - .95), Z(cz + o - .2), P(.9), P(.4));
+      }
+    }
+  }
+  // calçadas dos lotes
+  for (const l of m.lots) {
+    const c = lotCenter(m, l), s = S - ROAD;
+    g.fillStyle = school ? '#FFFDF6' : '#EDE6D8'; roundRect(g, X(c.x - s / 2), Z(c.z - s / 2), P(s), P(s), P(.6)); g.fill();
+  }
+}
+
+function initThree() {
+  const cv = $('#c3d');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true }); } catch (e) { return false; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  scene.background = canvasTex(4, 256, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#1E56C8'); gr.addColorStop(.55, '#6CC5F0'); gr.addColorStop(.8, '#FFD7A6'); gr.addColorStop(1, '#FF9E7A'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+  scene.fog = new THREE.Fog(0xBFE3F5, 90, 190);
+  const camera = new THREE.PerspectiveCamera(42, 1, .5, 500);
+  scene.add(new THREE.HemisphereLight(0xCFEAFF, 0xF2D4A0, .75));
+  const sun = new THREE.DirectionalLight(0xFFF0D8, .85); sun.position.set(-30, 50, 25); sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 1, far: 140 }); sun.shadow.bias = -.0008;
+  scene.add(sun);
+  // mar, areia e sol de city pop
+  const sea = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), mat(0x2FA2DD)); sea.rotation.x = -Math.PI / 2; sea.position.y = -.4; scene.add(sea);
+  const sunDisk = new THREE.Mesh(new THREE.CircleGeometry(22, 40), new THREE.MeshBasicMaterial({ color: 0xFF7A59, fog: false })); sunDisk.position.set(20, 18, -170); scene.add(sunDisk);
+  for (let k = 0; k < 5; k++) { const b = new THREE.Mesh(new THREE.PlaneGeometry(50, 1.4 + k * .4), new THREE.MeshBasicMaterial({ color: 0x6CC5F0, fog: false })); b.position.set(20, 6 + k * 4.2, -169); scene.add(b); }
+  Object.assign(three, { renderer, scene, camera, sun, world: null, labels: [], picks: [], rings: [],
+    cam: { theta: 0, el: .86, r: 40, tx: 0, tz: 0 } });
+  // Pongo
+  const loader = new THREE.TextureLoader();
+  // texturas normais + espelhadas (o Sprite não aceita escala negativa)
+  const loadPair = src => { const fl = new THREE.Texture(); fl.repeat.set(-1, 1); fl.offset.set(1, 0); const t = loader.load(src, tt => { fl.image = tt.image; fl.needsUpdate = true; }); return [t, fl]; };
+  [three.texStand, three.texStandL] = loadPair(IMG.pongo_em_pe); [three.texRun, three.texRunL] = loadPair(IMG.pongo_correndo);
+  const sm = new THREE.SpriteMaterial({ map: three.texStand, transparent: true, alphaTest: .05 });
+  three.pongo = new THREE.Sprite(sm); three.pongo.center.set(.5, 0); scene.add(three.pongo);
+  const sh = new THREE.Mesh(new THREE.CircleGeometry(1.2, 20), new THREE.MeshBasicMaterial({ color: 0x1D2547, transparent: true, opacity: .25 }));
+  sh.rotation.x = -Math.PI / 2; sh.position.y = .05; scene.add(sh); three.shadow = sh;
+  const arrowShape = new THREE.Shape(); arrowShape.moveTo(0, 2.6); arrowShape.lineTo(1.1, 1.1); arrowShape.lineTo(.4, 1.1); arrowShape.lineTo(.4, .2); arrowShape.lineTo(-.4, .2); arrowShape.lineTo(-.4, 1.1); arrowShape.lineTo(-1.1, 1.1); arrowShape.closePath();
+  const ar = new THREE.Mesh(new THREE.ShapeGeometry(arrowShape), new THREE.MeshBasicMaterial({ color: 0xFF4F9A, side: THREE.DoubleSide }));
+  ar.rotation.x = -Math.PI / 2; const arG = new THREE.Group(); arG.add(ar); ar.position.y = .08; scene.add(arG); three.arrow = arG;
+  const ttex = new THREE.TextureLoader().load(IMG.tromba);
+  three.tromba = new THREE.Sprite(new THREE.SpriteMaterial({ map: ttex, transparent: true, alphaTest: .05 })); three.tromba.center.set(.5, 0); three.tromba.visible = false; scene.add(three.tromba);
+  bindCamControls(cv);
+  return true;
+}
+function buildWorld3D(m) {
+  const { scene } = three;
+  if (three.world) { scene.remove(three.world); three.world.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+  const world = new THREE.Group(); three.world = world; three.labels = []; three.picks = []; three.rings = [];
+  const W = (m.cols + 1.2) * S, H = (m.rows + 1.2) * S, ox = -W / 2, oz = -H / 2, ppu = 2048 / Math.max(W, H);
+  const tex = canvasTex(Math.round(W * ppu), Math.round(H * ppu), g => drawBase(g, m, ppu, ox, oz)); tex.anisotropy = 8;
+  const ground = new THREE.Mesh(new THREE.BoxGeometry(W, 1, H), [mat(0xF0D9A8), mat(0xF0D9A8), new THREE.MeshLambertMaterial({ map: tex }), mat(0xF0D9A8), mat(0xF0D9A8), mat(0xF0D9A8)]);
+  ground.position.y = -.5; ground.receiveShadow = true; world.add(ground);
+  // areia em volta
+  const sand = new THREE.Mesh(new THREE.BoxGeometry(W + 14, .6, H + 14), mat(0xF4DDB0)); sand.position.y = -.62; sand.receiveShadow = true; world.add(sand);
+  if (m.id === 'city') {
+    for (let k = 0; k < 9; k++) { tree(world, ox - 3 + k * (W + 6) / 8, oz - 4, 1.1, true); tree(world, ox - 3 + k * (W + 6) / 8, -oz + 4, 1, k % 2 === 0); }
+    for (let k = 1; k < 6; k++) { tree(world, ox - 4, oz + k * H / 6, 1, true); tree(world, -ox + 4, oz + k * H / 6, 1, true); }
+  } else {
+    // paredes externas da escola
+    const wc = mat(0xFFFFFF); for (const [w, d, x, z] of [[W, .6, 0, oz], [W, .6, 0, -oz], [.6, H, ox, 0], [.6, H, -ox, 0]]) { const wl = new THREE.Mesh(new THREE.BoxGeometry(w, 3, d), wc); wl.position.set(x, 1.5, z); wl.castShadow = true; world.add(wl); }
+  }
+  for (const l of m.lots) {
+    const c = lotCenter(m, l), b = makeBuilding(l.type); b.position.set(c.x, 0, c.z); world.add(b);
+    let top = 0; b.traverse(o => { if (o.isMesh) { o.geometry.computeBoundingBox(); const y = o.geometry.boundingBox.max.y * o.scale.y + o.position.y; if (y > top) top = y; } });
+    const lcv = labelCanvas(l, !View.showPT || View.forcedNoPT), lt = new THREE.CanvasTexture(lcv);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: lt, depthTest: false, transparent: true })); sp.renderOrder = 10;
+    sp.position.set(c.x, Math.min(top, 12) + 2.6, c.z + 1); sp.scale.set(7.2, 7.2 * 176 / 512, 1); world.add(sp); three.labels.push({ sp, l, cv: lcv, tex: lt });
+    const pick = new THREE.Mesh(new THREE.BoxGeometry(S - ROAD, 8, S - ROAD), new THREE.MeshBasicMaterial({ visible: false })); pick.position.set(c.x, 4, c.z); pick.userData.k = l.k; world.add(pick); three.picks.push(pick);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(4.1, 4.9, 40), new THREE.MeshBasicMaterial({ color: 0xFF4F9A, transparent: true, opacity: .9, side: THREE.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2; ring.position.set(c.x, .2, c.z); ring.visible = false; ring.userData.k = l.k; world.add(ring); three.rings.push(ring);
+  }
+  three.scene.add(world);
+}
+function refreshLabels3D() {
+  if (!three.labels) return;
+  for (const L of three.labels) { const cv = labelCanvas(L.l, !View.showPT || View.forcedNoPT); L.cv.getContext('2d').clearRect(0, 0, 512, 176); L.cv.getContext('2d').drawImage(cv, 0, 0); L.tex.needsUpdate = true; }
+}
+function bindCamControls(cv) {
+  const pts = new Map(); let downAt = null, pinch0 = 0;
+  cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); downAt = { x: e.clientX, y: e.clientY, t: performance.now() }; if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch0 = Math.hypot(a.x - b.x, a.y - b.y); } });
+  cv.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId)) return; const p = pts.get(e.pointerId), dx = e.clientX - p.x, dy = e.clientY - p.y; pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const C = three.cam;
+    if (pts.size === 1) { C.theta -= dx * .006; C.el = Math.min(1.45, Math.max(.3, C.el + dy * .005)); }
+    else if (pts.size === 2) { const [a, b] = [...pts.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch0) C.r = Math.min(80, Math.max(16, C.r * pinch0 / d)); pinch0 = d; }
+  });
+  const up = e => {
+    if (pts.size === 1 && downAt && Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) < 7) pick3D(e);
+    pts.delete(e.pointerId); if (pts.size < 2) pinch0 = 0;
+  };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => pts.delete(e.pointerId));
+  cv.addEventListener('wheel', e => { e.preventDefault(); three.cam.r = Math.min(80, Math.max(16, three.cam.r * (1 + Math.sign(e.deltaY) * .08))); }, { passive: false });
+}
+function pick3D(e) {
+  const r = three.renderer.domElement.getBoundingClientRect(), v = new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+  const rc = new THREE.Raycaster(); rc.setFromCamera(v, three.camera); const hit = rc.intersectObjects(three.picks)[0];
+  if (hit) onPlaceTap(hit.object.userData.k);
+}
+function render3D(t, dt) {
+  const { renderer, scene, camera, cam } = three, cv = renderer.domElement, w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== Math.round(w * renderer.getPixelRatio()) || cv.height !== Math.round(h * renderer.getPixelRatio())) { renderer.setSize(w, h, false); camera.aspect = w / Math.max(1, h); camera.updateProjectionMatrix(); }
+  cam.tx += (Pongo.x - cam.tx) * Math.min(1, dt * 3); cam.tz += (Pongo.z - cam.tz) * Math.min(1, dt * 3);
+  const rr = cam.r * (w < 500 ? 1.25 : 1);
+  camera.position.set(cam.tx + Math.sin(cam.theta) * Math.cos(cam.el) * rr, Math.sin(cam.el) * rr, cam.tz + Math.cos(cam.theta) * Math.cos(cam.el) * rr);
+  camera.lookAt(cam.tx, 1.5, cam.tz);
+  // Pongo
+  const p = three.pongo, running = Pongo.walking;
+  // espelha conforme a direção na tela
+  const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd); const right = new THREE.Vector3(-fwd.z, 0, fwd.x).normalize();
+  const hv = [[0, -1], [1, 0], [0, 1], [-1, 0]][Pongo.heading]; const screenDir = running ? (hv[0] * right.x + hv[1] * right.z) : Pongo.facing * right.x;
+  const left = screenDir < -.01, tex = running ? (left ? three.texRunL : three.texRun) : (left ? three.texStandL : three.texStand);
+  if (p.material.map !== tex) { p.material.map = tex; p.material.needsUpdate = true; }
+  const img = tex.image, asp = img && img.width ? img.width / img.height : 1;
+  const hgt = running ? 2.9 : 4.1, pop = 1 + Math.max(0, Pongo.poof) * .5 * Math.sin(Pongo.poof * Math.PI);
+  p.scale.set(hgt * asp * pop, hgt * pop, 1);
+  p.position.set(Pongo.x, running ? .15 + Math.abs(Math.sin(Pongo.bob)) * .45 : .05, Pongo.z + .4);
+  three.shadow.position.set(Pongo.x, .06, Pongo.z + .4);
+  { const T = three.tromba, img = T.material.map.image, asp = img && img.width ? img.width / img.height : .63, h = 3.3 * (1 + Tromba.poof * .5 * Math.sin(Tromba.poof * Math.PI));
+    T.visible = Tromba.visible; T.scale.set(h * asp, h, 1); T.position.set(Tromba.x, (Tromba.anim || Tromba.follow) ? Math.abs(Math.sin(Tromba.bob)) * .5 : .05, Tromba.z + .4); }
+  three.arrow.visible = Pongo.showArrow; three.arrow.position.set(Pongo.x, 0, Pongo.z); three.arrow.rotation.y = -Pongo.heading * Math.PI / 2;
+  for (const ring of three.rings) { ring.visible = View.hl.includes(ring.userData.k); if (ring.visible) { const s = 1 + Math.sin(t * 5) * .06; ring.scale.set(s, s, s); } }
+  for (const L of three.labels) { const on = View.hl.includes(L.l.k), s = on ? 1.2 + Math.sin(t * 5) * .06 : 1; L.sp.scale.set(7.2 * s, 7.2 * 176 / 512 * s, 1); }
+  three.sun.position.set(cam.tx - 30, 50, cam.tz + 25); three.sun.target.position.set(cam.tx, 0, cam.tz); three.sun.target.updateMatrixWorld();
+  renderer.render(scene, camera);
+}
+
+/* ============================================================
+   2D — mapa de cima no estilo da página 109 do livro
+   ============================================================ */
+const two = { cv: null, g: null, base: null, key: '', faceImg: new Image(), tromba: new Image() };
+const TYPE_COL = { station: '#B8E8D8', dept: '#F6A9C2', office: '#9FDDF5', univ: '#FFE7C4', post: '#FFFFFF', taxi: '#FFDA7A', airport: '#C9CBD6',
+  room: '#D9E6A2', kitchen: '#F5E6C8', bath: '#CFEAF5', genkan: '#E3DED6', garden: '#A9DB7E', school: '#FFF1D6', library: '#E9DCFF', hospital: '#FFFFFF', church: '#FFFFFF', apt: '#F6A9C2', kinder: '#FFDA7A', house: '#FFFFFF',
+  bank: '#FFF1D6', cafe: '#86D8C4', park: '#8FD16A', pharmacy: '#FFFFFF', restaurant: '#FFDA7A', shop: '#7CC6F0', bus: '#FF7B63', subway: '#C9CBD6', pool: '#34B6F0',
+  classroom: '#FFE7A8', toilet: '#BFE6F7', libroom: '#E9DCFF', teachers: '#FAD2C4', canteen: '#D6F1D8', yard: '#B8E08E' };
+function render2D(t) {
+  const cv = two.cv, m = curMap, dpr = Math.min(2, window.devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); two.key = ''; }
+  const g = two.g, W = (m.cols + 1.2) * S, H = (m.rows + 1.2) * S, top = 52;
+  const sc = Math.min(cv.width / W, (cv.height - top * dpr) / H) * .96, ox = (cv.width - W * sc) / 2, oy = top * dpr + (cv.height - top * dpr - H * sc) / 2;
+  const key = [m.id, cv.width, cv.height].join();
+  if (two.key !== key) { two.key = key; const b = document.createElement('canvas'); b.width = Math.ceil(W * sc); b.height = Math.ceil(H * sc); drawBase(b.getContext('2d'), m, sc, -W / 2, -H / 2); two.base = b; }
+  g.fillStyle = '#FFF8EA'; g.fillRect(0, 0, cv.width, cv.height); g.drawImage(two.base, ox, oy);
+  const X = x => ox + (x + W / 2) * sc, Z = z => oy + (z + H / 2) * sc;
+  for (const l of m.lots) {
+    const c = lotCenter(m, l), s = (S - ROAD) * .78, on = View.hl.includes(l.k);
+    if (on) { g.strokeStyle = '#FF4F9A'; g.lineWidth = 5 * dpr + Math.sin(t * 6) * 2 * dpr; roundRect(g, X(c.x - s / 2) - 6 * dpr, Z(c.z - s / 2) - 6 * dpr, s * sc + 12 * dpr, s * sc + 12 * dpr, 12 * dpr); g.stroke(); }
+    g.fillStyle = TYPE_COL[l.type] || '#fff'; g.strokeStyle = '#1D2547'; g.lineWidth = 2 * dpr; roundRect(g, X(c.x - s / 2), Z(c.z - s / 2), s * sc, s * sc, 8 * dpr); g.fill(); g.stroke();
+    drawGlyph(g, l.type, X(c.x), Z(c.z) - s * sc * .12, s * sc * .42, dpr);
+    // etiqueta estilo livro (fundo verde-claro)
+    const fs = Math.max(11 * dpr, Math.min(20 * dpr, sc * 1.25)), showPT = View.showPT && !View.forcedNoPT;
+    g.font = `800 ${fs * .9}px "M PLUS Rounded 1c", sans-serif`; const kw = g.measureText(l.k).width; g.font = `700 ${fs * .62}px "Baloo 2", sans-serif`; const pw = showPT ? g.measureText(l.pt).width : 0;
+    const lw = Math.max(kw, pw) + fs * .8, lh = showPT ? fs * 1.85 : fs * 1.3, lx = X(c.x) - lw / 2, ly = Z(c.z) + s * sc * .5 - lh * .55;
+    g.fillStyle = '#F4F8C8'; roundRect(g, lx, ly, lw, lh, 6 * dpr); g.fill(); g.strokeStyle = '#C9D77A'; g.lineWidth = 1.5 * dpr; g.stroke();
+    g.fillStyle = '#1D2547'; g.textAlign = 'center'; g.textBaseline = 'top'; g.font = `800 ${fs * .9}px "M PLUS Rounded 1c", sans-serif`; g.fillText(l.k, X(c.x), ly + fs * .15);
+    if (showPT) { g.fillStyle = '#5B6385'; g.font = `700 ${fs * .62}px "Baloo 2", sans-serif`; g.fillText(l.pt, X(c.x), ly + fs * 1.1); }
+  }
+  // Senhor Tromba
+  if (Tromba.visible && two.tromba.complete && two.tromba.naturalWidth) {
+    const th = Math.max(26 * dpr, sc * 3.2) * (1 + Tromba.poof * .4), tw = th * two.tromba.naturalWidth / two.tromba.naturalHeight, jump = (Tromba.anim || Tromba.follow) ? Math.abs(Math.sin(Tromba.bob)) * 5 * dpr : 0;
+    g.fillStyle = 'rgba(255,255,255,.85)'; g.beginPath(); g.ellipse(X(Tromba.x), Z(Tromba.z), tw * .7, th * .22, 0, 0, 7); g.fill();
+    g.drawImage(two.tromba, X(Tromba.x) - tw / 2, Z(Tromba.z) - th - jump, tw, th);
+  }
+  // Pongo
+  const px = X(Pongo.x), pz = Z(Pongo.z), r = Math.max(14 * dpr, sc * 1.6) * (1 + Math.max(0, Pongo.poof) * .4);
+  if (Pongo.showArrow) {
+    g.save(); g.translate(px, pz); g.rotate(Pongo.heading * Math.PI / 2); g.fillStyle = '#FF4F9A'; g.strokeStyle = '#1D2547'; g.lineWidth = 2 * dpr;
+    g.beginPath(); g.moveTo(0, -r * 2.1); g.lineTo(r * .8, -r * 1.1); g.lineTo(-r * .8, -r * 1.1); g.closePath(); g.fill(); g.stroke(); g.restore();
+  }
+  const bob = Pongo.walking ? Math.abs(Math.sin(Pongo.bob)) * 4 * dpr : 0;
+  g.save(); g.beginPath(); g.arc(px, pz - bob, r, 0, Math.PI * 2); g.fillStyle = '#fff'; g.fill(); g.clip();
+  if (two.faceImg.complete && two.faceImg.naturalWidth) { const iw = two.faceImg.naturalWidth, ih = two.faceImg.naturalHeight, k = Math.max(2 * r / iw, 2 * r / ih); g.drawImage(two.faceImg, px - iw * k / 2, pz - bob - ih * k / 2, iw * k, ih * k); }
+  g.restore(); g.beginPath(); g.arc(px, pz - bob, r, 0, Math.PI * 2); g.lineWidth = 3 * dpr; g.strokeStyle = '#1D2547'; g.stroke();
+  two.toWorld = (cx, cy) => ({ x: (cx * dpr - ox) / sc - W / 2, z: (cy * dpr - oy) / sc - H / 2 });
+}
+function drawGlyph(g, type, x, y, s, dpr) {
+  g.save(); g.translate(x, y); g.lineWidth = 2 * dpr; g.strokeStyle = '#1D2547'; const f = (c) => { g.fillStyle = c; g.fill(); g.stroke(); };
+  const house = (body, rf) => { g.beginPath(); g.rect(-s * .5, -s * .1, s, s * .6); f(body); g.beginPath(); g.moveTo(-s * .62, -s * .1); g.lineTo(0, -s * .62); g.lineTo(s * .62, -s * .1); g.closePath(); f(rf); };
+  switch (type) {
+    case 'school': house('#FFF1D6', '#FF7B63'); g.beginPath(); g.arc(0, -s * .3, s * .12, 0, 7); f('#fff'); break;
+    case 'library': case 'libroom': ['#E5484D', '#FFDA7A', '#86D8C4', '#7CC6F0'].forEach((c, i) => { g.beginPath(); g.rect(-s * .45 + i * s * .23, -s * .45, s * .2, s * .85); f(c); }); break;
+    case 'hospital': g.beginPath(); g.rect(-s * .45, -s * .45, s * .9, s * .9); f('#fff'); g.beginPath(); g.rect(-s * .1, -s * .3, s * .2, s * .6); g.rect(-s * .3, -s * .1, s * .6, s * .2); g.fillStyle = '#E5484D'; g.fill(); break;
+    case 'church': house('#fff', '#FF7B63'); g.beginPath(); g.rect(-s * .04, -s * .9, s * .08, s * .3); g.rect(-s * .14, -s * .82, s * .28, s * .07); g.fillStyle = '#1D2547'; g.fill(); break;
+    case 'apt': for (const [dx, hh, c] of [[-.25, .9, '#F6A9C2'], [.22, 1.1, '#86D8C4']]) { g.beginPath(); g.rect(s * dx - s * .2, s * .5 - s * hh, s * .4, s * hh); f(c); } break;
+    case 'kinder': house('#FFDA7A', '#E5484D'); break;
+    case 'house': house('#fff', '#B7A5EA'); break;
+    case 'bank': g.beginPath(); g.moveTo(-s * .55, -s * .2); g.lineTo(0, -s * .55); g.lineTo(s * .55, -s * .2); g.closePath(); f('#fff'); for (let i = 0; i < 4; i++) { g.beginPath(); g.rect(-s * .45 + i * s * .28, -s * .15, s * .12, s * .55); f('#fff'); } break;
+    case 'cafe': case 'canteen': g.beginPath(); g.rect(-s * .3, -s * .3, s * .5, s * .6); f('#fff'); g.beginPath(); g.arc(s * .28, 0, s * .14, -1.4, 1.4); g.stroke(); break;
+    case 'park': case 'yard': for (const [dx, dy] of [[-.25, -.1], [.25, -.2], [0, .2]]) { g.beginPath(); g.arc(s * dx, s * dy, s * .22, 0, 7); f('#3FA45B'); } break;
+    case 'pharmacy': g.beginPath(); g.rect(-s * .12, -s * .4, s * .24, s * .8); g.rect(-s * .4, -s * .12, s * .8, s * .24); f('#4FB86A'); break;
+    case 'restaurant': g.beginPath(); g.arc(0, 0, s * .4, 0, Math.PI); g.closePath(); f('#fff'); g.beginPath(); g.moveTo(-s * .2, -s * .5); g.lineTo(s * .05, -s * .05); g.moveTo(s * .05, -s * .5); g.lineTo(s * .2, -s * .05); g.stroke(); break;
+    case 'shop': g.beginPath(); g.rect(-s * .4, -s * .25, s * .8, s * .6); f('#fff'); g.beginPath(); g.rect(-s * .45, -s * .45, s * .9, s * .2); f('#23315C'); break;
+    case 'bus': g.beginPath(); g.rect(-s * .5, -s * .3, s, s * .55); f('#FF7B63'); g.beginPath(); g.rect(-s * .4, -s * .2, s * .8, s * .2); f('#9FDDF5'); break;
+    case 'subway': g.beginPath(); g.arc(0, 0, s * .42, 0, 7); f('#2E7DE0'); g.fillStyle = '#fff'; g.font = `${s * .5}px "Baloo 2", sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('M', 0, s * .03); break;
+    case 'pool': g.beginPath(); g.rect(-s * .5, -s * .3, s, s * .6); f('#7FD4F4'); g.beginPath(); for (let i = 0; i < 3; i++) { g.moveTo(-s * .4, -s * .1 + i * s * .15); g.quadraticCurveTo(0, -s * .2 + i * s * .15, s * .4, -s * .1 + i * s * .15); } g.strokeStyle = '#fff'; g.stroke(); break;
+    case 'station': g.beginPath(); g.rect(-s * .55, -s * .25, s * 1.1, s * .5); f('#86D8C4'); g.beginPath(); g.rect(-s * .45, -s * .15, s * .9, s * .15); f('#9FDDF5'); g.beginPath(); g.rect(-s * .55, s * .05, s * 1.1, s * .07); g.fillStyle = '#FF7B63'; g.fill(); break;
+    case 'dept': g.beginPath(); g.rect(-s * .4, -s * .55, s * .8, s * 1.05); f('#F6A9C2'); for (let i = 0; i < 3; i++) { g.beginPath(); g.rect(-s * .3, -s * .42 + i * s * .3, s * .6, s * .12); g.fillStyle = '#fff'; g.fill(); } break;
+    case 'office': g.beginPath(); g.rect(-s * .25, -s * .65, s * .5, s * 1.15); f('#9FDDF5'); break;
+    case 'univ': g.beginPath(); g.rect(-s * .55, -s * .1, s * 1.1, s * .55); f('#FFE7C4'); g.beginPath(); g.arc(0, -s * .1, s * .28, Math.PI, 0); f('#86D8C4'); break;
+    case 'post': g.fillStyle = '#E5484D'; g.font = `800 ${s * .9}px "M PLUS Rounded 1c", sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('〒', 0, 0); break;
+    case 'taxi': g.beginPath(); g.rect(-s * .55, -s * .1, s * 1.1, s * .4); f('#FFDA7A'); g.beginPath(); g.rect(-s * .3, -s * .35, s * .6, s * .25); f('#9FDDF5'); break;
+    case 'airport': g.beginPath(); g.moveTo(s * .6, 0); g.lineTo(-s * .5, -s * .1); g.lineTo(-s * .5, s * .1); g.closePath(); f('#fff'); g.beginPath(); g.moveTo(0, -s * .55); g.lineTo(s * .15, 0); g.lineTo(0, s * .55); g.lineTo(-s * .12, 0); g.closePath(); f('#fff'); break;
+    case 'room': g.beginPath(); g.rect(-s * .5, -s * .4, s, s * .8); f('#C7D98A'); g.beginPath(); g.moveTo(0, -s * .4); g.lineTo(0, s * .4); g.moveTo(-s * .5, 0); g.lineTo(s * .5, 0); g.stroke(); break;
+    case 'kitchen': g.beginPath(); g.rect(-s * .45, -s * .3, s * .9, s * .6); f('#fff'); g.beginPath(); g.arc(-s * .2, 0, s * .12, 0, 7); f('#FF7B63'); g.beginPath(); g.arc(s * .2, 0, s * .12, 0, 7); f('#555'); break;
+    case 'bath': g.beginPath(); g.rect(-s * .5, -s * .2, s, s * .45); f('#58C3F0'); for (let i = -1; i <= 1; i++) { g.beginPath(); g.moveTo(i * s * .25, -s * .3); g.quadraticCurveTo(i * s * .25 + s * .1, -s * .45, i * s * .25, -s * .6); g.stroke(); } break;
+    case 'genkan': for (const [dx, c] of [[-.25, '#E5484D'], [0, '#23315C'], [.25, '#FF7B63']]) { g.beginPath(); g.rect(s * dx - s * .08, -s * .25, s * .16, s * .45); f(c); } break;
+    case 'garden': g.beginPath(); g.arc(-s * .2, -s * .1, s * .25, 0, 7); f('#3FA45B'); g.beginPath(); g.ellipse(s * .25, s * .15, s * .25, s * .15, 0, 0, 7); f('#58C3F0'); break;
+    case 'classroom': g.beginPath(); g.rect(-s * .5, -s * .45, s, s * .5); f('#2F6B4F'); g.beginPath(); g.rect(-s * .3, s * .15, s * .6, s * .25); f('#C98B52'); break;
+    case 'toilet': g.beginPath(); g.rect(-s * .4, -s * .45, s * .8, s * .9); f('#2E7DE0'); g.fillStyle = '#fff'; g.beginPath(); g.arc(-s * .15, -s * .2, s * .08, 0, 7); g.arc(s * .15, -s * .2, s * .08, 0, 7); g.fill(); break;
+    case 'teachers': g.beginPath(); g.rect(-s * .45, -s * .1, s * .9, s * .3); f('#C98B52'); g.beginPath(); g.rect(-s * .2, -s * .45, s * .4, s * .3); f('#7CC6F0'); break;
+  }
+  g.restore();
+}
+
+/* ============================================================
+   CENA DE OBJETOS (うえ・した・なか・よこ, livro L8) — SVG
+   ============================================================ */
+function sceneSVG(kind) {
+  const L = { footprints: { chair: 40, table: 170, box: 520 }, letter: { chair: 40, table: 170, box: 380 }, park: { chair: 520, table: 520, box: 520 }, trombabox: { chair: 40, table: 170, box: 360 }, ontable: { chair: 40, table: 170, box: 380 }, under: { chair: 40, table: 170, box: 380 }, inbox: { chair: 40, table: 170, box: 370 }, dog: { chair: 150, table: 280, box: 520 } }[kind];
+  const ST = 'stroke="#1D2547" stroke-width="3"';
+  const chair = x => `<g><rect x="${x}" y="70" width="12" height="120" rx="4" fill="#C98B52" ${ST}/><rect x="${x}" y="160" width="72" height="12" rx="4" fill="#C98B52" ${ST}/><rect x="${x + 4}" y="172" width="8" height="66" fill="#C98B52" ${ST}/><rect x="${x + 60}" y="172" width="8" height="66" fill="#C98B52" ${ST}/><text x="${x + 36}" y="262" text-anchor="middle" class="sl">いす</text></g>`;
+  const table = x => `<g><rect x="${x}" y="122" width="170" height="16" rx="5" fill="#E9A866" ${ST}/><rect x="${x + 12}" y="138" width="10" height="100" fill="#E9A866" ${ST}/><rect x="${x + 148}" y="138" width="10" height="100" fill="#E9A866" ${ST}/><text x="${x + 85}" y="262" text-anchor="middle" class="sl">テーブル</text></g>`;
+  const box = (x, see) => `<g><rect x="${x}" y="176" width="74" height="62" rx="4" fill="#F2C48D" ${see ? 'fill-opacity=".35"' : ''} ${ST}/><path d="M${x} 176 l10 -14 h54 l10 14" fill="#E7B074" ${see ? 'fill-opacity=".35"' : ''} ${ST}/><text x="${x + 37}" y="262" text-anchor="middle" class="sl">はこ</text></g>`;
+  const cup = (x, y) => `<g><path d="M${x} ${y} h26 l-3 24 h-20 z" fill="#86D8C4" ${ST}/><path d="M${x + 26} ${y + 6} q12 2 0 12" fill="none" ${ST}/></g>`;
+  const book = (x, y) => `<g><rect x="${x}" y="${y}" width="46" height="12" rx="2" fill="#E5484D" ${ST}/><rect x="${x + 4}" y="${y - 10}" width="40" height="10" rx="2" fill="#3389C9" ${ST}/></g>`;
+  const doll = (x, y) => `<g><circle cx="${x}" cy="${y}" r="10" fill="#FFE0C2" ${ST}/><path d="M${x - 12} ${y + 34} l12 -24 l12 24 z" fill="#E0457F" ${ST}/><path d="M${x - 10} ${y - 6} q10 -12 20 0" fill="#1D2547"/></g>`;
+  let item = '';
+  if (kind === 'ontable') item = cup(L.table + 70, 98);
+  if (kind === 'under') item = book(L.table + 62, 226);
+  if (kind === 'inbox') item = doll(L.box + 37, 196);
+  if (kind === 'footprints') item = [70, 130, 190, 250, 310, 370, 430].map((x, i) => `<g fill="#8A8F9E" opacity=".75"><ellipse cx="${x}" cy="${i % 2 ? 222 : 232}" rx="13" ry="9"/><circle cx="${x - 9}" cy="${(i % 2 ? 222 : 232) - 9}" r="3.5"/><circle cx="${x}" cy="${(i % 2 ? 222 : 232) - 12}" r="3.5"/><circle cx="${x + 9}" cy="${(i % 2 ? 222 : 232) - 9}" r="3.5"/></g>`).join('') + `<text x="440" y="60" text-anchor="end" class="sl">あしあと →</text>`;
+  if (kind === 'letter') item = `<g transform="rotate(-6 255 108)"><rect x="222" y="92" width="66" height="30" rx="3" fill="#fff" stroke="#1D2547" stroke-width="3"/><path d="M222 92 l33 18 l33 -18" fill="none" stroke="#1D2547" stroke-width="2.5"/></g>`;
+  if (kind === 'park') item = `<rect x="0" y="0" width="470" height="238" fill="#DFF3D2"/><g><rect x="96" y="120" width="22" height="118" fill="#C98B52" stroke="#1D2547" stroke-width="3"/><circle cx="107" cy="96" r="58" fill="#3FA45B" stroke="#1D2547" stroke-width="3"/></g>
+    <g><rect x="250" y="176" width="150" height="14" rx="4" fill="#FF7B63" stroke="#1D2547" stroke-width="3"/><rect x="262" y="190" width="10" height="48" fill="#1D2547"/><rect x="378" y="190" width="10" height="48" fill="#1D2547"/><rect x="250" y="150" width="150" height="12" rx="4" fill="#FF7B63" stroke="#1D2547" stroke-width="3"/></g>
+    <text x="107" y="262" text-anchor="middle" class="sl">き</text><text x="325" y="262" text-anchor="middle" class="sl">ベンチ</text><text x="450" y="40" text-anchor="end" class="sl">？？？</text>`;
+  if (kind === 'trombabox') item = `<image href="${IMG.tromba}" x="${L.box + 12}" y="150" width="56" height="90"/>`;
+  if (kind === 'dog') item = `<image href="${IMG.pongo_em_pe}" x="${L.chair - 108}" y="128" width="96" height="112"/>`;
+  return `<svg viewBox="0 0 470 270" role="img" aria-label="Cena do quarto com mesa, cadeira e caixa"><style>.sl{font:800 17px 'M PLUS Rounded 1c',sans-serif;fill:#5B6385}</style>
+    <rect width="470" height="270" fill="#FFF8EA"/><rect y="238" width="470" height="32" fill="#DCE6A8"/><rect x="0" y="0" width="470" height="20" fill="#E9F4FB"/>
+    ${chair(L.chair)}${table(L.table)}${kind === 'park' ? item : (kind === 'inbox' || kind === 'trombabox') ? item + box(L.box, true) : box(L.box, false) + item}</svg>`;
+}
+
+/* ============================================================
+   LÓGICA DAS FRASES EM BLOCOS
+   ============================================================ */
+const parseTok = s => { const i = s.indexOf(':'); return { role: s.slice(0, i), t: s.slice(i + 1), att: s[0] === 'a' }; };
+const norm = s => s.replace(/[\s.?!,、。！？]/g, '');
+function assemble(toks) {
+  let out = '';
+  toks.forEach((tk, i) => {
+    if (tk.att || /^です/.test(tk.t)) { out += tk.t; return; } // partículas e です grudam na palavra anterior
+    if (i > 0) out += ' ';
+    out += tk.t;
+  });
+  return out;
+}
+function solveTokens(bank, answer) {
+  const target = norm(answer), toks = bank.map(parseTok), used = new Array(toks.length).fill(false), seq = [];
+  const dfs = rest => {
+    if (!rest) return true;
+    for (let i = 0; i < toks.length; i++) {
+      if (used[i]) continue; const n = norm(toks[i].t);
+      if (n && rest.startsWith(n)) { used[i] = true; seq.push(toks[i]); if (dfs(rest.slice(n.length))) return true; used[i] = false; seq.pop(); }
+    }
+    return false;
+  };
+  return dfs(target) ? seq : null;
+}
+const TRANSPORT = /^(バス|でんしゃ|ちかてつ|タクシー|じてんしゃ|くるま|ひこうき|しんかんせん)$/;
+const MOVE = /^(いきます|きます|かえります|いきました|きました|かえりました)$/;
+function hintFor(step, tray) {
+  if (!tray.length) return 'Toque nos blocos coloridos para montar a frase.';
+  const verbs = tray.filter(t => t.role === 'v').map(t => t.t), ans = step.ans[0], text = assemble(tray);
+  const moving = verbs.some(v => MOVE.test(v));
+  for (let i = 0; i < tray.length; i++) {
+    if (!tray[i].att) continue;
+    if (i === 0 || tray[i - 1].att) return `A partícula ${tray[i].t} (lilás) vem logo depois de uma palavra, nunca sozinha ou no começo.`;
+    const prev = tray[i - 1].t, p = tray[i].t;
+    if (TRANSPORT.test(prev) && (p === 'へ' || p === 'に') && moving) return `Meio de transporte usa で: ${prev}で. へ/に marca o destino.`;
+    if (!TRANSPORT.test(prev) && p === 'で' && moving && (ans.includes(prev + 'へ') || ans.includes(prev + 'に'))) return `${prev} é o destino: use へ. で é para o meio de transporte (バスで、でんしゃで).`;
+    if (p === 'を' && moving) return 'いきます / きます / かえります pedem へ (ou に) no destino. を marca o objeto de verbos de ação (たべます、みます、かきます).';
+    if (p === 'を' && verbs.includes('のります')) return 'のります usa に: でんしゃに のります.';
+    if (p === 'が' && verbs.some(v => /^(たべ|のみ|み|かき|よみ|かい|べんきょう)/.test(v))) return 'O objeto direto leva を, não が: パンを たべます.';
+    if (p === 'と' && prev === 'ひとり') return 'Sozinho é ひとりで (não ひとりと).';
+    if (p === 'に' && /^(まいあさ|まいばん|まいにち|あした|きのう|にちようび)$/.test(prev)) return `${prev} não leva に. Só hora exata leva に: 6時に.`;
+    if (p === 'を' && /時$/.test(prev)) return 'Hora exata leva に: 6時に おきます.';
+  }
+  const vi = tray.findIndex(t => t.role === 'v');
+  if (vi >= 0 && tray.slice(vi + 1).some(t => t.role !== 'k')) return 'O verbo fecha a oração (ordem SOV): nada vem depois de ～ます / ～です.';
+  const hasT = re => tray.some(t => re.test(t.t));
+  if (hasT(/^きのう$/) && verbs.some(v => /(ます|ません)$/.test(v))) return 'Com きのう (ontem) o verbo vai para o passado: ～ました / ～ませんでした.';
+  if (hasT(/^(あした|まいあさ|まいばん|にちようび)$/) && verbs.some(v => /ました$/.test(v))) return 'Rotina e futuro usam ～ます (presente).';
+  if (/ませんでした/.test(ans) && verbs.some(v => /ました$/.test(v) && !/ませんでした$/.test(v))) return 'A frase é negativa no passado: ～ませんでした.';
+  if (verbs.some(v => /^あり/.test(v)) && /(^|\s|[がにはを])い(ます|ません)/.test(ans)) return 'O Senhor Tromba é um ser vivo para o Pongo: use います / いません.';
+  if (verbs.some(v => /^い(ます|ません)/.test(v)) && /あり(ます|ません)/.test(ans)) return 'Para coisas use あります. います é para seres vivos.';
+  if (verbs.includes('きます') && /いきます/.test(ans)) return 'きます = vir (para onde você está). Aqui o Pongo vai: いきます.';
+  if (verbs.includes('いきます') && /(^|\s)きます/.test(ans)) return 'いきます = ir. Aqui alguém vem para onde você está: きます.';
+  if (verbs.includes('きます') && /かえります/.test(ans)) return 'Voltar para casa é かえります.';
+  if (/か$/.test(norm(ans)) && !/か$/.test(norm(text))) return 'Pergunta termina com か: ～ですか.';
+  if (!/か$/.test(norm(ans)) && /か$/.test(norm(text))) return 'Aqui é uma afirmação, não uma pergunta: use です sem か.';
+  if (hasT(/^どこ$/) && !/どこ/.test(ans)) return 'どこ só aparece em perguntas. Na resposta use ここ / そこ / あそこ.';
+  for (let i = 0; i < tray.length; i++) if (tray[i].role === 's' && !(tray[i + 1] && tray[i + 1].att) && new RegExp(tray[i].t + '[はが]').test(norm(ans))) return `Não esqueça a partícula depois do sujeito: ${tray[i].t}${norm(ans).includes(tray[i].t + 'が') ? 'が' : 'は'}.`;
+  const want = solveTokens(step.bank, ans);
+  if (want && tray.length < want.length) return 'Falta um bloco. Confira os espaços tracejados.';
+  if (want && tray.length > want.length) return 'Sobrou bloco. Tem um bloco a mais na frase.';
+  const wrong = tray.find(t => (t.role === 'o' || t.role === 's') && want && !want.some(w => w.t === t.t));
+  if (wrong) return `${wrong.t} não combina com a situação. Leia o pedido de novo${View.hl.length ? ' e olhe o mapa' : ''}.`;
+  return step.tip ? 'Quase! Pista: ' + step.tip : 'Quase! Confira a ordem e as partículas.';
+}
+function parseRoute(tray) {
+  const cmds = []; let i = 0;
+  if (tray[0] && tray[0].t === 'ここから') i = 1;
+  while (i < tray.length) {
+    const t = tray[i].t;
+    if (t === 'そして') { i++; continue; }
+    if (t === 'ここから') return { err: 'ここから (daqui) vem só no começo.' };
+    if (t === 'へ') return { err: 'へ vem logo depois de みぎ ou ひだり: みぎへ.' };
+    if (tray[i].role === 'v') return { err: `Falta a direção antes de ${t}. Exemplo: まっすぐ いってください.` };
+    if (t === 'まっすぐ') {
+      const v = tray[i + 1] && tray[i + 1].t;
+      if (v === 'まがってください') return { err: 'まっすぐ (reto) combina com いってください: まっすぐ いってください.' };
+      if (v !== 'いってください') return { err: 'Depois de まっすぐ vem いってください.' };
+      cmds.push('F'); i += 2; continue;
+    }
+    if (!tray[i + 1] || tray[i + 1].t !== 'へ') return { err: `Depois de ${t} vem a partícula へ: ${t}へ.` };
+    const v = tray[i + 2] && tray[i + 2].t;
+    if (v !== 'まがってください' && v !== 'いってください') return { err: `Depois de ${t}へ vem まがってください (vire).` };
+    cmds.push(t === 'みぎ' ? 'R' : 'L'); i += 3;
+  }
+  if (!cmds.length) return { err: 'Monte pelo menos uma instrução, como まっすぐ いってください.' };
+  return { cmds };
+}
+function routeText(tray) {
+  let out = '';
+  tray.forEach((tk, i) => {
+    if (tk.att) { out += tk.t; return; }
+    if (tk.t === 'そして') { out += (out && !/。$/.test(out) ? '。' : '') + 'そして、'; return; }
+    out += (i && !/[、。]$/.test(out) ? ' ' : '') + tk.t; if (/ください$/.test(tk.t)) out += '。';
+  });
+  return out.trim();
+}
+
+/* ============================================================
+   JOGO — missões, painel, progresso
+   ============================================================ */
+const G = { mi: -1, si: 0, tray: [], bank: [], mistakes: 0, tries: 0, solved: false, busy: false, free: false, built: [], ctx: [],
+  stars: store.get('stars', {}), unlocked: store.get('unlockAll', false) };
+const SPEAKER = { 'ミラー': ['#3389C9', 'ミ'], 'えきいん': ['#0B8290', '駅'], 'こども': ['#E0457F', 'こ'], 'としょかんいん': ['#7D58B5', '図'], 'てんいん': ['#D2622F', '店'], 'ゆうびんきょくいん': ['#E5484D', '〒'] };
+function avatar(who) {
+  if (who === 'トロンバ') { const d = el('div', { class: 'av', style: 'background:#fff' }); d.append(el('img', { src: IMG.tromba, alt: 'Senhor Tromba', style: 'object-fit:contain' })); return d; }
+  if (who === 'ポンゴ') { const d = el('div', { class: 'av', style: 'background:#fff' }); d.append(el('img', { src: IMG[Pongo.face] || IMG.feliz, alt: 'Pongo' })); return d; }
+  const [c, ch] = SPEAKER[who] || ['#5B6385', who[0]]; return el('div', { class: 'av', style: `background:${c}`, title: who }, ch);
+}
+function setFace(f) { if (IMG[f]) { Pongo.face = f; two.faceImg.src = IMG[f]; } }
+function setSay(ko, pt) {
+  const s = $('#say'); if (!ko) { s.hidden = true; return; }
+  s.hidden = false; s.innerHTML = ''; const b = el('button', { class: 'hudbtn', style: 'background:var(--teal)', 'aria-label': 'Ouvir', html: ICON_SPK, onclick: () => speak(ko) });
+  s.append(el('img', { src: IMG[Pongo.face] || IMG.feliz, alt: '', style: 'width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid #1D2547' }), el('span', {}, ko, pt ? el('small', {}, ' · ' + pt) : null), b);
+}
+function totalStars() { return Object.values(G.stars).reduce((a, b) => a + b, 0); }
+function isUnlocked(i) { return G.unlocked || i === 0 || G.stars[MISSIONS[i - 1].id] > 0; }
+function setMap(id) {
+  if (curMap.id === id && three.world) return; curMap = MAPS[id];
+  if (three.renderer) buildWorld3D(curMap); two.key = '';
+}
+function startMission(i) {
+  const M = MISSIONS[i]; G.mi = i; G.si = 0; G.mistakes = 0; G.built = []; G.free = false; G.ctx = (M.ctx || []).slice(); hideTromba();
+  View.forcedNoPT = !!M.hidePT; setMap(M.map); refreshLabels3D(); two.key = '';
+  if (M.start) { Pongo.node = M.start; const p = nodePos(curMap, M.start); Pongo.x = p.x; Pongo.z = p.z; Pongo.poof = 1; }
+  else if (M.startRoute) teleport(M.startRoute.i, M.startRoute.j, M.startRoute.h);
+  three.cam && (three.cam.tx = Pongo.x, three.cam.tz = Pongo.z);
+  $('#startOv').hidden = true; $('#doneOv').hidden = true; setSay(null);
+  beginStep();
+}
+function beginStep() {
+  const M = MISSIONS[G.mi], st = M.steps[G.si];
+  G.tray = []; G.tries = 0; G.solved = false; G.busy = false; G.showClue = false;
+  View.hl = st.hl ? st.hl.slice() : [];
+  if (st.pre) G.ctx.push(...st.pre);
+  if (st.trombaAt && !Tromba.follow) showTromba(st.trombaAt);
+  if (st.type === 'route') { View.hl = [st.target]; teleport(st.start.i, st.start.j, st.start.h); Pongo.showArrow = true; }
+  else Pongo.showArrow = false;
+  setFace(st.face || 'feliz');
+  if (st.type === 'find') { G.bank = curMap.lots.map((l, i) => ({ role: 'o', t: l.k, id: i })); G.solution = null; renderPanel(); return; }
+  const bankSrc = st.type === 'route' ? ROUTE_BANK : st.bank;
+  G.bank = shuffle(bankSrc.map((s, i) => Object.assign(parseTok(s), { id: i })), st.type === 'route');
+  G.solution = st.type === 'route' ? null : solveTokens(st.bank, st.ans[0]);
+  renderPanel();
+}
+function shuffle(a, keep) { if (keep) return a; const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; }
+
+function renderPanel(feedback) {
+  const P = $('#panel'); P.innerHTML = '';
+  if (G.free) return renderFreePanel();
+  const M = MISSIONS[G.mi], st = M.steps[G.si], ch = CHAPTERS[M.ch - 1], route = st.type === 'route';
+  P.append(el('div', { class: 'eyebrow' }, `Capítulo ${ch.n} · ${ch.ko} · Missão ${M.id}`));
+  P.append(el('h2', { class: 'mtitle' }, el('span', { class: 'ko' }, M.ko), el('span', { class: 'pt' }, M.pt)));
+  const dots = el('div', { class: 'dots', 'aria-label': `Etapa ${G.si + 1} de ${M.steps.length}` });
+  M.steps.forEach((_, i) => dots.append(el('i', { class: i < G.si || (i === G.si && G.solved) ? 'done' : i === G.si ? 'now' : '' }))); P.append(dots);
+  if (G.ctx.length) {
+    const chat = el('div', { class: 'chat' });
+    for (const ln of G.ctx.slice(-4)) {
+      chat.append(el('div', { class: 'line' }, avatar(ln.who), el('div', { class: 'bubble' }, el('div', { class: 'ko' }, ln.ko, el('button', { 'aria-label': 'Ouvir', html: ICON_SPK, onclick: () => speak(ln.ko) })), ln.pt ? el('div', { class: 'pt' }, ln.pt) : null)));
+    }
+    P.append(chat);
+  }
+  const task = el('div', { class: 'task' }, el('img', { src: IMG[Pongo.face] || IMG.feliz, alt: 'Expressão do Pongo' }),
+    el('p', {}, (st.who && st.who !== 'ポンゴ' ? `[${st.who}] ` : '') + st.prompt, st.tip && (route || G.tries > 0) ? el('span', { class: 'tip' }, st.tip) : null));
+  P.append(task);
+  if (st.scene) P.append(el('div', { class: 'scene', html: sceneSVG(st.scene) }));
+  if (st.type === 'find') return renderFind(P, M, st, feedback);
+
+  // trilho da frase
+  const wrap = el('div', { class: 'trayWrap' }, el('div', { class: 'lbl' }, route ? 'Suas instruções' : 'Sua frase'));
+  const tray = el('div', { class: 'tray' + (G.solved ? ' ok' : ''), id: 'tray' });
+  G.tray.forEach((tk, i) => tray.append(blockEl(tk, () => { if (G.solved || G.busy) return; G.tray.splice(i, 1); Audio.pop(); renderPanel(); })));
+  if (!route && G.solution) for (let i = G.tray.length; i < G.solution.length; i++) {
+    const r = G.solution[i].role; tray.append(el('span', { class: 'ghost ' + r }, { s: 'sujeito', o: 'objeto / lugar', a: 'partícula', v: 'verbo', d: 'tempo', k: 'expressão' }[r]));
+  }
+  if (route && !G.tray.length) { tray.append(el('span', { class: 'ghost d' }, 'まっすぐ'), el('span', { class: 'ghost v' }, 'verbo'), el('span', { class: 'ghost k' }, 'そして'), el('span', { class: 'ghost o' }, 'みぎ / ひだり'), el('span', { class: 'ghost a' }, 'へ'), el('span', { class: 'ghost v' }, 'verbo')); }
+  wrap.append(tray);
+  const text = route ? routeText(G.tray) : assemble(G.tray);
+  wrap.append(el('div', { class: 'preview' }, text ? el('span', {}, text) : el('span', { class: 'empty' }, 'A frase aparece aqui enquanto você monta.'),
+    text ? el('button', { class: 'hudbtn', style: 'background:var(--teal)', 'aria-label': 'Ouvir a frase', html: ICON_SPK, onclick: () => speak(text) }) : null));
+  P.append(wrap);
+
+  if (!G.solved) {
+    const bank = el('div', { class: 'bank' });
+    for (const tk of G.bank) {
+      const used = !route && G.tray.includes(tk);
+      const b = blockEl(tk, () => { if (G.busy) return; if (!route && G.tray.includes(tk)) return; G.tray.push(route ? Object.assign({}, tk) : tk); Audio.click(); renderPanel(); });
+      if (used) b.classList.add('used'); bank.append(b);
+    }
+    P.append(el('div', { class: 'lbl' }, route ? 'Blocos de direção (use quantas vezes quiser)' : 'Blocos'), bank);
+    P.append(el('div', { class: 'legend' }, el('span', {}, el('i', { class: 's' }), 'S sujeito'), el('span', {}, el('i', { class: 'v' }), 'V verbo'), el('span', {}, el('i', { class: 'o' }), 'O objeto / lugar'), el('span', {}, el('i', { class: 'a' }), 'AUX partícula'), el('span', {}, el('i', { class: 'd' }), 'ADV tempo')));
+  }
+  if (feedback) P.append(feedback);
+  const act = el('div', { class: 'actions' });
+  if (!G.solved) {
+    act.append(el('button', { class: 'btn primary', id: 'btnCheck', onclick: route ? runRoute : checkAnswer, ...(G.busy ? { disabled: '' } : {}) }, route ? 'Executar caminho' : 'Verificar'));
+    act.append(el('button', { class: 'btn', onclick: () => { if (G.busy) return; G.tray = []; renderPanel(); } }, 'Limpar'));
+    if (G.tries >= 3 && !route) act.append(el('button', { class: 'btn', onclick: showAnswer }, 'Ver resposta'));
+  } else {
+    const last = G.si === M.steps.length - 1;
+    act.append(el('button', { class: 'btn go', id: 'btnNext', onclick: nextStep, ...(G.busy ? { disabled: '' } : {}) }, G.busy ? 'O Pongo está andando…' : last ? 'Concluir missão' : 'Continuar'));
+    if (G.busy) act.append(el('button', { class: 'btn', onclick: finishWalk }, 'Pular caminhada'));
+  }
+  P.append(act);
+  if (feedback && G.solved) setTimeout(() => { const n = $('#btnNext'); n && n.focus({ preventScroll: true }); }, 50);
+}
+function renderFind(P, M, st, feedback) {
+  const clue = el('div', { class: 'line' }, avatar(st.who), el('div', { class: 'bubble' },
+    el('div', { class: 'ko' }, st.clue.ko, el('button', { 'aria-label': 'Ouvir a pista', html: ICON_SPK, onclick: () => speak(st.clue.ko) })),
+    G.showClue || G.solved ? el('div', { class: 'pt' }, st.clue.pt) : el('button', { style: 'display:inline-block;margin-top:.3rem;background:var(--ink-soft);color:#fff;padding:.15rem .7rem;border-radius:999px;font-size:.78rem;font-weight:700', onclick: () => { G.showClue = true; G.mistakes++; renderPanel(); } }, 'Ver tradução (custa uma estrela)')));
+  P.append(el('div', { class: 'lbl' }, 'Pista'), el('div', { class: 'chat' }, clue));
+  if (!G.solved) {
+    const bank = el('div', { class: 'bank' });
+    for (const tk of G.bank) bank.append(blockEl(tk, () => guessPlace(tk.t)));
+    P.append(el('div', { class: 'lbl' }, 'Toque no lugar (aqui ou no mapa)'), bank);
+  }
+  if (feedback) P.append(feedback);
+  if (G.solved) {
+    const last = G.si === M.steps.length - 1, act = el('div', { class: 'actions' });
+    act.append(el('button', { class: 'btn go', id: 'btnNext', onclick: nextStep, ...(G.busy ? { disabled: '' } : {}) }, G.busy ? 'O Pongo está correndo…' : last ? 'Concluir missão' : 'Continuar'));
+    if (G.busy) act.append(el('button', { class: 'btn', onclick: () => { finishWalk(); if (Tromba.anim) { const A = Tromba.anim; Tromba.anim = null; Tromba.visible = false; A.res(); } } }, 'Pular'));
+    P.append(act);
+  }
+}
+async function guessPlace(k) {
+  const M = MISSIONS[G.mi], st = M.steps[G.si];
+  if (!st || st.type !== 'find' || G.solved || G.busy) return;
+  const l = curMap.byK[k];
+  if (k !== st.answer) {
+    G.mistakes++; G.tries++; Audio.bad(); setFace('curioso'); speak(k);
+    if (G.tries >= 3) View.hl = [st.answer];
+    renderPanel(el('div', { class: 'feedback bad' }, `Ali é ${k} (${l.pt}). Releia a pista${G.tries >= 3 ? ': o lugar certo está piscando no mapa.' : st.tip ? '. Dica: ' + st.tip : '.'}`));
+    return;
+  }
+  G.solved = true; G.busy = true; View.hl = [k]; Audio.good(); speak(st.clue.ko);
+  G.built.push({ ko: st.clue.ko, pt: st.clue.pt });
+  renderPanel(el('div', { class: 'feedback ok' }, `Isso! ${k} (${l.pt}). O Pongo vai até lá…`));
+  await goTo(k); View.hl = [];
+  showTromba(k); setFace('surpreso'); Audio.fanfare(); setSay('トロンバさんが いました!', 'O Senhor Tromba estava aqui!'); speak('トロンバさんが いました!');
+  await sleep(1300);
+  if (st.flee) { await fleeTromba(st.flee); setFace('bravo'); }
+  G.busy = false;
+  renderPanel(el('div', { class: 'feedback ok' }, el('div', { class: 'ko' }, 'トロンバさんが いました!'), st.flee ? 'O Senhor Tromba estava lá… mas fugiu correndo de novo!' : 'O Senhor Tromba está aqui! Desta vez ele não fugiu.'));
+}
+function blockEl(tk, onclick) {
+  const gl = glossOf(tk.t);
+  return el('button', { class: 'blk ' + tk.role, onclick, title: gl }, tk.t, gl ? el('small', {}, gl) : null);
+}
+async function checkAnswer() {
+  const M = MISSIONS[G.mi], st = M.steps[G.si], text = assemble(G.tray);
+  if (st.ans.some(a => norm(a) === norm(text))) {
+    await succeed(st, text);
+  } else {
+    G.mistakes++; G.tries++; Audio.bad(); setFace(G.tries > 1 ? 'triste' : 'curioso');
+    const hint = hintFor(st, G.tray);
+    renderPanel(el('div', { class: 'feedback bad', role: 'status' }, hint));
+    const t = $('#tray'); t && t.classList.add('bad');
+  }
+}
+function showAnswer() {
+  const st = MISSIONS[G.mi].steps[G.si]; G.mistakes += 2;
+  G.tray = (G.solution || []).map(s => G.bank.find(b => b.t === s.t && b.role === s.role) || s);
+  renderPanel(el('div', { class: 'feedback bad' }, 'Esta é a resposta. Toque em Verificar para ouvir e seguir.'));
+}
+async function succeed(st, text) {
+  G.solved = true; Audio.good(); setFace(st.face2 || st.face || 'feliz');
+  G.ctx.push({ who: st.who || 'ポンゴ', ko: text, pt: st.tr }); G.built.push({ ko: text, pt: st.tr });
+  speak(text); setSay(text, st.tr);
+  G.busy = !!(st.go && st.go.length);
+  renderPanel(el('div', { class: 'feedback ok', role: 'status' }, el('div', { class: 'ko' }, text), st.tr ? '✓ ' + st.tr : '✓ Correto!'));
+  if (st.follow) { Tromba.visible = true; Tromba.follow = true; Tromba.poof = 1; }
+  if (st.go) { for (const p of st.go) { View.hl = [p]; await goTo(p); } View.hl = []; G.busy = false; setFace(Tromba.follow ? 't_carinhoso' : 'empolgado'); renderPanel(el('div', { class: 'feedback ok' }, el('div', { class: 'ko' }, text), '✓ ' + (st.tr || ''))); }
+}
+async function runRoute() {
+  const M = MISSIONS[G.mi], st = M.steps[G.si], parsed = parseRoute(G.tray);
+  if (parsed.err) { G.tries++; Audio.bad(); setFace('curioso'); renderPanel(el('div', { class: 'feedback bad' }, parsed.err)); return; }
+  const text = routeText(G.tray); G.busy = true; renderPanel(); speak(text); setSay(text, 'O Pongo segue as instruções…');
+  await sleep(500);
+  let { i, j } = { i: st.start.i, j: st.start.j }, h = st.start.h, bumped = false;
+  for (const c of parsed.cmds) {
+    if (c === 'R') h = (h + 1) % 4; if (c === 'L') h = (h + 3) % 4;
+    Pongo.heading = h; await sleep(220);
+    const ni = i + [0, 1, 0, -1][h], nj = j + [-1, 0, 1, 0][h];
+    if (ni < 0 || nj < 0 || ni > curMap.cols || nj > curMap.rows) { bumped = true; break; }
+    await walkPoints([nodePos(curMap, `${ni},${nj}`)]); Pongo.heading = h; i = ni; j = nj; Pongo.node = `${i},${j}`;
+  }
+  const L = curMap.byK[st.target], ok = !bumped && (i === L.c || i === L.c + 1) && (j === L.r || j === L.r + 1);
+  if (ok) {
+    G.busy = false; G.solved = true; Audio.good(); setFace('empolgado'); G.ctx.push({ who: st.who || 'ポンゴ', ko: text, pt: 'Instruções até ' + L.pt }); G.built.push({ ko: text, pt: 'Caminho até ' + L.pt });
+    if (parsed.cmds.length > st.opt + 2) G.mistakes++;
+    G.busy = true; renderPanel(el('div', { class: 'feedback ok' }, `Chegou na ${L.k}! Você usou ${parsed.cmds.length} instruções (o mínimo é ${st.opt}).`));
+    Pongo.showArrow = false; await goTo(st.target);
+    if (st.flee) { setFace('surpreso'); setSay('あっ! にげました!', 'Ah! Ele fugiu!'); speak('あっ! にげました!'); await sleep(500); await fleeTromba(st.flee); setFace('bravo'); }
+    G.busy = false; renderPanel(el('div', { class: 'feedback ok' }, el('div', { class: 'ko' }, text), `Chegou na ${L.k} (${L.pt}) com ${parsed.cmds.length} instruções. Mínimo possível: ${st.opt}.`));
+  } else {
+    G.mistakes++; G.tries++; Audio.bad(); setFace(bumped ? 'assustado' : 'triste');
+    const here = curMap.lots.filter(l => (i === l.c || i === l.c + 1) && (j === l.r || j === l.r + 1)).map(l => l.k).join(', ');
+    const msg = bumped ? 'Ops! O Pongo chegou na borda do mapa e não pôde continuar.' : `O Pongo parou perto de: ${here}. O destino é ${L.k}.`;
+    await sleep(700); teleport(st.start.i, st.start.j, st.start.h); G.busy = false;
+    renderPanel(el('div', { class: 'feedback bad' }, msg + ' Ele voltou ao início; ajuste as instruções.'));
+  }
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function nextStep() {
+  const M = MISSIONS[G.mi];
+  if (G.si < M.steps.length - 1) { G.si++; setSay(null); beginStep(); return; }
+  const stars = G.mistakes === 0 ? 3 : G.mistakes <= 2 ? 2 : 1;
+  G.stars[M.id] = Math.max(G.stars[M.id] || 0, stars); store.set('stars', G.stars); $('#starCount').textContent = totalStars();
+  Audio.fanfare(); setFace(G.mi === MISSIONS.length - 1 ? 't_juntos' : 'empolgado'); View.hl = []; Pongo.showArrow = false;
+  const card = $('#doneCard'); card.innerHTML = '';
+  const finale = G.mi === MISSIONS.length - 1;
+  card.append(el('img', { src: finale ? IMG.t_companhia : IMG[Pongo.face], alt: finale ? 'Pongo e o Senhor Tromba, sempre juntos' : 'Pongo comemorando' }), el('div', { class: 'eyebrow', style: 'margin-top:.6rem' }, `Missão ${M.id} concluída`),
+    el('h2', { class: 'mtitle', style: 'justify-content:center' }, el('span', { class: 'ko' }, 'よく できました!'), el('span', { class: 'pt' }, 'Muito bem!')),
+    el('div', { class: 'bigstars', 'aria-label': `${stars} de 3 estrelas` }, '★'.repeat(stars), el('span', { style: 'color:var(--line)' }, '★'.repeat(3 - stars))));
+  const learned = el('div', { class: 'learned' }); for (const b of G.built) learned.append(el('div', {}, el('span', {}, el('span', { class: 'ko' }, b.ko), el('br'), el('small', {}, b.pt || '')), el('button', { class: 'hudbtn', style: 'background:var(--teal)', html: ICON_SPK, 'aria-label': 'Ouvir', onclick: () => speak(b.ko) })));
+  card.append(el('div', { class: 'lbl', style: 'text-align:left' }, 'Frases que você montou'), learned);
+  const row = el('div', { class: 'actions', style: 'justify-content:center' });
+  if (G.mi < MISSIONS.length - 1) row.append(el('button', { class: 'btn primary', onclick: () => startMission(G.mi + 1) }, 'Próxima missão'));
+  else row.append(el('div', { class: 'feedback ok', style: 'width:100%' }, 'Você encontrou o Senhor Tromba! ずっと いっしょ! Pongo e Tromba, sempre juntos.'));
+  row.append(el('button', { class: 'btn', onclick: () => { $('#doneOv').hidden = true; openStart(); } }, 'Mapa de missões'), el('button', { class: 'btn', onclick: () => startMission(G.mi) }, 'Repetir'));
+  card.append(row); $('#doneOv').hidden = false;
+  if (G.mi === MISSIONS.length - 1) speak('ずっと いっしょ!');
+}
+
+/* passeio livre */
+function startFree() {
+  G.free = true; G.mi = -1; View.hl = []; View.forcedNoPT = false; Pongo.showArrow = false; setMap('city'); refreshLabels3D();
+  Pongo.node = curMap.start; const p = nodePos(curMap, Pongo.node); Pongo.x = p.x; Pongo.z = p.z; Pongo.poof = 1;
+  $('#startOv').hidden = true; setFace('brincalhao'); renderPanel();
+}
+function renderFreePanel() {
+  const P = $('#panel'); P.innerHTML = '';
+  P.append(el('div', { class: 'eyebrow' }, 'Passeio livre'), el('h2', { class: 'mtitle' }, el('span', { class: 'ko' }, 'どこへ いきますか'), el('span', { class: 'pt' }, 'Toque em um lugar')));
+  P.append(el('div', { class: 'task' }, el('img', { src: IMG.brincalhao, alt: 'Pongo brincando' }), el('p', {}, 'Toque em qualquer prédio no mapa (3D ou 2D) ou na lista. O Pongo vai até lá e fala a frase em japonês.')));
+  const row = el('div', { class: 'actions' });
+  for (const id of ['house', 'city']) row.append(el('button', { class: 'btn' + (curMap.id === id ? ' go' : ''), onclick: () => { setMap(id); Pongo.node = MAPS[id].start; const p = nodePos(curMap, Pongo.node); Pongo.x = p.x; Pongo.z = p.z; renderPanel(); } }, id === 'house' ? 'うち · casa' : 'まち · cidade'));
+  P.append(row);
+  const bank = el('div', { class: 'bank' });
+  for (const l of curMap.lots) bank.append(blockEl({ role: 'o', t: l.k }, () => onPlaceTap(l.k)));
+  P.append(el('div', { class: 'lbl' }, 'Lugares'), bank);
+  P.append(el('button', { class: 'btn primary', onclick: openStart }, 'Ir para as missões'));
+}
+async function onPlaceTap(k) {
+  const l = curMap.byK[k]; if (!l) return;
+  if (G.free) {
+    if (Pongo.walking) return; const s = `${k}へ いきます`; setSay(s, `Vou: ${l.pt}`); speak(s); View.hl = [k]; await goTo(k); View.hl = []; setFace('feliz');
+  } else {
+    const st = G.mi >= 0 && MISSIONS[G.mi].steps[G.si];
+    if (st && st.type === 'find' && !G.solved) { guessPlace(k); return; }
+    setSay(k, l.pt); speak(k);
+  }
+}
+
+/* sobreposições */
+function openStart() {
+  const box = $('#chapters'); box.innerHTML = '';
+  for (const ch of CHAPTERS) {
+    const c = el('div', { class: 'chap' }, el('h3', {}, `Capítulo ${ch.n} · ${ch.pt}`), el('div', { class: 'ko' }, ch.ko));
+    MISSIONS.forEach((M, i) => {
+      if (M.ch !== ch.n) return; const s = G.stars[M.id] || 0, open = isUnlocked(i);
+      const b = el('button', { class: 'mbtn', onclick: () => { Audio.init(); startMission(i); }, ...(open ? {} : { disabled: '', title: 'Complete a missão anterior para liberar' }) },
+        el('b', {}, M.id), el('span', { class: 't' }, el('span', {}, M.ko), el('small', {}, M.pt)),
+        el('span', { class: 'st', 'aria-label': `${s} estrelas` }, '★'.repeat(s), el('span', { class: 'off' }, '★'.repeat(3 - s))));
+      c.append(b);
+    });
+    box.append(c);
+  }
+  $('#btnUnlock').textContent = G.unlocked ? 'Modo professor: ligado' : 'Modo professor: liberar todas';
+  $('#startOv').hidden = false;
+}
+const VOCAB = [
+  ['Caça ao Tromba', [['トロンバさん', 'Senhor Tromba'], ['ぞう', 'elefante'], ['います / いません', 'está / não está (ser vivo)'], ['あります / ありません', 'há / não há (coisa)'],
+    ['どこに いますか', 'onde está?'], ['さがします', 'procurar'], ['みつけました', 'encontrei'], ['あしあと', 'pegadas'], ['てがみ', 'carta, bilhete'], ['ぼうし', 'chapéu'],
+    ['～も', 'também'], ['それから', 'depois'], ['いっしょに', 'juntos'], ['まえ / うしろ', 'frente / atrás'], ['みぎ / ひだり', 'direita / esquerda']]],
+  ['Lugares (L3, L13)', [['えき', 'estação'], ['がっこう', 'escola'], ['ぎんこう', 'banco'], ['びょういん', 'hospital'], ['ゆうびんきょく', 'correio'], ['デパート', 'loja de departamentos'],
+    ['かいしゃ', 'empresa'], ['だいがく', 'universidade'], ['としょかん', 'biblioteca'], ['しょくどう', 'restaurante'], ['こうえん', 'parque'], ['うち', 'casa'], ['くうこう', 'aeroporto'],
+    ['バスてい', 'ponto de ônibus'], ['タクシーのりば', 'ponto de táxi'], ['ちかてつ', 'metrô']]],
+  ['Casa (livro L8)', [['げんかん', 'entrada'], ['へや', 'quarto'], ['だいどころ', 'cozinha'], ['おふろ', 'banheira'], ['トイレ', 'banheiro'], ['にわ', 'jardim'],
+    ['テーブル', 'mesa'], ['いす', 'cadeira'], ['たな', 'estante'], ['カップ', 'xícara'], ['ほん', 'livro'], ['にんぎょう', 'boneca'], ['はこ', 'caixa'], ['とけい', 'relógio'], ['しゃしん', 'foto']]],
+  ['Partículas', [['は', 'tópico (lê-se “wa”)'], ['へ', 'destino (lê-se “e”)'], ['に', 'hora exata · destino · のります'], ['を', 'objeto direto (lê-se “o”)'], ['で', 'meio de transporte'],
+    ['と', 'companhia'], ['まで', 'até'], ['うちへ かえります', 'Volto para casa.'], ['バスで いきます', 'Vou de ônibus.'], ['6時に おきます', 'Acordo às 6.']]],
+  ['Verbos (L5)', [['いきます / いきました', 'ir / fui'], ['きます / きました', 'vir / vim'], ['かえります / かえりました', 'voltar / voltei'], ['おきます', 'acordar'], ['ねます', 'dormir'],
+    ['やすみます', 'descansar'], ['べんきょうします', 'estudar'], ['のります', 'embarcar'], ['～ません / ～ませんでした', 'não … / não … (passado)']]],
+  ['Transportes (L6, L13)', [['でんしゃ', 'trem'], ['バス', 'ônibus'], ['タクシー', 'táxi'], ['くるま', 'carro'], ['じてんしゃ', 'bicicleta'], ['バイク', 'moto'], ['ひこうき', 'avião'],
+    ['しんかんせん', 'trem-bala'], ['ひとりで', 'sozinho'], ['たかい ↔ やすい', 'caro ↔ barato'], ['べんり ↔ ふべん', 'prático ↔ pouco prático'], ['ちかい ↔ とおい', 'perto ↔ longe'], ['はやい ↔ おそい', 'rápido ↔ lento']]],
+  ['Direções e kanji (p. 119)', [['まっすぐ いってください', 'Siga reto.'], ['みぎへ まがってください', 'Vire à direita.'], ['ひだりへ まがってください', 'Vire à esquerda.'],
+    ['東 ひがし', 'leste'], ['西 にし', 'oeste'], ['南 みなみ', 'sul'], ['北 きた', 'norte'], ['口 ぐち', 'saída / entrada'], ['北口 きたぐち', 'saída norte'], ['東口 ひがしぐち', 'saída leste']]]
+];
+function openVocab() {
+  const c = $('#vocabCard'); c.innerHTML = '';
+  c.append(el('button', { class: 'closex', onclick: () => { $('#vocabOv').hidden = true; } }, 'Fechar'), el('div', { class: 'eyebrow' }, 'Aulas Odu Creative · Minna no Nihongo L2–6 · livro L8 e L13'),
+    el('h2', { class: 'mtitle' }, el('span', { class: 'ko' }, 'ことば'), el('span', { class: 'pt' }, 'Toque para ouvir')));
+  const grid = el('div', { class: 'vocab' });
+  for (const [title, items] of VOCAB) {
+    const s = el('section', {}, el('h3', {}, title));
+    for (const [ko, pt] of items) s.append(el('button', { onclick: () => speak(ko.replace(/[()]/g, '')) }, el('span', { class: 'ko' }, ko), el('span', { class: 'pt' }, pt)));
+    grid.append(s);
+  }
+  c.append(grid); $('#vocabOv').hidden = false;
+}
+
+/* ============================================================
+   INICIALIZAÇÃO
+   ============================================================ */
+function setView(mode) {
+  View.mode = three.renderer ? mode : '2d';
+  $('#c3d').hidden = View.mode !== '3d'; $('#c2d').hidden = View.mode !== '2d';
+  $('#v3').setAttribute('aria-pressed', View.mode === '3d'); $('#v2').setAttribute('aria-pressed', View.mode === '2d');
+  $('#btnRecenter').hidden = View.mode !== '3d'; store.set('view', View.mode);
+}
+function setMusic(on) {
+  if (on) Audio.start(); else Audio.stop();
+  $('#btnMusic').setAttribute('aria-pressed', !!on); store.set('music', !!on);
+}
+async function boot() {
+  $('#heroImg').src = IMG.hero_tromba; setFace('feliz');
+  two.cv = $('#c2d'); two.g = two.cv.getContext('2d'); two.tromba.src = IMG.tromba;
+  // a fonte japonesa vem fatiada por caracteres: pede as fatias de todas as placas antes de desenhar
+  const allText = Object.values(MAPS).flatMap(m => m.lots.map(l => l.k)).join('') + 'いすテーブルはこ北';
+  try { await Promise.race([Promise.all([document.fonts.load('800 40px "M PLUS Rounded 1c"', allText), document.fonts.load('700 20px "Baloo 2"')]), sleep(3000)]); } catch (e) {}
+  const ok = typeof THREE !== 'undefined' && initThree();
+  const p = nodePos(curMap, curMap.start); Pongo.x = p.x; Pongo.z = p.z; Pongo.node = curMap.start;
+  if (ok) { buildWorld3D(curMap); three.cam.tx = Pongo.x; three.cam.tz = Pongo.z; }
+  setView(ok ? store.get('view', '3d') : '2d'); if (!ok) $('#v3').disabled = true;
+  $('#starCount').textContent = totalStars();
+  two.cv.addEventListener('click', e => {
+    if (!two.toWorld) return; const r = two.cv.getBoundingClientRect(), w = two.toWorld(e.clientX - r.left, e.clientY - r.top);
+    const hit = curMap.lots.find(l => { const c = lotCenter(curMap, l), s = (S - ROAD) / 2; return Math.abs(w.x - c.x) < s && Math.abs(w.z - c.z) < s; });
+    if (hit) onPlaceTap(hit.k);
+  });
+  $('#v3').onclick = () => setView('3d'); $('#v2').onclick = () => setView('2d');
+  $('#btnRecenter').onclick = () => Object.assign(three.cam, { theta: 0, el: .86, r: 40 });
+  $('#btnPT').onclick = () => { View.showPT = !View.showPT; $('#btnPT').setAttribute('aria-pressed', View.showPT); refreshLabels3D(); two.key = ''; };
+  $('#btnMusic').onclick = () => setMusic($('#btnMusic').getAttribute('aria-pressed') !== 'true');
+  $('#btnMissions').onclick = openStart; $('#btnVocab').onclick = openVocab;
+  $('#btnPlay').onclick = () => { Audio.init(); setMusic(true); firstMission(); };
+  $('#btnPlayQuiet').onclick = () => { Audio.init(); setMusic(false); firstMission(); };
+  $('#btnFree').onclick = () => { Audio.init(); startFree(); };
+  $('#btnUnlock').onclick = () => { G.unlocked = !G.unlocked; store.set('unlockAll', G.unlocked); openStart(); };
+  for (const ov of ['#doneOv', '#vocabOv']) $(ov).addEventListener('click', e => { if (e.target === $(ov) && ov === '#vocabOv') $(ov).hidden = true; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#vocabOv').hidden = true; });
+  openStart();
+  // painel de fundo enquanto o menu está aberto: primeira missão como exemplo
+  G.mi = 0; G.si = 0; G.ctx = (MISSIONS[0].ctx || []).slice(); G.built = []; setMap(MISSIONS[0].map); beginStep();
+  let last = performance.now(), fails = 0;
+  const loop = now => {
+    requestAnimationFrame(loop); // agenda antes de desenhar: um erro no desenho não para o jogo
+    const raw = Math.max(0, (now - last) / 1000), dt = Math.min(.05, raw), t = now / 1000; last = now; lastFrame = performance.now();
+    updateWalk(Math.min(.25, raw)); updateTromba(Math.min(.25, raw)); if (Pongo.poof > 0) Pongo.poof = Math.max(0, Pongo.poof - dt * 2.5);
+    try {
+      if (View.mode === '3d' && three.renderer) render3D(t, dt); else render2D(t);
+      fails = 0;
+    } catch (e) {
+      // se o 3D falhar várias vezes seguidas neste aparelho, passa para o mapa 2D
+      if (++fails > 3 && View.mode === '3d') { console.warn('3D falhou, usando 2D', e); setView('2d'); fails = 0; }
+    }
+  };
+  requestAnimationFrame(loop);
+}
+function firstMission() {
+  let i = MISSIONS.findIndex((M, k) => isUnlocked(k) && !G.stars[M.id]); if (i < 0) i = 0; startMission(i);
+}
+boot();
+</script>
