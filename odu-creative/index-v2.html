@@ -62,6 +62,7 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 .burst::before{content:"";position:absolute;inset:0;background:var(--burst-c,var(--yellow));clip-path:polygon(50% 0,61% 30%,95% 18%,72% 45%,100% 62%,66% 66%,72% 100%,50% 76%,26% 100%,32% 66%,0 60%,28% 44%,6% 16%,40% 30%);filter:drop-shadow(0 0 14px var(--burst-c,var(--yellow)))}
 .burst span{position:relative;font-weight:800;font-size:clamp(18px,3vw,26px);color:var(--night);text-align:center;line-height:1.05;transform:rotate(-8deg)}
 .burst span small{display:block;font-size:.55em;letter-spacing:.1em}
+[hidden]{display:none!important}
 .burst.pop{animation:burst .9s cubic-bezier(.2,1.6,.4,1) forwards}
 @keyframes burst{0%{transform:scale(0) rotate(-30deg);opacity:0}25%{transform:scale(1.1) rotate(4deg);opacity:1}75%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(.9);opacity:0}}
 .scene.shake{animation:shake .4s}
