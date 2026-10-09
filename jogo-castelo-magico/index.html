@@ -1,0 +1,695 @@
+<title>Spellwords Castle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: o castelo noturno do Blender ocupa o topo como "palco"; abaixo, o grimório (painel do feitiço) e o mapa dos capítulos ao lado. */
+:root {
+  /* Cores tiradas dos materiais da cena: Ceu, Ardosia, Pedra azulada, Luz dourada, Lua fria, Lago */
+  --sky: #070a16;
+  --slate: #12172a;
+  --stone: #2c3646;
+  --stone-hi: #3d4a5e;
+  --ink: #e9e4d6;
+  --ink-dim: #a9acb8;
+  --gold: #ffa021;
+  --gold-soft: #ffc76b;
+  --moon: #8cadff;
+  --lake: #0a2440;
+  --fail: #ff7a6b;
+  --ok: #8fe3b0;
+  --display: "IM Fell English SC", "IM Fell English", Georgia, "Times New Roman", serif;
+  --fell: "IM Fell English", Georgia, "Times New Roman", serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body { font-family: var(--body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 16px 16px 40px; display: grid; gap: 18px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; }
+header.top h1 { font-family: var(--display); font-weight: 400; font-size: clamp(1.7rem, 4vw, 2.5rem); margin: 0; letter-spacing: .02em; line-height: 1.1; text-wrap: balance; }
+header.top h1 span { color: var(--gold); }
+.stats { display: flex; gap: 18px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.stat { display: flex; flex-direction: column; }
+.stat b { font-size: 1.25rem; color: var(--gold-soft); line-height: 1.1; }
+.stat small { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
+
+.stage { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--stone); background: var(--slate); }
+.stage canvas { display: block; width: 100%; height: auto; max-width: 100%; }
+.stage .place { position: absolute; left: 14px; bottom: 12px; font-family: var(--display); font-size: clamp(.95rem, 2.4vw, 1.25rem); color: var(--gold-soft); text-shadow: 0 1px 6px #000; pointer-events: none; }
+.stage .place small { display: block; font-family: var(--body); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+@media (max-width: 820px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+/* Grimório */
+.grimoire { min-width: 0; background: linear-gradient(180deg, #161c30, #10152a); border: 1px solid var(--stone-hi); border-radius: 6px; padding: 20px clamp(16px, 3vw, 28px) 22px; display: grid; gap: 16px; }
+.mentor { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: start; }
+.mentor svg { width: 52px; height: 52px; }
+.mentor p { margin: 0; font-family: var(--fell); font-style: italic; font-size: 1.05rem; color: var(--ink); max-width: 60ch; }
+.mentor p b { font-style: normal; font-family: var(--display); font-weight: 400; color: var(--moon); display: block; font-size: .85rem; letter-spacing: .06em; }
+
+.task { display: grid; gap: 6px; }
+.task .label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.task .pt { font-size: clamp(1.15rem, 2.6vw, 1.4rem); font-weight: 700; margin: 0; text-wrap: balance; }
+.task .incant { font-family: var(--fell); font-style: italic; color: var(--gold-soft); }
+
+.slots { min-height: 64px; border: 1px dashed var(--stone-hi); border-radius: 6px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: rgba(0,0,0,.18); transition: border-color .3s, box-shadow .3s; }
+.slots.empty::before { content: "Toque nas runas abaixo para montar a frase…"; color: var(--ink-dim); font-size: .92rem; padding-left: 4px; }
+.slots.ok { border-style: solid; border-color: var(--gold); box-shadow: 0 0 22px rgba(255,160,33,.25) inset; }
+.slots.bad { border-color: var(--fail); animation: shake .4s; }
+@keyframes shake { 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+
+.pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; }
+.rune { font-family: var(--fell); font-size: 1.15rem; min-height: 44px; padding: 6px 14px; border-radius: 4px; border: 1px solid #5a6680; background: linear-gradient(180deg, #3a4559, #2a3343); color: var(--ink); cursor: pointer; box-shadow: 0 2px 0 #151a26; transition: transform .12s, background .2s, border-color .2s; }
+.rune:hover { transform: translateY(-2px); border-color: var(--gold-soft); }
+.rune:focus-visible, .btn:focus-visible, .chap:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.rune.placed { background: linear-gradient(180deg, #4a3a1f, #33280f); border-color: #b9802e; }
+.rune.good { background: linear-gradient(180deg, #284a3a, #1b3329); border-color: var(--ok); }
+.rune.wrong { border-color: var(--fail); }
+.rune:disabled { cursor: default; transform: none; }
+.rune.ghost { visibility: hidden; }
+
+.preview { font-family: var(--fell); font-size: 1.15rem; color: var(--ink-dim); min-height: 1.6em; margin: 0; }
+.preview.ok { color: var(--gold-soft); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { font-family: var(--body); font-weight: 700; font-size: .95rem; min-height: 44px; padding: 8px 16px; border-radius: 4px; border: 1px solid var(--stone-hi); background: transparent; color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--ink-dim); }
+.btn.cast { background: var(--gold); color: #1d1204; border-color: var(--gold); margin-left: auto; }
+.btn.cast:hover { background: var(--gold-soft); }
+.btn[disabled] { opacity: .45; cursor: default; }
+
+.feedback { border-radius: 6px; padding: 12px 14px; font-size: .98rem; display: grid; gap: 4px; }
+.feedback.fail { background: rgba(255,122,107,.1); border: 1px solid rgba(255,122,107,.45); }
+.feedback.win { background: rgba(255,160,33,.1); border: 1px solid rgba(255,160,33,.5); }
+.feedback.info { background: rgba(140,173,255,.08); border: 1px solid rgba(140,173,255,.35); }
+.feedback strong { font-family: var(--display); font-weight: 400; font-size: 1.1rem; letter-spacing: .03em; }
+.feedback .en { font-family: var(--fell); font-size: 1.2rem; color: var(--gold-soft); }
+
+/* Barra lateral */
+aside { display: grid; gap: 16px; min-width: 0; }
+.panel { border: 1px solid var(--stone); border-radius: 6px; padding: 16px; background: #0d1222; }
+.panel h2 { font-family: var(--display); font-weight: 400; font-size: 1.1rem; margin: 0 0 10px; color: var(--moon); letter-spacing: .04em; }
+.chapters { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.chap { width: 100%; text-align: left; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 4px; border: 1px solid transparent; background: transparent; color: var(--ink); font-family: var(--body); font-size: .92rem; cursor: pointer; }
+.chap:hover:not([disabled]) { border-color: var(--stone-hi); }
+.chap[aria-current="true"] { border-color: var(--gold); background: rgba(255,160,33,.07); }
+.chap[disabled] { color: #5b6275; cursor: default; }
+.chap .n { font-family: var(--display); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1px solid currentColor; font-size: .85rem; }
+.chap.done .n { background: var(--gold); color: #1d1204; border-color: var(--gold); }
+.chap .lvl { font-size: .7rem; letter-spacing: .08em; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.chap .nm small { display: block; color: var(--ink-dim); font-size: .76rem; }
+.chap[disabled] .nm small, .chap[disabled] .lvl { color: #4b5163; }
+
+.focus p { margin: 0 0 8px; font-size: .92rem; color: var(--ink-dim); }
+.focus .ex { font-family: var(--fell); font-size: 1.05rem; color: var(--ink); margin: 0; padding-left: 12px; border-left: 2px solid var(--gold); }
+.focus .ex + .ex { margin-top: 6px; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--gold); display: block; }
+.dots i.on { background: var(--gold); }
+
+.ending { text-align: center; display: grid; gap: 12px; justify-items: center; padding-block: 10px; }
+.ending h2 { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.2rem); color: var(--gold); margin: 0; text-wrap: balance; }
+.ending p { margin: 0; max-width: 52ch; }
+.foot { font-size: .8rem; color: var(--ink-dim); }
+.foot button { background: none; border: 0; color: var(--moon); font: inherit; text-decoration: underline; cursor: pointer; padding: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slots.bad { animation: none; }
+  .rune { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Spellwords <span>Castle</span></h1>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="sMana">0</b><small>Pontos de magia</small></div>
+      <div class="stat"><b id="sSpells">0/30</b><small>Feitiços lançados</small></div>
+      <div class="stat"><b id="sRank">Aprendiz</b><small>Título</small></div>
+    </div>
+  </header>
+
+  <div class="stage">
+    <canvas id="scene" width="1600" height="1000" aria-label="O castelo da Escola de Magia à noite. Cada frase correta acende uma parte do castelo."></canvas>
+    <div class="place" id="placeName"></div>
+  </div>
+
+  <div class="main">
+    <section class="grimoire" id="grimoire" aria-label="Grimório de feitiços"></section>
+    <aside>
+      <div class="panel">
+        <h2>Mapa do castelo</h2>
+        <ul class="chapters" id="chapters"></ul>
+      </div>
+      <div class="panel focus" id="focus"></div>
+      <p class="foot">O progresso fica salvo neste navegador. <button type="button" id="resetBtn">Recomeçar do zero</button></p>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------------------------------------------------------------
+   CONTEÚDO — 6 capítulos, 5 frases cada (A1 → A2)
+   en: frase alvo · pt: o que o jogador vê · x: runas falsas · tip: dica gramatical
+---------------------------------------------------------------- */
+const CHAPTERS = [
+  {
+    name: "Ponte das Lanternas", sub: "Verbo to be", level: "A1", spell: "Lux Pontis",
+    mentor: "Bem-vindo, jovem bruxo! A ponte está escura. Cada frase certa acende duas lanternas. Comece se apresentando.",
+    focus: ["Use <b>am</b> com I, <b>is</b> com he/she/it e <b>are</b> com you/we/they.", "I am a wizard.", "We are friends."],
+    items: [
+      { pt: "Eu sou um jovem bruxo.", en: "I am a young wizard.", x: ["is"], tip: "Com <b>I</b> o verbo to be é sempre <b>am</b>. O adjetivo vem antes do substantivo: <i>young wizard</i>." },
+      { pt: "Minha varinha é muito velha.", en: "My wand is very old.", x: ["are"], tip: "<i>My wand</i> é uma coisa só (it), então usamos <b>is</b>. <i>Very</i> vem antes de <i>old</i>." },
+      { pt: "A ponte é longa e escura.", en: "The bridge is long and dark.", x: ["am"], tip: "Em inglês o sujeito vem primeiro: <i>The bridge</i> + <b>is</b> + adjetivos." },
+      { pt: "Nós não estamos com medo.", en: "We are not afraid.", x: ["is"], tip: "Para negar o to be, coloque <b>not</b> depois do verbo: <i>we are not</i>. \"Ter medo\" = <i>be afraid</i>." },
+      { pt: "O castelo está aberto?", en: "Is the castle open?", x: ["are"], tip: "Na pergunta com to be, o verbo vem <b>antes</b> do sujeito: <i>Is the castle…?</i>" }
+    ]
+  },
+  {
+    name: "Portão de Carvalho", sub: "There is / there are", level: "A1", spell: "Porta Aperio",
+    mentor: "O portão de carvalho só abre para quem descreve o que vê. Diga o que existe aqui.",
+    focus: ["<b>There is</b> + uma coisa. <b>There are</b> + várias coisas. Ambos significam \"há / tem\".", "There is a key.", "There are two columns."],
+    items: [
+      { pt: "Há uma porta velha aqui.", en: "There is an old door here.", x: ["a", "are"], tip: "Uma coisa só: <b>There is</b>. Antes de som de vogal usamos <b>an</b>: <i>an old door</i>." },
+      { pt: "Há duas colunas de pedra.", en: "There are two stone columns.", x: ["is"], tip: "Duas coisas: <b>There are</b>. Em inglês, o material vem antes: <i>stone columns</i> (colunas de pedra)." },
+      { pt: "A chave está debaixo da lanterna.", en: "The key is under the lantern.", x: ["on"], tip: "<b>under</b> = debaixo de. <b>on</b> = em cima de." },
+      { pt: "Abra a porta, por favor.", en: "Open the door please.", x: ["opens"], tip: "Ordens (imperativo) usam o verbo puro, sem sujeito e sem -s: <b>Open</b> the door." },
+      { pt: "Há alunos lá dentro?", en: "Are there students inside?", x: ["is"], tip: "Na pergunta, inverta: <b>Are there</b>…? Como <i>students</i> é plural, use <b>are</b>." }
+    ]
+  },
+  {
+    name: "Grande Salão", sub: "Presente simples", level: "A1", spell: "Vitrum Ardeo",
+    mentor: "No Grande Salão os vitrais acendem com rotinas. Fale do dia a dia da escola.",
+    focus: ["Com <b>he / she / it</b> o verbo ganha <b>-s</b>. Para negar e perguntar: <b>don't / doesn't</b>, <b>do / does</b>.", "She wears a hat.", "Does your cat speak English?"],
+    items: [
+      { pt: "Nós jantamos no Grande Salão.", en: "We eat dinner in the Great Hall.", x: ["eats"], tip: "Com <b>we</b> o verbo fica sem -s: <i>we eat</i>. \"Jantar\" = <i>eat dinner</i>." },
+      { pt: "A professora usa um chapéu azul.", en: "The teacher wears a blue hat.", x: ["wear"], tip: "<i>The teacher</i> = she, então o verbo leva <b>-s</b>: <i>wears</i>. A cor vem antes: <i>blue hat</i>." },
+      { pt: "As corujas trazem cartas toda manhã.", en: "Owls bring letters every morning.", x: ["brings"], tip: "<i>Owls</i> é plural (they): <b>bring</b>, sem -s. A expressão de tempo fica no fim." },
+      { pt: "Eu não gosto de sopa fria.", en: "I don't like cold soup.", x: ["doesn't"], tip: "Com <b>I</b> a negação é <b>don't</b>. <i>Doesn't</i> é só para he/she/it." },
+      { pt: "Seu gato fala inglês?", en: "Does your cat speak English?", x: ["Do", "speaks"], tip: "<i>Your cat</i> = it → pergunta com <b>Does</b>. Depois de does o verbo volta ao normal: <i>speak</i>." }
+    ]
+  },
+  {
+    name: "Lago Encantado", sub: "Presente contínuo", level: "A1–A2", spell: "Aqua Lucens",
+    mentor: "O lago reflete o que está acontecendo agora. Descreva a cena enquanto ela acontece.",
+    focus: ["<b>am / is / are</b> + verbo com <b>-ing</b> = ação acontecendo agora.", "The moon is shining.", "We are flying."],
+    items: [
+      { pt: "A lua está brilhando sobre o lago.", en: "The moon is shining on the lake.", x: ["shine"], tip: "Agora mesmo: <b>is</b> + <b>shining</b>. Não esqueça o -ing." },
+      { pt: "Uma sereia está cantando uma canção.", en: "A mermaid is singing a song.", x: ["are"], tip: "<i>A mermaid</i> é uma só → <b>is singing</b>." },
+      { pt: "Nós estamos voando sobre a água.", en: "We are flying over the water.", x: ["is"], tip: "<b>We</b> pede <b>are</b>: <i>we are flying</i>. \"Sobre\" (por cima) = <i>over</i>." },
+      { pt: "Os peixes não estão dormindo.", en: "The fish are not sleeping.", x: ["sleep"], tip: "<i>Fish</i> aqui é plural (mesma forma!). Negação: <b>are not</b> + <i>sleeping</i>." },
+      { pt: "Para o que você está olhando?", en: "What are you looking at?", x: ["is"], tip: "Pergunta: <b>What</b> + <b>are you</b> + <i>looking at</i>. Em inglês a preposição pode ficar no fim." }
+    ]
+  },
+  {
+    name: "Bosque dos Pinheiros", sub: "Passado simples", level: "A2", spell: "Silva Memoria",
+    mentor: "Os vaga-lumes do bosque só aparecem para quem conta histórias. Fale do que aconteceu ontem.",
+    focus: ["Verbos regulares: <b>-ed</b> (walk → walked). Irregulares mudam: see → <b>saw</b>, run → <b>ran</b>. Negar e perguntar: <b>didn't / did</b> + verbo normal.", "I saw a unicorn.", "Did you hear that?"],
+    items: [
+      { pt: "Ontem eu caminhei na floresta.", en: "Yesterday I walked in the forest.", x: ["walk"], tip: "Passado regular: <b>walk + ed = walked</b>. <i>Yesterday</i> pode abrir a frase." },
+      { pt: "Eu vi um unicórnio prateado.", en: "I saw a silver unicorn.", x: ["see"], tip: "<b>see</b> é irregular: o passado é <b>saw</b>." },
+      { pt: "Ele correu para trás das árvores.", en: "It ran behind the trees.", x: ["runned"], tip: "<b>run</b> é irregular: <b>ran</b>. \"Runned\" não existe! Animal = <i>it</i>." },
+      { pt: "Nós não encontramos o mapa.", en: "We didn't find the map.", x: ["found"], tip: "Depois de <b>didn't</b> o verbo volta ao normal: <i>didn't find</i> (e não <i>didn't found</i>)." },
+      { pt: "Você ouviu aquele barulho?", en: "Did you hear that noise?", x: ["heard"], tip: "Pergunta no passado: <b>Did</b> + sujeito + verbo normal: <i>Did you hear…?</i>" }
+    ]
+  },
+  {
+    name: "Torre Mais Alta", sub: "Can · comparativos · going to", level: "A2", spell: "Turris Aurea",
+    mentor: "Última prova! Acenda as janelas das sete torres e as agulhas douradas. Mostre tudo o que aprendeu.",
+    focus: ["<b>can</b> + verbo (habilidade). <b>-er than</b> / <b>the -est</b> (comparar). <b>going to</b> + verbo (planos).", "This tower is taller than the hall.", "We are going to see the stars."],
+    items: [
+      { pt: "Eu sei ler feitiços antigos.", en: "I can read old spells.", x: ["reads"], tip: "\"Saber fazer\" = <b>can</b>. Depois de can o verbo fica puro: <i>can read</i>." },
+      { pt: "Esta torre é mais alta que o salão.", en: "This tower is taller than the hall.", x: ["more"], tip: "Adjetivo curto: <b>tall → taller than</b>. Não use <i>more</i> com adjetivos curtos." },
+      { pt: "É a torre mais alta do castelo.", en: "It is the highest tower in the castle.", x: ["higher"], tip: "Superlativo: <b>the + -est</b>: <i>the highest</i>. \"Do castelo\" = <i>in the castle</i>." },
+      { pt: "Hoje à noite nós vamos ver as estrelas.", en: "Tonight we are going to see the stars.", x: ["seeing"], tip: "Plano futuro: <b>are going to</b> + verbo puro: <i>see</i>." },
+      { pt: "Agora o castelo inteiro está brilhando!", en: "Now the whole castle is shining!", x: ["shines"], tip: "Acontecendo agora: <b>is shining</b>. \"Inteiro\" = <i>whole</i>, antes do substantivo." }
+    ]
+  }
+];
+const KEEP_CASE = new Set(["I", "Great", "Hall", "English"]);
+const TOTAL = CHAPTERS.reduce((n, c) => n + c.items.length, 0);
+
+/* ---------------------------------------------------------------
+   ESTADO
+---------------------------------------------------------------- */
+const SAVE_KEY = "spellwords-castle-v1";
+function freshState() {
+  return { ch: 0, i: 0, solved: CHAPTERS.map(c => c.items.map(() => 0)), placed: [], pool: null, tries: 0, hints: 0, phase: "build", fb: null, viewCh: 0 };
+}
+let S;
+
+function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { const v = JSON.parse(localStorage.getItem(SAVE_KEY)); if (v && v.solved && v.solved.length === CHAPTERS.length) return v; } catch (e) {} return null; }
+
+const words = s => s.replace(/[.?!]$/, "").split(" ");
+const punct = s => (s.match(/[.?!]$/) || ["."])[0];
+const item = () => CHAPTERS[S.ch].items[S.i];
+const solvedIn = ch => S.solved[ch].filter(Boolean).length;
+const totalSolved = () => S.solved.reduce((n, a) => n + a.filter(Boolean).length, 0);
+const mana = () => S.solved.flat().reduce((a, b) => a + b, 0);
+const chapterUnlocked = ch => ch === 0 || solvedIn(ch - 1) === CHAPTERS[ch - 1].items.length;
+function rank() {
+  const m = mana();
+  if (m >= 80) return "Arquimago"; if (m >= 55) return "Bruxo";
+  if (m >= 25) return "Aprendiz de feitiço"; return "Aprendiz";
+}
+function shown(w, first) { return first && !KEEP_CASE.has(w) ? w.toLowerCase() : w; }
+function shuffle(a) { for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+
+function setupPool() {
+  const it = item();
+  const ans = words(it.en);
+  const tiles = ans.map((w, k) => ({ t: shown(w, k === 0) })).concat(it.x.map(w => ({ t: shown(w, true) })));
+  tiles.forEach((tile, k) => tile.id = k);
+  let order = shuffle(tiles.map(t => t.id));
+  // evita que o embaralhamento entregue a frase pronta
+  if (order.slice(0, ans.length).every((id, k) => id === k)) order.reverse();
+  S.pool = order.map(id => tiles[id]);
+  S.placed = []; S.tries = 0; S.hints = 0; S.phase = "build"; S.fb = null;
+}
+function firstOpen() {
+  for (let c = 0; c < CHAPTERS.length; c++) for (let k = 0; k < CHAPTERS[c].items.length; k++) if (!S.solved[c][k]) return [c, k];
+  return null;
+}
+
+/* ---------------------------------------------------------------
+   INTERFACE DO GRIMÓRIO
+---------------------------------------------------------------- */
+const $ = id => document.getElementById(id);
+const owl = `<svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25" fill="#1d2440" stroke="#3d4a5e"/><path d="M14 18 L18 11 L22 17 Q26 15 30 17 L34 11 L38 18 Q41 30 36 39 Q26 45 16 39 Q11 30 14 18Z" fill="#6b5a44"/><path d="M18 34 Q26 41 34 34 Q31 42 26 42 Q21 42 18 34Z" fill="#8a7658"/><circle cx="20.5" cy="24" r="5" fill="#f2e2b8"/><circle cx="31.5" cy="24" r="5" fill="#f2e2b8"/><circle cx="20.5" cy="24" r="2.4" fill="#ffa021"/><circle cx="31.5" cy="24" r="2.4" fill="#ffa021"/><circle cx="20.5" cy="24" r="1.1" fill="#120c04"/><circle cx="31.5" cy="24" r="1.1" fill="#120c04"/><path d="M24.5 28 L26 32 L27.5 28Z" fill="#ffc76b"/></svg>`;
+
+function render() {
+  const g = $("grimoire");
+  $("sMana").textContent = mana();
+  $("sSpells").textContent = `${totalSolved()}/${TOTAL}`;
+  $("sRank").textContent = rank();
+
+  if (S.phase === "end") { renderEnding(g); renderSide(); save(); return; }
+
+  const ch = CHAPTERS[S.ch], it = item(), ans = words(it.en);
+  const placedTiles = S.placed.map(id => S.pool.find(t => t.id === id));
+  const built = placedTiles.map(t => t.t);
+  const won = S.phase === "won";
+  let preview = "";
+  if (built.length) { preview = built.join(" "); preview = preview[0].toUpperCase() + preview.slice(1) + (built.length === ans.length ? punct(it.en) : ""); }
+
+  g.innerHTML = `
+    <div class="mentor">${owl}<p><b>Professora Elowen</b>${S.i === 0 && !won ? ch.mentor : mentorLine()}</p></div>
+    <div class="task">
+      <div class="label"><span>Capítulo ${S.ch + 1} · Feitiço ${S.i + 1} de ${ch.items.length}</span><span class="incant">${ch.spell}</span></div>
+      <p class="pt">${it.pt}</p>
+    </div>
+    <div class="slots ${built.length ? "" : "empty"} ${won ? "ok" : ""} ${S.fb && S.fb.type === "fail" ? "bad" : ""}" id="slots" aria-label="Sua frase">
+      ${placedTiles.map((t, k) => `<button type="button" class="rune ${won ? "good" : "placed"}" data-out="${t.id}" ${won ? "disabled" : ""} aria-label="Remover ${t.t}">${t.t}</button>`).join("")}
+    </div>
+    <p class="preview ${won ? "ok" : ""}" aria-live="polite">${preview || "&nbsp;"}</p>
+    <div class="pool" aria-label="Runas disponíveis">
+      ${S.pool.map(t => `<button type="button" class="rune ${S.placed.includes(t.id) ? "ghost" : ""}" data-in="${t.id}" ${won || S.placed.includes(t.id) ? "disabled tabindex='-1'" : ""}>${t.t}</button>`).join("")}
+    </div>
+    ${feedbackHTML()}
+    <div class="actions">
+      ${won ? `
+        <button type="button" class="btn" id="listen">Ouvir a frase</button>
+        <button type="button" class="btn cast" id="next">${nextLabel()}</button>` : `
+        <button type="button" class="btn" id="clear" ${built.length ? "" : "disabled"}>Limpar</button>
+        <button type="button" class="btn" id="hint">Dica (−1 ponto)</button>
+        <button type="button" class="btn cast" id="cast" ${built.length ? "" : "disabled"}>Lançar feitiço</button>`}
+    </div>`;
+  renderSide();
+  save();
+}
+function mentorLine() {
+  if (S.phase === "won") return ["Perfeito! Sinta a magia fluir.", "Muito bem! O castelo responde às suas palavras.", "Excelente! Mais uma luz acesa.", "Isso! Sua varinha está esquentando."][S.i % 4];
+  if (S.tries > 1) return "Calma, jovem bruxo. Leia a dica e tente de novo: magia exige paciência.";
+  return "Monte a frase em inglês com as runas. Cuidado: algumas runas são armadilhas!";
+}
+function nextLabel() {
+  if (S.i + 1 < CHAPTERS[S.ch].items.length) return "Próximo feitiço";
+  return S.ch + 1 < CHAPTERS.length ? `Seguir para: ${CHAPTERS[S.ch + 1].name}` : "Ver o castelo iluminado";
+}
+function feedbackHTML() {
+  const f = S.fb; if (!f) return "";
+  const it = item();
+  if (f.type === "win") {
+    const stars = S.solved[S.ch][S.i];
+    return `<div class="feedback win" role="status"><strong>Feitiço lançado! +${stars} ${stars === 1 ? "ponto" : "pontos"}</strong><span class="en">${it.en}</span><span>${it.pt}</span></div>`;
+  }
+  if (f.type === "short") return `<div class="feedback info" role="status"><strong>O feitiço está incompleto</strong><span>Faltam ${f.n} ${f.n === 1 ? "runa" : "runas"}. As palavras certas já estão no lugar.</span></div>`;
+  if (f.type === "hint") return `<div class="feedback info" role="status"><strong>Dica da coruja</strong><span>${it.tip}</span></div>`;
+  return `<div class="feedback fail" role="alert"><strong>O feitiço falhou</strong><span>A runa <b>“${f.w}”</b> não está no lugar certo. ${it.tip}</span></div>`;
+}
+
+function renderEnding(g) {
+  const m = mana(), max = TOTAL * 3;
+  g.innerHTML = `
+    <div class="ending">
+      ${owl.replace('viewBox', 'width="72" height="72" viewBox')}
+      <h2>O castelo inteiro está brilhando!</h2>
+      <p>Você lançou ${TOTAL} feitiços e acendeu as lanternas, o portão, os vitrais, o lago, o bosque e as sete torres da Escola de Magia.</p>
+      <p><b style="color:var(--gold-soft)">${m} de ${max} pontos de magia</b> · Título: <b>${rank()}</b></p>
+      <p class="foot">Volte a qualquer capítulo pelo mapa para treinar de novo e melhorar sua pontuação.</p>
+      <button type="button" class="btn cast" id="again" style="margin-left:0">Jogar de novo</button>
+    </div>`;
+}
+
+function renderSide() {
+  const cur = S.phase === "end" ? -1 : S.ch;
+  $("chapters").innerHTML = CHAPTERS.map((c, k) => {
+    const n = solvedIn(k), done = n === c.items.length, open = chapterUnlocked(k);
+    return `<li><button type="button" class="chap ${done ? "done" : ""}" data-ch="${k}" ${open ? "" : "disabled"} aria-current="${k === cur}">
+      <span class="n">${k + 1}</span><span class="nm">${c.name}<small>${c.sub}</small></span><span class="lvl">${open ? `${n}/${c.items.length}` : "trancado"}<br>${c.level}</span></button></li>`;
+  }).join("");
+  const c = CHAPTERS[cur < 0 ? CHAPTERS.length - 1 : cur];
+  $("focus").innerHTML = `<h2>Foco do capítulo</h2><p>${c.focus[0]}</p><p class="ex">${c.focus[1]}</p><p class="ex">${c.focus[2]}</p>
+    <div class="dots" style="margin-top:12px" aria-label="${solvedIn(cur < 0 ? 5 : cur)} de 5 feitiços">${c.items.map((_, k) => `<i class="${S.solved[cur < 0 ? 5 : cur][k] ? "on" : ""}"></i>`).join("")}</div>`;
+  $("placeName").innerHTML = cur < 0 ? `<small>Escola de Magia</small>Castelo iluminado` : `<small>Capítulo ${cur + 1} · ${c.level}</small>${c.name}`;
+}
+
+/* ---------------------------------------------------------------
+   AÇÕES
+---------------------------------------------------------------- */
+function cast() {
+  const it = item(), ans = words(it.en);
+  const built = S.placed.map(id => S.pool.find(t => t.id === id).t);
+  let k = 0;
+  while (k < built.length && k < ans.length && built[k].toLowerCase() === ans[k].toLowerCase()) k++;
+  if (k === ans.length && built.length === ans.length) {
+    const pts = S.tries === 0 && S.hints === 0 ? 3 : (S.tries + S.hints <= 2 ? 2 : 1);
+    S.solved[S.ch][S.i] = Math.max(S.solved[S.ch][S.i], pts);
+    S.phase = "won"; S.fb = { type: "win" };
+    scene.burst(S.ch);
+    speak(it.en);
+  } else if (k === built.length) {
+    S.fb = { type: "short", n: ans.length - k };
+  } else {
+    S.tries++;
+    S.fb = { type: "fail", w: built[k] };
+    S.placed = S.placed.slice(0, k);
+  }
+  render();
+  focusFirst();
+}
+function hint() {
+  const ans = words(item().en);
+  const built = S.placed.map(id => S.pool.find(t => t.id === id).t.toLowerCase());
+  let k = 0; while (k < built.length && built[k] === ans[k].toLowerCase()) k++;
+  S.placed = S.placed.slice(0, k);
+  if (k < ans.length) {
+    const tile = S.pool.find(t => !S.placed.includes(t.id) && t.t.toLowerCase() === ans[k].toLowerCase());
+    if (tile) S.placed.push(tile.id);
+  }
+  S.hints++;
+  S.fb = { type: "hint" };
+  render();
+}
+function next() {
+  const open = firstOpen();
+  if (!open) { S.phase = "end"; render(); return; }
+  // segue em ordem dentro do capítulo atual; se ele acabou, vai para o primeiro pendente
+  const ch = CHAPTERS[S.ch];
+  let c = S.ch, k = S.i + 1;
+  if (k >= ch.items.length || S.solved[c][k]) { [c, k] = open; }
+  S.ch = c; S.i = k; setupPool(); render(); focusFirst();
+}
+function goChapter(c) {
+  if (!chapterUnlocked(c)) return;
+  const k = S.solved[c].findIndex(v => !v);
+  S.ch = c; S.i = k < 0 ? 0 : k; setupPool(); render(); focusFirst();
+}
+function speak(text) {
+  try {
+    const u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = .85;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function focusFirst() {
+  const el = document.querySelector("#next, .pool .rune:not([disabled])");
+  if (el && document.activeElement && document.activeElement.closest && document.activeElement.closest("#grimoire, #chapters")) el.focus({ preventScroll: true });
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.in !== undefined) { S.placed.push(+b.dataset.in); if (S.fb && S.fb.type !== "hint") S.fb = null; render(); const nx = document.querySelector(".pool .rune:not([disabled])"); if (nx) nx.focus({ preventScroll: true }); else $("cast")?.focus({ preventScroll: true }); return; }
+  if (b.dataset.out !== undefined) { S.placed = S.placed.filter(id => id !== +b.dataset.out); render(); return; }
+  if (b.dataset.ch !== undefined) { goChapter(+b.dataset.ch); return; }
+  switch (b.id) {
+    case "cast": cast(); break;
+    case "clear": S.placed = []; S.fb = null; render(); break;
+    case "hint": hint(); break;
+    case "next": next(); break;
+    case "listen": speak(item().en); break;
+    case "again": S = freshState(); setupPool(); render(); break;
+    case "resetBtn": $("resetBtn").textContent = "Toque de novo para confirmar"; if (b.dataset.armed) { S = freshState(); setupPool(); render(); b.textContent = "Recomeçar do zero"; delete b.dataset.armed; } else { b.dataset.armed = "1"; setTimeout(() => { delete b.dataset.armed; b.textContent = "Recomeçar do zero"; }, 3000); } break;
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Enter" || e.target.closest("button")) return;
+  if (S.phase === "won") next(); else if (S.placed.length) cast();
+});
+
+/* ---------------------------------------------------------------
+   CENA — releitura 2D (vista frontal) do castelo_escola_magia.py
+   Coordenadas em metros do Blender: x lateral, z altura. z<0 = primeiro plano.
+---------------------------------------------------------------- */
+const scene = (() => {
+  const cv = $("scene"), ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const Z0 = -14, Z1 = 48;
+  let Wd = 1600, Ht = 1000, sc = 1, xmin = -50;
+  let rnd = mulberry(14); // mesma semente do script: random.seed(14)
+  function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const X = x => (x - xmin) * sc, Y = z => Ht - (z - Z0) * sc, L = v => v * sc;
+
+  const C = { stone: "#303b4a", stoneDark: "#252e3c", stoneBack: "#1c2330", slate: "#131729", gold: "#ffa021", grass: "#0f1f1a", path: "#45454d", wood: "#21110a", leaf: "#06201a", lake: "#06203a", moon: "#c9d8ff", off: "#161c29" };
+
+  // torres: (x, y, r, h) do script
+  const TOWERS = [[-19, 17, 3, 24], [19, 17, 3, 24], [-7, 12, 3.3, 29], [7, 12, 3.3, 29], [0, 13, 4.2, 34], [-19, -7, 3, 23], [19, -7, 3, 23]];
+  const towerWins = []; TOWERS.forEach((t, ti) => { for (let z = 6; z < t[3] - 2; z += 5) towerWins.push([ti, z]); });
+  const hallWins = []; for (const z of [5, 10, 14]) for (let x = -9; x < 10; x += 3) hallWins.push([x, z]);
+  const wingWins = []; for (const x of [-15, 15]) for (const z of [4, 8]) for (const dx of [-2.2, 2.2]) wingWins.push([x + dx, z]);
+  const lanterns = []; for (const t of [.12, .36, .6, .84]) for (const s of [-1, 1]) lanterns.push({ t, s });
+  lanterns.sort((a, b) => a.t - b.t);
+
+  const stars = Array.from({ length: 140 }, () => ({ x: rnd() * 2 - 1, z: 22 + rnd() * 27, r: rnd() * 1.2 + .3, p: rnd() * 6.28 }));
+  const pinesFar = [], pinesNear = [];
+  for (let k = 0; k < 75; k++) {
+    const x = rnd() * 96 - 48, y = rnd() * 92 - 46, h = 3 + rnd() * 6;
+    if (Math.abs(x) < 25 && y > -35 && y < 22) continue;
+    if ((x - 30) ** 2 + (y + 21) ** 2 < 230) continue;
+    if (y > -8) pinesFar.push({ x, z: 0, h, y }); else pinesNear.push({ x, z: Math.max(-13, (y + 8) * .34), h });
+  }
+  pinesNear.sort((a, b) => b.z - a.z);
+  const flies = Array.from({ length: 40 }, () => { const p = pinesNear.concat(pinesFar)[Math.floor(rnd() * (pinesNear.length + pinesFar.length))]; return { x: p.x + (rnd() - .5) * 6, z: p.z + 1 + rnd() * p.h, p: rnd() * 6.28 }; });
+
+  let parts = [];
+  function resize() {
+    const w = cv.clientWidth || 800;
+    const aspect = w < 600 ? 4 / 3 : 16 / 10;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    Wd = Math.round(w * dpr); Ht = Math.round(w / aspect * dpr);
+    cv.width = Wd; cv.height = Ht;
+    sc = Ht / (Z1 - Z0);
+    xmin = -(Wd / sc) / 2;
+    if (reduce) draw(0);
+  }
+
+  function rect(x0, z0, x1, z1, fill) { ctx.fillStyle = fill; ctx.fillRect(X(x0), Y(z1), L(x1 - x0), L(z1 - z0)); }
+  function glowRect(x0, z0, x1, z1, on, k = 1) {
+    if (on) { ctx.save(); ctx.shadowColor = C.gold; ctx.shadowBlur = L(1.6) * k; rect(x0, z0, x1, z1, C.gold); ctx.restore(); }
+    else rect(x0, z0, x1, z1, C.off);
+  }
+  function tri(xc, zb, hw, h, fill) { ctx.fillStyle = fill; ctx.beginPath(); ctx.moveTo(X(xc - hw), Y(zb)); ctx.lineTo(X(xc + hw), Y(zb)); ctx.lineTo(X(xc), Y(zb + h)); ctx.closePath(); ctx.fill(); }
+  function pine(p, shade) {
+    const k = p.z < 0 ? 1 + (-p.z / 14) * .9 : 1;
+    const h = p.h * k;
+    rect(p.x - .24 * k, p.z, p.x + .24 * k, p.z + h * .36, C.wood);
+    for (let j = 0; j < 3; j++) tri(p.x, p.z + h * .2 + j * h * .21, h * (.22 - j * .035) * 1.25, h * .5, shade);
+  }
+
+  // progresso por capítulo (0..1)
+  const prog = ch => S ? solvedIn(ch) / CHAPTERS[ch].items.length : 0;
+
+  function draw(t) {
+    const p = [0, 1, 2, 3, 4, 5].map(prog);
+    const allDone = p.every(v => v === 1);
+    // céu
+    const sky = ctx.createLinearGradient(0, 0, 0, Y(0));
+    sky.addColorStop(0, "#04060f"); sky.addColorStop(.7, "#0a1028"); sky.addColorStop(1, allDone ? "#2a2440" : "#141a33");
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, Wd, Ht);
+    // estrelas
+    for (const s of stars) {
+      const a = reduce ? .7 : .45 + .45 * Math.sin(t / 900 + s.p);
+      ctx.fillStyle = `rgba(220,228,255,${a})`;
+      ctx.beginPath(); ctx.arc(X(s.x * -xmin), Y(s.z), s.r * Math.max(1, sc / 14), 0, 6.28); ctx.fill();
+    }
+    // lua fria (luz de área em -25,-20,55)
+    const mx = X(Math.max(xmin + 8, -36)), my = Y(40.5);
+    const mg = ctx.createRadialGradient(mx, my, 0, mx, my, L(allDone ? 16 : 11));
+    mg.addColorStop(0, "rgba(140,173,255,.35)"); mg.addColorStop(1, "rgba(140,173,255,0)");
+    ctx.fillStyle = mg; ctx.fillRect(mx - L(16), my - L(16), L(32), L(32));
+    ctx.fillStyle = C.moon; ctx.beginPath(); ctx.arc(mx, my, L(3.2), 0, 6.28); ctx.fill();
+
+    // pinheiros ao fundo
+    for (const pn of pinesFar) pine(pn, "#081a17");
+    // terreno
+    rect(xmin - 2, Z0, -xmin + 2, 0, C.grass);
+    const hz = ctx.createLinearGradient(0, Y(0), 0, Y(-6)); hz.addColorStop(0, "rgba(140,173,255,.08)"); hz.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = hz; ctx.fillRect(0, Y(0), Wd, L(6));
+
+    // torres de trás e do meio (ordem: mais longe primeiro)
+    const order = [0, 1, 2, 3, 4];
+    const twLit = Math.round(towerWins.length * p[5]);
+    const litSet = new Set(towerWins.slice(0, twLit).map(w => w.join()));
+    const drawTower = ti => {
+      const [x, y, r, h] = TOWERS[ti];
+      const shift = y > 15 ? 2.2 * Math.sign(x) : 0; // as torres de trás aparecem por trás das da frente
+      const xx = x + shift, base = y > 0 ? 0 : 0;
+      const body = y > 15 ? C.stoneBack : (y > 0 ? C.stoneDark : C.stone);
+      rect(xx - r, base, xx + r, h, body);
+      ctx.fillStyle = "rgba(255,255,255,.04)"; ctx.fillRect(X(xx - r), Y(h), L(r * .5), L(h));
+      ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.fillRect(X(xx + r * .55), Y(h), L(r * .45), L(h));
+      tri(xx, h, r * 1.3, 9.4, C.slate);
+      const needleOn = p[5] === 1;
+      if (needleOn) { ctx.save(); ctx.shadowColor = C.gold; ctx.shadowBlur = L(1.5); }
+      rect(xx - .14, h + 9.2, xx + .14, h + 10.9, needleOn ? C.gold : "#3a3428");
+      if (needleOn) ctx.restore();
+      for (let z = 6; z < h - 2; z += 5) glowRect(xx - .53, z - 1.05, xx + .53, z + 1.05, litSet.has(ti + "," + z));
+    };
+    order.forEach(drawTower);
+
+    // alas laterais
+    const wl = Math.round(wingWins.length * p[1]);
+    for (const x of [-15, 15]) { rect(x - 4.5, 0.5, x + 4.5, 10.5, C.stoneDark); rect(x - 5, 10.3, x + 5, 11.8, C.slate); }
+    wingWins.forEach((w, k) => glowRect(w[0] - .6, w[1] - 1, w[0] + .6, w[1] + 1, k < wl));
+    // grande salão
+    rect(-11, .8, 11, 15.5, C.stone);
+    ctx.fillStyle = "rgba(255,255,255,.035)"; ctx.fillRect(X(-11), Y(15.5), L(22), L(1));
+    rect(-11.5, 15.3, 11.5, 17.3, C.slate);
+    tri(0, 17.3, 11.5, 3.2, C.slate);
+    const hl = Math.round(hallWins.length * p[2]);
+    hallWins.forEach((w, k) => glowRect(w[0] - .58, w[1] - 1.12, w[0] + .58, w[1] + 1.12, k < hl, 1.3));
+    // portão e colunas
+    const gateOpen = p[1] === 1;
+    for (const x of [-2.3, 2.3]) rect(x - .33, .8, x + .33, 7, C.stoneDark);
+    if (gateOpen) {
+      ctx.save(); ctx.shadowColor = C.gold; ctx.shadowBlur = L(4);
+      rect(-2, .8, 2, 6.2, "#ffb64a"); ctx.restore();
+      rect(-2, .8, -1.55, 6.2, C.wood); rect(1.55, .8, 2, 6.2, C.wood);
+    } else {
+      rect(-2, .8, 2, 6.2, C.wood);
+      ctx.fillStyle = `rgba(255,160,33,${.12 + p[1] * .5})`; ctx.fillRect(X(-.08), Y(6.2), L(.16), L(5.4));
+    }
+    // torres da frente
+    [5, 6].forEach(drawTower);
+    // plataforma
+    rect(-19.5, 0, 19.5, .8, C.stoneDark);
+
+    // lago encantado
+    const lx = 31, lz = -5, rx = 14, rz = 3.4;
+    ctx.save(); ctx.beginPath(); ctx.ellipse(X(lx), Y(lz), L(rx), L(rz), 0, 0, 6.28); ctx.clip();
+    const lg = ctx.createLinearGradient(0, Y(lz + rz), 0, Y(lz - rz));
+    lg.addColorStop(0, "#0b2a4a"); lg.addColorStop(1, C.lake); ctx.fillStyle = lg; ctx.fillRect(X(lx - rx), Y(lz + rz), L(rx * 2), L(rz * 2));
+    if (p[3] > 0) {
+      const a = p[3];
+      for (let k = 0; k < 14; k++) {
+        const yy = lz + rz - (k + .5) * (rz * 2 / 14);
+        const off = reduce ? 0 : Math.sin(t / 700 + k) * 1.2;
+        ctx.fillStyle = `rgba(140,173,255,${.12 * a})`; ctx.fillRect(X(lx - rx * .8 + off), Y(yy), L(rx * 1.6), Math.max(1, L(.08)));
+        if (k % 3 === 0) { ctx.fillStyle = `rgba(255,190,90,${.35 * a})`; ctx.fillRect(X(lx - 4 + off * 2), Y(yy), L(3 + a * 3), Math.max(1, L(.1))); }
+      }
+      const glow = ctx.createRadialGradient(X(lx), Y(lz), 0, X(lx), Y(lz), L(rx));
+      glow.addColorStop(0, `rgba(120,200,255,${.28 * a})`); glow.addColorStop(1, "rgba(120,200,255,0)");
+      ctx.fillStyle = glow; ctx.fillRect(X(lx - rx), Y(lz + rz), L(rx * 2), L(rz * 2));
+    }
+    ctx.restore();
+    ctx.strokeStyle = "rgba(140,173,255,.25)"; ctx.lineWidth = Math.max(1, L(.12));
+    ctx.beginPath(); ctx.ellipse(X(lx), Y(lz), L(rx), L(rz), 0, 0, 6.28); ctx.stroke();
+
+    // ponte de acesso
+    ctx.fillStyle = C.path; ctx.beginPath();
+    ctx.moveTo(X(-3.5), Y(0)); ctx.lineTo(X(3.5), Y(0)); ctx.lineTo(X(9), Y(Z0)); ctx.lineTo(X(-9), Y(Z0)); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "rgba(0,0,0,.25)"; ctx.lineWidth = Math.max(1, L(.08));
+    for (let k = 1; k < 9; k++) { const tt = k / 9, z = Z0 * tt, hw = 3.5 + 5.5 * tt; ctx.beginPath(); ctx.moveTo(X(-hw), Y(z)); ctx.lineTo(X(hw), Y(z)); ctx.stroke(); }
+    for (const s of [-1, 1]) { ctx.fillStyle = C.stoneDark; ctx.beginPath(); ctx.moveTo(X(s * 3.5), Y(0)); ctx.lineTo(X(s * 4), Y(0)); ctx.lineTo(X(s * 10), Y(Z0)); ctx.lineTo(X(s * 9), Y(Z0)); ctx.closePath(); ctx.fill(); }
+
+    // lanternas mágicas
+    const ll = Math.round(lanterns.length * p[0]);
+    lanterns.forEach((ln, k) => {
+      const z = Z0 * ln.t, k2 = 1 + ln.t * 1.3, x = ln.s * (3.5 + 5.5 * ln.t + .9 * k2);
+      rect(x - .09 * k2, z, x + .09 * k2, z + 3.4 * k2, C.wood);
+      const on = k < ll;
+      if (on) {
+        const flick = reduce ? 1 : .85 + .15 * Math.sin(t / 160 + k * 1.7);
+        const gg = ctx.createRadialGradient(X(x), Y(z + 3.5 * k2), 0, X(x), Y(z + 3.5 * k2), L(3.2 * k2));
+        gg.addColorStop(0, `rgba(255,160,33,${.45 * flick})`); gg.addColorStop(1, "rgba(255,160,33,0)");
+        ctx.fillStyle = gg; ctx.fillRect(X(x - 3.2 * k2), Y(z + 6.7 * k2), L(6.4 * k2), L(6.4 * k2));
+      }
+      ctx.fillStyle = on ? C.gold : "#2b2a2a";
+      ctx.beginPath(); ctx.arc(X(x), Y(z + 3.5 * k2), L(.34 * k2), 0, 6.28); ctx.fill();
+    });
+
+    // bosque em primeiro plano
+    for (const pn of pinesNear) pine(pn, C.leaf);
+    // vaga-lumes
+    const fl = Math.round(flies.length * p[4]);
+    for (let k = 0; k < fl; k++) {
+      const f = flies[k];
+      const dx = reduce ? 0 : Math.sin(t / 1300 + f.p) * 1.2, dz = reduce ? 0 : Math.cos(t / 1700 + f.p) * .8;
+      const a = reduce ? .9 : .5 + .5 * Math.sin(t / 400 + f.p * 3);
+      ctx.save(); ctx.shadowColor = "#d6ff8a"; ctx.shadowBlur = L(.8);
+      ctx.fillStyle = `rgba(214,255,138,${a})`; ctx.beginPath(); ctx.arc(X(f.x + dx), Y(f.z + dz), L(.18) + 1, 0, 6.28); ctx.fill(); ctx.restore();
+    }
+
+    // luzes mágicas ambiente (3 pontos de luz do script)
+    const warm = (p[0] + p[1] + p[2] + p[5]) / 4;
+    if (warm > 0) for (const [x] of [[0], [-18], [18]]) {
+      const g = ctx.createRadialGradient(X(x), Y(9), 0, X(x), Y(9), L(16));
+      g.addColorStop(0, `rgba(255,140,51,${.16 * warm})`); g.addColorStop(1, "rgba(255,140,51,0)");
+      ctx.fillStyle = g; ctx.fillRect(X(x - 16), Y(25), L(32), L(32));
+    }
+
+    // partículas do feitiço
+    if (!reduce && parts.length) {
+      parts = parts.filter(q => (q.life -= 16) > 0);
+      for (const q of parts) {
+        q.x += q.vx; q.z += q.vz; q.vz -= .006;
+        ctx.fillStyle = `rgba(255,${180 + Math.floor(q.hue)},${90 + Math.floor(q.hue)},${q.life / 1400})`;
+        ctx.beginPath(); ctx.arc(X(q.x), Y(q.z), L(.22), 0, 6.28); ctx.fill();
+      }
+    }
+  }
+
+  const TARGET = [[0, -5], [0, 4], [0, 10], [31, -5], [-30, 3], [0, 40]];
+  function burst(ch) {
+    if (reduce) { draw(0); return; }
+    const [x, z] = TARGET[ch];
+    for (let k = 0; k < 70; k++) {
+      const a = Math.random() * 6.28, sp = .1 + Math.random() * .45;
+      parts.push({ x, z, vx: Math.cos(a) * sp, vz: Math.sin(a) * sp + .12, life: 900 + Math.random() * 600, hue: Math.random() * 70 });
+    }
+  }
+  function loop(t) { draw(t); requestAnimationFrame(loop); }
+  addEventListener("resize", resize);
+  return { start() { resize(); if (!reduce) requestAnimationFrame(loop); }, burst, draw };
+})();
+
+/* ---------------------------------------------------------------
+   INÍCIO
+---------------------------------------------------------------- */
+function start(data) {
+  S = (data && data.state) || load() || freshState();
+  if (!S.pool) setupPool();
+  scene.start();
+  render();
+}
+window.claude?.hot?.snapshot?.(() => ({ state: S }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
