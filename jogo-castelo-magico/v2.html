@@ -1,0 +1,1081 @@
+<title>Spellwords Castle II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: diorama isométrico à esquerda (mapa da maquete ou sala), grimório à direita; abaixo, a proposta do jogo como documento. */
+:root {
+  --night: #0b0f1a;
+  --panel: #121828;
+  --panel-2: #0e1320;
+  --line: #2a3448;
+  --line-hi: #44506a;
+  --ink: #ece6d6;
+  --ink-dim: #a3a8b6;
+  --gold: #f2a531;
+  --gold-soft: #ffcf7a;
+  --moon: #93b2ff;
+  --fail: #ff7d6e;
+  --ok: #8fe3b0;
+  --house: #f2a531;
+  --display: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  --fell: "IM Fell English", Georgia, serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--night); color: var(--ink); }
+body { font-family: var(--body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 16px 16px 48px; display: grid; gap: 20px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 22px; }
+header.top h1 { font-family: var(--display); font-weight: 400; font-size: clamp(1.7rem, 4vw, 2.5rem); margin: 0; line-height: 1.1; letter-spacing: .02em; }
+header.top h1 span { color: var(--gold); }
+header.top h1 em { font-style: normal; font-size: .55em; color: var(--ink-dim); margin-left: .3em; letter-spacing: .1em; }
+.stats { display: flex; gap: 20px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.stat { display: flex; flex-direction: column; }
+.stat b { font-size: 1.2rem; color: var(--gold-soft); line-height: 1.15; }
+.stat small { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
+
+.game { display: grid; grid-template-columns: minmax(0, 1fr) 410px; gap: 18px; align-items: start; }
+@media (max-width: 900px) { .game { grid-template-columns: minmax(0, 1fr); } }
+.stage { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: #070a12; min-width: 0; }
+.stage canvas { display: block; width: 100%; height: auto; max-width: 100%; touch-action: manipulation; }
+.stage .cap { position: absolute; left: 14px; top: 12px; pointer-events: none; font-family: var(--display); font-size: clamp(1rem, 2.4vw, 1.3rem); color: var(--gold-soft); text-shadow: 0 1px 8px #000; }
+.stage .cap small { display: block; font-family: var(--body); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+
+.grimoire { min-width: 0; background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line-hi); border-radius: 8px; padding: 18px clamp(16px, 2.6vw, 24px) 20px; display: grid; gap: 14px; }
+.back { justify-self: start; background: none; border: 0; color: var(--moon); font: inherit; font-size: .9rem; cursor: pointer; padding: 4px 0; }
+.mentor { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 12px; align-items: start; }
+.mentor svg { width: 46px; height: 46px; }
+.mentor p { margin: 0; font-family: var(--fell); font-style: italic; font-size: 1.04rem; }
+.mentor p b { display: block; font-style: normal; font-family: var(--display); font-weight: 400; font-size: .82rem; letter-spacing: .06em; color: var(--moon); }
+.label { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.label .room-tag { color: var(--house); }
+.q-en { font-family: var(--fell); font-size: clamp(1.35rem, 3vw, 1.6rem); margin: 0; color: var(--gold-soft); line-height: 1.25; text-wrap: balance; }
+.q-pt { margin: 0; font-size: clamp(1.1rem, 2.4vw, 1.3rem); font-weight: 700; text-wrap: balance; }
+.sub { margin: 0; font-size: .9rem; color: var(--ink-dim); }
+
+.slots { min-height: 60px; border: 1px dashed var(--line-hi); border-radius: 6px; padding: 9px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center; background: rgba(0,0,0,.2); }
+.slots.empty::before { content: attr(data-empty); color: var(--ink-dim); font-size: .9rem; padding-left: 4px; }
+.slots.ok { border-style: solid; border-color: var(--gold); box-shadow: 0 0 20px rgba(242,165,49,.22) inset; }
+.slots.bad { border-color: var(--fail); animation: shake .4s; }
+.slots.cauldron { border-radius: 6px 6px 40px 40px; border-style: solid; border-color: #4b3a6a; background: radial-gradient(ellipse at 50% 120%, rgba(160,90,255,.22), rgba(0,0,0,.2) 70%); }
+@keyframes shake { 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+
+.pool { display: flex; flex-wrap: wrap; gap: 7px; }
+.rune { font-family: var(--fell); font-size: 1.12rem; min-height: 44px; padding: 6px 13px; border-radius: 4px; border: 1px solid #5a6680; background: linear-gradient(180deg, #394458, #283142); color: var(--ink); cursor: pointer; box-shadow: 0 2px 0 #121722; transition: transform .12s, border-color .2s; }
+.rune:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--gold-soft); }
+.rune.placed { background: linear-gradient(180deg, #4a3a1f, #33280f); border-color: #b9802e; }
+.rune.good { background: linear-gradient(180deg, #284a3a, #1b3329); border-color: var(--ok); }
+.rune.ghost { visibility: hidden; }
+.rune:disabled { cursor: default; }
+.chip { font-family: var(--fell); font-size: 1.05rem; min-height: 40px; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--line-hi); background: transparent; color: var(--ink); cursor: pointer; }
+.chip:hover { border-color: var(--gold-soft); }
+button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.preview { font-family: var(--fell); font-size: 1.12rem; color: var(--ink-dim); min-height: 1.5em; margin: 0; }
+.preview.ok { color: var(--gold-soft); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.btn { font-family: var(--body); font-weight: 700; font-size: .93rem; min-height: 44px; padding: 8px 15px; border-radius: 4px; border: 1px solid var(--line-hi); background: transparent; color: var(--ink); cursor: pointer; }
+.btn:hover:not([disabled]) { border-color: var(--ink-dim); }
+.btn.main { background: var(--gold); color: #1d1204; border-color: var(--gold); margin-left: auto; }
+.btn.main:hover:not([disabled]) { background: var(--gold-soft); }
+.btn[disabled] { opacity: .45; cursor: default; }
+
+.answers { display: grid; gap: 8px; }
+.answers button { text-align: left; font-family: var(--fell); font-size: 1.15rem; min-height: 48px; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line-hi); background: rgba(255,255,255,.02); color: var(--ink); cursor: pointer; }
+.answers button:hover { border-color: var(--gold-soft); background: rgba(242,165,49,.06); }
+.answers button small { display: block; font-family: var(--body); font-size: .8rem; color: var(--ink-dim); }
+
+.feedback { border-radius: 6px; padding: 11px 13px; font-size: .95rem; display: grid; gap: 3px; }
+.feedback.fail { background: rgba(255,125,110,.1); border: 1px solid rgba(255,125,110,.45); }
+.feedback.win { background: rgba(242,165,49,.1); border: 1px solid rgba(242,165,49,.5); }
+.feedback.info { background: rgba(147,178,255,.08); border: 1px solid rgba(147,178,255,.35); }
+.feedback strong { font-family: var(--display); font-weight: 400; font-size: 1.05rem; letter-spacing: .03em; }
+.feedback .en { font-family: var(--fell); font-size: 1.15rem; color: var(--gold-soft); }
+
+.book { border: 1px solid #5b4a2c; background: #1b1610; border-radius: 4px; padding: 10px 14px; font-family: var(--fell); color: #e8d9b8; }
+.book h3 { margin: 0 0 4px; font-family: var(--display); font-weight: 400; font-size: .9rem; letter-spacing: .08em; color: #c9a467; }
+.book p { margin: 0; font-size: 1.02rem; }
+.book p.empty { color: #8a7a5c; font-style: italic; }
+
+.rooms { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.room-btn { width: 100%; display: grid; grid-template-columns: 30px minmax(0,1fr) auto; gap: 11px; align-items: center; text-align: left; padding: 9px 11px; border-radius: 6px; border: 1px solid var(--line); background: rgba(255,255,255,.015); color: var(--ink); font: inherit; cursor: pointer; }
+.room-btn:hover:not([disabled]) { border-color: var(--gold-soft); }
+.room-btn[disabled] { color: #5d6478; cursor: default; }
+.room-btn .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1px solid currentColor; font-family: var(--display); font-size: .9rem; }
+.room-btn.done .n { background: var(--c, var(--gold)); color: #120c04; border-color: var(--c, var(--gold)); }
+.room-btn.next { border-color: var(--gold); background: rgba(242,165,49,.07); }
+.room-btn .nm small { display: block; font-size: .78rem; color: var(--ink-dim); }
+.room-btn[disabled] .nm small { color: #4d5366; }
+.room-btn .st { font-size: .72rem; color: var(--ink-dim); text-align: right; font-variant-numeric: tabular-nums; letter-spacing: .05em; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--house); display: block; }
+.dots i.on { background: var(--house); }
+.foot { font-size: .8rem; color: var(--ink-dim); margin: 0; }
+.foot button { background: none; border: 0; color: var(--moon); font: inherit; text-decoration: underline; cursor: pointer; padding: 0; }
+
+/* Proposta */
+.proposal { border-top: 1px solid var(--line); padding-top: 28px; display: grid; gap: 26px; }
+.proposal > *, .refs > *, .cols > *, .game > * { min-width: 0; }
+.proposal .lead { display: grid; gap: 8px; max-width: 72ch; }
+.proposal .eyebrow { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin: 0; }
+.proposal h2 { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 3.6vw, 2.2rem); margin: 0; line-height: 1.15; text-wrap: balance; }
+.proposal h3 { font-family: var(--display); font-weight: 400; font-size: 1.3rem; margin: 0 0 10px; color: var(--moon); letter-spacing: .02em; text-wrap: balance; }
+.proposal p, .proposal li { max-width: 70ch; color: #d8d3c6; }
+.proposal p { margin: 0 0 10px; }
+.proposal ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.refs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.ref { border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; background: var(--panel-2); min-width: 0; }
+.ref h4 { margin: 0 0 4px; font-size: 1rem; }
+.ref .from { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); margin: 0 0 8px; }
+.ref p { font-size: .93rem; margin: 0; }
+.ref .to { margin-top: 10px; font-size: .88rem; color: var(--gold-soft); }
+.loop { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-family: var(--fell); font-size: 1.1rem; }
+.loop span { border: 1px solid var(--line-hi); border-radius: 20px; padding: 4px 14px; }
+.loop i { font-style: normal; color: var(--gold); }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: .92rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); font-weight: 700; background: var(--panel-2); }
+tr:last-child td { border-bottom: 0; }
+td b { color: var(--gold-soft); font-weight: 700; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 32px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.sw { display: flex; align-items: center; gap: 8px; font-size: .88rem; }
+.sw i { width: 22px; height: 22px; border-radius: 4px; display: block; border: 1px solid rgba(255,255,255,.15); }
+code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86em; background: #182034; padding: 1px 5px; border-radius: 3px; }
+.note { border-left: 3px solid var(--moon); padding: 8px 14px; background: rgba(147,178,255,.06); border-radius: 0 6px 6px 0; }
+.note p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { .slots.bad { animation: none; } .rune { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Spellwords <span>Castle</span><em>II</em></h1>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="sMana">0</b><small>Pontos de magia</small></div>
+      <div class="stat"><b id="sSpells">0/20</b><small>Feitiços</small></div>
+      <div class="stat"><b id="sHouse">Sem casa</b><small>Casa</small></div>
+      <div class="stat"><b id="sRank">Aprendiz</b><small>Título</small></div>
+    </div>
+  </header>
+
+  <section class="game">
+    <div class="stage">
+      <canvas id="cv" width="1000" height="940" aria-label="Diorama isométrico do castelo e das salas"></canvas>
+      <div class="cap" id="cap"></div>
+    </div>
+    <div class="grimoire" id="g" aria-live="polite"></div>
+  </section>
+
+  <section class="proposal" aria-labelledby="propTitle">
+    <div class="lead">
+      <p class="eyebrow">Proposta de jogo · versão 2</p>
+      <h2 id="propTitle">Do castelo-maquete às salas iluminadas</h2>
+      <p>Na versão 1 o jogador acendia um castelo visto de longe. Na versão 2 ele entra nas salas. O castelo vira uma maquete sobre rochas, como a impressão 3D, e cada sala é um diorama isométrico em corte, como as salas comunais e o laboratório de poções das referências. A regra continua a mesma: a magia vem da frase bem construída. O que muda é que cada sala ensina um ponto de gramática com uma mecânica própria.</p>
+    </div>
+
+    <div>
+      <h3>O que cada referência trouxe</h3>
+      <div class="refs">
+        <div class="ref"><p class="from">Imagem 1 · castelo impresso em 3D</p><h4>Maquete monocromática sobre rochas</h4><p>Castelo azul-acinzentado de uma cor só, base de rochas facetadas, ponte em arcos e placa com o nome na frente.</p><p class="to">Vira o mapa do jogo. O castelo começa todo cinza e cada sala concluída ganha cor e janelas acesas.</p></div>
+        <div class="ref"><p class="from">Imagens 2 e 3 · laboratório de poções</p><h4>Diorama em corte, luz de janela</h4><p>Câmera isométrica, duas paredes de pedra com borda grossa, janela em arco com treliça, caldeirão roxo, lousa com diagramas e prateleiras de frascos.</p><p class="to">Vira a Sala de Poções e a mecânica de receita: cada palavra certa cai no caldeirão e muda a cor da poção.</p></div>
+        <div class="ref"><p class="from">Imagem 4 · quatro salas comunais</p><h4>Mesma planta, quatro paletas</h4><p>Vermelho, verde, azul e amarelo, com lareira, poltronas, janelas em arco, estandartes e velas. A planta se repete e a casa muda a cor.</p><p class="to">Vira o sistema de casas. Um teste em inglês escolhe a casa e a sala comunal do jogador é pintada com a cor dela.</p></div>
+        <div class="ref"><p class="from">Versão 1 · script do Blender</p><h4>Noite, lanternas, câmera ortográfica</h4><p>Paleta noturna de pedra azulada, luz dourada nas janelas, lua fria e câmera ortográfica.</p><p class="to">Fica como identidade: tudo começa no escuro e acende com o progresso, nas mesmas cores.</p></div>
+      </div>
+    </div>
+
+    <div>
+      <h3>O ciclo de jogo</h3>
+      <div class="loop"><span>Mapa-maquete</span><i>→</i><span>Entrar na sala</span><i>→</i><span>5 feitiços de frase</span><i>→</i><span>A sala acende</span><i>→</i><span>O castelo ganha cor</span><i>→</i><span>Próxima sala abre</span></div>
+    </div>
+
+    <div>
+      <h3>Salas, mecânicas e gramática</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Sala</th><th>Mecânica</th><th>Gramática</th><th>Nível</th><th>O que o aluno consegue fazer</th></tr></thead>
+        <tbody>
+          <tr><td><b>Espelho das Casas</b></td><td>Lê perguntas em inglês e escolhe a resposta que combina com ele. Não há resposta errada.</td><td>like, I am, vocabulário de animais e lugares</td><td>A1</td><td>Entender frases curtas sobre gostos e falar de si.</td></tr>
+          <tr><td><b>Sala Comunal</b></td><td><i>Encontre e descreva</i>: lê a pergunta, toca no objeto certo do diorama e monta a resposta.</td><td>there is / there are, preposições (on, in, between, in front of)</td><td>A1</td><td>Descrever onde as coisas estão num cômodo.</td></tr>
+          <tr><td><b>Sala de Poções</b></td><td><i>Receita</i>: as palavras entram no caldeirão uma a uma. Palavra errada solta fumaça e volta para a mesa.</td><td>imperativo, first/then/finally, some/any, números</td><td>A1–A2</td><td>Seguir e dar instruções simples em sequência.</td></tr>
+          <tr><td><b>Biblioteca</b></td><td><i>Livro dos Dias</i>: cada frase certa vira uma linha de uma história, e um livro flutua.</td><td>passado simples (regulares, irregulares, did/didn't)</td><td>A2</td><td>Contar uma história curta no passado.</td></tr>
+          <tr><td><b>Estufa</b></td><td>Monta frases que fazem as plantas crescerem e florirem na hora.</td><td>presente contínuo, can</td><td>A1–A2</td><td>Descrever o que está acontecendo agora.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Como o jogo ensina</h3>
+        <ul>
+          <li>Cada frase tem runas falsas que testam o erro típico daquele ponto (<i>is</i> no lugar de <i>are</i>, <i>leafs</i>, <i>falled</i>, <i>didn't told</i>).</li>
+          <li>O erro mostra qual palavra falhou e explica a regra em português. As palavras certas ficam no lugar.</li>
+          <li>Pontos: 3 se acertar de primeira, 2 com até dois deslizes, 1 nos outros casos. A dica revela a próxima palavra e custa um ponto.</li>
+          <li>Na Sala Comunal o aluno primeiro entende (toca no objeto) e depois produz (monta a frase). Ler antes de escrever.</li>
+          <li>O botão Ouvir lê a frase em inglês britânico depois do acerto.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Casas originais</h3>
+        <p>Hogwarts e os nomes das casas são marcas registradas. Para o jogo poder ser publicado e usado em sala de aula, as casas têm nomes próprios e mantêm a lógica das quatro cores:</p>
+        <div class="swatches">
+          <span class="sw"><i style="background:#c8402f"></i>Emberhold · coragem</span>
+          <span class="sw"><i style="background:#2f9b5a"></i>Mossgrove · ambição</span>
+          <span class="sw"><i style="background:#3a6fd8"></i>Starwell · curiosidade</span>
+          <span class="sw"><i style="background:#e2b23a"></i>Honeyfield · bondade</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Produção no Blender</h3>
+        <ul>
+          <li>Uma sala-base de 10 × 10 m, paredes de 0,6 m de espessura e 7 m de altura, com o corte em L das referências. Muda a mobília e a paleta.</li>
+          <li>Câmera ortográfica isométrica: rotação X 54,74°, Z 45°. As cores e a luz desta versão já seguem essa projeção, então os renders do Blender podem substituir os desenhos sem mudar o jogo.</li>
+          <li>Cada objeto que o jogador pode tocar (gato, lareira, tapete…) vira uma área clicável. Basta exportar as caixas de contorno de cada objeto pela câmera.</li>
+          <li>Materiais por casa como no script da v1 (<code>mat()</code>), com emissão nas velas, na lareira e nos frascos para o estado "aceso".</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Modo maquete física</h3>
+        <p>A maquete impressa em 3D pode entrar no jogo. Um QR code colado em cada torre abre a sala correspondente, e o professor monta uma caça ao tesouro pela sala de aula. O jogo funciona igual sem a maquete.</p>
+        <h3 style="margin-top:18px">Próximas salas</h3>
+        <ul>
+          <li><b style="color:var(--gold-soft)">Grande Salão</b>: comida, some/any, How much/How many (A1)</li>
+          <li><b style="color:var(--gold-soft)">Corujal</b>: escrever cartas curtas, will para promessas (A2)</li>
+          <li><b style="color:var(--gold-soft)">Torre de Astronomia</b>: comparativos e superlativos (A2)</li>
+          <li><b style="color:var(--gold-soft)">Campo de Voo</b>: direções e imperativos (left, right, straight on) (A1)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note"><p>Esta página já é a versão jogável da proposta: o mapa, o teste das casas e as quatro salas funcionam acima. Os dioramas são desenhados por código na mesma projeção isométrica dos renders do Blender.</p></div>
+  </section>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* =================================================================
+   DADOS
+================================================================= */
+const HOUSES = {
+  ember: { name: "Emberhold", trait: "coragem", color: "#c8402f", trim: "#e9a93b", wall: "#5e2e22", floor: "#4a2a20", light: "#ff9a4a", rug: "#8e2a22" },
+  moss:  { name: "Mossgrove", trait: "ambição", color: "#2f9b5a", trim: "#b9c4b6", wall: "#22392d", floor: "#1d2a24", light: "#a6ff8f", rug: "#1f5b3a" },
+  star:  { name: "Starwell", trait: "curiosidade", color: "#3a6fd8", trim: "#c9a35a", wall: "#243155", floor: "#1d2540", light: "#8fb6ff", rug: "#26407e" },
+  honey: { name: "Honeyfield", trait: "bondade", color: "#e2b23a", trim: "#3a2c1a", wall: "#7a5c26", floor: "#58401f", light: "#ffd36a", rug: "#a9781f" }
+};
+
+const SORTING = [
+  { en: "What do you like?", pt: "Do que você gosta?", a: [
+    { en: "I like adventures.", pt: "Eu gosto de aventuras.", h: "ember" },
+    { en: "I like books and stars.", pt: "Eu gosto de livros e estrelas.", h: "star" },
+    { en: "I like animals and plants.", pt: "Eu gosto de animais e plantas.", h: "honey" },
+    { en: "I like to win games.", pt: "Eu gosto de ganhar jogos.", h: "moss" } ] },
+  { en: "Where is your favourite place?", pt: "Qual é o seu lugar favorito?", a: [
+    { en: "The library.", pt: "A biblioteca.", h: "star" },
+    { en: "The lake at night.", pt: "O lago à noite.", h: "moss" },
+    { en: "The mountains.", pt: "As montanhas.", h: "ember" },
+    { en: "The garden.", pt: "O jardim.", h: "honey" } ] },
+  { en: "Choose a pet.", pt: "Escolha um bichinho.", a: [
+    { en: "A friendly cat.", pt: "Um gato amigável.", h: "honey" },
+    { en: "A brave dog.", pt: "Um cachorro corajoso.", h: "ember" },
+    { en: "A smart snake.", pt: "Uma cobra esperta.", h: "moss" },
+    { en: "An old owl.", pt: "Uma coruja velha.", h: "star" } ] },
+  { en: "What are you like?", pt: "Como você é?", a: [
+    { en: "I am ambitious.", pt: "Eu sou ambicioso.", h: "moss" },
+    { en: "I am kind.", pt: "Eu sou gentil.", h: "honey" },
+    { en: "I am curious.", pt: "Eu sou curioso.", h: "star" },
+    { en: "I am brave.", pt: "Eu sou corajoso.", h: "ember" } ] }
+];
+
+const OBJ = {
+  cat: ["the cat", "o gato"], sofa: ["the sofa", "o sofá"], fireplace: ["the fireplace", "a lareira"], window: ["a window", "uma janela"],
+  rug: ["the rug", "o tapete"], table: ["the table", "a mesa"], candles: ["the candles", "as velas"], bookcase: ["the bookcase", "a estante"],
+  armchair: ["the armchair", "a poltrona"], banner: ["the banner", "o estandarte"]
+};
+
+const ROOMS = [
+  { id: "sorting", name: "Espelho das Casas", sub: "Teste das casas · A1", kind: "sorting", color: "#c9b6ff",
+    mentor: "O Espelho das Casas vai ler o seu coração, mas ele só entende inglês. Responda com sinceridade: aqui não existe resposta errada." },
+  { id: "common", name: "Sala Comunal", sub: "Preposições · there is/are · A1", kind: "find", color: null,
+    mentor: "Esta é a sua sala comunal! Leia a pergunta, toque no objeto certo e depois descreva com as runas.",
+    focus: "Use <b>on</b> (em cima), <b>in</b> (dentro), <b>between</b> (entre), <b>in front of</b> (na frente de). <b>There is</b> para uma coisa, <b>there are</b> para várias.",
+    items: [
+      { find: "cat", q: "Where is the cat?", pt: "O gato está no sofá.", en: "The cat is on the sofa.", x: ["in", "are"], tip: "Em cima de um móvel usamos <b>on</b>: <i>on the sofa</i>. <i>The cat</i> é um só → <b>is</b>." },
+      { find: "fireplace", q: "Where is the fireplace?", pt: "A lareira fica entre as janelas.", en: "The fireplace is between the windows.", x: ["behind", "are"], tip: "<b>between</b> = entre duas coisas. <i>Behind</i> = atrás de." },
+      { find: "rug", q: "What is in front of the fireplace?", pt: "Há um tapete grande na frente da lareira.", en: "There is a big rug in front of the fireplace.", x: ["are", "behind"], tip: "Uma coisa → <b>There is</b>. \"Na frente de\" = <b>in front of</b>." },
+      { find: "candles", q: "What is on the table?", pt: "Há três velas em cima da mesa.", en: "There are three candles on the table.", x: ["is", "under"], tip: "Várias coisas → <b>There are</b>. Em cima da mesa = <b>on</b>; <i>under</i> = embaixo." },
+      { find: "bookcase", q: "Where are the books?", pt: "Os livros estão na estante.", en: "The books are in the bookcase.", x: ["is", "on"], tip: "Dentro de um móvel → <b>in</b>. <i>The books</i> é plural → <b>are</b>." }
+    ] },
+  { id: "potions", name: "Sala de Poções", sub: "Imperativo · sequência · A1–A2", kind: "potion", color: "#a86bff",
+    mentor: "Na Sala de Poções cada palavra entra direto no caldeirão. Se a palavra estiver errada, a poção solta fumaça e ela volta para a mesa!",
+    focus: "Instruções usam o verbo puro, sem sujeito: <b>Add</b>, <b>Stir</b>, <b>Put</b>. Para negar: <b>Don't</b>. Ordem: <b>First</b>, <b>Then</b>, <b>Finally</b>.",
+    items: [
+      { pt: "Primeiro, coloque um pouco de água no caldeirão.", en: "First, put some water in the cauldron.", x: ["puts", "a"], tip: "Instrução = verbo puro: <b>put</b>. Água não se conta, então usamos <b>some water</b> (e não <i>a water</i>).", c: "#4fa3ff" },
+      { pt: "Depois, adicione três folhas verdes.", en: "Then add three green leaves.", x: ["leafs", "adds"], tip: "Plural de <i>leaf</i> é <b>leaves</b>. A cor vem antes: <i>green leaves</i>.", c: "#3fd17a" },
+      { pt: "Mexa a poção devagar.", en: "Stir the potion slowly.", x: ["slow", "stirs"], tip: "Como fazer algo = advérbio com <b>-ly</b>: <i>slowly</i>. O verbo vem primeiro: <b>Stir</b>." },
+      { pt: "Não adicione sal nenhum!", en: "Don't add any salt!", x: ["some", "doesn't"], tip: "Ordem negativa: <b>Don't</b> + verbo. Em frases negativas usamos <b>any</b>, não <i>some</i>.", c: "#ff8a3d" },
+      { pt: "Por fim, dê a poção para a sua professora.", en: "Finally, give the potion to your teacher.", x: ["gives", "at"], tip: "Dar algo <b>to</b> alguém: <i>give the potion to your teacher</i>.", c: "#c06bff" }
+    ] },
+  { id: "library", name: "Biblioteca", sub: "Passado simples · A2", kind: "build", color: "#4fb3ff",
+    mentor: "Na biblioteca as palavras viram história. Cada frase certa escreve uma linha no Livro dos Dias e um livro sai voando da estante.",
+    focus: "Regulares: <b>-ed</b> (visit → visited). Irregulares mudam: fall → <b>fell</b>, be → <b>was/were</b>, come → <b>came</b>. Com <b>did/didn't</b> o verbo volta ao normal.",
+    items: [
+      { pt: "Ontem à noite eu visitei a biblioteca antiga.", en: "Last night I visited the old library.", x: ["visit"], tip: "<i>Last night</i> pede passado: <b>visit + ed = visited</b>." },
+      { pt: "Um livro caiu da prateleira de cima.", en: "A book fell from the top shelf.", x: ["falled", "in"], tip: "<b>fall</b> é irregular: o passado é <b>fell</b>. \"De\" (origem) = <b>from</b>." },
+      { pt: "Era um mapa do castelo.", en: "It was a map of the castle.", x: ["were"], tip: "Com <b>it</b> o passado de to be é <b>was</b>. <i>Were</i> é para you/we/they." },
+      { pt: "Eu não contei para a bibliotecária.", en: "I didn't tell the librarian.", x: ["told"], tip: "Depois de <b>didn't</b> o verbo fica no infinitivo: <i>didn't tell</i>." },
+      { pt: "De onde veio o mapa?", en: "Where did the map come from?", x: ["came"], tip: "Pergunta no passado: <b>Where did</b> + sujeito + verbo normal (<i>come</i>). <i>From</i> fica no fim." }
+    ] },
+  { id: "green", name: "Estufa", sub: "Presente contínuo · can · A1–A2", kind: "build", color: "#7fe08a",
+    mentor: "Último desafio: a estufa! As plantas crescem com frases sobre o que está acontecendo agora.",
+    focus: "<b>am/is/are</b> + verbo com <b>-ing</b> = acontecendo agora. <b>can</b> + verbo puro = conseguir, saber fazer.",
+    items: [
+      { pt: "As flores estão abrindo agora.", en: "The flowers are opening now.", x: ["is"], tip: "<i>The flowers</i> é plural → <b>are opening</b>." },
+      { pt: "Uma plantinha está cantando uma canção.", en: "A small plant is singing a song.", x: ["sing"], tip: "Agora mesmo: <b>is</b> + verbo com <b>-ing</b>: <i>singing</i>." },
+      { pt: "Nós estamos regando a árvore velha.", en: "We are watering the old tree.", x: ["is", "water"], tip: "<b>We are</b> + <i>watering</i>. Adjetivo antes do substantivo: <i>old tree</i>." },
+      { pt: "Estas trepadeiras conseguem subir muito rápido.", en: "These vines can climb very fast.", x: ["climbs", "this"], tip: "Plural perto = <b>these</b>. Depois de <b>can</b> o verbo fica puro: <i>can climb</i>." },
+      { pt: "O que você está fazendo com essa semente?", en: "What are you doing with that seed?", x: ["do", "is"], tip: "Pergunta no contínuo: <b>What are you doing…?</b>" }
+    ] }
+];
+const KEEP_CASE = new Set(["I"]);
+const TASK_ROOMS = ROOMS.filter(r => r.items);
+const TOTAL = TASK_ROOMS.reduce((n, r) => n + r.items.length, 0);
+
+/* =================================================================
+   ESTADO
+================================================================= */
+const KEY = "spellwords-castle-v2";
+let S;
+function fresh() {
+  const prog = {}; TASK_ROOMS.forEach(r => prog[r.id] = r.items.map(() => 0));
+  return { view: "hub", room: null, house: null, sortAns: [], prog, t: null };
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { const v = JSON.parse(localStorage.getItem(KEY)); if (v && v.prog && v.prog.common) return v; } catch (e) {} return null; }
+
+const room = id => ROOMS.find(r => r.id === id);
+const words = s => s.replace(/[.?!]$/, "").split(" ");
+const punct = s => (s.match(/[.?!]$/) || ["."])[0];
+const doneIn = id => id === "sorting" ? (S.house ? 1 : 0) : S.prog[id].filter(Boolean).length;
+const complete = id => id === "sorting" ? !!S.house : doneIn(id) === room(id).items.length;
+const unlocked = id => { const k = ROOMS.findIndex(r => r.id === id); return k === 0 || complete(ROOMS[k - 1].id); };
+const lit = id => id === "sorting" ? (S.house ? 5 : S.sortAns.length) : doneIn(id);
+const solvedCount = () => TASK_ROOMS.reduce((n, r) => n + doneIn(r.id), 0);
+const mana = () => TASK_ROOMS.reduce((n, r) => n + S.prog[r.id].reduce((a, b) => a + b, 0), 0);
+const house = () => HOUSES[S.house || "ember"];
+function rank() { const m = mana(); return m >= 50 ? "Arquimago" : m >= 35 ? "Bruxo" : m >= 15 ? "Bruxo do 1º ano" : "Aprendiz"; }
+function roomColor(r) { return r.id === "common" ? house().color : r.color; }
+function shown(w, first) { return first && !KEEP_CASE.has(w) ? w.charAt(0).toLowerCase() + w.slice(1) : w; }
+function shuffle(a) { for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+
+function newTask(i) {
+  const r = room(S.room), it = r.items[i], ans = words(it.en);
+  const tiles = ans.map((w, k) => ({ t: shown(w, k === 0) })).concat(it.x.map(w => ({ t: w })));
+  tiles.forEach((t, k) => t.id = k);
+  let order = shuffle(tiles.map(t => t.id));
+  if (order.slice(0, ans.length).every((id, k) => id === k)) order.reverse();
+  S.t = { i, pool: order.map(id => tiles[id]), placed: [], tries: 0, hints: 0, phase: r.kind === "find" ? "find" : "build", fb: null };
+}
+function enter(id) {
+  if (!unlocked(id)) return;
+  S.view = "room"; S.room = id;
+  const r = room(id);
+  if (r.items) { const k = S.prog[id].findIndex(v => !v); newTask(k < 0 ? 0 : k); } else S.t = null;
+  render(); scene.fx(id);
+}
+function toHub() { S.view = "hub"; S.room = null; S.t = null; render(); }
+
+/* =================================================================
+   INTERFACE
+================================================================= */
+const $ = id => document.getElementById(id);
+const OWL = `<svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25" fill="#1d2440" stroke="#44506a"/><path d="M14 18 L18 11 L22 17 Q26 15 30 17 L34 11 L38 18 Q41 30 36 39 Q26 45 16 39 Q11 30 14 18Z" fill="#6b5a44"/><path d="M18 34 Q26 41 34 34 Q31 42 26 42 Q21 42 18 34Z" fill="#8a7658"/><circle cx="20.5" cy="24" r="5" fill="#f2e2b8"/><circle cx="31.5" cy="24" r="5" fill="#f2e2b8"/><circle cx="20.5" cy="24" r="2.4" fill="#f2a531"/><circle cx="31.5" cy="24" r="2.4" fill="#f2a531"/><circle cx="20.5" cy="24" r="1.1" fill="#120c04"/><circle cx="31.5" cy="24" r="1.1" fill="#120c04"/><path d="M24.5 28 L26 32 L27.5 28Z" fill="#ffcf7a"/></svg>`;
+const mentor = txt => `<div class="mentor">${OWL}<p><b>Professora Elowen</b>${txt}</p></div>`;
+
+function render() {
+  document.documentElement.style.setProperty("--house", S.house ? house().color : "#f2a531");
+  $("sMana").textContent = mana();
+  $("sSpells").textContent = `${solvedCount()}/${TOTAL}`;
+  $("sHouse").textContent = S.house ? house().name : "Sem casa";
+  $("sHouse").style.color = S.house ? house().color : "";
+  $("sRank").textContent = rank();
+  const g = $("g");
+  if (S.view === "hub") renderHub(g);
+  else if (S.room === "sorting") renderSorting(g);
+  else renderRoom(g);
+  const r = S.room && room(S.room);
+  if (typeof scene !== "undefined") scene.redraw();
+  $("cap").innerHTML = S.view === "hub" ? `<small>Maquete do castelo</small>Escolha uma sala` : `<small>${r.sub}</small>${r.id === "common" && S.house ? `Sala Comunal ${house().name}` : r.name}`;
+  save();
+}
+
+function renderHub(g) {
+  const next = ROOMS.find(r => unlocked(r.id) && !complete(r.id));
+  const allDone = !next;
+  g.innerHTML = `
+    ${mentor(allDone ? "Você acendeu todas as salas! O castelo inteiro ganhou cor. Volte a qualquer sala para treinar e melhorar sua pontuação." :
+      S.house ? `Bem-vindo de volta, bruxo de <b style="display:inline;color:${house().color};font-family:inherit;font-size:inherit;letter-spacing:0">${house().name}</b>. A próxima sala é: ${next.id === "common" ? "a sua Sala Comunal" : next.name}.` :
+      "Esta é a maquete do castelo. Ele ainda está todo cinza: cada sala que você concluir ganha cor. Comece pelo Espelho das Casas.")}
+    <ul class="rooms">
+      ${ROOMS.map((r, k) => {
+        const open = unlocked(r.id), done = complete(r.id), n = r.items ? `${doneIn(r.id)}/${r.items.length}` : (S.house ? "feito" : "");
+        const nm = r.id === "common" && S.house ? `Sala Comunal ${house().name}` : r.name;
+        return `<li><button type="button" class="room-btn ${done ? "done" : ""} ${next && next.id === r.id ? "next" : ""}" style="--c:${roomColor(r)}" data-room="${r.id}" ${open ? "" : "disabled"}>
+          <span class="n">${k + 1}</span><span class="nm">${nm}<small>${r.sub}</small></span><span class="st">${open ? n : "trancada"}</span></button></li>`;
+      }).join("")}
+    </ul>
+    <div class="actions">${next ? `<button type="button" class="btn main" data-room="${next.id}">${doneIn(next.id) ? "Continuar" : "Entrar"}: ${next.id === "common" ? "Sala Comunal" : next.name}</button>` : ""}</div>
+    <p class="foot">O progresso fica salvo neste navegador. <button type="button" id="reset">Recomeçar do zero</button></p>`;
+}
+
+function renderSorting(g) {
+  const r = room("sorting");
+  if (S.house) {
+    const h = house();
+    g.innerHTML = `<button type="button" class="back" id="back">← Mapa do castelo</button>
+      ${mentor(`O espelho decidiu! Sua casa é <b style="display:inline;color:${h.color};font-family:inherit;font-size:inherit;letter-spacing:0">${h.name}</b>, a casa da ${h.trait}. A sua sala comunal já está com as cores da casa.`)}
+      <div class="feedback win"><strong>You are in ${h.name}!</strong><span>Você está na ${h.name}!</span></div>
+      <div class="actions"><button type="button" class="btn main" data-room="common">Ir para a Sala Comunal</button></div>`;
+    return;
+  }
+  const k = S.sortAns.length, q = SORTING[k];
+  g.innerHTML = `<button type="button" class="back" id="back">← Mapa do castelo</button>
+    ${mentor(k === 0 ? r.mentor : "Muito bem. O espelho está ouvindo… próxima pergunta.")}
+    <div class="label"><span>Pergunta ${k + 1} de ${SORTING.length}</span><span class="room-tag">Espelho das Casas</span></div>
+    <p class="q-en">${q.en}</p><p class="sub">${q.pt}</p>
+    <div class="answers">${q.a.map((a, j) => `<button type="button" data-ans="${j}">${a.en}<small>${a.pt}</small></button>`).join("")}</div>`;
+}
+
+function renderRoom(g) {
+  const r = room(S.room), t = S.t, it = r.items[t.i], ans = words(it.en);
+  const placed = t.placed.map(id => t.pool.find(p => p.id === id));
+  const built = placed.map(p => p.t);
+  const won = t.phase === "won", potion = r.kind === "potion";
+  let pv = built.join(" "); if (pv) pv = pv[0].toUpperCase() + pv.slice(1) + (built.length === ans.length ? punct(it.en) : "");
+  const roomDone = complete(r.id);
+  const lines = [];
+  lines.push(`<button type="button" class="back" id="back">← Mapa do castelo</button>`);
+  lines.push(mentor(won ? winLine(t.i) : t.i === 0 && t.phase !== "won" && !t.fb ? r.mentor : t.tries > 1 ? "Calma, jovem bruxo. Leia a dica com atenção: a magia exige paciência." : (t.phase === "find" ? "Leia a pergunta em inglês e toque no objeto da sala." : potion ? "Escolha a próxima palavra da receita. Pense na ordem!" : "Monte a frase com as runas. Cuidado com as runas-armadilha!")));
+  if (r.id === "library") {
+    const story = r.items.map((x, k) => S.prog.library[k] ? x.en : null).filter(Boolean);
+    lines.push(`<div class="book"><h3>Livro dos Dias</h3>${story.length ? story.map(s => `<p>${s}</p>`).join("") : `<p class="empty">As páginas ainda estão em branco…</p>`}</div>`);
+  }
+  lines.push(`<div class="label"><span>Feitiço ${t.i + 1} de ${r.items.length}</span><span class="room-tag">${r.sub.split(" · ")[0]}</span></div>`);
+  if (r.kind === "find") {
+    lines.push(`<p class="q-en">${it.q}</p>`);
+    if (t.phase === "find") {
+      lines.push(`<p class="sub">Toque no objeto certo na sala. Ou escolha aqui:</p>`);
+      lines.push(`<div class="pool">${["cat", "sofa", "fireplace", "window", "rug", "table", "candles", "bookcase", "armchair"].map(o => `<button type="button" class="chip" data-obj="${o}">${OBJ[o][0].replace(/^(the|a) /, "")}</button>`).join("")}</div>`);
+    } else lines.push(`<p class="q-pt">${it.pt}</p>`);
+  } else lines.push(`<p class="q-pt">${it.pt}</p>`);
+
+  if (t.phase !== "find") {
+    lines.push(`<div class="slots ${built.length ? "" : "empty"} ${won ? "ok" : ""} ${potion ? "cauldron" : ""} ${t.fb && t.fb.type === "fail" ? "bad" : ""}" data-empty="${potion ? "O caldeirão está vazio. Escolha a primeira palavra…" : "Toque nas runas para montar a frase…"}">
+      ${placed.map(p => `<button type="button" class="rune ${won || potion ? "good" : "placed"}" ${won || potion ? "disabled" : ""} data-out="${p.id}">${p.t}</button>`).join("")}</div>`);
+    lines.push(`<p class="preview ${won ? "ok" : ""}">${pv || "&nbsp;"}</p>`);
+    lines.push(`<div class="pool">${t.pool.map(p => { const used = t.placed.includes(p.id); return `<button type="button" class="rune ${used ? "ghost" : ""}" data-in="${p.id}" ${won || used ? "disabled tabindex='-1'" : ""}>${p.t}</button>`; }).join("")}</div>`);
+  }
+  lines.push(fbHTML(r, it));
+  if (won) {
+    lines.push(`<div class="actions"><button type="button" class="btn" id="listen">Ouvir a frase</button>
+      <button type="button" class="btn main" id="next">${roomDone && firstOpenIn(r.id) < 0 ? (nextRoomOf(r.id) ? "Sala concluída: voltar ao mapa" : "Ver o castelo completo") : "Próximo feitiço"}</button></div>`);
+  } else if (t.phase !== "find") {
+    lines.push(`<div class="actions">${potion ? "" : `<button type="button" class="btn" id="clear" ${built.length ? "" : "disabled"}>Limpar</button>`}
+      <button type="button" class="btn" id="hint">Dica (−1 ponto)</button>
+      ${potion ? "" : `<button type="button" class="btn main" id="cast" ${built.length ? "" : "disabled"}>Lançar feitiço</button>`}</div>`);
+  }
+  lines.push(`<div><p class="sub" style="margin-bottom:6px">${r.focus}</p><div class="dots">${r.items.map((_, k) => `<i class="${S.prog[r.id][k] ? "on" : ""}"></i>`).join("")}</div></div>`);
+  g.innerHTML = lines.join("");
+}
+function winLine(i) { return ["Perfeito! Sinta a magia fluir.", "Muito bem! A sala responde às suas palavras.", "Excelente! Mais uma luz acesa.", "Isso! Sua varinha está esquentando.", "Brilhante!"][i % 5]; }
+function fbHTML(r, it) {
+  const f = S.t.fb; if (!f) return "";
+  if (f.type === "win") { const p = S.prog[r.id][S.t.i]; return `<div class="feedback win"><strong>Feitiço lançado! +${p} ${p === 1 ? "ponto" : "pontos"}</strong><span class="en">${it.en}</span><span>${it.pt}</span></div>`; }
+  if (f.type === "found") return `<div class="feedback info"><strong>Achou: ${OBJ[it.find][0]}!</strong><span>Agora monte a resposta em inglês.</span></div>`;
+  if (f.type === "wrongobj") return `<div class="feedback fail"><strong>That is ${OBJ[f.o][0]}.</strong><span>Isso é ${OBJ[f.o][1]}. Leia a pergunta de novo: <i>${it.q}</i></span></div>`;
+  if (f.type === "short") return `<div class="feedback info"><strong>O feitiço está incompleto</strong><span>Faltam ${f.n} ${f.n === 1 ? "runa" : "runas"}. As palavras certas já estão no lugar.</span></div>`;
+  if (f.type === "hint") return `<div class="feedback info"><strong>Dica da coruja</strong><span>${it.tip}</span></div>`;
+  if (f.type === "smoke") return `<div class="feedback fail"><strong>Puff! A poção soltou fumaça</strong><span>A palavra <b>“${f.w}”</b> não entra agora.${S.t.tries >= 2 ? " " + it.tip : " Pense na ordem da frase."}</span></div>`;
+  return `<div class="feedback fail"><strong>O feitiço falhou</strong><span>A runa <b>“${f.w}”</b> não está no lugar certo. ${it.tip}</span></div>`;
+}
+const firstOpenIn = id => S.prog[id].findIndex(v => !v);
+const nextRoomOf = id => { const k = ROOMS.findIndex(r => r.id === id); return ROOMS[k + 1] || null; };
+
+/* =================================================================
+   AÇÕES
+================================================================= */
+function score() { const t = S.t; return t.tries === 0 && t.hints === 0 ? 3 : (t.tries + t.hints <= 2 ? 2 : 1); }
+function win() {
+  const r = room(S.room), t = S.t;
+  S.prog[r.id][t.i] = Math.max(S.prog[r.id][t.i], score());
+  t.phase = "won"; t.fb = { type: "win" };
+  scene.fx(r.id, true);
+  speak(r.items[t.i].en);
+}
+function cast() {
+  const it = room(S.room).items[S.t.i], ans = words(it.en), t = S.t;
+  const built = t.placed.map(id => t.pool.find(p => p.id === id).t);
+  let k = 0; while (k < built.length && k < ans.length && built[k].toLowerCase() === ans[k].toLowerCase()) k++;
+  if (k === ans.length && built.length === ans.length) win();
+  else if (k === built.length) t.fb = { type: "short", n: ans.length - k };
+  else { t.tries++; t.fb = { type: "fail", w: built[k] }; t.placed = t.placed.slice(0, k); }
+  render();
+}
+function addTile(id) {
+  const r = room(S.room), t = S.t;
+  if (r.kind === "potion") {
+    const ans = words(r.items[t.i].en), want = ans[t.placed.length], tile = t.pool.find(p => p.id === id);
+    if (tile.t.toLowerCase() === want.toLowerCase()) {
+      t.placed.push(id); t.fb = null; scene.drop(true);
+      if (t.placed.length === ans.length) win();
+    } else { t.tries++; t.fb = { type: "smoke", w: tile.t }; scene.drop(false); }
+  } else { t.placed.push(id); if (t.fb && t.fb.type !== "hint") t.fb = null; }
+  render();
+  const nx = document.querySelector("#g .pool .rune:not([disabled])"); if (nx) nx.focus({ preventScroll: true }); else document.querySelector("#cast, #next")?.focus({ preventScroll: true });
+}
+function hint() {
+  const r = room(S.room), t = S.t, ans = words(r.items[t.i].en);
+  const built = t.placed.map(id => t.pool.find(p => p.id === id).t.toLowerCase());
+  let k = 0; while (k < built.length && built[k] === ans[k].toLowerCase()) k++;
+  t.placed = t.placed.slice(0, k);
+  const tile = t.pool.find(p => !t.placed.includes(p.id) && p.t.toLowerCase() === ans[k].toLowerCase());
+  if (tile) t.placed.push(tile.id);
+  t.hints++; t.fb = { type: "hint" };
+  if (r.kind === "potion") { scene.drop(true); if (t.placed.length === ans.length) win(); }
+  render();
+}
+function pickObject(o) {
+  const t = S.t, it = room(S.room).items[t.i];
+  if (t.phase !== "find") return;
+  if (o === it.find) { t.phase = "build"; t.fb = { type: "found" }; scene.fx("common", false, o); }
+  else { t.tries++; t.fb = { type: "wrongobj", o }; }
+  render();
+}
+function nextTask() {
+  const r = room(S.room), k = firstOpenIn(r.id);
+  if (k < 0) { toHub(); scene.fx("hub", true, r.id); return; }
+  const after = S.prog[r.id].findIndex((v, j) => !v && j > S.t.i);
+  newTask(after >= 0 ? after : k); render();
+  document.querySelector("#g .pool button")?.focus({ preventScroll: true });
+}
+function answerSort(j) {
+  S.sortAns.push(SORTING[S.sortAns.length].a[j].h);
+  if (S.sortAns.length === SORTING.length) {
+    const c = {}; S.sortAns.forEach((h, k) => c[h] = (c[h] || 0) + 1 + k * .01); // empate: vale a resposta mais recente
+    S.house = Object.keys(c).sort((a, b) => c[b] - c[a])[0];
+    scene.fx("sorting", true);
+  }
+  render();
+}
+function speak(text) { try { const u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = .85; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const d = b.dataset;
+  if (d.room) return enter(d.room);
+  if (d.in !== undefined) return addTile(+d.in);
+  if (d.out !== undefined) { S.t.placed = S.t.placed.filter(id => id !== +d.out); render(); return; }
+  if (d.ans !== undefined) return answerSort(+d.ans);
+  if (d.obj) return pickObject(d.obj);
+  switch (b.id) {
+    case "back": toHub(); break;
+    case "cast": cast(); break;
+    case "clear": S.t.placed = []; S.t.fb = null; render(); break;
+    case "hint": hint(); break;
+    case "next": nextTask(); break;
+    case "listen": speak(room(S.room).items[S.t.i].en); break;
+    case "reset":
+      if (d.armed) { S = fresh(); render(); }
+      else { d.armed = "1"; b.textContent = "Toque de novo para confirmar"; setTimeout(() => { if (b.isConnected) { delete d.armed; b.textContent = "Recomeçar do zero"; } }, 3000); }
+      break;
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Enter" || e.target.closest("button")) return;
+  if (S.t && S.t.phase === "won") nextTask(); else if (S.t && S.t.placed.length && room(S.room).kind !== "potion") cast();
+});
+
+/* =================================================================
+   CENA ISOMÉTRICA
+   Mesma projeção da câmera ortográfica isométrica (X 54,74°, Z 45°).
+   Unidades = metros do Blender. Sala 10×10, paredes 0,6 de espessura.
+================================================================= */
+const scene = (() => {
+  const cv = $("cv"), ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const COS = Math.cos(Math.PI / 6);
+  let W = 1000, H = 940, U = 40, OX = 500, OY = 300, dpr = 1;
+  let hits = [], cur = null, parts = [], pulse = { id: null, until: 0 }, mix = 0, lastRoom = null;
+
+  function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const P = (x, y, z) => [OX + (x - y) * COS * U, OY + (x + y) * .5 * U - z * U];
+  const cache = {};
+  function shade(hex, k) {
+    const key = hex + k; if (cache[key]) return cache[key];
+    const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k)));
+    return cache[key] = "#" + ((1 << 24) + (f(n >> 16) << 16) + (f(n >> 8 & 255) << 8) + f(n & 255)).toString(16).slice(1);
+  }
+  function track(pts) { if (!cur) return; for (const [x, y] of pts) { cur.x0 = Math.min(cur.x0, x); cur.y0 = Math.min(cur.y0, y); cur.x1 = Math.max(cur.x1, x); cur.y1 = Math.max(cur.y1, y); } }
+  function hit(id, fn) { cur = { id, x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 }; fn(); hits.push(cur); cur = null; }
+  function poly(pts, fill, stroke, lw) {
+    ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1; ctx.stroke(); }
+    track(pts);
+  }
+  function box(x, y, z, w, d, h, col, k = 1) {
+    poly([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)], shade(col, .8 * k));
+    poly([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)], shade(col, .62 * k));
+    poly([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)], shade(col, 1.08 * k));
+  }
+  // planos: parede esquerda (x=0, coordenada u = y), parede direita (y=0, u = x), chão (z=0)
+  const LW = (u, z, off = 0) => P(off, u, z), RW = (u, z, off = 0) => P(u, off, z);
+  function glow(px, py, r, color, a) {
+    const g = ctx.createRadialGradient(px, py, 0, px, py, r);
+    g.addColorStop(0, hexA(color, a)); g.addColorStop(1, hexA(color, 0));
+    ctx.fillStyle = g; ctx.fillRect(px - r, py - r, r * 2, r * 2);
+  }
+  function hexA(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; }
+  function ell(px, py, rx, ry, fill) { ctx.beginPath(); ctx.ellipse(px, py, Math.max(.1, rx), Math.max(.1, ry), 0, 0, 6.283); ctx.fillStyle = fill; ctx.fill(); track([[px - rx, py - ry], [px + rx, py + ry]]); }
+
+  /* ---------- casca da sala ---------- */
+  function shell(wall, floor, seed) {
+    const R = rng(seed);
+    box(-.6, -.6, -.8, 10.6, 10.6, .8, shade(floor, .8));
+    // lajotas
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) {
+      const x = i * 1.25, y = j * 1.25, k = .85 + R() * .3;
+      poly([P(x + .05, y + .05, 0), P(x + 1.2, y + .05, 0), P(x + 1.2, y + 1.2, 0), P(x + .05, y + 1.2, 0)], shade(floor, k));
+      if (R() < .25) { ctx.strokeStyle = shade(floor, .6); ctx.lineWidth = 1; ctx.beginPath(); const a = P(x + .3 + R() * .4, y + .1, 0), b = P(x + .5 + R() * .4, y + 1.1, 0); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    }
+    box(-.6, -.6, 0, .6, 10.6, 7, wall);
+    box(0, -.6, 0, 10, .6, 7, wall);
+    stones(LW, wall, R, .6); stones(RW, wall, R, .6);
+  }
+  function stones(F, wall, R, off) {
+    for (let z = 0, row = 0; z < 6.95; z += .62, row++) {
+      let u = row % 2 ? -.3 : 0;
+      while (u < 10) {
+        const len = .7 + R() * .9, u0 = Math.max(0, u), u1 = Math.min(10, u + len), z1 = Math.min(7, z + .62);
+        if (u1 - u0 > .1) poly([F(u0 + .04, z + .04), F(u1 - .04, z + .04), F(u1 - .04, z1 - .04), F(u0 + .04, z1 - .04)], shade(wall, (.92 + R() * .28) * .8));
+        u += len;
+      }
+    }
+  }
+  /* ---------- peças de parede ---------- */
+  function archPts(F, c, w, z0, z1) {
+    const r = w / 2, pts = [F(c - r, z0), F(c + r, z0), F(c + r, z1 - r)];
+    for (let a = 0; a <= Math.PI; a += Math.PI / 14) pts.push(F(c + r * Math.cos(a), z1 - r + r * Math.sin(a)));
+    pts.push(F(c - r, z1 - r)); return pts;
+  }
+  function archWindow(F, c, w, z0, z1, frame, glass) {
+    poly(archPts(F, c, w + .4, z0 - .2, z1 + .2), shade(frame, .9));
+    poly(archPts(F, c, w, z0, z1), glass);
+    ctx.save(); const pts = archPts(F, c, w, z0, z1);
+    ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.clip();
+    ctx.strokeStyle = shade(frame, .7); ctx.lineWidth = Math.max(1, U * .05);
+    for (let s = -8; s < 10; s += .45) { line(F(c - w + s, z0), F(c + s, z0 + w * 2.4)); line(F(c + w - s, z0), F(c - s, z0 + w * 2.4)); }
+    ctx.restore();
+  }
+  function line(a, b) { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+  function banner(F, c, z0, z1, w, col, trim, lit) {
+    poly([F(c - w / 2 - .1, z1 + .1), F(c + w / 2 + .1, z1 + .1), F(c + w / 2 + .1, z1 - .05), F(c - w / 2 - .1, z1 - .05)], "#3b2a18");
+    poly([F(c - w / 2, z1), F(c + w / 2, z1), F(c + w / 2, z0 + .5), F(c, z0), F(c - w / 2, z0 + .5)], shade(col, lit ? 1.05 : .75));
+    const m = F(c, (z0 + z1) / 2 + .2); ctx.beginPath(); ctx.arc(m[0], m[1], U * w * .22, 0, 6.283); ctx.fillStyle = shade(trim, lit ? 1 : .7); ctx.fill();
+  }
+  function shelves(F, u0, u1, z0, levels, wood, off, R, kind, lit, colors) {
+    // prateleiras abertas presas à parede (off = profundidade)
+    for (let l = 0; l < levels; l++) {
+      const z = z0 + l * 1.05;
+      const item = [];
+      let u = u0 + .15;
+      while (u < u1 - .3) {
+        const w = kind === "books" ? .14 + R() * .12 : .28 + R() * .2, h = kind === "books" ? .55 + R() * .3 : .35 + R() * .45;
+        item.push([u, w, h, colors[Math.floor(R() * colors.length)]]); u += w + (kind === "books" ? .02 : .12);
+      }
+      for (const [uu, w, h, c] of item) {
+        if (kind === "books") poly([F(uu, z + .12, off - .1), F(uu + w, z + .12, off - .1), F(uu + w, z + .12 + h, off - .1), F(uu, z + .12 + h, off - .1)], shade(c, lit ? 1 : .75));
+        else {
+          const a = F(uu + w / 2, z + .12 + h * .4, off * .5);
+          ctx.beginPath(); ctx.ellipse(a[0], a[1], U * w * .45, U * h * .45, 0, 0, 6.283); ctx.fillStyle = lit ? c : shade(c, .55); ctx.fill();
+          ctx.fillStyle = "#5a4630"; ctx.fillRect(a[0] - U * .05, a[1] - U * h * .65, U * .1, U * .14);
+          if (lit) glow(a[0], a[1], U * .8, c, .35);
+        }
+      }
+      // tábua
+      if (F === LW) box(0, u0, z, off, u1 - u0, .1, wood); else box(u0, 0, z, u1 - u0, off, .1, wood);
+    }
+  }
+  /* ---------- móveis ---------- */
+  function table(x, y, w, d, h, wood) {
+    for (const [a, b] of [[0, 0], [w - .18, 0], [0, d - .18], [w - .18, d - .18]]) box(x + a, y + b, 0, .18, .18, h - .15, shade(wood, .8));
+    box(x - .1, y - .1, h - .15, w + .2, d + .2, .18, wood);
+  }
+  function stool(x, y, wood) { for (const [a, b] of [[0, 0], [.6, 0], [0, .6], [.6, .6]]) box(x + a, y + b, 0, .12, .12, 1.3, wood); box(x - .08, y - .08, 1.3, .88, .88, .14, wood); }
+  function candles(pos, z, lit, t) {
+    for (const [x, y] of pos) {
+      box(x - .06, y - .06, z, .12, .12, .45, "#efe6cf");
+      if (lit) { const f = P(x, y, z + .6); const fl = reduce ? 1 : .8 + .2 * Math.sin(t / 120 + x * 7); ell(f[0], f[1], U * .07, U * .14 * fl, "#ffd27a"); }
+    }
+  }
+  function candleGlow(pos, z, color, t) { for (const [x, y] of pos) { const f = P(x, y, z + .6); glow(f[0], f[1], U * 1.6, color, .4 * (reduce ? 1 : .85 + .15 * Math.sin(t / 150 + x))); } }
+  function cauldron(x, y, z, r, liquid, level, t, lit) {
+    const c = P(x, y, z + r * .8);
+    ell(c[0], c[1] + U * r * .15, U * r * 1.05, U * r * .8, "#16141c");
+    ctx.save(); ctx.globalAlpha = .35; ell(c[0] - U * r * .35, c[1], U * r * .2, U * r * .4, "#5a5470"); ctx.restore();
+    const top = P(x, y, z + r * 1.45);
+    ell(top[0], top[1], U * r * 1.05, U * r * .52, "#2a2734");
+    ell(top[0], top[1] + U * .03, U * r * .9, U * r * .43, level > 0 ? liquid : "#1c1a22");
+    if (level > 0 && !reduce) for (let k = 0; k < 4; k++) {
+      const ph = (t / 600 + k * .27) % 1;
+      ell(top[0] + Math.sin(k * 2.1) * U * r * .5, top[1] - ph * U * .6, U * .08 * (1 - ph * .5), U * .08 * (1 - ph * .5), hexA(liquid, 1 - ph));
+    }
+    if (lit) glow(top[0], top[1] - U * .3, U * r * 3, liquid, .5);
+  }
+  function cat(x, y, z, col, lit, t) {
+    box(x, y, z, .5, .9, .42, col);
+    box(x + .05, y + .8, z + .3, .4, .38, .38, col);
+    const e1 = P(x + .5, y + 1.18, z + .78), e2 = P(x + .25, y + 1.18, z + .78);
+    ctx.fillStyle = shade(col, .9); [[x + .45, y + 1.0], [x + .12, y + 1.0]].forEach(([a, b]) => { const p = P(a, b, z + .68); ctx.beginPath(); ctx.moveTo(p[0] - U * .07, p[1]); ctx.lineTo(p[0] + U * .07, p[1]); ctx.lineTo(p[0], p[1] - U * .18); ctx.closePath(); ctx.fill(); });
+    const tl = P(x + .25, y, z + .3), tw = reduce ? 0 : Math.sin(t / 500) * U * .15;
+    ctx.strokeStyle = col; ctx.lineWidth = U * .09; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(tl[0], tl[1]); ctx.quadraticCurveTo(tl[0] - U * .5, tl[1] - U * .2, tl[0] - U * .3 + tw, tl[1] - U * .6); ctx.stroke(); ctx.lineCap = "butt";
+    const ey = P(x + .25, y + 1.18, z + .5);
+    ctx.fillStyle = lit ? "#b6ff6a" : "#e3d27a"; ctx.fillRect(ey[0] - U * .12, ey[1] - U * .06, U * .07, U * .05); ctx.fillRect(ey[0] + U * .04, ey[1] - U * .1, U * .07, U * .05);
+    if (lit) glow(ey[0], ey[1], U * .7, "#b6ff6a", .3);
+  }
+  function plant(x, y, z, s, potCol, leaf, bloom, flower, t) {
+    box(x - .25 * s, y - .25 * s, z, .5 * s, .5 * s, .45 * s, potCol);
+    const c = P(x, y, z + .45 * s);
+    const sway = reduce ? 0 : Math.sin(t / 900 + x) * U * .04;
+    for (let k = 0; k < 5; k++) { const a = -1.2 + k * .6; ctx.save(); ctx.translate(c[0], c[1]); ctx.rotate(a * .55); ell(sway, -U * .45 * s, U * .12 * s, U * .45 * s, shade(leaf, .8 + k * .07)); ctx.restore(); }
+    if (bloom > 0) { const f = P(x, y, z + (1 + bloom * .3) * s); ell(f[0] + sway, f[1], U * .2 * s * bloom, U * .2 * s * bloom, flower); ell(f[0] + sway, f[1], U * .07 * s, U * .07 * s, "#ffe58a"); glow(f[0], f[1], U * 1.2 * s, flower, .25 * bloom); }
+  }
+
+  /* ---------- salas ---------- */
+  function drawCommon(t, n) {
+    const h = house(), R = rng(7);
+    shell(h.wall, h.floor, 11);
+    const moonOn = n >= 3, glass = moonOn ? "#9fb9ff" : "#1b2440";
+    hit("window", () => archWindow(RW, 2.2, 1.5, 2.2, 5.6, "#3a2c20", glass));
+    hit("window", () => archWindow(RW, 8.6, 1.5, 2.2, 5.6, "#3a2c20", glass));
+    hit("banner", () => banner(LW, 6, 3.6, 6.4, 1.3, h.color, h.trim, n >= 1));
+    // lareira
+    hit("fireplace", () => {
+      box(3.8, 0, 0, 3.2, .9, 3.4, "#6d6a72"); box(3.6, 0, 3.4, 3.6, 1.1, .3, "#4b3524");
+      poly([P(4.5, .9, .1), P(6.3, .9, .1), P(6.3, .9, 2.2), P(4.5, .9, 2.2)], "#120e0e");
+      box(4.8, .3, .1, 1.2, .5, .25, "#3b2414");
+    });
+    hit("bookcase", () => { box(0, .6, 0, .9, 2.8, 5, shade("#4b3524", .9)); });
+    shelves(LW, .7, 3.3, .3, 4, "#4b3524", 1, R, "books", n >= 5, ["#8e2a22", "#26407e", "#1f5b3a", "#a9781f", "#5a3a6e", "#c9b38a"]);
+    // tapete
+    hit("rug", () => { poly([P(3, 2, .02), P(8, 2, .02), P(8, 6, .02), P(3, 6, .02)], shade(h.rug, .85)); poly([P(3.3, 2.3, .03), P(7.7, 2.3, .03), P(7.7, 5.7, .03), P(3.3, 5.7, .03)], h.rug); });
+    // sofá contra a parede esquerda
+    hit("sofa", () => { box(0, 4.3, 0, 1.5, 3.6, .9, shade(h.color, .8)); box(0, 4.3, .9, .45, 3.6, 1.1, shade(h.color, .7)); box(0, 4.1, 0, 1.5, .3, 1.4, shade(h.color, .6)); box(0, 7.8, 0, 1.5, .3, 1.4, shade(h.color, .6)); });
+    hit("table", () => table(5, 3.4, 1.4, 1.1, 1.2, "#5a3a22"));
+    hit("candles", () => candles([[5.3, 3.8], [5.7, 3.6], [6.1, 4.1]], 1.23, n >= 4, t));
+    hit("cat", () => cat(.6, 5.5, .9, "#2b2b30", n >= 1, t));
+    hit("armchair", () => { box(7.6, 6.2, 0, 1.6, 1.6, .9, shade(h.color, .85)); box(7.6, 7.5, .9, 1.6, .35, 1.2, shade(h.color, .7)); box(7.4, 6.2, 0, .25, 1.6, 1.3, shade(h.color, .65)); box(9.2, 6.2, 0, .25, 1.6, 1.3, shade(h.color, .65)); });
+    return () => { // emissivo
+      if (n >= 2) { const f = P(5.4, .9, .6); const fl = reduce ? 1 : .85 + .15 * Math.sin(t / 90); for (let k = 0; k < 5; k++) ell(f[0] + (k - 2) * U * .22, f[1] - U * .25 * fl, U * .14, U * (.4 + (k % 2) * .25) * fl, k % 2 ? "#ffb347" : "#ff7a2a"); glow(f[0], f[1], U * 6, h.light, .45); glow(f[0], f[1], U * 2.2, "#ffcf7a", .5); }
+      if (moonOn) { for (const c of [2.2, 8.6]) { const p = RW(c, 3.8); glow(p[0], p[1], U * 3, "#9fb9ff", .25); } ctx.fillStyle = "rgba(159,185,255,.06)"; ctx.beginPath(); const a = P(1.4, 0, 2.2), b = P(3, 0, 2.2), c2 = P(4.4, 4, 0), d = P(2.4, 4, 0); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c2[0], c2[1]); ctx.lineTo(d[0], d[1]); ctx.fill(); }
+      if (n >= 4) candleGlow([[5.3, 3.8], [5.7, 3.6], [6.1, 4.1]], 1.23, h.light, t);
+      if (n >= 5) { const p = LW(2, 2.6, 1); glow(p[0], p[1], U * 3.5, h.light, .25); }
+      if (n >= 1) { const p = LW(6, 5, 0); glow(p[0], p[1], U * 2.4, h.color, .25); }
+    };
+  }
+  function drawPotions(t, n) {
+    const R = rng(3), it = S.t && S.room === "potions" ? room("potions").items[S.t.i] : null;
+    shell("#2f4a4d", "#3a4a4c", 5);
+    archWindow(LW, 3.4, 2.2, 1.6, 6, "#26363a", n >= 4 ? "#cfe8ff" : "#5b7f99");
+    shelves(LW, 7.2, 9.6, .8, 4, "#3b2e24", .8, R, "bottles", n >= 2, ["#7fd0c0", "#b48cff", "#8fb6ff", "#d8e6a0"]);
+    box(0, 7.2, 0, .8, 2.4, .3, "#3b2e24");
+    // armário de frascos no canto direito
+    box(1, 0, 0, 2, .8, 3.2, "#3c4a4a");
+    shelves(RW, 1.05, 2.95, 3.3, 2, "#3b2e24", .8, R, "bottles", n >= 2, ["#d8b4ff", "#a0e0d0", "#e8d0a0"]);
+    // lousa e armário
+    box(4.4, 0, 0, 4.6, 1, 2.4, "#3a4f52"); box(4.3, 0, 2.4, 4.8, 1.1, .12, "#2b3a3c");
+    poly([RW(4.6, 3), RW(8.8, 3), RW(8.8, 6.1), RW(4.6, 6.1)], "#5a4630");
+    poly([RW(4.75, 3.15), RW(8.65, 3.15), RW(8.65, 5.95), RW(4.75, 5.95)], "#1b2a2c");
+    ctx.strokeStyle = n >= 3 ? "#d9f2ff" : "rgba(220,235,240,.45)"; ctx.lineWidth = Math.max(1, U * .035);
+    for (let k = 0; k < 5; k++) { const x0 = 5.1 + k * .55; line(RW(x0, 4.4), RW(x0, 5.6)); line(RW(x0 + .35, 4.4), RW(x0 + .35, 5.6)); line(RW(x0, 4.4), RW(x0 + .35, 4.4)); }
+    line(RW(7.6, 3.4), RW(8.2, 4.6)); line(RW(8.2, 4.6), RW(8.5, 3.4)); line(RW(7.6, 3.4), RW(8.5, 3.4));
+    ctx.beginPath(); const cc = RW(6.1, 3.7); ctx.arc(cc[0], cc[1], U * .3, 0, 6.283); ctx.stroke();
+    // jarros no chão
+    for (const [x, y, s] of [[1, 5.8, 1], [1.6, 6.6, .75]]) { const b = P(x, y, .5 * s); ell(b[0], b[1], U * .5 * s, U * .55 * s, "#4f6b66"); const nk = P(x, y, 1.15 * s); ctx.fillStyle = "#43605b"; ctx.fillRect(nk[0] - U * .12 * s, nk[1], U * .24 * s, U * .4 * s); }
+    stool(2.8, 3, "#3b2e24");
+    table(3.6, 4.2, 3.6, 2.2, 1.7, "#5a3422");
+    // tábua de corte e ingredientes
+    box(3.9, 5.5, 1.75, 1.2, .7, .06, "#8a6a4a");
+    const lev = it && S.t.phase !== "won" ? S.t.placed.length / words(it.en).length : (n > 0 ? 1 : 0);
+    const lastC = room("potions").items.slice(0, Math.max(1, n)).reverse().find(x => x.c)?.c || "#4fa3ff";
+    const liquid = it ? (it.c || lastC) : lastC;
+    cauldron(4.3, 4.6, 1.75, .45, "#7fd0c0", 1, t, false);
+    cauldron(6.3, 5, 1.75, .7, liquid, lev, t, false);
+    // lâmpada dupla
+    box(5.25, 4.5, 1.75, .1, .1, 1.5, "#2b2b2b"); box(4.9, 4.5, 3.15, .8, .1, .08, "#2b2b2b");
+    const b1 = P(4.95, 4.55, 3.45), b2 = P(5.65, 4.55, 3.45);
+    ell(b1[0], b1[1], U * .22, U * .22, n >= 1 ? "#ffe2a0" : "#4a463c"); ell(b2[0], b2[1], U * .22, U * .22, n >= 1 ? "#ffe2a0" : "#4a463c");
+    stool(4.2, 7.2, "#3b2e24");
+    return () => {
+      if (n >= 1) { glow(b1[0], b1[1], U * 4, "#ffcf7a", .45); glow(b2[0], b2[1], U * 4, "#ffcf7a", .45); }
+      const top = P(6.3, 5, 1.75 + .7 * 1.45);
+      if (lev > 0) glow(top[0], top[1] - U * .4, U * (2 + lev * 2.5), liquid, .25 + .3 * lev);
+      if (n >= 3) { const p = RW(6.7, 4.5); glow(p[0], p[1], U * 3, "#d9f2ff", .18); }
+      if (n >= 4) { const p = LW(3.4, 3.6); glow(p[0], p[1], U * 5, "#cfe8ff", .3); ctx.fillStyle = "rgba(207,232,255,.07)"; ctx.beginPath(); const a = P(0, 2.3, 1.6), b = P(0, 4.5, 1.6), c2 = P(4.5, 7.5, 0), d = P(4.5, 5.3, 0); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c2[0], c2[1]); ctx.lineTo(d[0], d[1]); ctx.fill(); }
+    };
+  }
+  function drawLibrary(t, n) {
+    const R = rng(9);
+    shell("#3a3040", "#3b2c22", 13);
+    const cols = ["#7a2a24", "#24406e", "#2d5b3a", "#8a6a2a", "#4a2a5e", "#b8a27a", "#6e4a2a"];
+    box(0, .4, 0, 1, 4.4, 6.2, "#3b2618"); shelves(LW, .5, 4.7, .3, 6, "#4b3020", 1.1, R, "books", n >= 5, cols);
+    box(.4, 0, 0, 4.4, 1, 6.2, "#3b2618"); shelves(RW, .5, 4.7, .3, 6, "#4b3020", 1.1, R, "books", n >= 5, cols);
+    box(6, 0, 0, 3.6, .9, 3.2, "#3b2618"); shelves(RW, 6.1, 9.5, .3, 3, "#4b3020", 1, R, "books", n >= 5, cols);
+    // janela redonda
+    const cw = LW(7.2, 4.6); ctx.beginPath(); ctx.ellipse(cw[0], cw[1], U * 1.2 * COS, U * 1.25, -0.52, 0, 6.283); ctx.fillStyle = "#4b3020"; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cw[0], cw[1], U * 1 * COS, U * 1.05, -0.52, 0, 6.283); ctx.fillStyle = n >= 5 ? "#c9d8ff" : "#1b2440"; ctx.fill();
+    // mapa emoldurado sobre a estante baixa
+    poly([RW(6.6, 3.8), RW(9, 3.8), RW(9, 5.6), RW(6.6, 5.6)], "#5a4630"); poly([RW(6.75, 3.95), RW(8.85, 3.95), RW(8.85, 5.45), RW(6.75, 5.45)], n >= 3 ? "#e8d29a" : "#8a7a5c");
+    // tapete, escrivaninha, globo
+    poly([P(3.5, 3.8, .02), P(8.5, 3.8, .02), P(8.5, 8.6, .02), P(3.5, 8.6, .02)], "#4a2228");
+    table(4.4, 5, 3.2, 1.6, 1.6, "#4b2e1c");
+    box(5, 5.3, 1.65, 1.2, .8, .08, "#e8dcc0"); // livro aberto
+    if (n >= 3) box(6.4, 5.4, 1.65, .8, .6, .03, "#d8c08a");
+    candles([[4.8, 5.4]], 1.65, n >= 1, t);
+    box(5.4, 7, 0, 1, 1, .9, "#4b2e1c"); box(5.4, 7.8, .9, 1, .2, 1.2, "#4b2e1c");
+    box(8.3, 2.6, 0, .4, .4, .3, "#4b2e1c"); box(8.45, 2.75, .3, .1, .1, 1, "#4b2e1c");
+    const gl = P(8.5, 2.8, 1.8); ell(gl[0], gl[1], U * .6, U * .6, n >= 4 ? "#3a8fd8" : "#2a4a6a"); ell(gl[0] + U * .1, gl[1] - U * .1, U * .25, U * .3, n >= 4 ? "#7fd07a" : "#3a5a3a");
+    // livros flutuando
+    for (let k = 0; k < Math.min(n >= 2 ? n - 1 : 0, 4); k++) {
+      const bob = reduce ? 0 : Math.sin(t / 700 + k) * .25;
+      box(4.6 + k * .9, 5.6 - k * .3, 3 + k * .5 + bob, .7, .5, .14, cols[k]);
+    }
+    return () => {
+      if (n >= 1) candleGlow([[4.8, 5.4]], 1.65, "#ffb35a", t);
+      if (n >= 2) for (let k = 0; k < Math.min(n - 1, 4); k++) { const p = P(4.95 + k * .9, 5.85 - k * .3, 3.1 + k * .5); glow(p[0], p[1], U * 1.3, "#ffd27a", .25); }
+      if (n >= 4) glow(gl[0], gl[1], U * 2, "#5ab0ff", .35);
+      if (n >= 5) glow(cw[0], cw[1], U * 4, "#c9d8ff", .35);
+    };
+  }
+  function drawGreen(t, n) {
+    const R = rng(21);
+    shell("#4a5248", "#4a4436", 17);
+    // vidraças nas duas paredes
+    for (const F of [LW, RW]) for (let c = 1.6; c < 10; c += 2.2) archWindow(F, c, 1.8, 2.2, 6.4, "#2f3a33", n >= 1 ? "#cfeedd" : "#6d8f86");
+    // trepadeiras crescendo na parede direita
+    const vl = n >= 4 ? 1 : n >= 3 ? .3 : 0;
+    if (vl) { ctx.strokeStyle = "#3f7d3a"; ctx.lineWidth = U * .08; for (let v = 0; v < 4; v++) { ctx.beginPath(); for (let s = 0; s <= 20 * vl; s++) { const p = RW(1 + v * 2.4 + Math.sin(s * .7 + v) * .3, 6.8 - s * .28); s ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); } ctx.stroke(); for (let s = 2; s <= 20 * vl; s += 3) { const p = RW(1 + v * 2.4 + Math.sin(s * .7 + v) * .3, 6.8 - s * .28); ell(p[0] + U * .12, p[1], U * .14, U * .09, "#5aa84a"); } } }
+    // bancada com vasos encostada à esquerda
+    table(.6, .8, 1.4, 8.4, 1.4, "#5a4632");
+    for (let k = 0; k < 6; k++) plant(1.3, 1.5 + k * 1.35, 1.45, .9, "#9a5a3a", "#3f8a4a", n >= 1 ? 1 : 0, ["#ff7fb0", "#ffd36a", "#c7a0ff"][k % 3], t);
+    // árvore velha
+    box(7.3, 1.2, 0, 1.6, 1.6, 1, "#7a4a32");
+    box(7.95, 1.85, 1, .3, .3, 2.4, "#5a3a22");
+    const cn = P(8.1, 2, 4.2), green = n >= 3 ? "#4fb04a" : "#4a6a3a";
+    for (let k = 0; k < 6; k++) ell(cn[0] + Math.cos(k) * U * .9, cn[1] + Math.sin(k * 1.7) * U * .5, U * 1.1, U * .8, shade(green, .75 + k * .06));
+    // mesa central com a planta que canta e a semente
+    table(3.8, 4.4, 2.8, 1.8, 1.3, "#5a4632");
+    plant(4.6, 5.3, 1.35, 1.2, "#6a3a5a", "#58a86a", n >= 2 ? 1.2 : 0, "#ff9ad0", t);
+    const sd = P(5.9, 5.2, 1.5); ell(sd[0], sd[1], U * .15, U * .1, n >= 5 ? "#ffe58a" : "#8a6a3a");
+    // regador
+    box(2.6, 7.4, 0, .6, .4, .5, "#7a8a9a");
+    for (let k = 0; k < 4; k++) plant(3.5 + k * 1.5, 8.6, 0, 1.1, "#9a5a3a", "#3f8a4a", n >= 1 ? .8 : 0, "#ffb070", t);
+    return () => {
+      if (n >= 1) { const p = P(5, 5, 6); glow(p[0], p[1], U * 9, "#e6ffd8", .14); }
+      if (n >= 2) { const f = P(4.6, 5.3, 2.9); glow(f[0], f[1], U * 2, "#ff9ad0", .35); if (!reduce) for (let k = 0; k < 3; k++) { const ph = (t / 1400 + k / 3) % 1; ctx.fillStyle = `rgba(255,230,180,${1 - ph})`; ctx.font = `${Math.round(U * .5)}px serif`; ctx.fillText("♪", f[0] + U * (.4 + ph) * (k % 2 ? 1 : -1), f[1] - U * ph * 1.8); } }
+      if (n >= 3 && !reduce) for (let k = 0; k < 6; k++) { const ph = (t / 800 + k / 6) % 1; const d = P(8.1 + Math.cos(k) * .8, 2 + Math.sin(k) * .6, 4 - ph * 3.5); ell(d[0], d[1], U * .05, U * .09, `rgba(150,200,255,${1 - ph})`); }
+      if (n >= 5) glow(sd[0], sd[1], U * 2, "#ffe58a", .6);
+    };
+  }
+  function drawSorting(t, n) {
+    shell("#363248", "#2e2a3a", 23);
+    const order = ["ember", "moss", "star", "honey"];
+    banner(LW, 2.5, 3.4, 6.4, 1.3, HOUSES.ember.color, HOUSES.ember.trim, true);
+    banner(LW, 7.5, 3.4, 6.4, 1.3, HOUSES.moss.color, HOUSES.moss.trim, true);
+    banner(RW, 2, 3.4, 6.4, 1.3, HOUSES.star.color, HOUSES.star.trim, true);
+    banner(RW, 8, 3.4, 6.4, 1.3, HOUSES.honey.color, HOUSES.honey.trim, true);
+    // espelho
+    const lead = S.house || (S.sortAns.length ? S.sortAns[S.sortAns.length - 1] : null);
+    const mc = lead ? HOUSES[lead].color : "#9aa6c8";
+    poly(archPts(RW, 5, 2.4, .8, 6.2), "#c9a35a");
+    poly(archPts(RW, 5, 2, 1, 6), mc);
+    ctx.save(); ctx.globalAlpha = .35; poly(archPts(RW, 4.6, .5, 1.4, 5.2), "#ffffff"); ctx.restore();
+    box(3.4, 0, 0, 3.2, .6, .8, "#4a3a52");
+    poly([P(3, 3, .02), P(7, 3, .02), P(7, 7, .02), P(3, 7, .02)], "#2b2440");
+    const fc = [[3, 4], [6, 3], [4.5, 7], [8, 6], [2, 7.5], [7.5, 2.5]];
+    for (const [x, y] of fc) { const bob = reduce ? 0 : Math.sin(t / 800 + x) * .2; box(x - .06, y - .06, 5 + bob, .12, .12, .45, "#efe6cf"); }
+    return () => {
+      const m = RW(5, 3.6); glow(m[0], m[1], U * (3 + n), mc, .3 + n * .05);
+      for (const [x, y] of fc) { const bob = reduce ? 0 : Math.sin(t / 800 + x) * .2; const f = P(x, y, 5.6 + bob); ell(f[0], f[1], U * .07, U * .13, "#ffd27a"); glow(f[0], f[1], U * 1.4, "#ffcf7a", .35); }
+    };
+  }
+
+  /* ---------- mapa: castelo-maquete sobre rochas ---------- */
+  const HUB = [
+    { id: "library", x: 1, y: 5, w: 4, d: 2.2, h: 3.4, roof: 2, tower: false },
+    { id: "sorting", x: 6, y: 3, w: 2.2, d: 2.2, h: 8, roof: 4.5, tower: true },
+    { id: "common", x: 2, y: 1.2, w: 2, d: 2, h: 5.6, roof: 3.4, tower: true },
+    { id: "green", x: 9.6, y: 1.6, w: 3, d: 2.6, h: 2.4, roof: 1.4, glass: true },
+    { id: "potions", x: 9, y: 6.6, w: 2.6, d: 2, h: 1.8, roof: 1.2 }
+  ];
+  function drawHub(t) {
+    const R = rng(31), base = "#5f7090";
+    // fundo
+    // rochas facetadas
+    const cells = [];
+    for (let i = -1; i < 15; i++) for (let j = -1; j < 11; j++) {
+      const dx = (i - 6.5) / 8.2, dy = (j - 4.5) / 6.2; if (dx * dx + dy * dy > 1 + R() * .15) continue;
+      const inner = i >= 0 && i < 14 && j >= 0 && j < 10;
+      cells.push([i, j, inner ? 0 : -.3 - R() * .7, R()]);
+    }
+    cells.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    for (const [i, j, top, r] of cells) {
+      const k = .78 + r * .35;
+      box(i, j, -2.6, 1, 1, 2.6 + top, shade(base, k * .85));
+      if (r > .55) { const c = P(i + .5, j + .5, top); ctx.fillStyle = shade(base, k * 1.1); ctx.beginPath(); ctx.moveTo(c[0], c[1] - U * .35); ctx.lineTo(c[0] + U * .55, c[1]); ctx.lineTo(c[0] - U * .2, c[1] + U * .2); ctx.closePath(); ctx.fill(); }
+    }
+    // ponte em arcos (como na maquete)
+    box(5, 5.6, 0, 1, 1.2, 2.6, base, 1.05);
+    for (let a = 0; a < 2; a++) poly([P(5.2, 6.8, .1), P(5.8, 6.8, .1), P(5.8, 6.8, 1.6), P(5.2, 6.8, 1.6)].map(p => [p[0] + a * 0, p[1]]), shade(base, .35));
+    box(12, 4.4, 0, .8, .8, 4.2, base, 1.05);
+    // prédios
+    [...HUB].sort((a, b) => (a.x + a.w / 2 + a.y + a.d / 2) - (b.x + b.w / 2 + b.y + b.d / 2)).forEach(b => {
+      const r = room(b.id), done = complete(b.id), col = done ? mixHex(base, roomColor(r), .35) : base;
+      box(b.x, b.y, 0, b.w, b.d, b.h, col, 1.05);
+      // ameias
+      for (let s = 0; s < b.w; s += .5) box(b.x + s, b.y + b.d - .2, b.h, .25, .2, .3, col, 1.05);
+      // janelas
+      const wc = done ? roomColor(r) : (b.glass ? "#3a4a5c" : shade(base, .4));
+      const rows = Math.max(1, Math.floor((b.h - .6) / 1.3));
+      for (let rr = 0; rr < rows; rr++) {
+        const z = .6 + rr * 1.3;
+        for (let s = .35; s < b.w - .2; s += .7) poly([P(b.x + s, b.y + b.d, z), P(b.x + s + .3, b.y + b.d, z), P(b.x + s + .3, b.y + b.d, z + .6), P(b.x + s, b.y + b.d, z + .6)], wc);
+        for (let s = .35; s < b.d - .2; s += .7) poly([P(b.x + b.w, b.y + s, z), P(b.x + b.w, b.y + s + .3, z), P(b.x + b.w, b.y + s + .3, z + .6), P(b.x + b.w, b.y + s, z + .6)], wc);
+      }
+      // telhado piramidal
+      const ap = P(b.x + b.w / 2, b.y + b.d / 2, b.h + .3 + b.roof), z = b.h + .3;
+      const rc = b.glass ? (done ? "#9fe0b0" : "#7a8aa0") : shade(col, .7);
+      poly([P(b.x + b.w, b.y, z), P(b.x + b.w, b.y + b.d, z), ap], shade(rc, .85));
+      poly([P(b.x, b.y + b.d, z), P(b.x + b.w, b.y + b.d, z), ap], shade(rc, .7));
+      b.pin = P(b.x + b.w / 2, b.y + b.d / 2, b.h + b.roof + 1.4);
+      b.win = P(b.x + b.w, b.y + b.d / 2, b.h / 2);
+    });
+    // placa
+    box(5.2, 10.1, -.6, 4.2, .35, 1.4, shade(base, .9));
+    ctx.save();
+    const o = P(5.2, 10.45, .8), k = U / 20;
+    ctx.setTransform(COS * k, .5 * k, 0, k, o[0], o[1]);
+    ctx.fillStyle = shade(base, 1.6); ctx.font = "italic 15px 'IM Fell English', Georgia, serif"; ctx.textBaseline = "middle"; ctx.fillText("Spellwords", 14, -2);
+    ctx.font = "6px 'Atkinson Hyperlegible', sans-serif"; ctx.fillText("SCHOOL OF SENTENCE MAGIC", 12, 9);
+    ctx.restore();
+    return () => {
+      HUB.forEach((b, k) => {
+        const r = room(b.id), open = unlocked(b.id), done = complete(b.id), c = roomColor(r);
+        if (done) glow(b.win[0], b.win[1], U * 3.2, c, .35);
+        hit("pin:" + b.id, () => {
+          const [px, py] = b.pin, rr = U * .55;
+          const bob = reduce || !open || done ? 0 : Math.sin(t / 400 + k) * U * .12;
+          ctx.strokeStyle = open ? "rgba(255,255,255,.35)" : "rgba(255,255,255,.12)"; ctx.lineWidth = 1; line([px, py + rr + bob], [px, py + rr + U * 1]);
+          if (open && !done) glow(px, py + bob, U * 1.6, "#f2a531", .35);
+          ctx.beginPath(); ctx.arc(px, py + bob, rr, 0, 6.283); ctx.fillStyle = done ? c : open ? "#f2a531" : "#2a3142"; ctx.fill();
+          ctx.lineWidth = 2; ctx.strokeStyle = open ? "#fff3d6" : "#4a5266"; ctx.stroke();
+          ctx.fillStyle = open ? "#160e04" : "#7a8296"; ctx.font = `${Math.round(U * .62)}px 'IM Fell English SC', Georgia, serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          ctx.fillText(String(ROOMS.findIndex(x => x.id === b.id) + 1), px, py + bob + 1); ctx.textAlign = "left";
+          track([[px - rr, py - rr + bob], [px + rr, py + rr + bob]]);
+        });
+      });
+    };
+  }
+  function mixHex(a, b, k) { const A = parseInt(a.slice(1), 16), B = parseInt(b.slice(1), 16); const m = (s) => Math.round(((A >> s) & 255) * (1 - k) + ((B >> s) & 255) * k); return "#" + ((1 << 24) + (m(16) << 16) + (m(8) << 8) + m(0)).toString(16).slice(1); }
+
+  /* ---------- quadro ---------- */
+  function frame(t) {
+    hits = [];
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const v = S.view === "hub" ? "hub" : S.room;
+    const bgc = { hub: ["#121a2c", "#06080f"], sorting: ["#1d1830", "#07060d"], common: [mixHex("#0a0d16", house().color, .18), "#06070c"], potions: ["#12302f", "#050b0d"], library: ["#221a24", "#07060a"], green: ["#1a2a22", "#060a08"] }[v];
+    const bg = ctx.createRadialGradient(W / 2, H * .45, 0, W / 2, H * .5, Math.max(W, H) * .7);
+    bg.addColorStop(0, bgc[0]); bg.addColorStop(1, bgc[1]); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    if (v === "hub") { U = Math.min(W / 24, H / 25.5); OX = W / 2 - 2 * COS * U; OY = H / 2 - 2.9 * U; }
+    else { U = Math.min(W / 20.6, H / 21); OX = W / 2; OY = H / 2 - 1.3 * U; }
+    let em;
+    const n = v === "hub" ? 0 : lit(v);
+    if (v === "hub") em = drawHub(t);
+    else em = { sorting: drawSorting, common: drawCommon, potions: drawPotions, library: drawLibrary, green: drawGreen }[v](t, n);
+    // escuridão que recua com o progresso
+    const dark = v === "hub" ? .1 : .4 - n * .06;
+    ctx.fillStyle = `rgba(4,6,14,${Math.max(.08, dark)})`; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.globalCompositeOperation = "lighter"; em && em(); ctx.restore();
+    // destaque do objeto encontrado
+    if (pulse.id && t < pulse.until) {
+      const h = hits.find(x => x.id === pulse.id);
+      if (h) { const a = (pulse.until - t) / 1800; ctx.strokeStyle = `rgba(255,207,122,${a})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse((h.x0 + h.x1) / 2, (h.y0 + h.y1) / 2, (h.x1 - h.x0) / 2 + 10, (h.y1 - h.y0) / 2 + 10, 0, 0, 6.283); ctx.stroke(); }
+    }
+    // partículas
+    if (parts.length) {
+      parts = parts.filter(p => (p.life -= 16) > 0);
+      for (const p of parts) { p.x += p.vx; p.y += p.vy; p.vy += p.g; ctx.fillStyle = p.smoke ? `rgba(160,160,170,${p.life / 2400})` : `rgba(255,${190 + (p.h | 0)},${110 + (p.h | 0)},${p.life / 1300})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.smoke ? p.r * (2 - p.life / 1200) : p.r, 0, 6.283); ctx.fill(); }
+    }
+  }
+  function loop(t) { frame(t); requestAnimationFrame(loop); }
+  function resize() {
+    const w = cv.clientWidth || 700;
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = Math.round(w * dpr); H = Math.round(w * .94 * dpr);
+    cv.width = W; cv.height = H;
+    if (reduce) frame(0);
+  }
+  function burstAt(x, y, count, smoke) {
+    if (reduce) { frame(0); return; }
+    for (let k = 0; k < count; k++) {
+      const a = Math.random() * 6.283, sp = (smoke ? .4 : 1) + Math.random() * (smoke ? 1 : 3.5);
+      parts.push({ x, y, vx: Math.cos(a) * sp * dpr, vy: (smoke ? -1.2 - Math.random() : Math.sin(a) * sp - 1.5) * dpr, g: smoke ? -.005 : .05 * dpr, life: smoke ? 1200 + Math.random() * 1000 : 800 + Math.random() * 600, h: Math.random() * 60, r: (smoke ? 5 : 2.2) * dpr, smoke });
+    }
+  }
+  cv.addEventListener("click", e => {
+    const rc = cv.getBoundingClientRect(), x = (e.clientX - rc.left) * (W / rc.width), y = (e.clientY - rc.top) * (H / rc.height);
+    for (let k = hits.length - 1; k >= 0; k--) {
+      const h = hits[k];
+      if (x >= h.x0 && x <= h.x1 && y >= h.y0 && y <= h.y1) {
+        if (h.id.startsWith("pin:")) { enter(h.id.slice(4)); return; }
+        if (S.view === "room" && S.room === "common") { pickObject(h.id); return; }
+        return;
+      }
+    }
+  });
+  cv.addEventListener("mousemove", e => {
+    const rc = cv.getBoundingClientRect(), x = (e.clientX - rc.left) * (W / rc.width), y = (e.clientY - rc.top) * (H / rc.height);
+    const clickable = hits.some(h => x >= h.x0 && x <= h.x1 && y >= h.y0 && y <= h.y1 && (h.id.startsWith("pin:") ? unlocked(h.id.slice(4)) : S.t && S.t.phase === "find"));
+    cv.style.cursor = clickable ? "pointer" : "default";
+  });
+  addEventListener("resize", resize);
+  return {
+    start() { resize(); if (!reduce) requestAnimationFrame(loop); },
+    fx(id, big, obj) {
+      if (obj) { pulse = { id: obj, until: performance.now() + 1800 }; const h = hits.find(x => x.id === obj); if (h) burstAt((h.x0 + h.x1) / 2, (h.y0 + h.y1) / 2, 30); }
+      if (big) burstAt(W / 2, H * .45, 90);
+      if (reduce) frame(0);
+    },
+    redraw() { if (reduce) frame(0); },
+    drop(ok) { const top = P(6.3, 5, 1.75 + 1.1); burstAt(top[0], top[1], ok ? 18 : 26, !ok); if (reduce) frame(0); }
+  };
+})();
+
+/* =================================================================
+   INÍCIO
+================================================================= */
+function start(data) {
+  S = (data && data.state) || load() || fresh();
+  if (S.view === "room" && !S.room) S.view = "hub";
+  scene.start(); render();
+}
+window.claude?.hot?.snapshot?.(() => ({ state: S }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
