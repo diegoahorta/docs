@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>Cadê o Sr. Tromba?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@600;800;900&family=Gowun+Dodum&display=swap">
+<style>
+/* Layout: comic-sticker playroom. A 2:1 game stage on top, a "speech panel" of answers under it, overlays for map / intro / feedback. Single bright look, both host themes. */
+:root{
+  --paper:#fdf0d5;      /* sticker-sheet cream */
+  --ink:#2a1e17;        /* outline brown-black */
+  --sun:#ffd23f;        /* label yellow */
+  --teal:#3fb8bf;       /* Pongo's shirt teal */
+  --berry:#f05d6c;      /* heart pink-red */
+  --sky:#4a9fe8;        /* shirt blue */
+  --leaf:#3fae6a;
+  --card:#fffaf0;
+  --muted:#7a6656;
+  --f-display:"Jua","Baloo 2","Nunito",system-ui,sans-serif;
+  --f-body:"Nunito","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-ko:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;
+  background-image:radial-gradient(rgba(42,30,23,.07) 1.2px,transparent 1.3px);background-size:14px 14px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:12px 28px;display:flex;flex-direction:column;gap:12px}
+
+/* HUD */
+.hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-family:var(--f-display);font-size:clamp(22px,4vw,32px);line-height:1;color:var(--sun);
+  -webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink);letter-spacing:.5px;margin-right:auto}
+.logo small{display:block;font-size:.5em;color:var(--sky);-webkit-text-stroke:1.2px var(--ink);text-shadow:2px 2px 0 var(--ink);margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:3px solid var(--ink);border-radius:999px;
+  padding:4px 12px;font-weight:900;box-shadow:3px 3px 0 var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.iconbtn{background:var(--card);border:3px solid var(--ink);border-radius:14px;padding:6px 10px;font-weight:900;box-shadow:3px 3px 0 var(--ink);transition:transform .1s}
+.iconbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+.levelbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lvname{font-family:var(--f-display);font-size:20px}
+.lvname .ko{color:var(--berry)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:18px;height:18px;border-radius:50%;border:3px solid var(--ink);background:var(--card)}
+.dot.on{background:var(--sun)}
+.dot.cur{background:var(--teal);animation:pulse 1s infinite alternate}
+@keyframes pulse{to{transform:scale(1.2)}}
+
+/* Stage */
+.stage{position:relative;width:100%;aspect-ratio:2/1;border:4px solid var(--ink);border-radius:22px;overflow:hidden;
+  box-shadow:6px 6px 0 var(--ink);background:#bfe3f0}
+.world{position:absolute;left:0;top:0;width:1200px;height:600px;transform-origin:0 0}
+.layer{position:absolute}
+.obj svg,.bg svg{display:block;overflow:visible}
+.tromba{position:absolute;transform-origin:50% 100%}
+.tromba svg{width:100%;height:100%;display:block;overflow:visible}
+.tromba.flip svg{transform:scaleX(-1)}
+.tromba.pop{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{0%{transform:scale(0) rotate(-20deg)}70%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1)}}
+.tromba.idle{animation:wobble 2.4s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(-3deg)}}
+.pongo{position:absolute;width:190px;height:191px;transition:left .7s cubic-bezier(.5,0,.3,1),top .7s cubic-bezier(.5,0,.3,1);z-index:35;pointer-events:none}
+.pongo img{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 0 rgba(42,30,23,.18))}
+.pongo.hop img{animation:hop .35s ease-in-out 2}
+@keyframes hop{50%{transform:translateY(-22px) rotate(-4deg)}}
+.pongo.sad img{animation:shake .4s 2}
+@keyframes shake{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.bubble{position:absolute;background:#fff;border:4px solid var(--ink);border-radius:22px;padding:8px 16px;font-family:var(--f-ko);font-size:28px;
+  white-space:nowrap;z-index:60;box-shadow:4px 4px 0 var(--ink);pointer-events:none}
+.bubble:after{content:"";position:absolute;left:28px;bottom:-18px;border:10px solid transparent;border-top:14px solid var(--ink)}
+.spot{position:absolute;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;border:5px dashed var(--ink);background:rgba(255,250,240,.82);
+  font-family:var(--f-display);font-size:42px;display:grid;place-items:center;z-index:50;box-shadow:0 0 0 6px rgba(255,210,63,.65);
+  animation:bob 1.6s ease-in-out infinite;color:var(--ink)}
+.spot:hover{background:var(--sun)}
+.spot:disabled{cursor:default;opacity:.92;animation:none;background:#eee}
+.spot .no{font-size:17px;line-height:1.05;text-align:center}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.emo{position:absolute;font-size:64px;z-index:45;pointer-events:none;animation:bob 1.4s ease-in-out infinite}
+.puff{position:absolute;z-index:55;pointer-events:none;font-size:70px;animation:puff .8s ease-out forwards}
+@keyframes puff{0%{transform:scale(.3);opacity:1}100%{transform:scale(1.6) translateY(-30px);opacity:0}}
+
+/* Panel */
+.panel{background:var(--card);border:4px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 var(--ink);padding:16px;display:flex;flex-direction:column;gap:14px}
+.q{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.q .tag{font-family:var(--f-display);background:var(--sun);border:3px solid var(--ink);border-radius:10px;padding:2px 10px;font-size:15px;white-space:nowrap}
+.q .main{flex:1;min-width:0}
+.ko-big{font-family:var(--f-ko);font-size:clamp(22px,3.6vw,34px);line-height:1.25;word-break:keep-all}
+.pt{color:var(--muted);font-weight:800;font-size:15px;margin-top:4px}
+.blank{display:inline-block;min-width:2.4em;border-bottom:4px solid var(--berry);text-align:center;color:var(--berry)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 14px;text-align:left;font-family:var(--f-ko);font-size:clamp(17px,2.4vw,22px);
+  box-shadow:3px 3px 0 var(--ink);word-break:keep-all;transition:transform .1s,background .2s}
+.opt:hover{background:#fff6d6}
+.opt:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.opt.wrong{background:#ffd9dc;text-decoration:line-through;opacity:.7}
+.opt.right{background:#c9f2d6}
+.opts.particles{grid-template-columns:repeat(4,minmax(0,1fr))}
+.opts.particles .opt{text-align:center;font-size:clamp(22px,3.5vw,30px)}
+.answer{min-height:64px;border:3px dashed var(--ink);border-radius:16px;padding:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fffdf6}
+.answer:empty:before{content:"Toque nos blocos para montar a frase…";color:var(--muted);font-weight:800;padding-left:6px}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{background:var(--teal);color:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px 14px;font-family:var(--f-ko);font-size:clamp(18px,2.6vw,24px);box-shadow:3px 3px 0 var(--ink)}
+.answer .tile{background:var(--sky)}
+.tile.used{visibility:hidden}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--f-display);font-size:20px;background:var(--sun);border:3px solid var(--ink);border-radius:16px;padding:8px 20px;box-shadow:4px 4px 0 var(--ink);transition:transform .1s}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.alt{background:#fff}
+.btn.go{background:var(--leaf);color:#fff}
+.msg{font-weight:900;color:var(--berry);min-height:1.2em}
+
+/* Overlays */
+.overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px;background:rgba(42,30,23,.45);overflow:auto}
+.sheet{background:var(--paper);border:4px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 var(--ink);padding:20px;width:min(920px,100%);
+  display:flex;flex-direction:column;gap:16px;max-height:calc(100% - 8px);overflow:auto}
+.title-hero{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:18px;align-items:center}
+.title-hero img{width:100%;max-width:220px}
+.big-title{font-family:var(--f-display);font-size:clamp(34px,7vw,64px);line-height:.95;color:var(--sun);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:5px 5px 0 var(--ink);margin:0;text-wrap:balance}
+.big-sub{font-family:var(--f-ko);font-size:clamp(20px,3.4vw,28px);color:var(--sky);-webkit-text-stroke:1px var(--ink);margin:10px 0 4px}
+.lead{margin:0;font-weight:700;max-width:60ch;line-height:1.45}
+.map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.node{background:var(--card);border:3px solid var(--ink);border-radius:18px;padding:10px;box-shadow:4px 4px 0 var(--ink);text-align:left;display:flex;flex-direction:column;gap:4px;min-width:0}
+.node .n{font-family:var(--f-display);font-size:14px;color:var(--muted);letter-spacing:.5px}
+.node .k{font-family:var(--f-ko);font-size:22px;line-height:1.1}
+.node .p{font-weight:800;font-size:13px;color:var(--muted)}
+.node .stars{font-size:18px;letter-spacing:2px}
+.node:disabled{opacity:.45;cursor:not-allowed}
+.node.done{background:#e9f8ef}
+.node.next{background:#fff3c4;animation:pulse2 1.2s infinite alternate}
+@keyframes pulse2{to{box-shadow:4px 4px 0 var(--ink),0 0 0 6px rgba(255,210,63,.6)}}
+.intro{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:18px;align-items:start}
+.sticker{width:100%;max-width:220px;border:4px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);background:#fff;display:block}
+.vocab{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.voc{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:6px 10px;text-align:left}
+.voc b{font-family:var(--f-ko);font-size:22px;font-weight:400;display:block}
+.voc span{font-size:13px;font-weight:800;color:var(--muted)}
+.tip{background:#e3f4fb;border:3px solid var(--ink);border-radius:14px;padding:10px 12px;font-weight:700;line-height:1.45}
+.tip .ko{font-family:var(--f-ko);font-weight:400}
+h2{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,4.5vw,38px);margin:0;line-height:1.05;text-wrap:balance}
+h2 .ko{color:var(--berry)}
+
+.fb{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;pointer-events:none}
+.fbcard{pointer-events:auto;background:var(--card);border:4px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 var(--ink);padding:18px;width:min(560px,100%);
+  display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:16px;align-items:center;animation:slam .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes slam{0%{transform:scale(.4) rotate(-8deg);opacity:0}100%{transform:none;opacity:1}}
+.fbcard .sticker{max-width:150px}
+.praise{font-family:var(--f-ko);font-size:clamp(34px,7vw,52px);line-height:1;color:var(--berry);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink)}
+.rom{font-weight:900;color:var(--muted);font-size:14px;margin-top:6px}
+.praise-pt{font-weight:900;font-size:18px}
+.learned{grid-column:1/-1;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px 12px}
+.learned .ko{font-family:var(--f-ko);font-size:22px}
+.fbcard .row{grid-column:1/-1;justify-content:flex-end}
+.wave{width:100%;max-width:240px;display:block;margin-inline:auto}
+.stars-big{font-size:46px;letter-spacing:6px;text-align:center}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:200}
+
+@media (max-width:640px){
+  .opts{grid-template-columns:minmax(0,1fr)}
+  .opts.particles{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .map{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .title-hero,.intro{grid-template-columns:minmax(0,1fr)}
+  .title-hero img,.intro .sticker{max-width:170px;margin-inline:auto}
+  .fbcard{grid-template-columns:minmax(0,90px) minmax(0,1fr)}
+  .stage{border-radius:14px;box-shadow:4px 4px 0 var(--ink)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="knit" width="9" height="9" patternUnits="userSpaceOnUse">
+      <ellipse cx="4.5" cy="4.5" rx="3" ry="2.2" fill="#8d8d92"/>
+      <ellipse cx="3.6" cy="3.8" rx="1.2" ry=".8" fill="#d7d7db"/>
+    </pattern>
+    <pattern id="dotsWall" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="4" fill="#a8d6e8"/><circle cx="30" cy="30" r="4" fill="#a8d6e8"/>
+    </pattern>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="hud">
+    <div class="logo">Cadê o Sr. Tromba?<small>트롬바 씨가 어디에 있어요?</small></div>
+    <span class="chip" title="Ossinhos (pontos)">🦴 <span id="score">0</span></span>
+    <span class="chip" title="Sequência de acertos">🔥 <span id="streak">0</span></span>
+    <button class="iconbtn" id="btnSound" aria-label="Ligar ou desligar som">🔊</button>
+    <button class="iconbtn" id="btnMap">🗺️ Mapa</button>
+  </header>
+  <div class="levelbar">
+    <div class="lvname" id="lvname"></div>
+    <div class="dots" id="dots"></div>
+  </div>
+  <div class="stage" id="stage"><div class="world" id="world"></div></div>
+  <section class="panel" id="panel" aria-live="polite"></section>
+</div>
+
+<div id="overlay"></div>
+<div id="fb"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+(()=>{
+"use strict";
+const INK="#2a1e17", F=470; // floor line in world px
+const $=s=>document.querySelector(s);
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const sw=`stroke="${INK}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"`;
+
+/* ---------- Korean helpers ---------- */
+const jong=w=>{const c=w.charCodeAt(w.length-1)-0xAC00;return c>=0&&c<11172?c%28:0};
+const wa=w=>jong(w)?"과":"와";
+
+/* ---------- Vocabulary (from the lesson: Unidade 13) ---------- */
+const OBJ={
+  desk:{ko:"책상",pt:"mesa",g:"a",rom:"chaeksang"},
+  chair:{ko:"의자",pt:"cadeira",g:"a",rom:"uija"},
+  box:{ko:"상자",pt:"caixa",g:"a",rom:"sangja",container:1},
+  bag:{ko:"가방",pt:"mochila",g:"a",rom:"gabang",container:1},
+  house:{ko:"집",pt:"casa",g:"a",rom:"jip",container:1},
+  tree:{ko:"나무",pt:"árvore",g:"a",rom:"namu"},
+  school:{ko:"학교",pt:"escola",g:"a",rom:"hakgyo",container:1,bld:["#f4a259","🏫"]},
+  library:{ko:"도서관",pt:"biblioteca",g:"a",rom:"doseogwan",container:1,bld:["#9b87d6","📚"]},
+  bank:{ko:"은행",pt:"banco",g:"o",rom:"eunhaeng",container:1,bld:["#5aa9a3","🏦"]},
+  cafe:{ko:"카페",pt:"cafeteria",g:"a",rom:"kape",container:1,bld:["#c98b6b","☕"]},
+  pharmacy:{ko:"약국",pt:"farmácia",g:"a",rom:"yakguk",container:1,bld:["#6cc28a","💊"]},
+  hospital:{ko:"병원",pt:"hospital",g:"o",rom:"byeongwon",container:1,bld:["#e9eef6","🏥"]},
+  restaurant:{ko:"식당",pt:"restaurante",g:"o",rom:"sikdang",container:1,bld:["#f47a7a","🍜"]},
+  shop:{ko:"가게",pt:"loja",g:"a",rom:"gage",container:1,bld:["#f5c94c","🛒"]},
+  park:{ko:"공원",pt:"parque",g:"o",rom:"gongwon",container:1},
+};
+const POS={
+  "위":{rom:"wi",pt:"em cima d",word:"em cima"},
+  "아래":{rom:"arae",pt:"embaixo d",word:"embaixo"},
+  "안":{rom:"an",pt:"dentro d",word:"dentro"},
+  "밖":{rom:"bak",pt:"fora d",word:"fora"},
+  "앞":{rom:"ap",pt:"na frente d",word:"na frente"},
+  "뒤":{rom:"dwi",pt:"atrás d",word:"atrás"},
+  "옆":{rom:"yeop",pt:"ao lado d",word:"ao lado"},
+  "왼쪽":{rom:"oenjjok",pt:"à esquerda d",word:"à esquerda"},
+  "오른쪽":{rom:"oreunjjok",pt:"à direita d",word:"à direita"},
+  "사이":{rom:"sai",pt:"entre",word:"entre"},
+};
+const KIND_OF={"위":"top","아래":"under","안":"in","앞":"front","뒤":"behind"};
+
+const PRAISE=[
+  ["잘했어요!","jalhaesseoyo","Muito bem!"],["대단해요!","daedanhaeyo","Incrível!"],["최고예요!","choegoyeyo","Você é o máximo!"],
+  ["완벽해요!","wanbyeokhaeyo","Perfeito!"],["멋져요!","meotjyeoyo","Que demais!"],["훌륭해요!","hullyunghaeyo","Excelente!"],
+  ["천재예요!","cheonjaeyeyo","Você é um gênio!"],["정답이에요!","jeongdabieyo","Resposta certa!"],["아주 좋아요!","aju joayo","Muito bom!"],
+  ["짱이에요!","jjang-ieyo","Show demais!"],["역시!","yeoksi","Eu sabia que você conseguia!"],["계속 화이팅!","gyesok hwaiting","Continue firme!"],
+];
+const OOPS=[["괜찮아요! 다시 해 봐요!","Tudo bem! Tente de novo!"],["거의 다 왔어요!","Quase lá!"],["천천히 해 봐요!","Vá com calma!"]];
+const GOOD_STICKERS=["feliz","orgulhoso","brincando","carinhoso","predador","naosolto","barriga","mordida"];
+const BAD_STICKERS=["pensativo","surpreso","curioso"];
+
+/* ---------- Art ---------- */
+function trombaSVG(){
+  return `<svg viewBox="0 0 132 116" aria-hidden="true">
+  <path d="M112 66 q18 2 14 18" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+  <path d="M112 66 q18 2 14 18" fill="none" stroke="#b5b5ba" stroke-width="4" stroke-linecap="round"/>
+  ${[52,70,92,108].map(x=>`<rect x="${x-9}" y="84" width="20" height="28" rx="9" fill="#a9a9af" ${sw}/><rect x="${x-9}" y="84" width="20" height="28" rx="9" fill="url(#knit)" opacity=".55"/><path d="M${x-5} 108 h12" stroke="#f3f0ea" stroke-width="3" stroke-linecap="round"/>`).join("")}
+  <ellipse cx="82" cy="70" rx="42" ry="30" fill="#bcbcc1" ${sw}/>
+  <ellipse cx="82" cy="70" rx="40" ry="28" fill="url(#knit)" opacity=".6"/>
+  <path d="M30 56 C14 60 8 76 10 92 C11 102 22 104 24 96" fill="none" stroke="${INK}" stroke-width="19" stroke-linecap="round"/>
+  <path d="M30 56 C14 60 8 76 10 92 C11 102 22 104 24 96" fill="none" stroke="#bcbcc1" stroke-width="11" stroke-linecap="round"/>
+  <path d="M30 56 C14 60 8 76 10 92 C11 102 22 104 24 96" fill="none" stroke="url(#knit)" stroke-width="11" stroke-linecap="round" opacity=".5"/>
+  <circle cx="44" cy="46" r="30" fill="#c4c4c9" ${sw}/>
+  <circle cx="44" cy="46" r="28" fill="url(#knit)" opacity=".55"/>
+  <path d="M60 22 C92 12 100 44 90 66 C84 78 66 74 62 62 Z" fill="#c9c9ce" ${sw}/>
+  <path d="M66 30 C86 26 90 46 84 60 C80 66 70 64 68 56 Z" fill="#e9b7bc"/>
+  <path d="M26 64 q-6 10 4 14 q-2-8 4-12" fill="#fffaf0" ${sw}/>
+  <circle cx="34" cy="40" r="5.5" fill="${INK}"/><circle cx="32.2" cy="38.2" r="1.8" fill="#fff"/>
+  <ellipse cx="44" cy="58" rx="7" ry="4" fill="#f4a6ae" opacity=".8"/>
+  <path d="M26 30 q6-6 13-3" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>
+</svg>`;
+}
+const TROMBA_W=132,TROMBA_H=116;
+
+const ART={
+  desk:{w:230,h:160,base:()=>`
+    <rect x="16" y="30" width="24" height="126" rx="6" fill="#a8693a" ${sw}/>
+    <rect x="190" y="30" width="24" height="126" rx="6" fill="#a8693a" ${sw}/>
+    <rect x="62" y="28" width="106" height="30" rx="6" fill="#b97b45" ${sw}/>
+    <circle cx="115" cy="43" r="5" fill="${INK}"/>
+    <rect x="4" y="4" width="222" height="30" rx="9" fill="#d4945a" ${sw}/>
+    <path d="M18 14 h120" stroke="#f0bf86" stroke-width="5" stroke-linecap="round"/>
+    <rect x="150" y="-26" width="48" height="30" rx="4" fill="#4a9fe8" ${sw}/><path d="M160 -14 h28" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`,
+    top:{dx:.42,dy:0,s:.75},under:{dy:160,s:.62}},
+  chair:{w:130,h:210,base:()=>`
+    <rect x="14" y="2" width="18" height="118" rx="6" fill="#e2574c" ${sw}/>
+    <rect x="98" y="2" width="18" height="118" rx="6" fill="#e2574c" ${sw}/>
+    <rect x="10" y="12" width="110" height="44" rx="12" fill="#f27d6e" ${sw}/>
+    <path d="M30 26 h66" stroke="#ffb3a7" stroke-width="5" stroke-linecap="round"/>
+    <rect x="16" y="120" width="16" height="86" rx="5" fill="#c4433a" ${sw}/>
+    <rect x="98" y="120" width="16" height="86" rx="5" fill="#c4433a" ${sw}/>
+    <rect x="4" y="108" width="122" height="22" rx="8" fill="#f27d6e" ${sw}/>`,
+    top:{dx:.5,dy:108,s:.66},under:{dy:210,s:.5}},
+  box:{w:170,h:150,base:()=>`
+    <polygon points="14,40 156,40 146,26 24,26" fill="#6e4220" ${sw}/>
+    <polygon points="12,40 34,30 20,0 2,12" fill="#e9b673" ${sw}/>
+    <polygon points="158,40 136,30 150,0 168,12" fill="#e9b673" ${sw}/>
+    ${boxFront()}`,front:()=>boxFront(),
+    top:{dx:.5,dy:20,s:.72},in:{dy:112,s:.72}},
+  bag:{w:140,h:170,base:()=>`
+    <path d="M48 46 C46 6 94 6 92 46" fill="none" stroke="${INK}" stroke-width="12" stroke-linecap="round"/>
+    <path d="M48 46 C46 6 94 6 92 46" fill="none" stroke="#2f74b8" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="70" cy="46" rx="52" ry="13" fill="#24160f" ${sw}/>
+    ${bagFront()}`,front:()=>bagFront(),
+    top:{dx:.5,dy:40,s:.66},in:{dy:126,s:.66}},
+  house:{w:220,h:240,base:()=>`
+    <rect x="150" y="20" width="26" height="50" fill="#b0453c" ${sw}/>
+    <rect x="22" y="98" width="176" height="138" rx="4" fill="#ffd56b" ${sw}/>
+    <polygon points="4,106 110,8 216,106" fill="#e2574c" ${sw}/>
+    <path d="M40 92 L110 28" stroke="#ff8f84" stroke-width="6" stroke-linecap="round"/>
+    <path d="M86 236 V178 a24 24 0 0 1 48 0 V236 Z" fill="#3a2a22" ${sw}/>
+    <rect x="36" y="128" width="40" height="36" rx="4" fill="#9fd8f5" ${sw}/><path d="M56 128 v36 M36 146 h40" stroke="${INK}" stroke-width="4"/>
+    <rect x="144" y="128" width="40" height="36" rx="4" fill="#9fd8f5" ${sw}/><path d="M164 128 v36 M144 146 h40" stroke="${INK}" stroke-width="4"/>
+    <text x="110" y="92" text-anchor="middle" font-family="Jua,sans-serif" font-size="22" fill="#fff" stroke="${INK}" stroke-width="1">집</text>`,
+    top:{dx:.5,dy:14,s:.55},in:{dy:236,s:.4,door:1}},
+  tree:{w:170,h:270,base:()=>{
+    const c=[[55,100,50],[118,96,50],[86,58,56],[86,128,46]];
+    return `<rect x="70" y="140" width="32" height="128" rx="6" fill="#8a5a33" ${sw}/>
+    ${c.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#4fb35a" ${sw}/>`).join("")}
+    ${c.map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r-3}" fill="#5cc366"/>`).join("")}
+    <circle cx="66" cy="60" r="10" fill="#8be08c"/><circle cx="120" cy="90" r="6" fill="#f05d6c" ${sw}/><circle cx="58" cy="112" r="6" fill="#f05d6c" ${sw}/>`},
+    behindDx:.68},
+  park:{w:190,h:200,base:()=>`
+    <rect x="22" y="80" width="12" height="118" fill="#8a5a33" ${sw}/>
+    <circle cx="28" cy="70" r="30" fill="#4fb35a" ${sw}/>
+    <rect x="152" y="96" width="12" height="102" fill="#8a5a33" ${sw}/>
+    <circle cx="158" cy="86" r="28" fill="#4fb35a" ${sw}/>
+    ${[50,70,90,110,130].map(x=>`<rect x="${x}" y="150" width="10" height="48" rx="3" fill="#fff6e0" ${sw}/>`).join("")}
+    <path d="M44 166 h100" stroke="${INK}" stroke-width="5"/>
+    <rect x="58" y="12" width="74" height="38" rx="10" fill="#fff8e6" ${sw}/>
+    <rect x="91" y="50" width="8" height="40" fill="#8a5a33" ${sw}/>
+    <text x="95" y="40" text-anchor="middle" font-family="Jua,sans-serif" font-size="24" fill="${INK}">공원</text>
+    <text x="95" y="136" text-anchor="middle" font-size="30">🌷</text>`,
+    in:{dy:196,s:.55}},
+};
+function boxFront(){return `<rect x="8" y="38" width="154" height="108" rx="6" fill="#d99b55" ${sw}/>
+  <rect x="72" y="40" width="26" height="104" fill="#f2d29a"/><path d="M24 120 l10-12 l10 12 M50 120 l10-12 l10 12" fill="none" stroke="#9a6431" stroke-width="4" stroke-linecap="round"/>`}
+function bagFront(){return `<path d="M12 60 Q12 46 30 46 L110 46 Q128 46 128 60 L132 150 Q132 166 114 166 L26 166 Q8 166 8 150 Z" fill="#3f8fd8" ${sw}/>
+  <rect x="30" y="98" width="80" height="54" rx="14" fill="#2f74b8" ${sw}/>
+  <path d="M38 112 h64" stroke="#ffd23f" stroke-width="4" stroke-dasharray="6 5"/>
+  <circle cx="98" cy="112" r="5" fill="#ffd23f" ${sw}/>
+  <path d="M26 64 q44 10 88 0" fill="none" stroke="#7ab8f0" stroke-width="5" stroke-linecap="round"/>`}
+function buildingArt(key){
+  const [col,emo]=OBJ[key].bld;
+  return {w:160,h:236,base:()=>`
+    <rect x="8" y="34" width="144" height="198" rx="6" fill="${col}" ${sw}/>
+    <rect x="0" y="22" width="160" height="22" rx="5" fill="${INK}" opacity=".85"/>
+    <rect x="18" y="52" width="124" height="44" rx="10" fill="#fff8e6" ${sw}/>
+    <text x="80" y="84" text-anchor="middle" font-family="Jua,sans-serif" font-size="${OBJ[key].ko.length>2?24:28}" fill="${INK}">${OBJ[key].ko}</text>
+    <text x="80" y="150" text-anchor="middle" font-size="42">${emo}</text>
+    <rect x="20" y="112" width="26" height="30" rx="3" fill="#cfeefd" ${sw}/>
+    <rect x="114" y="112" width="26" height="30" rx="3" fill="#cfeefd" ${sw}/>
+    <path d="M56 232 V176 h48 V232 Z" fill="#2d3e50" ${sw}/>
+    <path d="M80 176 v56" stroke="${INK}" stroke-width="4"/>`,
+    in:{dy:232,s:.38,door:1}};
+}
+const artOf=k=>ART[k]||buildingArt(k);
+const KINDS={desk:["top","under","front","left","right"],chair:["top","under","front","left","right"],
+  box:["top","in","front","behind","left","right"],bag:["top","in","front","behind","left","right"],
+  house:["top","in","front","behind","left","right"],tree:["front","behind","left","right"],
+  park:["in","front","left","right"]};
+const kindsOf=k=>KINDS[k]||["in","front","behind","left","right"];
+
+/* ---------- Scene geometry ---------- */
+function layout(keys,big){
+  const arts=keys.map(artOf), gap=big?150:185;
+  const total=arts.reduce((s,a)=>s+a.w,0)+gap*(keys.length-1);
+  const x0=290, x1=1120; let x=x0+Math.max(0,(x1-x0-total)/2);
+  return keys.map((k,i)=>{const a=arts[i];const o={key:k,art:a,L:x,R:x+a.w,w:a.w,h:a.h,T:F-a.h};x+=a.w+gap;return o});
+}
+function spotsFor(o,big){
+  const a=o.art, out=[]; const sc=big?.66:.8;
+  for(const kind of kindsOf(o.key)){
+    let s;
+    if(kind==="top"){s={x:o.L+a.w*a.top.dx,b:o.T+a.top.dy,s:a.top.s,z:12}}
+    else if(kind==="under"){s={x:o.L+a.w/2,b:o.T+a.under.dy,s:a.under.s,z:12}}
+    else if(kind==="in"){s={x:o.L+a.w/2,b:o.T+a.in.dy,s:a.in.s,z:11,clip:!a.in.door}}
+    else if(kind==="front"){s={x:o.L+a.w*.55,b:F+62,s:sc*1.08,z:30}}
+    else if(kind==="behind"){s={x:o.L+a.w*(a.behindDx||.97),b:F-26,s:sc,z:5}}
+    else if(kind==="left"){s={x:o.L-16-TROMBA_W*sc/2,b:F+14,s:sc,z:20}}
+    else if(kind==="right"){s={x:o.R+16+TROMBA_W*sc/2,b:F+14,s:sc,z:20}}
+    s.kind=kind;s.obj=o.key;out.push(s);
+  }
+  return out;
+}
+function buildScene(keys,kindsAllowed,big){
+  const objs=layout(keys,big); let spots=[];
+  for(const o of objs) for(const s of spotsFor(o,big)){
+    if(kindsAllowed&&!kindsAllowed.includes(s.kind)) continue;
+    if(ground(s)&&spots.some(t=>ground(t)&&Math.abs(t.x-s.x)<70)) continue;
+    spots.push(s);
+  }
+  return {objs,spots,big};
+}
+const ground=s=>s.kind==="left"||s.kind==="right";
+function truth(sent,spot,scene){
+  const o=scene.objs.find(x=>x.key===sent.obj);
+  switch(sent.pos){
+    case "밖": return !(spot.obj===sent.obj&&spot.kind==="in");
+    case "옆": return ground(spot)&&((spot.x<o.L&&o.L-spot.x<150)||(spot.x>o.R&&spot.x-o.R<150));
+    case "왼쪽": return ground(spot)&&spot.x<o.L&&o.L-spot.x<150;
+    case "오른쪽": return ground(spot)&&spot.x>o.R&&spot.x-o.R<150;
+    case "사이": {const p=scene.objs.find(x=>x.key===sent.obj2);const A=o.R<p.L?o:p,B=A===o?p:o;
+      return ground(spot)&&spot.x>A.R&&spot.x<B.L&&spot.x-A.R<150&&B.L-spot.x<150}
+    default: return spot.obj===sent.obj&&spot.kind===KIND_OF[sent.pos];
+  }
+}
+function sentKo(s){
+  if(s.pos==="사이"){const a=OBJ[s.obj].ko,b=OBJ[s.obj2].ko;return `트롬바 씨가 ${a}${wa(a)} ${b} 사이에 있어요.`}
+  return `트롬바 씨가 ${OBJ[s.obj].ko} ${s.pos}에 있어요.`;
+}
+function sentPt(s){
+  const o=OBJ[s.obj];
+  if(s.pos==="사이"){const p=OBJ[s.obj2];return `O Sr. Tromba está entre ${o.g} ${o.pt} e ${p.g} ${p.pt}.`}
+  return `O Sr. Tromba está ${POS[s.pos].pt}${o.g} ${o.pt}.`;
+}
+function allSentences(scene,positions){
+  const out=[];const keys=scene.objs.map(o=>o.key);
+  for(const p of positions){
+    if(p==="사이"){for(let i=0;i<keys.length-1;i++)out.push({pos:p,obj:keys[i],obj2:keys[i+1]});continue}
+    for(const k of keys){
+      if(KIND_OF[p]&&!kindsOf(k).includes(KIND_OF[p]))continue;
+      if(p==="밖"&&!OBJ[k].container)continue;
+      out.push({pos:p,obj:k});
+    }
+  }
+  return out;
+}
+// natural spot for a sentence (the place we hide Tromba)
+function naturalSpots(sent,scene){
+  return scene.spots.filter(sp=>{
+    if(!truth(sent,sp,scene))return false;
+    if(sent.pos==="밖"||sent.pos==="옆")return ground(sp)&&(truth({pos:"왼쪽",obj:sent.obj},sp,scene)||truth({pos:"오른쪽",obj:sent.obj},sp,scene));
+    return true;
+  });
+}
+
+/* ---------- Levels ---------- */
+const LEVELS=[
+  {ko:"위 · 아래",pt:"Em cima e embaixo",sticker:"curioso",need:6,modes:["A","A","B","A","B","B"],
+    scenes:[["desk"],["chair"],["desk","chair"],["chair","desk"]],focus:["위","아래"],kinds:["top","under"],sentPos:["위","아래"],
+    vocab:[["위","wi","em cima"],["아래","arae","embaixo"],["책상","chaeksang","mesa"],["의자","uija","cadeira"],["있어요","isseoyo","está / existe"]],
+    tip:`Padrão: <span class="ko">[quem] + 이/가 + [lugar + posição] + 에 있어요</span>.<br>Ex.: <span class="ko">책이 책상 위에 있어요.</span> = O livro está em cima da mesa. <br><span class="ko">아래</span> e <span class="ko">밑</span> significam “embaixo”.`},
+  {ko:"안 · 밖",pt:"Dentro e fora",sticker:"surpreso",need:6,modes:["A","B","A","B","C","B"],
+    scenes:[["box"],["bag"],["box","bag"],["bag","box"]],focus:["안","밖","위"],kinds:["in","top","right"],sentPos:["안","밖","위"],
+    vocab:[["안","an","dentro"],["밖","bak","fora"],["상자","sangja","caixa"],["가방","gabang","mochila"]],
+    tip:`<span class="ko">가방 안에 있어요.</span> = Está dentro da mochila.<br><span class="ko">건물 밖에 있어요.</span> = Está fora do prédio.`},
+  {ko:"앞 · 뒤",pt:"Na frente e atrás",sticker:"brincando",need:6,modes:["A","B","A","C","B","A"],
+    scenes:[["house"],["tree"],["house","box"],["tree","house"],["box","tree"]],focus:["앞","뒤"],kinds:["front","behind","in","top"],sentPos:["앞","뒤","안","위"],
+    vocab:[["앞","ap","na frente"],["뒤","dwi","atrás"],["집","jip","casa"],["나무","namu","árvore"]],
+    tip:`<span class="ko">학교 앞에 있어요.</span> = Está em frente à escola.<br><span class="ko">집 뒤에 있어요.</span> = Está atrás da casa.`},
+  {ko:"옆 · 왼쪽 · 오른쪽",pt:"Ao lado, esquerda, direita",sticker:"cabo",need:6,modes:["A","B","A","C","B","C"],
+    scenes:[["desk"],["box"],["chair","bag"],["bag","desk"],["box","chair"]],focus:["옆","왼쪽","오른쪽"],kinds:["left","right","top"],sentPos:["옆","왼쪽","오른쪽","위"],
+    vocab:[["옆","yeop","ao lado"],["왼쪽","oenjjok","esquerda"],["오른쪽","oreunjjok","direita"]],
+    tip:`<span class="ko">옆</span> serve para qualquer lado. <span class="ko">왼쪽 / 오른쪽</span> dizem o lado exato (do ponto de vista de quem olha a cena).<br><span class="ko">은행 옆에 있어요.</span> = Está ao lado do banco.`},
+  {ko:"사이",pt:"Entre dois lugares",sticker:"companhia",need:6,modes:["A","B","C","A","B","C"],
+    scenes:[["chair","box","bag"],["bag","chair","box"],["box","bag"],["chair","bag"],["desk","box"]],focus:["사이","사이","왼쪽","오른쪽"],kinds:["left","right","top"],sentPos:["사이","옆","왼쪽","오른쪽","위"],
+    vocab:[["사이","sai","entre"],["와 / 과","wa / gwa","e (liga A e B)"]],
+    tip:`<span class="ko">A와/과 B 사이에</span> = entre A e B. Use <span class="ko">와</span> depois de vogal (<span class="ko">의자와</span>) e <span class="ko">과</span> depois de consoante (<span class="ko">가방과</span>).<br><span class="ko">은행과 카페 사이에 있어요.</span>`},
+  {ko:"우리 동네",pt:"No bairro",sticker:"predador",need:6,big:1,modes:["A","B","C","A","B","C"],
+    pool:["school","library","bank","cafe","pharmacy","hospital","restaurant","shop","park"],focus:["앞","뒤","사이","옆","안"],kinds:["front","behind","in","left","right"],sentPos:["앞","뒤","사이","옆","안"],
+    vocab:[["학교","hakgyo","escola"],["도서관","doseogwan","biblioteca"],["은행","eunhaeng","banco"],["카페","kape","cafeteria"],["약국","yakguk","farmácia"],["병원","byeongwon","hospital"],["식당","sikdang","restaurante"],["가게","gage","loja"],["공원","gongwon","parque"]],
+    tip:`Pergunta útil: <span class="ko">약국이 어디에 있어요?</span> = Onde fica a farmácia?<br>Resposta: <span class="ko">은행 옆에 있어요.</span>`},
+  {ko:"에 · 에서 · (으)로",pt:"Partículas de lugar",sticker:"naosolto",need:6,modes:["D"],
+    vocab:[["에","e","destino / localização"],["에서","eseo","onde a ação acontece"],["으로","euro","direção, após consoante"],["로","ro","após vogal ou ㄹ"]],
+    tip:`<span class="ko">학교에 가요</span> (destino) · <span class="ko">도서관에서 공부해요</span> (ação no local) · <span class="ko">오른쪽으로 가세요</span> (direção) · <span class="ko">버스로 가요</span> (meio).`},
+  {ko:"최종 도전",pt:"Desafio final",sticker:"juntos",need:8,mix:1,modes:["A","B","C","D"],
+    vocab:[["어디에 있어요?","eodie isseoyo","Onde está?"],["어디에 가요?","eodie gayo","Aonde vai?"]],
+    tip:`Tudo junto! Acerte 8 frases para virar <b>Mestre das Posições</b>.<br><span class="ko">어디에 가요?</span> pergunta o destino; <span class="ko">어디에 있어요?</span> pergunta a localização.`},
+];
+
+const PARTICLE_ROUNDS=[
+  {place:"library",kind:"in",emo:"📖",pre:"트롬바 씨가 도서관",post:" 공부해요.",a:"에서",pt:"O Sr. Tromba estuda na biblioteca.",why:"A ação (estudar) acontece no local → 에서."},
+  {place:"park",kind:"walk",pre:"트롬바 씨가 공원",post:" 가요.",a:"에",pt:"O Sr. Tromba vai ao parque.",why:"Destino com 가다 → 에."},
+  {kind:"arrowR",pre:"트롬바 씨가 오른쪽",post:" 가요.",a:"으로",pt:"O Sr. Tromba vai para a direita.",why:"Direção; 오른쪽 termina em consoante (ㄱ) → 으로."},
+  {kind:"bus",pre:"트롬바 씨가 버스",post:" 학교에 가요.",a:"로",pt:"O Sr. Tromba vai à escola de ônibus.",why:"Meio de transporte; 버스 termina em vogal → 로."},
+  {place:"cafe",kind:"in",emo:"☕",pre:"트롬바 씨가 카페",post:" 커피를 마셔요.",a:"에서",pt:"O Sr. Tromba toma café na cafeteria.",why:"Ação no local → 에서."},
+  {place:"bank",kind:"front",pre:"트롬바 씨가 은행 앞",post:" 있어요.",a:"에",pt:"O Sr. Tromba está na frente do banco.",why:"Localização com 있다 → 에."},
+  {place:"restaurant",kind:"in",emo:"🍜",pre:"트롬바 씨가 식당",post:" 밥을 먹어요.",a:"에서",pt:"O Sr. Tromba come no restaurante.",why:"Ação no local → 에서."},
+  {kind:"arrowL",pre:"트롬바 씨, 왼쪽",post:" 도세요!",a:"으로",pt:"Sr. Tromba, vire à esquerda!",why:"Direção; 왼쪽 termina em consoante → 으로."},
+  {kind:"subway",pre:"트롬바 씨가 지하철",post:" 가요.",a:"로",pt:"O Sr. Tromba vai de metrô.",why:"지하철 termina em ㄹ: com ㄹ final usa-se 로, não 으로."},
+  {place:"school",kind:"walk",pre:"트롬바 씨가 학교",post:" 가요.",a:"에",pt:"O Sr. Tromba vai à escola.",why:"Destino → 에."},
+  {place:"house",kind:"in",emo:"💤",pre:"트롬바 씨가 집",post:" 있어요.",a:"에",pt:"O Sr. Tromba está em casa.",why:"Localização com 있다 → 에."},
+  {place:"school",kind:"in",emo:"✏️",pre:"트롬바 씨가 학교",post:" 공부해요.",a:"에서",pt:"O Sr. Tromba estuda na escola.",why:"Compare: 학교에 있어요 (está) × 학교에서 공부해요 (estuda)."},
+  {place:"hospital",kind:"walk",pre:"트롬바 씨가 병원",post:" 가요.",a:"에",pt:"O Sr. Tromba vai ao hospital.",why:"Destino → 에."},
+  {place:"pharmacy",kind:"right",pre:"트롬바 씨가 약국 옆",post:" 있어요.",a:"에",pt:"O Sr. Tromba está ao lado da farmácia.",why:"Posição + 에 있어요."},
+];
+
+/* ---------- State ---------- */
+let S={level:0,done:0,mistakes:0,score:0,streak:0,stars:{},sound:true,round:null};
+const KEY="pongo-tromba-v1";
+try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d){S.stars=d.stars||{};S.score=d.score||0;S.sound=d.sound!==false}}catch(e){}
+const hot=window.claude&&window.claude.hot;
+if(hot&&hot.data&&hot.data.S){Object.assign(S,hot.data.S);S.round=null}
+if(hot&&hot.snapshot)try{hot.snapshot(()=>({S:{...S,round:null}}))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({stars:S.stars,score:S.score,sound:S.sound}))}catch(e){}};
+const unlocked=i=>i===0||S.stars[i-1]>0;
+
+/* ---------- Audio ---------- */
+let AC=null;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();return AC}
+function tone(f,t0,d,type="triangle",v=.18,f2){const a=ac();if(!a||!S.sound)return;const o=a.createOscillator(),g=a.createGain();o.type=type;
+  o.frequency.setValueAtTime(f,a.currentTime+t0);if(f2)o.frequency.exponentialRampToValueAtTime(f2,a.currentTime+t0+d);
+  g.gain.setValueAtTime(0,a.currentTime+t0);g.gain.linearRampToValueAtTime(v,a.currentTime+t0+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+t0+d);
+  o.connect(g).connect(a.destination);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.05)}
+function noise(t0,d,v=.25,freq=1800){const a=ac();if(!a||!S.sound)return;const b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),ch=b.getChannelData(0);
+  for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*(1-i/ch.length);const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type="bandpass";f.frequency.value=freq;
+  const g=a.createGain();g.gain.value=v;s.connect(f).connect(g).connect(a.destination);s.start(a.currentTime+t0)}
+const SFX={
+  click(){tone(880,0,.06,"sine",.12)},
+  correct(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.08,.25,"triangle",.2));noise(0,.18,.3,3000);noise(.12,.25,.25,5000);
+    for(let i=0;i<6;i++)tone(1500+Math.random()*1500,.35+i*.05,.12,"sine",.06)},
+  wrong(){tone(330,0,.18,"square",.08,250);tone(220,.16,.3,"square",.08,150)},
+  bark(){[0,.2].forEach(t=>{tone(620,t,.12,"sawtooth",.1,280);noise(t,.08,.15,900)})},
+  sniff(){[0,.12,.24].forEach(t=>noise(t,.07,.2,2500))},
+  fanfare(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,i*.13,.35,"triangle",.2));noise(0,.3,.3,3000)},
+  pop(){noise(0,.12,.4,1200)}
+};
+let koVoice=null;
+function loadVoice(){try{koVoice=speechSynthesis.getVoices().find(v=>/^ko/i.test(v.lang))||null}catch(e){}}
+try{loadVoice();speechSynthesis.onvoiceschanged=loadVoice}catch(e){}
+function speak(t,rate=.9){if(!S.sound)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/___/g," "));u.lang="ko-KR";if(koVoice)u.voice=koVoice;u.rate=rate;speechSynthesis.speak(u)}catch(e){}}
+
+/* ---------- Confetti ---------- */
+const cv=$("#confetti"),cx=cv.getContext("2d");let parts=[],raf=0;
+const CCOL=["#ffd23f","#f05d6c","#3fb8bf","#4a9fe8","#3fae6a","#f08a24","#fffaf0"];
+function resizeCv(){const d=devicePixelRatio||1;cv.width=innerWidth*d;cv.height=innerHeight*d;cx.setTransform(d,0,0,d,0,0)}
+addEventListener("resize",resizeCv);resizeCv();
+function burst(x,y,n=120,spread=1){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)n=Math.min(n,30);
+  for(let i=0;i<n;i++){const a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.3*spread,v=6+Math.random()*11;
+    parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:Math.random()*6.28,vr:(Math.random()-.5)*.4,w:7+Math.random()*8,h:4+Math.random()*6,
+      c:rnd(CCOL),t:Math.random()<.12?rnd(["🦴","🐾","⭐","💖","🐘"]):(Math.random()<.3?"o":"r"),life:160+Math.random()*80})}
+  if(!raf)raf=requestAnimationFrame(tick)}
+function rain(n=160){for(let i=0;i<n;i++)parts.push({x:Math.random()*innerWidth,y:-20-Math.random()*innerHeight*.6,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,r:Math.random()*6,vr:(Math.random()-.5)*.3,w:8+Math.random()*8,h:5+Math.random()*5,c:rnd(CCOL),t:Math.random()<.1?rnd(["🦴","🐾","⭐"]):"r",life:400});if(!raf)raf=requestAnimationFrame(tick)}
+function tick(){cx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.life>0&&p.y<innerHeight+40);
+  for(const p of parts){p.vy+=.28;p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life--;
+    cx.save();cx.globalAlpha=Math.min(1,p.life/40);cx.translate(p.x,p.y);cx.rotate(p.r);
+    if(p.t==="r"){cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.t==="o"){cx.fillStyle=p.c;cx.beginPath();cx.arc(0,0,p.h,0,7);cx.fill()}
+    else{cx.font="22px serif";cx.fillText(p.t,-11,8)}
+    cx.restore()}
+  raf=parts.length?requestAnimationFrame(tick):0}
+
+/* ---------- Stage rendering ---------- */
+const world=$("#world"),stage=$("#stage");
+function fit(){world.style.transform=`scale(${stage.clientWidth/1200})`}
+new ResizeObserver(fit).observe(stage);
+function bgRoom(){return `<svg class="bg layer" width="1200" height="600" viewBox="0 0 1200 600" style="left:0;top:0">
+  <rect width="1200" height="440" fill="#bfe3f0"/><rect width="1200" height="440" fill="url(#dotsWall)"/>
+  <rect x="560" y="50" width="200" height="150" rx="10" fill="#fff8e6" ${sw}/><rect x="574" y="64" width="172" height="122" rx="6" fill="#9fd8f5"/>
+  <circle cx="710" cy="100" r="22" fill="#ffd23f"/><path d="M574 160 q50-40 90 0 q40-30 82 6 v20 h-172z" fill="#5cc366"/><path d="M660 50 v150 M560 125 h200" stroke="${INK}" stroke-width="6"/>
+  <rect x="930" y="70" width="110" height="90" rx="8" fill="#f05d6c" ${sw}/><text x="985" y="128" text-anchor="middle" font-size="40">🐘</text>
+  <rect x="300" y="80" width="90" height="70" rx="8" fill="#fff" ${sw}/><text x="345" y="128" text-anchor="middle" font-size="36">🦴</text>
+  <rect y="420" width="1200" height="26" fill="#fff6e0" ${sw}/>
+  <rect y="444" width="1200" height="160" fill="#e9b97a"/>
+  ${[0,1,2,3,4,5].map(i=>`<path d="M0 ${470+i*26} H1200" stroke="#d29c5c" stroke-width="3"/>`).join("")}
+  ${[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M${(i*157+(i%2)*60)%1200} ${470+(i%5)*26} v26" stroke="#d29c5c" stroke-width="3"/>`).join("")}
+  <ellipse cx="700" cy="520" rx="420" ry="54" fill="#f4a6ae" opacity=".55"/>
+</svg>`}
+function bgStreet(){return `<svg class="bg layer" width="1200" height="600" viewBox="0 0 1200 600" style="left:0;top:0">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc8f2"/><stop offset="1" stop-color="#d4effb"/></linearGradient></defs>
+  <rect width="1200" height="460" fill="url(#sky)"/>
+  ${[[160,90],[620,60],[1010,110]].map(([x,y])=>`<g transform="translate(${x} ${y})"><ellipse cx="0" cy="0" rx="58" ry="26" fill="#fff" ${sw}/><ellipse cx="34" cy="-10" rx="34" ry="24" fill="#fff"/><ellipse cx="-26" cy="-8" rx="30" ry="20" fill="#fff"/></g>`).join("")}
+  <path d="M0 400 Q200 320 420 390 T860 370 T1200 380 V460 H0Z" fill="#9fd88f"/>
+  <rect y="450" width="1200" height="110" fill="#efdcb9"/><path d="M0 450 H1200" stroke="${INK}" stroke-width="5"/>
+  ${Array.from({length:13},(_,i)=>`<path d="M${i*100} 450 l-30 110" stroke="#d9c194" stroke-width="3"/>`).join("")}
+  <rect y="556" width="1200" height="50" fill="#5d6470"/><path d="M0 556 H1200" stroke="${INK}" stroke-width="5"/>
+  ${Array.from({length:8},(_,i)=>`<rect x="${i*160+30}" y="576" width="80" height="8" rx="4" fill="#fff"/>`).join("")}
+</svg>`}
+function objHTML(o,front){
+  const a=o.art;const inner=front?a.front():a.base();
+  return `<div class="layer obj" style="left:${o.L}px;top:${o.T}px;width:${a.w}px;height:${a.h}px;z-index:${front?13:10}"><svg width="${a.w}" height="${a.h}" viewBox="0 0 ${a.w} ${a.h}">${inner}</svg></div>`;
+}
+function trombaHTML(sp,{hidden,pop,flip}={}){
+  const w=TROMBA_W*sp.s,h=TROMBA_H*sp.s;
+  return `<div class="tromba ${pop?"pop":"idle"} ${flip?"flip":""}" id="tromba" style="left:${sp.x-w/2}px;top:${sp.b-h}px;width:${w}px;height:${h}px;z-index:${sp.z}${hidden?";display:none":""}">${trombaSVG()}</div>`;
+}
+let pongoHome={x:12,y:F+52-191};
+function pongoHTML(){return `<div class="pongo" id="pongo" style="left:${pongoHome.x}px;top:${pongoHome.y}px"><img src="assets/pongo.webp" alt="Pongo"></div>`}
+function renderScene(scene,bg){
+  let h=bg==="street"?bgStreet():bgRoom();
+  for(const o of scene.objs){h+=objHTML(o,false);if(o.art.front)h+=objHTML(o,true)}
+  h+=pongoHTML();
+  world.innerHTML=h;fit();
+}
+function bubble(text,x,y,ms=1600){const b=document.createElement("div");b.className="bubble";b.textContent=text;b.style.left=x+"px";b.style.top=y+"px";world.appendChild(b);if(ms)setTimeout(()=>b.remove(),ms);return b}
+function movePongo(x,y){const p=$("#pongo");p.style.left=Math.max(0,Math.min(1010,x))+"px";p.style.top=y+"px"}
+function pongoAnim(c){const p=$("#pongo");if(!p)return;p.classList.remove("hop","sad");void p.offsetWidth;p.classList.add(c)}
+// client coords of a world point (for confetti)
+function toClient(x,y){const r=stage.getBoundingClientRect(),k=r.width/1200;return [r.left+x*k,r.top+y*k]}
+
+/* ---------- Round generation ---------- */
+function pickLevelForMix(){return rnd([0,1,2,3,4,5,6])}
+function genRound(){
+  let L=LEVELS[S.level],mode=L.modes[S.done%L.modes.length];
+  if(L.mix){const li=pickLevelForMix();L=LEVELS[li];mode=li===6?"D":rnd(["A","B","C"]);}
+  if(mode==="D")return {mode,L,p:rnd(PARTICLE_ROUNDS.filter(p=>!S.round||S.round.p!==p))};
+  for(let tries=0;tries<60;tries++){
+    const keys=L.pool?shuffle(L.pool).slice(0,Math.random()<.5?2:3):rnd(L.scenes);
+    const scene=buildScene(keys,L.kinds,L.big);
+    const pos=rnd(L.focus);
+    const sents=allSentences(scene,[pos]).filter(s=>naturalSpots(s,scene).length);
+    if(!sents.length)continue;
+    const sent=rnd(sents),spot=rnd(naturalSpots(sent,scene));
+    const r={mode,L,scene,sent,spot,bg:L.big?"street":"room"};
+    if(mode==="A"){
+      const mk=s=>[s.x,s.b-TROMBA_H*s.s/2];const far=(a,b)=>{const[p,q]=mk(a),[u,v]=mk(b);return Math.hypot(p-u,q-v)>=88};
+      const picked=[spot];for(const s of shuffle(scene.spots.filter(s=>s!==spot&&!truth(sent,s,scene)))){if(picked.length>=4)break;if(picked.every(t=>far(t,s)))picked.push(s)}
+      if(picked.length<2)continue;r.choices=shuffle(picked);
+    }else if(mode==="B"){
+      const others=allSentences(scene,L.sentPos).filter(s=>!truth(s,spot,scene));
+      const uniq=[];for(const s of shuffle(others))if(!uniq.some(u=>sentKo(u)===sentKo(s)))uniq.push(s);
+      if(uniq.length<2)continue;r.options=shuffle([sent,...uniq.slice(0,3)]);
+    }else{
+      const parts=sent.pos==="사이"?["트롬바 씨가",OBJ[sent.obj].ko+wa(OBJ[sent.obj].ko),OBJ[sent.obj2].ko,"사이에","있어요."]:["트롬바 씨가",OBJ[sent.obj].ko,sent.pos+"에","있어요."];
+      const extra=[];const otherPos=L.sentPos.filter(p=>p!==sent.pos&&p!=="사이");
+      if(otherPos.length)extra.push(rnd(otherPos)+"에");
+      const otherObj=Object.keys(OBJ).filter(k=>k!==sent.obj&&k!==sent.obj2&&(L.pool?L.pool.includes(k):!OBJ[k].bld&&k!=="park"));
+      extra.push(OBJ[rnd(otherObj)].ko);
+      r.parts=parts;r.tiles=shuffle([...parts,...extra].map((t,i)=>({t,id:i})));r.ans=[];
+    }
+    return r;
+  }
+  return genRound();
+}
+
+/* ---------- Panel / modes ---------- */
+const panel=$("#panel");
+function hudUpdate(){
+  $("#score").textContent=S.score;$("#streak").textContent=S.streak;$("#btnSound").textContent=S.sound?"🔊":"🔇";
+  const L=LEVELS[S.level];
+  $("#lvname").innerHTML=`Nível ${S.level+1} · <span class="ko">${L.ko}</span> <span style="font-family:var(--f-body);font-weight:800;font-size:15px;color:var(--muted)">${L.pt}</span>`;
+  $("#dots").innerHTML=Array.from({length:L.need},(_,i)=>`<span class="dot ${i<S.done?"on":i===S.done?"cur":""}"></span>`).join("");
+}
+function speakBtn(t){return `<button class="iconbtn" data-say="${t.replace(/"/g,"&quot;")}" aria-label="Ouvir em coreano">🔊 Ouvir</button>`}
+panel.addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b){speak(b.dataset.say)}const t=e.target.closest("[data-pt]");if(t){t.nextElementSibling.hidden=false;t.remove()}});
+const ptReveal=pt=>`<button class="iconbtn" data-pt>👁 Português</button><div class="pt" hidden>${pt}</div>`;
+
+function startRound(){
+  const r=genRound();S.round=r;r.tries=0;hudUpdate();
+  if(r.mode==="D")return startD(r);
+  renderScene(r.scene,r.bg);
+  if(r.mode==="A")startA(r);else startBC(r);
+}
+function startA(r){
+  for(const sp of r.choices){
+    const b=document.createElement("button");b.className="spot";b.textContent="?";
+    b.style.left=sp.x+"px";b.style.top=(sp.b-TROMBA_H*sp.s/2)+"px";b.setAttribute("aria-label","Procurar aqui");
+    b.onclick=()=>guessSpot(r,sp,b);world.appendChild(b);
+  }
+  const ko=sentKo(r.sent);
+  panel.innerHTML=`<div class="q"><span class="tag">ENCONTRE</span><div class="main">
+    <div class="ko-big">${ko}</div><div class="row" style="margin-top:8px">${speakBtn(ko)} ${ptReveal(sentPt(r.sent))}</div></div></div>
+    <div class="msg" id="msg">Leia a frase e toque no <b>?</b> onde o Sr. Tromba está escondido.</div>`;
+  setTimeout(()=>{bubble("트롬바 씨 어디 있어요?",150,pongoHome.y-70,2000)},250);
+}
+let busy=false;
+function guessSpot(r,sp,btn){
+  if(busy)return;busy=true;SFX.click();
+  const px=sp.x-200,py=Math.min(F+52,Math.max(F-120,sp.b+40))-191;
+  movePongo(px,F+52-191);
+  setTimeout(()=>{SFX.sniff();bubble("킁킁…",px+60,F-200,900);
+    setTimeout(()=>{
+      if(sp===r.spot){
+        btn.remove();world.querySelectorAll(".spot").forEach(s=>s.remove());
+        world.insertAdjacentHTML("beforeend",trombaHTML(sp,{pop:1}));
+        if(sp.clip){/* tromba sits inside: front overlay already above */}
+        pongoAnim("hop");SFX.bark();
+        const [x,y]=toClient(sp.x,sp.b-TROMBA_H*sp.s/2);busy=false;win(r,x,y);
+      }else{
+        btn.disabled=true;btn.innerHTML=`<span class="no">여기에<br>없어요!</span>`;
+        const p=document.createElement("div");p.className="puff";p.textContent="💨";p.style.left=(sp.x-35)+"px";p.style.top=(sp.b-90)+"px";world.appendChild(p);setTimeout(()=>p.remove(),900);
+        pongoAnim("sad");busy=false;lose(r,"여기에 없어요! (Não está aqui!) Releia a posição na frase.");
+      }
+    },800)},650);
+}
+function startBC(r){
+  world.insertAdjacentHTML("beforeend",trombaHTML(r.spot,{pop:1}));
+  bubble("트롬바 씨가 어디에 있어요?",150,pongoHome.y-70,2600);
+  if(r.mode==="B"){
+    panel.innerHTML=`<div class="q"><span class="tag">ESCOLHA</span><div class="main"><div class="ko-big">트롬바 씨가 어디에 있어요?</div>
+      <div class="pt">Onde está o Sr. Tromba? Escolha a frase verdadeira.</div></div></div>
+      <div class="opts" id="opts">${r.options.map((o,i)=>`<button class="opt" data-i="${i}">${sentKo(o)}</button>`).join("")}</div><div class="msg" id="msg"></div>`;
+    $("#opts").onclick=e=>{const b=e.target.closest(".opt");if(!b||b.disabled)return;const o=r.options[+b.dataset.i];
+      if(truth(o,r.spot,r.scene)){b.classList.add("right");$("#opts").querySelectorAll(".opt").forEach(x=>x.disabled=true);const bb=b.getBoundingClientRect();pongoAnim("hop");SFX.bark();win(r,bb.left+bb.width/2,bb.top)}
+      else{b.classList.add("wrong");b.disabled=true;pongoAnim("sad");lose(r,`Não: ${sentPt(o)}`)}};
+  }else renderC(r);
+}
+function renderC(r){
+  panel.innerHTML=`<div class="q"><span class="tag">MONTE</span><div class="main"><div class="ko-big">트롬바 씨가 어디에 있어요?</div>
+    <div class="pt">Monte a frase que diz onde o Sr. Tromba está. Sobram blocos!</div></div></div>
+    <div class="answer" id="ans">${r.ans.map(id=>{const t=r.tiles.find(x=>x.id===id);return `<button class="tile" data-a="${id}">${t.t}</button>`}).join("")}</div>
+    <div class="tiles" id="tiles">${r.tiles.map(t=>`<button class="tile ${r.ans.includes(t.id)?"used":""}" data-t="${t.id}">${t.t}</button>`).join("")}</div>
+    <div class="row"><button class="btn go" id="check">Verificar ✔</button><button class="btn alt" id="clear">Limpar</button></div><div class="msg" id="msg"></div>`;
+  $("#tiles").onclick=e=>{const b=e.target.closest("[data-t]");if(!b)return;SFX.click();r.ans.push(+b.dataset.t);renderC(r)};
+  $("#ans").onclick=e=>{const b=e.target.closest("[data-a]");if(!b)return;SFX.click();r.ans=r.ans.filter(x=>x!==+b.dataset.a);renderC(r)};
+  $("#clear").onclick=()=>{r.ans=[];renderC(r)};
+  $("#check").onclick=()=>{
+    const txt=r.ans.map(id=>r.tiles.find(x=>x.id===id).t).join(" ");
+    const match=allSentences(r.scene,["위","아래","안","밖","앞","뒤","옆","왼쪽","오른쪽","사이"]).find(s=>sentKo(s)===txt);
+    if(match&&truth(match,r.spot,r.scene)){r.sentDone=match;const bb=$("#ans").getBoundingClientRect();pongoAnim("hop");SFX.bark();
+      panel.querySelectorAll("button").forEach(b=>b.disabled=true);win(r,bb.left+bb.width/2,bb.top)}
+    else if(match){pongoAnim("sad");lose(r,`A frase está bem formada, mas não é verdade: ${sentPt(match)}`)}
+    else{pongoAnim("sad");lose(r,"Essa frase não combina com a cena. Modelo: 트롬바 씨가 + lugar + posição에 + 있어요.")}
+  };
+}
+function startD(r){
+  const p=r.p;let scene={objs:[],spots:[]};
+  if(p.place){const o=layout([p.place],true)[0];o.L=640;o.R=o.L+o.w;scene.objs=[o]}
+  renderScene(scene,"street");
+  let sp,flip=false;const o=scene.objs[0];
+  if(p.kind==="in"){const a=o.art;sp={x:o.L+o.w/2,b:o.T+a.in.dy,s:a.in.s,z:11}}
+  else if(p.kind==="front")sp={x:o.L+o.w*.55,b:F+62,s:.72,z:30};
+  else if(p.kind==="right")sp={x:o.R+70,b:F+14,s:.7,z:20};
+  else if(p.kind==="walk"){sp={x:470,b:F+30,s:.72,z:20};flip=true;
+    world.insertAdjacentHTML("beforeend",`<svg class="layer" style="left:540px;top:${F-40}px;z-index:15" width="100" height="40" viewBox="0 0 100 40"><path d="M4 20 H80" stroke="${INK}" stroke-width="7" stroke-dasharray="12 9" stroke-linecap="round"/><path d="M74 6 L96 20 L74 34" fill="#ffd23f" ${sw}/></svg>`)}
+  else if(p.kind==="arrowR"||p.kind==="arrowL"){const R=p.kind==="arrowR";sp={x:R?560:860,b:F+30,s:.8,z:20};flip=R;
+    world.insertAdjacentHTML("beforeend",`<svg class="layer" style="left:620px;top:200px;z-index:9" width="200" height="280" viewBox="0 0 200 280">
+      <rect x="92" y="90" width="16" height="186" fill="#8a5a33" ${sw}/>
+      <path d="${R?"M10 30 H140 V6 L194 60 L140 114 V90 H10Z":"M190 30 H60 V6 L6 60 L60 114 V90 H190Z"}" fill="#3fae6a" ${sw}/>
+      <text x="100" y="72" text-anchor="middle" font-family="Jua,sans-serif" font-size="30" fill="#fff">${R?"오른쪽":"왼쪽"}</text></svg>`)}
+  else if(p.kind==="bus"||p.kind==="subway"){sp={x:560,b:F+30,s:.75,z:20};flip=true;
+    world.insertAdjacentHTML("beforeend",`<div class="emo" style="left:700px;top:${F-170}px;font-size:170px;animation:none">${p.kind==="bus"?"🚌":"🚇"}</div>`)}
+  world.insertAdjacentHTML("beforeend",trombaHTML(sp,{pop:1,flip}));
+  if(p.emo)world.insertAdjacentHTML("beforeend",`<div class="emo" style="left:${sp.x+10}px;top:${sp.b-TROMBA_H*sp.s-80}px">${p.emo}</div>`);
+  const opts=["에","에서","로","으로"];
+  panel.innerHTML=`<div class="q"><span class="tag">COMPLETE</span><div class="main"><div class="ko-big">${p.pre}<span class="blank">?</span>${p.post}</div>
+    <div class="row" style="margin-top:8px">${ptReveal(p.pt)}</div></div></div>
+    <div class="opts particles" id="opts">${opts.map(o=>`<button class="opt" data-o="${o}">${o}</button>`).join("")}</div><div class="msg" id="msg">Qual partícula completa a frase?</div>`;
+  $("#opts").onclick=e=>{const b=e.target.closest(".opt");if(!b||b.disabled)return;
+    if(b.dataset.o===p.a){b.classList.add("right");panel.querySelector(".blank").textContent=p.a;$("#opts").querySelectorAll(".opt").forEach(x=>x.disabled=true);
+      const bb=b.getBoundingClientRect();pongoAnim("hop");SFX.bark();win(r,bb.left+bb.width/2,bb.top)}
+    else{b.classList.add("wrong");b.disabled=true;pongoAnim("sad");lose(r,"Pense: é destino, ação no local ou direção/meio?")}};
+}
+
+/* ---------- Win / lose ---------- */
+function learnedOf(r){
+  if(r.mode==="D")return {ko:r.p.pre+r.p.a+r.p.post,pt:r.p.pt,why:r.p.why};
+  const s=r.sentDone||r.sent;return {ko:sentKo(s),pt:sentPt(s)};
+}
+function win(r,x,y){
+  r.won=true;S.done++;S.streak++;const pts=10+Math.min(S.streak-1,5)*2-(r.tries?3:0);S.score+=Math.max(5,pts);save();hudUpdate();
+  SFX.correct();setTimeout(SFX.pop,120);
+  burst(x,y,140);burst(innerWidth*.08,innerHeight,60,.5);burst(innerWidth*.92,innerHeight,60,.5);
+  const [ph,rom,pt]=rnd(PRAISE);const L=learnedOf(r);
+  setTimeout(()=>speak(ph,1),350);
+  const msg=$("#msg");if(msg)msg.textContent="";
+  const last=S.done>=LEVELS[S.level].need;
+  $("#fb").innerHTML=`<div class="fb"><div class="fbcard" role="dialog" aria-label="Acertou">
+    <img class="sticker" src="assets/${rnd(GOOD_STICKERS)}.webp" alt="Pongo comemorando com o Sr. Tromba">
+    <div><div class="praise">${ph}</div><div class="rom">${rom}</div><div class="praise-pt">${pt} ${S.streak>2?`🔥 ${S.streak} seguidas!`:""}</div></div>
+    <div class="learned"><div class="ko">${L.ko}</div><div class="pt">${L.pt}</div>${L.why?`<div class="pt" style="color:var(--ink)">💡 ${L.why}</div>`:""}</div>
+    <div class="row">${speakBtnFb(L.ko)}<button class="btn go" id="next">${last?"Fim do nível ★":"Próxima ▶"}</button></div></div></div>`;
+  $("#fb [data-say]").onclick=()=>speak(L.ko);
+  const nx=$("#next");nx.focus({preventScroll:true});nx.onclick=()=>{SFX.click();$("#fb").innerHTML="";last?levelDone():startRound()};
+}
+const speakBtnFb=t=>`<button class="btn alt" data-say="${t}">🔊 Ouvir frase</button>`;
+function lose(r,why){
+  r.tries++;S.mistakes++;S.streak=0;hudUpdate();SFX.wrong();
+  const [k,pt]=rnd(OOPS);const m=$("#msg");
+  if(m)m.innerHTML=`<img src="assets/${rnd(BAD_STICKERS)}.webp" alt="" style="width:46px;height:46px;border-radius:10px;border:3px solid var(--ink);vertical-align:middle;margin-right:8px">${k} <span style="color:var(--muted)">(${pt})</span><br><span style="color:var(--ink)">${why}</span>`;
+}
+function levelDone(){
+  const stars=S.mistakes<=1?3:S.mistakes<=4?2:1;S.stars[S.level]=Math.max(S.stars[S.level]||0,stars);save();
+  SFX.fanfare();rain(220);setTimeout(()=>speak("레벨 클리어! 정말 잘했어요!",1),400);
+  const final=S.level===LEVELS.length-1;
+  overlay(`<div class="sheet" role="dialog" aria-label="Nível concluído">
+    <h2>${final?"Mestre das Posições!":"Nível concluído!"} <span class="ko">레벨 클리어!</span></h2>
+    <div class="intro"><div><img class="wave" src="assets/${final?"pongo-wave":"juntos"}.webp" alt="Pongo comemorando">${final?`<img class="sticker" src="assets/hero.webp" alt="Pongo e Sr. Tromba, melhores amigos" style="margin-top:10px">`:""}</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="stars-big" aria-label="${stars} estrelas">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+      <p class="lead" style="font-family:var(--f-ko);font-size:26px;font-weight:400">정말 잘했어요! <span style="font-family:var(--f-body);font-size:16px;font-weight:800;color:var(--muted)">Você mandou muito bem!</span></p>
+      <p class="lead">${final?"O Pongo encontrou o Sr. Tromba em todos os lugares. 트롬바 씨는 항상 퐁고 옆에 있어요 — o Sr. Tromba está sempre ao lado do Pongo.":`Erros neste nível: ${S.mistakes}. ${stars<3?"Jogue de novo para ganhar 3 estrelas!":"Perfeito!"}`}</p>
+      <div class="row">${final?"":`<button class="btn go" id="goNext">Próximo nível ▶</button>`}<button class="btn alt" id="goMap">🗺️ Mapa</button><button class="btn alt" id="again">↻ Repetir</button></div>
+    </div></div></div>`);
+  const g=$("#goNext");if(g)g.onclick=()=>openIntro(S.level+1);
+  $("#goMap").onclick=showMap;$("#again").onclick=()=>openIntro(S.level);
+}
+
+/* ---------- Overlays ---------- */
+function overlay(html){$("#overlay").innerHTML=html?`<div class="overlay">${html}</div>`:"";const b=$("#overlay button");if(b)b.focus({preventScroll:true})}
+function showMap(){
+  SFX.click();$("#fb").innerHTML="";
+  const nextIdx=LEVELS.findIndex((_,i)=>!S.stars[i]&&unlocked(i));
+  overlay(`<div class="sheet" role="dialog" aria-label="Mapa de níveis">
+    <div class="title-hero"><img src="assets/pongo-wave.webp" alt="Pongo acenando">
+    <div><h1 class="big-title">Cadê o Sr. Tromba?</h1><div class="big-sub">트롬바 씨가 어디에 있어요?</div>
+    <p class="lead">O Pongo perdeu o melhor amigo de pelúcia! Leia as frases em coreano, descubra <b>onde</b> o Sr. Tromba está e em <b>qual posição</b>. Cada nível usa as palavras da Unidade 13 — 어디에 가요?</p></div></div>
+    <div class="map">${LEVELS.map((L,i)=>{const st=S.stars[i]||0,ok=unlocked(i);
+      return `<button class="node ${st?"done":""} ${i===nextIdx?"next":""}" data-l="${i}" ${ok?"":"disabled"}>
+        <span class="n">NÍVEL ${i+1}${ok?"":" · 🔒"}</span><span class="k">${L.ko}</span><span class="p">${L.pt}</span>
+        <span class="stars">${"⭐".repeat(st)}${"☆".repeat(3-st)}</span></button>`}).join("")}</div>
+    <div class="row" style="justify-content:space-between"><span class="pt">🔊 O som e a voz coreana começam depois do primeiro toque. Progresso salvo neste navegador.</span>
+    ${Object.keys(S.stars).length?`<button class="btn alt" id="reset">Recomeçar progresso</button>`:""}</div></div>`);
+  $("#overlay .map").onclick=e=>{const b=e.target.closest("[data-l]");if(b&&!b.disabled)openIntro(+b.dataset.l)};
+  const rs=$("#reset");if(rs)rs.onclick=()=>{if(rs.dataset.sure){S.stars={};S.score=0;S.streak=0;save();hudUpdate();showMap()}else{rs.dataset.sure=1;rs.textContent="Toque de novo para confirmar"}};
+}
+function openIntro(i){
+  SFX.click();ac();const L=LEVELS[i];
+  overlay(`<div class="sheet" role="dialog" aria-label="Início do nível">
+    <h2>Nível ${i+1} · <span class="ko">${L.ko}</span></h2>
+    <div class="intro"><img class="sticker" src="assets/${L.sticker}.webp" alt="Pongo e Sr. Tromba">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <p class="lead"><b>${L.pt}.</b> ${L.need} frases para completar o nível.</p>
+      <div class="vocab">${L.vocab.map(([k,r,p])=>`<button class="voc" data-say="${k}"><b>${k}</b><span>${r} · ${p}</span></button>`).join("")}</div>
+      <div class="tip">${L.tip}</div>
+      <div class="row"><button class="btn go" id="play">Jogar ▶</button><button class="btn alt" id="back">🗺️ Mapa</button></div>
+    </div></div></div>`);
+  $("#overlay .vocab").onclick=e=>{const b=e.target.closest("[data-say]");if(b)speak(b.dataset.say)};
+  $("#back").onclick=showMap;
+  $("#play").onclick=()=>{SFX.bark();overlay("");S.level=i;S.done=0;S.mistakes=0;startRound()};
+  $("#play").focus({preventScroll:true});
+}
+$("#btnMap").onclick=showMap;
+$("#btnSound").onclick=()=>{S.sound=!S.sound;save();hudUpdate();if(S.sound)SFX.click();else try{speechSynthesis.cancel()}catch(e){}};
+addEventListener("keydown",e=>{if(e.key==="Enter"&&$("#next")&&document.activeElement!==$("#next")){$("#next").click()}});
+
+/* ---------- Boot: a live sample round behind the map ---------- */
+function boot(){S.level=0;S.done=0;startRound();hudUpdate();showMap()}
+boot();
+})();
+</script>
