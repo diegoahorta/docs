@@ -1,0 +1,1407 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dark Grammar Anime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;600&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap">
+<style>
+/* Layout: full-bleed toon-shaded 3D canvas; anime 2D cast in HUD and visual-novel dialogue boxes. Single night look by design. */
+:root {
+  --void: #0d0a22;
+  --panel: rgba(20, 14, 46, 0.94);
+  --panel-solid: #161034;
+  --line: rgba(190, 170, 255, 0.24);
+  --ink: #f3efff;
+  --muted: #a69cc9;
+  --lamp: #ffcf4a;      /* Aiko's flashlight */
+  --alien: #6ef3ff;     /* NOVA hologram */
+  --sakura: #ff6fa8;
+  --danger: #ff4d6d;
+  --ok: #6ee7a0;
+  --f-title: "Dela Gothic One", Impact, sans-serif;
+  --f-display: "M PLUS Rounded 1c", "Trebuchet MS", sans-serif;
+  --f-body: "M PLUS Rounded 1c", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--void); color: var(--ink); font-family: var(--f-body); overflow: hidden; -webkit-user-select: none; user-select: none; }
+#stage { position: fixed; inset: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--lamp); outline-offset: 2px; }
+
+/* HUD */
+.hud { position: fixed; pointer-events: none; font-family: var(--f-display); }
+#hud-tl { top: calc(12px + env(safe-area-inset-top, 0px)); left: 12px; display: grid; gap: 6px; width: min(250px, 46vw); }
+.bar { display: grid; grid-template-columns: 62px 1fr; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.bar .track { height: 8px; background: rgba(255,255,255,.08); border: 1px solid var(--line); position: relative; overflow: hidden; }
+.bar .fill { position: absolute; inset: 0 auto 0 0; width: 100%; transition: width .2s; }
+#hp-fill { background: var(--danger); }
+#bt-fill { background: var(--lamp); }
+#st-fill { background: #8fb4ff; }
+#inv { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.chip { font-size: 11px; padding: 2px 6px; border: 1px solid var(--line); background: rgba(10,14,26,.7); color: var(--ink); white-space: nowrap; }
+.chip b { color: var(--lamp); font-weight: 700; }
+.chip.core { border-color: var(--alien); color: var(--alien); }
+#hud-tr { top: calc(12px + env(safe-area-inset-top, 0px)); right: 12px; display: grid; gap: 6px; justify-items: end; }
+#minimap { width: 150px; height: 150px; border: 1px solid var(--line); background: rgba(5,7,13,.75); }
+#hud-tr .btns { display: flex; gap: 6px; pointer-events: auto; }
+.mini-btn { font-family: var(--f-display); font-size: 11px; letter-spacing: .06em; padding: 4px 8px; background: var(--panel); border: 1px solid var(--line); }
+#objective { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: min(420px, 60vw); font-size: 13px; line-height: 1.4; padding: 8px 12px; background: var(--panel); border-left: 3px solid var(--alien); pointer-events: none; }
+#objective small { display: block; font-family: var(--f-display); font-size: 10px; letter-spacing: .14em; color: var(--alien); text-transform: uppercase; }
+#prompt { position: fixed; left: 50%; bottom: calc(22% + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); padding: 8px 14px; background: var(--panel); border: 1px solid var(--lamp); color: var(--ink); font-family: var(--f-display); font-size: 14px; pointer-events: auto; cursor: pointer; max-width: calc(100vw - 32px); text-align: center; }
+#prompt kbd { font-family: var(--f-mono); background: var(--lamp); color: #000; padding: 0 6px; margin-right: 6px; }
+#toast { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: grid; gap: 6px; justify-items: center; pointer-events: none; width: min(520px, calc(100vw - 32px)); }
+.toast { background: var(--panel); border: 1px solid var(--line); padding: 8px 14px; font-size: 13px; animation: tin .25s ease-out; text-align: center; }
+.toast.good { border-color: var(--ok); } .toast.bad { border-color: var(--danger); } .toast.alien { border-color: var(--alien); }
+@keyframes tin { from { opacity: 0; transform: translateY(-6px); } }
+#flash { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity .35s; }
+
+/* Modals */
+.modal { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px; background: rgba(3,4,9,.72); z-index: 10; overflow-y: auto; }
+.card { width: min(720px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--panel-solid); border: 1px solid var(--line); padding: clamp(16px, 4vw, 28px); box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+.eyebrow { font-family: var(--f-display); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--alien); }
+h1.title { font-family: var(--f-title); font-weight: 400; font-size: clamp(36px, 8.5vw, 68px); line-height: 1; margin: 8px 0 4px; color: var(--ink); text-wrap: balance; -webkit-text-stroke: 1px #000; text-shadow: 4px 4px 0 var(--sakura); }
+h1.title span { color: var(--alien); }
+h2 { font-family: var(--f-display); font-size: clamp(20px, 4vw, 26px); margin: 6px 0 10px; text-wrap: balance; }
+p { line-height: 1.55; margin: 0 0 12px; max-width: 65ch; }
+.muted { color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.btn { font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .04em; padding: 10px 18px; border: 1px solid var(--lamp); background: var(--lamp); color: #140c00; }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 6px 18px; font-size: 13px; margin: 12px 0; }
+.controls kbd, .k { font-family: var(--f-mono); font-size: 12px; border: 1px solid var(--line); padding: 0 5px; color: var(--lamp); }
+.credits { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; margin-top: 14px; }
+
+/* Puzzle */
+.pz-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.dots { display: flex; gap: 5px; }
+.dots i { width: 10px; height: 10px; border: 1px solid var(--line); display: block; }
+.dots i.done { background: var(--ok); border-color: var(--ok); }
+.dots i.cur { border-color: var(--lamp); }
+.pz-q { font-family: var(--f-mono); font-size: clamp(15px, 2.6vw, 18px); line-height: 1.5; background: rgba(255,255,255,.04); border: 1px solid var(--line); padding: 12px 14px; margin: 10px 0; }
+.pz-q .blank { color: var(--lamp); }
+.pz-q.wrong { border-color: var(--danger); text-decoration: line-through; text-decoration-color: var(--danger); }
+.opts { display: grid; gap: 8px; }
+.opt { text-align: left; padding: 10px 14px; background: rgba(255,255,255,.03); border: 1px solid var(--line); font-family: var(--f-mono); font-size: 15px; }
+.opt:hover:not(:disabled) { border-color: var(--lamp); }
+.opt.right { border-color: var(--ok); background: rgba(94,224,138,.12); }
+.opt.bad { border-color: var(--danger); background: rgba(255,77,94,.1); }
+.pz-input { width: 100%; font-family: var(--f-mono); font-size: 16px; padding: 10px 12px; background: #050810; color: var(--ink); border: 1px solid var(--line); -webkit-user-select: text; user-select: text; }
+.blk-row { display: flex; flex-wrap: wrap; gap: 6px; min-height: 58px; padding: 8px; border: 1px dashed var(--line); margin: 8px 0; align-content: flex-start; }
+.blk { display: grid; padding: 0; border: 0; background: none; text-align: left; }
+.blk .role { font-family: var(--f-display); font-size: 9px; letter-spacing: .1em; padding: 2px 6px; color: #0a0a0a; font-weight: 700; }
+.blk .txt { font-family: var(--f-mono); font-size: 14px; padding: 6px 8px; background: rgba(255,255,255,.06); border: 1px solid var(--line); border-top: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.legend span { font-family: var(--f-display); font-size: 9px; letter-spacing: .08em; padding: 2px 5px; color: #0a0a0a; font-weight: 700; }
+.fb { margin-top: 12px; padding: 10px 14px; border-left: 3px solid var(--line); background: rgba(255,255,255,.03); font-size: 14px; line-height: 1.5; }
+.fb.ok { border-color: var(--ok); } .fb.bad { border-color: var(--danger); }
+.fb strong { font-family: var(--f-display); letter-spacing: .04em; }
+.hint { margin-top: 10px; font-size: 13px; color: var(--alien); border: 1px solid rgba(63,240,210,.3); padding: 8px 12px; }
+
+/* Journal */
+.jr-list { display: grid; gap: 10px; }
+.jr-item { border: 1px solid var(--line); padding: 10px 14px; }
+.jr-item .en { font-family: var(--f-mono); font-size: 14px; line-height: 1.5; margin: 6px 0; }
+.jr-item .rule { font-size: 13px; color: var(--lamp); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 12px 0; }
+.stats div { border: 1px solid var(--line); padding: 8px 10px; font-family: var(--f-display); }
+.stats b { display: block; font-size: 24px; color: var(--lamp); font-variant-numeric: tabular-nums; }
+.stats span { font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+table.sum { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.sum td, table.sum th { border-top: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.sum th { font-family: var(--f-display); color: var(--alien); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.tbl-wrap { overflow-x: auto; }
+
+/* Anime cast + visual novel */
+.cast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 14px 0 4px; }
+.cast figure { margin: 0; display: grid; justify-items: center; gap: 4px; border: 1px solid var(--line); background: radial-gradient(circle at 50% 40%, rgba(255,111,168,.18), transparent 70%); padding: 8px 4px; }
+.cast img { width: 100%; max-width: 120px; aspect-ratio: 2 / 3; object-fit: contain; }
+.cast img.sq { aspect-ratio: 1; }
+.cast figcaption { font-size: 12px; text-align: center; line-height: 1.3; }
+.cast figcaption b { display: block; font-family: var(--f-title); font-weight: 400; color: var(--lamp); font-size: 14px; }
+.vn { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: start; }
+.vn img { width: 112px; height: 112px; border: 2px solid var(--alien); background: rgba(110,243,255,.08); border-radius: 50%; }
+.vn .bubble { position: relative; border: 2px solid var(--ink); background: #0f0b26; padding: 10px 14px; border-radius: 4px 14px 14px 14px; min-width: 0; }
+.vn .who { font-family: var(--f-title); font-size: 13px; color: var(--alien); letter-spacing: .06em; }
+.nova-say { display: flex; gap: 10px; align-items: center; margin: 4px 0 8px; }
+.nova-say img { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--alien); background: rgba(110,243,255,.08); flex: none; }
+.nova-say span { font-size: 13px; background: #0f0b26; border: 1px solid var(--line); padding: 6px 10px; border-radius: 4px 12px 12px 12px; }
+#fx { position: fixed; inset: 0; pointer-events: none; width: 100%; height: 100%; }
+@media (max-width: 520px) { .vn { grid-template-columns: 64px minmax(0, 1fr); } .vn img { width: 64px; height: 64px; } }
+
+/* Touch */
+#touch { position: fixed; inset: auto 0 0 0; height: 45%; pointer-events: none; }
+#joy { position: absolute; left: 22px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 120px; height: 120px; border-radius: 50%; border: 1px solid var(--line); background: rgba(10,14,26,.4); pointer-events: auto; touch-action: none; }
+#joy i { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px; border-radius: 50%; background: rgba(255,179,71,.5); }
+#tbtns { position: absolute; right: 16px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: repeat(2, 64px); gap: 10px; pointer-events: auto; }
+#tbtns button { height: 56px; border-radius: 50%; background: var(--panel); border: 1px solid var(--line); font-family: var(--f-display); font-size: 10px; letter-spacing: .05em; touch-action: none; }
+#tbtns button.main { border-color: var(--lamp); color: var(--lamp); }
+@media (max-width: 640px) {
+  #minimap { width: 110px; height: 110px; }
+  #objective { max-width: calc(100vw - 24px); bottom: auto; top: calc(150px + env(safe-area-inset-top, 0px)); font-size: 12px; }
+  #toast { top: calc(215px + env(safe-area-inset-top, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } #flash { transition: none; } }
+</style>
+
+<div id="stage"></div>
+<canvas id="fx"></canvas>
+<div id="flash"></div>
+
+<div class="hud" id="hud-tl" hidden>
+  <div class="bar"><span>Vida</span><div class="track"><div class="fill" id="hp-fill"></div></div></div>
+  <div class="bar"><span>Bateria</span><div class="track"><div class="fill" id="bt-fill"></div></div></div>
+  <div class="bar"><span>Fôlego</span><div class="track"><div class="fill" id="st-fill"></div></div></div>
+  <div id="inv"></div>
+</div>
+<div class="hud" id="hud-tr" hidden>
+  <canvas id="minimap" width="300" height="300" aria-label="Minimapa"></canvas>
+  <div class="btns">
+    <button class="mini-btn" id="b-journal" type="button">Diário (J)</button>
+    <button class="mini-btn" id="b-mute" type="button">Som</button>
+    <button class="mini-btn" id="b-pause" type="button">Pausa</button>
+  </div>
+</div>
+<div id="objective" hidden><small>Objetivo</small><span id="obj-text"></span></div>
+<div id="prompt" hidden></div>
+<div id="toast"></div>
+
+<div id="touch" hidden>
+  <div id="joy"><i></i></div>
+  <div id="tbtns">
+    <button type="button" id="t-light">PULSO</button>
+    <button type="button" id="t-act" class="main">USAR</button>
+    <button type="button" id="t-flare">SINAL</button>
+    <button type="button" id="t-run">CORRER</button>
+    <button type="button" id="t-med">KIT</button>
+  </div>
+</div>
+
+<!-- Intro -->
+<div class="modal" id="m-intro">
+  <div class="card">
+    <div class="eyebrow">Advanced Grammar · Sequência 01 · Units 1–3</div>
+    <h1 class="title">Dark Grammar<br><span>Anime</span></h1>
+    <div class="cast">
+      <figure><img id="cast-hero" alt="Aiko, sobrevivente de jaqueta laranja e cachecol"><figcaption><b>Aiko</b>sobrevivente</figcaption></figure>
+      <figure><img id="cast-nova" class="sq" alt="NOVA, IA holográfica de cabelo ciano"><figcaption><b>NOVA</b>IA holográfica</figcaption></figure>
+      <figure><img id="cast-alien" alt="Gramático, alienígena encapuzado com máscara"><figcaption><b>Gramáticos</b>invasores</figcaption></figure>
+    </div>
+    <p>Santos, 3h da manhã. A frota do <strong>Universo Escuro</strong> apagou a cidade. <strong>Aiko</strong> acorda num bunker com <strong>NOVA</strong>, uma IA holográfica que ainda funciona. Os <strong>Gramáticos</strong> se alimentam de frases erradas: cada tempo verbal mal usado ecoa no escuro e chama todos até você.</p>
+    <p>Investigue as pistas, destrave os terminais em inglês para conseguir equipamento, reúna os três <strong>Tense Cores</strong> e ligue a nave de fuga ao norte.</p>
+    <div class="controls">
+      <div><span class="k">WASD</span> / <span class="k">setas</span> mover</div>
+      <div><span class="k">Shift</span> correr (faz barulho)</div>
+      <div><span class="k">E</span> examinar pista ou terminal</div>
+      <div><span class="k">F</span> / <span class="k">Espaço</span> pulso da lanterna</div>
+      <div><span class="k">G</span> sinalizador · <span class="k">Q</span> kit médico</div>
+      <div><span class="k">J</span> diário · <span class="k">Esc</span> pausa</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="b-new" type="button">Novo jogo</button>
+      <button class="btn ghost" id="b-continue" type="button" hidden>Continuar</button>
+    </div>
+    <div class="credits">Versão anime: personagens 2D com cel shading num mundo 3D toon. Conteúdo baseado nas aulas <em>Advanced Grammar em Blocos</em> e no Glossário B2+/C1 · Prof. Diego Horta · ODU Creative. Nível B2+ / C1.</div>
+  </div>
+</div>
+
+<!-- Puzzle -->
+<div class="modal" id="m-puzzle" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="pz-title">
+    <div class="pz-head">
+      <div><div class="eyebrow" id="pz-eyebrow"></div><h2 id="pz-title"></h2></div>
+      <div class="dots" id="pz-dots"></div>
+    </div>
+    <div class="nova-say"><img id="pz-face" alt="NOVA"><span id="pz-say"></span></div>
+    <div id="pz-body"></div>
+    <div id="pz-hint"></div>
+    <div id="pz-fb"></div>
+    <div class="actions" id="pz-actions"></div>
+  </div>
+</div>
+
+<!-- Note -->
+<div class="modal" id="m-note" hidden>
+  <div class="card" role="dialog" aria-modal="true">
+    <div class="eyebrow" id="nt-eyebrow">Pista encontrada</div>
+    <h2 id="nt-title"></h2>
+    <div class="jr-item"><div class="en" id="nt-en"></div><div class="muted" id="nt-pt" style="font-size:13px"></div></div>
+    <div class="vn" style="margin-top:12px"><img id="nt-face" alt="NOVA"><div class="bubble"><div class="who">NOVA</div><div id="nt-rule"></div></div></div>
+    <div class="actions"><button class="btn" id="nt-close" type="button">Guardar no diário</button></div>
+  </div>
+</div>
+
+<!-- Journal -->
+<div class="modal" id="m-journal" hidden>
+  <div class="card" role="dialog" aria-modal="true">
+    <div class="eyebrow">Diário do sobrevivente</div>
+    <h2>Pistas e equipamento</h2>
+    <div class="stats" id="jr-stats"></div>
+    <div class="jr-list" id="jr-list"></div>
+    <div class="actions"><button class="btn" id="jr-close" type="button">Voltar ao jogo</button></div>
+  </div>
+</div>
+
+<!-- Pause -->
+<div class="modal" id="m-pause" hidden>
+  <div class="card">
+    <div class="eyebrow">Pausa</div>
+    <h2>O escuro espera.</h2>
+    <p class="muted">O progresso é salvo automaticamente neste navegador.</p>
+    <div class="actions">
+      <button class="btn" id="ps-resume" type="button">Continuar</button>
+      <button class="btn ghost" id="ps-restart" type="button">Recomeçar do zero</button>
+    </div>
+    <div id="ps-confirm" hidden class="fb bad">Apagar todo o progresso? <button class="btn ghost" id="ps-yes" type="button" style="margin-left:8px;padding:4px 10px">Sim, apagar</button></div>
+  </div>
+</div>
+
+<!-- Death -->
+<div class="modal" id="m-dead" hidden>
+  <div class="card">
+    <div class="eyebrow" style="color:var(--danger)">Capturado</div>
+    <h2>Os Gramáticos levaram você.</h2>
+    <div class="vn"><img id="dead-face" alt="NOVA preocupada"><div class="bubble"><div class="who">NOVA</div><div id="dead-tip"></div></div></div>
+    <p class="muted">Você acorda no bunker com o equipamento que já tinha.</p>
+    <div class="actions"><button class="btn" id="dead-ok" type="button">Acordar no bunker</button></div>
+  </div>
+</div>
+
+<!-- Win -->
+<div class="modal" id="m-win" hidden>
+  <div class="card">
+    <div class="eyebrow">Fuga concluída</div>
+    <h1 class="title" style="font-size:clamp(30px,6.5vw,52px)">You <span>have escaped.</span></h1>
+    <div class="vn"><img id="win-face" alt="NOVA feliz"><div class="bubble"><div class="who">NOVA</div>We've made it, Aiko! A nave rompe a nuvem escura. Lá embaixo, os Gramáticos ficam presos em frases que não sabem terminar.</div></div>
+    <div class="stats" id="win-stats"></div>
+    <div class="tbl-wrap"><table class="sum">
+      <tr><th>Bloco</th><th>Forma</th><th>Função</th></tr>
+      <tr><td>Unit 1</td><td>am/is/are + V-ing × V / V-s</td><td>Temporário, em curso ou em mudança × permanente, rotina, verdade geral.</td></tr>
+      <tr><td>Unit 2</td><td>state verb + V/V-s × sentido dinâmico + V-ing</td><td>Verbos de estado, duplo sentido, continuous tentativo e verbos performativos.</td></tr>
+      <tr><td>Unit 3</td><td>V-ed / V2 × have/has + particípio</td><td>Passado encerrado × passado conectado ao presente.</td></tr>
+    </table></div>
+    <div class="actions"><button class="btn" id="win-again" type="button">Jogar de novo</button></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* ------------------------------------------------------------------
+   ASSET PIPELINE (Unity 2D + Blender)
+   Os sprites e o cenário padrão são gerados por código para o jogo rodar
+   sozinho. Para trocar pelos seus assets:
+   - unitySprites: sprite sheets PNG exportados do Unity (Sprite Editor),
+     frames lado a lado na horizontal, mesma largura.
+   - blenderScene: cena .glb exportada do Blender (File > Export > glTF 2.0).
+   Os caminhos são relativos a este arquivo.
+------------------------------------------------------------------- */
+const ASSET_CONFIG = {
+  unitySprites: { player: null, alien: null, frames: 3 },
+  blenderScene: null,
+  blenderReplacesProcedural: false,
+};
+
+/* ------------------------------ CONTENT ------------------------------ */
+const LEGEND = {
+  S: ['SUJEITO', '#ff6b74'], AUX: ['AUX/MODAL', '#ffa24a'], V: ['VERBO', '#ffd84d'],
+  O: ['OBJETO', '#6ad884'], C: ['COMPLEMENTO', '#4fd1e0'], ADV: ['ADVÉRBIO', '#8aa2ff'],
+  PREP: ['PREPOSIÇÃO', '#b28cff'], CONJ: ['CONECTOR', '#e58cf0'], REL: ['RELATIVO/WH', '#ff9cc8'],
+  DET: ['DETERMINANTE', '#c4c4c4'], X: ['OUTROS', '#d9c9a8'],
+};
+
+const ITEMS = {
+  lanterna: { name: 'Lanterna UV', desc: 'Ilumina à frente. F/Espaço dispara um pulso que atordoa alienígenas (custa 20% de bateria).' },
+  radar: { name: 'Radar de ondas', desc: 'Mostra os alienígenas no minimapa.' },
+  botas: { name: 'Botas de corrida', desc: 'Corrida mais rápida e fôlego que volta mais depressa.' },
+  medkit: { name: 'Kit médico', desc: 'Q: recupera 50 de vida.', stack: true },
+  bateria: { name: 'Célula de bateria', desc: '+40% de bateria, uso imediato.' },
+  sinalizador: { name: 'Sinalizador', desc: 'G: acende uma luz vermelha que espanta alienígenas próximos.', stack: true },
+  coreA: { name: 'Tense Core α', desc: 'Present simple × continuous.', core: true },
+  coreB: { name: 'Tense Core β', desc: 'Verbos de estado e usos especiais.', core: true },
+  coreC: { name: 'Tense Core γ', desc: 'Past simple × present perfect.', core: true },
+};
+
+const ZONES = {
+  u1: { name: 'Mercado do Porto', unit: 'Unit 1', title: 'Present continuous and present simple (1)', c: [-55, 10], color: 0xffa24a,
+        tip: 'Dica ODU: pergunte-se “isso tem prazo de validade?”. Se sim (este mês, por enquanto, ultimamente), o continuous costuma ser a escolha natural. Rotinas, fatos e verdades gerais ficam no simple.' },
+  u2: { name: "Chef's Lab", unit: 'Unit 2', title: 'Present continuous and present simple (2)', c: [55, 10], color: 0xe58cf0,
+        tip: 'Dica ODU: se o verbo descreve algo que você “tem” ou “é” por dentro (opinião, posse, sentimento estável), fica no simple. Se descreve algo que você “faz”, o continuous está liberado.' },
+  u3: { name: 'Estação de Notícias', unit: 'Unit 3', title: 'Past simple and present perfect', c: [0, -40], color: 0x8aa2ff,
+        tip: 'Dica ODU: procure a “âncora” de tempo. Com âncora no passado (yesterday, in 2010, ago, last night) o present perfect está proibido. Período aberto (today, so far, ever, since) pede present perfect.' },
+};
+
+const NOTES = [
+  { id: 'n0', zone: null, pos: [4, 55], title: 'Mensagem riscada na porta do bunker',
+    en: "If you're reading this, you've survived the first night. They hear wrong grammar. Every mistake you make echoes in the dark.",
+    pt: 'Se você está lendo isto, sobreviveu à primeira noite. Eles ouvem gramática errada. Cada erro ecoa no escuro.',
+    rule: 'Pistas liberam a “Dica ODU” nos terminais da zona. O Mercado do Porto fica a oeste: comece por lá.' },
+  { id: 'n1', zone: 'u1', pos: [-67, 13], title: 'Diário do vigia do porto',
+    en: "I normally patrol the docks, but this week I'm hiding in the market because the Wraiths are everywhere.",
+    pt: 'Normalmente eu patrulho as docas, mas esta semana estou me escondendo no mercado porque os Espectros estão por toda parte.',
+    rule: 'Rotina (normally) → present simple. Arranjo temporário (this week) → present continuous.' },
+  { id: 'n2', zone: 'u1', pos: [-50, 27], title: 'Bilhete preso numa barraca',
+    en: "My flatmate is forever leaving the lights on. That's how they found us. He's always making the same mistake!",
+    pt: 'Meu colega de apartamento vive deixando as luzes acesas. Foi assim que nos acharam.',
+    rule: 'always / forever / constantly + continuous = hábito repetitivo que irrita ou surpreende.' },
+  { id: 'n3', zone: 'u1', pos: [-41, 4], title: 'Rádio de pilha, ainda ligado',
+    en: 'The night is getting colder and colder. Darkness is becoming the norm, and the alien signal is growing stronger.',
+    pt: 'A noite está ficando cada vez mais fria. A escuridão está se tornando a norma.',
+    rule: 'Tendências e mudanças graduais (get, become, grow, rise, improve) pedem o continuous.' },
+  { id: 'n4', zone: 'u2', pos: [68, 12], title: 'Receita manchada de molho',
+    en: 'The soup tastes a bit salty. The chef was tasting the sauce when the lights went out.',
+    pt: 'A sopa está com gosto meio salgado. O chef estava provando o molho quando as luzes apagaram.',
+    rule: 'Mesmo verbo, dois sentidos: taste (ter gosto, estado → simple) × taste (provar, ação → continuous).' },
+  { id: 'n5', zone: 'u2', pos: [42, 9], title: 'E-mail que nunca foi enviado',
+    en: 'Dear Dr Lima, I was wondering if you had a minute to talk. I apologise for the short notice. I suggest we leave the city tonight.',
+    pt: 'Prezada Dra. Lima, eu gostaria de saber se a senhora teria um minuto. Peço desculpas pelo aviso em cima da hora.',
+    rule: 'Continuous “tentativo” (I was wondering, I’m hoping) soa educado. Verbos performativos (apologise, promise, suggest) ficam no simple.' },
+  { id: 'n6', zone: 'u2', pos: [55, -4], title: 'Ficha de espécime: Stative Leech',
+    en: "Stative Leeches feed on forms like 'I'm understanding' or 'it is belonging'. Know, belong, own, consist, seem: they never take -ing.",
+    pt: 'As Sanguessugas Estativas se alimentam de formas como “I’m understanding”. Verbos de estado não vão para o -ing.',
+    rule: 'Verbos de estado (know, belong, own, consist, seem, mean, prefer, deserve) ficam no simple.' },
+  { id: 'n7', zone: 'u3', pos: [16, -40], title: 'Boletim de emergência impresso',
+    en: 'BREAKING: An alien fleet has landed near Santos. The ships arrived at 3 a.m. and destroyed the bridge.',
+    pt: 'URGENTE: Uma frota alienígena pousou perto de Santos. As naves chegaram às 3h e destruíram a ponte.',
+    rule: 'Notícias abrem com present perfect (fato novo) e dão os detalhes no past simple.' },
+  { id: 'n8', zone: 'u3', pos: [-16, -40], title: 'Caderno da cientista',
+    en: "We have discovered how they navigate. We found the first one in March. I've known it since then: they can't stand correct tenses.",
+    pt: 'Descobrimos como eles navegam. Encontramos o primeiro em março. Sei disso desde então.',
+    rule: 'Âncora no passado (in March) → past simple. Começou no passado e continua (since) → present perfect.' },
+  { id: 'n9', zone: 'u3', pos: [7, -56], title: 'Mensagem do piloto',
+    en: "I've hidden the shuttle on the north pad. I fuelled it yesterday. It needs three Tense Cores to start.",
+    pt: 'Escondi a nave na plataforma norte. Abasteci ontem. Ela precisa de três Tense Cores para ligar.',
+    rule: 'Cada zona guarda um Tense Core num cofre que abre depois de 3 terminais resolvidos.' },
+];
+
+// Puzzle step types: choice | fix | type | blocks | unit
+const TERMINALS = [
+  // ---------- UNIT 1 · Mercado do Porto ----------
+  { id: 't1a', zone: 'u1', pos: [-63, 2], name: 'Container 07', reward: 'lanterna', steps: [
+    { t: 'choice', q: 'I ___ at a hotel near the beach until I find a flat to rent.', opts: ['am staying', 'stay', 'have stayed'], a: 'am staying',
+      why: 'Arranjo provisório (“até eu achar um apartamento”) pede present continuous.' } ] },
+  { id: 't1b', zone: 'u1', pos: [-47, 0], name: 'Balança do peixeiro', reward: 'radar', steps: [
+    { t: 'blocks', pt: 'Os preços dos aluguéis estão subindo constantemente este ano.',
+      blocks: [['Rental prices', 'S'], ['are', 'AUX'], ['rising', 'V'], ['steadily', 'ADV'], ['this year', 'ADV']],
+      why: 'Tendência em curso num período atual (this year) → are rising.' } ] },
+  { id: 't1c', zone: 'u1', pos: [-62, 21], name: 'Caixa registradora', reward: 'botas', steps: [
+    { t: 'fix', wrong: "Every morning I'm drinking coffee before work.", opts: ['Every morning I drink coffee before work.', 'Every morning I have drunk coffee before work.', 'Every morning I am drink coffee before work.'], a: 'Every morning I drink coffee before work.',
+      why: 'Rotina com every morning pede present simple. O continuous soaria temporário ou estranho.' } ] },
+  { id: 't1d', zone: 'u1', pos: [-45, 18], name: 'Guindaste de carga', reward: 'medkit', steps: [
+    { t: 'type', q: "She ______ (always / lose) her keys — it's driving me mad!", acc: ['is always losing', "'s always losing", 'she is always losing', "she's always losing"],
+      why: 'always + continuous expressa hábito repetitivo que irrita: is always losing.' } ] },
+  { id: 'core1', zone: 'u1', pos: [-55, 10], name: 'Cofre do capitão', reward: 'coreA', requires: 3, steps: [
+    { t: 'choice', q: 'Look out of the window — it ___!', opts: ["'s snowing", 'snows', 'has snowed'], a: "'s snowing", why: 'Acontecendo agora, diante dos olhos → present continuous.' },
+    { t: 'choice', q: 'Technology ___ faster and faster these days.', opts: ['is changing', 'changes', 'changed'], a: 'is changing', why: 'Mudança gradual em curso (these days, -er and -er) → continuous.' },
+    { t: 'fix', wrong: 'He is coming from Recife originally, but he moved to São Paulo as a child.', opts: ['He comes from Recife originally, but he moved to São Paulo as a child.', 'He has come from Recife originally, but he moved to São Paulo as a child.', 'He came from Recife originally, but he is moving to São Paulo as a child.'], a: 'He comes from Recife originally, but he moved to São Paulo as a child.', why: 'Origem é fato permanente → present simple (comes from).' },
+  ] },
+
+  // ---------- UNIT 2 · Chef's Lab ----------
+  { id: 't2a', zone: 'u2', pos: [47, 2], name: 'Balança de bagagem', reward: 'bateria', steps: [
+    { t: 'choice', q: "This suitcase ___ more than 23 kilos, so you'll have to pay extra.", opts: ['weighs', 'is weighing', 'has weighed'], a: 'weighs', why: 'weigh = ter o peso de (estado) → simple.' } ] },
+  { id: 't2b', zone: 'u2', pos: [63, 2], name: 'Enfermaria improvisada', reward: 'medkit', steps: [
+    { t: 'choice', q: 'The nurse ___ the baby at the moment.', opts: ['is weighing', 'weighs', 'weighed'], a: 'is weighing', why: 'weigh = medir o peso de (ação em curso, at the moment) → continuous.' } ] },
+  { id: 't2c', zone: 'u2', pos: [47, 19], name: 'Fogão industrial', reward: 'sinalizador', steps: [
+    { t: 'blocks', pt: 'Estou pensando se você poderia ajudar.',
+      blocks: [['I', 'S'], ['am', 'AUX'], ['wondering', 'V'], ['whether', 'REL'], ['you', 'S'], ['could', 'AUX'], ['help', 'V']],
+      why: 'wonder no continuous soa tentativo e educado: I am wondering whether…' } ] },
+  { id: 't2d', zone: 'u2', pos: [63, 19], name: 'Geladeira trancada', reward: 'bateria', steps: [
+    { t: 'fix', wrong: 'This bag is belonging to my sister.', opts: ['This bag belongs to my sister.', 'This bag is belong to my sister.', 'This bag has been belonging to my sister.'], a: 'This bag belongs to my sister.', why: 'belong (posse) nunca vai para o continuous.' } ] },
+  { id: 't2e', zone: 'u2', pos: [55, 25], name: 'Painel do restaurante', reward: 'sinalizador', steps: [
+    { t: 'type', q: "I ______ (think) of applying for that job in Lisbon. What's your opinion?", acc: ['am thinking', "'m thinking", 'i am thinking', "i'm thinking"], why: 'think of/about = refletir, considerar (ação) → continuous.' } ] },
+  { id: 'core2', zone: 'u2', pos: [55, 10], name: 'Cofre da câmara fria', reward: 'coreB', requires: 3, steps: [
+    { t: 'choice', q: 'Why ___ you ___ so quiet today? Is something wrong?', opts: ['are / being', 'are / be', 'do / be'], a: 'are / being', why: 'Comportamento temporário, não característico → be + being + adjetivo.' },
+    { t: 'choice', q: "I ___ I'll pay you back by the end of the month.", opts: ['promise', 'am promising', 'promising'], a: 'promise', why: 'Verbo performativo: dizer “I promise” já é prometer → simple.' },
+    { t: 'fix', wrong: 'Are you knowing anyone who speaks Korean?', opts: ['Do you know anyone who speaks Korean?', 'Have you knowing anyone who speaks Korean?', 'Are you know anyone who speaks Korean?'], a: 'Do you know anyone who speaks Korean?', why: 'know é verbo de estado → simple.' },
+  ] },
+
+  // ---------- UNIT 3 · Estação de Notícias ----------
+  { id: 't3a', zone: 'u3', pos: [-9, -34], name: 'Arquivo de artes', reward: 'bateria', steps: [
+    { t: 'choice', q: 'Leonardo da Vinci ___ the Mona Lisa in the early 16th century.', opts: ['painted', 'has painted', 'was painting'], a: 'painted', why: 'Âncora no passado encerrado (16th century) → past simple.' } ] },
+  { id: 't3b', zone: 'u3', pos: [9, -34], name: 'Máquina de café', reward: 'medkit', steps: [
+    { t: 'choice', q: 'This is the best coffee I ___.', opts: ['have ever tasted', 'ever taste', 'am ever tasting'], a: 'have ever tasted', why: 'Depois de superlativo (the best … ever) → present perfect.' } ] },
+  { id: 't3c', zone: 'u3', pos: [-11, -47], name: 'Mesa do âncora', reward: 'sinalizador', steps: [
+    { t: 'blocks', pt: 'É a primeira vez que viajo de classe executiva.',
+      blocks: [['It', 'X'], ["'s", 'AUX'], ['the first time', 'C'], ['I', 'S'], ["'ve", 'AUX'], ['flown', 'V'], ['business class', 'ADV']],
+      why: "It's the first time + present perfect." } ] },
+  { id: 't3d', zone: 'u3', pos: [11, -47], name: 'Van de transmissão', reward: 'bateria', steps: [
+    { t: 'fix', wrong: 'I have finished university in 2020.', opts: ['I finished university in 2020.', 'I was finishing university in 2020.', 'I have finish university in 2020.'], a: 'I finished university in 2020.', why: 'Data específica no passado (in 2020) exige past simple.' } ] },
+  { id: 't3e', zone: 'u3', pos: [-5, -55], name: 'Antena parabólica', reward: 'medkit', steps: [
+    { t: 'type', q: 'I ______ (not / see) Marcos since he started his new job.', acc: ["haven't seen", 'have not seen', "i haven't seen", 'i have not seen'], why: 'since + situação que continua até hoje → present perfect.' } ] },
+  { id: 'core3', zone: 'u3', pos: [0, -36], name: 'Cofre da redação', reward: 'coreC', requires: 3, steps: [
+    { t: 'choice', q: 'When ___ in Brazil?', opts: ['did you arrive', 'have you arrived', 'are you arriving'], a: 'did you arrive', why: 'When pergunta por um momento encerrado → past simple.' },
+    { t: 'choice', q: 'How long ___ your best friend?', opts: ['have you known', 'do you know', 'did you know'], a: 'have you known', why: 'Duração até agora (how long, since) → present perfect.' },
+    { t: 'choice', q: 'We ___ a terrible storm last night.', opts: ['had', 'have had', 'were having'], a: 'had', why: 'last night é tempo encerrado → past simple.' },
+  ] },
+
+  // ---------- FINAL · Nave de fuga ----------
+  { id: 'shuttle', zone: null, pos: [0, -73], name: 'Nave de fuga', reward: 'win', shuttle: true, steps: [
+    { t: 'unit', q: "You're constantly checking your phone during meetings — it's quite distracting.", a: 1, why: 'Unit 1: constantly + continuous para hábito irritante.' },
+    { t: 'unit', q: "My parents live in Campinas, but they're staying with us until their flat is renovated.", a: 1, why: 'Unit 1: live (residência fixa) × are staying (arranjo provisório).' },
+    { t: 'unit', q: 'Scientists have discovered a new species of frog in the Atlantic Forest. They found it during a survey in March.', a: 3, why: 'Unit 3: notícia abre com present perfect, detalhe com past simple.' },
+    { t: 'unit', q: "You're being very stubborn today — that's not like you.", a: 2, why: 'Unit 2: be + being + adjetivo para comportamento temporário.' },
+    { t: 'unit', q: 'I suggest we postpone the launch until the bugs are fixed.', a: 2, why: 'Unit 2: suggest como verbo performativo.' },
+    { t: 'unit', q: 'Shakespeare wrote dozens of plays, but my favourite author has written only two novels so far.', a: 3, why: 'Unit 3: wrote (vida encerrada) × has written … so far (período aberto).' },
+  ] },
+];
+
+const DEATH_TIPS = [
+  'Lembrete: I’ve been working here since 2019, nunca “I’m working here since 2019”.',
+  'Lembrete: I understand what you mean. “Understand” é verbo de estado.',
+  'Lembrete: Have you ever eaten feijoada? Experiência sem tempo definido pede present perfect.',
+  'Lembrete: The climate is getting warmer and warmer these days. Mudança gradual → continuous.',
+  'Lembrete: He is being very rude today. Comportamento temporário → be + being.',
+  'Lembrete: I’ve known her since I was a teenager, não “I know her since…”.',
+];
+
+/* ------------------------------ STATE ------------------------------ */
+const SAVE_KEY = 'dark-grammar-anime-v1';
+const BUNKER = [0, 62], SAFE_R = 9, START = [0, 55];
+const store = {
+  get() { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch (e) { return null; } },
+  set(v) { try { localStorage.setItem(SAVE_KEY, JSON.stringify(v)); } catch (e) {} },
+  clear() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} },
+};
+function freshState() {
+  return { hp: 100, battery: 60, stamina: 100, items: {}, solved: [], notes: [], cores: 0,
+           right: 0, wrong: 0, deaths: 0, time: 0, pos: START.slice(), seen: [] };
+}
+let S = freshState();
+let mode = 'intro';
+const has = (k) => (S.items[k] || 0) > 0;
+function save() { S.pos = [player.x, player.z]; store.set(S); }
+
+/* ------------------------------ UTIL ------------------------------ */
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const R = rng(20261011);
+const shuffle = (a) => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const norm = (s) => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.!?,;]+$/g, '').replace(/\s+/g, ' ').trim();
+function toast(msg, kind = '') {
+  const el = document.createElement('div'); el.className = 'toast ' + kind; el.textContent = msg;
+  $('toast').appendChild(el); setTimeout(() => el.remove(), 3800);
+  while ($('toast').children.length > 3) $('toast').firstChild.remove();
+}
+function flash(color, a = 0.35) { const f = $('flash'); f.style.transition = 'none'; f.style.background = color; f.style.opacity = a; requestAnimationFrame(() => { f.style.transition = ''; f.style.opacity = 0; }); }
+
+/* ------------------------------ AUDIO ------------------------------ */
+const sfx = {
+  ctx: null, master: null, threatGain: null, muted: false,
+  init() {
+    if (this.ctx) return;
+    try {
+      const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+      const ctx = this.ctx = new C(); this.master = ctx.createGain(); this.master.gain.value = 0.7; this.master.connect(ctx.destination);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 240; lp.connect(this.master);
+      const dg = ctx.createGain(); dg.gain.value = 0.06; dg.connect(lp);
+      [55, 55.6, 82.4].forEach((f) => { const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.connect(dg); o.start(); });
+      const tg = this.threatGain = ctx.createGain(); tg.gain.value = 0; tg.connect(this.master);
+      const to = ctx.createOscillator(); to.type = 'triangle'; to.frequency.value = 146; to.connect(tg); to.start();
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 7; const lg = ctx.createGain(); lg.gain.value = 30; lfo.connect(lg); lg.connect(to.frequency); lfo.start();
+    } catch (e) { this.ctx = null; }
+  },
+  tone(f, d = 0.15, type = 'sine', v = 0.2, f2 = null, delay = 0) {
+    if (!this.ctx || this.muted) return;
+    const t = this.ctx.currentTime + delay, o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.001, t + d); o.connect(g); g.connect(this.master); o.start(t); o.stop(t + d + 0.02);
+  },
+  right() { this.tone(660, .12, 'triangle', .2); this.tone(990, .2, 'triangle', .18, null, .1); },
+  wrong() { this.tone(180, .4, 'sawtooth', .22, 60); },
+  pick() { this.tone(520, .1, 'square', .1); this.tone(780, .15, 'square', .1, null, .08); },
+  pulse() { this.tone(1400, .35, 'sine', .2, 200); },
+  hurt() { this.tone(120, .2, 'square', .18, 70); },
+  deny() { this.tone(220, .12, 'square', .12); this.tone(180, .15, 'square', .12, null, .1); },
+  threat(v) { if (this.threatGain) this.threatGain.gain.setTargetAtTime(this.muted ? 0 : v * 0.07, this.ctx.currentTime, .3); },
+  toggle() { this.muted = !this.muted; if (this.master) this.master.gain.value = this.muted ? 0 : 0.7; $('b-mute').textContent = this.muted ? 'Som: off' : 'Som'; },
+};
+
+/* ------------------------------ ANIME 2D CHARACTERS (cel-shaded line art, drawn on canvas) ------------------------------ */
+const INK = '#1b1530';
+function hexA(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
+function shape(g, fill, draw, lw = 4) { g.beginPath(); draw(); g.fillStyle = fill; g.fill(); if (lw) { g.lineWidth = lw; g.strokeStyle = INK; g.lineJoin = 'round'; g.lineCap = 'round'; g.stroke(); } }
+function rrect(g, x, y, w, h, r) { g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function drawEye(g, cx, cy, w, h, iris1, iris2, look = 0) {
+  shape(g, '#ffffff', () => g.ellipse(cx, cy, w, h, 0, 0, Math.PI * 2), 3);
+  g.save(); g.beginPath(); g.ellipse(cx, cy, w, h, 0, 0, Math.PI * 2); g.clip();
+  const gr = g.createLinearGradient(0, cy - h, 0, cy + h); gr.addColorStop(0, iris2); gr.addColorStop(1, iris1);
+  g.beginPath(); g.ellipse(cx + look, cy + h * .15, w * .8, h * .88, 0, 0, Math.PI * 2); g.fillStyle = gr; g.fill();
+  g.beginPath(); g.ellipse(cx + look, cy + h * .25, w * .38, h * .45, 0, 0, Math.PI * 2); g.fillStyle = INK; g.fill();
+  g.fillStyle = '#ffffff';
+  g.beginPath(); g.ellipse(cx + look - w * .32, cy - h * .28, w * .28, h * .24, 0, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc(cx + look + w * .32, cy + h * .42, w * .13, 0, Math.PI * 2); g.fill();
+  g.restore();
+  g.beginPath(); g.ellipse(cx, cy + 2, w * 1.1, h * 1.04, 0, Math.PI * 1.06, Math.PI * 1.94); g.lineWidth = 6; g.strokeStyle = INK; g.stroke();
+}
+function happyEye(g, cx, cy, w) { g.beginPath(); g.moveTo(cx - w, cy + 4); g.quadraticCurveTo(cx, cy - w, cx + w, cy + 4); g.lineWidth = 6; g.strokeStyle = INK; g.lineCap = 'round'; g.stroke(); }
+
+// Aiko, the survivor: 256x384
+function drawHero(g, f) {
+  const s = [0, 1, 0, -1][f], bob = (f % 2) * 4;
+  g.save(); g.translate(0, bob);
+  shape(g, '#2fd8c0', () => { g.moveTo(150, 212); g.bezierCurveTo(190, 214 + s * 6, 214, 196 - s * 8, 244, 206 + s * 10); g.lineTo(236, 226 + s * 8); g.bezierCurveTo(206, 224, 186, 238, 148, 234); g.closePath(); });
+  const leg = (dx, sw, col) => shape(g, col, () => rrect(g, 128 + dx - 14 + sw * 10, 292, 28, 66, 12));
+  leg(-16, -s, '#232946'); leg(16, s, '#2f3758');
+  const shoe = (dx, sw) => { shape(g, '#f4f1ec', () => rrect(g, 128 + dx - 19 + sw * 12, 350, 40, 20, 9)); g.fillStyle = '#ff4d6d'; g.fillRect(128 + dx - 14 + sw * 12, 358, 30, 4); };
+  shoe(-16, -s); shoe(16, s);
+  shape(g, '#d9602a', () => rrect(g, 78 + s * 6, 212, 24, 76, 12));
+  shape(g, '#ff7a2f', () => { g.moveTo(94, 204); g.lineTo(162, 204); g.lineTo(174, 300); g.lineTo(82, 300); g.closePath(); });
+  g.beginPath(); g.moveTo(142, 204); g.lineTo(162, 204); g.lineTo(174, 300); g.lineTo(148, 300); g.closePath(); g.fillStyle = 'rgba(110,20,0,.28)'; g.fill();
+  shape(g, '#f4f1ec', () => { g.moveTo(114, 206); g.lineTo(142, 206); g.lineTo(128, 238); g.closePath(); }, 3);
+  g.strokeStyle = INK; g.lineWidth = 3; g.beginPath(); g.moveTo(128, 238); g.lineTo(128, 296); g.stroke();
+  shape(g, '#ffd27a', () => rrect(g, 98, 250, 20, 14, 3), 2);
+  shape(g, '#3a2a1a', () => rrect(g, 82, 290, 92, 12, 4), 3);
+  shape(g, '#ff8a45', () => rrect(g, 154 - s * 6, 212, 24, 74, 12));
+  shape(g, '#ffe1cc', () => g.arc(166 - s * 6, 290, 11, 0, Math.PI * 2), 3);
+  shape(g, '#ffe1cc', () => g.arc(90 + s * 6, 290, 11, 0, Math.PI * 2), 3);
+  shape(g, '#2fd8c0', () => rrect(g, 96, 190, 66, 22, 11));
+  // hair back mass
+  shape(g, '#26305e', () => { g.moveTo(58, 130); g.quadraticCurveTo(52, 214, 82, 222); g.lineTo(176, 222); g.quadraticCurveTo(206, 214, 198, 130); g.quadraticCurveTo(128, 30, 58, 130); g.closePath(); });
+  // face
+  shape(g, '#ffe6d5', () => { g.moveTo(72, 118); g.quadraticCurveTo(72, 186, 128, 204); g.quadraticCurveTo(184, 186, 184, 118); g.quadraticCurveTo(128, 86, 72, 118); g.closePath(); });
+  g.fillStyle = 'rgba(200,110,110,.18)'; g.beginPath(); g.moveTo(72, 120); g.quadraticCurveTo(128, 150, 184, 120); g.lineTo(184, 110); g.lineTo(72, 110); g.closePath(); g.fill();
+  g.fillStyle = 'rgba(255,120,140,.45)'; g.beginPath(); g.ellipse(92, 172, 12, 6, 0, 0, Math.PI * 2); g.ellipse(164, 172, 12, 6, 0, 0, Math.PI * 2); g.fill();
+  drawEye(g, 104, 150, 15, 21, '#b8561a', '#ffcf4a', 2); drawEye(g, 152, 150, 15, 21, '#b8561a', '#ffcf4a', 2);
+  g.strokeStyle = INK; g.lineWidth = 4; g.beginPath(); g.moveTo(90, 120); g.quadraticCurveTo(104, 112, 118, 118); g.moveTo(138, 118); g.quadraticCurveTo(152, 112, 166, 120); g.stroke();
+  g.lineWidth = 3; g.beginPath(); g.moveTo(122, 184); g.quadraticCurveTo(128, 189, 134, 184); g.stroke();
+  // spiky bangs
+  shape(g, '#2c3770', () => {
+    const p = [[56, 146], [60, 84], [90, 54], [128, 44], [170, 54], [198, 86], [200, 146], [186, 116], [178, 136], [168, 104], [152, 128], [142, 98], [126, 126], [112, 96], [98, 130], [88, 104], [74, 140]];
+    g.moveTo(...p[0]); p.slice(1).forEach((q) => g.lineTo(...q)); g.closePath(); });
+  g.strokeStyle = '#6f82d8'; g.lineWidth = 5; g.beginPath(); g.arc(128, 104, 54, Math.PI * 1.2, Math.PI * 1.45); g.stroke(); g.beginPath(); g.arc(128, 104, 54, Math.PI * 1.55, Math.PI * 1.7); g.stroke();
+  shape(g, '#2c3770', () => { g.moveTo(122, 50); g.quadraticCurveTo(128, 14, 158, 12); g.quadraticCurveTo(138, 26, 136, 48); g.closePath(); });
+  g.restore();
+}
+
+// Dark Grammar yokai: hooded robe, noh-style mask, horns. 256x384
+function drawAlien(g, f, k) {
+  const w = Math.sin(f / 4 * Math.PI * 2) * 8;
+  const rg = g.createRadialGradient(128, 210, 20, 128, 210, 150); rg.addColorStop(0, hexA(k.g, .4)); rg.addColorStop(1, hexA(k.g, 0)); g.fillStyle = rg; g.fillRect(0, 0, 256, 384);
+  shape(g, '#1d1430', () => { g.moveTo(70, 168); g.quadraticCurveTo(26, 224 + w, 34, 278); g.lineTo(78, 252); g.closePath(); });
+  shape(g, '#1d1430', () => { g.moveTo(186, 168); g.quadraticCurveTo(230, 224 - w, 222, 278); g.lineTo(178, 252); g.closePath(); });
+  for (const [x, dir] of [[36, -1], [220, 1]]) shape(g, k.l, () => { g.moveTo(x, 276); g.lineTo(x + dir * 10, 300); g.lineTo(x + dir * -2, 292); g.lineTo(x - dir * 6, 304); g.lineTo(x - dir * 8, 282); g.closePath(); }, 3);
+  shape(g, '#1d1430', () => { g.moveTo(128, 92); g.bezierCurveTo(198, 112, 208, 250, 212, 334);
+    for (let i = 1; i <= 6; i++) { const x = 212 - i * (168 / 6), y = 334 + (i % 2 ? 24 + w : -w * .5); g.lineTo(x, y); }
+    g.bezierCurveTo(48, 250, 58, 112, 128, 92); g.closePath(); });
+  g.beginPath(); g.moveTo(128, 92); g.bezierCurveTo(198, 112, 208, 250, 212, 334); g.lineTo(150, 340); g.bezierCurveTo(170, 250, 160, 140, 128, 92); g.fillStyle = 'rgba(255,255,255,.06)'; g.fill();
+  g.strokeStyle = k.g; g.lineWidth = 5; g.beginPath(); g.moveTo(128, 186); g.lineTo(128, 330); g.stroke();
+  g.beginPath(); g.moveTo(96, 200); g.quadraticCurveTo(128, 222, 160, 200); g.stroke();
+  for (const dir of [-1, 1]) shape(g, k.l, () => { g.moveTo(128 + dir * 34, 78); g.quadraticCurveTo(128 + dir * 62, 36, 128 + dir * 34, 10); g.quadraticCurveTo(128 + dir * 44, 44, 128 + dir * 18, 70); g.closePath(); }, 3);
+  shape(g, '#2a1d45', () => { g.moveTo(62, 166); g.quadraticCurveTo(52, 70, 128, 62); g.quadraticCurveTo(204, 70, 194, 166); g.quadraticCurveTo(128, 196, 62, 166); g.closePath(); });
+  shape(g, '#f3efe6', () => { g.moveTo(94, 104); g.quadraticCurveTo(128, 86, 162, 104); g.quadraticCurveTo(168, 152, 128, 182); g.quadraticCurveTo(88, 152, 94, 104); g.closePath(); }, 3);
+  g.fillStyle = hexA(k.g, .55); g.beginPath(); g.moveTo(128, 92); g.lineTo(122, 104); g.lineTo(134, 104); g.closePath(); g.fill();
+  g.shadowColor = k.g; g.shadowBlur = 20; g.fillStyle = k.l;
+  for (const dir of [-1, 1]) { g.beginPath(); g.moveTo(128 + dir * 8, 128); g.quadraticCurveTo(128 + dir * 22, 116, 128 + dir * 30, 120); g.quadraticCurveTo(128 + dir * 22, 132, 128 + dir * 8, 128); g.fill(); }
+  g.shadowBlur = 0;
+  g.strokeStyle = INK; g.lineWidth = 3; g.beginPath(); g.moveTo(110, 158); g.quadraticCurveTo(128, 168, 146, 158); g.stroke();
+  for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(116 + i * 8, 160 + (i % 3 ? 2 : 0)); g.lineTo(118 + i * 8, 165); g.stroke(); }
+  g.fillStyle = hexA(k.l, .8);
+  for (let i = 0; i < 5; i++) { const a = f * 0.8 + i * 1.3; g.beginPath(); g.arc(128 + Math.cos(a) * 92, 230 + Math.sin(a * 1.3) * 80, 4 + (i % 2) * 2, 0, Math.PI * 2); g.fill(); }
+}
+
+// NOVA, the holographic AI companion. 256x256. expr: normal | happy | worried
+function drawNova(g, expr = 'normal') {
+  const rg = g.createRadialGradient(128, 130, 10, 128, 130, 128); rg.addColorStop(0, 'rgba(110,243,255,.35)'); rg.addColorStop(1, 'rgba(110,243,255,0)'); g.fillStyle = rg; g.fillRect(0, 0, 256, 256);
+  for (const dir of [-1, 1]) shape(g, '#5fe4ff', () => { g.ellipse(128 + dir * 84, 150, 22, 62, dir * -0.35, 0, Math.PI * 2); });
+  shape(g, '#e8fbff', () => { g.moveTo(98, 200); g.lineTo(158, 200); g.lineTo(178, 256); g.lineTo(78, 256); g.closePath(); });
+  g.strokeStyle = '#5fe4ff'; g.lineWidth = 4; g.beginPath(); g.moveTo(84, 246); g.lineTo(172, 246); g.stroke();
+  shape(g, '#7aeaff', () => { g.moveTo(60, 120); g.quadraticCurveTo(56, 196, 84, 206); g.lineTo(172, 206); g.quadraticCurveTo(200, 196, 196, 120); g.quadraticCurveTo(128, 28, 60, 120); g.closePath(); });
+  shape(g, '#fff0e8', () => { g.moveTo(74, 116); g.quadraticCurveTo(74, 182, 128, 198); g.quadraticCurveTo(182, 182, 182, 116); g.quadraticCurveTo(128, 86, 74, 116); g.closePath(); });
+  g.fillStyle = 'rgba(255,120,170,.5)'; g.beginPath(); g.ellipse(94, 168, 12, 6, 0, 0, Math.PI * 2); g.ellipse(162, 168, 12, 6, 0, 0, Math.PI * 2); g.fill();
+  if (expr === 'happy') { happyEye(g, 106, 148, 14); happyEye(g, 150, 148, 14); }
+  else { const sc = expr === 'worried' ? .9 : 1; drawEye(g, 106, 146, 15 * sc, 20 * sc, '#7a2bd6', '#ff8ad8'); drawEye(g, 150, 146, 15 * sc, 20 * sc, '#7a2bd6', '#ff8ad8'); }
+  g.strokeStyle = INK; g.lineWidth = 4; g.beginPath();
+  if (expr === 'worried') { g.moveTo(92, 114); g.lineTo(118, 122); g.moveTo(164, 114); g.lineTo(138, 122); }
+  else { g.moveTo(92, 118); g.quadraticCurveTo(106, 110, 118, 116); g.moveTo(138, 116); g.quadraticCurveTo(150, 110, 164, 118); }
+  g.stroke();
+  if (expr === 'happy') shape(g, '#ff6f91', () => { g.moveTo(116, 176); g.quadraticCurveTo(128, 194, 140, 176); g.closePath(); }, 3);
+  else if (expr === 'worried') { g.lineWidth = 3; g.beginPath(); g.moveTo(116, 182); g.quadraticCurveTo(122, 176, 128, 182); g.quadraticCurveTo(134, 188, 140, 182); g.stroke();
+    shape(g, '#bfefff', () => { g.moveTo(178, 96); g.quadraticCurveTo(188, 114, 178, 120); g.quadraticCurveTo(168, 114, 178, 96); }, 2); }
+  else { g.lineWidth = 3; g.beginPath(); g.moveTo(120, 180); g.quadraticCurveTo(128, 186, 136, 180); g.stroke(); }
+  shape(g, '#7aeaff', () => { const p = [[62, 134], [70, 82], [100, 58], [128, 52], [158, 58], [188, 82], [194, 134], [178, 108], [166, 124], [156, 98], [140, 118], [128, 96], [116, 118], [100, 98], [90, 124], [78, 108]];
+    g.moveTo(...p[0]); p.slice(1).forEach((q) => g.lineTo(...q)); g.closePath(); });
+  g.strokeStyle = '#ffffff'; g.lineWidth = 4; g.beginPath(); g.arc(128, 110, 50, Math.PI * 1.25, Math.PI * 1.5); g.stroke();
+  shape(g, '#ffcf4a', () => { g.moveTo(166, 66); g.lineTo(176, 56); g.lineTo(186, 66); g.lineTo(176, 76); g.closePath(); }, 2);
+  g.fillStyle = 'rgba(255,255,255,.08)'; for (let y = 0; y < 256; y += 6) g.fillRect(0, y, 256, 2);
+}
+const ALIEN_KINDS = {
+  u1: { name: 'Continuous Wraith', g: '#2fd8c0', l: '#a8fff1' },
+  u2: { name: 'Stative Leech', g: '#e05be8', l: '#f6c1ff' },
+  u3: { name: 'Perfect Stalker', g: '#6f7dff', l: '#c7ccff' },
+  rogue: { name: 'Dark Grammarian', g: '#ff3d7f', l: '#ffc2d8' },
+};
+function art(w, h, fn, mirror = false) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  if (mirror) { g.translate(w, 0); g.scale(-1, 1); }
+  fn(g); return c;
+}
+const texCache = {};
+function tex(canvas, smooth = true) {
+  const t = new THREE.CanvasTexture(canvas);
+  t.magFilter = smooth ? THREE.LinearFilter : THREE.NearestFilter; t.minFilter = smooth ? THREE.LinearFilter : THREE.NearestFilter; t.generateMipmaps = false;
+  return t;
+}
+function framesFor(kind) {
+  if (texCache[kind]) return texCache[kind];
+  const frames = { r: [], l: [] };
+  for (let f = 0; f < 4; f++) for (const m of [false, true]) {
+    const c = kind === 'player' ? art(256, 384, (g) => drawHero(g, f), m) : art(256, 384, (g) => drawAlien(g, f, ALIEN_KINDS[kind]), m);
+    frames[m ? 'l' : 'r'].push(tex(c));
+  }
+  return (texCache[kind] = frames);
+}
+const PORTRAITS = {};
+['normal', 'happy', 'worried'].forEach((e) => { PORTRAITS[e] = art(256, 256, (g) => drawNova(g, e)).toDataURL(); });
+const novaTex = tex(art(256, 256, (g) => drawNova(g, 'normal')));
+const exclTex = tex(art(96, 128, (g) => {
+  g.font = '900 120px "Dela Gothic One", Impact, sans-serif'; g.textAlign = 'center'; g.lineJoin = 'round';
+  g.lineWidth = 14; g.strokeStyle = INK; g.strokeText('!', 48, 112); g.fillStyle = '#ffd23f'; g.fillText('!', 48, 112);
+}));
+function loadUnitySheet(url, count, kind) {
+  const img = new Image();
+  img.onload = () => {
+    const fw = Math.floor(img.width / count), frames = { r: [], l: [] };
+    for (let i = 0; i < count; i++) for (const m of [false, true]) frames[m ? 'l' : 'r'].push(tex(art(fw, img.height, (g) => g.drawImage(img, i * fw, 0, fw, img.height, 0, 0, fw, img.height), m)));
+    if (kind === 'player') texCache.player = frames; else Object.keys(ALIEN_KINDS).forEach((k) => (texCache[k] = frames));
+  };
+  img.src = url;
+}
+
+/* ------------------------------ THREE SETUP ------------------------------ */
+const stage = $('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x140f2e);
+scene.fog = new THREE.Fog(0x140f2e, 22, 64);
+const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 400);
+const CAM_OFF = new THREE.Vector3(0, 21, 15);
+function resize() { const w = window.innerWidth, h = window.innerHeight; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize', resize); resize();
+
+scene.add(new THREE.HemisphereLight(0x7a6ad0, 0x1a0f2a, 0.95));
+const moon = new THREE.DirectionalLight(0xb0b8ff, 0.6);
+moon.position.set(-30, 50, -20); moon.castShadow = true; moon.shadow.mapSize.set(1024, 1024);
+Object.assign(moon.shadow.camera, { left: -35, right: 35, top: 35, bottom: -35, near: 1, far: 140 });
+scene.add(moon, moon.target);
+
+/* ------------------------------ WORLD (Blender-style low-poly) ------------------------------ */
+const colliders = [];
+const procedural = new THREE.Group(); scene.add(procedural);
+// Toon (cel) shading: 3-step gradient + inverted-hull outlines, the anime look for 3D
+const TOON_GRAD = new THREE.DataTexture(new Uint8Array([70, 150, 255]), 3, 1, THREE.LuminanceFormat);
+TOON_GRAD.minFilter = TOON_GRAD.magFilter = THREE.NearestFilter; TOON_GRAD.generateMipmaps = false; TOON_GRAD.needsUpdate = true;
+function std(o = {}) { const p = Object.assign({}, o); delete p.roughness; delete p.metalness; delete p.flatShading; p.gradientMap = TOON_GRAD; return new THREE.MeshToonMaterial(p); }
+const M = (color, opts = {}) => std(Object.assign({ color }, opts));
+const OUTLINE = new THREE.MeshBasicMaterial({ color: 0x0b0716, side: THREE.BackSide });
+function outline(m, w, h, d) { if (w * h * d < 0.08) return; const o = new THREE.Mesh(m.geometry, OUTLINE); o.scale.set(1 + .16 / w, 1 + .16 / h, 1 + .16 / d); m.add(o); }
+const keepClear = [...TERMINALS.map((t) => t.pos), ...NOTES.map((n) => n.pos), START, BUNKER];
+const nearKeep = (x, z, r) => keepClear.some(([a, b]) => Math.hypot(a - x, b - z) < r);
+function box(x, z, w, d, h, mat, { y = 0, collide = true, parent = procedural, rotY = 0, shadow = true } = {}) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y + h / 2, z); m.rotation.y = rotY;
+  m.castShadow = shadow; m.receiveShadow = true; parent.add(m); outline(m, w, h, d);
+  if (collide) { const ww = rotY ? d : w, dd = rotY ? w : d; colliders.push({ x0: x - ww / 2, x1: x + ww / 2, z0: z - dd / 2, z1: z + dd / 2 }); }
+  return m;
+}
+function cyl(x, z, rt, rb, h, mat, { y = 0, seg = 8, collide = true, parent = procedural } = {}) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y + h / 2, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); outline(m, Math.max(rt, rb) * 2, h, Math.max(rt, rb) * 2);
+  if (collide) { const r = Math.max(rt, rb) * 0.85; colliders.push({ x0: x - r, x1: x + r, z0: z - r, z1: z + r }); }
+  return m;
+}
+function windowTexture() {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 128; const g = c.getContext('2d');
+  g.fillStyle = '#2a2f3d'; g.fillRect(0, 0, 64, 128);
+  for (let y = 6; y < 124; y += 14) for (let x = 5; x < 60; x += 14) {
+    const r = R(); g.fillStyle = r < 0.06 ? '#c9a45a' : r < 0.1 ? '#3ff0d2' : '#141822'; g.fillRect(x, y, 8, 9);
+  }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+function textSprite(text, sub, color = '#e4e8f3') {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 220; const g = c.getContext('2d');
+  g.textAlign = 'center'; g.lineJoin = 'round'; g.font = '400 86px "Dela Gothic One", Impact, sans-serif'; g.lineWidth = 12; g.strokeStyle = '#0b0716'; g.strokeText(text.toUpperCase(), 512, 105); g.fillStyle = color; g.fillText(text.toUpperCase(), 512, 105);
+  if (sub) { g.fillStyle = '#8b94ad'; let fs = 48; do { g.font = `600 ${fs}px "IBM Plex Mono", monospace`; fs -= 2; } while (g.measureText(sub).width > 1000 && fs > 20); g.fillText(sub, 512, 180); }
+  const t = new THREE.CanvasTexture(c);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false, opacity: 0.7 }));
+  s.scale.set(14, 3, 1); return s;
+}
+
+function buildWorld() {
+  // Ground with vertex-color noise
+  const gg = new THREE.PlaneGeometry(220, 220, 70, 70); gg.rotateX(-Math.PI / 2);
+  const cols = [], pos = gg.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), z = pos.getZ(i); pos.setY(i, (Math.abs(x) > 4 && Math.abs(z - 10) > 4) ? (R() - 0.5) * 0.25 : 0);
+    const n = 0.13 + R() * 0.04; cols.push(n * 1.0, n * 0.88, n * 1.35);
+  }
+  gg.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); gg.computeVertexNormals();
+  const ground = new THREE.Mesh(gg, std({ vertexColors: true, roughness: 1, flatShading: true }));
+  ground.receiveShadow = true; procedural.add(ground);
+
+  // Roads with dashes
+  const rc = document.createElement('canvas'); rc.width = 64; rc.height = 64; const rg = rc.getContext('2d');
+  rg.fillStyle = '#15171d'; rg.fillRect(0, 0, 64, 64); rg.fillStyle = '#6b5a2e'; rg.fillRect(30, 0, 4, 30);
+  const rt = new THREE.CanvasTexture(rc); rt.wrapS = rt.wrapT = THREE.RepeatWrapping;
+  const road = (x, z, w, len, rot) => { const t = rt.clone(); t.needsUpdate = true; t.repeat.set(1, len / 6);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, len), std({ map: t, roughness: 1 }));
+    m.rotation.x = -Math.PI / 2; if (rot) m.rotation.z = Math.PI / 2; m.position.set(x, 0.03, z); m.receiveShadow = true; procedural.add(m); };
+  road(0, 10, 7, 150, false); road(0, 10, 7, 160, true);
+
+  // Water (harbour, west)
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(40, 220), std({ color: 0x0a2233, roughness: .3, metalness: .6, emissive: 0x03121a }));
+  water.rotation.x = -Math.PI / 2; water.position.set(-102, -0.2, 0); procedural.add(water);
+  colliders.push({ x0: -140, x1: -82, z0: -120, z1: 120 });
+  box(-81, 0, 1.2, 200, 0.6, M(0x4a4136), { collide: false });
+
+  // Map edge walls
+  colliders.push({ x0: -140, x1: 140, z0: -140, z1: -92 }, { x0: -140, x1: 140, z0: 92, z1: 140 }, { x0: 92, x1: 140, z0: -140, z1: 140 });
+
+  // Ruined city blocks
+  const wt = windowTexture(), bMats = [0x4a4680, 0x3c4a78, 0x5a4270, 0x34566e].map((c) => M(c, { map: wt }));
+  const zoneClear = (x, z, pad) => Object.values(ZONES).some((zz) => Math.hypot(zz.c[0] - x, zz.c[1] - z) < 21 + pad)
+    || Math.hypot(x - BUNKER[0], z - BUNKER[1]) < 16 || Math.hypot(x, z + 80) < 16 || Math.abs(x) < 7 || Math.abs(z - 10) < 7;
+  let placed = 0;
+  for (let i = 0; i < 400 && placed < 70; i++) {
+    const x = (R() - 0.5) * 172, z = (R() - 0.5) * 172, w = 5 + R() * 6, d = 5 + R() * 6, h = 3 + R() * 13;
+    if (x < -78 || zoneClear(x, z, Math.max(w, d) / 2) || nearKeep(x, z, 8)) continue;
+    if (colliders.some((b) => x + w / 2 + 2 > b.x0 && x - w / 2 - 2 < b.x1 && z + d / 2 + 2 > b.z0 && z - d / 2 - 2 < b.z1)) continue;
+    const b = box(x, z, w, d, h, bMats[placed % 4]);
+    b.material = b.material.clone(); b.material.map = wt.clone(); b.material.map.needsUpdate = true; b.material.map.repeat.set(Math.round(w / 3), Math.round(h / 4));
+    if (R() < 0.45) box(x + (R() - .5) * 2, z + (R() - .5) * 2, w * 0.5, d * 0.5, 1.2, M(0x2a2d36), { y: h, collide: false });
+    placed++;
+  }
+  // Debris, cars, dead trees
+  const carMats = [0x6b2d2d, 0x2d4a6b, 0x55583a, 0x777777].map((c) => M(c, { metalness: .3 }));
+  for (let i = 0; i < 26; i++) {
+    const x = (R() - .5) * 150, z = (R() - .5) * 150; if (x < -76 || nearKeep(x, z, 5)) continue;
+    const onRoad = R() < 0.5; const cx = onRoad ? (R() - .5) * 4 : x, cz = onRoad ? z : (R() < .5 ? 10 + (R() - .5) * 4 : z);
+    if (nearKeep(cx, cz, 7) || Math.hypot(cx - BUNKER[0], cz - BUNKER[1]) < 12 || Math.hypot(cx, cz + 80) < 18) continue;
+    const g = new THREE.Group(); g.position.set(cx, 0, cz); procedural.add(g);
+    const rot = R() < .5 ? 0 : Math.PI / 2;
+    box(0, 0, 2, 4, 1, carMats[i % 4], { parent: g, collide: false, y: 0.3, rotY: 0 }); box(0, -0.2, 1.8, 2, 0.7, M(0x1a1f2a), { parent: g, collide: false, y: 1.3 });
+    g.rotation.y = rot + (R() - .5) * 0.3;
+    const ww = rot ? 4.2 : 2.2, dd = rot ? 2.2 : 4.2; colliders.push({ x0: cx - ww / 2, x1: cx + ww / 2, z0: cz - dd / 2, z1: cz + dd / 2 });
+  }
+  const trunk = M(0x2b2420);
+  for (let i = 0; i < 30; i++) {
+    const x = (R() - .5) * 170, z = (R() - .5) * 170; if (x < -78 || nearKeep(x, z, 4) || zoneClear(x, z, -12) || Math.abs(x) < 5 || Math.abs(z - 10) < 5) continue;
+    cyl(x, z, .15, .3, 3 + R() * 2, trunk);
+    for (let b = 0; b < 3; b++) { const br = new THREE.Mesh(new THREE.CylinderGeometry(.05, .12, 1.8, 5), trunk); br.position.set(x, 2.5 + b * .5, z); br.rotation.set(R() - .5, R() * 6, .8 + R() * .5); procedural.add(br); }
+  }
+  for (let i = 0; i < 60; i++) {
+    const x = (R() - .5) * 170, z = (R() - .5) * 170; if (x < -79 || nearKeep(x, z, 3)) continue;
+    const r = new THREE.Mesh(new THREE.DodecahedronGeometry(.3 + R() * .7, 0), M(0x3a3a40)); r.position.set(x, .2, z); r.rotation.set(R() * 3, R() * 3, R() * 3); r.castShadow = true; procedural.add(r);
+  }
+  // Broken lamp posts with flicker
+  [[5, 30], [-5, -10], [5, -60], [-25, 14], [28, 6], [-5, 40]].forEach(([x, z], i) => {
+    cyl(x, z, .1, .14, 5, M(0x555a66, { metalness: .5 }), { collide: false });
+    if (i % 2 === 0) { const l = new THREE.PointLight(0xffc26b, 0.9, 12, 2); l.position.set(x, 4.8, z); procedural.add(l); flickers.push(l); }
+  });
+
+  buildBunker(); buildHarbour(); buildLab(); buildNews(); buildShuttle(); buildMothership();
+
+  Object.values(ZONES).forEach((z) => {
+    const s = textSprite(z.name, z.unit + ' · ' + z.title.replace(/ \((\d)\)/, ' $1'), '#' + z.color.toString(16).padStart(6, '0'));
+    s.position.set(z.c[0], 9, z.c[1] - 8); procedural.add(s);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(19.6, 20, 64), new THREE.MeshBasicMaterial({ color: z.color, transparent: true, opacity: .12, side: THREE.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2; ring.position.set(z.c[0], .05, z.c[1]); procedural.add(ring);
+  });
+}
+const flickers = [];
+function buildBunker() {
+  const [x, z] = BUNKER, con = M(0x5b5e66);
+  const half = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 12, 12), con);
+  half.rotation.x = Math.PI / 2; half.position.set(x, 0, z + 5); half.castShadow = half.receiveShadow = true; procedural.add(half);
+  colliders.push({ x0: x - 6, x1: x + 6, z0: z - 1, z1: z + 11 });
+  box(x, z - 1.2, 2.4, .4, 3, M(0x8a6a2a, { emissive: 0x2a1a00 }), { collide: false });
+  const lamp = new THREE.PointLight(0xffb347, 1.6, 22, 2); lamp.position.set(x, 4, z - 4); procedural.add(lamp);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(SAFE_R - .25, SAFE_R, 48), new THREE.MeshBasicMaterial({ color: 0xffb347, transparent: true, opacity: .35, side: THREE.DoubleSide }));
+  ring.rotation.x = -Math.PI / 2; ring.position.set(x, .06, z - 2); procedural.add(ring);
+  for (let i = -1; i <= 1; i += 2) box(x + i * 4.5, z - 4, 2.5, 1, 1, M(0x6a5a3c), { collide: true });
+  const s = textSprite('Bunker', 'zona segura', '#ffb347'); s.scale.set(9, 2, 1); s.position.set(x, 8, z); procedural.add(s);
+}
+function buildHarbour() {
+  const [cx, cz] = ZONES.u1.c, cMats = [0x8a3b24, 0x24577a, 0x2d7a6b, 0x7a6a24].map((c) => M(c, { metalness: .4, roughness: .7 }));
+  const spots = [[-72, -6], [-72, 0], [-72, 26], [-66, 30], [-38, -6], [-36, 22], [-58, -8], [-44, 30]];
+  spots.forEach(([x, z], i) => { const rot = i % 2 ? Math.PI / 2 : 0; box(x, z, 6, 2.6, 2.6, cMats[i % 4], { rotY: rot }); if (i % 3 === 0) box(x, z, 6, 2.6, 2.6, cMats[(i + 1) % 4], { y: 2.6, rotY: rot, collide: false }); });
+  // Crane
+  const steel = M(0xb08a2a, { metalness: .5 });
+  cyl(-74, 14, .4, .5, 16, steel); box(-68, 14, 14, .8, .8, steel, { y: 15.5, collide: false });
+  const hook = new THREE.Mesh(new THREE.BoxGeometry(.2, 6, .2), M(0x222222)); hook.position.set(-62, 12, 14); procedural.add(hook);
+  // Market stalls
+  [[-52, 3], [-58, 16], [-49, 14], [-63, 9]].forEach(([x, z], i) => {
+    box(x, z, 3, 1.6, 1, M(0x5a4430), {}); const can = new THREE.Mesh(new THREE.ConeGeometry(2.4, 1.2, 4), M([0x7a2430, 0x245a7a, 0x6a6a24, 0x2a6a3a][i]));
+    can.position.set(x, 3, z); can.rotation.y = Math.PI / 4; can.castShadow = true; procedural.add(can);
+    cyl(x - 1.3, z, .06, .06, 2.6, M(0x333333), { collide: false }); cyl(x + 1.3, z, .06, .06, 2.6, M(0x333333), { collide: false });
+  });
+  const l = new THREE.PointLight(ZONES.u1.color, 0.8, 26, 2); l.position.set(cx, 5, cz); procedural.add(l);
+}
+function buildLab() {
+  const [cx, cz] = ZONES.u2.c, wall = M(0x4c4048), tile = M(0xd9d4cc, { roughness: .6 });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), M(0x3a3438)); floor.rotation.x = -Math.PI / 2; floor.position.set(cx, .04, cz + 10); floor.receiveShadow = true; procedural.add(floor);
+  // broken walls with gaps (open front to the west and south)
+  box(cx + 15, cz + 10, 1, 30, 4, wall); box(cx - 15, cz + 1, 1, 12, 4, wall); box(cx - 15, cz + 21, 1, 8, 3, wall);
+  box(cx + 6, cz + 25, 18, 1, 4, wall); box(cx - 8, cz - 5, 12, 1, 2.5, wall);
+  // counters, stoves, pots
+  [[cx - 4, cz + 4], [cx + 4, cz + 4], [cx - 4, cz + 15], [cx + 4, cz + 15]].forEach(([x, z]) => box(x, z, 4, 1.6, 1.1, tile));
+  [[cx + 11, cz + 6], [cx + 11, cz + 14]].forEach(([x, z]) => { box(x, z, 2, 3, 2.6, M(0xb7bcc4, { metalness: .6 })); });
+  [[cx - 4.5, cz + 4], [cx + 4.5, cz + 15]].forEach(([x, z]) => cyl(x, z, .6, .5, .8, M(0x9aa0aa, { metalness: .7 }), { y: 1.1, collide: false }));
+  const neon = textSprite("The Chef's Lab", 'open · aberto', '#e58cf0'); neon.scale.set(10, 2.2, 1); neon.position.set(cx + 6, 5.5, cz + 25.6); procedural.add(neon);
+  const l = new THREE.PointLight(ZONES.u2.color, 1, 28, 2); l.position.set(cx, 5, cz + 8); procedural.add(l);
+}
+let towerLight;
+function buildNews() {
+  const [cx, cz] = ZONES.u3.c, steel = M(0x8a8f9a, { metalness: .6 }), tx = cx, tz = cz - 8;
+  for (const [dx, dz] of [[-1.5, -1.5], [1.5, -1.5], [-1.5, 1.5], [1.5, 1.5]]) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(.12, .18, 26, 5), steel); leg.position.set(tx + dx * .6, 13, tz + dz * .6); leg.rotation.set(-dz * .04, 0, dx * .04); leg.castShadow = true; procedural.add(leg); }
+  for (let y = 2; y < 26; y += 3) box(tx, tz, 3.2 - y * .08, 3.2 - y * .08, .12, steel, { y, collide: false });
+  colliders.push({ x0: tx - 2, x1: tx + 2, z0: tz - 2, z1: tz + 2 });
+  towerLight = new THREE.Mesh(new THREE.SphereGeometry(.45, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff2a2a })); towerLight.position.set(tx, 26.5, tz); procedural.add(towerLight);
+  // studio desk, van, dishes
+  box(cx - 15, cz - 4, 3, 6, 2, M(0x3a4a6a)); box(cx + 18, cz - 10, 6, 3, 3, M(0xdedede, { metalness: .2 })); box(cx + 18, cz - 10, 3, 3, 1, M(0xdedede), { y: 3, collide: false });
+  [[cx - 17, cz - 12], [cx + 16, cz + 4]].forEach(([x, z]) => { cyl(x, z, .2, .3, 2, steel); const dish = new THREE.Mesh(new THREE.SphereGeometry(2, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2.6), M(0xcfd3da, { side: THREE.DoubleSide, metalness: .4 })); dish.position.set(x, 2.6, z); dish.rotation.x = -2.2; procedural.add(dish); });
+  const l = new THREE.PointLight(ZONES.u3.color, 0.9, 28, 2); l.position.set(cx, 6, cz); procedural.add(l);
+}
+let shuttleGlow;
+function buildShuttle() {
+  const x = 0, z = -82, pad = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, .3, 24), M(0x2c3040)); pad.position.set(x, .15, z); pad.receiveShadow = true; procedural.add(pad);
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, b = new THREE.Mesh(new THREE.SphereGeometry(.18, 6, 4), new THREE.MeshBasicMaterial({ color: 0x3ff0d2 })); b.position.set(x + Math.cos(a) * 8.5, .4, z + Math.sin(a) * 8.5); procedural.add(b); }
+  const hull = M(0xc8ccd6, { metalness: .5, roughness: .4 });
+  cyl(x, z, 1.8, 2.2, 7, hull, { y: 1.5 }); const nose = new THREE.Mesh(new THREE.ConeGeometry(1.8, 3.5, 10), hull); nose.position.set(x, 10.2, z); nose.castShadow = true; procedural.add(nose);
+  for (let i = 0; i < 3; i++) { const a = i / 3 * Math.PI * 2; box(x + Math.cos(a) * 2.4, z + Math.sin(a) * 2.4, .3, 2.2, 3, M(0xff8a2a), { y: .3, collide: false, rotY: -a }); }
+  shuttleGlow = new THREE.PointLight(0x3ff0d2, 0.4, 18, 2); shuttleGlow.position.set(x, 3, z + 4); procedural.add(shuttleGlow);
+  const s = textSprite('Nave de fuga', 'requer 3 Tense Cores', '#3ff0d2'); s.scale.set(10, 2.2, 1); s.position.set(x, 14, z); procedural.add(s);
+}
+let mothership;
+function buildMothership() {
+  mothership = new THREE.Group(); mothership.position.set(10, 46, -95); scene.add(mothership);
+  const body = new THREE.Mesh(new THREE.SphereGeometry(30, 24, 8), std({ color: 0x0c0f1c, roughness: .5, metalness: .7, flatShading: true, fog: false }));
+  body.scale.set(1, .16, 1); mothership.add(body);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(24, .6, 6, 48), new THREE.MeshBasicMaterial({ color: 0x3ff0d2, fog: false })); ring.rotation.x = Math.PI / 2; ring.position.y = -3; mothership.add(ring);
+  const beam = new THREE.Mesh(new THREE.ConeGeometry(9, 46, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0x3ff0d2, transparent: true, opacity: .06, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
+  beam.position.y = -24; mothership.add(beam);
+}
+
+// Ash particles
+const ashGeo = new THREE.BufferGeometry(), ASH = 700, ashPos = new Float32Array(ASH * 3);
+for (let i = 0; i < ASH; i++) { ashPos[i * 3] = (Math.random() - .5) * 70; ashPos[i * 3 + 1] = Math.random() * 25; ashPos[i * 3 + 2] = (Math.random() - .5) * 70; }
+ashGeo.setAttribute('position', new THREE.BufferAttribute(ashPos, 3));
+const ash = new THREE.Points(ashGeo, new THREE.PointsMaterial({ color: 0x8890a8, size: .12, transparent: true, opacity: .6, depthWrite: false }));
+scene.add(ash);
+
+/* ------------------------------ ENTITIES ------------------------------ */
+function blob(r = .6) { const m = new THREE.Mesh(new THREE.CircleGeometry(r, 16), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: .45, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.y = .07; return m; }
+const player = { x: START[0], z: START[1], dir: 0, face: 1, frame: 0, ft: 0, moving: false, sprinting: false, hurtT: 0 };
+player.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: framesFor('player').r[0], alphaTest: .15, transparent: true }));
+player.sprite.scale.set(2.6, 3.9, 1); player.shadow = blob(.7);
+scene.add(player.sprite, player.shadow);
+const nova = new THREE.Sprite(new THREE.SpriteMaterial({ map: novaTex, transparent: true, opacity: .9, depthWrite: false }));
+nova.scale.set(1.6, 1.6, 1); scene.add(nova);
+const novaPos = new THREE.Vector3(START[0], 3, START[1]);
+const playerGlow = new THREE.PointLight(0xffd9a8, .7, 7, 2); scene.add(playerGlow);
+const flashlight = new THREE.SpotLight(0xfff0d0, 0, 26, .5, .45, 1.4);
+flashlight.castShadow = true; flashlight.shadow.mapSize.set(512, 512); flashlight.shadow.camera.near = .5;
+scene.add(flashlight, flashlight.target);
+let pulseT = 0;
+
+const terms = TERMINALS.map((t) => {
+  const g = new THREE.Group(); g.position.set(t.pos[0], 0, t.pos[1]); scene.add(g);
+  const isCore = !!t.requires, isShuttle = !!t.shuttle;
+  if (!isShuttle) {
+    const base = new THREE.Mesh(new THREE.BoxGeometry(isCore ? 1.8 : 1.1, isCore ? 1.6 : 1.3, isCore ? 1.2 : .8), M(isCore ? 0x2a2f44 : 0x30343f, { metalness: .4 }));
+    base.position.y = isCore ? .8 : .65; base.castShadow = true; g.add(base);
+    colliders.push({ x0: t.pos[0] - .6, x1: t.pos[0] + .6, z0: t.pos[1] - .45, z1: t.pos[1] + .45 });
+  }
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(isCore ? 1.4 : .8, .5), new THREE.MeshBasicMaterial({ color: 0x3ff0d2 }));
+  scr.position.set(0, isCore ? 1.2 : 1.0, isCore ? .61 : .41); if (isShuttle) scr.visible = false; g.add(scr);
+  const beacon = new THREE.Mesh(new THREE.OctahedronGeometry(isCore ? .4 : .22), new THREE.MeshBasicMaterial({ color: 0x3ff0d2 }));
+  beacon.position.y = isCore ? 2.6 : 2.0; if (isShuttle) beacon.position.y = 4; g.add(beacon);
+  return { def: t, g, scr, beacon };
+});
+const notes = NOTES.map((n) => {
+  const c = document.createElement('canvas'); c.width = 12; c.height = 14; const g = c.getContext('2d');
+  g.fillStyle = '#f2e6c8'; g.fillRect(1, 0, 10, 14); g.fillStyle = '#7a6a4a'; for (let y = 3; y < 13; y += 2) g.fillRect(3, y, 6, 1); g.fillStyle = '#ffb347'; g.fillRect(1, 0, 10, 1);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex(c, false), alphaTest: .5, fog: false })); s.scale.set(.8, .95, 1); s.position.set(n.pos[0], 1.2, n.pos[1]); scene.add(s);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(.5, .7, 20), new THREE.MeshBasicMaterial({ color: 0xffd27a, transparent: true, opacity: .5, side: THREE.DoubleSide, depthWrite: false }));
+  ring.rotation.x = -Math.PI / 2; ring.position.set(n.pos[0], .08, n.pos[1]); scene.add(ring);
+  return { def: n, s, ring };
+});
+
+const aliens = [];
+const ALIEN_SPAWNS = [
+  { kind: 'u1', home: [-55, 8], r: 16 }, { kind: 'rogue', home: [-25, 30], r: 18 },
+  { kind: 'u2', home: [55, 12], r: 14 }, { kind: 'u2', home: [58, -6], r: 12 },
+  { kind: 'u3', home: [0, -40], r: 15 }, { kind: 'u3', home: [-10, -55], r: 12 },
+];
+function spawnAlien(kind, home, r) {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: framesFor(kind).r[0], alphaTest: .05, transparent: true, depthWrite: false }));
+  sp.scale.set(3.1, 4.65, 1); const sh = blob(.85);
+  const excl = new THREE.Sprite(new THREE.SpriteMaterial({ map: exclTex, transparent: true, depthTest: false, fog: false })); excl.visible = false;
+  scene.add(sp, sh, excl);
+  const a = { kind, home, r, x: home[0] + (Math.random() - .5) * 6, z: home[1] + (Math.random() - .5) * 6, tx: home[0], tz: home[1], t: 0, stun: 0, alert: 0, chase: false, frame: 0, ft: 0, face: 1, sp, sh, excl, exclT: 0, ax: 0, az: 0 };
+  aliens.push(a); return a;
+}
+function resetAliens() {
+  aliens.forEach((a) => { scene.remove(a.sp, a.sh, a.excl); }); aliens.length = 0;
+  ALIEN_SPAWNS.forEach((s) => spawnAlien(s.kind, s.home, s.r));
+  const extra = [[-20, -10], [25, -20], [30, 40], [-35, -30], [15, -65], [-15, -68]];
+  for (let i = 0; i < S.cores * 2 && i < extra.length; i++) spawnAlien('rogue', extra[i], 16);
+}
+function alertAliens(x, z, radius = 45, secs = 9) {
+  let n = 0; aliens.forEach((a) => { if (Math.hypot(a.x - x, a.z - z) < radius) { a.alert = secs; a.ax = x; a.az = z; n++; } }); return n;
+}
+
+/* ------------------------------ COLLISION ------------------------------ */
+function collide(x, z, r) {
+  for (let k = 0; k < 2; k++) for (const b of colliders) {
+    if (x + r < b.x0 || x - r > b.x1 || z + r < b.z0 || z - r > b.z1) continue;
+    const cx = clamp(x, b.x0, b.x1), cz = clamp(z, b.z0, b.z1), dx = x - cx, dz = z - cz, d2 = dx * dx + dz * dz;
+    if (d2 >= r * r) continue;
+    if (d2 > 1e-6) { const d = Math.sqrt(d2); x = cx + dx / d * r; z = cz + dz / d * r; }
+    else { const l = x - b.x0, rr = b.x1 - x, t = z - b.z0, bb = b.z1 - z, m = Math.min(l, rr, t, bb);
+      if (m === l) x = b.x0 - r; else if (m === rr) x = b.x1 + r; else if (m === t) z = b.z0 - r; else z = b.z1 + r; }
+  }
+  return [x, z];
+}
+
+/* ------------------------------ INPUT ------------------------------ */
+const keys = {};
+const joy = { x: 0, y: 0, active: false };
+let touchRun = false;
+window.addEventListener('keydown', (e) => {
+  if (e.target && e.target.tagName === 'INPUT') { if (e.code === 'Enter') { const b = document.querySelector('#pz-actions .btn'); if (b && !b.disabled) b.click(); } return; }
+  keys[e.code] = true;
+  if (mode === 'play') {
+    if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+    if (e.code === 'KeyE' || e.code === 'Enter') interact();
+    else if (e.code === 'KeyF' || e.code === 'Space') pulse();
+    else if (e.code === 'KeyG') flare();
+    else if (e.code === 'KeyQ') useMedkit();
+    else if (e.code === 'KeyJ') openJournal();
+    else if (e.code === 'KeyM') sfx.toggle();
+    else if (e.code === 'Escape' || e.code === 'KeyP') openPause();
+  } else if (e.code === 'Escape' || (e.code === 'KeyJ' && mode === 'journal')) {
+    if (mode === 'journal') closeModal('m-journal'); else if (mode === 'pause') closeModal('m-pause'); else if (mode === 'note') $('nt-close').click();
+  } else if (mode === 'note' && (e.code === 'KeyE' || e.code === 'Enter' || e.code === 'Space')) $('nt-close').click();
+});
+window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+(function setupTouch() {
+  const j = $('joy'), knob = j.querySelector('i'); let id = null;
+  const upd = (t) => { const r = j.getBoundingClientRect(); let dx = (t.clientX - r.left - r.width / 2) / (r.width / 2), dy = (t.clientY - r.top - r.height / 2) / (r.height / 2); const l = Math.hypot(dx, dy); if (l > 1) { dx /= l; dy /= l; } joy.x = dx; joy.y = dy; knob.style.transform = `translate(${dx * 36}px, ${dy * 36}px)`; };
+  j.addEventListener('pointerdown', (e) => { id = e.pointerId; j.setPointerCapture(id); joy.active = true; upd(e); });
+  j.addEventListener('pointermove', (e) => { if (e.pointerId === id) upd(e); });
+  const end = () => { id = null; joy.active = false; joy.x = joy.y = 0; knob.style.transform = ''; };
+  j.addEventListener('pointerup', end); j.addEventListener('pointercancel', end);
+  const tap = (idn, fn) => $(idn).addEventListener('pointerdown', (e) => { e.preventDefault(); if (mode === 'play') fn(); });
+  tap('t-act', interact); tap('t-light', pulse); tap('t-flare', flare); tap('t-med', useMedkit);
+  $('t-run').addEventListener('pointerdown', (e) => { e.preventDefault(); touchRun = true; $('t-run').classList.add('main'); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => $('t-run').addEventListener(ev, () => { touchRun = false; $('t-run').classList.remove('main'); }));
+})();
+
+/* ------------------------------ ACTIONS ------------------------------ */
+function pulse() {
+  if (!has('lanterna')) { toast('Você ainda não tem uma lanterna. Procure no Mercado do Porto (oeste).', 'bad'); sfx.deny(); return; }
+  if (S.battery < 20) { toast('Bateria fraca. Resolva terminais para achar células de bateria.', 'bad'); sfx.deny(); return; }
+  S.battery -= 20; pulseT = .35; fxBurst = 1; sfx.pulse(); flash('rgba(255,220,160,.6)', .25);
+  let hit = 0;
+  aliens.forEach((a) => { const dx = a.x - player.x, dz = a.z - player.z, d = Math.hypot(dx, dz); if (d > 12) return;
+    let da = Math.atan2(dz, dx) - player.dir; da = Math.atan2(Math.sin(da), Math.cos(da));
+    if (Math.abs(da) < .65 || d < 2.2) { a.stun = 4.5; a.alert = 0; a.chase = false; a.x += dx / d * 2.5; a.z += dz / d * 2.5; hit++; } });
+  if (hit) toast(hit > 1 ? `${hit} Gramáticos atordoados!` : 'Gramático atordoado!', 'good');
+}
+const flares = [];
+const flareLight = new THREE.PointLight(0xff3030, 0, 20, 2); scene.add(flareLight);
+function flare() {
+  if (!has('sinalizador')) { toast('Sem sinalizadores. Alguns terminais guardam um.', 'bad'); sfx.deny(); return; }
+  S.items.sinalizador--; sfx.tone(300, .8, 'sawtooth', .12, 900);
+  flares.length = 0; flareLight.position.set(player.x, 1.5, player.z); flares.push({ l: flareLight, t: 8, x: player.x, z: player.z });
+  aliens.forEach((a) => { if (Math.hypot(a.x - player.x, a.z - player.z) < 16) { a.stun = 6; a.chase = false; a.alert = 0; } });
+  toast('Sinalizador aceso. Os alienígenas recuam da luz vermelha.', 'good'); renderHUD(); save();
+}
+function useMedkit() {
+  if (!has('medkit')) { toast('Nenhum kit médico no inventário.', 'bad'); sfx.deny(); return; }
+  if (S.hp >= 100) { toast('Sua vida já está cheia.'); return; }
+  S.items.medkit--; S.hp = Math.min(100, S.hp + 50); sfx.pick(); flash('rgba(94,224,138,.4)', .25); renderHUD(); save();
+}
+function grant(key) {
+  const it = ITEMS[key];
+  if (key === 'bateria') { S.battery = Math.min(100, S.battery + 40); }
+  else S.items[key] = (S.items[key] || 0) + 1;
+  if (it.core) { S.cores++; const n = S.cores; const extra = [[-20, -10], [25, -20], [30, 40], [-35, -30], [15, -65], [-15, -68]];
+    spawnAlien('rogue', extra[(n - 1) * 2], 16); spawnAlien('rogue', extra[(n - 1) * 2 + 1], 16);
+    setTimeout(() => toast('O céu pulsa. Mais Gramáticos desceram da nave-mãe.', 'alien'), 1600); }
+  sfx.pick(); toast(`Equipamento: ${it.name}. ${it.desc}`, 'good'); renderHUD();
+}
+
+/* ------------------------------ INTERACTION ------------------------------ */
+let nearest = null;
+function findNearest() {
+  let best = null, bd = 2.8;
+  terms.forEach((t) => { const d = Math.hypot(t.def.pos[0] - player.x, t.def.pos[1] - player.z) - (t.def.shuttle ? 2 : 0); if (d < bd) { bd = d; best = { kind: 'term', o: t }; } });
+  notes.forEach((n) => { if (S.notes.includes(n.def.id)) return; const d = Math.hypot(n.def.pos[0] - player.x, n.def.pos[1] - player.z); if (d < bd) { bd = d; best = { kind: 'note', o: n }; } });
+  return best;
+}
+function promptText(n) {
+  if (n.kind === 'note') return `<kbd>E</kbd>Ler pista: ${esc(n.o.def.title)}`;
+  const d = n.o.def;
+  if (S.solved.includes(d.id)) return `${esc(d.name)} · resolvido`;
+  if (d.shuttle) return S.cores < 3 ? `${esc(d.name)} · faltam ${3 - S.cores} Tense Core(s)` : `<kbd>E</kbd>Ligar a nave de fuga`;
+  if (d.requires) { const n2 = solvedInZone(d.zone); return n2 < d.requires ? `${esc(d.name)} · bloqueado (${n2}/${d.requires} terminais)` : `<kbd>E</kbd>Abrir ${esc(d.name)}`; }
+  return `<kbd>E</kbd>Hackear ${esc(d.name)} · ${ZONES[d.zone].unit}`;
+}
+const solvedInZone = (z) => TERMINALS.filter((t) => t.zone === z && !t.requires && S.solved.includes(t.id)).length;
+function interact() {
+  if (!nearest) return;
+  if (nearest.kind === 'note') return openNote(nearest.o.def);
+  const d = nearest.o.def;
+  if (S.solved.includes(d.id)) { toast('Já resolvido. O equipamento está com você.'); return; }
+  if (d.shuttle && S.cores < 3) { toast(`A nave precisa de 3 Tense Cores. Você tem ${S.cores}.`, 'bad'); sfx.deny(); return; }
+  if (d.requires && solvedInZone(d.zone) < d.requires) { toast(`Cofre bloqueado: resolva ${d.requires} terminais desta zona primeiro (${solvedInZone(d.zone)}/${d.requires}).`, 'bad'); sfx.deny(); return; }
+  openPuzzle(d);
+}
+
+/* ------------------------------ MODALS ------------------------------ */
+function showModal(id, m) { $(id).hidden = false; mode = m; $('prompt').hidden = true; const b = $(id).querySelector('.btn'); if (b) setTimeout(() => b.focus(), 30); }
+function closeModal(id) { $(id).hidden = true; mode = 'play'; lastT = performance.now(); }
+
+function openNote(n) {
+  $('nt-eyebrow').textContent = n.zone ? `Pista · ${ZONES[n.zone].name} · ${ZONES[n.zone].unit}` : 'Pista · Bunker';
+  $('nt-title').textContent = n.title; $('nt-en').textContent = n.en; $('nt-pt').textContent = n.pt; $('nt-rule').textContent = n.rule;
+  if (!S.notes.includes(n.id)) { S.notes.push(n.id); save(); }
+  sfx.pick(); showModal('m-note', 'note');
+}
+$('nt-close').onclick = () => { closeModal('m-note'); renderHUD(); };
+
+function openJournal() {
+  const st = [['Pistas', `${S.notes.length}/${NOTES.length}`], ['Terminais', `${S.solved.filter((i) => i !== 'shuttle').length}/${TERMINALS.length - 1}`], ['Tense Cores', `${S.cores}/3`], ['Acertos', S.right], ['Erros', S.wrong]];
+  $('jr-stats').innerHTML = st.map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('');
+  const items = Object.entries(S.items).filter(([, v]) => v > 0).map(([k, v]) => `<div class="jr-item"><strong>${esc(ITEMS[k].name)}${ITEMS[k].stack ? ' ×' + v : ''}</strong><div class="muted" style="font-size:13px">${esc(ITEMS[k].desc)}</div></div>`).join('');
+  const read = NOTES.filter((n) => S.notes.includes(n.id)).map((n) => `<div class="jr-item"><div class="eyebrow">${n.zone ? esc(ZONES[n.zone].name + ' · ' + ZONES[n.zone].unit) : 'Bunker'}</div><strong>${esc(n.title)}</strong><div class="en">${esc(n.en)}</div><div class="rule">${esc(n.rule)}</div></div>`).join('');
+  $('jr-list').innerHTML = (items ? `<div class="eyebrow">Equipamento</div>${items}` : '') + `<div class="eyebrow" style="margin-top:6px">Pistas lidas</div>` + (read || '<p class="muted">Nenhuma pista ainda. Procure os papéis brilhantes pela cidade.</p>');
+  showModal('m-journal', 'journal');
+}
+$('jr-close').onclick = () => closeModal('m-journal');
+function openPause() { $('ps-confirm').hidden = true; showModal('m-pause', 'pause'); }
+$('ps-resume').onclick = () => closeModal('m-pause');
+$('ps-restart').onclick = () => { $('ps-confirm').hidden = false; };
+$('ps-yes').onclick = () => { store.clear(); $('m-pause').hidden = true; startGame(true); };
+$('b-journal').onclick = () => { if (mode === 'play') openJournal(); };
+$('b-pause').onclick = () => { if (mode === 'play') openPause(); };
+$('b-mute').onclick = () => sfx.toggle();
+$('prompt').onclick = () => { if (mode === 'play') interact(); };
+
+/* ------------------------------ NOVA (visual novel) ------------------------------ */
+const NOVA_LINES = {
+  open: ['Terminal ativo. Leia com calma: o tempo verbal é a chave.', 'Procure a âncora de tempo antes de responder.', 'Respira, Aiko. Eles só ouvem os erros.', 'Hmm… isso tem prazo de validade ou é permanente?'],
+  right: ['Isso! Resposta perfeita.', 'Yatta! O terminal aceitou.', 'Mandou bem. Eles nem perceberam.', 'Exato. Gramática limpa, silêncio total.'],
+  wrong: ['Cuidado! O terminal fez barulho!', 'Eles ouviram… tenta de novo, rápido!', 'Quase! Lê a explicação e respira.'],
+};
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+function novaSay(expr, line) { $('pz-face').src = PORTRAITS[expr]; $('pz-say').textContent = line; }
+[['cast-nova', 'normal'], ['nt-face', 'normal'], ['dead-face', 'worried'], ['win-face', 'happy']].forEach(([id, e]) => { $(id).src = PORTRAITS[e]; });
+$('cast-hero').src = art(256, 384, (g) => drawHero(g, 0)).toDataURL();
+$('cast-alien').src = art(256, 384, (g) => drawAlien(g, 1, ALIEN_KINDS.u1)).toDataURL();
+
+/* ------------------------------ PUZZLES ------------------------------ */
+let PZ = null;
+function openPuzzle(def) {
+  PZ = { def, queue: def.steps.map((s, i) => i), done: 0, total: def.steps.length, locked: false, hint: false };
+  $('pz-eyebrow').textContent = def.shuttle ? 'Revisão integrada · Qual bloco é este?' : `${ZONES[def.zone].name} · ${ZONES[def.zone].unit}${def.requires ? ' · Cofre' : ''}`;
+  $('pz-title').textContent = def.name; showModal('m-puzzle', 'puzzle'); renderStep();
+}
+function zoneNoteRead(z) { return NOTES.some((n) => n.zone === z && S.notes.includes(n.id)); }
+function renderStep() {
+  const step = PZ.def.steps[PZ.queue[0]];
+  $('pz-dots').innerHTML = Array.from({ length: PZ.total }, (_, i) => `<i class="${i < PZ.done ? 'done' : i === PZ.done ? 'cur' : ''}"></i>`).join('');
+  $('pz-fb').innerHTML = ''; $('pz-hint').innerHTML = ''; $('pz-actions').innerHTML = ''; PZ.locked = false;
+  novaSay('normal', PZ.def.shuttle ? 'Última verificação! A que bloco pertence cada frase?' : pick(NOVA_LINES.open));
+  const body = $('pz-body'); const fill = (q) => esc(q).replace(/_{3,}/g, '<span class="blank">______</span>');
+  if (step.t === 'choice' || step.t === 'fix') {
+    body.innerHTML = (step.t === 'fix' ? `<p class="muted">Encontre o erro e escolha a versão correta:</p><div class="pz-q wrong">${esc(step.wrong)}</div>` : `<p class="muted">Escolha a forma que completa a frase:</p><div class="pz-q">${fill(step.q)}</div>`) + `<div class="opts" id="pz-opts"></div>`;
+    shuffle(step.opts).forEach((o) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = o; b.onclick = () => answer(o === step.a, step, b); $('pz-opts').appendChild(b); });
+  } else if (step.t === 'type') {
+    body.innerHTML = `<p class="muted">Digite a forma correta do verbo entre parênteses:</p><div class="pz-q">${fill(step.q)}</div><input class="pz-input" id="pz-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex.: am staying" aria-label="Sua resposta">`;
+    addAction('Verificar', () => { const v = norm($('pz-in').value); if (!v) return; answer(step.acc.map(norm).includes(v), step, null, step.acc[0]); });
+    setTimeout(() => $('pz-in') && $('pz-in').focus(), 40);
+  } else if (step.t === 'blocks') {
+    body.innerHTML = `<p class="muted">Frases em blocos: monte a frase em inglês na ordem certa.</p><div class="pz-q" style="font-family:var(--f-body)">${esc(step.pt)}</div><div class="eyebrow">Sua frase</div><div class="blk-row" id="blk-ans"></div><div class="eyebrow">Blocos</div><div class="blk-row" id="blk-pool"></div><div class="legend">${[...new Set(step.blocks.map((b) => b[1]))].map((r) => `<span style="background:${LEGEND[r][1]}">${r} · ${LEGEND[r][0]}</span>`).join('')}</div>`;
+    const pool = shuffle(step.blocks.map((b, i) => ({ txt: b[0], role: b[1], i }))), ans = [];
+    const draw = () => {
+      const mk = (b, from) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'blk'; el.innerHTML = `<span class="role" style="background:${LEGEND[b.role][1]}">${b.role}</span><span class="txt">${esc(b.txt)}</span>`; el.onclick = () => { if (PZ.locked) return; const src = from === 'pool' ? pool : ans, dst = from === 'pool' ? ans : pool; src.splice(src.indexOf(b), 1); dst.push(b); draw(); }; return el; };
+      $('blk-ans').replaceChildren(...ans.map((b) => mk(b, 'ans'))); $('blk-pool').replaceChildren(...pool.map((b) => mk(b, 'pool')));
+      $('pz-actions').innerHTML = ''; const btn = addAction('Verificar', () => answer(ans.map((b) => b.txt).join(' ') === step.blocks.map((b) => b[0]).join(' '), step, null, step.blocks.map((b) => b[0]).join(' ').replace(/ '/g, "'")));
+      btn.disabled = pool.length > 0;
+    };
+    draw();
+  } else if (step.t === 'unit') {
+    body.innerHTML = `<p class="muted">A que bloco (Unit) pertence esta frase?</p><div class="pz-q">${esc(step.q)}</div><div class="opts" id="pz-opts"></div>`;
+    [[1, 'Unit 1 · Present simple × continuous (1)'], [2, 'Unit 2 · Verbos de estado e usos especiais'], [3, 'Unit 3 · Past simple × present perfect']].forEach(([n, l]) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = l; b.onclick = () => answer(n === step.a, step, b); $('pz-opts').appendChild(b); });
+  }
+  const zone = PZ.def.zone;
+  if (zone) {
+    const hb = document.createElement('button'); hb.type = 'button'; hb.className = 'btn ghost'; hb.style.cssText = 'font-size:12px;padding:6px 10px;margin-top:10px';
+    if (zoneNoteRead(zone)) { hb.textContent = 'Dica ODU'; hb.onclick = () => { $('pz-hint').innerHTML = `<div class="hint">${esc(ZONES[zone].tip)}</div>`; }; }
+    else { hb.textContent = 'Dica bloqueada: leia uma pista desta zona'; hb.disabled = true; }
+    $('pz-hint').appendChild(hb);
+  }
+  addAction('Sair', () => { closeModal('m-puzzle'); }, true);
+}
+function addAction(label, fn, ghost) { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn' + (ghost ? ' ghost' : ''); b.textContent = label; b.onclick = fn; $('pz-actions').appendChild(b); return b; }
+function answer(ok, step, btn, shown) {
+  if (PZ.locked) return; PZ.locked = true;
+  document.querySelectorAll('#pz-opts .opt').forEach((b) => { b.disabled = true; if (step.a !== undefined && (b.textContent === step.a)) b.classList.add('right'); });
+  if (btn) btn.classList.add(ok ? 'right' : 'bad');
+  const inp = $('pz-in'); if (inp) inp.disabled = true;
+  $('pz-actions').innerHTML = '';
+  if (ok) {
+    S.right++; sfx.right(); novaSay('happy', pick(NOVA_LINES.right));
+    $('pz-fb').innerHTML = `<div class="fb ok"><strong>Correto.</strong> ${esc(step.why)}</div>`;
+    PZ.queue.shift(); PZ.done++;
+    if (!PZ.queue.length) addAction(PZ.def.shuttle ? 'Decolar' : 'Coletar equipamento', finishPuzzle);
+    else addAction('Próximo', renderStep);
+  } else {
+    S.wrong++; sfx.wrong(); flash('rgba(255,77,94,.5)', .3); novaSay('worried', pick(NOVA_LINES.wrong)); fxBurst = 1;
+    const n = alertAliens(player.x, player.z, 48, 10);
+    const reveal = step.t === 'type' || step.t === 'blocks' ? `Uma resposta correta: <em>${esc(shown)}</em>. ` : '';
+    $('pz-fb').innerHTML = `<div class="fb bad"><strong>Errado. O terminal emitiu um ruído${n ? ` e ${n} Gramático${n > 1 ? 's ouviram' : ' ouviu'}` : ''}.</strong><br>${reveal}${esc(step.why)}</div>`;
+    if (PZ.def.shuttle) { PZ.queue.push(PZ.queue.shift()); }
+    const b = addAction('Tentar de novo', renderStep); b.disabled = true; setTimeout(() => { b.disabled = false; b.focus(); }, 1200);
+    addAction('Fugir do terminal', () => closeModal('m-puzzle'), true);
+  }
+  save();
+}
+function finishPuzzle() {
+  const d = PZ.def; S.solved.push(d.id); closeModal('m-puzzle');
+  if (d.reward === 'win') return winGame();
+  grant(d.reward); save(); renderHUD();
+  if (!d.requires && d.zone) { const n = solvedInZone(d.zone), core = TERMINALS.find((t) => t.zone === d.zone && t.requires);
+    if (n === core.requires && !S.solved.includes(core.id)) setTimeout(() => toast(`${core.name} destravado em ${ZONES[d.zone].name}.`, 'alien'), 900); }
+}
+
+/* ------------------------------ GAME FLOW ------------------------------ */
+function startGame(fresh) {
+  S = fresh ? freshState() : Object.assign(freshState(), store.get() || {});
+  player.x = S.pos[0]; player.z = S.pos[1];
+  resetAliens();
+  ['m-intro', 'm-win', 'm-dead'].forEach((m) => ($(m).hidden = true));
+  ['hud-tl', 'hud-tr', 'objective'].forEach((m) => ($(m).hidden = false));
+  $('touch').hidden = !isTouch;
+  sfx.init(); if (sfx.ctx && sfx.ctx.state === 'suspended') sfx.ctx.resume();
+  mode = 'play'; lastT = performance.now(); renderHUD(); save();
+  if (fresh) setTimeout(() => toast('Leia a mensagem na porta do bunker (papel brilhante) para começar.', 'alien'), 600);
+}
+$('b-new').onclick = () => startGame(true);
+$('b-continue').onclick = () => startGame(false);
+if (store.get()) $('b-continue').hidden = false;
+function die() {
+  mode = 'dead'; S.deaths++; sfx.hurt();
+  $('dead-tip').textContent = DEATH_TIPS[S.deaths % DEATH_TIPS.length];
+  showModal('m-dead', 'dead');
+}
+$('dead-ok').onclick = () => { S.hp = 100; S.stamina = 100; player.x = START[0]; player.z = START[1]; resetAliens(); $('m-dead').hidden = true; mode = 'play'; lastT = performance.now(); save(); renderHUD(); };
+function winGame() {
+  mode = 'win'; sfx.right();
+  const mins = Math.floor(S.time / 60), secs = Math.floor(S.time % 60);
+  const acc = S.right + S.wrong ? Math.round(S.right / (S.right + S.wrong) * 100) : 100;
+  $('win-stats').innerHTML = [['Tempo', `${mins}:${String(secs).padStart(2, '0')}`], ['Precisão', acc + '%'], ['Acertos', S.right], ['Pistas', `${S.notes.length}/${NOTES.length}`], ['Capturas', S.deaths]].map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('');
+  store.clear(); $('b-continue').hidden = true;
+  showModal('m-win', 'win');
+}
+$('win-again').onclick = () => startGame(true);
+
+/* ------------------------------ HUD ------------------------------ */
+function renderHUD() {
+  $('hp-fill').style.width = S.hp + '%'; $('bt-fill').style.width = S.battery + '%'; $('st-fill').style.width = S.stamina + '%';
+  const chips = Object.entries(S.items).filter(([, v]) => v > 0).map(([k, v]) => `<span class="chip${ITEMS[k].core ? ' core' : ''}">${esc(ITEMS[k].name)}${ITEMS[k].stack ? ` <b>×${v}</b>` : ''}</span>`);
+  $('inv').innerHTML = chips.join('');
+  let obj;
+  if (!S.notes.includes('n0')) obj = 'Leia a mensagem na porta do bunker (papel brilhante).';
+  else if (!has('lanterna')) obj = 'Vá ao Mercado do Porto (oeste). O terminal Container 07 guarda uma lanterna.';
+  else if (S.cores < 3) {
+    const st = ['u1', 'u2', 'u3'].map((z, i) => { const core = TERMINALS.find((t) => t.zone === z && t.requires); return `${'αβγ'[i]} ${S.solved.includes(core.id) ? '✓' : solvedInZone(z) + '/3'}`; }).join(' · ');
+    obj = `Reúna os 3 Tense Cores (${st}). Resolva 3 terminais numa zona para abrir o cofre.`;
+  } else obj = 'Você tem os 3 Tense Cores. Corra até a nave de fuga, no extremo norte.';
+  $('obj-text').textContent = obj;
+}
+const mm = $('minimap'), mg = mm.getContext('2d');
+function drawMinimap() {
+  const W = mm.width, s = W / 190, X = (x) => (x + 95) * s, Z = (z) => (z + 95) * s;
+  mg.clearRect(0, 0, W, W);
+  mg.fillStyle = 'rgba(10,34,51,.9)'; mg.fillRect(0, 0, X(-82), W);
+  mg.fillStyle = 'rgba(255,255,255,.07)'; mg.fillRect(X(-3.5), 0, 7 * s, W); mg.fillRect(0, Z(6.5), W, 7 * s);
+  Object.values(ZONES).forEach((z) => { mg.strokeStyle = '#' + z.color.toString(16).padStart(6, '0'); mg.globalAlpha = .6; mg.lineWidth = 2; mg.beginPath(); mg.arc(X(z.c[0]), Z(z.c[1]), 20 * s, 0, 7); mg.stroke(); mg.globalAlpha = 1; });
+  mg.fillStyle = '#ffb347'; mg.globalAlpha = .5; mg.beginPath(); mg.arc(X(BUNKER[0]), Z(BUNKER[1] - 2), SAFE_R * s, 0, 7); mg.fill(); mg.globalAlpha = 1;
+  terms.forEach((t) => { const d = t.def; mg.fillStyle = S.solved.includes(d.id) ? '#5ee08a' : d.shuttle ? '#3ff0d2' : '#e4e8f3'; const r = d.requires || d.shuttle ? 5 : 3; mg.fillRect(X(d.pos[0]) - r / 2 * 1.5, Z(d.pos[1]) - r / 2 * 1.5, r * 1.5, r * 1.5); });
+  notes.forEach((n) => { if (S.notes.includes(n.def.id)) return; mg.fillStyle = '#ffd27a'; mg.beginPath(); mg.arc(X(n.def.pos[0]), Z(n.def.pos[1]), 3.5, 0, 7); mg.fill(); });
+  if (has('radar')) aliens.forEach((a) => { mg.fillStyle = a.stun > 0 ? '#8b94ad' : '#ff4d5e'; mg.beginPath(); mg.arc(X(a.x), Z(a.z), 4, 0, 7); mg.fill(); });
+  const px = X(player.x), pz = Z(player.z); mg.save(); mg.translate(px, pz); mg.rotate(player.dir); mg.fillStyle = '#ffb347'; mg.beginPath(); mg.moveTo(9, 0); mg.lineTo(-6, -6); mg.lineTo(-3, 0); mg.lineTo(-6, 6); mg.closePath(); mg.fill(); mg.restore();
+}
+
+/* ------------------------------ ANIME FX (speed lines) ------------------------------ */
+const fx = $('fx'), fg = fx.getContext('2d'), reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let fxLevel = 0, fxBurst = 0;
+function drawFx(dt) {
+  if (fx.width !== innerWidth || fx.height !== innerHeight) { fx.width = innerWidth; fx.height = innerHeight; }
+  const want = mode === 'play' && player.sprinting ? .35 : 0;
+  fxLevel = lerp(fxLevel, want, Math.min(1, dt * 6)); fxBurst = Math.max(0, fxBurst - dt * 2.5);
+  const lvl = reduceMotion ? 0 : Math.max(fxLevel, fxBurst);
+  fg.clearRect(0, 0, fx.width, fx.height);
+  if (lvl < .02) return;
+  const cx = fx.width / 2, cy = fx.height / 2, R0 = Math.hypot(cx, cy);
+  fg.strokeStyle = `rgba(255,255,255,${.5 * lvl})`;
+  for (let i = 0; i < 70; i++) {
+    const a = Math.random() * Math.PI * 2, inner = R0 * (.55 + Math.random() * .3 * (1 - lvl));
+    fg.lineWidth = 1 + Math.random() * 3; fg.beginPath(); fg.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner); fg.lineTo(cx + Math.cos(a) * R0, cy + Math.sin(a) * R0); fg.stroke();
+  }
+}
+
+/* ------------------------------ LOOP ------------------------------ */
+let lastT = performance.now(), hudT = 0, clock = 0;
+function update(dt) {
+  S.time += dt; clock += dt;
+  // movement
+  let mx = 0, mz = 0;
+  if (keys.KeyW || keys.ArrowUp) mz -= 1; if (keys.KeyS || keys.ArrowDown) mz += 1;
+  if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1;
+  if (joy.active) { mx += joy.x; mz += joy.y; }
+  const ml = Math.hypot(mx, mz); player.moving = ml > 0.15;
+  const wantRun = (keys.ShiftLeft || keys.ShiftRight || touchRun) && player.moving && S.stamina > 2;
+  player.sprinting = wantRun;
+  const speed = wantRun ? (has('botas') ? 10.5 : 8.8) : 5.4;
+  if (player.moving) {
+    mx /= Math.max(1, ml); mz /= Math.max(1, ml);
+    [player.x, player.z] = collide(player.x + mx * speed * dt, player.z + mz * speed * dt, .45);
+    player.x = clamp(player.x, -92, 92); player.z = clamp(player.z, -92, 92);
+    const target = Math.atan2(mz, mx); let da = target - player.dir; da = Math.atan2(Math.sin(da), Math.cos(da)); player.dir += da * Math.min(1, dt * 12);
+    if (Math.abs(mx) > .1) player.face = mx > 0 ? 1 : -1;
+    player.ft += dt * (wantRun ? 14 : 9); player.frame = Math.floor(player.ft) % 4;
+  } else player.frame = 0;
+  S.stamina = clamp(S.stamina + (wantRun ? -28 : (has('botas') ? 26 : 16)) * dt, 0, 100);
+  const inSafe = Math.hypot(player.x - BUNKER[0], player.z - (BUNKER[1] - 2)) < SAFE_R;
+  if (inSafe) S.hp = Math.min(100, S.hp + 6 * dt);
+
+  // aliens
+  let threat = 0;
+  aliens.forEach((a) => {
+    const dx = player.x - a.x, dz = player.z - a.z, d = Math.hypot(dx, dz);
+    a.ft += dt * 6; a.frame = Math.floor(a.ft) % 4; if (a.exclT > 0) a.exclT -= dt;
+    if (a.stun > 0) { a.stun -= dt; a.sp.material.opacity = .35 + Math.abs(Math.sin(clock * 12)) * .4; return; }
+    a.sp.material.opacity = 1;
+    if (a.alert > 0) a.alert -= dt;
+    const detect = player.sprinting ? 15 : (has('lanterna') ? 10 : 8.5);
+    const sees = !inSafe && d < detect;
+    let tx, tz, sp;
+    if (sees) { if (!a.chase) { a.exclT = 1.1; sfx.tone(880, .12, 'square', .1); sfx.tone(1320, .15, 'square', .08, null, .08); } a.chase = true; tx = player.x; tz = player.z; sp = 6.1 + S.cores * .25; }
+    else if (a.alert > 0) { tx = a.ax; tz = a.az; sp = 5.2; if (Math.hypot(a.ax - a.x, a.az - a.z) < 1.5) a.alert = 0; }
+    else {
+      a.chase = false; a.t -= dt;
+      if (a.t <= 0 || Math.hypot(a.tx - a.x, a.tz - a.z) < 1) { const ang = Math.random() * 6.28, rr = Math.random() * a.r; a.tx = a.home[0] + Math.cos(ang) * rr; a.tz = a.home[1] + Math.sin(ang) * rr; a.t = 3 + Math.random() * 4; }
+      tx = a.tx; tz = a.tz; sp = 1.8;
+    }
+    const ddx = tx - a.x, ddz = tz - a.z, dl = Math.hypot(ddx, ddz);
+    if (dl > .05) { [a.x, a.z] = collide(a.x + ddx / dl * sp * dt, a.z + ddz / dl * sp * dt, .55); if (Math.abs(ddx) > .1) a.face = ddx > 0 ? 1 : -1; }
+    const bd = Math.hypot(a.x - BUNKER[0], a.z - (BUNKER[1] - 2));
+    if (bd < SAFE_R + 1.5) { const k = (SAFE_R + 1.5) / bd; a.x = BUNKER[0] + (a.x - BUNKER[0]) * k; a.z = (BUNKER[1] - 2) + (a.z - (BUNKER[1] - 2)) * k; a.t = 0; }
+    flares.forEach((f) => { const fd = Math.hypot(a.x - f.x, a.z - f.z); if (fd < 9) { a.x += (a.x - f.x) / fd * 4 * dt; a.z += (a.z - f.z) / fd * 4 * dt; } });
+    if (d < 1.25 && !inSafe) { S.hp -= 24 * dt; if (player.hurtT <= 0) { sfx.hurt(); flash('rgba(255,40,60,.55)', .4); player.hurtT = .6; fxBurst = .8; } }
+    if (a.chase || a.alert > 0) threat = Math.max(threat, 1 - d / 20);
+  });
+  player.hurtT -= dt;
+  sfx.threat(clamp(threat, 0, 1));
+  for (let i = flares.length - 1; i >= 0; i--) { const f = flares[i]; f.t -= dt; f.l.intensity = 2.2 + Math.sin(clock * 30) * .4; if (f.t <= 0) { f.l.intensity = 0; flares.splice(i, 1); } }
+  if (S.hp <= 0) { S.hp = 0; die(); return; }
+
+  nearest = findNearest();
+  const pr = $('prompt');
+  if (nearest) { const html = promptText(nearest); if (pr.innerHTML !== html) pr.innerHTML = html; pr.hidden = false; } else pr.hidden = true;
+
+  hudT -= dt; if (hudT <= 0) { hudT = .15; $('hp-fill').style.width = S.hp + '%'; $('bt-fill').style.width = S.battery + '%'; $('st-fill').style.width = S.stamina + '%'; drawMinimap(); }
+  if (Math.floor(S.time) % 10 === 0 && Math.floor(S.time - dt) % 10 !== 0) save();
+}
+function render(dt) {
+  const fr = framesFor('player');
+  { const arr = player.face > 0 ? fr.r : fr.l; player.sprite.material.map = arr[player.frame % arr.length]; }
+  player.sprite.position.set(player.x, 1.92, player.z);
+  novaPos.lerp(new THREE.Vector3(player.x - Math.cos(player.dir) * 1.3 - .4, 3.9 + Math.sin(clock * 2.2) * .25, player.z - Math.sin(player.dir) * 1.3 - .3), Math.min(1, dt * 3));
+  nova.position.copy(novaPos); nova.material.opacity = .75 + Math.sin(clock * 9) * .08;
+  player.shadow.position.set(player.x, .07, player.z);
+  playerGlow.position.set(player.x, 2.2, player.z);
+  if (has('lanterna')) {
+    pulseT = Math.max(0, pulseT - dt);
+    flashlight.intensity = (S.battery > 0 ? 2.4 : .8) + pulseT * 18;
+    flashlight.position.set(player.x, 2.2, player.z);
+    flashlight.target.position.set(player.x + Math.cos(player.dir) * 8, 0, player.z + Math.sin(player.dir) * 8);
+  }
+  aliens.forEach((a) => {
+    const f = framesFor(a.kind), arr = a.face > 0 ? f.r : f.l; a.sp.material.map = arr[a.frame % arr.length];
+    a.sp.position.set(a.x, 2.5 + Math.sin(clock * 3 + a.home[0]) * .18, a.z); a.sh.position.set(a.x, .07, a.z);
+    a.excl.visible = a.exclT > 0; if (a.excl.visible) { const k = Math.min(1, (1.1 - a.exclT) * 8); a.excl.scale.set(.9 * k, 1.2 * k, 1); a.excl.position.set(a.x, 5.4, a.z); }
+  });
+  terms.forEach((t) => {
+    const solved = S.solved.includes(t.def.id), locked = (t.def.requires && solvedInZone(t.def.zone) < t.def.requires) || (t.def.shuttle && S.cores < 3);
+    const col = solved ? 0x5ee08a : locked ? 0xff4d5e : 0x3ff0d2;
+    t.scr.material.color.setHex(col); t.beacon.material.color.setHex(col);
+    t.beacon.rotation.y += dt * 1.6; t.beacon.position.y = (t.def.shuttle ? 4 : t.def.requires ? 2.6 : 2) + Math.sin(clock * 2 + t.def.pos[0]) * .15;
+    t.beacon.visible = !solved || t.def.requires;
+  });
+  notes.forEach((n) => { const read = S.notes.includes(n.def.id); n.s.visible = n.ring.visible = !read; n.ring.material.opacity = .35 + Math.sin(clock * 3) * .2; n.s.position.y = 1.2 + Math.sin(clock * 2 + n.def.pos[0]) * .15; });
+  flickers.forEach((l, i) => { l.intensity = Math.random() < .04 ? 0 : .9 + Math.sin(clock * (7 + i)) * .1; });
+  if (towerLight) towerLight.visible = Math.sin(clock * 3) > 0;
+  if (shuttleGlow) shuttleGlow.intensity = S.cores >= 3 ? 1.4 + Math.sin(clock * 4) * .4 : .3;
+  if (mothership) { mothership.rotation.y += dt * .05; mothership.position.y = 46 + Math.sin(clock * .4) * 1.2; }
+  const ap = ashGeo.attributes.position;
+  for (let i = 0; i < ASH; i++) { let y = ap.getY(i) - dt * (.6 + (i % 5) * .15); if (y < 0) y = 25; ap.setY(i, y); ap.setX(i, ap.getX(i) + Math.sin(clock + i) * dt * .2); }
+  ap.needsUpdate = true; ash.position.set(player.x, 0, player.z);
+  const want = new THREE.Vector3(player.x, 0, player.z).add(CAM_OFF);
+  camera.position.lerp(want, Math.min(1, dt * 5)); camera.lookAt(camera.position.x, 0, camera.position.z - CAM_OFF.z);
+  moon.position.set(player.x - 30, 50, player.z - 20); moon.target.position.set(player.x, 0, player.z);
+  renderer.render(scene, camera);
+}
+function frame(now) {
+  const dt = Math.min(.05, (now - lastT) / 1000 || 0); lastT = now;
+  if (mode === 'play') update(dt);
+  else clock += dt;
+  if (mode === 'intro') { player.x = Math.sin(clock * .05) * 30; player.z = 20 + Math.cos(clock * .05) * 30; }
+  render(dt); drawFx(dt);
+  requestAnimationFrame(frame);
+}
+
+/* ------------------------------ BOOT ------------------------------ */
+function loadBlender() {
+  if (!ASSET_CONFIG.blenderScene) return;
+  const go = () => new THREE.GLTFLoader().load(ASSET_CONFIG.blenderScene, (g) => {
+    g.scene.traverse((o) => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; } }); scene.add(g.scene);
+    if (ASSET_CONFIG.blenderReplacesProcedural) procedural.visible = false;
+  }, undefined, () => toast('Não foi possível carregar a cena do Blender (.glb).', 'bad'));
+  if (THREE.GLTFLoader) return go();
+  const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js'; s.onload = go; document.head.appendChild(s);
+}
+const fontsReady = (document.fonts && document.fonts.ready) ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]) : Promise.resolve();
+fontsReady.then(() => {
+  buildWorld(); resetAliens();
+  if (ASSET_CONFIG.unitySprites.player) loadUnitySheet(ASSET_CONFIG.unitySprites.player, ASSET_CONFIG.unitySprites.frames, 'player');
+  if (ASSET_CONFIG.unitySprites.alien) loadUnitySheet(ASSET_CONFIG.unitySprites.alien, ASSET_CONFIG.unitySprites.frames, 'alien');
+  loadBlender();
+  requestAnimationFrame(frame);
+  window.__dgi = { S: () => S, aliens, terms, TERMINALS, openPuzzle, startGame, get mode() { return mode; }, player };
+});
+})();
+</script>
+
+</html>
