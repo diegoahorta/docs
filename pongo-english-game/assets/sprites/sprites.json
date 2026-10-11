@@ -1,0 +1,30 @@
+{
+ "walk": {
+  "w": 164,
+  "h": 200,
+  "n": 8
+ },
+ "jump": {
+  "w": 165,
+  "h": 300,
+  "n": 8
+ },
+ "faces": [
+  "feliz",
+  "piscando",
+  "empolgado",
+  "curioso",
+  "surpreso",
+  "sonolento",
+  "carinhoso",
+  "brincalhao",
+  "atento",
+  "bravo",
+  "assustado",
+  "pensativo",
+  "triste",
+  "com_osso",
+  "barriga",
+  "tchau"
+ ]
+}

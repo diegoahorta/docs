@@ -2,7 +2,8 @@
 Blender map and the images are all inlined):
   index.html   -> pongo-english.html  (inglês)
   coreano.html -> pongo-coreano.html  (coreano / hangul)
-  mandarim.html -> pongo-mandarim.html (mandarim / 中文)"""
+  mandarim.html -> pongo-mandarim.html (mandarim / 中文)
+Versão 2D (cartoon, sem Three.js): index-2d / coreano-2d / mandarim-2d -> pongo-*-2d.html"""
 import base64, os, re
 
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
@@ -38,3 +39,6 @@ def build(src, dst):
 build("index.html", "pongo-english.html")
 build("coreano.html", "pongo-coreano.html")
 build("mandarim.html", "pongo-mandarim.html")
+build("index-2d.html", "pongo-english-2d.html")
+build("coreano-2d.html", "pongo-coreano-2d.html")
+build("mandarim-2d.html", "pongo-mandarim-2d.html")

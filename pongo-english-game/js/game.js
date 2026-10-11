@@ -13,6 +13,13 @@
   const Map3D = window.PongoMap || null;
   const $ = (id) => document.getElementById(id);
   const pick = (a) => a[(Math.random() * a.length) | 0];
+  // Expressões do Pongo (versão 2D, js/sprites-data.js). Sem elas, as imagens não mudam.
+  const FACES = (window.PongoSprites && window.PongoSprites.faces) || null;
+  function face(el, mood) {
+    if (!FACES || !el) return;
+    const k = Array.isArray(mood) ? pick(mood) : mood;
+    if (FACES[k]) el.src = FACES[k];
+  }
   const P = window.PongoPack;
   const ROLE_NAMES = P.roles;
   const KIND = Object.assign({
@@ -105,7 +112,8 @@
   }
 
   let tipTimer = null;
-  function pongoSays(en, pt, speak = true, ms = 6500) {
+  function pongoSays(en, pt, speak = true, ms = 6500, mood = ['feliz', 'piscando', 'carinhoso', 'brincalhao']) {
+    face(document.querySelector('.tip-pongo'), mood);
     $('tip-en').textContent = en;
     $('tip-pt').textContent = pt || '';
     const tip = $('map-tip');
@@ -123,6 +131,9 @@
 
   // start screen texts come from the pack
   document.title = P.docTitle;
+  face(document.querySelector('.start-pongo'), 'feliz');
+  face(document.querySelector('.quit-pongo'), 'triste');
+  face(document.querySelector('.cel-pongo'), 'empolgado');
   $('start-title').innerHTML = P.start.title;
   $('start-lead').innerHTML = P.start.lead;
   $('start-bubble').textContent = P.start.bubble;
@@ -135,7 +146,7 @@
     if (i >= open) {
       if (el) { el.classList.remove('nope'); void el.offsetWidth; el.classList.add('nope'); }
       Audio.wrong();
-      say(P.say.notYet, false, 3500);
+      say(P.say.notYet, false, 3500, 'pensativo');
       return;
     }
     Audio.tap();
@@ -212,8 +223,8 @@
     if (mapOk) Map3D.setActive(true);
     const n = unlockedCount();
     setTimeout(() => {
-      if (save.xp === 0) say(P.say.first);
-      else if (allDone()) say(P.say.allDone);
+      if (save.xp === 0) say(P.say.first, true, 6500, 'tchau');
+      else if (allDone()) say(P.say.allDone, true, 6500, 'barriga');
       else say(P.say.welcome(n, UNITS[n - 1]));
     }, 600);
   });
@@ -259,6 +270,7 @@
   function showIntro() {
     const u = L.unit;
     setFoot('idle');
+    face($('pongo-avatar'), 'curioso');
     $('ex-kind').textContent = `Lição ${L.index + 1} · ${u.place}`;
     $('ex-title').textContent = u.title;
     $('ex-bubble').innerHTML = `<button class="speak" type="button" aria-label="Ouvir">${SPEAKER}</button><span>${esc(u.intro.en)}</span>`;
@@ -324,6 +336,7 @@
     btn.disabled = true;
     btn.onclick = check;
     $('pongo-avatar').className = 'pongo-avatar';
+    face($('pongo-avatar'), ['atento', 'curioso', 'pensativo']);
     renderExercise(L.current.ex);
   }
 
@@ -598,6 +611,7 @@
         bump(comboEl);
       }
       avatar.className = 'pongo-avatar happy';
+      face(avatar, ex.type === 'build' || ex.type === 'listen' ? 'empolgado' : ['feliz', 'piscando', 'carinhoso']);
       setFoot('ok');
       $('fb-title').textContent = pick(OK_SHORT);
       $('fb-text').textContent = ex.type === 'match' ? 'Todos os pares certos!' : ex.type === 'build' || ex.type === 'listen' ? res.right : '';
@@ -633,6 +647,7 @@
       Audio.wrong();
       setTimeout(() => Audio.heartLost(), 250);
       avatar.className = 'pongo-avatar sad';
+      face(avatar, ['triste', 'assustado', 'surpreso']);
       setFoot('bad');
       $('fb-title').textContent = 'Quase! Resposta correta:';
       $('fb-text').textContent = res.right;
@@ -684,6 +699,7 @@
         : `Pongo está pronto para ir até: ${UNITS[L.index + 1].place}.`;
       $('res-stars').innerHTML = [0, 1, 2].map((k) => `<span class="${k < stars ? 'on' : ''}">★</span>`).join('');
       pongoImg.className = 'result-pongo';
+      face(pongoImg, stars === 3 ? 'empolgado' : ['feliz', 'com_osso']);
       Audio.lessonComplete();
       setTimeout(() => FX.party(), 200);
       setTimeout(() => Audio.speak(P.result.speak[stars]), 1500);
@@ -694,6 +710,7 @@
       $('res-sub').textContent = 'Não tem problema! Errar faz parte. Vamos tentar de novo?';
       $('res-stars').innerHTML = '<span>★</span><span>★</span><span>★</span>';
       pongoImg.className = 'result-pongo sad';
+      face(pongoImg, 'triste');
       Audio.heartLost();
     }
     renderHud(true);

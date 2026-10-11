@@ -96,3 +96,22 @@ Tudo fica em `js/levels.js`. Exemplo de frase em blocos:
 - As frases do manual já vêm divididas em chunks; no jogo elas viram os blocos coloridos, com as mesmas cores do manual (S azul, ADV laranja, V verde, O amarelo, partícula lilás).
 - Voz em chinês (zh-CN) do aparelho; sem voz, aparece o pinyin.
 - Para mudar o conteúdo: edite o manual (`odu-mandarim/content_*.py`), gere o `content.json` e rode `python3 tools/gen_levels_zh.py` e `python3 tools/build_single_html.py`.
+
+## Versão 2D (cartoon)
+
+Mesmo jogo, com o jardim desenhado em 2D no traço dos sprites do Pongo, sem Three.js. Os arquivos ficam 5× menores (cerca de 1 MB) e rodam bem em celulares mais simples.
+
+- **Arquivos únicos:** `pongo-english-2d.html`, `pongo-coreano-2d.html`, `pongo-mandarim-2d.html`.
+- **Mapa:** `js/map2d.js` desenha em canvas o portão com arco de flores, os canteiros, o lago com o patinho, a árvore com balanço, a casinha "PONGO", a horta e a casa do dono, além de nuvens, borboletas e a fumaça da chaminé. Dá para arrastar, dar zoom (roda ou pinça) e tocar no Pongo para ele pular.
+- **Sprites:** `tools/cut_sprites.py` recorta as folhas de sprites em `assets/sprites/`:
+  - 8 quadros de caminhada (`walk.webp`), usados quando o Pongo anda até a próxima parada;
+  - 8 de pulo (`jump.webp`), usados ao chegar e ao tocar nele;
+  - 16 expressões (`faces/`).
+- **Expressões nas lições:**
+  - curioso ou atento nas perguntas;
+  - feliz ou piscando no acerto;
+  - empolgado na comemoração;
+  - triste ou assustado no erro;
+  - tchau na primeira saudação;
+  - de barriga pra cima ao terminar o jardim.
+- **Gerar de novo:** `python3 tools/cut_sprites.py walk.webp jump.webp expressoes.webp`, depois `python3 tools/embed_sprites.py`, `python3 tools/make_2d_pages.py` e `python3 tools/build_single_html.py`.
