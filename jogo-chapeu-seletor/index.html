@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rafaela e o Chapéu Seletor</title>
+<meta name="description" content="Jogo ODU Creative — Unit 21: Future Continuous & Future Perfect. Rafaela e o Chapéu Gramático Seletor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800;900&display=swap">
+<style>
+/* Layout: coluna única estilo app (Duolingo), máx. 640px, castelo à noite à luz de velas.
+   Cores ODU Chunking: S azul · V marinho · O coral · AUX dourado · ADV verde-água · C rosa */
+:root{
+  --night:#0A1540; --night-2:#111d52; --night-3:#1A2B6B; --line:#2b3b80; --line-2:#3a4b96;
+  --parch:#F6EEDC; --muted:#A9B3D9; --dim:#6f7cad;
+  --gold:#D4AF37; --gold-d:#a8871f; --coral:#E87060; --teal:#0E8A8A; --blue:#2563EB; --rose:#C05070; --navy:#1A2B6B;
+  --ok:#58CC02; --ok-d:#46A302; --ok-bg:#15301c; --bad:#FF4B4B; --bad-d:#D23A3A; --bad-bg:#3a1424;
+  --c-S:#2563EB; --c-V:#1A2B6B; --c-O:#E87060; --c-AUX:#D4AF37; --c-ADV:#0E8A8A; --c-C:#C05070;
+  --font-display:"Baloo 2","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --font-body:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--parch);font-family:var(--font-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;overflow:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+   radial-gradient(1px 1px at 12% 18%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 72% 9%,#fff9 50%,transparent 51%),
+   radial-gradient(1.5px 1.5px at 38% 32%,#fff6 50%,transparent 51%),radial-gradient(1px 1px at 88% 41%,#fff7 50%,transparent 51%),
+   radial-gradient(1px 1px at 22% 66%,#fff5 50%,transparent 51%),radial-gradient(1.5px 1.5px at 60% 74%,#fff6 50%,transparent 51%),
+   radial-gradient(1px 1px at 92% 86%,#fff5 50%,transparent 51%),radial-gradient(1px 1px at 6% 92%,#fff6 50%,transparent 51%),
+   radial-gradient(60% 40% at 50% 0%,#24358a 0%,transparent 70%),
+   radial-gradient(40% 30% at 0% 100%,#3b1d4a66 0%,transparent 70%),
+   radial-gradient(40% 30% at 100% 100%,#0e4a5a55 0%,transparent 70%)}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--gold)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:10px}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+#app{position:relative;z-index:1;max-width:640px;height:100%;margin:0 auto;display:flex;flex-direction:column}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;padding-inline:16px;padding-top:env(safe-area-inset-top,0px)}
+h1,h2,h3{font-family:var(--font-display);line-height:1.1;text-wrap:balance;margin:0}
+
+/* ---------- botões 3D ---------- */
+.btn{font-family:var(--font-display);font-weight:800;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;border:0;border-radius:16px;padding:13px 22px 11px;background:var(--ok);color:#fff;box-shadow:0 4px 0 var(--ok-d);transition:transform .08s,box-shadow .08s,filter .15s;width:100%}
+.btn:hover{filter:brightness(1.07)}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--ok-d)}
+.btn.gold{background:var(--gold);color:#0A1540;box-shadow:0 4px 0 var(--gold-d)}
+.btn.red{background:var(--bad);box-shadow:0 4px 0 var(--bad-d)}
+.btn.ghost{background:transparent;border:2px solid var(--line-2);box-shadow:0 4px 0 var(--line-2);color:var(--muted)}
+.btn:disabled{background:#26326a;box-shadow:0 4px 0 #19234f;color:#6f7cad;cursor:not-allowed;transform:none;filter:none}
+.icon-btn{border:0;background:transparent;padding:6px;border-radius:12px;display:inline-grid;place-items:center;color:var(--muted)}
+.icon-btn:hover{color:var(--parch);background:#ffffff10}
+.icon-btn svg{width:26px;height:26px}
+.speak{border:0;background:var(--blue);color:#fff;border-radius:12px;width:40px;height:40px;display:inline-grid;place-items:center;box-shadow:0 3px 0 #1a46b0;flex:none}
+.speak svg{width:22px;height:22px}
+.speak:active{transform:translateY(3px);box-shadow:none}
+.speak.sm{width:32px;height:32px;border-radius:10px}
+.speak.sm svg{width:18px;height:18px}
+
+/* ---------- barra ODU ---------- */
+.odu-bar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 10px;font-size:.74rem;color:var(--muted);padding:10px 8px calc(10px + env(safe-area-inset-bottom,0px));text-align:center}
+.odu-bar a{color:var(--muted);text-decoration:none;font-weight:800}
+.odu-bar a:hover{color:var(--gold)}
+.odu-bar .sep{opacity:.4}
+.odu-bar img{width:22px;height:22px;border-radius:50%;background:#fff}
+
+/* ---------- capa ---------- */
+#home{align-items:center;text-align:center;justify-content:space-between}
+.home-top{display:flex;width:100%;justify-content:space-between;align-items:center;padding-top:14px}
+.logo-pill{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:800;letter-spacing:.08em;font-size:.8rem;color:var(--muted)}
+.logo-pill img{width:40px;height:40px;border-radius:50%;background:#fff}
+.home-hero{display:flex;flex-direction:column;align-items:center;gap:10px;padding-block:8px}
+.hero-hat{width:min(250px,62vw);filter:drop-shadow(0 18px 30px #000a) drop-shadow(0 0 40px #d4af3733);animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.eyebrow{font-family:var(--font-display);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;color:var(--gold)}
+.home-hero h1{font-size:clamp(2rem,8vw,3rem);font-weight:800;color:var(--parch)}
+.home-hero h1 em{font-style:normal;color:var(--gold);display:block}
+.home-hero p{max-width:34ch;color:var(--muted);margin:0}
+.home-actions{width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px;padding-block:8px}
+.candles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+.candle{position:absolute;width:10px;height:34px;border-radius:3px;background:linear-gradient(#f8ecd0,#d9c8a3);animation:bob 6s ease-in-out infinite}
+.candle::before{content:"";position:absolute;left:50%;top:-14px;width:10px;height:14px;transform:translateX(-50%);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff6c4,#ffb23a 55%,#ff6a0000 75%);animation:flick .3s infinite alternate}
+.candle::after{content:"";position:absolute;left:50%;top:-30px;width:60px;height:60px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(#ffcf6633,transparent 70%)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes flick{from{transform:translateX(-50%) scale(1,1)}to{transform:translateX(-52%) scale(.92,1.08)}}
+
+/* ---------- topo da trilha ---------- */
+.topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:12px 0 10px;background:linear-gradient(var(--night) 75%,transparent)}
+.topbar .logo{width:38px;height:38px;border-radius:50%;background:#fff;flex:none}
+.stat{display:flex;align-items:center;gap:4px;font-family:var(--font-display);font-weight:800;font-size:1.05rem}
+.stat svg{width:22px;height:22px}
+.stat.xp{color:var(--gold)}
+.frags{display:flex;gap:4px;margin-left:auto}
+.frag{width:22px;height:22px;color:#2f3d7d}
+.frag.got{color:var(--gold);filter:drop-shadow(0 0 6px #d4af37aa)}
+.unit-banner{background:var(--teal);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 5px 0 #08605f;margin-top:4px}
+.unit-banner .txt{flex:1;min-width:0}
+.unit-banner small{font-family:var(--font-display);font-weight:800;letter-spacing:.12em;opacity:.85;font-size:.75rem;text-transform:uppercase}
+.unit-banner h2{font-size:1.25rem}
+.unit-banner .guide{flex:none;border:2px solid #ffffff55;background:#ffffff1a;border-radius:14px;padding:8px 12px;font-family:var(--font-display);font-weight:800;font-size:.8rem;letter-spacing:.06em;color:#fff;display:flex;align-items:center;gap:6px}
+.unit-banner .guide svg{width:18px;height:18px}
+
+.path{position:relative;display:flex;flex-direction:column;align-items:center;gap:26px;padding:60px 0 30px}
+.node-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px}
+.node{width:76px;height:70px;border-radius:50%;border:0;display:grid;place-items:center;background:#2a376f;color:#56639a;box-shadow:0 7px 0 #1b2550;position:relative;transition:transform .1s}
+.node svg{width:34px;height:34px}
+.node img{width:54px;height:auto;filter:grayscale(1) brightness(.6)}
+.node:active{transform:translateY(6px);box-shadow:0 1px 0 #1b2550}
+.node.current{background:var(--ok);color:#fff;box-shadow:0 7px 0 var(--ok-d)}
+.node.current::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:5px solid #58cc0255;animation:ring 1.6s ease-out infinite}
+@keyframes ring{from{transform:scale(.9);opacity:1}to{transform:scale(1.18);opacity:0}}
+.node.done{background:var(--gold);color:#0A1540;box-shadow:0 7px 0 var(--gold-d)}
+.node.current img,.node.done img{filter:none}
+.node-label{font-family:var(--font-display);font-weight:700;font-size:.85rem;color:var(--muted);max-width:150px;text-align:center;line-height:1.15}
+.node-wrap.current .node-label{color:var(--parch)}
+.start-tip{position:absolute;top:-40px;background:var(--parch);color:var(--ok-d);font-family:var(--font-display);font-weight:800;letter-spacing:.08em;font-size:.8rem;padding:5px 12px;border-radius:10px;animation:bob 1.6s ease-in-out infinite;white-space:nowrap;border:2px solid #e2d8bf}
+.start-tip::after{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:12px;background:var(--parch);transform:translateX(-50%) rotate(45deg);border-right:2px solid #e2d8bf;border-bottom:2px solid #e2d8bf}
+.path-hat{position:absolute;width:96px;opacity:.95;filter:drop-shadow(0 10px 16px #0008);pointer-events:none}
+
+.tabbar{display:flex;justify-content:space-around;border-top:2px solid var(--line);background:var(--night);padding:6px 4px 0;flex:none}
+.tab{flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:12px;color:var(--dim);font-family:var(--font-display);font-weight:700;font-size:.74rem;letter-spacing:.04em}
+.tab svg{width:26px;height:26px}
+.tab.on{color:var(--gold);background:#d4af3714;outline:2px solid #d4af3755}
+
+/* ---------- história ---------- */
+.story-head{display:flex;align-items:center;gap:8px;padding:12px 0 6px;position:sticky;top:0;background:linear-gradient(var(--night) 80%,transparent);z-index:3}
+.story-head h2{font-size:1.15rem;flex:1}
+.story-log{display:flex;flex-direction:column;gap:14px;padding:8px 0 20px}
+.line{display:flex;gap:10px;align-items:flex-end;animation:rise .35s ease-out both}
+.line.right{flex-direction:row-reverse}
+@keyframes rise{from{opacity:.0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.avatar{width:66px;flex:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.avatar img,.avatar svg{width:66px;height:auto}
+.avatar span{font-family:var(--font-display);font-weight:800;font-size:.66rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.talking img{animation:talk .22s ease-in-out infinite alternate;transform-origin:50% 90%}
+@keyframes talk{from{transform:scale(1,1)}to{transform:scale(1.03,.95)}}
+.bubble{position:relative;min-width:0;flex:1;max-width:460px;background:var(--night-2);border:2px solid var(--line);border-radius:18px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.bubble .txt{flex:1;min-width:0}
+.bubble .en{font-weight:800;font-size:1.06rem}
+.bubble .pt{color:var(--muted);font-size:.9rem;margin-top:4px}
+.line.hat .bubble{border-color:#6b4a2a;background:#1d1a3f}
+.line.raf .bubble{border-color:#5a3c8a;background:#1f1a4a}
+.scene{background:#0f1a4a;border:2px dashed var(--line-2);border-radius:16px;padding:12px 14px;font-style:italic;color:var(--muted);display:flex;gap:10px;align-items:flex-start;animation:rise .35s both}
+.scene b{font-style:normal;font-family:var(--font-display);letter-spacing:.12em;font-size:.72rem;color:var(--gold);display:block}
+.narr{color:var(--parch);text-align:center;font-size:1.02rem;padding:4px 10px;animation:rise .35s both}
+.narr b{display:block;font-family:var(--font-display);letter-spacing:.14em;font-size:.7rem;color:var(--dim)}
+.screen-text{text-align:center;font-family:var(--font-display);font-weight:800;font-size:1.35rem;color:var(--gold);padding:10px;border-block:2px solid #d4af3755;animation:rise .35s both}
+.card{background:var(--night-2);border:2px solid var(--line);border-radius:18px;padding:14px;animation:rise .35s both}
+.card h3{font-size:1rem;letter-spacing:.06em;color:var(--gold);margin-bottom:8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.92rem}
+.kv dt{font-family:var(--font-display);font-weight:800;color:var(--coral);letter-spacing:.06em;font-size:.78rem;padding-top:2px}
+.kv dd{margin:0;min-width:0}
+.reward{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px;border-radius:20px;background:radial-gradient(circle at 50% 30%,#d4af3733,transparent 70%),var(--night-2);border:2px solid var(--gold);animation:rise .4s both}
+.reward svg{width:64px;height:64px;color:var(--gold);filter:drop-shadow(0 0 14px #d4af37);animation:spin 3s ease-in-out infinite}
+@keyframes spin{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.08)}}
+.reward b{font-family:var(--font-display);font-size:1.2rem}
+.story-foot{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(transparent,var(--night) 30%);margin-top:auto}
+
+/* ---------- blocos ODU ---------- */
+.chunks{display:flex;flex-wrap:wrap;gap:8px}
+.chunk{display:inline-flex;flex-direction:column;align-items:flex-start;gap:0;border:0;border-radius:12px;padding:5px 12px 7px;color:#fff;font-weight:800;font-size:1.04rem;line-height:1.2;box-shadow:0 4px 0 #0007;background:var(--c-S);transition:transform .12s}
+.chunk small{font-family:var(--font-display);font-size:.6rem;letter-spacing:.14em;opacity:.9;font-weight:800}
+.chunk[data-k="S"]{background:var(--c-S)}
+.chunk[data-k="V"]{background:var(--c-V);box-shadow:0 0 0 2px #5a6fd0 inset,0 4px 0 #0007}
+.chunk[data-k="O"]{background:var(--c-O)}
+.chunk[data-k="AUX"]{background:var(--c-AUX);color:#0A1540}
+.chunk[data-k="ADV"]{background:var(--c-ADV)}
+.chunk[data-k="C"]{background:var(--c-C)}
+button.chunk:active{transform:translateY(4px);box-shadow:0 0 0 #0000}
+.chunk.ghost{background:#202b62!important;box-shadow:none!important;color:transparent!important;pointer-events:none}
+.chunk.pop{animation:pop .22s ease-out}
+@keyframes pop{0%{transform:scale(.7)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+.chunks.sm .chunk{font-size:.9rem;padding:3px 9px 5px;border-radius:9px;box-shadow:0 2px 0 #0006}
+.chunks.sm .chunk small{font-size:.52rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.legend .chunk{font-size:.78rem;padding:4px 9px;box-shadow:none}
+
+/* ---------- lição ---------- */
+#lesson{padding-bottom:0}
+.lesson-top{display:flex;align-items:center;gap:12px;padding:14px 0 6px}
+.progress{flex:1;height:16px;border-radius:99px;background:#26326a;overflow:hidden}
+.progress i{display:block;height:100%;width:0;border-radius:99px;background:var(--ok);box-shadow:inset 0 -4px 0 #0002;position:relative;transition:width .45s cubic-bezier(.3,1.4,.6,1)}
+.progress i::after{content:"";position:absolute;left:10px;right:10px;top:4px;height:4px;border-radius:9px;background:#ffffff55}
+.hearts{display:flex;align-items:center;gap:4px;color:var(--bad);font-family:var(--font-display);font-weight:800;font-size:1.1rem}
+.hearts svg{width:26px;height:26px}
+.hearts.hit svg{animation:hit .4s}
+@keyframes hit{30%{transform:scale(1.4)}}
+.lesson-body{flex:1;display:flex;flex-direction:column;gap:16px;padding:10px 0 18px}
+.ins{font-size:1.45rem;font-weight:800}
+.mission-tag{font-family:var(--font-display);font-weight:800;font-size:.75rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.prompt{display:flex;gap:12px;align-items:flex-end}
+.prompt .hat{width:110px;flex:none;filter:drop-shadow(0 8px 12px #0009)}
+.prompt .hat img{width:110px}
+.prompt .bubble{align-items:center}
+.prompt .bubble::before{content:"";position:absolute;left:-10px;bottom:22px;width:16px;height:16px;background:inherit;border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.wrong-line{color:var(--bad);text-decoration:line-through;text-decoration-thickness:2px;font-weight:800;margin-top:6px;font-size:.98rem}
+.wrong-line::before{content:"✗ ";text-decoration:none;display:inline-block;margin-right:4px}
+.answer-line{min-height:132px;padding:8px 0;display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px;background:repeating-linear-gradient(transparent 0 58px,var(--line) 58px 60px)}
+.bank{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding-top:6px}
+.legend-mini{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:.72rem;color:var(--muted);justify-content:center}
+.legend-mini i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;border:2px solid var(--line-2);background:var(--night-2);border-radius:16px;padding:12px 14px;box-shadow:0 4px 0 var(--line-2);font-weight:800;font-size:1.05rem}
+.opt .num{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--line-2);display:grid;place-items:center;font-size:.85rem;color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--blue);background:#13265e;box-shadow:0 4px 0 var(--blue);color:#9cc0ff}
+.opt[aria-pressed="true"] .num{border-color:var(--blue);color:#9cc0ff}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line-2)}
+.q-sent{font-weight:800;font-size:1.1rem}
+.q-sent .gap{display:inline-block;min-width:80px;border-bottom:3px solid var(--gold);margin:0 4px}
+.fill-sent{font-size:1.2rem;font-weight:800;line-height:2.4;background:var(--night-2);border:2px solid var(--line);border-radius:16px;padding:12px 16px}
+.fill-sent input{font:inherit;font-size:1.05rem;color:var(--parch);background:#0c1646;border:0;border-bottom:3px solid var(--gold);border-radius:8px 8px 0 0;padding:2px 8px;margin:0 4px;max-width:100%}
+.fill-sent input:focus{outline:none;border-bottom-color:var(--blue);background:#13265e}
+.fill-sent .verb{color:var(--gold);font-size:.95rem}
+textarea{width:100%;min-height:120px;font:inherit;font-size:1.05rem;font-weight:700;color:var(--parch);background:var(--night-2);border:2px solid var(--line-2);border-radius:16px;padding:12px 14px;resize:vertical}
+textarea:focus{outline:none;border-color:var(--blue)}
+.helper{font-size:.85rem;color:var(--muted)}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+.lesson-foot{position:sticky;bottom:0;margin-inline:-16px;padding:14px 16px 0;border-top:2px solid var(--line);background:var(--night);z-index:4}
+.lesson-foot.ok{background:var(--ok-bg);border-top-color:transparent}
+.lesson-foot.bad{background:var(--bad-bg);border-top-color:transparent}
+.fb{display:flex;gap:12px;align-items:flex-start;padding-bottom:12px;animation:rise .25s both}
+.fb .badge{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--parch)}
+.fb .badge svg{width:30px;height:30px}
+.fb.ok .badge{color:var(--ok-d)} .fb.bad .badge{color:var(--bad)}
+.fb .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.fb h3{font-size:1.4rem}
+.fb.ok h3{color:var(--ok)} .fb.bad h3{color:var(--bad)}
+.fb .label{font-family:var(--font-display);font-weight:800;font-size:.85rem;letter-spacing:.06em}
+.fb.ok .label{color:var(--ok)} .fb.bad .label{color:#ff8a8a}
+.fb .sent{font-weight:800}
+.fb .pt{font-size:.88rem;color:var(--muted)}
+.fb .hint{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;background:#00000033;border-radius:12px;padding:8px 10px}
+.fb .hint img{width:38px;flex:none}
+.lesson-foot .odu-bar{padding-top:8px}
+
+/* ---------- resultado / casas / final ---------- */
+.center-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding-block:24px}
+.big-hat{width:min(210px,55vw);filter:drop-shadow(0 16px 24px #000a);animation:float 3.5s ease-in-out infinite}
+.title-xl{font-size:clamp(1.9rem,7vw,2.6rem);font-weight:800;color:var(--gold)}
+.stat-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:440px}
+.sc{border-radius:16px;border:2px solid var(--c);overflow:hidden;background:var(--c)}
+.sc small{display:block;font-family:var(--font-display);font-weight:800;font-size:.7rem;letter-spacing:.1em;color:#0A1540;padding:4px 2px;text-transform:uppercase}
+.sc div{background:var(--night);border-radius:12px 12px 0 0;padding:10px 4px;font-family:var(--font-display);font-weight:800;font-size:1.35rem;color:var(--c);display:flex;align-items:center;justify-content:center;gap:4px;font-variant-numeric:tabular-nums}
+.sc svg{width:20px;height:20px}
+.doors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:520px}
+.door{position:relative;border-radius:60px 60px 14px 14px;border:3px solid var(--hc);background:linear-gradient(#ffffff08,#00000030),var(--night-2);padding:22px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .25s,box-shadow .25s,opacity .25s;min-width:0}
+.door b{font-family:var(--font-display);font-size:1.02rem;color:var(--hc);line-height:1.1}
+.door p{margin:0;font-size:.78rem;color:var(--muted)}
+.door .pct{font-family:var(--font-display);font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.door .bar{width:80%;height:8px;border-radius:9px;background:#26326a;overflow:hidden}
+.door .bar i{display:block;height:100%;background:var(--hc);border-radius:9px}
+.door.flash{transform:scale(1.04);box-shadow:0 0 26px var(--hc)}
+.door.chosen{transform:scale(1.06);box-shadow:0 0 0 4px var(--hc),0 0 40px var(--hc);background:radial-gradient(circle at 50% 20%,color-mix(in srgb,var(--hc) 35%,transparent),transparent 70%),var(--night-2)}
+.door.dim{opacity:.45}
+.house-msg{max-width:46ch;color:var(--parch)}
+.check-list{display:flex;flex-direction:column;gap:8px;text-align:left;width:100%;max-width:460px}
+.check-list label{display:flex;gap:10px;align-items:flex-start;background:var(--night-2);border:2px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:700;font-size:.93rem;cursor:pointer}
+.check-list input{width:20px;height:20px;accent-color:var(--ok);flex:none;margin-top:1px}
+
+/* ---------- guia / glossário / ODU ---------- */
+.page-head{padding:16px 0 8px;display:flex;flex-direction:column;gap:4px}
+.page-head h1{font-size:1.7rem}
+.page-head p{margin:0;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px;padding-bottom:20px}
+.point-tag{display:inline-block;background:var(--coral);color:#fff;font-family:var(--font-display);font-weight:800;font-size:.72rem;letter-spacing:.12em;padding:2px 8px;border-radius:6px;margin-right:6px}
+.errcmp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;font-size:.88rem;margin-top:10px}
+.errcmp div{border-radius:12px;padding:8px 10px}
+.errcmp .x{background:var(--bad-bg);color:#ffb3b3}
+.errcmp .v{background:var(--ok-bg);color:#b9f58c}
+.obs{margin-top:10px;font-size:.88rem;color:var(--muted);border-left:4px solid var(--gold);padding-left:10px}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-display);letter-spacing:.06em;color:var(--gold);font-size:.78rem;text-transform:uppercase}
+.seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.seg button{flex:none;border:2px solid var(--line-2);background:transparent;border-radius:12px;padding:6px 12px;font-weight:800;font-size:.85rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#0A1540}
+.gl-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.gl-row .t{flex:1;min-width:0}
+.gl-row b{display:block}
+.gl-row span{color:var(--gold);font-size:.88rem}
+.gl-row em{display:block;color:var(--muted);font-size:.86rem;font-style:normal}
+.contact{display:flex;flex-direction:column;gap:10px}
+.contact a,.contact .row{display:flex;align-items:center;gap:12px;background:var(--night-2);border:2px solid var(--line);border-radius:16px;padding:12px 14px;text-decoration:none;color:var(--parch);font-weight:800}
+.contact small{display:block;color:var(--muted);font-weight:700;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+.contact svg{width:28px;height:28px;color:var(--gold);flex:none}
+.copy{margin-left:auto;border:2px solid var(--line-2);background:transparent;border-radius:10px;padding:4px 10px;font-weight:800;font-size:.78rem;color:var(--muted)}
+
+/* ---------- modal ---------- */
+.modal-bg{position:fixed;inset:0;z-index:50;background:#050a25cc;display:grid;place-items:end center;padding:16px;animation:fade .2s both}
+@keyframes fade{from{opacity:0}}
+.modal{width:100%;max-width:520px;background:var(--night-2);border:2px solid var(--line-2);border-radius:24px;padding:20px 18px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;animation:rise .25s both;margin-bottom:env(safe-area-inset-bottom,0px)}
+.modal img{width:110px}
+.modal h2{font-size:1.5rem}
+.modal p{margin:0;color:var(--muted)}
+.modal .btns{display:flex;flex-direction:column;gap:12px;width:100%}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60;width:100%;height:100%}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:70;background:var(--parch);color:#0A1540;font-weight:800;padding:8px 16px;border-radius:12px;box-shadow:0 6px 20px #0008;animation:rise .25s both}
+
+@media (max-width:420px){
+  .prompt .hat,.prompt .hat img{width:84px}
+  .ins{font-size:1.25rem}
+  .avatar,.avatar img,.avatar svg{width:54px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- CAPA -->
+  <section class="screen" id="home">
+    <div class="candles" aria-hidden="true">
+      <div class="candle" style="left:4%;top:24%;animation-delay:-1s"></div>
+      <div class="candle" style="left:93%;top:20%;animation-delay:-3s"></div>
+      <div class="candle" style="left:3%;top:78%;animation-delay:-2s"></div>
+      <div class="candle" style="left:94%;top:74%;animation-delay:-4s"></div>
+      <div class="candle" style="left:22%;top:9%;animation-delay:-5s"></div>
+    </div>
+    <div class="home-top">
+      <div class="logo-pill"><img src="assets/odu-logo.png" alt="ODU Creative">ODU CREATIVE</div>
+      <button class="icon-btn" data-music aria-label="Ligar ou desligar música"></button>
+    </div>
+    <div class="home-hero">
+      <img class="hero-hat" src="assets/hat2_3.webp" alt="O Chapéu Gramático Seletor falando">
+      <div class="eyebrow">Unit 21 · What a Surprise! · Nível B1</div>
+      <h1>Rafaela e o <em>Chapéu Gramático Seletor</em></h1>
+      <p>Rafaela chegou ao castelo sem uma casa. Ajude-a a dominar o <b>Future Continuous</b> e o <b>Future Perfect</b> para descobrir onde ela pertence.</p>
+    </div>
+    <div class="home-actions">
+      <button class="btn" id="startBtn">Começar jornada</button>
+      <button class="btn ghost" id="guideBtnHome">Ver gramática da unidade</button>
+      <div class="helper">Toque em começar para ligar a trilha sonora lofi.</div>
+    </div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- TRILHA -->
+  <section class="screen" id="map" hidden>
+    <div class="topbar">
+      <img class="logo" src="assets/odu-logo.png" alt="ODU Creative">
+      <div class="stat xp" title="Pontos de experiência"><span data-ic="bolt"></span><span id="xpVal">0</span></div>
+      <div class="frags" id="frags" title="Fragmentos mágicos"></div>
+      <button class="icon-btn" data-music aria-label="Ligar ou desligar música"></button>
+    </div>
+    <div class="unit-banner">
+      <div class="txt"><small>Unit 21 · Livro p. 9</small><h2>Future Continuous &amp; Future Perfect</h2></div>
+      <button class="guide" data-go="grammar"><span data-ic="book"></span>GUIA</button>
+    </div>
+    <div class="path" id="path"></div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- HISTÓRIA -->
+  <section class="screen" id="story" hidden>
+    <div class="story-head">
+      <button class="icon-btn" id="storyClose" aria-label="Voltar à trilha"><span data-ic="close"></span></button>
+      <h2 id="storyTitle"></h2>
+      <button class="icon-btn" data-music aria-label="Ligar ou desligar música"></button>
+    </div>
+    <div class="story-log" id="storyLog"></div>
+    <div class="story-foot">
+      <button class="btn" id="storyNext">Continuar</button>
+      <div class="odu-bar" data-odu></div>
+    </div>
+  </section>
+
+  <!-- LIÇÃO -->
+  <section class="screen" id="lesson" hidden>
+    <div class="lesson-top">
+      <button class="icon-btn" id="quitBtn" aria-label="Sair da missão"><span data-ic="close"></span></button>
+      <div class="progress" role="progressbar" aria-label="Progresso da missão"><i id="prog"></i></div>
+      <div class="hearts" id="hearts"><span data-ic="heart"></span><span id="heartVal">5</span></div>
+    </div>
+    <div class="lesson-body" id="exBody"></div>
+    <div class="lesson-foot" id="foot">
+      <div id="fb"></div>
+      <button class="btn" id="checkBtn" disabled>Verificar</button>
+      <div class="odu-bar" data-odu></div>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="screen" id="result" hidden>
+    <div class="center-col">
+      <img class="big-hat" src="assets/hat1_3.webp" alt="Chapéu comemorando">
+      <div class="title-xl" id="resTitle">Missão concluída!</div>
+      <p id="resText" style="margin:0;color:var(--muted);max-width:36ch"></p>
+      <div class="stat-cards">
+        <div class="sc" style="--c:var(--gold)"><small>Total XP</small><div><span data-ic="bolt"></span><span id="resXp">0</span></div></div>
+        <div class="sc" style="--c:var(--ok)"><small>Precisão</small><div id="resAcc">0%</div></div>
+        <div class="sc" style="--c:var(--bad)"><small>Corações</small><div><span data-ic="heart"></span><span id="resHearts">5</span></div></div>
+      </div>
+      <div style="width:100%;max-width:440px"><button class="btn" id="resNext">Continuar</button></div>
+    </div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- CASAS -->
+  <section class="screen" id="house" hidden>
+    <div class="center-col">
+      <img class="big-hat" id="houseHat" src="assets/hat1_4.webp" alt="O Chapéu Seletor decidindo">
+      <div class="eyebrow">A escolha da casa</div>
+      <div class="bubble" style="max-width:480px"><div class="txt"><div class="en" id="houseSay">Hmm... let me see...</div><div class="pt" id="houseSayPt">Hmm... deixe-me ver...</div></div></div>
+      <div class="doors" id="doors"></div>
+      <p class="house-msg" id="houseMsg" hidden></p>
+      <div style="width:100%;max-width:440px"><button class="btn gold" id="houseNext" hidden>Continuar</button></div>
+    </div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="screen" id="final" hidden>
+    <div class="center-col">
+      <img class="big-hat" src="assets/hat2_2.webp" alt="Chapéu Seletor">
+      <div class="title-xl">MISSÃO CONCLUÍDA!</div>
+      <p style="margin:0;max-width:38ch">Rafaela está pronta para avançar no estudo do inglês.</p>
+      <div class="door chosen" id="finalHouse" style="width:220px"></div>
+      <div class="stat-cards">
+        <div class="sc" style="--c:var(--gold)"><small>XP total</small><div><span data-ic="bolt"></span><span id="finXp">0</span></div></div>
+        <div class="sc" style="--c:var(--ok)"><small>Precisão</small><div id="finAcc">0%</div></div>
+        <div class="sc" style="--c:var(--gold)"><small>Fragmentos</small><div><span data-ic="gem"></span><span id="finFr">4</span></div></div>
+      </div>
+      <div class="card" style="width:100%;max-width:460px;text-align:left">
+        <h3>Autoavaliação</h3>
+        <div class="check-list" id="selfCheck"></div>
+      </div>
+      <div class="card" style="width:100%;max-width:460px;text-align:left">
+        <h3>Dica ODU</h3>
+        <div style="font-size:.92rem">Desafio de Produção: leve suas 4 frases sobre o seu aniversário para correção individual com o professor. Verifique forma, função e se os erros comuns desta unidade foram evitados.</div>
+      </div>
+      <div style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:12px">
+        <button class="btn" data-go="map">Voltar à trilha</button>
+        <button class="btn ghost" data-go="odu">Falar com a ODU Creative</button>
+      </div>
+    </div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- GRAMÁTICA -->
+  <section class="screen" id="grammar" hidden>
+    <div class="page-head"><div class="eyebrow">Unit 21 · Grammar</div><h1>Guia do Chapéu</h1><p>Future Continuous &amp; Future Perfect no método ODU Chunking.</p></div>
+    <div class="stack" id="grammarBody"></div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- GLOSSÁRIO -->
+  <section class="screen" id="glossary" hidden>
+    <div class="page-head"><div class="eyebrow">Vocabulary Glossary</div><h1>Glossário mágico</h1><p>Toque no alto-falante para ouvir cada exemplo.</p></div>
+    <div class="seg" id="glSeg"></div>
+    <div id="glBody" class="stack" style="padding-top:6px"></div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <!-- ODU -->
+  <section class="screen" id="odu" hidden>
+    <div class="center-col" style="justify-content:flex-start">
+      <img src="assets/odu-logo.png" alt="ODU Creative — Idiomas, Educação, Cultura, Design" style="width:170px;border-radius:50%;background:#fff;margin-top:12px">
+      <h1 style="font-size:1.7rem">ODU Creative</h1>
+      <p style="margin:0;color:var(--muted)">Idiomas · Educação · Cultura · Design<br>Material da Unit 21 — Prof. Diego Horta</p>
+      <div class="contact" style="width:100%;max-width:440px">
+        <a href="https://oducreative.com" target="_blank" rel="noopener"><span data-ic="globe"></span><span><small>Site</small>oducreative.com</span></a>
+        <a href="https://instagram.com/odu.creative" target="_blank" rel="noopener"><span data-ic="insta"></span><span><small>Instagram</small>@odu.creative</span></a>
+        <div class="row"><span data-ic="chat"></span><span><small>WhatsApp</small><a href="https://wa.me/5511956641229" target="_blank" rel="noopener" style="all:unset;cursor:pointer">11 95664-1229</a></span><button class="copy" id="copyWa">Copiar</button></div>
+      </div>
+      <div style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:12px;margin-top:8px">
+        <button class="btn ghost" id="voiceBtn">Voz em inglês: ligada</button>
+        <button class="btn red" id="resetBtn">Reiniciar jornada</button>
+      </div>
+    </div>
+    <div class="odu-bar" data-odu></div>
+  </section>
+
+  <nav class="tabbar" id="tabbar" hidden>
+    <button class="tab" data-go="map"><span data-ic="castle"></span>Trilha</button>
+    <button class="tab" data-go="grammar"><span data-ic="book"></span>Gramática</button>
+    <button class="tab" data-go="glossary"><span data-ic="cards"></span>Glossário</button>
+    <button class="tab" data-go="odu"><span data-ic="info"></span>ODU</button>
+  </nav>
+</div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+"use strict";
+/* =========================================================
+   ÍCONES
+   ========================================================= */
+const IC = {
+  heart:'<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.5-9.3C1 7.9 3.4 4.5 7 4.5c2 0 3.5 1.1 5 3 1.5-1.9 3-3 5-3 3.6 0 6 3.4 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 2 4 14h7l-1.5 8L19 10h-7z"/></svg>',
+  gem:'<svg viewBox="0 0 24 24"><path fill="currentColor" d="M6 3h12l4 6-10 12L2 9z"/><path fill="#fff" opacity=".35" d="M6 3h6L8 9H2z"/></svg>',
+  close:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+  music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg>',
+  musicOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/><path d="M3 3l18 18"/></svg>',
+  speaker:'<svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7"/></svg>',
+  castle:'<svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V9h3V6h2v3h2V4h4v5h2V6h2v3h3v12h-7v-4a2 2 0 0 0-4 0v4z"/></svg>',
+  cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="6" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.1"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2.5"/></svg>',
+  hourglass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 4.5 5 6 5 9s-5 4.5-5 9M17 3c0 4.5-5 6-5 9s5 4.5 5 9"/><path d="M9 19h6l-3-3z" fill="currentColor"/></svg>',
+  split:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M2 12h20"/><circle cx="7" cy="12" r="3.2" fill="none"/><circle cx="17" cy="12" r="3.2" fill="currentColor"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V8a6 6 0 0 1 12 0v13M3 21h18"/><circle cx="14.5" cy="14" r="1.3" fill="currentColor"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>',
+  insta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 2.5 2.5 4.7 5 5l1.2-1.2 2 .9-.6 1.8c-4.3.3-9-4.4-8.6-8.7L9.8 6.7l.9 2z" fill="currentColor" stroke="none"/></svg>',
+  candle:'<svg viewBox="0 0 24 24" width="22" height="22"><path fill="#f6eedc" d="M9 10h6v12H9z"/><path fill="#ffb23a" d="M12 2c2 3 3 4.5 3 6a3 3 0 0 1-6 0c0-1.5 1-3 3-6z"/></svg>'
+};
+function paintIcons(root=document){ root.querySelectorAll('[data-ic]').forEach(s=>{ s.innerHTML=IC[s.dataset.ic]||''; s.style.display='inline-grid'; }); }
+
+const RAFAELA_SVG = `<svg viewBox="0 0 120 120" role="img" aria-label="Rafaela">
+ <defs><clipPath id="rc"><circle cx="60" cy="60" r="58"/></clipPath></defs>
+ <circle cx="60" cy="60" r="58" fill="#2b2f7a"/><g clip-path="url(#rc)">
+ <path d="M28 62Q26 18 60 17Q94 18 92 62L97 112H23Z" fill="#3b2416"/>
+ <rect x="52" y="74" width="16" height="14" fill="#e8b994"/>
+ <path d="M18 122Q22 86 60 84Q98 86 102 122Z" fill="#1A2B6B"/>
+ <path d="M48 85L60 102L72 85" fill="none" stroke="#D4AF37" stroke-width="4" stroke-linejoin="round"/>
+ <ellipse cx="60" cy="56" rx="22" ry="25" fill="#f2c7a5"/>
+ <path d="M36 52Q38 26 62 27Q86 29 84 54Q76 40 62 41Q48 38 36 52Z" fill="#3b2416"/>
+ <circle cx="51" cy="58" r="3.4" fill="#1b1b2f"/><circle cx="69" cy="58" r="3.4" fill="#1b1b2f"/>
+ <circle cx="52.2" cy="56.8" r="1.1" fill="#fff"/><circle cx="70.2" cy="56.8" r="1.1" fill="#fff"/>
+ <ellipse cx="45" cy="66" rx="4.5" ry="2.6" fill="#f29a8a" opacity=".6"/><ellipse cx="75" cy="66" rx="4.5" ry="2.6" fill="#f29a8a" opacity=".6"/>
+ <path d="M53 68Q60 74 67 68" fill="none" stroke="#8a3b2e" stroke-width="2.4" stroke-linecap="round"/>
+ <path d="M92 104L106 74" stroke="#8b5a2b" stroke-width="4" stroke-linecap="round"/>
+ <path d="M107 63l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" fill="#D4AF37"/>
+ </g></svg>`;
+
+const HAT = { idle:'assets/hat1_0.webp', talk:'assets/hat1_2.webp', shout:'assets/hat1_3.webp', think:'assets/hat1_1.webp',
+  wide:'assets/hat1_4.webp', lean:'assets/hat1_5.webp', bend:'assets/hat1_6.webp', smirk:'assets/hat1_7.webp',
+  idle2:'assets/hat2_0.webp', talk2:'assets/hat2_2.webp', shout2:'assets/hat2_3.webp', wide2:'assets/hat2_4.webp' };
+Object.values(HAT).forEach(src=>{ const i=new Image(); i.src=src; });
+
+/* =========================================================
+   CONTEÚDO — Roteiro, Unit 21 e Glossário ODU Creative
+   ========================================================= */
+const KINDS = { S:'Sujeito', V:'Verbo', O:'Objeto', AUX:'Auxiliar', ADV:'Advérbio / Tempo / Lugar', C:'Complemento / Oração' };
+const parseChunks = s => s ? s.split('|').map(p=>{ const i=p.indexOf(':'); return { k:p.slice(0,i), t:p.slice(i+1) }; }) : [];
+function sentenceOf(ch){ let s=ch.map(c=>c.t).join(' '); s=s.charAt(0).toUpperCase()+s.slice(1); if(!/[.?!]$/.test(s)) s+='.'; return s; }
+
+const HOUSES = {
+  fluxo:   { name:'Casa do Fluxo',    color:'#0E8A8A', desc:'Ações em andamento e Future Continuous.', missions:[1] },
+  prazos:  { name:'Casa dos Prazos',  color:'#D4AF37', desc:'Ações concluídas e Future Perfect.',      missions:[2] },
+  harmonia:{ name:'Casa da Harmonia', color:'#E87060', desc:'Diferenciar AT e BY.',                     missions:[3] },
+  voz:     { name:'Casa da Voz',      color:'#5b8cff', desc:'Perguntas, negativas e produção própria.', missions:[4,5] }
+};
+
+const MISSIONS = [
+ { id:0, title:'Abertura', sub:'O salão das casas', icon:'castle', story:true,
+   intro:[
+    {who:'scene', text:'O grande salão está iluminado por velas. Quatro portas permanecem fechadas. Rafaela entra carregando seus livros. Sobre um pedestal, um velho chapéu começa a se mexer.'},
+    {who:'N', text:'Rafaela chegou ao castelo para estudar magia e inglês. Mas, sem uma casa definida, os corredores parecem mudar a cada passo.'},
+    {who:'R', en:"I know this castle is full of magic, but I don't know where I belong.", pt:'Eu sei que este castelo é cheio de magia, mas não sei a que lugar pertenço.'},
+    {who:'H', hat:'wide', en:'Welcome, Rafaela. Your house has not been chosen yet. First, you must show how well you can travel through time with English.', pt:'Bem-vinda, Rafaela. Sua casa ainda não foi escolhida. Primeiro, você precisa mostrar como consegue viajar pelo tempo usando o inglês.'},
+    {who:'R', en:'Travel through time? How?', pt:'Viajar pelo tempo? Como?'},
+    {who:'H', en:'With two powerful spells: will be + verb-ing and will have + past participle.', pt:'Com dois feitiços poderosos: will be + verbo com -ing e will have + particípio passado.'},
+    {who:'legend'},
+    {who:'H', hat:'smirk', en:'Every sentence is built with magic blocks. Each color has a job.', pt:'Toda frase é construída com blocos mágicos. Cada cor tem uma função — é o Método ODU Chunking.'},
+    {who:'screen', text:'Complete as missões e descubra onde Rafaela pertence.'}
+   ],
+   outro:[] },
+
+ { id:1, title:'O Observatório do Futuro', sub:'Future Continuous: will be + verb-ing', icon:'clock', frag:'Fragmento do Presente Futuro',
+   intro:[
+    {who:'scene', text:'Um relógio mágico mostra horários diferentes. Uma imagem surge no ar como uma fotografia do futuro.'},
+    {who:'H', hat:'talk', en:'Look at the clock. It is 7 p.m. tomorrow. What will the guests be doing at that moment?', pt:'Olhe para o relógio. São 19h de amanhã. O que os convidados estarão fazendo nesse momento?'},
+    {who:'rule', title:'Point A · Future Continuous', forma:'Sujeito + will be + verbo-ing', funcao:'Ação em andamento num ponto do futuro', modo:'at this time tomorrow / at 8 p.m. tonight', ex:'S:I|AUX:will be|V:flying|ADV:to Lisbon at this time tomorrow'},
+    {who:'H', hat:'think', en:'Think of a photograph of the future: at that moment, the action is happening.', pt:'Pense numa "fotografia" do futuro: no momento indicado, a ação está acontecendo, sem começo nem fim visíveis.'}
+   ],
+   ex:[
+    {t:'mc', ins:'Escolha o feitiço certo', q:'At 7 p.m. tomorrow, the guests ____.', opts:['will be dancing','will have danced','will dancing'], a:0,
+     full:'At 7 p.m. tomorrow, the guests will be dancing.', pt:'Amanhã, às 19h, os convidados estarão dançando.',
+     hint:'O marcador at 7 p.m. mostra um momento específico. Imagine uma fotografia: a ação estará em andamento. Use will be + verbo com -ing.'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Eu estarei voando para Lisboa amanhã a esta hora.', chunks:'S:I|AUX:will be|V:flying|ADV:to Lisbon|ADV:at this time tomorrow', extra:'AUX:will|V:fly|AUX:will have',
+     hint:'O BE não pode sumir: will + be + -ing.'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Eles estarão preparando a festa surpresa às 19h.', chunks:'S:They|AUX:will be|V:preparing|O:the surprise party|ADV:at 7 p.m.', extra:'V:prepared|AUX:will have',
+     hint:'Ação em andamento às 19h → will be + preparing.'},
+    {t:'fill', ins:'Complete com o Future Continuous', parts:['This time next week, I ',' on a beach in Bahia.'], labels:['lie'], ans:[['will be lying',"'ll be lying"]],
+     full:'This time next week, I will be lying on a beach in Bahia.', pt:'Na semana que vem, a esta hora, estarei deitada numa praia na Bahia.',
+     hint:'This time next week = fotografia do futuro → will be + -ing. Atenção: lie → lying (ie vira y).'},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'I will flying tomorrow at 9.', chunks:'S:I|AUX:will be|V:flying|ADV:tomorrow at 9', extra:'AUX:will|V:fly',
+     pt:'Eu estarei voando amanhã às 9.', hint:'O BE não pode sumir: will + be + -ing.'},
+    {t:'fill', ins:'Complete com o Future Continuous', parts:["Don't call at 8 — we ",' dinner.'], labels:['have'], ans:[['will be having',"'ll be having"]],
+     full:"Don't call at 8 — we will be having dinner.", pt:'Não ligue às 8 — estaremos jantando.',
+     hint:'Às 8 o jantar estará em andamento → will be having.'},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'At 9 tomorrow I will working.', chunks:'ADV:At 9 tomorrow|S:I|AUX:will be|V:working', extra:'AUX:will|V:worked',
+     pt:'Amanhã às 9 eu estarei trabalhando.', hint:'Falta o BE: will be working.'},
+    {t:'mc', ins:'O que significa este chunk?', q:'at this time tomorrow', opts:['amanhã a esta hora','até amanhã','ontem a esta hora'], a:0,
+     full:'I will be flying at this time tomorrow.', pt:'Estarei voando amanhã a esta hora.', hint:'at this time tomorrow = amanhã a esta hora — um marcador típico do Future Continuous.'}
+   ],
+   outro:[
+    {who:'R', en:'At 7 p.m. tomorrow, the guests will be dancing!', pt:'Amanhã, às 19h, os convidados estarão dançando.'},
+    {who:'H', hat:'shout', en:'Excellent! Use will be + verb-ing for an action in progress at a specific future time.', pt:'Excelente! Use will be + verbo com -ing para uma ação que estará acontecendo em um momento específico do futuro.'},
+    {who:'reward', text:'Rafaela recebe o Fragmento do Presente Futuro.'}
+   ]},
+
+ { id:2, title:'A Sala dos Prazos', sub:'Future Perfect: will have + past participle', icon:'hourglass', frag:'Fragmento do Prazo Mágico',
+   intro:[
+    {who:'scene', text:'A sala está cheia de fitas, velas e decorações para uma festa. Uma ampulheta marca o prazo: 6 p.m.'},
+    {who:'R', en:'The decorations are everywhere. Will we finish them before six?', pt:'As decorações estão por toda parte. Vamos terminá-las antes das seis?'},
+    {who:'H', en:"The deadline is clear: by six o'clock. Choose the spell that shows the work will be completed before then.", pt:'O prazo está claro: até as seis horas. Escolha o feitiço que mostra que o trabalho estará concluído antes desse horário.'},
+    {who:'rule', title:'Point B · Future Perfect', forma:'Sujeito + will have + particípio passado', funcao:'Ação já concluída ANTES de um momento futuro', modo:'by Friday / by the time you arrive / by 2030', ex:"S:We|AUX:will have|V:finished|O:the decorations|ADV:by 6 o'clock"},
+    {who:'H', hat:'think', en:'BY means "no later than". It is the typical marker of the Future Perfect.', pt:'BY = "até / no máximo até". É o marcador mais típico do Future Perfect.'}
+   ],
+   ex:[
+    {t:'mc', ins:'Escolha o feitiço certo', q:'By 6 p.m., Rafaela and her friends ____ the decorations.', opts:['will be finishing','will have finished','will finished'], a:1,
+     full:'By 6 p.m., Rafaela and her friends will have finished the decorations.', pt:'Até as 18h, Rafaela e seus amigos terão terminado as decorações.',
+     hint:'Depois de will, use have + particípio passado. A forma correta é will have finished; will finished está incompleta.'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Nós já teremos terminado a decoração até as 6.', chunks:"S:We|AUX:will have|V:finished|O:the decorations|ADV:by 6 o'clock", extra:'V:finish|AUX:will be',
+     hint:'BY + prazo → will have + particípio (finished).'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Ela já terá se formado até dezembro do ano que vem.', chunks:'S:She|AUX:will have|V:graduated|ADV:by next December', extra:'V:graduating|AUX:will',
+     hint:'graduate → graduated. Future Perfect = will have + particípio.'},
+    {t:'fill', ins:'Complete com o Future Perfect', parts:['By the end of the year, she ',' enough money for the trip.'], labels:['save'], ans:[['will have saved',"'ll have saved"]],
+     full:'By the end of the year, she will have saved enough money for the trip.', pt:'Até o fim do ano, ela terá economizado dinheiro suficiente para a viagem.',
+     hint:'by the end of the year = prazo → will have saved.'},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'By Friday I will finished the report.', chunks:'ADV:By Friday|S:I|AUX:will have|V:finished|O:the report', extra:'AUX:will|V:finishing',
+     pt:'Até sexta eu terei terminado o relatório.', hint:'Falta o HAVE + particípio; "will finished" não existe.'},
+    {t:'fill', ins:'Complete com o Future Perfect', parts:['By the time you arrive, the film ','.'], labels:['start'], ans:[['will have started',"'ll have started"]],
+     full:'By the time you arrive, the film will have started.', pt:'Quando você chegar, o filme já terá começado.',
+     hint:'by the time you arrive = antes de você chegar a ação já terá terminado → will have started.'},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'By June we will have finish the course.', chunks:'ADV:By June|S:we|AUX:will have|V:finished|O:the course', extra:'V:finish|AUX:will be',
+     pt:'Até junho teremos terminado o curso.', hint:'Depois de have vem o particípio: finished, não finish.'},
+    {t:'mc', ins:'O que significa este chunk?', q:'by the time you arrive', opts:['quando você chegar / até você chegar','depois que você sair','enquanto você está chegando'], a:0,
+     full:'The film will have started by the time you arrive.', pt:'O filme terá começado quando você chegar.', hint:'by the time… = até o momento em que… → marca um prazo (Future Perfect).'}
+   ],
+   outro:[
+    {who:'R', en:'By 6 p.m., we will have finished the decorations.', pt:'Até as 18h, teremos terminado as decorações.'},
+    {who:'H', hat:'shout', en:"That's the Future Perfect. Its structure is will have + past participle. By often points to a deadline or a completed action.", pt:'Esse é o Future Perfect. Sua estrutura é will have + particípio passado. By costuma indicar um prazo ou uma ação concluída.'},
+    {who:'reward', text:'Rafaela recebe o Fragmento do Prazo Mágico.'}
+   ]},
+
+ { id:3, title:'O Banquete das Duas Linhas do Tempo', sub:'Contraste: Future Continuous × Future Perfect', icon:'split', frag:'Fragmento da Harmonia',
+   intro:[
+    {who:'scene', text:'Duas cenas aparecem lado a lado: convidados dançando e uma mesa com o bolo já servido.'},
+    {who:'H', en:'The same evening can be described in two different ways. Look at the time marker in each sentence.', pt:'A mesma noite pode ser descrita de duas formas diferentes. Observe o marcador de tempo em cada frase.'},
+    {who:'rule', title:'Point D · Contraste', forma:'will be doing × will have done', funcao:'Em andamento no momento futuro × já terminado antes dele', modo:'Mesma situação, visão diferente', ex:'ADV:At 10 p.m.|S:the guests|AUX:will be|V:dancing', ex2:'ADV:By 10 p.m.|S:the guests|AUX:will have|V:eaten|O:the cake'},
+    {who:'tip', text:'Truque ODU: AT → continuous (fotografia); BY → perfect (prazo final).'}
+   ],
+   ex:[
+    {t:'mc', ins:'Complete as duas linhas do tempo', q:'At 10 p.m., the guests ____. By 10 p.m., they ____ the cake.', opts:['will be dancing / will have eaten','will have danced / will be eating','will dancing / will eaten'], a:0,
+     full:'At 10 p.m., the guests will be dancing. By 10 p.m., they will have eaten the cake.', pt:'Às 22h, os convidados estarão dançando. Até as 22h, já terão comido o bolo.',
+     hint:'AT aponta para a ação em andamento naquele horário. BY indica que a ação estará concluída até esse horário.'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Às 22h os convidados estarão dançando.', chunks:'ADV:At 10 p.m.|S:the guests|AUX:will be|V:dancing', extra:'AUX:will have|V:danced',
+     hint:'AT + horário = ação em andamento → will be dancing.'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Até às 22h os convidados já terão comido o bolo.', chunks:'ADV:By 10 p.m.|S:the guests|AUX:will have|V:eaten|O:the cake', extra:'AUX:will be|V:eating',
+     hint:'BY + prazo = ação concluída → will have eaten.'},
+    {t:'mc', ins:'AT ou BY?', q:'____ midnight, we will have cleaned everything.', opts:['At','By'], a:1,
+     full:'By midnight, we will have cleaned everything.', pt:'Até meia-noite, teremos limpado tudo.', hint:'will have cleaned = concluído → combina com BY (prazo final).'},
+    {t:'fix', ins:'Corrija o erro (a ideia é: já terminado)', wrong:'By midnight we will be cleaning everything.', chunks:'ADV:By midnight|S:we|AUX:will have|V:cleaned|O:everything', extra:'AUX:will be|V:cleaning',
+     pt:'Até meia-noite teremos limpado tudo.', hint:'Com BY + ideia de conclusão, use o Future Perfect.'},
+    {t:'mc', ins:'AT ou BY?', q:'____ 8 p.m. tonight, I will be studying English.', opts:['At','By'], a:0,
+     full:'At 8 p.m. tonight, I will be studying English.', pt:'Às 20h de hoje, estarei estudando inglês.', hint:'will be studying = em andamento → combina com AT (fotografia).'},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'By 2030 they will be built the new bridge.', chunks:'ADV:By 2030|S:they|AUX:will have|V:built|O:the new bridge', extra:'AUX:will be|V:building',
+     pt:'Até 2030 eles terão construído a nova ponte.', hint:'BY 2030 = prazo → will have + built (particípio de build).'},
+    {t:'mc', ins:'Qual frase mostra uma ação CONCLUÍDA antes do prazo?', q:'', opts:['By Friday, I will have finished the report.','At 9 tomorrow, I will be working.','This time next week, I will be relaxing.'], a:0,
+     full:'By Friday, I will have finished the report.', pt:'Até sexta, terei terminado o relatório.', hint:'Ação concluída antes de um prazo = BY + will have + particípio.'}
+   ],
+   outro:[
+    {who:'R', en:'At ten, they will be dancing. By ten, they will have eaten the cake.', pt:'Às dez, eles estarão dançando. Até as dez, já terão comido o bolo.'},
+    {who:'H', hat:'shout', en:'Exactly. At shows the moment when an action is happening. By shows that an action will be complete before a time.', pt:'Isso mesmo. At mostra o momento em que uma ação estará acontecendo. By mostra que uma ação estará concluída até determinado horário.'},
+    {who:'tip', text:'DICA ODU: AT + horário = ação em andamento  |  BY + prazo = ação concluída até aquele momento.'},
+    {who:'reward', text:'Rafaela recebe o Fragmento da Harmonia.'}
+   ]},
+
+ { id:4, title:'O Corredor das Perguntas e Negativas', sub:'Perguntas e negativas nos dois tempos', icon:'door', frag:'Fragmento da Voz Mágica',
+   intro:[
+    {who:'scene', text:'Uma porta bloqueia a passagem. Para abri-la, Rafaela precisa completar dois feitiços.'},
+    {who:'rule', title:'Point C · Negativas e perguntas', forma:"won't be + -ing / won't have + particípio · Will + S + be + -ing? / Will + S + have + particípio?", funcao:'Negar ou perguntar sobre ações futuras em andamento ou concluídas', modo:'Negativo e interrogativo', ex:'AUX:Will|S:you|AUX:be|V:using|O:the car|ADV:tonight?'},
+    {who:'H', en:'The first spell is a polite question. Ask your friend about the laptop tonight.', pt:'O primeiro feitiço é uma pergunta educada. Pergunte ao seu amigo sobre o notebook hoje à noite.'}
+   ],
+   ex:[
+    {t:'build', ins:'Organize as palavras: a pergunta educada', pt:'Você estará usando seu notebook hoje à noite?', chunks:'AUX:Will|S:you|AUX:be|V:using|O:your laptop|ADV:tonight?', extra:'AUX:have',
+     hint:'Em perguntas no Future Continuous, use Will + sujeito + be + verbo com -ing. Não misture will be com have.'},
+    {t:'build', ins:'Agora diga que o grupo NÃO terminará o projeto até segunda', pt:'Eles não terão terminado o projeto até segunda-feira.', chunks:"S:They|AUX:won't have|V:finished|O:the project|ADV:by Monday", extra:"AUX:won't be|V:finishing",
+     hint:"Para negar no Future Perfect, use won't have + particípio passado. Para uma ação em andamento, a estrutura seria won't be + verbo com -ing."},
+    {t:'fill', ins:'Complete a pergunta', parts:['',' you ',' your laptop this afternoon?'], labels:['…','use'], ans:[['will'],['be using']],
+     full:'Will you be using your laptop this afternoon?', pt:'Você estará usando seu notebook hoje à tarde?', hint:'Pergunta no Future Continuous: Will + sujeito + be + -ing.'},
+    {t:'fill', ins:'Complete com a negativa', parts:['They ',' the project by Monday.'], labels:['not finish'], ans:[["won't have finished",'will not have finished']],
+     full:"They won't have finished the project by Monday.", pt:'Eles não terão terminado o projeto até segunda.', hint:"BY + negação de algo concluído → won't have + particípio."},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'Will you have be working tomorrow?', chunks:'AUX:Will|S:you|AUX:be|V:working|ADV:tomorrow?', extra:'AUX:have|V:worked',
+     pt:'Você estará trabalhando amanhã?', hint:'Não misture os dois tempos: escolha be + -ing OU have + particípio.'},
+    {t:'build', ins:'Monte a frase em blocos', pt:'Ele não terá chegado quando a festa começar.', chunks:"S:He|AUX:won't have|V:arrived|ADV:by the time|C:the party starts", extra:"AUX:won't be|V:arriving",
+     hint:"won't have + particípio (arrived) + by the time…"},
+    {t:'fix', ins:'Corrija o erro montando a frase certa', wrong:'Will she have be sleeping?', chunks:'AUX:Will|S:she|AUX:be|V:sleeping?', extra:'AUX:have|V:slept',
+     pt:'Ela estará dormindo?', hint:'Escolha um tempo só: Will she be sleeping? (ou Will she have slept?)'},
+    {t:'mc', ins:'Qual é a forma mais educada de perguntar sobre os planos de alguém?', q:'', opts:['Will you be using the car tonight?','Give me the car tonight.','Will you have be using the car tonight?'], a:0,
+     full:'Will you be using the car tonight?', pt:'Você vai estar usando o carro hoje à noite?', hint:'"Will you be using…?" pergunta sobre planos sem soar como pedido direto.'}
+   ],
+   outro:[
+    {who:'R', en:'Will you be using your laptop tonight?', pt:'Você estará usando seu notebook hoje à noite?'},
+    {who:'H', en:'A very polite question. Now, say that the group will not finish the project by Monday.', pt:'Uma pergunta muito educada. Agora, diga que o grupo não terminará o projeto até segunda-feira.'},
+    {who:'R', en:"They won't have finished the project by Monday.", pt:'Eles não terão terminado o projeto até segunda-feira.'},
+    {who:'reward', text:'Rafaela recebe o Fragmento da Voz Mágica. A porta se abre.'}
+   ]},
+
+ { id:5, title:'O Salão do Chapéu', sub:'Desafio de Produção', icon:'hat', final:true,
+   intro:[
+    {who:'scene', text:'Os quatro fragmentos se unem. O salão fica em silêncio; as portas das casas começam a brilhar.'},
+    {who:'H', hat:'wide', en:'You have learned to describe the future in progress and the future already completed. Now, tell me about your own future.', pt:'Você aprendeu a descrever o futuro em andamento e o futuro já concluído. Agora, fale sobre o seu próprio futuro.'},
+    {who:'tip', text:'DESAFIO DE PRODUÇÃO: escreva frases sobre o seu próximo aniversário — duas com Future Continuous (o que estará fazendo) e duas com Future Perfect (o que já terá feito).'}
+   ],
+   ex:[
+    {t:'prod', q:'What will you be doing at this time on your birthday?', pt:'O que você estará fazendo a esta hora no dia do seu aniversário?', want:'FC',
+     model:'At this time on my birthday, I will be celebrating with my friends.'},
+    {t:'prod', q:'What will you have prepared by the time your friends arrive?', pt:'O que você terá preparado quando seus amigos chegarem?', want:'FP',
+     model:'By the time they arrive, I will have prepared the cake.'},
+    {t:'prod', q:'Will you be celebrating at the castle?', pt:'Você estará comemorando no castelo?', want:'FC',
+     model:'Yes, I will be celebrating at the castle with my house.'},
+    {t:'prod', q:'What will you have achieved by the end of the year?', pt:'O que você terá conquistado até o fim do ano?', want:'FP',
+     model:'By the end of the year, I will have finished my English course.'}
+   ],
+   outro:[
+    {who:'R', en:'I understand now. I can describe what will be happening and what will have been completed.', pt:'Agora entendi. Consigo descrever o que estará acontecendo e o que já terá sido concluído.'},
+    {who:'H', hat:'wide', en:'Your house is chosen by the way you use your magic: with care, curiosity, and the courage to keep learning.', pt:'Sua casa é escolhida pela forma como você usa sua magia: com atenção, curiosidade e coragem para continuar aprendendo.'}
+   ],
+   closing:[
+    {who:'R', en:"I have found my house — and I'm ready for the next English adventure!", pt:'Encontrei minha casa — e estou pronta para a próxima aventura em inglês!'},
+    {who:'H', hat:'shout', en:'Your journey has just begun!', pt:'Sua jornada está apenas começando!'},
+    {who:'screen', text:'MISSÃO CONCLUÍDA! Rafaela está pronta para avançar no estudo do inglês.'}
+   ]}
+];
+
+const GLOSSARY = [
+ { name:'Actions & Events', rows:[
+  ['fly / flying','voar / voando','I will be flying to Lisbon tomorrow.'],['prepare / preparing','preparar / preparando','They will be preparing a surprise party.'],
+  ['finish / finished','terminar / terminado','We will have finished by six.'],['graduate / graduated','formar-se / formado(a)','She will have graduated by December.'],
+  ['arrive / arrived','chegar / chegado',"He won't have arrived by then."],['dance / dancing','dançar / dançando','The guests will be dancing at ten.'],
+  ['eat / eaten','comer / comido','They will have eaten the cake.'],['clean / cleaned','limpar / limpo','We will have cleaned everything.'],
+  ['save / saved','economizar / economizado','She will have saved enough money.'],['start / started','começar / começado','The film will have started.'],
+  ['use / using','usar / usando','Will you be using the car?'],['build / built','construir / construído','They will have built the bridge.'] ]},
+ { name:'People, Places & Objects', rows:[
+  ['surprise party','festa surpresa','We will be preparing the surprise party.'],['decorations','decorações','We will have finished the decorations.'],
+  ['guests','convidados','The guests will be dancing.'],['cake','bolo','They will have eaten the cake.'],['report','relatório','I will have finished the report.'],
+  ['project','projeto',"They won't have finished the project."],['laptop','notebook / computador portátil','Will you be using your laptop?'],
+  ['bridge','ponte','They will have built the new bridge.'],['beach','praia','I will be lying on a beach.'],['trip','viagem','She will have saved money for the trip.'],
+  ['course','curso','We will have finished the course.'],['birthday','aniversário','What will you be doing on your birthday?'] ]},
+ { name:'Time Expressions', rows:[
+  ['at this time tomorrow','amanhã a esta hora','I will be flying at this time tomorrow.'],['this time next week','na próxima semana, a esta hora','I will be relaxing this time next week.'],
+  ['at 7 p.m.','às 19h','They will be preparing dinner at 7 p.m.'],['tonight','hoje à noite','Will you be using the car tonight?'],
+  ['this afternoon','hoje à tarde','Will you be using your laptop this afternoon?'],['by Friday','até sexta-feira','I will have finished the report by Friday.'],
+  ["by 6 o'clock",'até as seis horas',"We will have finished by 6 o'clock."],['by next December','até dezembro do ano que vem','She will have graduated by next December.'],
+  ['by the end of the year','até o fim do ano','She will have saved enough money.'],['by the time you arrive','quando você chegar / até você chegar','The film will have started by the time you arrive.'],
+  ['by midnight','até meia-noite','We will have cleaned everything by midnight.'],['by 2030','até 2030','They will have built the bridge by 2030.'] ]},
+ { name:'Grammar Chunks', rows:[
+  ['will be + verb-ing','estará fazendo algo','I will be working at nine.'],['will have + past participle','terá feito algo','I will have finished by Friday.'],
+  ["won't be + verb-ing",'não estará fazendo',"I won't be sleeping at ten."],["won't have + participle",'não terá feito',"He won't have arrived by then."],
+  ['Will you be using…?','Você estará usando…?','Will you be using the car tonight?'],['Will you have finished…?','Você terá terminado…?','Will you have finished by Monday?'] ]},
+ { name:'Speaking Practice', speaking:true, rows:[
+  ['What will you be doing at this time tomorrow?','',''],['What will you have finished by Friday?','',''],
+  ['Will you be using your laptop this afternoon?','',''],['What will you have achieved by the end of the year?','',''] ]}
+];
+
+const GRAMMAR = [
+ { tag:'POINT A', title:'Future Continuous — afirmativa', forma:'Sujeito + will be + verbo-ing', funcao:'Ação em andamento num ponto do futuro', modo:'Afirmativo — at this time tomorrow / at 8 p.m. tonight',
+   ex:['S:I|AUX:will be|V:flying|ADV:to Lisbon at this time tomorrow','S:They|AUX:will be|V:preparing|O:the surprise party|ADV:at 7 p.m.'],
+   x:'I will flying tomorrow at 9.', v:'I will be flying tomorrow at 9.', why:'O BE não pode sumir: will + be + -ing.', obs:'Pense numa "fotografia" do futuro: no momento indicado, a ação está acontecendo, sem começo nem fim visíveis.' },
+ { tag:'POINT B', title:'Future Perfect — afirmativa', forma:'Sujeito + will have + particípio passado', funcao:'Ação já concluída ANTES de um momento futuro', modo:'Afirmativo — by Friday / by the time you arrive / by 2030',
+   ex:["S:We|AUX:will have|V:finished|O:the decorations|ADV:by 6 o'clock",'S:She|AUX:will have|V:graduated|ADV:by next December'],
+   x:'By Friday I will finished the report.', v:'By Friday I will have finished the report.', why:'Falta o HAVE + particípio; "will finished" não existe.', obs:'BY = "até / no máximo até". É o marcador mais típico do Future Perfect.' },
+ { tag:'POINT C', title:'Negativas e perguntas nos dois tempos', forma:"won't be + -ing / won't have + particípio · Will + S + be + -ing? / Will + S + have + particípio?", funcao:'Negar ou perguntar sobre ações futuras em andamento ou concluídas', modo:'Negativo e interrogativo',
+   ex:['AUX:Will|S:you|AUX:be|V:using|O:the car|ADV:tonight?',"S:He|AUX:won't have|V:arrived|ADV:by the time the party starts"],
+   x:'Will you have be working tomorrow?', v:'Will you be working tomorrow?', why:'Não misture os dois tempos: escolha be + -ing OU have + particípio.', obs:'"Will you be using…?" é uma forma muito educada de perguntar sobre planos dos outros sem soar como pedido direto.' },
+ { tag:'POINT D', title:'Contraste: Future Continuous × Future Perfect', forma:'will be doing × will have done', funcao:'Em andamento no momento futuro × já terminado antes dele', modo:'Comparativo — mesma situação, visão diferente',
+   ex:['ADV:At 10 p.m.|S:the guests|AUX:will be|V:dancing','ADV:By 10 p.m.|S:the guests|AUX:will have|V:eaten|O:the cake'],
+   x:'By midnight we will be cleaning everything (= já terminado).', v:'By midnight we will have cleaned everything.', why:'Com BY + ideia de conclusão, use o Future Perfect.', obs:'Truque ODU: AT → continuous (fotografia); BY → perfect (prazo final).' }
+];
+
+/* =========================================================
+   ESTADO / PERSISTÊNCIA
+   ========================================================= */
+const SAVE_KEY='odu-chapeu-seletor-v1';
+const fresh = () => ({ xp:0, unlocked:0, done:[], stats:{}, house:null, voice:true, music:true, self:[] });
+let S = fresh();
+try{ const raw=localStorage.getItem(SAVE_KEY); if(raw) S=Object.assign(fresh(), JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
+
+/* =========================================================
+   ÁUDIO — trilha lofi gerada ao vivo + efeitos
+   ========================================================= */
+const Sound = (()=>{
+  let ctx=null, master, sfx, music, keysBus, lfo, noiseBuf, timer=null, nextT=0, step=0, bar=0, playing=false;
+  const BPM=74, SIX=60/BPM/4;
+  const mtof=m=>440*Math.pow(2,(m-69)/12);
+  const CHORDS=[ [53,57,60,64,67], [52,55,59,62,66], [50,53,57,60,64], [48,52,55,59,62] ]; // Fmaj9 Em9 Dm9 Cmaj9
+  const BASS=[41,40,38,36];
+  const PENTA=[72,74,76,79,81,84];
+  function init(){
+    if(ctx) return true;
+    try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return false; }
+    master=ctx.createGain(); master.gain.value=.9; master.connect(ctx.destination);
+    sfx=ctx.createGain(); sfx.gain.value=.55; sfx.connect(master);
+    music=ctx.createGain(); music.gain.value=0;
+    const warm=ctx.createBiquadFilter(); warm.type='lowpass'; warm.frequency.value=2300; warm.Q.value=.4;
+    music.connect(warm); warm.connect(master);
+    keysBus=ctx.createGain(); keysBus.gain.value=.5;
+    const dly=ctx.createDelay(); dly.delayTime.value=SIX*3; const fbk=ctx.createGain(); fbk.gain.value=.28; const dlp=ctx.createBiquadFilter(); dlp.type='lowpass'; dlp.frequency.value=1400;
+    keysBus.connect(music); keysBus.connect(dly); dly.connect(dlp); dlp.connect(fbk); fbk.connect(dly); dlp.connect(music);
+    lfo=ctx.createOscillator(); lfo.frequency.value=.45; const lfoG=ctx.createGain(); lfoG.gain.value=7; lfo.connect(lfoG); lfo.start(); lfo.out=lfoG;
+    noiseBuf=ctx.createBuffer(1, ctx.sampleRate*2, ctx.sampleRate);
+    const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    // chiado de vinil
+    const vb=ctx.createBuffer(1, ctx.sampleRate*3, ctx.sampleRate); const vd=vb.getChannelData(0);
+    for(let i=0;i<vd.length;i++){ vd[i]=(Math.random()*2-1)*.012; if(Math.random()<.00035) vd[i]+= (Math.random()*2-1)*.7; }
+    const vs=ctx.createBufferSource(); vs.buffer=vb; vs.loop=true; const vh=ctx.createBiquadFilter(); vh.type='highpass'; vh.frequency.value=900;
+    const vg=ctx.createGain(); vg.gain.value=.5; vs.connect(vh); vh.connect(vg); vg.connect(music); vs.start();
+    return true;
+  }
+  function key(m,t,dur,vel){
+    const f=mtof(m), env=ctx.createGain(), o1=ctx.createOscillator(), o2=ctx.createOscillator(), g2=ctx.createGain();
+    o1.type='sine'; o1.frequency.value=f; o2.type='triangle'; o2.frequency.value=f*2; g2.gain.value=.12;
+    lfo.out.connect(o1.detune); lfo.out.connect(o2.detune);
+    env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(vel,t+.012); env.gain.exponentialRampToValueAtTime(vel*.35,t+.35); env.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o1.connect(env); o2.connect(g2); g2.connect(env); env.connect(keysBus);
+    o1.start(t); o2.start(t); o1.stop(t+dur+.05); o2.stop(t+dur+.05);
+  }
+  function bass(m,t,dur){
+    const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.value=mtof(m);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.32,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(music); o.start(t); o.stop(t+dur+.05);
+  }
+  function kick(t){ const o=ctx.createOscillator(), g=ctx.createGain(); o.frequency.setValueAtTime(115,t); o.frequency.exponentialRampToValueAtTime(42,t+.13);
+    g.gain.setValueAtTime(.75,t); g.gain.exponentialRampToValueAtTime(.0001,t+.38); o.connect(g); g.connect(music); o.start(t); o.stop(t+.4); }
+  function noise(t,dur,type,freq,vol,dest){ const s=ctx.createBufferSource(); s.buffer=noiseBuf; const f=ctx.createBiquadFilter(); f.type=type; f.frequency.value=freq; f.Q.value=.8;
+    const g=ctx.createGain(); g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur); s.connect(f); f.connect(g); g.connect(dest||music); s.start(t, Math.random()); s.stop(t+dur+.02); }
+  function snare(t){ noise(t,.2,'bandpass',1700,.28); const o=ctx.createOscillator(),g=ctx.createGain(); o.frequency.value=190; g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.0001,t+.1); o.connect(g); g.connect(music); o.start(t); o.stop(t+.12); }
+  function hat(t,v){ noise(t,.05,'highpass',7500,v); }
+  function schedule(st,t){
+    const s16=st%16, ci=bar%4;
+    const swing=(s16%4===2)? SIX*.33 : 0; const tt=t+swing;
+    if(s16===0){ CHORDS[ci].forEach((m,i)=>key(m,t+i*.018,2.6,.11)); bass(BASS[ci],t,1.1); }
+    if(s16===10){ CHORDS[ci].slice(1,4).forEach((m,i)=>key(m+12*(i===2?0:0),tt+i*.015,1.2,.06)); bass(BASS[ci]+7,tt,.5); }
+    if(s16===0||s16===7||s16===10) kick(s16===7?t:tt);
+    if(s16===4||s16===12) snare(t);
+    if(s16%2===0) hat(tt, s16%4===0?.07:.045);
+    if(s16%2===0 && Math.random()<.16){ const m=PENTA[Math.floor(Math.random()*PENTA.length)]; key(m,tt,.9,.05); }
+  }
+  function tick(){
+    while(nextT < ctx.currentTime+.15){ schedule(step,nextT); nextT+=SIX; step++; if(step%16===0) bar++; }
+  }
+  function startMusic(){
+    if(!init()) return; if(ctx.state==='suspended') ctx.resume();
+    if(playing) return; playing=true; nextT=ctx.currentTime+.1; step=0;
+    timer=setInterval(tick,25);
+    music.gain.cancelScheduledValues(ctx.currentTime); music.gain.setTargetAtTime(.5,ctx.currentTime,.9);
+  }
+  function stopMusic(){
+    if(!ctx||!playing) return; playing=false;
+    music.gain.cancelScheduledValues(ctx.currentTime); music.gain.setTargetAtTime(0,ctx.currentTime,.25);
+    const tm=timer; setTimeout(()=>{ if(!playing) clearInterval(tm); },1200);
+  }
+  function tone(f,t,dur,type='sine',vol=.25,to){
+    const o=ctx.createOscillator(), g=ctx.createGain(); o.type=type; o.frequency.setValueAtTime(f,t); if(to) o.frequency.exponentialRampToValueAtTime(to,t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+dur); o.connect(g); g.connect(sfx); o.start(t); o.stop(t+dur+.05);
+  }
+  const fx = {
+    tap(){ tone(660,ctx.currentTime,.07,'sine',.15); },
+    place(){ const t=ctx.currentTime; tone(520,t,.06,'triangle',.18); tone(780,t+.04,.06,'triangle',.12); },
+    correct(){ const t=ctx.currentTime; [784,1047,1319].forEach((f,i)=>tone(f,t+i*.085,.28,'triangle',.22)); tone(1568,t+.26,.5,'sine',.12); },
+    wrong(){ const t=ctx.currentTime; tone(240,t,.16,'square',.07,180); tone(200,t+.15,.24,'square',.07,140); },
+    pop(){ const t=ctx.currentTime; noise(t,.18,'bandpass',2400,.5,sfx); for(let i=0;i<6;i++) tone(1800+Math.random()*2600,t+.05+i*.05,.12,'sine',.06); },
+    fanfare(){ const t=ctx.currentTime; [523,659,784,1047].forEach((f,i)=>tone(f,t+i*.11,.3,'triangle',.2)); [523,659,784,1047].forEach(f=>tone(f,t+.5,1.1,'sine',.09)); this.pop(); },
+    magic(){ const t=ctx.currentTime; for(let i=0;i<10;i++) tone(600+i*140,t+i*.05,.35,'sine',.07); tone(2093,t+.55,.8,'sine',.06); },
+    heart(){ const t=ctx.currentTime; tone(330,t,.25,'sine',.15,160); }
+  };
+  return {
+    play(name){ if(!init()) return; if(ctx.state==='suspended') ctx.resume(); try{ fx[name]&&fx[name](); }catch(e){} },
+    startMusic, stopMusic, get playing(){ return playing; },
+    suspend(){ if(ctx&&ctx.state==='running') ctx.suspend(); }, resume(){ if(ctx&&ctx.state==='suspended') ctx.resume(); }
+  };
+})();
+document.addEventListener('visibilitychange',()=>{ document.hidden ? Sound.suspend() : Sound.resume(); });
+
+function setMusic(on){
+  S.music=on; save();
+  on ? Sound.startMusic() : Sound.stopMusic();
+  document.querySelectorAll('[data-music]').forEach(b=>{ b.innerHTML = on ? IC.music : IC.musicOff; b.title = on ? 'Música lofi ligada' : 'Música lofi desligada'; b.setAttribute('aria-pressed', on); });
+}
+document.querySelectorAll('[data-music]').forEach(b=>b.addEventListener('click',()=>setMusic(!Sound.playing)));
+document.querySelectorAll('[data-music]').forEach(b=>{ b.innerHTML = IC.music; });
+
+/* ---------- voz (TTS) ---------- */
+let enVoice=null;
+function pickVoice(){ try{ const vs=speechSynthesis.getVoices(); enVoice = vs.find(v=>/en[-_]US/i.test(v.lang)&&/female|samantha|google us/i.test(v.name)) || vs.find(v=>/en[-_](US|GB)/i.test(v.lang)) || null; }catch(e){} }
+try{ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }catch(e){}
+function speak(text){
+  try{ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text.replace(/____/g,'blank')); u.lang='en-US'; u.rate=.9; if(enVoice) u.voice=enVoice; speechSynthesis.speak(u); }catch(e){}
+}
+function speakBtn(text, sm){ const b=document.createElement('button'); b.className='speak'+(sm?' sm':''); b.innerHTML=IC.speaker; b.setAttribute('aria-label','Ouvir em inglês'); b.onclick=e=>{ e.stopPropagation(); speak(text); }; return b; }
+
+/* =========================================================
+   CONFETES
+   ========================================================= */
+const Confetti = (()=>{
+  const cv=document.getElementById('confetti'), cx=cv.getContext('2d'); let parts=[], raf=null, dpr=1;
+  const COLORS=['#2563EB','#E87060','#D4AF37','#0E8A8A','#C05070','#58CC02','#F6EEDC','#5b8cff'];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){ dpr=Math.min(2,window.devicePixelRatio||1); cv.width=innerWidth*dpr; cv.height=innerHeight*dpr; }
+  size(); addEventListener('resize',size);
+  function burst(x,y,n=90,power=1){
+    n = reduce ? Math.round(n/4) : n;
+    for(let i=0;i<n;i++){ const a=Math.random()*Math.PI*2, sp=(4+Math.random()*9)*power;
+      parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-6*power,w:6+Math.random()*7,h:8+Math.random()*10,r:Math.random()*6,vr:(Math.random()-.5)*.4,
+        c:COLORS[i%COLORS.length],life:120+Math.random()*60,shape:Math.random()<.25?'c':(Math.random()<.15?'s':'r'),wob:Math.random()*10}); }
+    if(!raf) raf=requestAnimationFrame(loop);
+  }
+  function rain(n=160){ for(let i=0;i<n;i++){ parts.push({x:Math.random()*innerWidth,y:-20-Math.random()*innerHeight*.5,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,w:6+Math.random()*6,h:8+Math.random()*10,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:COLORS[i%COLORS.length],life:260,shape:Math.random()<.2?'s':'r',wob:Math.random()*10}); } if(!raf) raf=requestAnimationFrame(loop); }
+  function star(x,y,r){ cx.beginPath(); for(let i=0;i<10;i++){ const rr=i%2?r*.45:r, a=i*Math.PI/5-Math.PI/2; cx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr); } cx.closePath(); cx.fill(); }
+  function loop(){
+    cx.setTransform(dpr,0,0,dpr,0,0); cx.clearRect(0,0,innerWidth,innerHeight);
+    parts=parts.filter(p=>p.life>0 && p.y<innerHeight+40);
+    for(const p of parts){ p.vy+=.28; p.vx*=.985; p.vy*=.985; p.x+=p.vx+Math.sin((p.wob+=.1))*.6; p.y+=p.vy; p.r+=p.vr; p.life--;
+      cx.save(); cx.globalAlpha=Math.min(1,p.life/40); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c;
+      if(p.shape==='c'){ cx.beginPath(); cx.arc(0,0,p.w/2,0,7); cx.fill(); } else if(p.shape==='s'){ star(0,0,p.w*.8); } else { cx.scale(1,Math.cos(p.wob)); cx.fillRect(-p.w/2,-p.h/2,p.w,p.h); }
+      cx.restore(); }
+    if(parts.length) raf=requestAnimationFrame(loop); else { raf=null; cx.clearRect(0,0,innerWidth,innerHeight); }
+  }
+  return { burst, rain, fromEl(el,n,p){ const r=el.getBoundingClientRect(); burst(r.left+r.width/2, r.top+r.height/2, n, p); } };
+})();
+
+/* =========================================================
+   UI HELPERS
+   ========================================================= */
+const $=(s,r=document)=>r.querySelector(s);
+function h(tag,cls,html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SCREENS=['home','map','story','lesson','result','house','final','grammar','glossary','odu'];
+const TABBED=['map','grammar','glossary','odu'];
+function go(id){
+  SCREENS.forEach(s=>{ $('#'+s).hidden = s!==id; });
+  $('#tabbar').hidden = !TABBED.includes(id);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.go===id));
+  $('#'+id).scrollTop=0;
+  if(id==='map') renderMap();
+  if(id==='grammar') renderGrammar();
+  if(id==='glossary') renderGlossary();
+}
+document.addEventListener('click',e=>{ const g=e.target.closest('[data-go]'); if(g){ Sound.play('tap'); go(g.dataset.go); } });
+
+function chunkRow(chs, sm){ const w=h('div','chunks'+(sm?' sm':'')); chs.forEach(c=>{ const s=h('span','chunk',`<small>${c.k}</small>${esc(c.t)}`); s.dataset.k=c.k; w.appendChild(s); }); return w; }
+function legendEl(){ const w=h('div','legend'); Object.entries(KINDS).forEach(([k,n])=>{ const s=h('span','chunk',`<small>${k}</small>${n}`); s.dataset.k=k; w.appendChild(s); }); return w; }
+
+function modal({img,title,text,buttons}){
+  const bg=h('div','modal-bg'); const m=h('div','modal');
+  if(img){ const i=h('img'); i.src=img; i.alt=''; m.appendChild(i); }
+  m.appendChild(h('h2',null,esc(title))); if(text) m.appendChild(h('p',null,text));
+  const bs=h('div','btns'); buttons.forEach(b=>{ const x=h('button','btn '+(b.cls||''),esc(b.label)); x.onclick=()=>{ bg.remove(); b.fn&&b.fn(); }; bs.appendChild(x); });
+  m.appendChild(bs); bg.appendChild(m); document.body.appendChild(bg); bs.firstChild.focus();
+}
+function toast(msg){ const t=h('div','toast',esc(msg)); document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
+
+function fillOdu(){
+  document.querySelectorAll('[data-odu]').forEach(b=>{
+    b.innerHTML=`<img src="assets/odu-logo.png" alt=""><span>ODU Creative</span><span class="sep">|</span>
+      <a href="https://oducreative.com" target="_blank" rel="noopener">oducreative.com</a><span class="sep">|</span>
+      <a href="https://instagram.com/odu.creative" target="_blank" rel="noopener">Instagram: odu.creative</a><span class="sep">|</span>
+      <a href="https://wa.me/5511956641229" target="_blank" rel="noopener">WhatsApp: 11 95664-1229</a>`;
+  });
+}
+
+/* =========================================================
+   TRILHA (mapa)
+   ========================================================= */
+const OFFS=[0,62,88,40,-40,-80];
+function renderMap(){
+  $('#xpVal').textContent=S.xp;
+  const fr=$('#frags'); fr.innerHTML='';
+  for(let i=1;i<=4;i++){ const g=h('span','frag'+(S.done.includes(i)?' got':''),IC.gem); g.title=MISSIONS[i].frag; fr.appendChild(g); }
+  const p=$('#path'); p.innerHTML='';
+  MISSIONS.forEach((m,i)=>{
+    const st = S.done.includes(i) ? 'done' : (i<=S.unlocked ? 'current' : 'locked');
+    const w=h('div','node-wrap '+st); w.style.transform=`translateX(${OFFS[i]}px)`;
+    const b=h('button','node '+st); b.setAttribute('aria-label',m.title+(st==='locked'?' (bloqueada)':''));
+    b.innerHTML = m.icon==='hat' ? `<img src="${HAT.idle2}" alt="">` : IC[m.icon];
+    if(st==='current') w.appendChild(h('div','start-tip', i===0?'COMEÇAR':'PRÓXIMA'));
+    b.onclick=()=>openMission(i,st);
+    w.appendChild(b); w.appendChild(h('div','node-label',esc(m.title)));
+    p.appendChild(w);
+  });
+  const ph=h('img','path-hat'); ph.src=HAT.smirk; ph.alt=''; ph.style.cssText='left:6px;top:170px'; p.appendChild(ph);
+  const ph2=h('img','path-hat'); ph2.src=HAT.bend; ph2.alt=''; ph2.style.cssText='right:4px;top:520px;transform:scaleX(-1)'; p.appendChild(ph2);
+}
+function openMission(i,st){
+  Sound.play('tap');
+  const m=MISSIONS[i];
+  if(st==='locked'){ const n=$('#path').children[i]; n.classList.remove('shake'); void n.offsetWidth; n.classList.add('shake'); toast('Complete a missão anterior primeiro!'); return; }
+  modal({ img: m.icon==='hat'?HAT.wide:HAT.talk, title:m.title, text:`<b style="color:var(--gold)">${esc(m.sub)}</b>${m.ex?`<br>${m.ex.length} desafios · até ${m.ex.length*10} XP`:''}${S.done.includes(i)?'<br>Missão já concluída — jogue de novo para treinar.':''}`,
+    buttons:[ {label: S.done.includes(i)?'Jogar de novo':'Começar', fn:()=>runMission(i)}, {label:'Agora não', cls:'ghost'} ] });
+}
+function runMission(i){
+  const m=MISSIONS[i];
+  if(m.story){ playStory(m.intro, m.title, ()=>{ completeMission(i,0); }); return; }
+  playStory(m.intro, m.title, ()=>startLesson(i));
+}
+function completeMission(i, xp){
+  S.xp+=xp; if(!S.done.includes(i)) S.done.push(i); S.unlocked=Math.max(S.unlocked, i+1); save();
+  if(i===0){ Confetti.burst(innerWidth/2, innerHeight/3, 120); Sound.play('fanfare'); }
+  go('map');
+}
+
+/* =========================================================
+   HISTÓRIA (diálogos)
+   ========================================================= */
+let typing=null;
+function typeText(node, text, onEnd){
+  let i=0; node.textContent='';
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const id=setInterval(()=>{ i+=2; node.textContent=text.slice(0,i); if(i>=text.length) done(); }, reduce?0:22);
+  function done(){ clearInterval(id); node.textContent=text; typing=null; onEnd&&onEnd(); }
+  typing={ finish:done };
+}
+function storyLine(L){
+  if(L.who==='scene'){ const d=h('div','scene'); d.appendChild(h('span',null,IC.candle)); d.appendChild(h('div',null,`<b>CENA</b>${esc(L.text)}`)); return {el:d}; }
+  if(L.who==='N') return {el:h('div','narr',`<b>NARRADOR</b>${esc(L.text)}`)};
+  if(L.who==='screen') return {el:h('div','screen-text',esc(L.text))};
+  if(L.who==='tip'){ const d=h('div','card'); d.appendChild(h('h3',null,'DICA ODU')); d.appendChild(h('div',null,esc(L.text))); return {el:d}; }
+  if(L.who==='legend'){ const d=h('div','card'); d.appendChild(h('h3',null,'Legenda de Cores — Método ODU Chunking')); d.appendChild(legendEl()); return {el:d}; }
+  if(L.who==='rule'){
+    const d=h('div','card'); d.appendChild(h('h3',null,esc(L.title)));
+    d.appendChild(h('dl','kv',`<dt>FORMA</dt><dd>${esc(L.forma)}</dd><dt>FUNÇÃO</dt><dd>${esc(L.funcao)}</dd><dt>MODO</dt><dd>${esc(L.modo)}</dd>`));
+    const ex=h('div','stack'); ex.style.cssText='gap:8px;padding:10px 0 0';
+    [L.ex,L.ex2].filter(Boolean).forEach(s=>{ const ch=parseChunks(s); const r=h('div'); r.style.cssText='display:flex;gap:8px;align-items:center'; const c=chunkRow(ch,true); c.style.flex='1'; r.appendChild(c); r.appendChild(speakBtn(sentenceOf(ch),true)); ex.appendChild(r); });
+    d.appendChild(ex); return {el:d};
+  }
+  if(L.who==='reward'){ const d=h('div','reward',`${IC.gem}<b>${esc(L.text)}</b><span style="color:var(--muted);font-size:.85rem">+1 fragmento mágico</span>`); return {el:d, reward:true}; }
+  // fala: H (chapéu) ou R (Rafaela)
+  const isHat=L.who==='H';
+  const row=h('div','line '+(isHat?'hat':'raf right'));
+  const av=h('div','avatar');
+  if(isHat){ const im=h('img'); im.src=HAT[L.hat||'talk']; im.alt=''; av.appendChild(im); av.appendChild(h('span',null,'Chapéu')); }
+  else { av.innerHTML=RAFAELA_SVG; av.appendChild(h('span',null,'Rafaela')); }
+  const b=h('div','bubble'); const tx=h('div','txt'); const en=h('div','en'); const pt=h('div','pt',esc(L.pt||'')); pt.style.visibility='hidden';
+  tx.appendChild(en); tx.appendChild(pt); b.appendChild(tx); b.appendChild(speakBtn(L.en,true));
+  row.appendChild(av); row.appendChild(b);
+  return {el:row, type:()=>{ if(isHat) av.classList.add('talking'); typeText(en, L.en, ()=>{ av.classList.remove('talking'); if(isHat) av.querySelector('img').src=HAT[(L.hat&&L.hat!=='talk')?L.hat:'idle']; pt.style.visibility='visible'; }); if(S.voice) speak(L.en); }};
+}
+let storyNextFn=null;
+function playStory(lines, title, done){
+  go('story'); $('#storyTitle').textContent=title;
+  const log=$('#storyLog'); log.innerHTML=''; let i=0;
+  const next=$('#storyNext');
+  function show(){
+    const r=storyLine(lines[i]); log.appendChild(r.el);
+    if(r.type) r.type();
+    if(r.reward){ Sound.play('magic'); setTimeout(()=>Confetti.fromEl(r.el,110,1),120); }
+    next.textContent = i===lines.length-1 ? 'Continuar' : 'Continuar';
+    requestAnimationFrame(()=>r.el.scrollIntoView({behavior:'smooth',block:'end'}));
+  }
+  storyNextFn=()=>{ if(typing){ typing.finish(); return; } Sound.play('tap'); i++; if(i>=lines.length){ storyNextFn=null; try{speechSynthesis.cancel();}catch(e){} done(); } else show(); };
+  next.onclick=storyNextFn;
+  if(lines.length) show(); else { storyNextFn=null; done(); }
+}
+$('#storyClose').onclick=()=>{ try{speechSynthesis.cancel();}catch(e){} if(typing) typing.finish(); go('map'); };
+
+/* =========================================================
+   LIÇÃO (exercícios)
+   ========================================================= */
+let L=null;
+function startLesson(mi){
+  const m=MISSIONS[mi];
+  L={ mi, queue:m.ex.map(e=>({...e})), pos:0, solved:0, total:m.ex.length, hearts:5, ok:0, tot:0, xp:0, state:'answer', cur:null };
+  go('lesson'); renderEx();
+}
+function setHearts(hit){ $('#heartVal').textContent=L.hearts; const hs=$('#hearts'); if(hit){ hs.classList.remove('hit'); void hs.offsetWidth; hs.classList.add('hit'); } }
+function setCheck(enabled,label){ const b=$('#checkBtn'); b.disabled=!enabled; if(label) b.textContent=label; }
+function hatPrompt(img, contentEl){
+  const p=h('div','prompt'); const hw=h('div','hat'); const im=h('img'); im.src=img; im.alt='Chapéu Seletor'; hw.appendChild(im);
+  const b=h('div','bubble'); b.appendChild(contentEl); p.appendChild(hw); p.appendChild(b); return {p, im, b};
+}
+function renderEx(){
+  const ex=L.queue[L.pos]; const body=$('#exBody'); body.innerHTML='';
+  const foot=$('#foot'); foot.className='lesson-foot'; $('#fb').innerHTML='';
+  const cb=$('#checkBtn'); cb.className='btn'; setCheck(false,'Verificar');
+  $('#prog').style.width=(L.solved/L.total*100)+'%'; setHearts();
+  L.state='answer'; L.cur={ex};
+  body.appendChild(h('div','mission-tag',esc(MISSIONS[L.mi].title)+(ex._tried?' · revisão':'')));
+  if(ex.t==='mc') renderMC(ex,body);
+  else if(ex.t==='build'||ex.t==='fix') renderBuild(ex,body);
+  else if(ex.t==='fill') renderFill(ex,body);
+  else if(ex.t==='prod') renderProd(ex,body);
+}
+function renderMC(ex,body){
+  body.appendChild(h('div','ins',esc(ex.ins)));
+  if(ex.q){
+    const t=h('div','txt'); const q=h('div','q-sent'); q.innerHTML=esc(ex.q).replace(/____/g,'<span class="gap"></span>'); t.appendChild(q);
+    const r=hatPrompt(HAT.talk,t); r.b.appendChild(speakBtn(ex.q,true)); L.cur.hatImg=r.im; body.appendChild(r.p);
+  } else { const r=hatPrompt(HAT.think,h('div','txt',`<div class="q-sent">Pense bem, Rafaela...</div>`)); L.cur.hatImg=r.im; body.appendChild(r.p); }
+  const opts=h('div','opts');
+  ex.opts.forEach((o,i)=>{ const b=h('button','opt',`<span class="num">${i+1}</span><span>${esc(o)}</span>`); b.setAttribute('aria-pressed','false');
+    b.onclick=()=>{ if(L.state!=='answer') return; Sound.play('tap'); opts.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); L.cur.sel=i; setCheck(true); };
+    opts.appendChild(b); });
+  body.appendChild(opts); L.cur.opts=opts;
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function renderBuild(ex,body){
+  body.appendChild(h('div','ins',esc(ex.ins)));
+  const t=h('div','txt'); t.appendChild(h('div','q-sent',esc(ex.pt)));
+  if(ex.wrong) t.appendChild(h('div','wrong-line',esc(ex.wrong)));
+  const r=hatPrompt(ex.wrong?HAT.think:HAT.talk,t); if(ex.wrong) r.b.appendChild(speakBtn(ex.wrong,true)); L.cur.hatImg=r.im; body.appendChild(r.p);
+  const target=parseChunks(ex.chunks); const all=shuffle(target.concat(parseChunks(ex.extra)).map((c,i)=>({...c,id:i})));
+  L.cur.target=target; L.cur.placed=[];
+  const line=h('div','answer-line'); line.setAttribute('aria-label','Sua frase'); const bank=h('div','bank');
+  const legend=h('div','legend-mini'); Object.entries(KINDS).forEach(([k,n])=>{ legend.appendChild(h('span',null,`<i style="background:var(--c-${k})"></i>${k} · ${n.split(' /')[0]}`)); });
+  all.forEach(c=>{
+    const b=h('button','chunk',`<small>${c.k}</small>${esc(c.t)}`); b.dataset.k=c.k;
+    b.onclick=()=>{ if(L.state!=='answer') return; Sound.play('place');
+      const p=h('button','chunk pop',`<small>${c.k}</small>${esc(c.t)}`); p.dataset.k=c.k;
+      p.onclick=()=>{ if(L.state!=='answer') return; Sound.play('tap'); p.remove(); b.classList.remove('ghost'); L.cur.placed=L.cur.placed.filter(x=>x.c!==c); setCheck(L.cur.placed.length>0); };
+      line.appendChild(p); b.classList.add('ghost'); L.cur.placed.push({c,el:p}); setCheck(true); };
+    bank.appendChild(b);
+  });
+  body.appendChild(line); body.appendChild(bank); body.appendChild(legend); L.cur.line=line;
+}
+function renderFill(ex,body){
+  body.appendChild(h('div','ins',esc(ex.ins)));
+  const r=hatPrompt(HAT.talk,h('div','txt','<div class="q-sent">Complete o feitiço com o tempo verbal certo.</div>')); L.cur.hatImg=r.im; body.appendChild(r.p);
+  const s=h('div','fill-sent'); const inputs=[];
+  ex.parts.forEach((part,i)=>{
+    s.appendChild(document.createTextNode(part));
+    if(i<ex.parts.length-1){
+      const inp=h('input'); inp.type='text'; inp.id='fill-'+L.pos+'-'+i; inp.autocomplete='off'; inp.autocapitalize='off'; inp.spellcheck=false;
+      const longest=Math.max(...ex.ans[i].map(a=>a.length)); inp.size=Math.max(4,longest+1);
+      inp.setAttribute('aria-label','Lacuna '+(i+1)+(ex.labels[i]&&ex.labels[i]!=='…'?' — verbo '+ex.labels[i]:''));
+      inp.oninput=()=>setCheck(inputs.every(x=>x.value.trim()));
+      inp.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); if(!$('#checkBtn').disabled) onCheck(); } };
+      s.appendChild(inp); inputs.push(inp);
+      if(ex.labels[i] && ex.labels[i]!=='…') s.appendChild(h('span','verb',' ('+esc(ex.labels[i])+')'));
+    }
+  });
+  body.appendChild(s); L.cur.inputs=inputs; setTimeout(()=>inputs[0].focus(),50);
+}
+function renderProd(ex,body){
+  body.appendChild(h('div','ins','Responda ao Chapéu em inglês'));
+  const t=h('div','txt'); t.appendChild(h('div','q-sent',esc(ex.q))); t.appendChild(h('div','pt',esc(ex.pt)));
+  const r=hatPrompt(HAT.wide,t); r.b.appendChild(speakBtn(ex.q,true)); L.cur.hatImg=r.im; body.appendChild(r.p);
+  if(S.voice) speak(ex.q);
+  const ta=h('textarea'); ta.id='prod-'+L.pos; ta.placeholder= ex.want==='FC' ? 'Ex.: At 8 p.m., I will be ...' : 'Ex.: By then, I will have ...';
+  ta.setAttribute('aria-label','Sua resposta em inglês'); ta.value=L.cur.draft||'';
+  ta.oninput=()=>setCheck(ta.value.trim().length>3);
+  body.appendChild(ta);
+  body.appendChild(h('div','helper', ex.want==='FC' ? 'Use o Future Continuous: <b>will be + verbo-ing</b> (ação em andamento).' : 'Use o Future Perfect: <b>will have + particípio</b> (ação concluída até um prazo).'));
+  L.cur.ta=ta; setTimeout(()=>ta.focus(),50);
+}
+
+/* ---------- correção ---------- */
+const norm = s => s.toLowerCase().replace(/[’‘`]/g,"'").replace(/\bwon't\b/g,'will not').replace(/\b(i|you|we|they|he|she|it)'ll\b/g,'$1 will').replace(/^'ll/,'will').replace(/'ll\b/g,' will')
+  .replace(/[.,!?;:]/g,' ').replace(/\s+/g,' ').trim();
+function sameSeq(a,b){ return a.length===b.length && a.every((x,i)=>norm(x.t)===norm(b[i].t)); }
+function checkBuild(placed,target){
+  const p=placed.map(x=>x.c);
+  if(sameSeq(p,target)) return true;
+  if(target[0].k==='ADV' && target.length>2 && sameSeq(p, target.slice(1).concat([target[0]]))) return true;
+  const last=target[target.length-1];
+  if(last.k==='ADV' && !/\?$/.test(last.t) && sameSeq(p, [last].concat(target.slice(0,-1)))) return true;
+  return false;
+}
+function analyzeProd(text, want){
+  const t=' '+norm(text.replace(/'ll\b/g,' will'))+' ';
+  const words=t.trim().split(' ').filter(Boolean);
+  if(words.length<4) return {ok:false,msg:'Escreva uma frase completa (sujeito + auxiliar + verbo + complemento).'};
+  if(!/\bwill\b/.test(t)) return {ok:false,msg:'Seu feitiço precisa do WILL. '+(want==='FC'?'Use will be + verbo-ing.':'Use will have + particípio.')};
+  if(/\bwill (?:not )?(?:\w+ )?have be\b/.test(t)) return {ok:false,msg:'Não misture os dois tempos: escolha be + -ing OU have + particípio.'};
+  const fc=/\bwill (?:not )?(?:\w+ )?be \w+ing\b/.test(t);
+  const fpm=t.match(/\bwill (?:not )?(?:\w+ )?have (\w+)/);
+  const fp=!!(fpm && fpm[1]!=='be' && !/ing$/.test(fpm[1]) && fpm[1]!=='to');
+  if(want==='FC' && fc) return {ok:true};
+  if(want==='FP' && fp) return {ok:true};
+  if(want==='FC' && fp) return {ok:false,msg:'Você usou o Future Perfect. Aqui o Chapéu pediu o Future Continuous: will be + verbo-ing (ação em andamento).'};
+  if(want==='FP' && fc) return {ok:false,msg:'Você usou o Future Continuous. Aqui o Chapéu pediu o Future Perfect: will have + particípio (ação concluída até um prazo).'};
+  if(/\bwill (?:not )?(?:\w+ )?\w+ing\b/.test(t)) return {ok:false,msg:'O BE não pode sumir: will + be + -ing.'};
+  if(/\bwill (?:not )?(?:\w+ )?have \w+ing\b/.test(t)) return {ok:false,msg:'Depois de will have vem o particípio passado (finished, prepared, eaten...).'};
+  if(/\bwill (?:not )?\w+ed\b/.test(t)) return {ok:false,msg:'Falta o HAVE: will have + particípio ("will finished" não existe).'};
+  return {ok:false,msg: want==='FC' ? 'Use a estrutura will be + verbo com -ing.' : 'Use a estrutura will have + particípio passado.'};
+}
+function onCheck(){
+  if(!L) return;
+  if(L.state==='feedback'){ nextEx(); return; }
+  if(L.state==='retry'){ L.state='answer'; const d=L.cur.ta.value; L.cur.draft=d; renderExKeep(); return; }
+  const ex=L.cur.ex; let ok=false, msg='', fullSent=ex.full, chunks=null;
+  if(ex.t==='mc'){ if(L.cur.sel==null) return; ok = L.cur.sel===ex.a; }
+  else if(ex.t==='build'||ex.t==='fix'){ ok=checkBuild(L.cur.placed,L.cur.target); chunks=L.cur.target; fullSent=sentenceOf(L.cur.target); }
+  else if(ex.t==='fill'){ ok = L.cur.inputs.every((inp,i)=>ex.ans[i].some(a=>norm(a)===norm(inp.value))); }
+  else if(ex.t==='prod'){ const r=analyzeProd(L.cur.ta.value, ex.want); ok=r.ok; msg=r.msg; fullSent=L.cur.ta.value.trim(); }
+  const first=!ex._tried; ex._tried=true;
+  if(first){ L.tot++; if(ok) L.ok++; }
+  if(ok){ L.solved++; L.xp += first?10:5; }
+  else if(ex.t!=='prod'){ L.hearts--; setHearts(true); L.queue.push({...ex}); Sound.play('heart'); }
+  showFeedback(ok, ex, fullSent, chunks, msg);
+}
+function renderExKeep(){ const draft=L.cur.draft; renderEx(); L.cur.draft=draft; if(L.cur.ta){ L.cur.ta.value=draft||''; setCheck((draft||'').trim().length>3); } }
+const PRAISE=['Excelente!','Muito bem!','Perfeito!','Mágico!','Incrível!','Isso mesmo!'];
+function showFeedback(ok, ex, full, chunks, msg){
+  const foot=$('#foot'); foot.className='lesson-foot '+(ok?'ok':'bad');
+  const fb=h('div','fb '+(ok?'ok':'bad'));
+  fb.appendChild(h('div','badge', ok?IC.check:IC.close));
+  const body=h('div','body');
+  body.appendChild(h('h3',null, ok ? PRAISE[Math.floor(Math.random()*PRAISE.length)] : (ex.t==='prod'?'Quase lá!':'Ops! Não foi dessa vez.')));
+  if(ex.t==='prod'){
+    if(ok){ body.appendChild(h('div','label','Sua frase:')); const r=h('div'); r.style.cssText='display:flex;gap:8px;align-items:center'; r.appendChild(h('div','sent',esc(full))); r.appendChild(speakBtn(full,true)); body.appendChild(r); }
+    else { const hi=h('div','hint'); const im=h('img'); im.src=HAT.lean; im.alt=''; hi.appendChild(im); hi.appendChild(h('div',null,esc(msg))); body.appendChild(hi); }
+    body.appendChild(h('div','pt','Modelo de resposta: <b>'+esc(ex.model)+'</b>'));
+  } else {
+    body.appendChild(h('div','label', ok?'Frase completa:':'Resposta correta:'));
+    const r=h('div'); r.style.cssText='display:flex;gap:8px;align-items:center';
+    const c = chunks ? chunkRow(chunks,true) : h('div','sent',esc(full)); c.style.flex='1'; r.appendChild(c); r.appendChild(speakBtn(full,true)); body.appendChild(r);
+    if(ex.pt) body.appendChild(h('div','pt',esc(ex.pt)));
+    if(!ok && ex.hint){ const hi=h('div','hint'); const im=h('img'); im.src=HAT.lean; im.alt=''; hi.appendChild(im); hi.appendChild(h('div',null,'<b>O Chapéu explica:</b> '+esc(ex.hint))); body.appendChild(hi); }
+  }
+  fb.appendChild(body); $('#fb').innerHTML=''; $('#fb').appendChild(fb);
+  const cb=$('#checkBtn'); cb.disabled=false; cb.className='btn'+(ok?'':' red');
+  if(ok){
+    cb.textContent='Continuar'; L.state='feedback';
+    if(L.cur.hatImg) L.cur.hatImg.src=HAT.shout;
+    Sound.play('correct'); setTimeout(()=>Sound.play('pop'),180);
+    const src = L.cur.line || L.cur.opts || (L.cur.inputs&&L.cur.inputs[0]) || L.cur.ta || $('#exBody');
+    Confetti.fromEl(src,110,1);
+    $('#prog').style.width=(L.solved/L.total*100)+'%';
+    if(S.voice && ex.t!=='prod') speak(full);
+  } else {
+    Sound.play('wrong');
+    if(L.cur.hatImg) L.cur.hatImg.src=HAT.lean;
+    const target=L.cur.line||L.cur.opts||$('#exBody').querySelector('.fill-sent')||L.cur.ta; if(target){ target.classList.remove('shake'); void target.offsetWidth; target.classList.add('shake'); }
+    if(ex.t==='prod'){ cb.textContent='Tentar de novo'; L.state='retry'; L.cur.draft=L.cur.ta.value; }
+    else { cb.textContent='Continuar'; L.state='feedback'; }
+  }
+  // trava interação
+  $('#exBody').querySelectorAll('input,textarea').forEach(x=>{ if(L.state!=='retry') x.readOnly=true; });
+  cb.focus({preventScroll:true});
+}
+function nextEx(){
+  try{ speechSynthesis.cancel(); }catch(e){}
+  if(L.hearts<=0){ outOfHearts(); return; }
+  L.pos++;
+  if(L.pos>=L.queue.length) finishLesson(); else renderEx();
+}
+$('#checkBtn').onclick=onCheck;
+function outOfHearts(){
+  const mi=L.mi;
+  modal({ img:HAT.lean, title:'Seus corações acabaram!', text:'O Chapéu Seletor recarregou sua magia. Revise as dicas e tente esta missão de novo — errar faz parte do aprendizado.',
+    buttons:[ {label:'Tentar de novo', fn:()=>startLesson(mi)}, {label:'Voltar à trilha', cls:'ghost', fn:()=>{ L=null; go('map'); }} ] });
+}
+$('#quitBtn').onclick=()=>{
+  modal({ img:HAT.think, title:'Sair da missão?', text:'Você vai perder o progresso desta lição.',
+    buttons:[ {label:'Continuar estudando'}, {label:'Sair', cls:'red', fn:()=>{ try{speechSynthesis.cancel();}catch(e){} L=null; go('map'); }} ] });
+};
+
+function finishLesson(){
+  const m=MISSIONS[L.mi]; const acc = L.tot ? Math.round(L.ok/L.tot*100) : 100;
+  const bonus = L.hearts===5 ? 20 : 0; const gained=L.xp+bonus;
+  const prev=S.stats[L.mi]; if(!prev || acc>=prev.acc) S.stats[L.mi]={acc, ok:L.ok, tot:L.tot};
+  save();
+  go('result');
+  $('#resTitle').textContent = m.final ? 'Desafio de produção concluído!' : 'Missão concluída!';
+  $('#resText').textContent = bonus ? 'Nenhum coração perdido: +20 XP de bônus!' : 'Cada erro corrigido deixa sua magia mais forte.';
+  $('#resXp').textContent=gained; $('#resAcc').textContent=acc+'%'; $('#resHearts').textContent=L.hearts;
+  Sound.play('fanfare'); Confetti.rain(170); setTimeout(()=>Confetti.burst(innerWidth/2,innerHeight*.35,140,1.2),250);
+  const mi=L.mi;
+  $('#resNext').onclick=()=>{
+    Sound.play('tap');
+    S.xp+=gained; if(!S.done.includes(mi)) S.done.push(mi); S.unlocked=Math.max(S.unlocked,mi+1); save();
+    L=null;
+    playStory(m.outro, m.title, ()=>{ if(m.final) houseCeremony(); else go('map'); });
+  };
+}
+
+/* =========================================================
+   ESCOLHA DA CASA
+   ========================================================= */
+function houseScores(){
+  const sc={};
+  for(const [k,hz] of Object.entries(HOUSES)){ const v=hz.missions.map(i=>S.stats[i]?S.stats[i].acc:0); sc[k]=Math.round(v.reduce((a,b)=>a+b,0)/v.length); }
+  return sc;
+}
+function houseCeremony(){
+  go('house');
+  const sc=houseScores(); const doors=$('#doors'); doors.innerHTML='';
+  const keys=Object.keys(HOUSES);
+  keys.forEach(k=>{ const hz=HOUSES[k]; const d=h('div','door'); d.style.setProperty('--hc',hz.color);
+    d.innerHTML=`<b>${hz.name}</b><p>${hz.desc}</p><div class="pct">${sc[k]}%</div><div class="bar"><i style="width:${sc[k]}%"></i></div>`; d.dataset.k=k; doors.appendChild(d); });
+  $('#houseMsg').hidden=true; $('#houseNext').hidden=true; $('#houseHat').src=HAT.think;
+  $('#houseSay').textContent='Hmm... difficult. Very difficult...'; $('#houseSayPt').textContent='Hmm... difícil. Muito difícil... Vejo muito talento aqui.';
+  if(S.voice) speak('Hmm... difficult. Very difficult...');
+  const max=Math.max(...keys.map(k=>sc[k])); const best=keys.filter(k=>sc[k]===max); const pick=best[Math.floor(Math.random()*best.length)];
+  const els=[...doors.children]; let n=0; const total=12+keys.indexOf(pick);
+  const spin=setInterval(()=>{ els.forEach(e=>e.classList.remove('flash')); els[n%4].classList.add('flash'); Sound.play('tap'); n++;
+    if(n>total){ clearInterval(spin); reveal(); } }, 230);
+  function reveal(){
+    els.forEach(e=>{ e.classList.remove('flash'); e.classList.add(e.dataset.k===pick?'chosen':'dim'); });
+    const hz=HOUSES[pick]; S.house=pick; save();
+    $('#houseHat').src=HAT.shout;
+    const name=hz.name.toUpperCase();
+    $('#houseSay').textContent=name+'!'; $('#houseSayPt').textContent='As portas se iluminam de acordo com suas respostas e seu desempenho nas missões.';
+    if(S.voice) speak(hz.name.replace('Casa','House').replace(' do ',' of ').replace(' dos ',' of ').replace(' da ',' of '));
+    const weakest=keys.reduce((a,b)=>sc[b]<sc[a]?b:a);
+    const msg=$('#houseMsg'); msg.hidden=false;
+    msg.innerHTML=`Rafaela pertence à <b style="color:${hz.color}">${hz.name}</b>: ${hz.desc.toLowerCase()} As casas representam habilidades diferentes; nenhuma é melhor que a outra.`+
+      (sc[weakest]<100 && weakest!==pick ? `<br><br>Para continuar crescendo, pratique o conteúdo da <b>${HOUSES[weakest].name}</b> (${HOUSES[weakest].desc.toLowerCase()})` : '');
+    Sound.play('fanfare'); Confetti.rain(200); Confetti.fromEl(doors.querySelector('.chosen'),160,1.3);
+    $('#houseNext').hidden=false;
+    $('#houseNext').onclick=()=>{ Sound.play('tap'); playStory(MISSIONS[5].closing,'Encerramento',()=>showFinal()); };
+  }
+}
+function showFinal(){
+  go('final');
+  const hz=HOUSES[S.house||'voz']; const fh=$('#finalHouse'); fh.style.setProperty('--hc',hz.color);
+  fh.innerHTML=`<b>${hz.name}</b><p>${hz.desc}</p>`;
+  $('#finXp').textContent=S.xp;
+  const v=Object.values(S.stats); $('#finAcc').textContent=(v.length?Math.round(v.reduce((a,b)=>a+b.acc,0)/v.length):0)+'%';
+  $('#finFr').textContent=[1,2,3,4].filter(i=>S.done.includes(i)).length;
+  const items=['Entendo a forma (estrutura) de cada ponto desta unidade.','Sei quando usar cada estrutura (função).','Consigo evitar os erros comuns apresentados.','Consigo produzir frases próprias com Future Perfect & Future Continuous.'];
+  const cl=$('#selfCheck'); cl.innerHTML='';
+  items.forEach((t,i)=>{ const lb=h('label'); const cbx=h('input'); cbx.type='checkbox'; cbx.id='self-'+i; cbx.checked=!!S.self[i];
+    cbx.onchange=()=>{ S.self[i]=cbx.checked; save(); if(cbx.checked){ Sound.play('place'); Confetti.fromEl(cbx,30,.6); } };
+    lb.appendChild(cbx); lb.appendChild(h('span',null,esc(t))); cl.appendChild(lb); });
+  Sound.play('fanfare'); Confetti.rain(220);
+}
+
+/* =========================================================
+   GUIA E GLOSSÁRIO
+   ========================================================= */
+function renderGrammar(){
+  const g=$('#grammarBody'); if(g.childElementCount) return;
+  const lg=h('div','card'); lg.appendChild(h('h3',null,'Legenda de Cores — Método ODU Chunking')); lg.appendChild(legendEl()); g.appendChild(lg);
+  GRAMMAR.forEach(p=>{
+    const c=h('div','card'); c.appendChild(h('h3',null,`<span class="point-tag">${p.tag}</span>${esc(p.title)}`));
+    c.appendChild(h('dl','kv',`<dt>FORMA</dt><dd>${esc(p.forma)}</dd><dt>FUNÇÃO</dt><dd>${esc(p.funcao)}</dd><dt>MODO</dt><dd>${esc(p.modo)}</dd>`));
+    const exs=h('div','stack'); exs.style.cssText='gap:8px;padding:12px 0 0';
+    p.ex.forEach(s=>{ const ch=parseChunks(s); const r=h('div'); r.style.cssText='display:flex;gap:8px;align-items:center'; const row=chunkRow(ch,true); row.style.flex='1'; r.appendChild(row); r.appendChild(speakBtn(sentenceOf(ch),true)); exs.appendChild(r); });
+    c.appendChild(exs);
+    c.appendChild(h('div','errcmp',`<div class="x"><b>✗ Erro comum</b><br>${esc(p.x)}</div><div class="v"><b>✓ Forma correta</b><br>${esc(p.v)}</div>`));
+    c.appendChild(h('div','obs',`<b>Por quê?</b> ${esc(p.why)}<br><b>OBS:</b> ${esc(p.obs)}`));
+    g.appendChild(c);
+  });
+  const sum=h('div','card'); sum.appendChild(h('h3',null,'Quadro-resumo da unidade'));
+  sum.appendChild(h('div','tbl-wrap',`<table><thead><tr><th>Tempo</th><th>Forma</th><th>Uso</th><th>Marcadores</th></tr></thead><tbody>
+   <tr><td><b>Future Continuous</b></td><td>will be + -ing</td><td>Ação em andamento num momento futuro</td><td>at this time tomorrow, at 8 p.m.</td></tr>
+   <tr><td><b>Future Perfect</b></td><td>will have + particípio</td><td>Ação concluída antes de um momento futuro</td><td>by Friday, by the time…, by 2030</td></tr></tbody></table>`));
+  sum.appendChild(h('div','obs','<b>Truque ODU:</b> AT → continuous (fotografia); BY → perfect (prazo final).'));
+  g.appendChild(sum);
+}
+let glTab=0;
+function renderGlossary(){
+  const seg=$('#glSeg'); seg.innerHTML='';
+  GLOSSARY.forEach((g,i)=>{ const b=h('button',null,esc(g.name)); b.setAttribute('aria-pressed',i===glTab); b.onclick=()=>{ Sound.play('tap'); glTab=i; renderGlossary(); }; seg.appendChild(b); });
+  const body=$('#glBody'); body.innerHTML=''; const g=GLOSSARY[glTab];
+  const card=h('div','card');
+  if(g.speaking){
+    card.appendChild(h('h3',null,'Speaking Practice — pergunte e responda'));
+    g.rows.forEach(r=>{ const row=h('div','gl-row'); row.appendChild(h('div','t',`<b>ASK · ${esc(r[0])}</b><em>Responda em voz alta usando a mesma estrutura da pergunta.</em>`)); row.appendChild(speakBtn(r[0],true)); card.appendChild(row); });
+    const mc=h('div','card'); mc.appendChild(h('h3',null,'Mini Challenge: complete as frases'));
+    ['By Friday, I will have ______.','At 8 p.m. tonight, I will be ______.','By the time my friends arrive, I will have ______.','This time next week, I will be ______.'].forEach((s,i)=>mc.appendChild(h('div','gl-row',`<div class="t"><b>${i+1}. ${esc(s)}</b></div>`)));
+    mc.appendChild(h('div','obs','<b>ODU TIP:</b> AT + horário = ação em andamento (Future Continuous). BY + prazo de conclusão = ação já concluída (Future Perfect).'));
+    body.appendChild(card); body.appendChild(mc); return;
+  }
+  card.appendChild(h('h3',null,esc(g.name)));
+  g.rows.forEach(r=>{ const row=h('div','gl-row'); row.appendChild(h('div','t',`<b>${esc(r[0])}</b><span>${esc(r[1])}</span><em>${esc(r[2])}</em>`)); row.appendChild(speakBtn(r[2],true)); card.appendChild(row); });
+  body.appendChild(card);
+}
+
+/* =========================================================
+   ODU / CONFIGURAÇÕES
+   ========================================================= */
+function paintVoice(){ $('#voiceBtn').textContent='Voz em inglês: '+(S.voice?'ligada':'desligada'); }
+$('#voiceBtn').onclick=()=>{ S.voice=!S.voice; save(); paintVoice(); Sound.play('tap'); };
+$('#copyWa').onclick=()=>{ const n='11 95664-1229'; const p=navigator.clipboard&&navigator.clipboard.writeText(n); if(p) p.then(()=>toast('Número copiado!'),()=>toast(n)); else toast(n); };
+$('#resetBtn').onclick=()=>modal({ img:HAT.lean, title:'Reiniciar a jornada?', text:'Todo o progresso, XP, fragmentos e a casa escolhida serão apagados.',
+  buttons:[ {label:'Cancelar', cls:'ghost'}, {label:'Reiniciar', cls:'red', fn:()=>{ const m=S.music, v=S.voice; S=fresh(); S.music=m; S.voice=v; save(); go('home'); paintHome(); }} ] });
+
+function paintHome(){ $('#startBtn').textContent = S.done.length ? 'Continuar jornada' : 'Começar jornada'; }
+$('#startBtn').onclick=()=>{ Sound.play('tap'); if(S.music) setMusic(true); go('map'); };
+$('#guideBtnHome').onclick=()=>{ Sound.play('tap'); if(S.music) setMusic(true); go('grammar'); };
+
+document.addEventListener('keydown',e=>{
+  if(document.querySelector('.modal-bg')) return;
+  const tag=(e.target.tagName||'').toLowerCase();
+  if(!$('#lesson').hidden){
+    if(e.key==='Enter' && tag!=='textarea' && tag!=='input' && !$('#checkBtn').disabled && tag!=='button'){ e.preventDefault(); onCheck(); }
+    if(L && L.state==='answer' && L.cur.opts && /^[1-9]$/.test(e.key) && tag!=='input' && tag!=='textarea'){ const b=L.cur.opts.children[+e.key-1]; if(b) b.click(); }
+  } else if(!$('#story').hidden && (e.key==='Enter'||e.key===' ') && tag!=='button'){ e.preventDefault(); storyNextFn&&storyNextFn(); }
+});
+
+paintIcons(); fillOdu(); paintVoice(); paintHome();
+setMusicIcons();
+function setMusicIcons(){ document.querySelectorAll('[data-music]').forEach(b=>{ b.innerHTML = S.music ? IC.music : IC.musicOff; }); }
+</script>
+</body>
+</html>
