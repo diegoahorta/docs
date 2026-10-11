@@ -1,0 +1,626 @@
+<title>Dark Grammar Invasion</title>
+<meta name="description" content="Sobreviva a uma invasão alienígena resolvendo puzzles de gramática inglesa e desperte o robô ODU-X.">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#05070d; font-family:'Segoe UI',system-ui,sans-serif; color:#dfe7ef; color-scheme:dark; -webkit-user-select:none; user-select:none; }
+  #game { position:fixed; inset:0; }
+  canvas.webgl { display:block; }
+  button { font-family:inherit; }
+  button:focus-visible { outline:2px solid #ffb347; outline-offset:2px; }
+  .vignette { position:fixed; inset:0; pointer-events:none; background:radial-gradient(ellipse at center, transparent 40%, rgba(180,0,20,.55) 100%); opacity:.1; transition:opacity .3s; z-index:5; }
+  /* HUD */
+  .hud-tl { position:fixed; top:calc(14px + env(safe-area-inset-top,0px)); left:14px; z-index:10; display:flex; flex-direction:column; gap:8px; }
+  .bar { display:flex; align-items:center; gap:8px; font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
+  .bar span { width:52px; text-shadow:0 1px 3px #000; }
+  .track { width:140px; max-width:36vw; height:10px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); border-radius:6px; overflow:hidden; }
+  .fill { height:100%; transition:width .2s; }
+  .fill-hp { background:linear-gradient(90deg,#ff2d4d,#ff7a5c); }
+  .fill-st { background:linear-gradient(90deg,#2dd4bf,#7ef9e2); }
+  .cores { display:flex; align-items:center; gap:5px; font-size:11px; }
+  .core { width:12px; height:12px; border-radius:50%; border:1px solid #3ff0d2; background:transparent; }
+  .core.on { background:#ffb347; border-color:#ffb347; box-shadow:0 0 8px #ffb347; }
+  .cores em { font-style:normal; margin-left:6px; opacity:.8; }
+  .minimap { position:fixed; top:calc(14px + env(safe-area-inset-top,0px)); right:14px; z-index:10; width:110px; height:110px; background:rgba(5,10,18,.75); border:1px solid rgba(63,240,210,.4); border-radius:8px; }
+  .prompt { position:fixed; bottom:calc(150px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%); z-index:10; background:rgba(10,20,30,.85); color:#7ef9e2; border:1px solid #3ff0d2; padding:10px 22px; border-radius:8px; font-size:14px; cursor:pointer; letter-spacing:.05em; max-width:calc(100vw - 32px); }
+  .prompt:hover { background:rgba(63,240,210,.15); }
+  .toast { position:fixed; top:calc(70px + env(safe-area-inset-top,0px)); left:50%; transform:translateX(-50%); z-index:10; background:rgba(10,20,30,.9); border:1px solid #ffb347; color:#ffcf8a; padding:10px 20px; border-radius:8px; font-size:14px; max-width:calc(100vw - 32px); text-align:center; }
+  .lore { position:fixed; bottom:calc(150px + env(safe-area-inset-bottom,0px)); left:14px; z-index:9; max-width:min(340px, calc(100vw - 28px)); font-size:12px; font-style:italic; color:#9fd8cf; background:rgba(5,10,18,.7); padding:8px 12px; border-left:2px solid #3ff0d2; border-radius:4px; }
+  /* Touch controls */
+  .pad { position:fixed; bottom:calc(20px + env(safe-area-inset-bottom,0px)); left:20px; z-index:10; display:grid; grid-template-columns:repeat(3,52px); grid-template-rows:repeat(2,52px); gap:6px; }
+  .pb { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:#dfe7ef; border-radius:10px; font-size:18px; touch-action:none; }
+  .pb.up{grid-column:2;grid-row:1} .pb.left{grid-column:1;grid-row:2} .pb.down{grid-column:2;grid-row:2} .pb.right{grid-column:3;grid-row:2}
+  .actions { position:fixed; bottom:calc(20px + env(safe-area-inset-bottom,0px)); right:20px; z-index:10; display:flex; gap:10px; }
+  .ab { width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:#dfe7ef; font-size:13px; touch-action:none; }
+  .ab-main { background:rgba(63,240,210,.2); border-color:#3ff0d2; color:#7ef9e2; font-size:20px; font-weight:bold; }
+  @media (hover:hover) and (pointer:fine) { .pad,.actions { opacity:.35; } }
+  /* Modal */
+  .modal-wrap { position:fixed; inset:0; z-index:20; background:rgba(2,4,8,.75); display:flex; align-items:center; justify-content:center; padding:16px; overflow-y:auto; }
+  .modal { background:linear-gradient(160deg,#0b1420,#101b2b); border:1px solid rgba(63,240,210,.5); border-radius:14px; padding:26px; max-width:520px; width:100%; box-shadow:0 0 60px rgba(63,240,210,.15); max-height:calc(100vh - 32px); overflow-y:auto; }
+  .modal-tag { font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#3ff0d2; margin-bottom:6px; }
+  .modal h2 { font-size:22px; margin-bottom:6px; }
+  .modal-intro { font-size:13px; opacity:.75; margin-bottom:14px; }
+  .sentence { font-size:19px; font-weight:600; color:#ffcf8a; margin-bottom:16px; line-height:1.4; }
+  .opts { display:flex; flex-direction:column; gap:8px; }
+  .opt { text-align:left; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.2); color:#dfe7ef; padding:12px 14px; border-radius:8px; font-size:15px; cursor:pointer; }
+  .opt:hover:not(:disabled) { border-color:#3ff0d2; }
+  .opt:disabled { cursor:default; }
+  .opt.ok { background:rgba(46,204,113,.2); border-color:#2ecc71; }
+  .opt.bad { background:rgba(255,45,77,.2); border-color:#ff2d4d; }
+  .fb { margin-top:14px; font-size:14px; padding:12px; border-radius:8px; line-height:1.45; }
+  .fb.ok { background:rgba(46,204,113,.12); color:#8af0b8; }
+  .fb.bad { background:rgba(255,45,77,.12); color:#ff9aa8; }
+  .fb .btn-game { margin-top:10px; display:block; }
+  .btn-game { background:linear-gradient(90deg,#0e6e5f,#0e8a77); color:#eafffb; border:1px solid #3ff0d2; padding:10px 22px; border-radius:8px; font-size:15px; cursor:pointer; letter-spacing:.04em; }
+  .btn-game:hover { filter:brightness(1.2); }
+  .btn-big { font-size:18px; padding:14px 34px; }
+  /* Screens */
+  .screen { position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:16px; background-size:cover; background-position:center; overflow-y:auto; }
+  .screen-dark { background:radial-gradient(ellipse at center,#0a1220 0%,#03050a 100%); }
+  .screen-inner { text-align:center; max-width:620px; width:100%; padding:30px; background:rgba(3,6,12,.72); border-radius:16px; border:1px solid rgba(63,240,210,.25); }
+  .title-glitch { font-size:clamp(28px,6vw,52px); letter-spacing:.04em; color:#7ef9e2; text-shadow:0 0 18px rgba(63,240,210,.6),3px 3px 0 #ff2d4d; margin-bottom:10px; animation:gl 3s infinite; }
+  .title-glitch.danger { color:#ff5c72; text-shadow:0 0 18px rgba(255,45,77,.7),3px 3px 0 #3ff0d2; }
+  @keyframes gl { 0%,93%,100%{transform:translate(0)} 94%{transform:translate(-2px,1px)} 96%{transform:translate(2px,-1px)} 98%{transform:translate(-1px,0)} }
+  @media (prefers-reduced-motion: reduce) { .title-glitch { animation:none; } }
+  .tag { color:#ffb347; letter-spacing:.25em; text-transform:uppercase; font-size:12px; margin-bottom:16px; }
+  .story { font-size:15px; line-height:1.6; opacity:.9; margin-bottom:16px; }
+  .controls { font-size:12px; opacity:.6; margin-bottom:22px; }
+  .win-robot { width:220px; max-width:60%; height:auto; margin:0 auto 14px; display:block; filter:drop-shadow(0 0 24px rgba(63,240,210,.5)); }
+  .err { color:#ff9aa8; font-size:13px; margin-top:12px; }
+</style>
+<div id="game"></div>
+<div class="vignette" id="vignette"></div>
+
+<div id="hud" hidden>
+  <div class="hud-tl">
+    <div class="bar"><span>Vida</span><div class="track"><div class="fill fill-hp" id="hp"></div></div></div>
+    <div class="bar"><span>Fôlego</span><div class="track"><div class="fill fill-st" id="st"></div></div></div>
+    <div class="cores" id="cores"></div>
+  </div>
+  <canvas class="minimap" id="mini" width="220" height="220" aria-label="Minimapa"></canvas>
+  <button class="prompt" id="prompt" type="button" hidden></button>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <div class="lore" id="lore" hidden></div>
+  <div class="pad">
+    <button class="pb up" type="button" data-k="w" aria-label="Cima">▲</button>
+    <button class="pb left" type="button" data-k="a" aria-label="Esquerda">◀</button>
+    <button class="pb down" type="button" data-k="s" aria-label="Baixo">▼</button>
+    <button class="pb right" type="button" data-k="d" aria-label="Direita">▶</button>
+  </div>
+  <div class="actions">
+    <button class="ab" type="button" data-k="sprint">Correr</button>
+    <button class="ab ab-main" type="button" id="btnE" aria-label="Investigar">E</button>
+  </div>
+</div>
+
+<div class="modal-wrap" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mName">
+    <div class="modal-tag" id="mTag"></div>
+    <h2 id="mName"></h2>
+    <p class="modal-intro">Terminal infectado. Escolha a forma correta para extrair o Grammar Core.</p>
+    <p class="sentence" id="mQ"></p>
+    <div class="opts" id="mOpts"></div>
+    <div class="fb" id="mFb" hidden></div>
+  </div>
+</div>
+
+<div class="screen" id="titleScreen">
+  <div class="screen-inner">
+    <h1 class="title-glitch">Dark Grammar Invasion</h1>
+    <p class="tag">Investigação · Mistério · Sobrevivência</p>
+    <p class="story">A Gramática do Universo Escuro rasgou o céu. Criaturas que se alimentam de tempos verbais quebrados caçam os sobreviventes. Explore a cidade, decifre os 5 terminais em inglês e desperte o robô ODU-X para destruí-las.</p>
+    <p class="controls">WASD/setas mover · Shift correr · E investigar · Esc fecha o terminal — ou use os botões na tela</p>
+    <button class="btn-game btn-big" id="btnStart" type="button" disabled>Carregando…</button>
+    <p class="err" id="loadErr" hidden>Não foi possível carregar o motor 3D (Three.js). Verifique a conexão e recarregue a página.</p>
+  </div>
+</div>
+
+<div class="screen screen-dark" id="deadScreen" hidden>
+  <div class="screen-inner">
+    <h1 class="title-glitch danger">Você foi reescrito</h1>
+    <p class="story" id="deadText"></p>
+    <button class="btn-game btn-big" id="btnRetry" type="button">Tentar novamente</button>
+  </div>
+</div>
+
+<div class="screen screen-dark" id="winScreen" hidden>
+  <div class="screen-inner">
+    <canvas id="winRobot" width="220" height="290" class="win-robot" aria-label="Robô ODU-X"></canvas>
+    <h1 class="title-glitch">Invasão contida</h1>
+    <p class="story">O ODU-X apagou cada criatura da Gramática Sombria. Seu inglês salvou a cidade.</p>
+    <button class="btn-game btn-big" id="btnAgain" type="button">Jogar de novo</button>
+  </div>
+</div>
+
+<script>
+  // Mostra um aviso se o módulo do Three.js não carregar (CDN bloqueada, offline).
+  setTimeout(() => { if (!window.__dgiReady) { document.getElementById('loadErr').hidden = false; document.getElementById('btnStart').textContent = 'Indisponível'; } }, 12000);
+</script>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ============ DADOS DOS PUZZLES (ODU Creative — Advanced Grammar Seq. 01, Units 1–3) ============ */
+const TERMINALS = [
+  { name:"Rádio da Delegacia", unit:"Unit 1 · Temporário × permanente", pos:[-22,-14],
+    lore:'LOG 01: "They feed on broken tenses. Every wrong verb makes them stronger."',
+    questions:[
+      { prompt:"Rental prices ___ steadily this year.", options:["rise","are rising","rising"], answer:1, why:"Tendência em andamento num período atual (this year) → present continuous." },
+      { prompt:"She ___ chemistry at a state school.", options:["is teaching","teaches","has teach"], answer:1, why:"Fato permanente / profissão → present simple." } ] },
+  { name:"Apartamento 3B", unit:"Unit 1 · Hábitos irritantes", pos:[26,-20],
+    lore:'LOG 02: "A robot sleeps under the old shipyard. It needs five Grammar Cores."',
+    questions:[
+      { prompt:"My flatmate is forever ___ the lights on.", options:["leaving","leaves","left"], answer:0, why:"forever/always + continuous = hábito repetitivo que irrita." },
+      { prompt:"I ___ in Santos for now, until my flat is renovated.", options:["live","lived","'m living"], answer:2, why:"Arranjo provisório (for now) → present continuous com live." } ] },
+  { name:"Restaurante Abandonado", unit:"Unit 2 · Verbos de estado", pos:[-30,22],
+    lore:'LOG 03: "State verbs are their weakness. They cannot be continuous."',
+    questions:[
+      { prompt:"This flashlight ___ to my brother.", options:["is belonging","belongs","belong"], answer:1, why:"belong to é verbo de estado → não usa continuous." },
+      { prompt:"Quiet! The chef ___ the sauce right now.", options:["is tasting","tastes","tasted"], answer:0, why:"taste como ação (provar) é dinâmico → continuous está correto." } ] },
+  { name:"Escritório do Contador", unit:"Unit 2 · Polidez e performativos", pos:[18,26],
+    lore:'LOG 04: "Politeness disrupts their signal. Ask softly, survive longer."',
+    questions:[
+      { prompt:"I ___ if you had a minute to talk.", options:["wonder","was wondering","am wonder"], answer:1, why:"I was wondering if... = pedido educado (polidez com continuous)." },
+      { prompt:"I ___ we postpone the launch.", options:["suggest","am suggest","suggesting"], answer:0, why:"Verbos performativos (suggest, promise, apologise) → present simple." } ] },
+  { name:"Torre de Notícias", unit:"Unit 3 · Past simple × present perfect", pos:[2,-34],
+    lore:'LOG 05: "The last core is here. Then run to the shipyard — and wake it."',
+    questions:[
+      { prompt:"This is the first time I ___ a real alien.", options:["see","have seen","saw"], answer:1, why:"Depois de It's / This is the first time → present perfect." },
+      { prompt:"The first signal ___ at 3 a.m. last night.", options:["has arrived","arrived","has been arriving"], answer:1, why:"Tempo passado definido (last night) → past simple." } ] },
+];
+const ROBOT_POS = [40,40];
+const WORLD = 66;
+
+/* ============ ÁUDIO PROCEDURAL (sci-fi horror) ============ */
+let actx=null, master=null, heart=null, beatTimer=null, pingTimer=null;
+function startAudio(){
+  if(actx){ if(actx.state==="suspended") actx.resume(); return; }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return;
+  try { actx = new AC(); } catch(e){ actx=null; return; }
+  master = actx.createGain(); master.gain.value=.5;
+  const delay=actx.createDelay(2); delay.delayTime.value=.45;
+  const fb=actx.createGain(); fb.gain.value=.45;
+  delay.connect(fb).connect(delay); delay.connect(master); master.connect(actx.destination);
+  const lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=320; lp.Q.value=6;
+  const lfo=actx.createOscillator(), lfoG=actx.createGain();
+  lfo.frequency.value=.07; lfoG.gain.value=180; lfo.connect(lfoG).connect(lp.frequency); lfo.start();
+  const dg=actx.createGain(); dg.gain.value=.18;
+  [41.2,41.7,61.7,82.9].forEach((f,i)=>{ const o=actx.createOscillator(); o.type=i%2?"sawtooth":"triangle"; o.frequency.value=f; o.connect(lp); o.start(); });
+  lp.connect(dg).connect(master);
+  const buf=actx.createBuffer(1,actx.sampleRate*2,actx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+  const noise=actx.createBufferSource(); noise.buffer=buf; noise.loop=true;
+  const bp=actx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=600;
+  const nG=actx.createGain(); nG.gain.value=.035;
+  noise.connect(bp).connect(nG).connect(master); noise.start();
+  heart=actx.createGain(); heart.gain.value=0; heart.connect(master);
+  const beat=()=>{ if(!actx || heart.gain.value<.01) return; const t=actx.currentTime;
+    [0,.28].forEach(off=>{ const o=actx.createOscillator(), g=actx.createGain();
+      o.frequency.setValueAtTime(70,t+off); o.frequency.exponentialRampToValueAtTime(35,t+off+.15);
+      g.gain.setValueAtTime(.9,t+off); g.gain.exponentialRampToValueAtTime(.001,t+off+.2);
+      o.connect(g).connect(heart); o.start(t+off); o.stop(t+off+.25); }); };
+  beatTimer=setInterval(beat,900);
+  const ping=()=>{ if(!actx) return; const t=actx.currentTime;
+    const o=actx.createOscillator(), g=actx.createGain();
+    const notes=[311,466,622,740,932,1244];
+    o.type="sine"; o.frequency.value=notes[Math.floor(Math.random()*notes.length)];
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.12,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+2.5);
+    o.connect(g).connect(delay); o.start(t); o.stop(t+2.6);
+    pingTimer=setTimeout(ping,2500+Math.random()*5000); };
+  ping();
+}
+function setDanger(v){ if(heart&&actx) heart.gain.setTargetAtTime(Math.min(1,Math.max(0,v))*.7,actx.currentTime,.3); }
+function sfx(kind){
+  if(!actx) return; const t=actx.currentTime;
+  const seq={ good:[523,784], bad:[220,155], hit:[90], core:[392,523,659,1046], robot:[130,196,261,392,523] };
+  (seq[kind]||[]).forEach((f,i)=>{ const o=actx.createOscillator(), g=actx.createGain();
+    o.type=(kind==="bad"||kind==="hit")?"sawtooth":"square"; o.frequency.value=f;
+    const s=t+i*.11; g.gain.setValueAtTime(.12,s); g.gain.exponentialRampToValueAtTime(.001,s+.3);
+    o.connect(g).connect(master); o.start(s); o.stop(s+.32); });
+}
+
+/* ============ SPRITES 2D (canvas → textura) ============ */
+function toTexture(c){
+  const t=new THREE.CanvasTexture(c);
+  t.magFilter=THREE.NearestFilter; t.colorSpace=THREE.SRGBColorSpace;
+  return t;
+}
+function makePlayerCanvas(){
+  const c=document.createElement("canvas"); c.width=128; c.height=192; const x=c.getContext("2d");
+  // sobrevivente estilo anime: casaco, mochila, lanterna
+  x.fillStyle="#2b3a4a"; x.fillRect(44,70,40,70);            // corpo/casaco
+  x.fillStyle="#1a2530"; x.fillRect(48,140,12,44); x.fillRect(68,140,12,44); // pernas
+  x.fillStyle="#f2c9a0"; x.beginPath(); x.arc(64,46,22,0,Math.PI*2); x.fill(); // rosto
+  x.fillStyle="#20303f"; x.beginPath(); x.arc(64,36,22,Math.PI,0); x.fill();  // cabelo
+  x.fillRect(42,30,44,14);
+  x.fillStyle="#111"; x.fillRect(52,44,7,9); x.fillRect(70,44,7,9);          // olhos
+  x.fillStyle="#7ef9e2"; x.fillRect(54,46,3,3); x.fillRect(72,46,3,3);
+  x.fillStyle="#c25"; x.fillRect(58,60,12,3);                                 // boca
+  x.fillStyle="#3a4d61"; x.fillRect(30,74,14,44); x.fillRect(84,74,14,44);   // braços
+  x.fillStyle="#8a5a2b"; x.fillRect(50,76,28,26);                             // mochila frente
+  x.fillStyle="#ffe9a8"; x.beginPath(); x.arc(98,118,6,0,Math.PI*2); x.fill(); // lanterna
+  return c;
+}
+function makeAlienCanvas(){
+  const c=document.createElement("canvas"); c.width=128; c.height=192; const x=c.getContext("2d");
+  x.strokeStyle="#0d1f16"; x.lineWidth=8; x.lineCap="round";                      // tentáculos (atrás do corpo)
+  for(let i=0;i<4;i++){ x.beginPath(); x.moveTo(40+i*16,150); x.quadraticCurveTo(30+i*20,178,36+i*18,186); x.stroke(); }
+  x.fillStyle="#0d1f16"; x.beginPath(); x.ellipse(64,110,34,52,0,0,Math.PI*2); x.fill();  // corpo
+  x.fillStyle="#123524"; x.beginPath(); x.ellipse(64,52,30,34,0,0,Math.PI*2); x.fill();   // cabeça
+  x.fillStyle="#b6ff3f";                                                          // olhos brilhantes
+  x.beginPath(); x.ellipse(50,48,9,13,-.3,0,Math.PI*2); x.fill();
+  x.beginPath(); x.ellipse(78,48,9,13,.3,0,Math.PI*2); x.fill();
+  x.fillStyle="#051008";
+  x.beginPath(); x.ellipse(50,50,4,7,-.3,0,Math.PI*2); x.fill();
+  x.beginPath(); x.ellipse(78,50,4,7,.3,0,Math.PI*2); x.fill();
+  x.font="bold 26px monospace"; x.fillStyle="#b6ff3f"; x.textAlign="center"; x.fillText("?!",64,120); // símbolo gramatical corrupto
+  return c;
+}
+function makeRobotCanvas(){
+  const c=document.createElement("canvas"); c.width=128; c.height=192; const x=c.getContext("2d");
+  x.fillStyle="#5a6b7d"; x.fillRect(34,60,60,80);             // torso
+  x.fillStyle="#7d8ea0"; x.fillRect(40,18,48,40);             // cabeça
+  x.fillStyle="#3ff0d2"; x.fillRect(48,32,12,10); x.fillRect(68,32,12,10); // olhos
+  x.fillStyle="#2c3947"; x.fillRect(52,48,24,4);
+  x.fillStyle="#46586b"; x.fillRect(20,66,14,60); x.fillRect(94,66,14,60); // braços
+  x.fillStyle="#46586b"; x.fillRect(42,140,16,46); x.fillRect(70,140,16,46); // pernas
+  x.fillStyle="#ffb347"; x.beginPath(); x.arc(64,92,10,0,Math.PI*2); x.fill(); // núcleo
+  x.strokeStyle="#3ff0d2"; x.lineWidth=2; x.strokeRect(34,60,60,80);
+  return c;
+}
+
+/* ============ MUNDO 3D ============ */
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));
+renderer.setSize(innerWidth,innerHeight);
+renderer.domElement.classList.add("webgl");
+document.getElementById("game").appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x070a12);
+scene.fog = new THREE.FogExp2(0x0a0f1a, 0.016);
+const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, .1, 400);
+camera.position.set(0,11,13); camera.lookAt(0,1,0);
+addEventListener("resize",()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+
+scene.add(new THREE.HemisphereLight(0x3a4a6b, 0x0a0c10, 1.2));
+const moon = new THREE.DirectionalLight(0x8fa8d8, .9); moon.position.set(-30,50,20); scene.add(moon);
+
+// chão
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(140,140),
+  new THREE.MeshStandardMaterial({ color:0x11161f, roughness:1 }));
+ground.rotation.x = -Math.PI/2; scene.add(ground);
+// grid de ruas
+const grid = new THREE.GridHelper(140, 28, 0x1c2a3a, 0x141d29); grid.position.y=.02; scene.add(grid);
+
+// obstáculos: caixas alinhadas aos eixos (AABB) e círculos (carros)
+const BOXES = [], CIRCLES = [];
+const clearOf = (x,z,r) => Math.hypot(x,z) < 10+r
+  || TERMINALS.some(t=>Math.hypot(t.pos[0]-x,t.pos[1]-z) < 5+r)
+  || Math.hypot(ROBOT_POS[0]-x,ROBOT_POS[1]-z) < 7+r;
+const overlaps = (x,z,w,d) => BOXES.some(b => x+w/2+1.5>b.x0 && x-w/2-1.5<b.x1 && z+d/2+1.5>b.z0 && z-d/2-1.5<b.z1);
+
+// prédios em ruínas (caixas escuras com janelas brilhantes)
+function windowTexture(lit){
+  const c=document.createElement("canvas"); c.width=64; c.height=128; const x=c.getContext("2d");
+  x.fillStyle="#0d131c"; x.fillRect(0,0,64,128);
+  for(let yy=6; yy<124; yy+=14) for(let xx=5; xx<60; xx+=14){
+    x.fillStyle = Math.random()<lit ? "#ffb347" : "#1a2a3a"; x.fillRect(xx,yy,8,9);
+  }
+  const t=toTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.magFilter=THREE.LinearFilter; return t;
+}
+const winTex=[windowTexture(.05), windowTexture(.18)];
+const bGeo = new THREE.BoxGeometry(1,1,1);
+for(let i=0, placed=0; i<300 && placed<38; i++){
+  const w=4+Math.random()*6, h=6+Math.random()*18, d=4+Math.random()*6;
+  const bx=(Math.random()-.5)*116, bz=(Math.random()-.5)*116;
+  if(clearOf(bx,bz,Math.max(w,d)/2) || overlaps(bx,bz,w,d)) continue;
+  const tex=winTex[placed%2].clone(); tex.needsUpdate=true; tex.repeat.set(Math.max(1,Math.round(w/3)), Math.max(1,Math.round(h/4)));
+  const m = new THREE.Mesh(bGeo, new THREE.MeshStandardMaterial({
+    color:new THREE.Color().setHSL(.6,.15,.25+Math.random()*.15), roughness:.9,
+    map:tex, emissive:0xffffff, emissiveMap:tex, emissiveIntensity:.35 }));
+  m.scale.set(w,h,d); m.position.set(bx,h/2,bz); scene.add(m);
+  BOXES.push({ x0:bx-w/2, x1:bx+w/2, z0:bz-d/2, z1:bz+d/2 });
+  placed++;
+}
+// carros destruídos
+for(let i=0, placed=0; i<100 && placed<12; i++){
+  const cx=(Math.random()-.5)*100, cz=(Math.random()-.5)*100;
+  if(clearOf(cx,cz,2) || overlaps(cx,cz,4,4)) continue;
+  const car = new THREE.Mesh(new THREE.BoxGeometry(3.4,1.2,1.6),
+    new THREE.MeshStandardMaterial({ color:new THREE.Color().setHSL(Math.random(),.4,.18), roughness:.7, metalness:.4 }));
+  car.position.set(cx,.6,cz); car.rotation.y=Math.random()*Math.PI; scene.add(car);
+  CIRCLES.push({ x:cx, z:cz, r:1.8 });
+  placed++;
+}
+// fenda alienígena no céu (fog:false para não sumir na neblina)
+const rift = new THREE.Mesh(new THREE.RingGeometry(8,16,32),
+  new THREE.MeshBasicMaterial({ color:0xb14dff, side:THREE.DoubleSide, transparent:true, opacity:.7, fog:false }));
+rift.position.set(0,55,-70); scene.add(rift);
+const riftLight = new THREE.PointLight(0xb14dff, 300, 200); riftLight.position.copy(rift.position); scene.add(riftLight);
+
+// terminais
+const termMeshes = TERMINALS.map(t=>{
+  const g = new THREE.Group();
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,3), new THREE.MeshStandardMaterial({ color:0x2a3442 }));
+  pole.position.y=1.5; g.add(pole);
+  const screenM = new THREE.MeshBasicMaterial({ color:0x3ff0d2 });
+  const scr = new THREE.Mesh(new THREE.BoxGeometry(1.6,1.1,.2), screenM);
+  scr.position.y=3.2; g.add(scr);
+  const light = new THREE.PointLight(0x3ff0d2, 20, 14); light.position.y=3.4; g.add(light);
+  g.position.set(t.pos[0],0,t.pos[1]); scene.add(g);
+  return { g, screenM, light };
+});
+// robô ODU-X (sprite 2D no estaleiro)
+const robotCanvas = makeRobotCanvas();
+const robot = new THREE.Sprite(new THREE.SpriteMaterial({ map:toTexture(robotCanvas), transparent:true }));
+robot.scale.set(4,6,1); robot.position.set(ROBOT_POS[0],3,ROBOT_POS[1]); scene.add(robot);
+const robotLight = new THREE.PointLight(0x3ff0d2, 0, 20); robotLight.position.set(ROBOT_POS[0],4,ROBOT_POS[1]); scene.add(robotLight);
+// feixe do robô (aparece enquanto destrói as criaturas)
+const beam = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
+  new THREE.LineBasicMaterial({ color:0x7ef9e2, transparent:true, opacity:0 }));
+scene.add(beam);
+
+// jogador e alienígenas (sprites 2D no mundo 3D)
+const player = new THREE.Sprite(new THREE.SpriteMaterial({ map:toTexture(makePlayerCanvas()), transparent:true }));
+player.scale.set(2.2,3.3,1); scene.add(player);
+const alienTex = toTexture(makeAlienCanvas());
+
+/* ============ COLISÃO ============ */
+function collide(p, rad=1){
+  for(const b of BOXES){
+    if(p.x+rad<b.x0 || p.x-rad>b.x1 || p.z+rad<b.z0 || p.z-rad>b.z1) continue;
+    const cx=THREE.MathUtils.clamp(p.x,b.x0,b.x1), cz=THREE.MathUtils.clamp(p.z,b.z0,b.z1);
+    const dx=p.x-cx, dz=p.z-cz, d=Math.hypot(dx,dz);
+    if(d>=rad) continue;
+    if(d>1e-4){ p.x=cx+dx/d*rad; p.z=cz+dz/d*rad; }
+    else { // centro dentro da caixa: empurra pelo lado mais próximo
+      const l=p.x-b.x0, r=b.x1-p.x, t=p.z-b.z0, bt=b.z1-p.z, m=Math.min(l,r,t,bt);
+      if(m===l) p.x=b.x0-rad; else if(m===r) p.x=b.x1+rad; else if(m===t) p.z=b.z0-rad; else p.z=b.z1+rad;
+    }
+  }
+  for(const o of CIRCLES){
+    const dx=p.x-o.x, dz=p.z-o.z, d=Math.hypot(dx,dz), min=o.r+rad;
+    if(d<min){ const k=d>1e-4?1/d:0; p.x=o.x+(k?dx*k:1)*min; p.z=o.z+(k?dz*k:0)*min; }
+  }
+  p.x=THREE.MathUtils.clamp(p.x,-WORLD,WORLD); p.z=THREE.MathUtils.clamp(p.z,-WORLD,WORLD);
+}
+
+/* ============ ESTADO ============ */
+let S;
+function makeStore(){
+  const r=()=> (Math.random()-.5)*110;
+  return {
+    p:new THREE.Vector3(0,0,0), face:new THREE.Vector3(0,0,-1), keys:{}, moving:false,
+    paused:true, hp:100, stamina:100,
+    solved:TERMINALS.map(()=>false), robotActive:false, robotTimer:0, beamT:0,
+    aliens:Array.from({length:9},()=>{
+      const pos=new THREE.Vector3(r(),0,r());
+      if(pos.length()<18) pos.setLength(22);
+      collide(pos,1);
+      const sp=new THREE.Sprite(new THREE.SpriteMaterial({ map:alienTex, transparent:true }));
+      sp.scale.set(2.4,3.6,1); sp.position.copy(pos).setY(1.8); scene.add(sp);
+      return { pos, target:pos.clone(), alive:true, die:0, sp, retarget:0 };
+    }),
+  };
+}
+
+/* ============ UI ============ */
+const $=id=>document.getElementById(id);
+const hud=$("hud"), promptEl=$("prompt"), toastEl=$("toast"), loreEl=$("lore"), modal=$("modal");
+let phase="title", puzzle=null, toastTimer=null;
+function flash(m){ toastEl.textContent=m; toastEl.hidden=false; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ toastEl.hidden=true; },2600); }
+function solvedCount(){ return S.solved.filter(Boolean).length; }
+function renderCores(){
+  $("cores").innerHTML = S.solved.map(s=>`<span class="core${s?" on":""}"></span>`).join("") + `<em>Grammar Cores ${solvedCount()}/5</em>`;
+}
+const shuffle=a=>{ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; };
+
+let near=-1, robotNear=false;
+function interact(){
+  if(!S || S.paused || phase!=="play") return;
+  if(robotNear){
+    if(S.robotActive) flash("O ODU-X já está caçando as criaturas. Fique perto dele!");
+    else if(S.solved.every(Boolean)){
+      S.robotActive=true; sfx("robot");
+      robotLight.intensity=60;
+      flash("UNIDADE ODU-X ATIVADA — destruindo a Gramática Sombria!");
+    } else flash(`O robô precisa de 5 Grammar Cores (${solvedCount()}/5).`);
+    return;
+  }
+  if(near>=0 && !S.solved[near]){ S.paused=true; for(const k in S.keys) S.keys[k]=false; openPuzzle(near); }
+}
+function openPuzzle(t){
+  puzzle={ t, q:0, picked:null };
+  showQuestion();
+}
+function showQuestion(){
+  const T=TERMINALS[puzzle.t], Q=T.questions[puzzle.q];
+  $("mTag").textContent=`${T.unit} · ${puzzle.q+1}/${T.questions.length}`;
+  $("mName").textContent=T.name;
+  $("mQ").textContent=Q.prompt;
+  $("mFb").hidden=true;
+  const opts=$("mOpts"); opts.innerHTML="";
+  shuffle(Q.options.map((o,i)=>({o,i}))).forEach(({o,i})=>{
+    const b=document.createElement("button"); b.type="button"; b.className="opt"; b.textContent=o; b.dataset.i=i;
+    b.onclick=()=>answer(i); opts.appendChild(b);
+  });
+  modal.hidden=false;
+  opts.firstChild.focus();
+}
+function answer(i){
+  if(!puzzle || puzzle.picked!==null) return;
+  const Q=TERMINALS[puzzle.t].questions[puzzle.q];
+  const ok = i===Q.answer;
+  sfx(ok?"good":"bad");
+  if(!ok) S.hp=Math.max(1,S.hp-12);
+  puzzle.picked=i;
+  [...$("mOpts").children].forEach(b=>{ b.disabled=true; if(+b.dataset.i===i) b.classList.add(ok?"ok":"bad"); });
+  const fb=$("mFb"); fb.hidden=false; fb.className="fb "+(ok?"ok":"bad");
+  fb.textContent = ok ? `✔ Correto! ${Q.why}` : "✖ A Gramática Sombria te feriu (−12 vida). Releia a frase e procure a pista de tempo.";
+  const btn=document.createElement("button"); btn.type="button"; btn.className="btn-game";
+  btn.textContent = ok ? "Continuar" : "Tentar de novo";
+  btn.onclick=nextQ; fb.appendChild(btn); btn.focus();
+}
+function closePuzzle(){
+  modal.hidden=true; puzzle=null; S.paused=false; last=performance.now();
+}
+function nextQ(){
+  const T=TERMINALS[puzzle.t], Q=T.questions[puzzle.q];
+  if(puzzle.picked!==Q.answer){ puzzle.picked=null; showQuestion(); return; }
+  if(puzzle.q+1<T.questions.length){ puzzle.q++; puzzle.picked=null; showQuestion(); return; }
+  S.solved[puzzle.t]=true; sfx("core");
+  termMeshes[puzzle.t].screenM.color.set(0xffb347);
+  termMeshes[puzzle.t].light.color.set(0xffb347);
+  loreEl.textContent=T.lore; loreEl.hidden=false;
+  closePuzzle();
+  renderCores();
+  const n=solvedCount();
+  flash(n===5 ? "5/5 Cores! Vá ao estaleiro (ponto branco no mapa) e acorde o robô." : `Grammar Core obtido (${n}/5)`);
+}
+
+/* ============ CONTROLES ============ */
+const KEYMAP = { KeyW:"w", ArrowUp:"w", KeyA:"a", ArrowLeft:"a", KeyS:"s", ArrowDown:"s", KeyD:"d", ArrowRight:"d", ShiftLeft:"sprint", ShiftRight:"sprint" };
+addEventListener("keydown",e=>{
+  if(!S || phase!=="play") return;
+  if(!modal.hidden){ if(e.code==="Escape"){ closePuzzle(); } return; }
+  const k=KEYMAP[e.code];
+  if(k){ S.keys[k]=true; e.preventDefault(); }
+  if((e.code==="KeyE"||e.code==="Enter") && !e.repeat){ e.preventDefault(); interact(); }
+});
+addEventListener("keyup",e=>{ const k=KEYMAP[e.code]; if(S&&k) S.keys[k]=false; });
+addEventListener("blur",()=>{ if(S) for(const k in S.keys) S.keys[k]=false; });
+document.querySelectorAll("[data-k]").forEach(b=>{
+  const k=b.dataset.k;
+  const on=e=>{ e.preventDefault(); if(S) S.keys[k]=true; try{ b.setPointerCapture(e.pointerId); }catch(_){} };
+  const off=()=>{ if(S) S.keys[k]=false; };
+  b.addEventListener("pointerdown",on);
+  ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>b.addEventListener(ev,off));
+  b.addEventListener("contextmenu",e=>e.preventDefault());
+});
+$("btnE").onclick=interact;
+promptEl.onclick=interact;
+
+function startGame(){
+  startAudio();
+  if(S) S.aliens.forEach(a=>scene.remove(a.sp));
+  S=makeStore(); S.paused=false; phase="play"; last=performance.now();
+  termMeshes.forEach(m=>{ m.screenM.color.set(0x3ff0d2); m.light.color.set(0x3ff0d2); });
+  robotLight.intensity=0; beam.material.opacity=0;
+  loreEl.hidden=true; modal.hidden=true; puzzle=null;
+  $("titleScreen").hidden=true; $("deadScreen").hidden=true; $("winScreen").hidden=true;
+  hud.hidden=false; renderCores();
+  camera.position.set(0,11,13);
+}
+$("btnStart").onclick=startGame;
+$("btnRetry").onclick=startGame;
+$("btnAgain").onclick=startGame;
+
+// robô da tela de vitória (desenho 2D, escala uniforme e centralizado)
+(function(){
+  const c=$("winRobot"), x=c.getContext("2d");
+  const s=Math.min(c.width/robotCanvas.width, c.height/robotCanvas.height);
+  x.imageSmoothingEnabled=false;
+  x.drawImage(robotCanvas,(c.width-robotCanvas.width*s)/2,(c.height-robotCanvas.height*s)/2,robotCanvas.width*s,robotCanvas.height*s);
+})();
+
+/* ============ LOOP ============ */
+const mini=$("mini").getContext("2d");
+const camTarget=new THREE.Vector3();
+let acc=0, last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(.05,Math.max(0,(now-last)/1000)); last=now;
+  rift.rotation.z += dt*.3;
+  rift.material.opacity = .5+Math.sin(now*.002)*.2;
+  if(!S || S.paused){ renderer.render(scene,camera); return; }
+
+  const K=S.keys;
+  const dir=new THREE.Vector3((K.d?1:0)-(K.a?1:0),0,(K.s?1:0)-(K.w?1:0));
+  S.moving=dir.lengthSq()>0;
+  const sprint=K.sprint&&S.stamina>1&&S.moving;
+  S.stamina=THREE.MathUtils.clamp(S.stamina+(sprint?-28:14)*dt,0,100);
+  if(S.moving){
+    dir.normalize();
+    S.face.lerp(dir,1-Math.exp(-10*dt)).normalize();
+    S.p.addScaledVector(dir,(sprint?8.5:5.2)*dt);
+    collide(S.p,.8);
+  }
+  player.position.copy(S.p).setY(1.65+Math.sin(now*.008)*.06*(S.moving?1:0));
+
+  let danger=0;
+  S.aliens.forEach(a=>{
+    if(!a.alive){
+      if(a.die>0&&a.die<1){ a.die=Math.min(1,a.die+dt*.8); const k=1-a.die*.5; a.sp.material.opacity=1-a.die; a.sp.scale.set(2.4*k,3.6*k,1); }
+      if(a.die>=1) a.sp.visible=false;
+      return;
+    }
+    const dist=a.pos.distanceTo(S.p);
+    danger=Math.max(danger,1-dist/16);
+    const chase=dist<15;
+    a.retarget-=dt;
+    if(chase) a.target.copy(S.p);
+    else if(a.pos.distanceTo(a.target)<1 || a.retarget<=0){ a.target.set((Math.random()-.5)*110,0,(Math.random()-.5)*110); a.retarget=6+Math.random()*4; }
+    const v=a.target.clone().sub(a.pos).setY(0);
+    if(v.lengthSq()>.01) a.pos.addScaledVector(v.normalize(),(chase?4.1:1.8)*dt);
+    collide(a.pos,.7);
+    a.sp.position.copy(a.pos).setY(1.8+Math.sin(now*.005+a.pos.x)*.15);
+    if(dist<1.3) S.hp-=22*dt;
+  });
+
+  if(S.robotActive){
+    S.robotTimer-=dt; S.beamT-=dt;
+    beam.material.opacity=Math.max(0,S.beamT*3);
+    const busy=S.aliens.some(a=>!a.alive&&a.die>0&&a.die<1);
+    if(!busy&&S.robotTimer<=0){
+      const nxt=S.aliens.find(a=>a.alive);
+      if(nxt){
+        nxt.alive=false; nxt.die=.01; S.robotTimer=.3; sfx("hit");
+        beam.geometry.setFromPoints([new THREE.Vector3(ROBOT_POS[0],4.5,ROBOT_POS[1]), nxt.pos.clone().setY(1.8)]); S.beamT=.35;
+      }
+      else { S.paused=true; phase="win"; setDanger(0); hud.hidden=true; $("winScreen").hidden=false; $("btnAgain").focus(); }
+    }
+  }
+  setDanger(danger);
+
+  near=TERMINALS.findIndex(t=>Math.hypot(t.pos[0]-S.p.x,t.pos[1]-S.p.z)<3);
+  robotNear=Math.hypot(ROBOT_POS[0]-S.p.x,ROBOT_POS[1]-S.p.z)<5;
+  if((near>=0&&!S.solved[near])||(robotNear&&!S.robotActive)){
+    promptEl.hidden=false;
+    const txt = robotNear ? "E · Ativar robô ODU-X" : `E · Investigar: ${TERMINALS[near].name}`;
+    if(promptEl.textContent!==txt) promptEl.textContent=txt;
+  } else promptEl.hidden=true;
+
+  if(S.hp<=0){
+    S.hp=0; S.paused=true; phase="dead"; sfx("bad"); setDanger(0);
+    $("deadText").textContent=`A Gramática Sombria te alcançou. Cores coletados: ${solvedCount()}/5.`;
+    hud.hidden=true; $("deadScreen").hidden=false; $("btnRetry").focus();
+  }
+
+  // câmera segue o jogador (suavização independente da taxa de quadros)
+  camTarget.set(S.p.x,11,S.p.z+13);
+  camera.position.lerp(camTarget,1-Math.exp(-5*dt));
+  camera.lookAt(camera.position.x,1,camera.position.z-13);
+
+  acc+=dt;
+  if(acc>.12){
+    acc=0;
+    $("hp").style.width=Math.max(0,S.hp)+"%"; $("st").style.width=S.stamina+"%";
+    $("vignette").style.opacity=.1+Math.max(0,danger)*.8;
+    const W=mini.canvas.width, sc=W/(WORLD*2), m=x=>(x+WORLD)*sc;
+    mini.clearRect(0,0,W,W);
+    TERMINALS.forEach((t,i)=>{ mini.fillStyle=S.solved[i]?"#ffb347":"#3ff0d2"; mini.fillRect(m(t.pos[0])-6,m(t.pos[1])-6,12,12); });
+    mini.fillStyle="#fff"; mini.beginPath(); mini.arc(m(ROBOT_POS[0]),m(ROBOT_POS[1]),8,0,Math.PI*2); mini.fill();
+    S.aliens.forEach(a=>{ if(a.alive&&a.pos.distanceTo(S.p)<25){ mini.fillStyle="#ff4d5e"; mini.fillRect(m(a.pos.x)-4,m(a.pos.z)-4,8,8); } });
+    mini.fillStyle="#ffcf8a"; mini.beginPath(); mini.arc(m(S.p.x),m(S.p.z),7,0,Math.PI*2); mini.fill();
+  }
+  renderer.render(scene,camera);
+}
+requestAnimationFrame(loop);
+window.__dgiReady = true;
+window.__dgi = { get S(){ return S; }, TERMINALS, startGame, interact, ROBOT_POS };
+const startBtn=$("btnStart"); startBtn.disabled=false; startBtn.textContent="Iniciar sobrevivência"; startBtn.focus();
+</script>
