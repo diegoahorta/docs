@@ -238,11 +238,11 @@ export const DIALOGO_FINAL = [
 ];
 
 // ------------------------------------------------------------------ fases
-// Cada fase = um cenário 3D (Blender) com 3 portais; cada portal = uma missão.
+// Cada fase = um cenário 2D cartoon (js/world.js) com 3 portais; cada portal = uma missão.
 export const LEVELS = [
   {
-    id: 1, nivel: 'Pré-HSK 1', nome: 'O Jardim do Pongo', zh: '花园', py: 'huāyuán', cena: 'scene_1.glb',
-    ceu: ['#bfe6ff', '#fff4e0'], chao: 0, particulas: 'petalas',
+    id: 1, nivel: 'Pré-HSK 1', nome: 'O Jardim do Pongo', zh: '花园', py: 'huāyuán',
+    ceu: ['#bfe6ff', '#fff4e0'], particulas: 'petalas',
     historia: 'Pongo está preso no jardim. O portão só abre para quem canta os tons do mandarim!',
     missoes: [
       { tipo: 'tons', titulo: 'Os cinco tons', zh: '声调', desc: 'Ouça a melodia e descubra o tom.' },
@@ -251,8 +251,8 @@ export const LEVELS = [
     ],
   },
   {
-    id: 2, nivel: 'Pré-HSK 1', nome: 'A Floresta de Bambu', zh: '竹林', py: 'zhúlín', cena: 'scene_2.glb',
-    ceu: ['#d4f0d0', '#fdf7e3'], chao: 0, particulas: 'vagalumes',
+    id: 2, nivel: 'Pré-HSK 1', nome: 'A Floresta de Bambu', zh: '竹林', py: 'zhúlín',
+    ceu: ['#d4f0d0', '#fdf7e3'], particulas: 'vagalumes',
     historia: 'Entre os bambus, o vento sussurra os sons do pinyin. Afine o ouvido para atravessar o riacho.',
     missoes: [
       { tipo: 'sons', titulo: 'Sons do pinyin', zh: '拼音', desc: 'j q x · zh ch sh r · z c s · -n -ng · ü' },
@@ -261,8 +261,8 @@ export const LEVELS = [
     ],
   },
   {
-    id: 3, nivel: 'HSK 1', nome: 'Os Arrozais de Guilin', zh: '桂林', py: 'Guìlín', cena: 'scene_3.glb',
-    ceu: ['#c9ecf7', '#fff1d6'], chao: 0.2, particulas: 'petalas',
+    id: 3, nivel: 'HSK 1', nome: 'Os Arrozais de Guilin', zh: '桂林', py: 'Guìlín',
+    ceu: ['#c9ecf7', '#fff1d6'], particulas: 'petalas',
     historia: 'As montanhas de Guilin guardam as primeiras palavras. Cumprimente quem trabalha nos arrozais.',
     missoes: [
       { tipo: 'vocab', grupos: ['pessoas'], titulo: 'Pessoas e família', zh: '人', desc: 'Pronomes, família e profissões.' },
@@ -271,8 +271,8 @@ export const LEVELS = [
     ],
   },
   {
-    id: 4, nivel: 'HSK 1', nome: 'O Porto', zh: '港口', py: 'gǎngkǒu', cena: 'scene_4.glb',
-    ceu: ['#a9dcf5', '#fde9c8'], chao: 0.36, particulas: 'bolhas',
+    id: 4, nivel: 'HSK 1', nome: 'O Porto', zh: '港口', py: 'gǎngkǒu',
+    ceu: ['#a9dcf5', '#fde9c8'], particulas: 'bolhas',
     historia: 'No porto, o barco para a China só aceita passageiros que sabem pedir comida e pagar a passagem.',
     missoes: [
       { tipo: 'vocab', grupos: ['comida'], titulo: 'Comida e bebida', zh: '吃喝', desc: 'Para não passar fome no navio.' },
@@ -281,8 +281,8 @@ export const LEVELS = [
     ],
   },
   {
-    id: 5, nivel: 'HSK 1', nome: 'A Grande Muralha', zh: '长城', py: 'Chángchéng', cena: 'scene_5.glb',
-    ceu: ['#bcd9f2', '#fde2c4'], chao: 0, particulas: 'neve',
+    id: 5, nivel: 'HSK 1', nome: 'A Grande Muralha', zh: '长城', py: 'Chángchéng',
+    ceu: ['#bcd9f2', '#fde2c4'], particulas: 'neve',
     historia: 'Pongo chegou à China! Para cruzar a Grande Muralha, ele precisa dominar QUANDO e ONDE.',
     missoes: [
       { tipo: 'vocab', grupos: ['tempo'], titulo: 'Tempo: dias e horas', zh: '时间', desc: 'O bloco amarelo-ouro mora antes do verbo.' },
@@ -291,8 +291,8 @@ export const LEVELS = [
     ],
   },
   {
-    id: 6, nivel: 'HSK 1', nome: 'Pequim: a vila dos amigos', zh: '北京', py: 'Běijīng', cena: 'scene_6.glb',
-    ceu: ['#ffd6c2', '#fff2d9'], chao: 0, particulas: 'petalas', amiga: true,
+    id: 6, nivel: 'HSK 1', nome: 'Pequim: a vila dos amigos', zh: '北京', py: 'Běijīng',
+    ceu: ['#ffd6c2', '#fff2d9'], particulas: 'petalas', amiga: true,
     historia: 'Lanternas vermelhas! A amiga Lili, a panda, espera o Pongo para um chá. Mostre tudo o que aprendeu.',
     missoes: [
       { tipo: 'vocab', grupos: ['verbos', 'descricao', 'perguntas'], titulo: 'Verbos, adjetivos e perguntas', zh: '动词', desc: 'As palavras que fazem a frase andar.' },

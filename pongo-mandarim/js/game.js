@@ -5,7 +5,11 @@ import {
 } from './data.js';
 import * as A from './audio.js';
 import * as FX from './fx.js';
-import { createWorld } from './world.js';
+import { createWorld, GATE_FRAC } from './world.js';
+import { expr } from './assets.js';
+
+const ava = (name, cls = '') => `<img class="ava ${cls}" src="${expr(name)}" alt="Pongo ${name}">`;
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -370,7 +374,7 @@ async function startLevel(id) {
     await world.loadLevel(L);
   } catch (e) {
     console.error(e);
-    $('#loading').innerHTML = `<p>Não foi possível carregar o cenário 3D (${esc(e.message)}).<br>Abra o jogo por um servidor web (veja o README).</p>`;
+    $('#loading').innerHTML = `<p>Não foi possível carregar o cenário (${esc(e.message)}).</p>`;
     return;
   }
   $('#loading').hidden = true;
@@ -388,12 +392,12 @@ function renderPathMarkers() {
   const L = state.level;
   if (!L) return;
   const d = save.done[L.id] || [];
-  $('#path-gates').innerHTML = [0, 1, 2].map((i) => `<span class="pg${d[i] ? ' ok' : ''}" style="left:${((4 - [-16, -32, -48][i] - 2.6) / 62) * 100}%">${d[i] ? '✓' : i + 1}</span>`).join('');
+  $('#path-gates').innerHTML = [0, 1, 2].map((i) => `<span class="pg${d[i] ? ' ok' : ''}" style="left:${GATE_FRAC[i] * 100}%">${d[i] ? '✓' : i + 1}</span>`).join('');
 }
 
 function story(text, tip) {
   const el = $('#story');
-  el.innerHTML = `<div class="bubble"><b>Pongo:</b> ${esc(text)}<small>${esc(tip)}</small></div>`;
+  el.innerHTML = `<div class="bubble">${ava('feliz', 'ava-bubble')}<div><b>Pongo:</b> ${esc(text)}<small>${esc(tip)}</small></div></div>`;
   el.hidden = false;
   clearTimeout(story.t);
   story.t = setTimeout(() => (el.hidden = true), 7000);
@@ -434,7 +438,7 @@ function closePanel() {
 function renderLesson(m) {
   setProgress(0);
   const body = $('#panel-body');
-  body.innerHTML = `<div class="lesson"><div class="lesson-tag">Lição · ${esc(m.desc)}</div>${lessonHtml(m)}</div>`;
+  body.innerHTML = `<div class="lesson"><div class="lesson-head">${ava(pick(['curioso', 'pensativo']))}<div><div class="lesson-tag">Lição</div><p class="lesson-say">${esc(m.desc)}</p></div></div>${lessonHtml(m)}</div>`;
   setFooter(`<button class="btn btn-primary" id="go">Começar os desafios</button>`);
   $('#go').addEventListener('click', () => {
     A.sfxClick();
@@ -518,7 +522,7 @@ function wrong(el) {
 }
 
 function feedback(ok, html, onNext) {
-  setFooter(`<div class="fb ${ok ? 'fb-ok' : 'fb-no'}"><div class="fb-text">${ok ? '<b>对了！duì le!</b> ' : ''}${html}</div><button class="btn btn-primary" id="next">Continuar →</button></div>`);
+  setFooter(`<div class="fb ${ok ? 'fb-ok' : 'fb-no'}">${ava(ok ? pick(['feliz', 'empolgado', 'piscando', 'carinhoso']) : 'pensativo', 'ava-fb')}<div class="fb-text">${ok ? '<b>对了！duì le!</b> ' : ''}${html}</div><button class="btn btn-primary" id="next">Continuar →</button></div>`);
   const n = $('#next');
   n.focus({ preventScroll: true });
   n.addEventListener('click', () => {
@@ -748,6 +752,7 @@ function missionComplete() {
   world.celebrate();
   setProgress(1);
   $('#panel-body').innerHTML = `<div class="done">
+    ${ava(stars === 3 ? 'empolgado' : stars === 2 ? 'feliz' : 'osso', 'ava-big')}
     <div class="done-stars">${[1, 2, 3].map((s) => `<span class="${s <= stars ? 'on' : ''}" style="--d:${s * 0.15}s">★</span>`).join('')}</div>
     <h3>Missão cumprida!</h3>
     <p>${state.firstTry} de ${state.list.length} na primeira tentativa.</p>
@@ -785,6 +790,7 @@ function levelComplete() {
     $('#panel-title').innerHTML = `<span class="pt-zh">${L.zh}</span><span><small>Fase ${L.id} concluída</small>${L.nome}</span>`;
     setProgress(1);
     $('#panel-body').innerHTML = `<div class="done">
+      ${ava(L.amiga ? 'carinhoso' : 'brincalhao', 'ava-big')}
       <div class="done-stars">${'★'.repeat(stars)}<span class="dim">${'★'.repeat(9 - stars)}</span></div>
       <h3>${L.amiga ? 'Pongo chegou! 欢迎你来北京！' : 'Fase concluída!'}</h3>
       <p>${L.amiga ? 'A Lili serviu chá, e o Pongo conversou em mandarim do começo ao fim. Você concluiu a trilha Pré-HSK 1 → HSK 1!' : `Próxima parada: <b>${next.nome} ${next.zh}</b>.`}</p>

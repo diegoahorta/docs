@@ -1,10 +1,10 @@
 # Pongo vai à China · 小狗 Pongo 去中国
 
-Jogo 3D de mandarim para os níveis **Pré-HSK 1 e HSK 1**, no estilo dos materiais da **ODU Creative**
+Jogo 2D em estilo cartoon de mandarim para os níveis **Pré-HSK 1 e HSK 1**, no estilo dos materiais da **ODU Creative**
 (Método ODU Chunking, com frases montadas em blocos coloridos).
 
 > Pongo é um cachorrinho que ama aprender idiomas. Ele quer visitar os amigos na China, mas está
-> preso no jardim. Para chegar a Pequim, ele atravessa seis cenários 3D, e cada portal do caminho
+> preso no jardim. Para chegar a Pequim, ele atravessa seis cenários, e cada portal do caminho
 > só se abre quando o jogador cumpre uma missão de mandarim.
 
 ## Como jogar
@@ -15,13 +15,13 @@ python3 -m http.server 8000
 # abra http://localhost:8000
 ```
 
-O `index.html` precisa de um servidor web porque carrega os modelos `.glb` com `fetch`.
+O `index.html` usa módulos JavaScript, que os navegadores só carregam por um servidor web.
 Qualquer hospedagem estática serve: Netlify, Vercel, GitHub Pages ou similar.
 
 ### Versão em arquivo único
 
-`dist/pongo-vai-a-china.html` (cerca de 2,4 MB) traz o jogo inteiro num só arquivo: CSS,
-JavaScript, Three.js, os modelos 3D e as imagens embutidos. Ele abre com duplo clique, sem
+`dist/pongo-vai-a-china.html` traz o jogo inteiro num só arquivo: CSS, JavaScript, sprites e
+imagens embutidos. Ele abre com duplo clique, sem
 servidor, e pode ser enviado por e-mail ou colocado num pendrive. Só as fontes vêm da internet;
 sem conexão, o navegador usa fontes parecidas. Para gerar o arquivo de novo depois de mudar o jogo:
 
@@ -52,7 +52,8 @@ Estrelas por missão: 3 com 90% ou mais de acertos de primeira, 2 com 65% ou mai
 
 ### Comemorações
 
-Cada acerto solta confete na tela e no 3D, toca um acorde e faz o Pongo pular e girar.
+Cada acerto solta confete e estrelinhas, toca um acorde, faz o Pongo pular (sprite de pulo) e mostra
+um balão com a expressão dele.
 Cada missão cumprida dispara a "explosão": canhões de confete, chuva de emojis 🧧🏮🐶🥟, fogos de
 artifício, flashes coloridos, tremor de tela, estouro grave, bombinhas 鞭炮, gongo, fanfarra,
 buzina, apito e torcida, e a voz diz 太棒了！. A fase concluída dispara tudo isso em dobro.
@@ -67,7 +68,7 @@ com swing, bloco de madeira e chiado de vinil. Ela pode ser desligada no botão 
 
 ## Conteúdo pedagógico
 
-| Fase | Cenário 3D | Nível | Portal 1 | Portal 2 | Portal 3 |
+| Fase | Cenário | Nível | Portal 1 | Portal 2 | Portal 3 |
 | --- | --- | --- | --- | --- | --- |
 | 1 | O Jardim do Pongo 花园 | Pré-HSK 1 | Os cinco tons | Pares mínimos (买/卖) | Os 20 pares de tons |
 | 2 | A Floresta de Bambu 竹林 | Pré-HSK 1 | Sons do pinyin (j q x, zh ch sh r, z c s, -n/-ng, ü) | Sandhi (3+3, 不, 一) | Números 一 a 十 |
@@ -97,30 +98,20 @@ Fontes do conteúdo: *Material Didático*, *Norteador* e *Mandarim em Blocos* (O
 Yoyo Chinese (tone pairs); Wikipedia (*Standard Chinese phonology*); Language Trainers (*Chinese tones*);
 PolyU (*Basic tones*). Todo o conteúdo está em `js/data.js`, para o professor editar.
 
-## Os modelos 3D (Blender)
+## Visual 2D cartoon
 
-Todos os modelos foram gerados por script no Blender (`blender/build_assets.py`) e exportados em glTF:
-
-| Arquivo | Conteúdo |
-| --- | --- |
-| `pongo.glb` | Pongo (tricolor, orelha esquerda em pé, coleira azul, camiseta de ossinhos) com as animações `Walk`, `Idle`, `Jump` e `Sad` |
-| `panda.glb` | Lili, a panda, com as animações `Idle` e `Wave` |
-| `gate.glb` | Portal chinês 牌坊 com as portas `DoorL` / `DoorR` |
-| `scene_1.glb` … `scene_6.glb` | Jardim, floresta de bambu, arrozais de Guilin, porto, Grande Muralha e Pequim |
-
-Para alterar e regenerar:
-
-```bash
-# com o Blender instalado (4.2 ou mais recente)
-blender --background --python blender/build_assets.py -- assets/models
-
-# ou com o Blender como módulo Python
-pip install bpy==4.2.0
-python3 blender/build_assets.py assets/models
-```
-
-O caminho de cada cenário vai de Y = 0 a Y = 64 no Blender (Z = 0 a −64 no jogo), e os portais ficam
-em Y = 16, 32 e 48. O Pongo olha para +Y.
+- **Pongo** é animado com folhas de sprites recortadas das artes originais: `assets/sprites/pongo-walk.webp`
+  (8 quadros de caminhada) e `assets/sprites/pongo-jump.webp` (8 quadros de pulo, usado nas comemorações;
+  o último quadro é a pose parada). Os quadros estão alinhados pelo chão, 160 × 195 px e 161 × 293 px.
+- **Expressões** (`assets/img/expr/`) vêm da folha "Pongo: expressões e reações": feliz, empolgado,
+  piscando, curioso, surpreso, triste, pensativo, assustado, carinhoso, com osso, brincalhão e tchau.
+  Elas aparecem no balão sobre o Pongo (curioso ao chegar no portal, triste ou assustado ao errar,
+  feliz ou empolgado ao acertar), na lição, no retorno de cada resposta e nas telas de fim.
+- **Cenários** são desenhados em canvas (`js/world.js`) no mesmo traço: contorno escuro, cores chapadas
+  e camadas em parallax (céu, fundo, meio, chão e primeiro plano). Cada fase tem as próprias peças:
+  casinha e cerca no jardim, bambuzal, montanhas cársticas e arrozais de Guilin, píer e barcos no porto,
+  a Grande Muralha serpenteando nas montanhas, casas, pagodes e lanternas em Pequim, onde a panda Lili
+  espera com a mesa de chá.
 
 ## Estrutura
 
@@ -131,13 +122,14 @@ pongo-mandarim/
 ├── js/
 │   ├── data.js           tons, pinyin, sandhi, vocabulário HSK 1, frases em blocos, fases
 │   ├── game.js           missões, desafios, pontuação, progresso
-│   ├── world.js          cena 3D (Three.js): Pongo, portais, câmera, partículas
+│   ├── world.js          mundo 2D: cenários em parallax, sprites do Pongo, portais, Lili
+│   ├── assets.js         caminhos das imagens e das folhas de sprites
 │   ├── audio.js          trilha lofi, efeitos, contorno dos tons, voz zh-CN
 │   └── fx.js             confete, fogos, emojis, flashes, tremor
-├── assets/models/*.glb   modelos exportados do Blender
-├── assets/img/           arte do Pongo e logo ODU Creative
-├── blender/build_assets.py
-└── vendor/three/         Three.js r169 (licença MIT)
+├── assets/sprites/       folhas de sprites (andar, pular)
+├── assets/img/           retrato, expressões do Pongo e logo ODU Creative
+├── tools/build-single-html.mjs   gera dist/pongo-vai-a-china.html
+└── dist/                 o jogo em um único arquivo HTML
 ```
 
 A voz em mandarim usa a síntese de fala do aparelho (`speechSynthesis`). Se não houver voz chinesa

@@ -308,7 +308,7 @@ button.blk.nope { opacity: 0.4; }
 .done { text-align: center; display: grid; justify-items: center; gap: 8px; padding-top: 6px; }
 .done h3 { font-size: 2rem; }
 .done p { margin: 0; }
-.done-stars { font-size: 3rem; letter-spacing: 6px; color: #d5cfc4; }
+.done-stars { font-size: clamp(1.5rem, 7vw, 3rem); letter-spacing: 2px; color: #d5cfc4; max-width: 100%; }
 .done-stars .on { color: var(--gold); display: inline-block; animation: starin 0.6s var(--d) both cubic-bezier(.3, 1.8, .5, 1); -webkit-text-stroke: 2px var(--ink); }
 .done-stars .dim { color: #d5cfc4; }
 @keyframes starin { from { transform: scale(0) rotate(-180deg); } }
@@ -368,3 +368,18 @@ button.blk.nope { opacity: 0.4; }
 @media (prefers-reduced-motion: reduce) {
   .walk:not(.on), .title-art img, .hud-combo { animation: none; }
 }
+
+/* ---------------------------------------------------------- expressões do Pongo (sprites) */
+.title-art img { aspect-ratio: 4 / 5; object-fit: cover; object-position: center 18%; }
+.ava { display: block; border-radius: 50%; border: 3px solid var(--ink); background: #fff; object-fit: cover; flex: none; }
+.ava-bubble { width: 64px; height: 64px; }
+.bubble { display: flex; gap: 12px; align-items: center; }
+.lesson-head { display: flex; gap: 12px; align-items: center; margin-bottom: 4px; }
+.lesson-head .ava { width: 72px; height: 72px; animation: tilt 2.4s ease-in-out infinite; }
+.lesson-say { margin: 2px 0 0; font-weight: 800; background: #fff; border: 3px solid var(--ink); border-radius: 4px 16px 16px 16px; padding: 6px 12px; }
+@keyframes tilt { 50% { transform: rotate(-6deg); } }
+.ava-fb { width: 54px; height: 54px; animation: popin 0.4s cubic-bezier(.3, 1.6, .5, 1); }
+.ava-big { width: 120px; height: 120px; border-width: 4px; box-shadow: 6px 6px 0 var(--gold); animation: popin 0.5s cubic-bezier(.3, 1.6, .5, 1); }
+.comic-ava { width: 100%; max-width: 160px; aspect-ratio: 1; object-fit: cover; border: 3px solid var(--ink); border-radius: 14px; display: block; margin-bottom: 8px; }
+#play { background: #bfe6ff; }
+@media (prefers-reduced-motion: reduce) { .lesson-head .ava { animation: none; } }

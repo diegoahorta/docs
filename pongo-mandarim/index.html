@@ -4,14 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pongo vai à China</title>
-<meta name="description" content="Jogo 3D de mandarim Pré-HSK 1 e HSK 1: tons, pinyin, hanzi e frases em blocos coloridos (Método ODU Chunking).">
+<meta name="description" content="Jogo cartoon de mandarim Pré-HSK 1 e HSK 1: tons, pinyin, hanzi e frases em blocos coloridos (Método ODU Chunking).">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800;900&family=Noto+Sans+SC:wght@500;700&family=ZCOOL+KuaiLe&display=swap">
 <link rel="stylesheet" href="css/style.css">
-<script type="importmap">
-{ "imports": { "three": "./vendor/three/build/three.module.min.js", "three/addons/": "./vendor/three/examples/jsm/" } }
-</script>
 </head>
 <body>
 <div id="app">
@@ -20,7 +17,7 @@
   <section class="screen" id="title">
     <div class="title-wrap">
       <div class="title-art">
-        <img src="assets/img/pongo-arte.webp" alt="Pongo, um filhote tricolor de orelha levantada, com coleira azul e camiseta de ossinhos" width="700" height="874">
+        <img src="assets/img/pongo-retrato.webp" alt="Pongo, um filhote caramelo e branco de orelha levantada, com coleira azul-marinho e camiseta de bolinhas" width="520" height="923">
         <span class="sticker s1">你好!</span>
         <span class="sticker s2">mā má mǎ mà</span>
       </div>
@@ -28,7 +25,7 @@
         <p class="eyebrow">Pré-HSK 1 → HSK 1 · Método ODU Chunking</p>
         <h1>Pongo<br>vai à China</h1>
         <p class="title-zh">小狗 Pongo 去中国</p>
-        <p class="title-lead">Pongo ama aprender idiomas e quer visitar os amigos na China. Mas ele está preso no jardim! Ajude-o a atravessar seis cenários 3D aprendendo tons, pinyin, hanzi e a montar frases em blocos coloridos.</p>
+        <p class="title-lead">Pongo ama aprender idiomas e quer visitar os amigos na China. Mas ele está preso no jardim! Ajude-o a atravessar seis cenários aprendendo tons, pinyin, hanzi e a montar frases em blocos coloridos.</p>
         <button class="btn btn-primary btn-huge" id="play-btn">Jogar <span class="zh">开始</span></button>
         <p class="title-score" id="title-score"></p>
         <div class="title-foot">
@@ -44,14 +41,14 @@
     <div class="intro-wrap">
       <h2>A história</h2>
       <ol class="comic">
-        <li><span class="panel-zh">爱学习</span><p>Pongo é um cachorrinho que <b>ama aprender idiomas</b>. Ele já sabe latir em português, e agora quer falar mandarim.</p></li>
-        <li><span class="panel-zh">朋友</span><p>Os amigos dele moram na China. A panda <b>Lili</b> espera o Pongo em Pequim para um chá.</p></li>
-        <li><span class="panel-zh">开门</span><p>Mas o Pongo está <b>preso no jardim</b>! Cada portal do caminho só se abre com uma missão de mandarim cumprida.</p></li>
+        <li><img class="comic-ava" src="assets/img/expr/feliz.webp" alt="Pongo feliz"><span class="panel-zh">爱学习</span><p>Pongo é um cachorrinho que <b>ama aprender idiomas</b>. Ele já sabe latir em português, e agora quer falar mandarim.</p></li>
+        <li><img class="comic-ava" src="assets/img/expr/carinhoso.webp" alt="Pongo carinhoso"><span class="panel-zh">朋友</span><p>Os amigos dele moram na China. A panda <b>Lili</b> espera o Pongo em Pequim para um chá.</p></li>
+        <li><img class="comic-ava" src="assets/img/expr/assustado.webp" alt="Pongo assustado"><span class="panel-zh">开门</span><p>Mas o Pongo está <b>preso no jardim</b>! Cada portal do caminho só se abre com uma missão de mandarim cumprida.</p></li>
       </ol>
       <div class="howto">
         <h3>Como jogar</h3>
         <ul>
-          <li><b>走 Andar:</b> toque no botão (ou segure ↑ / W) e o Pongo caminha pelo cenário 3D.</li>
+          <li><b>走 Andar:</b> toque no botão (ou segure ↑ / W) e o Pongo caminha pelo cenário.</li>
           <li><b>Portais 牌坊:</b> em cada portal começa uma missão. Primeiro a lição, depois os desafios.</li>
           <li><b>Progressão:</b> a próxima fase só abre quando os 3 portais da fase atual estiverem abertos.</li>
           <li><b>Pontos:</b> 100 por acerto de primeira, 50 na segunda, 25 depois. Acertos seguidos multiplicam até ×5. Cada missão rende até 3 estrelas.</li>
@@ -72,9 +69,9 @@
     <div class="map-route" id="map-stops"></div>
   </section>
 
-  <!-- ============ JOGO 3D ============ -->
+  <!-- ============ JOGO 2D ============ -->
   <section class="screen" id="play" hidden>
-    <canvas id="gl" aria-label="Cenário 3D com o Pongo"></canvas>
+    <canvas id="gl" aria-label="Cenário com o Pongo"></canvas>
 
     <div class="hud">
       <button class="hud-btn" id="btn-map" aria-label="Voltar ao mapa">◀ Mapa</button>
@@ -99,7 +96,7 @@
 
     <button class="walk" id="walk"><span class="walk-zh">走</span><span id="walk-label">Andar</span></button>
 
-    <div class="loading" id="loading" hidden><div class="spinner"></div><p>Carregando o cenário 3D…</p></div>
+    <div class="loading" id="loading" hidden><div class="spinner"></div><p>Carregando o cenário…</p></div>
 
     <aside class="panel" id="panel" hidden aria-live="polite">
       <div class="panel-head">
