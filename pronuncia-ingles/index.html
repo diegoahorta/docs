@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Noto+Sans:wght@400;600&display=swap">
 <style>
-/* Layout: palco 3D (carrossel de blocos de som) no topo, trilha de lições logo abaixo, painel da lição com Aprender/Praticar, e a análise do material no fim. */
+/* Layout: palco 3D (carrossel de blocos de som) no topo, trilha de lições logo abaixo, painel da lição com Aprender/Praticar */
 :root {
   --bg: #f2f6f8;
   --surface: #ffffff;
@@ -187,7 +187,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .btn-voice::before { content: ""; width: 14px; height: 14px; background: currentColor; -webkit-mask: var(--spk) center/14px no-repeat; mask: var(--spk) center/14px no-repeat; }
 .btn-soft { background: var(--voice-soft); color: var(--voice); border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 700; }
 .note { font-size: .88rem; color: var(--muted); }
-.tag-extra { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); padding: 2px 8px; border-radius: 99px; }
 
 .pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
 .pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
@@ -239,19 +238,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .result { text-align: center; display: grid; gap: 12px; justify-items: center; }
 .result .score { font-family: var(--f-display); font-size: 3.4rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
 
-/* About */
-.about { padding-block: 40px 56px; }
-.about-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px 40px; margin-top: 18px; }
-.about p, .about li { max-width: 68ch; }
-.about ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
-table { border-collapse: collapse; width: 100%; font-size: .92rem; min-width: 520px; }
-th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
-tr:last-child td { border-bottom: 0; }
-td.n { font-variant-numeric: tabular-nums; text-align: right; }
-.fixes { counter-reset: fx; }
-.fixes li { list-style: none; position: relative; }
 footer { border-top: 1px solid var(--line); padding-block: 18px; color: var(--muted); font-size: .85rem; }
 
 .notice { background: var(--bad-soft); border-radius: 12px; padding: 10px 14px; font-size: .92rem; }
@@ -261,7 +247,7 @@ footer { border-top: 1px solid var(--line); padding-block: 18px; color: var(--mu
 }
 @media (max-width: 860px) {
   .hero .wrap { grid-template-columns: minmax(0, 1fr); padding-block: 24px 12px; }
-  .intro, .about-grid { grid-template-columns: minmax(0, 1fr); }
+  .intro { grid-template-columns: minmax(0, 1fr); }
   .lesson-head { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 520px) {
@@ -294,7 +280,7 @@ footer { border-top: 1px solid var(--line); padding-block: 18px; color: var(--mu
     <div class="hero-copy">
       <span class="eyebrow">Inglês para quem fala português</span>
       <h1>Use o português que você já sabe para soar natural em inglês</h1>
-      <p class="lead">Oito lições curtas, feitas a partir das aulas bônus de pronúncia do curso. Cada som vem com uma <strong>comparação com o português</strong>, a posição da boca, áudio e um exercício rápido.</p>
+      <p class="lead">Oito lições curtas sobre os sons que mais confundem quem fala português. Cada som vem com uma <strong>comparação com o português</strong>, a posição da boca, áudio e um exercício rápido.</p>
       <div class="cta-row">
         <button class="btn btn-primary" id="startBtn" type="button">Começar pela lição 1</button>
         <button class="btn btn-ghost" id="challengeBtn" type="button">Desafio misto (10 perguntas)</button>
@@ -319,41 +305,8 @@ footer { border-top: 1px solid var(--line); padding-block: 18px; color: var(--mu
   <div class="wrap" id="lessonInner"></div>
 </main>
 
-<section class="about" id="sobre">
-  <div class="wrap">
-    <span class="eyebrow">Análise do material</span>
-    <h2>O que os PDFs ensinam e como viraram este sistema</h2>
-    <div class="about-grid">
-      <div style="display:grid;gap:14px;align-content:start">
-        <p>Os dois arquivos são as <b>Aulas Bônus de Pronúncia</b> do <b>Curso de Inglês Victor Riva 2.0</b>: “Pronunciation” (parte 1, 2 páginas) e “Pronunciation, Part 02” (2 páginas). São listas de palavras agrupadas por som, com uma frase-modelo que junta os sons da regra.</p>
-        <p>O ponto forte do material é explicar o inglês <b>pelo português</b>: o R “caipira”, o T que soa como “d” ou “r”, o OO como o nosso “u”, o “ã” de <i>blood</i>. O sistema mantém essa ideia em todas as lições e acrescenta o que uma página impressa não tem: voz, transcrição fonética e exercícios com correção imediata.</p>
-        <p class="note">A pronúncia de referência é a do inglês americano, que é a que o próprio material descreve (T “flap”, T mudo depois de N, R retroflexo).</p>
-      </div>
-      <div style="display:grid;gap:18px;min-width:0">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Tópico do PDF</th><th>Ideia central</th><th class="n">Palavras</th></tr></thead>
-            <tbody id="aboutTable"></tbody>
-          </table>
-        </div>
-        <div>
-          <h3 style="margin-bottom:10px">Ajustes feitos ao transformar o material</h3>
-          <ul class="fixes">
-            <li><b>Transcrição fonética (IPA).</b> O PDF não traz símbolos fonéticos. Cada palavra ganhou IPA americano e uma aproximação “em português”.</li>
-            <li><b>Sílaba tônica visível.</b> O tópico “Syllable Stressing” lista as palavras sem marcar a sílaba forte (a marcação provavelmente era cor ou negrito e se perdeu). Aqui a sílaba tônica fica destacada e vira exercício.</li>
-            <li><b>Grafia mista.</b> A frase do L usa <i>travelling</i> (britânico) enquanto o resto segue o americano (<i>traveling</i>). Mantivemos a frase original e sinalizamos a diferença.</li>
-            <li><b>Casos com mais de uma pronúncia.</b> <i>with</i> aparece no TH “buzzy”, mas também se ouve com TH suave; <i>poor</i> costuma soar /pʊr/ nos EUA; <i>our</i> pode soar igual a <i>are</i>. Isso aparece como observação na lição.</li>
-            <li><b>Homófono que faltava.</b> O trio clássico é <i>to / too / two</i>; o PDF traz só <i>too / two</i>. Incluímos <i>to</i> como nota.</li>
-            <li><b>Frases e pares extras.</b> O tópico do EE não tem frase-modelo e nenhum tópico traz pares de contraste (<i>sheep × ship</i>). Tudo que não está no PDF leva a etiqueta <span class="tag-extra">extra</span>.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <footer>
-  <div class="wrap">Conteúdo baseado nas Aulas Bônus de Pronúncia (partes 1 e 2) do Curso de Inglês Victor Riva 2.0. Áudio gerado pela voz sintetizada do seu navegador.</div>
+  <div class="wrap">Pronúncia de referência: inglês americano. Áudio gerado pela voz sintetizada do seu navegador.</div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -362,7 +315,7 @@ footer { border-top: 1px solid var(--line); padding-block: 18px; color: var(--mu
 "use strict";
 
 /* ------------------------------------------------------------------ */
-/* Conteúdo (extraído e organizado a partir dos PDFs)                  */
+/* Conteúdo das lições                                                */
 /* ------------------------------------------------------------------ */
 // w: palavra, i: IPA americano, p: aproximação em português, h: trecho a destacar
 const MODULES = [
@@ -498,10 +451,10 @@ const MODULES = [
           { w: "talk", i: "tɔːk", p: "TÓK" }
         ] }
     ],
-    sentence: { t: "I'm travelling to Brazil to talk to the love of my life.", key: ["travelling", "Brazil", "talk", "love", "life"] },
+    sentence: { t: "I'm traveling to Brazil to talk to the love of my life.", key: ["traveling", "Brazil", "talk", "love", "life"] },
     pairs: [["Brazil", "Brasil", "pt"], ["milk", "miúca", "pt"], ["travel", "trevo", "pt"]],
     pairsNote: "Compare o L final do inglês com o “u” do português.",
-    note: "O PDF escreve <i>travelling</i> (grafia britânica). No inglês americano a grafia é <i>traveling</i>; a pronúncia é a mesma."
+    note: "No inglês britânico escreve-se <i>travelling</i>; no americano, <i>traveling</i>. A pronúncia é a mesma."
   },
   {
     id: "ee", glyph: "EE", name: "Duplo E", en: "Double “e” in English",
@@ -522,7 +475,7 @@ const MODULES = [
           { w: "teeth", i: "tiːθ", p: "TÍITH" }
         ] }
     ],
-    sentence: { t: "I meet my friends on Green Street to eat free cheese.", key: ["meet", "Green", "Street", "free", "cheese"], extra: true },
+    sentence: { t: "I meet my friends on Green Street to eat free cheese.", key: ["meet", "Green", "Street", "free", "cheese"] },
     pairs: [["sheep", "ship"], ["feet", "fit"], ["sleep", "slip"], ["green", "grin"], ["meet", "mitt"], ["leave", "live"]]
   },
   {
@@ -933,7 +886,7 @@ function sentenceBlock(s) {
     return `<span data-s="${start}" data-e="${pos}"${isKey ? ' class="key"' : ""}>${esc(tok)}</span>`;
   }).join(" ");
   return `<div class="sentence">
-    <div class="row"><span class="eyebrow">Frase-modelo</span>${s.extra ? '<span class="tag-extra">extra</span>' : ""}</div>
+    <div class="row"><span class="eyebrow">Frase-modelo</span></div>
     <p class="sentence-text" data-text="${esc(s.t)}">${spans}</p>
     <div class="row">
       <button type="button" class="btn-voice" data-act="sentence">Ouvir a frase</button>
@@ -1001,7 +954,7 @@ function renderLearn(m) {
 
   if (m.pairs) {
     html += `<div class="group">
-      <div class="group-head"><h3>Compare os sons</h3><span class="tag-extra">extra</span></div>
+      <div class="group-head"><h3>Compare os sons</h3></div>
       <p class="group-desc">${m.pairsNote || "Pares de palavras que só mudam no som da lição. Ouça um, depois o outro, e repita."}</p>
       <div class="pairs">${m.pairs.map(p => `<div class="pair">
         <button type="button" data-say="${esc(p[0])}">${esc(p[0])}<small>inglês</small></button>
@@ -1237,13 +1190,6 @@ const App = (function () {
 
   $("#startBtn").onclick = () => open(MODULES[0].id, true);
   $("#challengeBtn").onclick = challenge;
-
-  // Tabela da análise
-  $("#aboutTable").innerHTML = MODULES.map((m, i) => {
-    const count = m.homo ? m.homo.reduce((s, g) => s + g.items.length, 0) : m.groups.reduce((s, g) => s + g.words.length, 0);
-    const part = m.homo ? "Parte 2" : "Parte 1";
-    return `<tr><td><b>${esc(m.en)}</b><br><span class="note">${part}</span></td><td>${m.homo ? "15 grupos de palavras que soam igual + 5 letras/números" : m.groups.map(g => esc(g.title) + " " + esc(g.ipa)).join("; ")}</td><td class="n">${count}</td></tr>`;
-  }).join("");
 
   drawTrail();
   const last = store.get("pef-last", null);
