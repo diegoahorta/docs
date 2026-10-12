@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pronúncia em Foco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Noto+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: palco 3D (carrossel de blocos de som) no topo, trilha de lições logo abaixo, painel da lição com Aprender/Praticar, e a análise do material no fim. */
+:root {
+  --bg: #f2f6f8;
+  --surface: #ffffff;
+  --surface-2: #e6eef2;
+  --ink: #16283a;
+  --muted: #536a7e;
+  --line: #d2dde5;
+  --accent: #eaa21a;
+  --accent-soft: #fcefd2;
+  --accent-ink: #7a4f00;
+  --voice: #1d756d;
+  --voice-soft: #d9efec;
+  --good: #2b8556;
+  --good-soft: #dcf1e4;
+  --bad: #b8433a;
+  --bad-soft: #f7e0dd;
+  --tile: #ffffff;
+  --shadow: 0 1px 2px rgba(22, 40, 58, .06), 0 8px 24px rgba(22, 40, 58, .07);
+
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-ipa: "Noto Sans", "Charis SIL", "Lucida Sans Unicode", "Segoe UI", "DejaVu Sans", sans-serif;
+
+  --r: 14px;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1922;
+    --surface: #14232e;
+    --surface-2: #1b2e3b;
+    --ink: #e3ebf0;
+    --muted: #9bb0bf;
+    --line: #2a3f4e;
+    --accent: #f2b73c;
+    --accent-soft: #3a3016;
+    --accent-ink: #f7cd6c;
+    --voice: #56c4b8;
+    --voice-soft: #173a39;
+    --good: #62c88e;
+    --good-soft: #17352a;
+    --bad: #ef7d70;
+    --bad-soft: #3d1f1d;
+    --tile: #1e3240;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1922;
+  --surface: #14232e;
+  --surface-2: #1b2e3b;
+  --ink: #e3ebf0;
+  --muted: #9bb0bf;
+  --line: #2a3f4e;
+  --accent: #f2b73c;
+  --accent-soft: #3a3016;
+  --accent-ink: #f7cd6c;
+  --voice: #56c4b8;
+  --voice-soft: #173a39;
+  --good: #62c88e;
+  --good-soft: #17352a;
+  --bad: #ef7d70;
+  --bad-soft: #3d1f1d;
+  --tile: #1e3240;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: var(--gutter); }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.12; text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+h1 { font-size: clamp(2rem, 4.6vw, 3.3rem); font-weight: 800; }
+h2 { font-size: clamp(1.55rem, 3vw, 2.1rem); font-weight: 750; }
+h3 { font-size: 1.2rem; font-weight: 700; }
+p { margin: 0; }
+.ipa { font-family: var(--f-ipa); }
+.eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Top bar */
+.top { border-bottom: 1px solid var(--line); background: var(--surface); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; color: #2a1c00; font-size: .95rem; }
+.settings { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; font-size: .9rem; color: var(--muted); }
+.settings label { display: flex; align-items: center; gap: 8px; }
+.settings select { font: inherit; font-size: .88rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); max-width: 210px; }
+.settings input[type="range"] { width: 100px; accent-color: var(--voice); }
+.rate-val { font-variant-numeric: tabular-nums; min-width: 3.2ch; color: var(--ink); }
+
+/* Hero */
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 40px; align-items: center; padding-block: 36px 20px; }
+.hero-copy { display: grid; gap: 18px; min-width: 0; }
+.hero-copy .lead { font-size: 1.12rem; color: var(--muted); max-width: 46ch; }
+.hero-copy .lead strong { color: var(--ink); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 11px 20px; font-weight: 700; border: 1.5px solid transparent; transition: transform .15s ease, background .15s ease; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--accent); color: #2a1c00; }
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-ghost { background: transparent; border-color: var(--line); }
+.btn-ghost:hover { background: var(--surface-2); }
+.progress-line { display: grid; gap: 6px; max-width: 360px; }
+.progress-meta { display: flex; justify-content: space-between; font-size: .88rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar > span { display: block; height: 100%; width: 0; background: var(--good); border-radius: inherit; transition: width .5s ease; }
+
+.stage { position: relative; height: clamp(320px, 50vh, 520px); border-radius: 22px; overflow: hidden; background:
+  radial-gradient(ellipse at 50% 55%, var(--accent-soft) 0%, transparent 62%), var(--surface); border: 1px solid var(--line); min-width: 0; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+.stage-hint { position: absolute; left: 14px; bottom: 12px; font-size: .82rem; color: var(--muted); background: var(--surface); padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); pointer-events: none; }
+.stage-fallback { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--muted); }
+
+/* Trail */
+.trail { padding-block: 8px 8px; }
+.trail ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
+.trail button { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+.trail button:hover { background: var(--surface-2); }
+.trail button[aria-current="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.trail .t-num { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; align-items: center; }
+.trail .t-name { font-weight: 700; font-size: .92rem; line-height: 1.25; }
+.dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--line); }
+.dot.done { background: var(--good); border-color: var(--good); }
+.dot.part { background: var(--accent); border-color: var(--accent); }
+
+/* Lesson */
+.lesson { padding-block: 28px 12px; scroll-margin-top: 12px; }
+.lesson-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: end; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.lesson-head .sub { color: var(--muted); margin-top: 6px; }
+.tabs { display: inline-flex; background: var(--surface-2); border-radius: 999px; padding: 4px; gap: 4px; }
+.tabs button { border: 0; background: transparent; padding: 8px 18px; border-radius: 999px; font-weight: 700; color: var(--muted); }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.lesson-body { display: grid; gap: 22px; padding-top: 22px; }
+.intro { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 18px; align-items: start; }
+.intro p.big { font-size: 1.12rem; max-width: 62ch; }
+.mouth { background: var(--voice-soft); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 6px; min-width: 0; }
+.mouth .eyebrow { color: var(--voice); }
+.pitfall { background: var(--bad-soft); border-radius: var(--r); padding: 14px 18px; min-width: 0; }
+.pitfall .eyebrow { color: var(--bad); }
+
+.groups { display: grid; gap: 16px; }
+.group { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; display: grid; gap: 14px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-ipa); font-size: .95rem; padding: 2px 10px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
+.group-desc { color: var(--muted); max-width: 70ch; }
+.group-desc b { color: var(--ink); }
+.words { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.word { display: grid; gap: 2px; text-align: left; padding: 10px 12px 10px 40px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); position: relative; min-width: 0; transition: border-color .15s, background .15s; }
+.word:hover { border-color: var(--voice); }
+.word::before { content: ""; position: absolute; left: 12px; top: 14px; width: 18px; height: 18px; border-radius: 50%; background: var(--voice); -webkit-mask: var(--spk) center/12px no-repeat; mask: var(--spk) center/12px no-repeat; opacity: .9; }
+.word.playing { background: var(--voice-soft); border-color: var(--voice); }
+.word .w { font-weight: 700; font-size: 1.05rem; overflow-wrap: anywhere; }
+.word .w mark { background: none; color: var(--accent-ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.word .i { font-family: var(--f-ipa); font-size: .88rem; color: var(--muted); overflow-wrap: anywhere; }
+.word .p { font-size: .8rem; color: var(--muted); }
+:root { --spk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z'/%3E%3C/svg%3E"); }
+
+.sentence { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 10px; }
+.sentence-text { font-size: clamp(1.15rem, 2.3vw, 1.45rem); font-family: var(--f-display); font-weight: 600; line-height: 1.4; }
+.sentence-text span { border-radius: 6px; padding: 0 2px; transition: background .12s; }
+.sentence-text span.on { background: var(--accent-soft); color: var(--accent-ink); }
+.sentence-text span.key { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn-voice { background: var(--voice); color: var(--surface); border-radius: 999px; padding: 8px 16px; border: 0; font-weight: 700; display: inline-flex; gap: 8px; align-items: center; }
+.btn-voice::before { content: ""; width: 14px; height: 14px; background: currentColor; -webkit-mask: var(--spk) center/14px no-repeat; mask: var(--spk) center/14px no-repeat; }
+.btn-soft { background: var(--voice-soft); color: var(--voice); border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 700; }
+.note { font-size: .88rem; color: var(--muted); }
+.tag-extra { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); padding: 2px 8px; border-radius: 99px; }
+
+.pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+.pair button { border: 0; background: var(--surface-2); border-radius: 9px; padding: 8px; font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+.pair button:hover { background: var(--voice-soft); }
+.pair .vs { font-size: .75rem; color: var(--muted); }
+.pair small { display: block; font-weight: 400; font-size: .75rem; color: var(--muted); }
+
+/* Homophones */
+.homo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.homo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; display: grid; gap: 10px; align-content: start; }
+.homo-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.homo-words { display: flex; gap: 6px; flex-wrap: wrap; font-family: var(--f-display); font-weight: 700; font-size: 1.25rem; }
+.homo-words .eq { color: var(--muted); font-weight: 500; }
+.homo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.homo li button { width: 100%; text-align: left; border: 0; background: var(--surface-2); border-radius: 10px; padding: 8px 10px; display: grid; gap: 1px; }
+.homo li button:hover { background: var(--voice-soft); }
+.homo li b { color: var(--accent-ink); }
+.homo li .mean { font-size: .8rem; color: var(--muted); }
+.icon-btn { width: 36px; height: 36px; flex: none; border-radius: 50%; border: 0; background: var(--voice); display: grid; place-items: center; }
+.icon-btn::before { content: ""; width: 16px; height: 16px; background: var(--surface); -webkit-mask: var(--spk) center/16px no-repeat; mask: var(--spk) center/16px no-repeat; }
+.letters { display: flex; flex-wrap: wrap; gap: 10px; }
+.letters button { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 10px 14px; font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; }
+.letters button:hover { border-color: var(--voice); }
+
+/* Quiz */
+.quiz { display: grid; gap: 18px; max-width: 760px; }
+.quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+.steps { display: flex; gap: 4px; flex-wrap: wrap; }
+.steps i { width: 22px; height: 6px; border-radius: 99px; background: var(--surface-2); }
+.steps i.ok { background: var(--good); }
+.steps i.no { background: var(--bad); }
+.steps i.cur { background: var(--accent); }
+.q-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: clamp(18px, 3vw, 28px); display: grid; gap: 16px; box-shadow: var(--shadow); }
+.q-prompt { font-family: var(--f-display); font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 650; }
+.q-prompt em { font-style: normal; color: var(--accent-ink); }
+.opts { display: grid; gap: 8px; }
+.opts.syl { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { text-align: left; border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-weight: 700; }
+.opts.syl .opt { font-family: var(--f-display); font-size: 1.4rem; padding: 12px 20px; text-align: center; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--good); background: var(--good-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.feedback { border-radius: 12px; padding: 12px 14px; }
+.feedback.ok { background: var(--good-soft); }
+.feedback.no { background: var(--bad-soft); }
+.feedback b { display: block; }
+.result { text-align: center; display: grid; gap: 12px; justify-items: center; }
+.result .score { font-family: var(--f-display); font-size: 3.4rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+
+/* About */
+.about { padding-block: 40px 56px; }
+.about-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px 40px; margin-top: 18px; }
+.about p, .about li { max-width: 68ch; }
+.about ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; min-width: 520px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+tr:last-child td { border-bottom: 0; }
+td.n { font-variant-numeric: tabular-nums; text-align: right; }
+.fixes { counter-reset: fx; }
+.fixes li { list-style: none; position: relative; }
+footer { border-top: 1px solid var(--line); padding-block: 18px; color: var(--muted); font-size: .85rem; }
+
+.notice { background: var(--bad-soft); border-radius: 12px; padding: 10px 14px; font-size: .92rem; }
+
+@media (max-width: 980px) {
+  .trail ol { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); padding-block: 24px 12px; }
+  .intro, .about-grid { grid-template-columns: minmax(0, 1fr); }
+  .lesson-head { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .trail ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .settings input[type="range"] { width: 80px; }
+  .homo-grid { grid-template-columns: minmax(0, 1fr); }
+  .pair { grid-template-columns: 1fr; }
+  .pair .vs { text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark ipa" aria-hidden="true">ð</span>Pronúncia em Foco</div>
+    <div class="settings">
+      <label for="voiceSel">Voz <select id="voiceSel" aria-label="Voz em inglês"><option>Carregando vozes…</option></select></label>
+      <label for="rate">Velocidade <input id="rate" type="range" min="0.5" max="1.1" step="0.05" value="0.85"><span class="rate-val" id="rateVal">0.85×</span></label>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Inglês para quem fala português</span>
+      <h1>Use o português que você já sabe para soar natural em inglês</h1>
+      <p class="lead">Oito lições curtas, feitas a partir das aulas bônus de pronúncia do curso. Cada som vem com uma <strong>comparação com o português</strong>, a posição da boca, áudio e um exercício rápido.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" id="startBtn" type="button">Começar pela lição 1</button>
+        <button class="btn btn-ghost" id="challengeBtn" type="button">Desafio misto (10 perguntas)</button>
+      </div>
+      <div class="progress-line" aria-live="polite">
+        <div class="progress-meta"><span>Seu progresso</span><span id="progText">0 de 8 lições</span></div>
+        <div class="bar"><span id="progBar"></span></div>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="three" aria-label="Carrossel 3D com as lições de pronúncia. Use a lista de lições abaixo para navegar pelo teclado." role="img"></canvas>
+      <p class="stage-hint" id="stageHint">Arraste para girar · toque num bloco para abrir</p>
+    </div>
+  </div>
+</section>
+
+<nav class="trail" aria-label="Lições">
+  <div class="wrap"><ol id="trail"></ol></div>
+</nav>
+
+<main class="lesson" id="lesson" tabindex="-1">
+  <div class="wrap" id="lessonInner"></div>
+</main>
+
+<section class="about" id="sobre">
+  <div class="wrap">
+    <span class="eyebrow">Análise do material</span>
+    <h2>O que os PDFs ensinam e como viraram este sistema</h2>
+    <div class="about-grid">
+      <div style="display:grid;gap:14px;align-content:start">
+        <p>Os dois arquivos são as <b>Aulas Bônus de Pronúncia</b> do <b>Curso de Inglês Victor Riva 2.0</b>: “Pronunciation” (parte 1, 2 páginas) e “Pronunciation, Part 02” (2 páginas). São listas de palavras agrupadas por som, com uma frase-modelo que junta os sons da regra.</p>
+        <p>O ponto forte do material é explicar o inglês <b>pelo português</b>: o R “caipira”, o T que soa como “d” ou “r”, o OO como o nosso “u”, o “ã” de <i>blood</i>. O sistema mantém essa ideia em todas as lições e acrescenta o que uma página impressa não tem: voz, transcrição fonética e exercícios com correção imediata.</p>
+        <p class="note">A pronúncia de referência é a do inglês americano, que é a que o próprio material descreve (T “flap”, T mudo depois de N, R retroflexo).</p>
+      </div>
+      <div style="display:grid;gap:18px;min-width:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tópico do PDF</th><th>Ideia central</th><th class="n">Palavras</th></tr></thead>
+            <tbody id="aboutTable"></tbody>
+          </table>
+        </div>
+        <div>
+          <h3 style="margin-bottom:10px">Ajustes feitos ao transformar o material</h3>
+          <ul class="fixes">
+            <li><b>Transcrição fonética (IPA).</b> O PDF não traz símbolos fonéticos. Cada palavra ganhou IPA americano e uma aproximação “em português”.</li>
+            <li><b>Sílaba tônica visível.</b> O tópico “Syllable Stressing” lista as palavras sem marcar a sílaba forte (a marcação provavelmente era cor ou negrito e se perdeu). Aqui a sílaba tônica fica destacada e vira exercício.</li>
+            <li><b>Grafia mista.</b> A frase do L usa <i>travelling</i> (britânico) enquanto o resto segue o americano (<i>traveling</i>). Mantivemos a frase original e sinalizamos a diferença.</li>
+            <li><b>Casos com mais de uma pronúncia.</b> <i>with</i> aparece no TH “buzzy”, mas também se ouve com TH suave; <i>poor</i> costuma soar /pʊr/ nos EUA; <i>our</i> pode soar igual a <i>are</i>. Isso aparece como observação na lição.</li>
+            <li><b>Homófono que faltava.</b> O trio clássico é <i>to / too / two</i>; o PDF traz só <i>too / two</i>. Incluímos <i>to</i> como nota.</li>
+            <li><b>Frases e pares extras.</b> O tópico do EE não tem frase-modelo e nenhum tópico traz pares de contraste (<i>sheep × ship</i>). Tudo que não está no PDF leva a etiqueta <span class="tag-extra">extra</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Conteúdo baseado nas Aulas Bônus de Pronúncia (partes 1 e 2) do Curso de Inglês Victor Riva 2.0. Áudio gerado pela voz sintetizada do seu navegador.</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+"use strict";
+
+/* ------------------------------------------------------------------ */
+/* Conteúdo (extraído e organizado a partir dos PDFs)                  */
+/* ------------------------------------------------------------------ */
+// w: palavra, i: IPA americano, p: aproximação em português, h: trecho a destacar
+const MODULES = [
+  {
+    id: "stress", glyph: "ˈTEL", name: "Sílaba tônica", en: "Syllable stressing",
+    intro: "Em inglês, toda palavra com mais de uma sílaba tem uma sílaba mais forte. Ela é mais longa, mais alta e mais clara; as outras ficam curtinhas, quase engolidas. Errar a tônica atrapalha mais a compreensão do que errar um som isolado.",
+    mouth: "Bata palmas na sílaba forte: TE-le-vi-sion. Estique a vogal dessa sílaba e deixe as outras rápidas e fracas.",
+    pitfall: "Em português falamos “te-le-VI-são”. Em inglês a força vai para o começo: TEL-e-vi-sion. Não leve o hábito do português para a palavra parecida.",
+    groups: [
+      { title: "Onde cai a força", ipa: "ˈ", desc: "O símbolo <b>ˈ</b> na transcrição aparece antes da sílaba forte. As sílabas em maiúsculas são as tônicas.",
+        words: [
+          { w: "television", i: "ˈtɛl.ə.vɪʒ.ən", p: "TÉ-le-vi-jân", syl: ["tel", "e", "vi", "sion"], s: 0 },
+          { w: "computer", i: "kəmˈpjuː.ɾɚ", p: "câm-PIU-rer", syl: ["com", "pu", "ter"], s: 1 },
+          { w: "manager", i: "ˈmæn.ɪ.dʒɚ", p: "MÉ-ni-djer", syl: ["man", "a", "ger"], s: 0 },
+          { w: "interesting", i: "ˈɪn.trə.stɪŋ", p: "ÍN-tres-tin", syl: ["in", "ter", "est", "ing"], s: 0 },
+          { w: "police", i: "pəˈliːs", p: "pâ-LÍIS", syl: ["po", "lice"], s: 1 },
+          { w: "phone", i: "foʊn", p: "FÔUN", syl: ["phone"], s: 0 }
+        ] }
+    ],
+    note: "<i>Phone</i> tem uma sílaba só, então a força é a palavra inteira. Em <i>interesting</i>, nativos costumam juntar sílabas e dizer “IN-tres-ting” (3 sílabas)."
+  },
+  {
+    id: "th", glyph: "TH", name: "O som do TH", en: "Words with “th” sound",
+    intro: "O português não tem o som do TH. Ele existe em duas versões: o TH suave (só ar, sem vibrar) e o TH “buzzy” (com zumbido na garganta).",
+    mouth: "Coloque a ponta da língua levemente entre os dentes da frente e sopre. Sem voz é o suave /θ/; ligue a voz (a garganta vibra) e vira o buzzy /ð/.",
+    pitfall: "Não troque por F, S, T ou D: “fank you”, “sink”, “dis”, “fader”. A língua precisa aparecer entre os dentes.",
+    groups: [
+      { title: "TH suave", ipa: "/θ/", desc: "Só ar, como um <b>S soprado com a língua entre os dentes</b>. A garganta não vibra.", h: "th",
+        words: [
+          { w: "thank you", i: "ˈθæŋk juː", p: "THÉNK-iu" },
+          { w: "thanks", i: "θæŋks", p: "THÉNKS" },
+          { w: "three", i: "θriː", p: "THRÍI" },
+          { w: "think", i: "θɪŋk", p: "THÍNK" },
+          { w: "something", i: "ˈsʌm.θɪŋ", p: "SÂM-thin" }
+        ] },
+      { title: "TH buzzy", ipa: "/ð/", desc: "Mesma posição, mas <b>com voz</b>, como um D zumbido. Coloque a mão no pescoço e sinta vibrar.", h: "th",
+        words: [
+          { w: "this", i: "ðɪs", p: "DHÍS" },
+          { w: "that", i: "ðæt", p: "DHÉT" },
+          { w: "father", i: "ˈfɑː.ðɚ", p: "FÁ-dher" },
+          { w: "mother", i: "ˈmʌð.ɚ", p: "MÂ-dher" },
+          { w: "together", i: "təˈɡɛð.ɚ", p: "tu-GUÉ-dher" },
+          { w: "with", i: "wɪð", p: "UÍDH" }
+        ] }
+    ],
+    sentence: { t: "Their father and mother are thinking about something to do together.", key: ["Their", "father", "mother", "thinking", "something", "together"] },
+    pairs: [["think", "sink"], ["three", "tree"], ["thank", "tank"], ["they", "day"], ["then", "den"], ["mouth", "mouse"]],
+    note: "<i>With</i> aparece no grupo buzzy, mas muitos nativos dizem /wɪθ/, com TH suave. As duas formas estão certas."
+  },
+  {
+    id: "r", glyph: "R", name: "A letra R", en: "The letter “r”",
+    intro: "A letra R em inglês tem sempre o som do R retroflexo, o “R caipira” do interior de São Paulo e Minas. No começo, no meio ou no fim da palavra.",
+    mouth: "Curve a ponta da língua para trás, sem encostar no céu da boca, e arredonde um pouco os lábios. A língua não bate em lugar nenhum.",
+    pitfall: "No começo da palavra não use o “RR” de “rato” (que sai da garganta): <i>rock</i> não é “hóck”. E não faça o R vibrado de “caro”.",
+    groups: [
+      { title: "R caipira em todas as posições", ipa: "/ɹ/", desc: "Pense em “po<b>r</b>ta” falado no interior: é esse som em <i>door</i>, <i>car</i> e também em <i>rock</i>.", h: "r",
+        words: [
+          { w: "door", i: "dɔːr", p: "DÓR" },
+          { w: "park", i: "pɑːrk", p: "PÁRK" },
+          { w: "car", i: "kɑːr", p: "KÁR" },
+          { w: "bird", i: "bɝːd", p: "BÂRD" },
+          { w: "rock", i: "rɑːk", p: "RÁK (r caipira)" },
+          { w: "rare", i: "rer", p: "RÉR" },
+          { w: "really", i: "ˈriː.li", p: "RÍI-li" }
+        ] }
+    ],
+    sentence: { t: "I parked my car around the corner.", key: ["parked", "car", "around", "corner"] },
+    pairs: [["car", "carro", "pt"], ["door", "dor", "pt"], ["park", "parque", "pt"]],
+    pairsNote: "Os pares comparam a palavra em inglês com a palavra parecida em português (voz brasileira, se o seu navegador tiver)."
+  },
+  {
+    id: "t", glyph: "T", name: "A letra T", en: "The letter “t” sound",
+    intro: "O T muda conforme a posição na palavra. No começo ele é forte; entre vogais vira quase um “r” de “caro”; depois de N pode sumir; e antes de “-ain/-on” vira uma pausinha na garganta.",
+    mouth: "Para o T entre vogais (water), toque a língua rapidinho atrás dos dentes, como no “r” de “ca<b>r</b>o”. Para o T glotal, feche a garganta por um instante, como em “hum-hum”.",
+    pitfall: "Brasileiro costuma transformar “ti” em “tchi”. Em inglês o T nunca vira “tch”: <i>table</i> é “TÊI-bâl”, não “tchêibou”.",
+    groups: [
+      { title: "T forte (começo da palavra)", ipa: "/t/", desc: "Um T limpo, com um sopro de ar logo depois. Nunca “tch”.", h: "t",
+        words: [
+          { w: "talk", i: "tɔːk", p: "TÓK" },
+          { w: "take", i: "teɪk", p: "TÊIK" },
+          { w: "table", i: "ˈteɪ.bəl", p: "TÊI-bâl" },
+          { w: "top", i: "tɑːp", p: "TÁP" }
+        ] },
+      { title: "T como “d” ou “r” (entre vogais)", ipa: "/ɾ/", desc: "Soa como o <b>r de “caro”</b> ou um d bem rápido: <i>water</i> soa “uó-rer”.", h: "tt|t",
+        words: [
+          { w: "water", i: "ˈwɑː.ɾɚ", p: "UÓ-rer" },
+          { w: "daughter", i: "ˈdɑː.ɾɚ", p: "DÓ-rer" },
+          { w: "computer", i: "kəmˈpjuː.ɾɚ", p: "câm-PIU-rer" },
+          { w: "later", i: "ˈleɪ.ɾɚ", p: "LÊI-rer" },
+          { w: "better", i: "ˈbɛɾ.ɚ", p: "BÉ-rer" }
+        ] },
+      { title: "T mudo depois de N", ipa: "nt → n", desc: "Na fala do dia a dia o T do <b>NT</b> some: <i>twenty</i> soa “tuÉni”.", h: "nt",
+        words: [
+          { w: "twenty", i: "ˈtwɛn.i", p: "TUÉ-ni" },
+          { w: "internet", i: "ˈɪn.ɚ.nɛt", p: "Í-ner-net" },
+          { w: "interview", i: "ˈɪn.ɚ.vjuː", p: "Í-ner-viu" },
+          { w: "advantage", i: "ədˈvæn.ɪdʒ", p: "âd-VÉ-nidj" },
+          { w: "winter", i: "ˈwɪn.ɚ", p: "UÍ-ner" }
+        ] },
+      { title: "T glotal (pausa na garganta)", ipa: "/ʔ/", desc: "Antes de “-ain”, “-on”, “-en” o T vira uma <b>parada rápida na garganta</b>, como em “hum-hum”.", h: "t",
+        words: [
+          { w: "mountain", i: "ˈmaʊn.ʔn̩", p: "MÁUN-ʔn" },
+          { w: "fountain", i: "ˈfaʊn.ʔn̩", p: "FÁUN-ʔn" },
+          { w: "certain", i: "ˈsɝː.ʔn̩", p: "SÂR-ʔn" },
+          { w: "button", i: "ˈbʌʔ.n̩", p: "BÂ-ʔn" },
+          { w: "forgotten", i: "fɚˈɡɑːʔ.n̩", p: "fâr-GÁ-ʔn" }
+        ] }
+    ],
+    sentence: { t: "My daughter left the water fountain on the table.", key: ["daughter", "water", "fountain", "table"] }
+  },
+  {
+    id: "l", glyph: "L", name: "O som do L", en: "The “L” sound",
+    intro: "No começo da palavra o L é igual ao nosso. No meio e no fim ele continua sendo L, com a língua encostada atrás dos dentes. Algumas palavras têm L mudo.",
+    mouth: "No fim da palavra, termine com a ponta da língua encostada atrás dos dentes de cima e a parte de trás da língua levantada. Não deixe virar “u”.",
+    pitfall: "Brasileiro diz “Brasiu”, “miuk”, “trévou”. Em inglês o L final é ouvido: <i>Brazil</i> termina com a língua no céu da boca.",
+    groups: [
+      { title: "L no começo", ipa: "/l/", desc: "Igual ao L de “<b>l</b>ua”.", h: "l",
+        words: [
+          { w: "light", i: "laɪt", p: "LÁIT" },
+          { w: "letter", i: "ˈlɛɾ.ɚ", p: "LÉ-rer" },
+          { w: "love", i: "lʌv", p: "LÂV" },
+          { w: "like", i: "laɪk", p: "LÁIK" }
+        ] },
+      { title: "L no meio ou no fim", ipa: "/ɫ/", desc: "L “escuro”: a língua encosta, <b>não vira “u”</b>.", h: "l",
+        words: [
+          { w: "milk", i: "mɪɫk", p: "MÍLK (sem “miuk”)" },
+          { w: "Brazil", i: "brəˈzɪɫ", p: "brâ-ZÍL" },
+          { w: "travel", i: "ˈtræv.əɫ", p: "TRÉ-vâl" }
+        ] },
+      { title: "L mudo", ipa: "∅", desc: "Em <i>walk</i> e <i>talk</i> o L <b>não é pronunciado</b>.", h: "l",
+        words: [
+          { w: "walk", i: "wɔːk", p: "UÓK" },
+          { w: "talk", i: "tɔːk", p: "TÓK" }
+        ] }
+    ],
+    sentence: { t: "I'm travelling to Brazil to talk to the love of my life.", key: ["travelling", "Brazil", "talk", "love", "life"] },
+    pairs: [["Brazil", "Brasil", "pt"], ["milk", "miúca", "pt"], ["travel", "trevo", "pt"]],
+    pairsNote: "Compare o L final do inglês com o “u” do português.",
+    note: "O PDF escreve <i>travelling</i> (grafia britânica). No inglês americano a grafia é <i>traveling</i>; a pronúncia é a mesma."
+  },
+  {
+    id: "ee", glyph: "EE", name: "Duplo E", en: "Double “e” in English",
+    intro: "EE em inglês soa como um “i” longo e esticado, com um sorriso. É o som /iː/.",
+    mouth: "Sorria, estique os lábios para os lados e segure o “i” um pouquinho mais do que em português.",
+    pitfall: "O “i” curto /ɪ/ de <i>ship</i> é outro som, mais relaxado. Trocar um pelo outro muda a palavra: <i>sheep</i> (ovelha) × <i>ship</i> (navio).",
+    groups: [
+      { title: "EE = “i” longo", ipa: "/iː/", desc: "Como o “i” de “<b>ii</b>sso!” bem esticado.", h: "ee",
+        words: [
+          { w: "sleep", i: "sliːp", p: "SLÍIP" },
+          { w: "cheese", i: "tʃiːz", p: "TCHÍIZ" },
+          { w: "green", i: "ɡriːn", p: "GRÍIN" },
+          { w: "free", i: "friː", p: "FRÍI" },
+          { w: "meet", i: "miːt", p: "MÍIT" },
+          { w: "sixteen", i: "ˌsɪkˈstiːn", p: "siks-TÍIN" },
+          { w: "street", i: "striːt", p: "STRÍIT" },
+          { w: "feet", i: "fiːt", p: "FÍIT" },
+          { w: "teeth", i: "tiːθ", p: "TÍITH" }
+        ] }
+    ],
+    sentence: { t: "I meet my friends on Green Street to eat free cheese.", key: ["meet", "Green", "Street", "free", "cheese"], extra: true },
+    pairs: [["sheep", "ship"], ["feet", "fit"], ["sleep", "slip"], ["green", "grin"], ["meet", "mitt"], ["leave", "live"]]
+  },
+  {
+    id: "oo", glyph: "OO", name: "Duplo O", en: "Double “o” in English",
+    intro: "OO tem três sons. Na maioria das vezes é parecido com o nosso “u”; em algumas palavras é um “ó”; e em duas palavras comuns soa como “ã”.",
+    mouth: "Para /ʊ/ (book), faça um “u” mais curto e relaxado, sem fazer bico. Para /ʌ/ (blood), boca meio aberta e relaxada, como um “ã” sem nasal.",
+    pitfall: "Não estique o “u” de <i>book</i> como em “bu-u-k”. É curto. E <i>blood</i> não rima com <i>food</i>.",
+    groups: [
+      { title: "OO como “u”", ipa: "/ʊ/", desc: "Parecido com o <b>“u”</b> do português, só que mais curto.", h: "oo",
+        words: [
+          { w: "book", i: "bʊk", p: "BÚK" },
+          { w: "cook", i: "kʊk", p: "KÚK" },
+          { w: "foot", i: "fʊt", p: "FÚT" },
+          { w: "wood", i: "wʊd", p: "UÚD" },
+          { w: "good", i: "ɡʊd", p: "GÚD" },
+          { w: "look", i: "lʊk", p: "LÚK" }
+        ] },
+      { title: "OO como “ó”", ipa: "/ɔː/", desc: "Antes de R soa como <b>“ó”</b>.", h: "oo",
+        words: [
+          { w: "door", i: "dɔːr", p: "DÓR" },
+          { w: "poor", i: "pʊr / pɔːr", p: "PÚR ou PÓR" },
+          { w: "floor", i: "flɔːr", p: "FLÓR" }
+        ] },
+      { title: "OO como “ã”", ipa: "/ʌ/", desc: "Soa como um <b>“ã”</b> sem nasalizar.", h: "oo",
+        words: [
+          { w: "blood", i: "blʌd", p: "BLÂD" },
+          { w: "flood", i: "flʌd", p: "FLÂD" }
+        ] }
+    ],
+    sentence: { t: "I'm looking for a good book about cooking.", key: ["looking", "good", "book", "cooking"] },
+    pairs: [["look", "Luke"], ["full", "fool"], ["pull", "pool"], ["good", "food"]],
+    note: "<i>Poor</i> aparece no grupo do “ó”, mas nos EUA também é muito comum ouvir /pʊr/, rimando com <i>sure</i>."
+  },
+  {
+    id: "homo", glyph: "two\ntoo", name: "Homófonos", en: "Homophones",
+    intro: "Homófonos são palavras com a mesma pronúncia, mas escrita e significado diferentes. Você não precisa aprender sons novos: precisa reconhecer qual palavra é pelo contexto.",
+    mouth: "Pronuncie as palavras de cada grupo exatamente igual. Quem desfaz a dúvida é a frase, não o som.",
+    pitfall: "Na escrita, troque com cuidado: <i>your</i> (seu) × <i>you're</i> (você é), <i>hear</i> (ouvir) × <i>here</i> (aqui) e <i>where</i> (onde) × <i>wear</i> (vestir) são erros comuns.",
+    homo: [
+      { ipa: "baɪ", items: [["buy", "comprar", "I need to {} a new smartphone."], ["bye", "tchau", "It's time to say good{}."], ["by", "de, por", "She goes to work {} car."]] },
+      { ipa: "noʊ", items: [["know", "saber, conhecer", "Do you {} where the bank is?"], ["no", "não, nenhum", "I have {} time for that."]] },
+      { ipa: "hɪr", items: [["hear", "ouvir", "She couldn't {} the teacher."], ["here", "aqui", "All my friends live {} in Brazil."]] },
+      { ipa: "raɪt", items: [["right", "certo", "We have to do what's {}."], ["write", "escrever", "Susan likes to {} songs."]] },
+      { ipa: "aɪ", items: [["I", "eu", "{} like to drink Coke on the weekends."], ["eye", "olho", "She has beautiful blue {}s."]] },
+      { ipa: "haɪ", items: [["hi", "oi", "{}, Carol, how are you?"], ["high", "alto", "That building is very {}."]] },
+      { ipa: "aʊɚ", items: [["hour", "hora", "I've been waiting for you for more than one {}."], ["our", "nosso", "{} house is infested by bugs."]] },
+      { ipa: "miːt", items: [["meet", "conhecer, encontrar", "I'd like you to {} my mother, Maria."], ["meat", "carne", "A healthy diet must have {} and vegetables."]] },
+      { ipa: "piːs", items: [["peace", "paz", "He's reading a book called War and {}."], ["piece", "pedaço", "I'd like a {} of chocolate cake."]] },
+      { ipa: "sʌn", items: [["sun", "sol", "The {} shines in the morning."], ["son", "filho", "My {} is turning 16 tomorrow."]] },
+      { ipa: "siː", items: [["see", "ver", "There are a lot of interesting things to {} at the museum."], ["sea", "mar", "The ship floats on the {}."]] },
+      { ipa: "tuː", items: [["too", "demais, também", "She drank {} much last night."], ["two", "dois", "There are {} cars in the garage."]], note: "<i>To</i> (para) também soa igual." },
+      { ipa: "wiːk", items: [["week", "semana", "We're going to New York next {}."], ["weak", "fraco", "Peter is too {} to lift this box."]] },
+      { ipa: "wer", items: [["where", "onde", "Can you tell me {} the bank is, please?"], ["wear", "vestir, usar", "She loves to {} dresses and high heels."]] },
+      { ipa: "jʊr", items: [["your", "seu, sua", "{} cell phone is on the table."], ["you're", "você é / está", "{} a very responsible person."]] }
+    ],
+    letters: [["You", "U"], ["Be", "Bee", "B"], ["See", "C"], ["Too", "2"], ["For", "Four", "4"]]
+  }
+];
+
+/* ------------------------------------------------------------------ */
+/* Utilidades                                                          */
+/* ------------------------------------------------------------------ */
+const $ = (s, el) => (el || document).querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* sem armazenamento */ } }
+};
+let progress = store.get("pef-progress-v1", {});
+
+/* ------------------------------------------------------------------ */
+/* Voz (Web Speech API)                                                */
+/* ------------------------------------------------------------------ */
+const Voice = (function () {
+  const ok = "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+  let voices = [], chosen = null, ptVoice = null;
+  const sel = $("#voiceSel"), rate = $("#rate"), rateVal = $("#rateVal");
+  const savedVoice = store.get("pef-voice", null);
+  rate.value = store.get("pef-rate", 0.85);
+  rateVal.textContent = Number(rate.value).toFixed(2) + "×";
+  rate.addEventListener("input", () => { rateVal.textContent = Number(rate.value).toFixed(2) + "×"; store.set("pef-rate", Number(rate.value)); });
+
+  function load() {
+    if (!ok) return;
+    voices = speechSynthesis.getVoices();
+    const en = voices.filter(v => /^en[-_]/i.test(v.lang) || v.lang === "en");
+    en.sort((a, b) => score(b) - score(a));
+    ptVoice = voices.find(v => /^pt[-_]BR/i.test(v.lang)) || voices.find(v => /^pt/i.test(v.lang)) || null;
+    if (!en.length) { sel.innerHTML = "<option>Voz padrão</option>"; return; }
+    sel.innerHTML = en.map((v, i) => `<option value="${i}">${esc(v.name.replace(/Microsoft |Google /, ""))} (${esc(v.lang)})</option>`).join("");
+    let idx = savedVoice ? en.findIndex(v => v.name === savedVoice) : -1;
+    if (idx < 0) idx = 0;
+    sel.value = String(idx);
+    chosen = en[idx];
+    sel.onchange = () => { chosen = en[Number(sel.value)]; store.set("pef-voice", chosen.name); say("Hello! Let's practice.", {}); };
+  }
+  function score(v) {
+    let s = 0;
+    if (/en[-_]US/i.test(v.lang)) s += 10;
+    if (/natural|neural|online|enhanced|premium/i.test(v.name)) s += 5;
+    if (/google/i.test(v.name)) s += 3;
+    if (v.localService) s += 1;
+    return s;
+  }
+  if (ok) {
+    load();
+    speechSynthesis.onvoiceschanged = load;
+  } else {
+    sel.innerHTML = "<option>Sem voz no navegador</option>";
+    sel.disabled = true; rate.disabled = true;
+  }
+
+  function say(text, opt) {
+    opt = opt || {};
+    if (!ok) { showNotice(); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if (opt.lang === "pt") { u.lang = "pt-BR"; if (ptVoice) u.voice = ptVoice; }
+    else { u.lang = chosen ? chosen.lang : "en-US"; if (chosen) u.voice = chosen; }
+    u.rate = Number(rate.value) * (opt.slow ? 0.7 : 1);
+    u.onstart = () => { Scene.speaking(true); opt.onStart && opt.onStart(); };
+    u.onboundary = e => { Scene.pulse(); opt.onBoundary && opt.onBoundary(e); };
+    u.onend = u.onerror = () => { Scene.speaking(false); opt.onEnd && opt.onEnd(); };
+    speechSynthesis.speak(u);
+  }
+  let noticed = false;
+  function showNotice() {
+    if (noticed) return; noticed = true;
+    const n = document.createElement("p");
+    n.className = "notice";
+    n.textContent = "Seu navegador não oferece voz sintetizada. As lições e exercícios continuam funcionando; para ouvir o áudio, abra a página no Chrome, Edge ou Safari.";
+    $(".hero-copy").appendChild(n);
+  }
+  return { say, ok };
+})();
+
+function playWord(btn, text, lang) {
+  document.querySelectorAll(".word.playing").forEach(b => b.classList.remove("playing"));
+  btn && btn.classList.add("playing");
+  Voice.say(text, { lang, onEnd: () => btn && btn.classList.remove("playing") });
+}
+
+/* ------------------------------------------------------------------ */
+/* Cena 3D (three.js)                                                  */
+/* ------------------------------------------------------------------ */
+const Scene = (function () {
+  const api = { focus() {}, refresh() {}, speaking() {}, pulse() {} };
+  const canvas = $("#three"), stage = $("#stage");
+  if (typeof THREE === "undefined") return fallback("Não foi possível carregar a biblioteca 3D. Use a lista de lições abaixo.");
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
+  catch (e) { return fallback("Seu dispositivo não suporta 3D (WebGL). Use a lista de lições abaixo."); }
+  function fallback(msg) {
+    canvas.remove(); $("#stageHint").remove();
+    const d = document.createElement("div"); d.className = "stage-fallback"; d.textContent = msg; stage.appendChild(d);
+    return api;
+  }
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.set(0, 1.7, 9.2);
+  camera.lookAt(0, 0.1, 0);
+  scene.fog = new THREE.Fog(0xffffff, 8, 14.5);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.85));
+  const key = new THREE.DirectionalLight(0xffffff, 0.75); key.position.set(3, 6, 8); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.35); rim.position.set(-6, 2, -4); scene.add(rim);
+
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#888";
+  const col = n => new THREE.Color(css(n));
+
+  // Núcleo: esfera que "fala" + anel de barras como um equalizador
+  const core = new THREE.Group(); scene.add(core);
+  const orb = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 1), new THREE.MeshStandardMaterial({ flatShading: true, roughness: 0.45, metalness: 0.05 }));
+  core.add(orb);
+  const BARS = 48, bars = [];
+  const barGeo = new THREE.BoxGeometry(0.06, 1, 0.06); barGeo.translate(0, 0.5, 0);
+  const barMat = new THREE.MeshStandardMaterial({ roughness: 0.6 });
+  for (let i = 0; i < BARS; i++) {
+    const a = (i / BARS) * Math.PI * 2;
+    const m = new THREE.Mesh(barGeo, barMat);
+    m.position.set(Math.sin(a) * 1.05, Math.cos(a) * 1.05, 0);
+    m.rotation.z = -a;
+    m.scale.y = 0.15;
+    core.add(m); bars.push(m);
+  }
+  core.position.y = 0.95;
+  core.scale.setScalar(0.8);
+
+  // Blocos das lições
+  const N = MODULES.length, R = 3.5;
+  const tiles = [], hitTargets = [];
+  const W = 1.25, H = 1.25;
+  const shape = (function () {
+    const s = new THREE.Shape(), r = 0.2, x = -W / 2, y = -H / 2;
+    s.moveTo(x + r, y); s.lineTo(x + W - r, y); s.quadraticCurveTo(x + W, y, x + W, y + r);
+    s.lineTo(x + W, y + H - r); s.quadraticCurveTo(x + W, y + H, x + W - r, y + H);
+    s.lineTo(x + r, y + H); s.quadraticCurveTo(x, y + H, x, y + H - r);
+    s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+    return s;
+  })();
+  const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.22, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 3, curveSegments: 8 });
+  bodyGeo.translate(0, 0, -0.22);
+  const faceGeo = new THREE.ShapeGeometry(shape, 8);
+  // UV da face: mapear de [-W/2,W/2] para [0,1]
+  (function () { const uv = faceGeo.attributes.uv, p = faceGeo.attributes.position; for (let i = 0; i < uv.count; i++) uv.setXY(i, p.getX(i) / W + 0.5, p.getY(i) / H + 0.5); uv.needsUpdate = true; })();
+
+  MODULES.forEach((m, i) => {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.05 }));
+    const cv = document.createElement("canvas"); cv.width = cv.height = 512;
+    const tex = new THREE.CanvasTexture(cv);
+    tex.anisotropy = 4;
+    const face = new THREE.Mesh(faceGeo, new THREE.MeshBasicMaterial({ map: tex, transparent: true }));
+    face.position.z = 0.045;
+    g.add(body, face);
+    body.userData.idx = face.userData.idx = i;
+    scene.add(g);
+    tiles.push({ g, body, face, cv, tex, hover: 0, sel: 0 });
+    hitTargets.push(body, face);
+  });
+
+  function drawTile(i) {
+    const t = tiles[i], m = MODULES[i], c = t.cv.getContext("2d"), S = 512;
+    const done = (progress[m.id] || 0) >= 80, isSel = i === selected;
+    c.clearRect(0, 0, S, S);
+    c.fillStyle = isSel ? css("--accent") : css("--tile");
+    roundRect(c, 10, 10, S - 20, S - 20, 70); c.fill();
+    const ink = isSel ? "#2a1c00" : css("--ink");
+    c.fillStyle = ink; c.textAlign = "center"; c.textBaseline = "middle";
+    const lines = m.glyph.split("\n");
+    let size = lines.length > 1 ? 150 : 230;
+    c.font = `800 ${size}px "Bricolage Grotesque", "Noto Sans", sans-serif`;
+    const widest = Math.max(...lines.map(l => c.measureText(l).width));
+    if (widest > 400) { size = Math.floor(size * 400 / widest); c.font = `800 ${size}px "Bricolage Grotesque", "Noto Sans", sans-serif`; }
+    lines.forEach((l, k) => c.fillText(l, S / 2, S / 2 - 20 + (k - (lines.length - 1) / 2) * size * 0.95));
+    c.font = `700 40px "Atkinson Hyperlegible", sans-serif`;
+    c.fillStyle = isSel ? "#2a1c00" : css("--muted");
+    c.fillText(m.name, S / 2, S - 70);
+    c.textAlign = "left"; c.font = `700 40px "Atkinson Hyperlegible", sans-serif`;
+    c.fillText(String(i + 1), 50, 72);
+    if (done) {
+      c.fillStyle = css("--good"); c.beginPath(); c.arc(S - 72, 72, 34, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = "#fff"; c.lineWidth = 9; c.lineCap = "round"; c.lineJoin = "round";
+      c.beginPath(); c.moveTo(S - 88, 73); c.lineTo(S - 76, 86); c.lineTo(S - 55, 60); c.stroke();
+    }
+    t.tex.needsUpdate = true;
+    t.body.material.color = done ? col("--good") : isSel ? col("--accent") : col("--surface-2");
+  }
+  function roundRect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+
+  function applyTheme() {
+    orb.material.color = col("--accent");
+    barMat.color = col("--voice");
+    scene.fog.color = col("--surface");
+    tiles.forEach((_, i) => drawTile(i));
+    needsFrame = true;
+  }
+
+  // Estado de animação
+  let selected = -1, base = 0, target = null, vel = 0, amp = 0.12, ampTarget = 0.12, talking = false, needsFrame = true;
+  let hovered = -1, dragging = false, dragX = 0, dragMoved = 0, autoPause = 0;
+  const step = Math.PI * 2 / N;
+
+  function layout(t) {
+    tiles.forEach((tile, i) => {
+      const a = base + i * step;
+      const bob = reduced ? 0 : Math.sin(t * 1.2 + i * 0.9) * 0.08;
+      tile.g.position.set(Math.sin(a) * R, -0.65 + bob, Math.cos(a) * R * 0.78);
+      tile.g.lookAt(camera.position.x * 0.6, tile.g.position.y + 0.4, camera.position.z);
+      const k = 1 + tile.hover * 0.1 + tile.sel * 0.12;
+      tile.g.scale.setScalar(k);
+    });
+  }
+
+  // Tamanho
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width / r.height;
+    // garante que os blocos laterais caibam na largura
+    camera.position.z = Math.max(9.2, 13.2 / camera.aspect);
+    scene.fog.near = camera.position.z - 1.5;
+    scene.fog.far = camera.position.z + 5.5;
+    camera.updateProjectionMatrix();
+    needsFrame = true;
+  }
+  new ResizeObserver(resize).observe(stage);
+
+  // Interação
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  function pick(ev) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    const hit = ray.intersectObjects(hitTargets, false)[0];
+    if (hit) return hit.object.userData.idx;
+    if (ray.intersectObject(orb, false).length) return "orb";
+    return -1;
+  }
+  canvas.addEventListener("pointerdown", e => { dragging = true; dragX = e.clientX; dragMoved = 0; vel = 0; target = null; });
+  window.addEventListener("pointermove", e => {
+    if (dragging) {
+      const dx = e.clientX - dragX; dragX = e.clientX; dragMoved += Math.abs(dx);
+      vel = dx * 0.006; base += vel; autoPause = 4; needsFrame = true;
+    } else if (e.target === canvas) {
+      const p = pick(e); hovered = typeof p === "number" ? p : -1;
+      canvas.style.cursor = p !== -1 ? "pointer" : "grab";
+    }
+  });
+  window.addEventListener("pointercancel", () => { dragging = false; });
+  window.addEventListener("pointerup", e => {
+    if (!dragging) return;
+    dragging = false;
+    if (dragMoved < 6 && e.target === canvas) {
+      const p = pick(e);
+      if (p === "orb") Voice.say("Welcome! Choose a lesson and let's practice together.");
+      else if (p >= 0) App.open(MODULES[p].id, true);
+    }
+  });
+  canvas.addEventListener("pointerleave", () => { hovered = -1; });
+
+  // Loop
+  let visible = true, last = performance.now();
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(stage);
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (!visible || document.hidden) { last = now; return; }
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    const t = now / 1000;
+    if (target !== null) {
+      const d = target - base; base += d * Math.min(1, dt * 4);
+      if (Math.abs(d) < 0.001) { base = target; target = null; }
+    } else if (!dragging) {
+      base += vel; vel *= 0.94;
+      if (autoPause > 0) autoPause -= dt;
+      else if (!reduced && selected < 0) base += dt * 0.12;
+    }
+    tiles.forEach((tile, i) => {
+      tile.hover += ((i === hovered ? 1 : 0) - tile.hover) * Math.min(1, dt * 10);
+      tile.sel += ((i === selected ? 1 : 0) - tile.sel) * Math.min(1, dt * 6);
+    });
+    layout(reduced ? 0 : t);
+    amp += (ampTarget - amp) * Math.min(1, dt * 8);
+    if (!talking) ampTarget = 0.12;
+    bars.forEach((b, i) => {
+      const n = reduced ? 0.5 : (Math.sin(t * 7 + i * 0.7) * 0.5 + 0.5) * (Math.sin(t * 3.1 + i * 1.9) * 0.5 + 0.5);
+      b.scale.y = 0.1 + amp * (0.25 + n * 0.9);
+    });
+    orb.scale.setScalar(1 + amp * 0.12);
+    if (!reduced) { orb.rotation.y += dt * 0.3; orb.rotation.x += dt * 0.12; core.rotation.z += dt * (talking ? 0.6 : 0.08); }
+    renderer.render(scene, camera);
+  }
+
+  api.focus = function (id) {
+    const i = MODULES.findIndex(m => m.id === id);
+    const prev = selected; selected = i;
+    if (prev >= 0) drawTile(prev);
+    if (i >= 0) {
+      drawTile(i);
+      let goal = -i * step;
+      // menor caminho até o ângulo
+      goal += Math.round((base - goal) / (Math.PI * 2)) * Math.PI * 2;
+      target = goal; vel = 0;
+    }
+  };
+  api.refresh = () => tiles.forEach((_, i) => drawTile(i));
+  api.speaking = on => { talking = on; ampTarget = on ? 0.9 : 0.12; };
+  api.pulse = () => { ampTarget = 1.25; setTimeout(() => { if (talking) ampTarget = 0.85; }, 120); };
+
+  resize();
+  applyTheme();
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(applyTheme);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  requestAnimationFrame(frame);
+  return api;
+})();
+
+/* ------------------------------------------------------------------ */
+/* Lições e exercícios                                                 */
+/* ------------------------------------------------------------------ */
+function highlight(word, pattern) {
+  if (!pattern) return esc(word);
+  const re = new RegExp("(" + pattern + ")", "i");
+  return esc(word).replace(re, "<mark>$1</mark>");
+}
+
+function wordBtn(wd, h) {
+  return `<button type="button" class="word" data-say="${esc(wd.w)}" aria-label="Ouvir ${esc(wd.w)}">
+    <span class="w">${highlight(wd.w, h)}</span>
+    <span class="i">/${esc(wd.i)}/</span>
+    <span class="p">soa como: ${esc(wd.p)}</span>
+  </button>`;
+}
+
+function sentenceBlock(s) {
+  let pos = 0;
+  const spans = s.t.split(" ").map(tok => {
+    const start = s.t.indexOf(tok, pos); pos = start + tok.length;
+    const clean = tok.replace(/[.,!?]/g, "");
+    const isKey = (s.key || []).includes(clean);
+    return `<span data-s="${start}" data-e="${pos}"${isKey ? ' class="key"' : ""}>${esc(tok)}</span>`;
+  }).join(" ");
+  return `<div class="sentence">
+    <div class="row"><span class="eyebrow">Frase-modelo</span>${s.extra ? '<span class="tag-extra">extra</span>' : ""}</div>
+    <p class="sentence-text" data-text="${esc(s.t)}">${spans}</p>
+    <div class="row">
+      <button type="button" class="btn-voice" data-act="sentence">Ouvir a frase</button>
+      <button type="button" class="btn-soft" data-act="sentence-slow">Devagar</button>
+      <span class="note">As palavras sublinhadas têm o som da lição. Repita em voz alta junto com o áudio.</span>
+    </div>
+  </div>`;
+}
+
+function playSentence(p, slow) {
+  const text = p.dataset.text, spans = [...p.querySelectorAll("span")];
+  const clear = () => spans.forEach(s => s.classList.remove("on"));
+  Voice.say(text, {
+    slow,
+    onBoundary: e => {
+      if (e.name && e.name !== "word") return;
+      clear();
+      const sp = spans.find(s => e.charIndex >= +s.dataset.s && e.charIndex < +s.dataset.e);
+      sp && sp.classList.add("on");
+    },
+    onEnd: clear
+  });
+}
+
+function renderLearn(m) {
+  let html = `<div class="intro">
+    <p class="big">${m.intro}</p>
+    <div style="display:grid;gap:12px;min-width:0">
+      <div class="mouth"><span class="eyebrow">Como fazer com a boca</span><p>${m.mouth}</p></div>
+      <div class="pitfall"><span class="eyebrow">Erro comum de brasileiro</span><p>${m.pitfall}</p></div>
+    </div>
+  </div>`;
+
+  if (m.homo) {
+    html += `<div class="homo-grid">` + m.homo.map((g, gi) => `
+      <div class="homo">
+        <div class="homo-top">
+          <div class="homo-words">${g.items.map(it => esc(it[0])).join('<span class="eq">=</span>')}</div>
+          <button type="button" class="icon-btn" data-say="${esc(g.items[0][0])}" aria-label="Ouvir o som /${esc(g.ipa)}/"></button>
+        </div>
+        <span class="chip">/${esc(g.ipa)}/</span>
+        <ul>${g.items.map(it => {
+          const full = it[2].replace("{}", it[0]);
+          const shown = esc(it[2]).replace("{}", `<b>${esc(it[0])}</b>`);
+          return `<li><button type="button" data-say="${esc(full)}"><span>${shown}</span><span class="mean">${esc(it[0])} = ${esc(it[1])}</span></button></li>`;
+        }).join("")}</ul>
+        ${g.note ? `<p class="note">${g.note}</p>` : ""}
+      </div>`).join("") + `</div>`;
+    html += `<div class="group">
+      <div class="group-head"><h3>Letras e números que soam como palavras</h3></div>
+      <p class="group-desc">Muito usados em mensagens: <b>C U 2morrow</b> (see you tomorrow), <b>4 U</b> (for you), <b>B right back</b>.</p>
+      <div class="letters">${m.letters.map(l => `<button type="button" data-say="${esc(l[0])}">${l.map(esc).join(" = ")}</button>`).join("")}</div>
+    </div>`;
+    return html;
+  }
+
+  html += `<div class="groups">` + m.groups.map(g => `
+    <div class="group">
+      <div class="group-head"><h3>${g.title}</h3><span class="chip">${esc(g.ipa)}</span></div>
+      <p class="group-desc">${g.desc}</p>
+      <div class="words">${g.words.map(wd => m.id === "stress" ? stressWord(wd) : wordBtn(wd, g.h)).join("")}</div>
+    </div>`).join("") + `</div>`;
+
+  if (m.sentence) html += sentenceBlock(m.sentence);
+
+  if (m.pairs) {
+    html += `<div class="group">
+      <div class="group-head"><h3>Compare os sons</h3><span class="tag-extra">extra</span></div>
+      <p class="group-desc">${m.pairsNote || "Pares de palavras que só mudam no som da lição. Ouça um, depois o outro, e repita."}</p>
+      <div class="pairs">${m.pairs.map(p => `<div class="pair">
+        <button type="button" data-say="${esc(p[0])}">${esc(p[0])}<small>inglês</small></button>
+        <span class="vs">×</span>
+        <button type="button" data-say="${esc(p[1])}" ${p[2] === "pt" ? 'data-lang="pt"' : ""}>${esc(p[1])}<small>${p[2] === "pt" ? "português" : "inglês"}</small></button>
+      </div>`).join("")}</div>
+    </div>`;
+  }
+  if (m.note) html += `<p class="note"><b>Observação:</b> ${m.note}</p>`;
+  return html;
+}
+
+function stressWord(wd) {
+  const syl = wd.syl.map((s, k) => k === wd.s ? `<mark>${esc(s.toUpperCase())}</mark>` : esc(s)).join("·");
+  return `<button type="button" class="word" data-say="${esc(wd.w)}" aria-label="Ouvir ${esc(wd.w)}">
+    <span class="w">${syl}</span>
+    <span class="i">/${esc(wd.i)}/</span>
+    <span class="p">soa como: ${esc(wd.p)}</span>
+  </button>`;
+}
+
+/* Gera perguntas para uma lição */
+function buildQuiz(m) {
+  const qs = [];
+  if (m.id === "stress") {
+    m.groups[0].words.filter(w => w.syl.length > 1).forEach(w => qs.push({
+      type: "syl", prompt: `Qual é a sílaba forte de <em>${esc(w.w)}</em>?`, say: w.w, opts: w.syl, a: w.s,
+      why: `${w.syl.map((s, k) => k === w.s ? s.toUpperCase() : s).join("-")} · /${w.i}/`
+    }));
+    return shuffle(qs);
+  }
+  if (m.homo) {
+    shuffle(m.homo).slice(0, 7).forEach(g => {
+      const it = g.items[Math.floor(Math.random() * g.items.length)];
+      const opts = g.items.map(x => x[0]);
+      qs.push({
+        type: "choice", prompt: `Ouça e complete: <em>${esc(it[2]).replace("{}", "_____")}</em>`, say: it[2].replace("{}", it[0]),
+        opts, a: opts.indexOf(it[0]), why: `<b>${esc(it[0])}</b> = ${esc(it[1])}. Todas soam /${esc(g.ipa)}/; quem decide é o sentido.`
+      });
+    });
+    return qs;
+  }
+  if (m.groups.length > 1) {
+    const all = [];
+    m.groups.forEach((g, gi) => g.words.forEach(w => all.push({ w, gi })));
+    // não usar palavras que aparecem em mais de um grupo
+    const uniq = all.filter(x => all.filter(y => y.w.w === x.w.w).length === 1);
+    shuffle(uniq).slice(0, 6).forEach(({ w, gi }) => qs.push({
+      type: "choice", prompt: `Em <em>${esc(w.w)}</em>, qual é a regra?`, say: w.w,
+      opts: m.groups.map(g => `${g.title} ${g.ipa}`), a: gi,
+      why: `/${esc(w.i)}/ · soa como “${esc(w.p)}”.`
+    }));
+  }
+  (EXTRA_Q[m.id] || []).forEach(q => qs.push(q));
+  return shuffle(qs).slice(0, 8);
+}
+
+const EXTRA_Q = {
+  th: [
+    { type: "choice", prompt: "Onde fica a língua no som do TH?", opts: ["Entre os dentes da frente", "Atrás dos dentes, como no T", "Encostada no céu da boca, como no L"], a: 0, why: "A ponta da língua aparece levemente entre os dentes." },
+    { type: "choice", prompt: "Ouça. Qual palavra foi dita?", sayRandom: ["think", "sink"], opts: ["think", "sink"], why: "<i>think</i> tem a língua entre os dentes; <i>sink</i> é um S comum." }
+  ],
+  r: [
+    { type: "choice", prompt: "Qual R do português mais se parece com o R do inglês?", opts: ["O R caipira de “porta” no interior", "O RR de “rato” (garganta)", "O R vibrado de “caro”"], a: 0, why: "O R inglês é retroflexo: a língua curva para trás e não encosta." },
+    { type: "choice", prompt: "Como fica o R de <em>rock</em>?", say: "rock", opts: ["R caipira, mesmo no começo da palavra", "RR de garganta, como “hóck”", "Mudo"], a: 0, why: "Em inglês o R nunca sai da garganta." },
+    { type: "choice", prompt: "Em <em>car</em> e <em>door</em>, o R final…", say: "car door", opts: ["É pronunciado, com a língua curvada", "É mudo", "Vira “rr” forte"], a: 0, why: "No inglês americano o R final é sempre ouvido." },
+    { type: "choice", prompt: "Qual a vogal + R de <em>bird</em>?", say: "bird", opts: ["/ɝː/, um “âr” contínuo", "“bírd”, com i claro", "“bãrd”, nasal"], a: 0, why: "IR, ER e UR antes de consoante viram o mesmo som /ɝː/." }
+  ],
+  t: [
+    { type: "choice", prompt: "Como se fala o T de <em>table</em>?", say: "table", opts: ["T limpo: “TÊI-bâl”", "Como “tch”: “tchêibou”", "Como “r”: “rêibou”"], a: 0, why: "O T inglês nunca vira “tch”." }
+  ],
+  l: [
+    { type: "choice", prompt: "Como termina <em>Brazil</em> em inglês?", say: "Brazil", opts: ["Com L: a língua encosta atrás dos dentes", "Com “u”: “Brasiu”", "Sem som nenhum"], a: 0, why: "O L final do inglês não vira “u”." }
+  ],
+  ee: [
+    { type: "choice", prompt: "Ouça. Qual palavra foi dita?", sayRandom: ["sheep", "ship"], opts: ["sheep", "ship"], why: "<i>sheep</i> tem o “i” longo /iː/; <i>ship</i> tem o “i” curto /ɪ/." },
+    { type: "choice", prompt: "Ouça. Qual palavra foi dita?", sayRandom: ["feet", "fit"], opts: ["feet", "fit"], why: "EE é sempre o “i” longo." },
+    { type: "choice", prompt: "Ouça. Qual palavra foi dita?", sayRandom: ["sleep", "slip"], opts: ["sleep", "slip"], why: "Estique o “i” e sorria em <i>sleep</i>." },
+    { type: "choice", prompt: "Qual palavra tem o som /iː/ (EE)?", opts: ["street", "sit", "bed"], a: 0, why: "<i>street</i> /striːt/." },
+    { type: "choice", prompt: "Como fica a boca no EE?", opts: ["Sorrindo, lábios esticados", "Lábios em bico", "Boca bem aberta"], a: 0, why: "Sorriso e “i” longo." },
+    { type: "choice", prompt: "Quantos sons de “i” tem <em>sixteen</em>?", say: "sixteen", opts: ["Dois: um curto (six) e um longo (teen)", "Um só, longo", "Nenhum"], a: 0, why: "/ˌsɪkˈstiːn/: /ɪ/ curto e /iː/ longo." }
+  ]
+};
+
+function renderQuiz(container, m, questions, onFinish) {
+  let i = 0, right = 0;
+  const marks = questions.map(() => "");
+  // copia as perguntas, sorteia o áudio quando for o caso e embaralha as alternativas
+  questions = questions.map(q0 => {
+    const q = Object.assign({}, q0, { opts: q0.opts.slice() });
+    if (q.sayRandom) { q.say = q.sayRandom[Math.floor(Math.random() * q.sayRandom.length)]; q.a = q.opts.indexOf(q.say); }
+    if (q.type === "choice") {
+      const order = shuffle(q.opts.map((_, k) => k));
+      q.opts = order.map(k => q0.opts[k]);
+      q.a = order.indexOf(q.a);
+    }
+    return q;
+  });
+
+  function draw() {
+    const q = questions[i];
+    container.innerHTML = `<div class="quiz">
+      <div class="quiz-top"><span>Pergunta ${i + 1} de ${questions.length}</span>
+        <div class="steps" aria-hidden="true">${marks.map((s, k) => `<i class="${s || (k === i ? "cur" : "")}"></i>`).join("")}</div></div>
+      <div class="q-card">
+        ${q.mod ? `<span class="eyebrow">${esc(q.mod)}</span>` : ""}
+        <p class="q-prompt">${q.prompt}</p>
+        ${q.say ? `<div class="row"><button type="button" class="btn-voice" id="qSay">Ouvir</button><button type="button" class="btn-soft" id="qSlow">Devagar</button></div>` : ""}
+        <div class="opts ${q.type === "syl" ? "syl" : ""}" role="group" aria-label="Respostas">
+          ${q.opts.map((o, k) => `<button type="button" class="opt" data-k="${k}">${esc(o)}</button>`).join("")}
+        </div>
+        <div id="fb" aria-live="polite"></div>
+      </div>
+    </div>`;
+    if (q.say) {
+      $("#qSay", container).onclick = () => Voice.say(q.say);
+      $("#qSlow", container).onclick = () => Voice.say(q.say, { slow: true });
+      if (q.sayRandom) setTimeout(() => Voice.say(q.say), 250);
+    }
+    container.querySelectorAll(".opt").forEach(b => b.onclick = () => answer(+b.dataset.k));
+  }
+  function answer(k) {
+    const q = questions[i], ok = k === q.a;
+    if (ok) right++;
+    marks[i] = ok ? "ok" : "no";
+    container.querySelectorAll(".opt").forEach(b => {
+      b.disabled = true;
+      const kk = +b.dataset.k;
+      if (kk === q.a) b.classList.add("right");
+      else if (kk === k) b.classList.add("wrong");
+    });
+    $(".steps", container).children[i].className = marks[i];
+    const fb = $("#fb", container);
+    fb.innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><b>${ok ? "Isso mesmo!" : "Quase. A resposta certa está em verde."}</b>${q.why || ""}</div>
+      <div class="row" style="margin-top:12px"><button type="button" class="btn btn-primary" id="nextQ">${i + 1 < questions.length ? "Próxima pergunta" : "Ver resultado"}</button></div>`;
+    if (q.say && !q.sayRandom) Voice.say(q.say);
+    const n = $("#nextQ", container); n.focus({ preventScroll: true });
+    n.onclick = () => { i++; i < questions.length ? draw() : finish(); };
+  }
+  function finish() {
+    const pct = Math.round(right / questions.length * 100);
+    onFinish && onFinish(pct);
+    const msg = pct >= 80 ? "Excelente! Lição concluída." : pct >= 50 ? "Bom caminho. Ouça as palavras de novo e tente outra vez." : "Sem pressa. Volte ao “Aprender”, repita em voz alta e tente de novo.";
+    container.innerHTML = `<div class="quiz"><div class="q-card result">
+      <span class="eyebrow">Resultado</span>
+      <div class="score">${right}/${questions.length}</div>
+      <p>${msg}</p>
+      <div class="row" style="justify-content:center">
+        <button type="button" class="btn btn-primary" id="again">Tentar de novo</button>
+        ${m ? `<button type="button" class="btn btn-ghost" id="nextL">${nextModule(m) ? "Próxima lição" : "Desafio misto"}</button>` : `<button type="button" class="btn btn-ghost" id="toStart">Voltar às lições</button>`}
+      </div></div></div>`;
+    $("#again", container).onclick = () => m ? App.open(m.id, false, "practice") : App.challenge();
+    const nl = $("#nextL", container);
+    if (nl) nl.onclick = () => { const nx = nextModule(m); nx ? App.open(nx.id, true) : App.challenge(); };
+    const ts = $("#toStart", container);
+    if (ts) ts.onclick = () => App.open(MODULES[0].id, true);
+  }
+  draw();
+}
+function nextModule(m) { const i = MODULES.indexOf(m); return MODULES[i + 1] || null; }
+
+/* ------------------------------------------------------------------ */
+/* App                                                                 */
+/* ------------------------------------------------------------------ */
+const App = (function () {
+  const trail = $("#trail"), inner = $("#lessonInner"), lesson = $("#lesson");
+  let current = null;
+
+  function drawTrail() {
+    trail.innerHTML = MODULES.map((m, i) => {
+      const p = progress[m.id] || 0;
+      return `<li><button type="button" data-id="${m.id}" ${current && current.id === m.id ? 'aria-current="true"' : ""}>
+        <span class="t-num">Lição ${i + 1}<span class="dot ${p >= 80 ? "done" : p > 0 ? "part" : ""}" title="${p ? "Melhor resultado: " + p + "%" : "Ainda não praticada"}"></span></span>
+        <span class="t-name">${esc(m.name)}</span></button></li>`;
+    }).join("");
+    const done = MODULES.filter(m => (progress[m.id] || 0) >= 80).length;
+    $("#progText").textContent = `${done} de ${MODULES.length} lições`;
+    $("#progBar").style.width = (done / MODULES.length * 100) + "%";
+  }
+  trail.addEventListener("click", e => { const b = e.target.closest("button[data-id]"); if (b) open(b.dataset.id, true); });
+
+  function open(id, scroll, tab) {
+    const m = MODULES.find(x => x.id === id); if (!m) return;
+    current = m;
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    const idx = MODULES.indexOf(m);
+    inner.innerHTML = `<div class="lesson-head">
+        <div><span class="eyebrow">Lição ${idx + 1} de ${MODULES.length} · ${esc(m.en)}</span><h2 style="margin-top:6px">${esc(m.name)}</h2></div>
+        <div class="tabs" role="tablist" aria-label="Modo">
+          <button type="button" role="tab" id="tabLearn" aria-selected="true" aria-controls="lessonBody">Aprender</button>
+          <button type="button" role="tab" id="tabPractice" aria-selected="false" aria-controls="lessonBody">Praticar</button>
+        </div>
+      </div>
+      <div class="lesson-body" id="lessonBody" role="tabpanel"></div>`;
+    const body = $("#lessonBody");
+    const learn = () => { setTab("learn"); body.innerHTML = renderLearn(m) + `<div class="row"><button type="button" class="btn btn-primary" id="goPractice">Praticar esta lição</button></div>`; $("#goPractice").onclick = practice; };
+    const practice = () => { setTab("practice"); renderQuiz(body, m, buildQuiz(m), pct => { progress[m.id] = Math.max(progress[m.id] || 0, pct); store.set("pef-progress-v1", progress); drawTrail(); Scene.refresh(); }); };
+    function setTab(t) { $("#tabLearn").setAttribute("aria-selected", t === "learn"); $("#tabPractice").setAttribute("aria-selected", t === "practice"); }
+    $("#tabLearn").onclick = learn; $("#tabPractice").onclick = practice;
+    tab === "practice" ? practice() : learn();
+    drawTrail();
+    Scene.focus(m.id);
+    store.set("pef-last", m.id);
+    if (scroll) { lesson.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" }); lesson.focus({ preventScroll: true }); }
+  }
+
+  function challenge() {
+    current = null;
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    const pool = [];
+    MODULES.forEach(m => buildQuiz(m).slice(0, 3).forEach(q => pool.push(Object.assign({}, q, { mod: m.name }))));
+    const qs = shuffle(pool).slice(0, 10);
+    inner.innerHTML = `<div class="lesson-head"><div><span class="eyebrow">Todas as lições</span><h2 style="margin-top:6px">Desafio misto</h2>
+      <p class="sub">Dez perguntas sorteadas de todas as lições. Use o fone e responda sem pressa.</p></div></div>
+      <div class="lesson-body" id="lessonBody"></div>`;
+    renderQuiz($("#lessonBody"), null, qs, () => {});
+    drawTrail();
+    Scene.focus(null);
+    lesson.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  }
+
+  // Delegação de cliques de áudio
+  inner.addEventListener("click", e => {
+    const act = e.target.closest("[data-act]");
+    if (act) {
+      const p = act.closest(".sentence").querySelector(".sentence-text");
+      playSentence(p, act.dataset.act === "sentence-slow");
+      return;
+    }
+    const b = e.target.closest("[data-say]");
+    if (b) playWord(b.classList.contains("word") ? b : null, b.dataset.say, b.dataset.lang);
+  });
+
+  $("#startBtn").onclick = () => open(MODULES[0].id, true);
+  $("#challengeBtn").onclick = challenge;
+
+  // Tabela da análise
+  $("#aboutTable").innerHTML = MODULES.map((m, i) => {
+    const count = m.homo ? m.homo.reduce((s, g) => s + g.items.length, 0) : m.groups.reduce((s, g) => s + g.words.length, 0);
+    const part = m.homo ? "Parte 2" : "Parte 1";
+    return `<tr><td><b>${esc(m.en)}</b><br><span class="note">${part}</span></td><td>${m.homo ? "15 grupos de palavras que soam igual + 5 letras/números" : m.groups.map(g => esc(g.title) + " " + esc(g.ipa)).join("; ")}</td><td class="n">${count}</td></tr>`;
+  }).join("");
+
+  drawTrail();
+  const last = store.get("pef-last", null);
+  open(MODULES.some(m => m.id === last) ? last : MODULES[0].id, false);
+  return { open, challenge };
+})();
+
+})();
+</script>
+</body>
+</html>
