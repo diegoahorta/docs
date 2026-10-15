@@ -1,0 +1,1801 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pongo Contra os Gramáticos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&display=swap">
+<style>
+/* Layout: a single 16:9 arcade screen centered in the void; every overlay lives inside it and scales with its width (cqw). */
+@font-face {
+  font-family: "Kenney Mini Square";
+  src: url("assets/kenney_mini_square.ttf") format("truetype");
+  font-display: swap;
+}
+:root {
+  --void: #0c0612;        /* around the screen */
+  --night: #1a0d24;       /* panels */
+  --ink: #f5ecff;         /* main text */
+  --dim: #b69bc9;         /* secondary text */
+  --cyan: #2ce8f5;        /* Gramático glow, focus, highlights */
+  --flame: #ff952e;       /* Pongo's jet, score */
+  --berry: #d9356e;       /* danger, boss bar */
+  --gold: #ffea96;        /* power bar selection */
+  --display: "Kenney Mini Square", "Silkscreen", ui-monospace, monospace;
+  --body: "Chakra Petch", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--body);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px;
+  box-sizing: border-box;
+}
+#stage {
+  position: relative;
+  width: min(100%, calc((100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) * 16 / 9));
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  container-type: inline-size;
+  background: #140a1e;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px #2a1638, 0 18px 60px #000a;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#stage canvas.gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+
+/* ---------- HUD ---------- */
+.hud { position: absolute; inset: 0; pointer-events: none; font-family: var(--display); }
+.hud-top {
+  position: absolute; left: 0; right: 0; top: 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 2cqw;
+  padding: 1cqw 1.6cqw;
+  font-size: 1.9cqw; letter-spacing: .06em;
+  text-shadow: 0 .2cqw 0 #000;
+  font-variant-numeric: tabular-nums;
+}
+.hud-top .score { color: var(--flame); }
+.hud-top .lives, .hud-top .parts { display: flex; gap: .8cqw; align-items: center; }
+.hud-top .parts b { color: var(--cyan); font-weight: normal; }
+.stage-name { color: var(--dim); font-size: 1.5cqw; }
+.boss-bar {
+  position: absolute; left: 25%; right: 25%; top: 5.2cqw; height: 1.4cqw;
+  border: .25cqw solid #fff; background: #0008; border-radius: .3cqw;
+}
+.boss-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--berry), var(--flame)); transform-origin: left; }
+.boss-bar span { position: absolute; top: 1.7cqw; left: 0; right: 0; text-align: center; font-size: 1.4cqw; color: var(--berry); text-shadow: 0 .2cqw 0 #000; }
+
+.power {
+  position: absolute; left: 1.6cqw; bottom: 1.4cqw;
+  display: grid; grid-template-columns: repeat(6, 9.2cqw); gap: .4cqw;
+}
+.power div {
+  font-size: 1.35cqw; text-align: center; padding: .55cqw 0 .45cqw;
+  border: .22cqw solid var(--dim); color: var(--dim); background: #0007; border-radius: .2cqw;
+}
+.power div.on { border-color: var(--gold); color: #1a0d24; background: var(--gold); }
+.power div.maxed { opacity: .35; }
+
+.narrator {
+  position: absolute; right: 1.4cqw; bottom: 1.2cqw;
+  display: flex; align-items: flex-end; gap: .8cqw; flex-direction: row-reverse;
+  max-width: 46cqw;
+}
+.narrator canvas { width: 6cqw; height: 7cqw; image-rendering: pixelated; background: #1a0d24cc; border: .22cqw solid #fff; border-radius: .4cqw; flex: none; }
+.bubble {
+  font-family: var(--body); font-weight: 600; font-size: 1.55cqw; line-height: 1.25;
+  background: #fff; color: #1a0d24; padding: .7cqw 1cqw; border-radius: .6cqw .6cqw 0 .6cqw;
+  min-width: 0; transition: opacity .25s, transform .25s;
+}
+.bubble.hide { opacity: 0; transform: translateY(.6cqw); }
+
+.touch-btn {
+  position: absolute; pointer-events: auto;
+  font-family: var(--display); color: var(--ink); background: #1a0d24b0;
+  border: .3cqw solid var(--cyan); border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+}
+#btn-power { right: 3cqw; bottom: 11cqw; width: 11cqw; height: 11cqw; font-size: 1.7cqw; }
+#btn-pause { right: 1.4cqw; top: 4.6cqw; width: 5cqw; height: 5cqw; font-size: 1.6cqw; border-color: var(--dim); border-radius: .8cqw; }
+#btn-power:active { background: var(--cyan); color: var(--night); }
+
+/* ---------- Screens ---------- */
+.screen {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: radial-gradient(ellipse at center, #1a0d2466 0%, #0c0612d9 75%);
+  padding: 3cqw;
+}
+.screen.clear-bg { background: radial-gradient(ellipse at center, #1a0d24aa 0%, #0c061255 70%); }
+.panel { display: grid; gap: 1.8cqw; justify-items: center; text-align: center; max-width: 70cqw; }
+.logo { font-family: var(--display); line-height: .95; text-wrap: balance; }
+.logo .kicker { display: block; font-size: 2cqw; color: var(--cyan); letter-spacing: .3em; }
+.logo .name { display: block; font-size: 8.5cqw; color: var(--flame); text-shadow: .5cqw .5cqw 0 var(--berry), 1cqw 1cqw 0 #000; }
+.logo .sub { display: block; font-size: 3.2cqw; color: var(--ink); margin-top: .8cqw; text-shadow: .3cqw .3cqw 0 #000; }
+.screen h2 { font-family: var(--display); font-weight: normal; font-size: 5cqw; margin: 0; color: var(--gold); text-shadow: .4cqw .4cqw 0 var(--berry); text-wrap: balance; }
+.screen p { margin: 0; font-size: 1.9cqw; line-height: 1.45; color: var(--ink); max-width: 60cqw; text-wrap: pretty; }
+.screen p.dim { color: var(--dim); font-size: 1.5cqw; }
+.row { display: flex; gap: 1.4cqw; flex-wrap: wrap; justify-content: center; }
+.btn {
+  font-family: var(--display); font-size: 2cqw; letter-spacing: .05em; color: var(--ink);
+  min-width: 22cqw; padding: 1.3cqw 2cqw 1.1cqw;
+  background: #0006 url("assets/btn.png") center / 100% 100% no-repeat;
+  border: 0; cursor: pointer; image-rendering: pixelated;
+}
+.btn:hover, .btn:focus-visible { background-image: url("assets/btn_hover.png"); color: var(--gold); outline: none; }
+.btn.small { min-width: 15cqw; font-size: 1.5cqw; padding: .9cqw 1.4cqw .8cqw; }
+.keys { display: grid; grid-template-columns: auto auto; gap: .4cqw 1.6cqw; font-size: 1.45cqw; color: var(--dim); text-align: left; }
+.keys kbd { font-family: var(--display); color: var(--cyan); font-size: 1.3cqw; }
+.story { display: grid; gap: 1.4cqw; text-align: left; max-width: 62cqw; }
+.story p { font-size: 2cqw; }
+.story strong { color: var(--flame); font-weight: 600; }
+.story em { color: var(--cyan); font-style: normal; font-weight: 600; }
+.tally { font-family: var(--display); font-size: 2.2cqw; display: grid; grid-template-columns: auto auto; gap: .6cqw 3cqw; font-variant-numeric: tabular-nums; }
+.tally span:nth-child(even) { color: var(--gold); text-align: right; }
+.words { display: flex; flex-wrap: wrap; gap: .6cqw; justify-content: center; max-width: 60cqw; }
+.words span { font-family: var(--display); font-size: 1.5cqw; color: var(--night); background: var(--cyan); padding: .3cqw .7cqw; border-radius: 1cqw; }
+.loading { font-family: var(--display); font-size: 2.4cqw; color: var(--dim); }
+.rotate-hint { display: none; }
+@media (orientation: portrait) and (max-width: 700px) {
+  .rotate-hint { display: block; font-family: var(--display); font-size: 3cqw; color: var(--gold); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bubble { transition: none; }
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="hud" id="hud" hidden>
+    <div class="hud-top">
+      <div class="lives" id="hud-lives">PONGO x3</div>
+      <div class="stage-name" id="hud-stage">FASE 1</div>
+      <div class="score" id="hud-score">000000</div>
+      <div class="parts">PARTÍCULAS <b id="hud-parts">0</b></div>
+    </div>
+    <div class="boss-bar" id="boss-bar" hidden><i id="boss-fill"></i><span id="boss-name">CHEFE</span></div>
+    <div class="power" id="power"></div>
+    <div class="narrator">
+      <canvas id="pirate" width="24" height="28" aria-hidden="true"></canvas>
+      <div class="bubble hide" id="bubble" role="status" aria-live="polite"></div>
+    </div>
+    <button class="touch-btn" id="btn-power" type="button" hidden>PODER</button>
+    <button class="touch-btn" id="btn-pause" type="button" aria-label="Pausar">II</button>
+  </div>
+
+  <div class="screen" id="scr-loading">
+    <div class="loading">Carregando sprites…</div>
+  </div>
+
+  <div class="screen" id="scr-title" hidden>
+    <div class="panel">
+      <div class="logo">
+        <span class="kicker">PILOTO</span>
+        <span class="name">PONGO</span>
+        <span class="sub">contra os Gramáticos</span>
+      </div>
+      <div class="row">
+        <button class="btn" id="btn-start" type="button">JOGAR</button>
+        <button class="btn" id="btn-continue" type="button" hidden>CONTINUAR</button>
+      </div>
+      <div class="row">
+        <button class="btn small" id="btn-sound" type="button">SOM: LIGADO</button>
+        <button class="btn small" id="btn-voice" type="button">NARRAÇÃO: LIGADA</button>
+      </div>
+      <div class="keys">
+        <kbd>SETAS / WASD</kbd><span>mover a nave</span>
+        <kbd>Z / ESPAÇO</kbd><span>atirar (segure)</span>
+        <kbd>X / SHIFT</kbd><span>ativar o poder marcado na barra</span>
+        <kbd>P / ESC</kbd><span>pausar</span>
+        <kbd>TOQUE</kbd><span>arraste para mover; o tiro é automático</span>
+      </div>
+      <p class="dim" id="hiscore">Recorde: 0</p>
+      <span class="rotate-hint">Gire o celular para jogar na horizontal</span>
+    </div>
+  </div>
+
+  <div class="screen" id="scr-story" hidden>
+    <div class="panel">
+      <h2>Ano 3025</h2>
+      <div class="story">
+        <p>Os <em>Gramáticos</em>, alienígenas de sombra que só falam em regras, invadiram a galáxia e roubaram as <em>Partículas</em>: o QUE, o SE, o DE, o EM e todas as palavrinhas que ligam uma frase à outra.</p>
+        <p>Sem elas, ninguém no universo consegue terminar uma frase. Os planetas ficaram em silêncio.</p>
+        <p>Só um piloto aceitou a missão: <strong>Pongo</strong>, um jovem cachorro da Frota Latido, de roupinha estampada e coragem de sobra. Três setores separam Pongo do Rei dos Gramáticos.</p>
+      </div>
+      <button class="btn" id="btn-go" type="button">DECOLAR</button>
+    </div>
+  </div>
+
+  <div class="screen" id="scr-pause" hidden>
+    <div class="panel">
+      <h2>Pausa</h2>
+      <div class="row">
+        <button class="btn" id="btn-resume" type="button">CONTINUAR</button>
+        <button class="btn small" id="btn-sound2" type="button">SOM</button>
+        <button class="btn small" id="btn-quit" type="button">MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen clear-bg" id="scr-clear" hidden>
+    <div class="panel">
+      <h2 id="clear-title">Fase concluída!</h2>
+      <div class="tally" id="clear-tally"></div>
+      <div class="words" id="clear-words"></div>
+      <button class="btn" id="btn-next" type="button">PRÓXIMA FASE</button>
+    </div>
+  </div>
+
+  <div class="screen" id="scr-over" hidden>
+    <div class="panel">
+      <h2>Fim de jogo</h2>
+      <p>Os Gramáticos ainda guardam partículas roubadas. A Frota Latido conta com você.</p>
+      <div class="tally" id="over-tally"></div>
+      <div class="row">
+        <button class="btn" id="btn-retry" type="button">CONTINUAR FASE</button>
+        <button class="btn small" id="btn-menu" type="button">MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen clear-bg" id="scr-end" hidden>
+    <div class="panel">
+      <h2>As frases voltaram!</h2>
+      <div class="story">
+        <p>Com o Rei Pleonasmo derrotado, as Partículas voltaram para casa. Em cada planeta, alguém finalmente terminou a frase que tinha começado.</p>
+        <p><strong>Pongo</strong> ganhou um biscoito do tamanho de uma lua e a medalha de Piloto Gramatical de Primeira Classe.</p>
+      </div>
+      <div class="tally" id="end-tally"></div>
+      <button class="btn" id="btn-again" type="button">JOGAR DE NOVO</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   Pongo contra os Gramáticos
+   Shoot 'em up horizontal em Three.js (câmera ortográfica 640x360).
+   ===================================================================== */
+const W = 640, H = 360;
+const $ = (s) => document.querySelector(s);
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const TAU = Math.PI * 2;
+
+/* ---------------- Renderer ---------------- */
+const stageEl = $("#stage");
+const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+renderer.domElement.className = "gl";
+stageEl.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, -1000, 1000);
+camera.position.z = 500;
+let cssScale = 1;
+
+function resize() {
+  const r = stageEl.getBoundingClientRect();
+  if (!r.width) return;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(r.width, r.height, false);
+  cssScale = r.width / W;
+  if (particles) particles.mat.uniforms.scale.value = cssScale * renderer.getPixelRatio();
+}
+new ResizeObserver(resize).observe(stageEl);
+
+/* ---------------- Assets ---------------- */
+const A = "assets/";
+const PIXEL = ["ship", "rock_big", "rock_small", "fire", "bg_sea", "clouds", "cloud_small", "cave_tiles",
+  "tile_wine", "crate", "palm_strip", "water_strip", "boom_strip"];
+const SMOOTH = ["bg_space", "stars"];
+for (let i = 0; i < 8; i++) SMOOTH.push("dog_jump" + i, "dog_walk" + i, "alien" + i);
+const TEX = {};
+const IMG = {};
+
+function loadTex(name, pixel) {
+  return new Promise((res, rej) => {
+    new THREE.TextureLoader().load(A + name + ".png", (t) => {
+      if (pixel) { t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; }
+      else { t.minFilter = THREE.LinearFilter; t.generateMipmaps = false; }
+      TEX[name] = t; res(t);
+    }, undefined, () => rej(new Error("Não foi possível carregar " + name)));
+  });
+}
+function loadImg(name) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => { IMG[name] = im; res(im); };
+    im.onerror = () => rej(new Error("Não foi possível carregar " + name));
+    im.src = A + name + ".png";
+  });
+}
+
+/* Procedural textures (bells, capsules, orbs, particle words, glow). */
+function canvasTex(w, h, draw, pixel = false) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const g = c.getContext("2d");
+  draw(g, w, h);
+  const t = new THREE.CanvasTexture(c);
+  if (pixel) { t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter; }
+  else t.minFilter = THREE.LinearFilter;
+  t.generateMipmaps = false;
+  return t;
+}
+function makeProcTextures() {
+  TEX.glow = canvasTex(64, 64, (g) => {
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, "rgba(255,255,255,1)");
+    gr.addColorStop(0.35, "rgba(255,255,255,.75)");
+    gr.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+  });
+  TEX.orb = canvasTex(32, 32, (g) => {
+    const gr = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+    gr.addColorStop(0, "#ffffff"); gr.addColorStop(0.3, "#ff7ad9"); gr.addColorStop(0.65, "rgba(170,29,122,.8)"); gr.addColorStop(1, "rgba(170,29,122,0)");
+    g.fillStyle = gr; g.fillRect(0, 0, 32, 32);
+  });
+  TEX.crescent = canvasTex(32, 64, (g) => {
+    g.fillStyle = "#2ce8f5"; g.beginPath(); g.ellipse(10, 32, 14, 30, 0, -Math.PI / 2, Math.PI / 2); g.ellipse(4, 32, 10, 26, 0, Math.PI / 2, -Math.PI / 2, true); g.fill();
+    g.fillStyle = "#ffffff"; g.beginPath(); g.ellipse(10, 32, 9, 24, 0, -Math.PI / 2, Math.PI / 2); g.ellipse(6, 32, 7, 21, 0, Math.PI / 2, -Math.PI / 2, true); g.fill();
+  });
+  TEX.laser = canvasTex(64, 8, (g) => {
+    const gr = g.createLinearGradient(0, 0, 0, 8);
+    gr.addColorStop(0, "rgba(44,232,245,0)"); gr.addColorStop(0.5, "#ffffff"); gr.addColorStop(1, "rgba(44,232,245,0)");
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 8);
+  });
+  TEX.missile = canvasTex(12, 6, (g) => {
+    g.fillStyle = "#33323d"; g.fillRect(0, 0, 12, 6);
+    g.fillStyle = "#eed878"; g.fillRect(1, 1, 8, 4);
+    g.fillStyle = "#d06c63"; g.fillRect(9, 1, 2, 4);
+  }, true);
+  TEX.capsule = canvasTex(16, 12, (g) => {
+    g.fillStyle = "#33323d"; g.fillRect(2, 0, 12, 12); g.fillRect(0, 2, 16, 8);
+    g.fillStyle = "#d9356e"; g.fillRect(2, 2, 12, 8);
+    g.fillStyle = "#ff7a9c"; g.fillRect(3, 3, 6, 2);
+    g.fillStyle = "#ffffff"; g.fillRect(4, 3, 2, 1);
+    g.fillStyle = "#74174c"; g.fillRect(3, 8, 10, 1);
+  }, true);
+  // White bell: tinted per color with material.color.
+  TEX.bell = canvasTex(20, 22, (g) => {
+    const px = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+    px(9, 0, 2, 2, "#33323d");
+    px(6, 2, 8, 2, "#33323d"); px(4, 4, 12, 2, "#33323d"); px(3, 6, 14, 8, "#33323d"); px(2, 14, 16, 3, "#33323d"); px(1, 17, 18, 2, "#33323d");
+    px(7, 3, 6, 2, "#ffffff"); px(5, 5, 10, 2, "#ffffff"); px(4, 7, 12, 7, "#e8e8e8"); px(3, 14, 14, 3, "#d0d0d0");
+    px(6, 6, 2, 7, "#ffffff"); px(13, 7, 2, 7, "#b8b8b8");
+    px(8, 19, 4, 3, "#33323d"); px(9, 19, 2, 2, "#b8b8b8");
+  }, true);
+}
+const WORDS = ["QUE", "SE", "DE", "EM", "COM", "POR", "NÃO", "JÁ", "OU", "MAS", "E", "A", "O", "LHE", "PRA"];
+const wordTex = {};
+function getWordTex(word) {
+  if (wordTex[word]) return wordTex[word];
+  const t = canvasTex(64, 64, (g) => {
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, "rgba(44,232,245,.95)"); gr.addColorStop(0.6, "rgba(44,232,245,.55)"); gr.addColorStop(1, "rgba(44,232,245,0)");
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+    g.fillStyle = "#1a0d24"; g.beginPath(); g.arc(32, 32, 19, 0, TAU); g.fill();
+    g.strokeStyle = "#ffffff"; g.lineWidth = 3; g.stroke();
+    g.fillStyle = "#ffffff";
+    g.font = (word.length > 2 ? 15 : 20) + "px 'Kenney Mini Square', monospace";
+    g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(word, 32, 34);
+  });
+  wordTex[word] = t;
+  return t;
+}
+
+/* ---------------- Sprite helpers ---------------- */
+const QUAD = new THREE.PlaneGeometry(1, 1);
+function sprite(tex, w, h, z = 0, opts = {}) {
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex, transparent: true, depthTest: false, depthWrite: false,
+    blending: opts.add ? THREE.AdditiveBlending : THREE.NormalBlending,
+  });
+  if (opts.color) mat.color.set(opts.color);
+  const geo = opts.ownGeo ? new THREE.PlaneGeometry(1, 1) : QUAD;
+  const m = new THREE.Mesh(geo, mat);
+  m.scale.set(w, h, 1);
+  m.position.z = z;
+  m.userData.ownGeo = !!opts.ownGeo;
+  scene.add(m);
+  return m;
+}
+function unsprite(m) {
+  if (!m) return;
+  scene.remove(m);
+  m.material.dispose();
+  if (m.userData.ownGeo) m.geometry.dispose();
+}
+// Frame i of an n-frame strip (horizontal by default, vertical when stacked top to bottom).
+function setStripFrame(m, i, n, vertical = false) {
+  const uv = m.geometry.attributes.uv;
+  const a = i / n, b = (i + 1) / n;
+  if (!vertical) { uv.setXY(0, a, 1); uv.setXY(1, b, 1); uv.setXY(2, a, 0); uv.setXY(3, b, 0); }
+  else { uv.setXY(0, 0, 1 - a); uv.setXY(1, 1, 1 - a); uv.setXY(2, 0, 1 - b); uv.setXY(3, 1, 1 - b); }
+  uv.needsUpdate = true;
+}
+function texAspect(t) { return t.image.width / t.image.height; }
+function setFrameTex(m, tex, h, flip = 1) {
+  m.material.map = tex;
+  m.scale.set(h * texAspect(tex) * flip, h, 1);
+}
+
+/* ---------------- Particle system (one Points draw call) ---------------- */
+let particles = null;
+class Particles {
+  constructor(n) {
+    this.n = n; this.count = 0;
+    this.pos = new Float32Array(n * 3);
+    this.col = new Float32Array(n * 4);
+    this.size = new Float32Array(n);
+    this.vel = new Float32Array(n * 2);
+    this.life = new Float32Array(n);
+    this.max = new Float32Array(n);
+    this.base = new Float32Array(n);
+    this.grav = new Float32Array(n);
+    this.drag = new Float32Array(n);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute("pcolor", new THREE.BufferAttribute(this.col, 4).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute("psize", new THREE.BufferAttribute(this.size, 1).setUsage(THREE.DynamicDrawUsage));
+    this.geo = geo;
+    this.mat = new THREE.ShaderMaterial({
+      uniforms: { map: { value: TEX.glow }, scale: { value: 1 } },
+      vertexShader: "attribute float psize; attribute vec4 pcolor; varying vec4 vC; uniform float scale;" +
+        "void main(){ vC = pcolor; gl_PointSize = psize * scale; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+      fragmentShader: "uniform sampler2D map; varying vec4 vC;" +
+        "void main(){ vec4 t = texture2D(map, gl_PointCoord); gl_FragColor = vec4(vC.rgb * vC.a * t.a, 1.0); }",
+      transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending,
+    });
+    this.points = new THREE.Points(geo, this.mat);
+    this.points.frustumCulled = false;
+    this.points.position.z = 80;
+    scene.add(this.points);
+  }
+  spawn(x, y, vx, vy, life, color, size, grav = 0, drag = 0) {
+    if (this.count >= this.n) return;
+    const i = this.count++;
+    this.pos[i * 3] = x; this.pos[i * 3 + 1] = y; this.pos[i * 3 + 2] = 0;
+    this.vel[i * 2] = vx; this.vel[i * 2 + 1] = vy;
+    this.life[i] = life; this.max[i] = life;
+    this.col[i * 4] = color.r; this.col[i * 4 + 1] = color.g; this.col[i * 4 + 2] = color.b; this.col[i * 4 + 3] = 1;
+    this.base[i] = size; this.size[i] = size;
+    this.grav[i] = grav; this.drag[i] = drag;
+  }
+  copy(d, s) {
+    for (let k = 0; k < 3; k++) this.pos[d * 3 + k] = this.pos[s * 3 + k];
+    for (let k = 0; k < 4; k++) this.col[d * 4 + k] = this.col[s * 4 + k];
+    this.vel[d * 2] = this.vel[s * 2]; this.vel[d * 2 + 1] = this.vel[s * 2 + 1];
+    this.life[d] = this.life[s]; this.max[d] = this.max[s]; this.base[d] = this.base[s];
+    this.size[d] = this.size[s]; this.grav[d] = this.grav[s]; this.drag[d] = this.drag[s];
+  }
+  update(dt) {
+    let i = 0;
+    while (i < this.count) {
+      this.life[i] -= dt;
+      if (this.life[i] <= 0) { this.copy(i, --this.count); continue; }
+      const k = Math.max(0, 1 - this.drag[i] * dt);
+      this.vel[i * 2] *= k; this.vel[i * 2 + 1] = this.vel[i * 2 + 1] * k - this.grav[i] * dt;
+      this.pos[i * 3] += this.vel[i * 2] * dt;
+      this.pos[i * 3 + 1] += this.vel[i * 2 + 1] * dt;
+      const f = this.life[i] / this.max[i];
+      this.col[i * 4 + 3] = Math.min(1, f * 1.6);
+      this.size[i] = this.base[i] * (0.4 + 0.6 * f);
+      i++;
+    }
+    this.geo.setDrawRange(0, this.count);
+    this.geo.attributes.position.needsUpdate = true;
+    this.geo.attributes.pcolor.needsUpdate = true;
+    this.geo.attributes.psize.needsUpdate = true;
+  }
+  clear() { this.count = 0; this.geo.setDrawRange(0, 0); }
+}
+const C = (hex) => new THREE.Color(hex);
+const PAL = {
+  flame: [C("#ffea96"), C("#ff952e"), C("#ff5a2e"), C("#ffffff")],
+  cyan: [C("#2ce8f5"), C("#ffffff"), C("#7b7bab")],
+  berry: [C("#d9356e"), C("#ff7ad9"), C("#ffffff")],
+  fireworks: [C("#ff5a2e"), C("#ffea96"), C("#2ce8f5"), C("#92c191"), C("#ff7ad9"), C("#ffffff"), C("#a98cff")],
+};
+function burst(x, y, n, palette, speed = 120, life = 0.7, size = 6, grav = 0) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * TAU, s = speed * (0.3 + Math.random() * 0.9);
+    particles.spawn(x, y, Math.cos(a) * s, Math.sin(a) * s, life * rand(0.6, 1.2), pick(palette), size * rand(0.6, 1.4), grav, 1.5);
+  }
+}
+
+/* =====================================================================
+   Audio: synth sequencer (sci-fi soundtrack) + sound effects
+   ===================================================================== */
+const Audio = {
+  ctx: null, master: null, musicBus: null, sfxBus: null, delay: null,
+  enabled: true, track: null, timer: null, step: 0, nextTime: 0, noise: null,
+  init() {
+    if (this.ctx) { if (this.ctx.state === "suspended") this.ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = this.ctx = new AC();
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -14; comp.ratio.value = 4;
+    this.master = ctx.createGain(); this.master.gain.value = this.enabled ? 0.8 : 0;
+    this.master.connect(comp); comp.connect(ctx.destination);
+    this.musicBus = ctx.createGain(); this.musicBus.gain.value = 0.55; this.musicBus.connect(this.master);
+    this.sfxBus = ctx.createGain(); this.sfxBus.gain.value = 0.7; this.sfxBus.connect(this.master);
+    // Space echo shared by arps and lead.
+    this.delay = ctx.createDelay(1); this.delay.delayTime.value = 0.27;
+    const fb = ctx.createGain(); fb.gain.value = 0.38;
+    const wet = ctx.createGain(); wet.gain.value = 0.35;
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600;
+    this.delay.connect(lp); lp.connect(fb); fb.connect(this.delay); lp.connect(wet); wet.connect(this.musicBus);
+    const len = ctx.sampleRate;
+    this.noise = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = this.noise.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  },
+  setEnabled(on) {
+    this.enabled = on;
+    if (this.master) this.master.gain.setTargetAtTime(on ? 0.8 : 0, this.ctx.currentTime, 0.05);
+  },
+  freq: (m) => 440 * Math.pow(2, (m - 69) / 12),
+
+  /* ---- instruments ---- */
+  osc(type, f, t, dur, gain, dest, opts = {}) {
+    const ctx = this.ctx, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (opts.slideTo) o.frequency.exponentialRampToValueAtTime(opts.slideTo, t + dur);
+    if (opts.detune) o.detune.value = opts.detune;
+    const atk = opts.attack ?? 0.005, rel = opts.release ?? dur;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(gain, t + atk);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + Math.max(atk + 0.01, rel));
+    let node = o;
+    if (opts.filter) {
+      const f2 = ctx.createBiquadFilter(); f2.type = opts.filter.type || "lowpass";
+      f2.frequency.setValueAtTime(opts.filter.from, t);
+      if (opts.filter.to) f2.frequency.exponentialRampToValueAtTime(opts.filter.to, t + dur);
+      f2.Q.value = opts.filter.q ?? 4;
+      o.connect(f2); node = f2;
+    }
+    node.connect(g); g.connect(dest);
+    if (opts.send) g.connect(this.delay);
+    o.start(t); o.stop(t + Math.max(atk + 0.02, rel) + 0.05);
+  },
+  noiseHit(t, dur, gain, dest, type, freq, q = 1, sweepTo) {
+    const ctx = this.ctx, s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = this.noise;
+    f.type = type; f.frequency.setValueAtTime(freq, t); f.Q.value = q;
+    if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur);
+    g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(dest);
+    s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.02);
+  },
+  kick(t) { this.osc("sine", 150, t, 0.28, 0.9, this.musicBus, { slideTo: 38, release: 0.3 }); },
+  snare(t) { this.noiseHit(t, 0.16, 0.45, this.musicBus, "bandpass", 1800, 0.8); this.osc("triangle", 220, t, 0.08, 0.25, this.musicBus, { slideTo: 140 }); },
+  hat(t, open) { this.noiseHit(t, open ? 0.12 : 0.04, 0.16, this.musicBus, "highpass", 7500, 1); },
+
+  /* ---- sequencer ---- */
+  play(name) {
+    if (!this.ctx) return;
+    if (this.track && this.track.name === name) return;
+    this.stop();
+    const tr = TRACKS[name];
+    if (!tr) return;
+    this.track = tr; this.step = 0; this.nextTime = this.ctx.currentTime + 0.08;
+    this.timer = setInterval(() => this.tick(), 25);
+  },
+  stop() { clearInterval(this.timer); this.timer = null; this.track = null; },
+  tick() {
+    const tr = this.track; if (!tr) return;
+    const sp = 60 / tr.bpm / 4;
+    while (this.nextTime < this.ctx.currentTime + 0.12) {
+      this.playStep(tr, this.step, this.nextTime, sp);
+      this.step++;
+      if (tr.once && this.step >= tr.length) { this.stop(); return; }
+      this.nextTime += sp;
+    }
+  },
+  playStep(tr, step, t, sp) {
+    const s = step % tr.length, bar = Math.floor(s / 16), pos = s % 16;
+    const ch = tr.chords[bar % tr.chords.length];
+    const root = ch[0], tones = ch.slice(1).map((x) => root + x);
+    const dr = tr.drums;
+    if (dr) {
+      if (dr.k[pos] === "x") this.kick(t);
+      if (dr.s[pos] === "x") this.snare(t);
+      if (dr.h[pos] === "x") this.hat(t, false);
+      if (dr.h[pos] === "o") this.hat(t, true);
+    }
+    if (tr.bass && tr.bass[pos] !== ".") {
+      const n = root - 24 + (tr.bass[pos] === "5" ? 7 : tr.bass[pos] === "8" ? 12 : 0);
+      this.osc("sawtooth", this.freq(n), t, sp * 1.6, 0.32, this.musicBus, { filter: { from: 1400, to: 180, q: 6 }, release: sp * 1.8 });
+    }
+    if (tr.arp && pos % tr.arp.every === 0) {
+      const k = (pos / tr.arp.every) | 0;
+      const n = tones[k % tones.length] + 12 * (tr.arp.oct + (((k / tones.length) | 0) % 2));
+      this.osc(tr.arp.wave, this.freq(n), t, sp * 0.9, 0.07, this.musicBus, { send: true, release: sp * 0.9 });
+    }
+    if (tr.pad && pos === 0) {
+      for (const n of tones) {
+        for (const det of [-9, 9]) this.osc("sawtooth", this.freq(n + 12), t, sp * 16, 0.028, this.musicBus,
+          { detune: det, attack: sp * 3, release: sp * 16, filter: { from: 900, q: 1 } });
+      }
+    }
+    if (tr.lead) {
+      const n = tr.lead[s];
+      if (n !== null && n !== undefined) {
+        this.osc("square", this.freq(n), t, sp * 1.8, 0.06, this.musicBus, { send: true, release: sp * 2.2, filter: { from: 3200, q: 1 } });
+        this.osc("triangle", this.freq(n + 12), t, sp * 1.8, 0.05, this.musicBus, { release: sp * 2 });
+      }
+    }
+  },
+
+  /* ---- sound effects ---- */
+  sfx(name) {
+    if (!this.ctx || !this.enabled) return;
+    const t = this.ctx.currentTime, d = this.sfxBus;
+    switch (name) {
+      case "shot": this.osc("square", 1300, t, 0.07, 0.05, d, { slideTo: 500 }); break;
+      case "laser": this.osc("sawtooth", 2200, t, 0.09, 0.04, d, { slideTo: 900 }); break;
+      case "hit": this.noiseHit(t, 0.05, 0.25, d, "highpass", 3000); break;
+      case "boom": this.noiseHit(t, 0.45, 0.8, d, "lowpass", 2400, 1, 120); this.osc("sine", 120, t, 0.3, 0.5, d, { slideTo: 40 }); break;
+      case "bigboom":
+        for (let i = 0; i < 4; i++) this.noiseHit(t + i * 0.12, 0.8, 0.8, d, "lowpass", 1800, 1, 60);
+        this.osc("sine", 90, t, 1, 0.8, d, { slideTo: 30 }); break;
+      case "capsule": [72, 76, 79].forEach((n, i) => this.osc("square", this.freq(n), t + i * 0.05, 0.08, 0.08, d)); break;
+      case "power": [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => this.osc("square", this.freq(n), t + i * 0.035, 0.1, 0.07, d)); break;
+      case "word": this.osc("sine", 1568, t, 0.25, 0.15, d); this.osc("sine", 2093, t + 0.06, 0.3, 0.12, d); break;
+      case "bell": this.osc("triangle", 1046, t, 0.4, 0.15, d); this.osc("sine", 2637, t, 0.25, 0.06, d); break;
+      case "bellget": [84, 88, 91, 96].forEach((n, i) => this.osc("triangle", this.freq(n), t + i * 0.06, 0.25, 0.12, d)); break;
+      case "die": this.osc("sawtooth", 600, t, 0.9, 0.2, d, { slideTo: 50 }); this.noiseHit(t, 0.8, 0.6, d, "lowpass", 1500, 1, 80); break;
+      case "eshot": this.osc("triangle", 500, t, 0.1, 0.05, d, { slideTo: 300 }); break;
+      case "warn": [0, 0.3, 0.6].forEach((o) => this.osc("square", 440, t + o, 0.2, 0.1, d, { slideTo: 220 })); break;
+      case "launch": this.osc("sine", 300, t, 0.6, 0.06, d, { slideTo: 1600 }); this.noiseHit(t, 0.5, 0.05, d, "highpass", 5000); break;
+      case "pop":
+        this.noiseHit(t, 0.5, 0.6, d, "lowpass", 3000, 1, 200);
+        for (let i = 0; i < 6; i++) this.noiseHit(t + 0.1 + Math.random() * 0.4, 0.05, 0.18, d, "highpass", 6000);
+        break;
+    }
+  },
+};
+
+/* Algorithmic melody from chord tones: deterministic per seed so each track keeps its tune. */
+function makeLead(chords, bars, rhythm, seed, octave) {
+  let s = seed;
+  const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  const out = [];
+  let last = 2;
+  for (let b = 0; b < bars; b++) {
+    const ch = chords[b % chords.length];
+    const tones = ch.slice(1).map((x) => ch[0] + x);
+    const scale = [...tones, tones[0] + 12, tones[1] + 12];
+    const rh = rhythm[b % rhythm.length];
+    for (let p = 0; p < 16; p++) {
+      if (rh[p] === "x") {
+        last = clamp(last + ((rnd() * 5) | 0) - 2, 0, scale.length - 1);
+        out.push(scale[last] + 12 * octave);
+      } else out.push(null);
+    }
+  }
+  return out;
+}
+const MAJ = [0, 4, 7], MIN = [0, 3, 7], MIN7 = [0, 3, 7, 10], MAJ7 = [0, 4, 7, 11], SUS = [0, 5, 7];
+const ch = (root, q) => [root, ...q];
+const RH = ["x..x..x.x.x.x...", "x.x...x.x..xx...", "x...x.xx..x.x.x.", "xx..x...x.x.xx.."];
+const TRACKS = {};
+function buildTracks() {
+  const mk = (name, o) => {
+    const len = o.bars * 16;
+    TRACKS[name] = { name, length: len, ...o, lead: o.leadSeed ? makeLead(o.chords, o.bars, o.rhythm || RH, o.leadSeed, o.leadOct ?? 1) : null };
+  };
+  const D1 = { k: "x...x...x...x...", s: "....x.......x...", h: "..x...x...x...xo" };
+  const D2 = { k: "x..x..x.x..x..x.", s: "....x.......x..x", h: "x.x.x.x.x.x.x.xo" };
+  const D3 = { k: "x.x...x.x.x...x.", s: "....x..x....x...", h: "xxxoxxxoxxxoxxxo" };
+  mk("title", { bpm: 108, bars: 8, chords: [ch(57, MIN7), ch(53, MAJ7), ch(48, MAJ), ch(55, SUS)], arp: { every: 2, oct: 1, wave: "square" }, pad: true, bass: "x.......x...5...", drums: { k: "x.......x.......", s: "........", h: "....x.......x..." }, leadSeed: 7 });
+  mk("stage1", { bpm: 126, bars: 8, chords: [ch(52, MIN), ch(48, MAJ), ch(50, MAJ), ch(47, MIN)], arp: { every: 1, oct: 1, wave: "square" }, pad: true, bass: "x.x.x.x.x.x.5.8.", drums: D1, leadSeed: 31 });
+  mk("stage2", { bpm: 132, bars: 8, chords: [ch(50, MIN7), ch(46, MAJ7), ch(48, MAJ), ch(45, MIN)], arp: { every: 1, oct: 1, wave: "triangle" }, pad: true, bass: "x..x..x.x..x.5..", drums: D2, leadSeed: 113 });
+  mk("stage3", { bpm: 138, bars: 8, chords: [ch(48, MIN), ch(44, MAJ), ch(46, MAJ), ch(43, MAJ)], arp: { every: 1, oct: 1, wave: "sawtooth" }, pad: true, bass: "x.x.x.xxx.x.x.58", drums: D3, leadSeed: 59 });
+  mk("boss", { bpm: 152, bars: 4, chords: [ch(50, MIN), ch(51, MAJ), ch(50, MIN), ch(49, MAJ)], arp: { every: 1, oct: 2, wave: "square" }, pad: false, bass: "xxxxxxxxxxxx5585", drums: D3, leadSeed: 211, rhythm: ["x.x.x.x.xx.x.x.x"], leadOct: 1 });
+  mk("ending", { bpm: 96, bars: 8, chords: [ch(48, MAJ7), ch(55, MAJ), ch(57, MIN7), ch(53, MAJ7)], arp: { every: 2, oct: 1, wave: "triangle" }, pad: true, bass: "x.....x.x.......", drums: { k: "x.......x.......", s: "....x.......x...", h: "x.x.x.x.x.x.x.x." }, leadSeed: 3 });
+  // Victory fanfare (plays once).
+  const fan = [72, null, 72, null, 72, null, 76, null, 79, null, null, null, 76, null, 79, null,
+    84, null, null, null, null, null, null, null, 83, null, 84, null, 88, null, null, null];
+  TRACKS.fanfare = { name: "fanfare", bpm: 150, length: 32, once: true, chords: [ch(48, MAJ), ch(55, MAJ)], arp: { every: 1, oct: 1, wave: "square" }, pad: true, bass: "x...x...x...8...", drums: { k: "x...x...x...x...", s: "..x...x...x.xxxx", h: "xxxxxxxxxxxxxxxx" }, lead: fan };
+}
+
+/* =====================================================================
+   Narrator (Capitão Caveirinha, live commentary)
+   ===================================================================== */
+const Narrator = {
+  voice: true, last: 0, hideTimer: null, frame: 0, ft: 0, talk: 0,
+  ctx: null, ptVoice: null,
+  init() {
+    const c = $("#pirate");
+    this.ctx = c.getContext("2d");
+    this.ctx.imageSmoothingEnabled = false;
+    if ("speechSynthesis" in window) {
+      const pickVoice = () => {
+        const vs = speechSynthesis.getVoices();
+        this.ptVoice = vs.find((v) => /pt[-_]BR/i.test(v.lang)) || vs.find((v) => /^pt/i.test(v.lang)) || null;
+      };
+      pickVoice();
+      speechSynthesis.onvoiceschanged = pickVoice;
+    } else this.voice = false;
+  },
+  say(text, priority = false) {
+    const now = performance.now();
+    if (!priority && now - this.last < 2600) return;
+    this.last = now;
+    const b = $("#bubble");
+    b.textContent = text;
+    b.classList.remove("hide");
+    this.talk = 1.6;
+    clearTimeout(this.hideTimer);
+    this.hideTimer = setTimeout(() => b.classList.add("hide"), 2600);
+    if (this.voice && Audio.enabled && "speechSynthesis" in window) {
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text.replace(/[!]+/g, "!"));
+        u.lang = "pt-BR"; u.rate = 1.15; u.pitch = 1.25; u.volume = 0.9;
+        if (this.ptVoice) u.voice = this.ptVoice;
+        speechSynthesis.speak(u);
+      } catch (e) { /* speech is optional */ }
+    }
+  },
+  update(dt) {
+    if (!IMG.pirate_strip) return;
+    this.talk = Math.max(0, this.talk - dt);
+    this.ft += dt * (this.talk > 0 ? 14 : 7);
+    this.frame = Math.floor(this.ft) % 5;
+    const g = this.ctx;
+    g.clearRect(0, 0, 24, 28);
+    g.drawImage(IMG.pirate_strip, this.frame * 64 + 20, 4, 24, 28, 0, 0, 24, 28);
+  },
+};
+
+/* =====================================================================
+   Backgrounds
+   ===================================================================== */
+class Layer {
+  // A horizontally repeating band. mirror: every other copy flipped to hide seams.
+  constructor(tex, h, y, speed, z, o = {}) {
+    this.tex = tex; this.h = h; this.w = h * (o.aspect || texAspect(tex));
+    this.y = y; this.speed = speed; this.gap = o.gap || 0; this.mirror = !!o.mirror;
+    this.frames = o.frames || null; this.ft = 0; this.off = 0;
+    this.step = this.w + this.gap;
+    this.period = this.mirror ? this.step * 2 : this.step;
+    const n = Math.ceil((W + this.period) / this.step) + 1;
+    this.copies = [];
+    for (let i = 0; i < n; i++) {
+      const m = sprite(tex, this.w, h, z, { ownGeo: !!this.frames, color: o.color });
+      if (this.mirror && i % 2) m.scale.x = -this.w;
+      if (this.frames) setStripFrame(m, 0, this.frames.n, this.frames.vertical);
+      this.copies.push(m);
+    }
+    this.place();
+  }
+  place() {
+    this.copies.forEach((m, i) => { m.position.x = i * this.step - this.off + this.w / 2 + (this.gap ? this.gap / 2 : 0); m.position.y = this.y; });
+  }
+  update(dt, k = 1) {
+    this.off = (this.off + this.speed * k * dt) % this.period;
+    if (this.frames) {
+      this.ft += dt * this.frames.fps;
+      const f = Math.floor(this.ft) % this.frames.n;
+      if (f !== this.lastF) { this.lastF = f; this.copies.forEach((m) => setStripFrame(m, f, this.frames.n, this.frames.vertical)); }
+    }
+    this.place();
+  }
+  dispose() { this.copies.forEach(unsprite); }
+}
+class TiledPlane {
+  // Full-screen repeating texture (cave wallpaper).
+  constructor(tex, tile, speed, z, color) {
+    this.tex = tex.clone(); this.tex.needsUpdate = true;
+    this.tex.wrapS = this.tex.wrapT = THREE.RepeatWrapping;
+    this.tex.repeat.set(W / tile, H / tile);
+    this.m = sprite(this.tex, W, H, z, { color });
+    this.m.position.set(W / 2, H / 2, z);
+    this.speed = speed; this.tile = tile;
+  }
+  update(dt, k = 1) { this.tex.offset.x = (this.tex.offset.x + (this.speed * k * dt) / this.tile) % 1; }
+  dispose() { unsprite(this.m); this.tex.dispose(); }
+}
+
+/* Cave terrain: floor and ceiling columns built from the 16px tileset. */
+const TILE = 16;
+const tileGeoCache = {};
+function tileGeo(cx, cy) {
+  const key = cx + "," + cy;
+  if (tileGeoCache[key]) return tileGeoCache[key];
+  const g = new THREE.PlaneGeometry(1, 1);
+  const e = 0.02;
+  const u0 = (cx * 16 + e) / 544, u1 = ((cx + 1) * 16 - e) / 544;
+  const v1 = 1 - (cy * 16 + e) / 160, v0 = 1 - ((cy + 1) * 16 - e) / 160;
+  const uv = g.attributes.uv;
+  uv.setXY(0, u0, v1); uv.setXY(1, u1, v1); uv.setXY(2, u0, v0); uv.setXY(3, u1, v0);
+  tileGeoCache[key] = g;
+  return g;
+}
+class Terrain {
+  constructor() {
+    this.cols = []; this.x = 0; this.floorH = 3; this.ceilH = 2; this.gen = 0;
+    this.mat = new THREE.MeshBasicMaterial({ map: TEX.cave_tiles, transparent: true, depthTest: false, depthWrite: false });
+    this.active = true;
+    while (this.cols.length * TILE < W + TILE * 2) this.addCol(true);
+  }
+  addCol(flat) {
+    this.gen++;
+    if (!flat && this.active && this.gen % 3 === 0) {
+      this.floorH = clamp(this.floorH + pick([-1, 0, 0, 1]), 1, 6);
+      this.ceilH = clamp(this.ceilH + pick([-1, 0, 0, 1]), 1, 5);
+      if (this.floorH + this.ceilH > 9) this.ceilH--;
+    }
+    if (!this.active) { this.floorH = Math.max(1, this.floorH - (this.gen % 2)); this.ceilH = Math.max(1, this.ceilH - (this.gen % 2)); }
+    const x = this.cols.length ? this.cols[this.cols.length - 1].x + TILE : TILE / 2;
+    const col = { x, floor: this.floorH, ceil: this.ceilH, meshes: [] };
+    const add = (cx, cy, y) => {
+      const m = new THREE.Mesh(tileGeo(cx, cy), this.mat);
+      m.scale.set(TILE, TILE, 1); m.position.set(x, y, -10); scene.add(m); col.meshes.push(m);
+    };
+    for (let i = 0; i < col.floor; i++) {
+      const top = i === col.floor - 1;
+      add(top ? 1 + (this.gen % 4) : (i === 0 ? 13 : pick([13, 13, 14, 12])), top ? 0 : (i === 0 ? 0 : 0), TILE / 2 + i * TILE);
+    }
+    for (let i = 0; i < col.ceil; i++) {
+      const bottom = i === col.ceil - 1;
+      add(bottom ? 1 + (this.gen % 4) : 13, bottom ? 5 : 0, H - TILE / 2 - i * TILE);
+    }
+    this.cols.push(col);
+  }
+  update(dt, speed) {
+    for (const c of this.cols) { c.x -= speed * dt; c.meshes.forEach((m) => (m.position.x = c.x)); }
+    while (this.cols.length && this.cols[0].x < -TILE) { this.cols.shift().meshes.forEach((m) => scene.remove(m)); }
+    while (this.cols[this.cols.length - 1].x < W + TILE * 2) this.addCol(false);
+  }
+  // Floor top and ceiling bottom at world x.
+  bounds(x) {
+    for (const c of this.cols) if (Math.abs(c.x - x) <= TILE / 2) return { floor: c.floor * TILE, ceil: H - c.ceil * TILE };
+    return { floor: 0, ceil: H };
+  }
+  dispose() { this.cols.forEach((c) => c.meshes.forEach((m) => scene.remove(m))); this.cols = []; this.mat.dispose(); }
+}
+
+/* =====================================================================
+   Stages
+   ===================================================================== */
+const STAGES = [
+  {
+    name: "Cinturão das Vírgulas", music: "stage1", clear: 0x140a1e, length: 68,
+    boss: { name: "SUJEITO OCULTO", hp: 140 },
+    intro: "Fase 1! Pongo entra no Cinturão das Vírgulas. Cuidado com os asteroides!",
+    build(bg) {
+      bg.push(new Layer(TEX.bg_space, H, H / 2, 10, -60, { mirror: true }));
+      bg.push(new Layer(TEX.stars, H, H / 2, 34, -55, { mirror: true }));
+    },
+    waves: [
+      [2, "rocks", 10], [4, "sine", 250], [9, "sine", 110], [14, "bell"], [15, "dive", 4], [20, "line", 280],
+      [21, "line", 80], [26, "sine2"], [31, "rocks", 6], [33, "shooter", 2], [38, "bell"], [40, "dive", 5],
+      [45, "sine", 180], [49, "line", 300], [50, "line", 60], [54, "shooter", 3], [58, "rocks", 6], [60, "sine2"],
+    ],
+  },
+  {
+    name: "Mar das Reticências", music: "stage2", clear: 0x92a9ce, length: 72,
+    boss: { name: "CRASE INDEVIDA", hp: 210 },
+    intro: "Fase 2! Mar das Reticências... que vista linda! Mas os Gramáticos estão por toda parte!",
+    build(bg) {
+      bg.push(new Layer(TEX.bg_sea, H, H / 2, 4, -60));
+      bg.push(new Layer(TEX.palm_strip, 54, 118 + 24, 9, -57, { aspect: 51 / 53, gap: 230, frames: { n: 4, fps: 5 } }));
+      bg.push(new Layer(TEX.water_strip, 18, 108, 22, -56, { aspect: 170 / 10, gap: 70, frames: { n: 4, fps: 6, vertical: true } }));
+      bg.push(new Layer(TEX.water_strip, 14, 70, 44, -56, { aspect: 170 / 10, gap: 160, frames: { n: 4, fps: 7, vertical: true } }));
+      bg.push(new Layer(TEX.clouds, 150, H - 70, 16, -58));
+      bg.push(new Layer(TEX.cloud_small, 34, 205, 30, -57, { gap: 280 }));
+    },
+    waves: [
+      [2, "sine", 260], [6, "sine", 140], [10, "bell"], [11, "dive", 5], [16, "shooter", 2], [20, "line", 300],
+      [21, "line", 200], [22, "line", 100], [27, "sine2"], [31, "bell"], [33, "dive", 6], [38, "shooter", 3],
+      [43, "sine", 220], [46, "sine", 120], [50, "rocks", 6], [52, "dive", 6], [57, "shooter", 3], [61, "sine2"], [64, "bell"],
+    ],
+  },
+  {
+    name: "Caverna do Pleonasmo", music: "stage3", clear: 0x1b0f1c, length: 74, cave: true,
+    boss: { name: "REI PLEONASMO", hp: 300 },
+    intro: "Fase 3! A Caverna do Pleonasmo! Não encoste nas paredes, Pongo!",
+    build(bg) {
+      bg.push(new TiledPlane(TEX.tile_wine, 32, 20, -60));
+    },
+    waves: [
+      [2, "crates", 3], [4, "sine", 200], [9, "dive", 4], [13, "bell"], [14, "line", 230], [15, "line", 140],
+      [19, "crates", 3], [21, "shooter", 2], [26, "sine2"], [30, "bell"], [32, "dive", 6], [36, "crates", 4],
+      [38, "shooter", 3], [44, "sine", 180], [48, "line", 250], [49, "line", 120], [52, "dive", 6], [56, "crates", 3],
+      [58, "shooter", 3], [63, "sine2"], [66, "bell"],
+    ],
+  },
+];
+
+/* =====================================================================
+   Game state
+   ===================================================================== */
+const POWERS = ["VELOC", "MÍSSIL", "DUPLO", "LASER", "OPÇÃO", "ESCUDO"];
+const G = {
+  state: "loading", stageIdx: 0, t: 0, score: 0, hiscore: 0, lives: 3, words: 0, stageWords: [],
+  nextLife: 30000, bg: [], terrain: null, waveIdx: 0, boss: null, bossSpawned: false,
+  enemies: [], bullets: [], ebullets: [], items: [], booms: [], fireworks: null, clearTimer: 0,
+  shake: 0, flash: 0, scroll: 60, waves: {}, idleT: 0,
+};
+const player = {
+  x: 90, y: H / 2, mesh: null, jet: null, shieldMesh: null, alive: true, inv: 0, respawn: 0,
+  speed: 0, missile: false, double: false, laser: false, options: [], shield: 0, capsules: 0,
+  fireCd: 0, missileCd: 0, ft: 0, giant: 0, trail: [],
+};
+
+/* ---------------- Input ---------------- */
+const keys = {};
+const touch = { id: null, lx: 0, ly: 0, active: false };
+const isTouch = matchMedia("(pointer: coarse)").matches;
+addEventListener("keydown", (e) => {
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Spacebar"].includes(e.key)) e.preventDefault();
+  if (e.repeat) { keys[e.code] = true; return; }
+  keys[e.code] = true;
+  if (G.state === "play" && ["KeyX", "KeyK", "ShiftLeft", "ShiftRight"].includes(e.code)) activatePower();
+  if (["KeyP", "Escape"].includes(e.code)) { if (G.state === "play") pause(true); else if (G.state === "paused") pause(false); }
+  if (e.code === "KeyM") toggleSound();
+});
+addEventListener("keyup", (e) => { keys[e.code] = false; });
+stageEl.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "mouse" || G.state !== "play") return;
+  if (e.target.closest("button")) return;
+  touch.id = e.pointerId; touch.lx = e.clientX; touch.ly = e.clientY; touch.active = true;
+});
+stageEl.addEventListener("pointermove", (e) => {
+  if (e.pointerId !== touch.id || G.state !== "play" || !player.alive) return;
+  const k = 1.5 / cssScale;
+  player.x += (e.clientX - touch.lx) * k; player.y -= (e.clientY - touch.ly) * k;
+  touch.lx = e.clientX; touch.ly = e.clientY;
+});
+const endTouch = (e) => { if (e.pointerId === touch.id) { touch.id = null; touch.active = false; } };
+stageEl.addEventListener("pointerup", endTouch);
+stageEl.addEventListener("pointercancel", endTouch);
+document.addEventListener("visibilitychange", () => { if (document.hidden && G.state === "play") pause(true); });
+
+/* ---------------- UI helpers ---------------- */
+const screens = ["loading", "title", "story", "pause", "clear", "over", "end"];
+function show(name) {
+  for (const s of screens) $("#scr-" + s).hidden = s !== name;
+  const btn = $("#scr-" + name)?.querySelector(".btn");
+  if (btn && !isTouch) setTimeout(() => btn.focus({ preventScroll: true }), 30);
+}
+function hideScreens() { for (const s of screens) $("#scr-" + s).hidden = true; }
+function fmt(n) { return String(n).padStart(6, "0"); }
+function hud() {
+  $("#hud-score").textContent = fmt(G.score);
+  $("#hud-lives").textContent = "PONGO x" + Math.max(0, G.lives);
+  $("#hud-parts").textContent = G.words;
+}
+const powerEls = [];
+function buildPowerBar() {
+  const p = $("#power");
+  POWERS.forEach((name) => { const d = document.createElement("div"); d.textContent = name; p.appendChild(d); powerEls.push(d); });
+}
+function powerMaxed(i) {
+  return (i === 0 && player.speed >= 4) || (i === 1 && player.missile) || (i === 2 && player.double) ||
+    (i === 3 && player.laser) || (i === 4 && player.options.length >= 2) || (i === 5 && player.shield > 0);
+}
+function updatePowerBar() {
+  powerEls.forEach((d, i) => {
+    d.classList.toggle("on", player.capsules - 1 === i);
+    d.classList.toggle("maxed", powerMaxed(i));
+  });
+}
+function addScore(n) {
+  G.score += n;
+  if (G.score >= G.nextLife) { G.nextLife += 30000; G.lives++; Narrator.say("Vida extra! Mais um Pongo na reserva!", true); Audio.sfx("bellget"); }
+  if (G.score > G.hiscore) { G.hiscore = G.score; try { localStorage.setItem("pongo-hiscore", String(G.hiscore)); } catch (e) { /* storage optional */ } }
+  hud();
+}
+
+/* =====================================================================
+   Player
+   ===================================================================== */
+function createPlayer() {
+  player.mesh = sprite(TEX.dog_jump3, 46, 46, 20);
+  player.jet = sprite(TEX.fire, 10, 16, 19, { add: true });
+  player.jet.rotation.z = -Math.PI / 2;
+  player.shieldMesh = sprite(TEX.glow, 70, 70, 21, { add: true, color: "#2ce8f5" });
+  player.shieldMesh.visible = false;
+}
+function resetPlayer(full) {
+  player.x = 90; player.y = H / 2; player.alive = true; player.inv = 2.5; player.respawn = 0;
+  player.speed = 0; player.missile = false; player.double = false; player.laser = false; player.shield = 0;
+  player.capsules = 0; player.giant = 0; player.trail = [];
+  player.options.forEach((o) => unsprite(o.mesh)); player.options = [];
+  player.mesh.visible = true; player.jet.visible = true;
+  if (full) player.inv = 1.5;
+  updatePowerBar();
+}
+function activatePower() {
+  const i = player.capsules - 1;
+  if (i < 0 || !player.alive || powerMaxed(i)) return;
+  const lines = ["VELOCIDADE! Esse cachorro não para!", "MÍSSEIS armados!", "TIRO DUPLO!", "LASER! Que brilho, que brilho!", "OPÇÃO a bordo! Pongo tem companhia!", "ESCUDO ativado!"];
+  if (i === 0) player.speed++;
+  if (i === 1) player.missile = true;
+  if (i === 2) { player.double = true; player.laser = false; }
+  if (i === 3) { player.laser = true; player.double = false; }
+  if (i === 4) player.options.push({ mesh: sprite(TEX.ship, 22, 20, 18), x: player.x, y: player.y });
+  if (i === 5) player.shield = 3;
+  player.options.forEach((o) => (o.mesh.rotation.z = -Math.PI / 2));
+  player.capsules = 0;
+  Audio.sfx("power");
+  Narrator.say(lines[i], true);
+  updatePowerBar();
+}
+function shootFrom(x, y) {
+  if (player.laser) {
+    G.bullets.push({ mesh: sprite(TEX.laser, 46, 6, 15, { add: true }), x: x + 20, y, vx: 620, vy: 0, dmg: 1.4, r: 6, pierce: true, hitSet: new Set() });
+  } else {
+    const b = sprite(TEX.fire, 9, 14, 15);
+    b.rotation.z = -Math.PI / 2;
+    G.bullets.push({ mesh: b, x: x + 18, y, vx: 480, vy: 0, dmg: 1, r: 6 });
+  }
+  if (player.double) {
+    const b = sprite(TEX.fire, 8, 12, 15);
+    b.rotation.z = -Math.PI / 4;
+    G.bullets.push({ mesh: b, x: x + 12, y: y + 6, vx: 340, vy: 340, dmg: 1, r: 6 });
+  }
+}
+function updatePlayer(dt) {
+  const p = player;
+  if (!p.alive) {
+    p.respawn -= dt;
+    if (p.respawn <= 0) {
+      if (G.lives < 0) { gameOver(); return; }
+      resetPlayer(false);
+      if (G.lives === 0) Narrator.say("Última vida! Segura essa, Pongo!", true);
+    }
+    return;
+  }
+  const sp = (130 + p.speed * 42) * dt;
+  let dx = 0, dy = 0;
+  if (keys.ArrowLeft || keys.KeyA) dx -= 1;
+  if (keys.ArrowRight || keys.KeyD) dx += 1;
+  if (keys.ArrowUp || keys.KeyW) dy += 1;
+  if (keys.ArrowDown || keys.KeyS) dy -= 1;
+  if (dx && dy) { dx *= 0.7071; dy *= 0.7071; }
+  p.x += dx * sp; p.y += dy * sp;
+  const gs = p.giant > 0 ? 2.2 : 1;
+  p.x = clamp(p.x, 24 * gs, W - 24 * gs);
+  p.y = clamp(p.y, 18 * gs, H - 28 * gs);
+  // Cave walls push Pongo back and hurt (no instant death).
+  if (G.terrain) {
+    const b = G.terrain.bounds(p.x);
+    if (p.y - 14 < b.floor) { p.y = b.floor + 14; wallHit(); }
+    if (p.y + 14 > b.ceil) { p.y = b.ceil - 14; wallHit(); }
+  }
+  p.inv = Math.max(0, p.inv - dt);
+  p.giant = Math.max(0, p.giant - dt);
+
+  // Animation: airborne frames of the jump sheet.
+  p.ft += dt * 8;
+  const seq = [2, 3, 4, 3];
+  const f = seq[Math.floor(p.ft) % seq.length];
+  setFrameTex(p.mesh, TEX["dog_jump" + f], 46 * gs);
+  p.mesh.position.set(p.x, p.y + Math.sin(p.ft * 0.8) * 1.5, 20);
+  p.mesh.visible = p.inv > 0 ? Math.floor(p.inv * 12) % 2 === 0 : true;
+  p.jet.position.set(p.x - 22 * gs, p.y - 4 * gs, 19);
+  p.jet.scale.set(10 * gs, (14 + Math.random() * 6) * gs, 1);
+  p.shieldMesh.visible = p.shield > 0;
+  p.shieldMesh.position.set(p.x, p.y, 21);
+  p.shieldMesh.material.opacity = 0.25 + 0.1 * p.shield + Math.sin(G.t * 10) * 0.05;
+  if (Math.random() < 0.6) particles.spawn(p.x - 26 * gs, p.y - 4 * gs + rand(-2, 2), rand(-140, -80), rand(-15, 15), 0.25, pick(PAL.flame), 5 * gs);
+
+  // Options follow Pongo's trail.
+  p.trail.unshift({ x: p.x, y: p.y });
+  if (p.trail.length > 40) p.trail.pop();
+  p.options.forEach((o, i) => {
+    const tp = p.trail[Math.min(p.trail.length - 1, (i + 1) * 14)];
+    o.x = tp.x - 6; o.y = tp.y;
+    o.mesh.position.set(o.x, o.y + Math.sin(G.t * 6 + i) * 2, 18);
+  });
+
+  // Shooting (hold, or always on touch).
+  p.fireCd -= dt; p.missileCd -= dt;
+  const firing = keys.Space || keys.KeyZ || keys.KeyJ || touch.active || G.autoFire;
+  if (firing && p.fireCd <= 0) {
+    p.fireCd = p.laser ? 0.09 : 0.13;
+    shootFrom(p.x, p.y);
+    p.options.forEach((o) => shootFrom(o.x, o.y));
+    Audio.sfx(p.laser ? "laser" : "shot");
+  }
+  if (firing && p.missile && p.missileCd <= 0) {
+    p.missileCd = 0.7;
+    const launch = (x, y) => G.bullets.push({ mesh: sprite(TEX.missile, 12, 6, 15), x, y: y - 8, vx: 90, vy: -60, dmg: 2.5, r: 7, missile: true });
+    launch(p.x, p.y);
+    p.options.forEach((o) => launch(o.x, o.y));
+  }
+}
+function wallHit() {
+  if (player.inv > 0 || player.giant > 0) return;
+  hurtPlayer();
+}
+function hurtPlayer() {
+  const p = player;
+  if (!p.alive || p.inv > 0 || p.giant > 0) return;
+  if (p.shield > 0) {
+    p.shield--; p.inv = 0.8; Audio.sfx("hit"); burst(p.x, p.y, 20, PAL.cyan, 160, 0.4, 5);
+    updatePowerBar();
+    return;
+  }
+  p.alive = false; p.respawn = 1.6; G.lives--;
+  p.mesh.visible = false; p.jet.visible = false; p.shieldMesh.visible = false;
+  p.options.forEach((o) => (o.mesh.visible = false));
+  explode(p.x, p.y, 1.6, "#ff952e");
+  burst(p.x, p.y, 60, PAL.flame, 220, 0.9, 7);
+  Audio.sfx("die");
+  G.shake = 0.5;
+  hud();
+  Narrator.say(pick(["Ai ai ai! Pongo foi atingido!", "Auuu! Essa doeu!", "Pongo caiu! Mas ainda não acabou!"]), true);
+}
+
+/* =====================================================================
+   Enemies
+   ===================================================================== */
+function waveId() { return Math.random().toString(36).slice(2); }
+function spawnGram(x, y, move, o = {}) {
+  const h = o.h || 44;
+  const m = sprite(TEX.alien1, 30, h, 10);
+  const e = { kind: "gram", mesh: m, x, y, y0: y, t: 0, hp: o.hp || 2, r: 15, move, h, ft: Math.random() * 6,
+    wave: o.wave, phase: o.phase || 0, vx: o.vx || 115, shootCd: rand(1.2, 3), score: 100, ...o };
+  G.enemies.push(e);
+  if (e.wave) G.waves[e.wave] = (G.waves[e.wave] || 0) + 1;
+  return e;
+}
+function spawnWave(type, arg) {
+  const id = waveId();
+  switch (type) {
+    case "sine": for (let i = 0; i < 5; i++) spawnGram(W + 30 + i * 40, arg, "sine", { wave: id, phase: i * 0.6 }); break;
+    case "sine2":
+      for (let i = 0; i < 5; i++) spawnGram(W + 30 + i * 40, 260, "sine", { wave: id, phase: i * 0.6 });
+      { const id2 = waveId(); for (let i = 0; i < 5; i++) spawnGram(W + 30 + i * 40, 110, "sine", { wave: id2, phase: i * 0.6 + Math.PI }); }
+      break;
+    case "line": for (let i = 0; i < 4; i++) spawnGram(W + 30 + i * 34, arg, "line", { wave: id, vx: 170 }); break;
+    case "dive":
+      for (let i = 0; i < arg; i++) {
+        const top = i % 2 === 0;
+        spawnGram(W + 30 + i * 45, top ? H - 40 : 50, "dive", { wave: id, vx: 135 });
+      }
+      break;
+    case "shooter":
+      for (let i = 0; i < arg; i++) spawnGram(W + 40 + i * 30, 80 + ((i + 1) * (H - 140)) / (arg + 1), "shooter", { hp: 6, h: 60, r: 20, score: 300, tx: rand(440, 560), shootCd: 1 });
+      break;
+    case "rocks":
+      for (let i = 0; i < arg; i++) {
+        const big = Math.random() < 0.55;
+        spawnRock(W + 40 + i * rand(60, 110), rand(50, H - 60), big);
+      }
+      break;
+    case "crates":
+      for (let i = 0; i < arg; i++) G.pendingCrates = (G.pendingCrates || 0) + 1;
+      break;
+    case "bell": spawnBell(); break;
+  }
+}
+function spawnRock(x, y, big) {
+  const s = big ? 40 : 21;
+  const m = sprite(big ? TEX.rock_big : TEX.rock_small, s, s * 0.93, 9);
+  G.enemies.push({ kind: "rock", big, mesh: m, x, y, vx: rand(70, 120), vy: rand(-25, 25), spin: rand(-2, 2), hp: big ? 6 : 2, r: big ? 18 : 9, score: big ? 150 : 50 });
+}
+function spawnCrate(x, floorY) {
+  const m = sprite(TEX.crate, 32, 32, 9);
+  G.enemies.push({ kind: "crate", mesh: m, x, y: floorY + 15, hp: 4, r: 15, score: 200, onFloor: true });
+}
+function enemyShoot(x, y, speed = 135, angleOffset = 0) {
+  if (!player.alive) return;
+  const a = Math.atan2(player.y - y, player.x - x) + angleOffset;
+  G.ebullets.push({ mesh: sprite(TEX.orb, 12, 12, 30, { add: true }), x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, r: 4 });
+  Audio.sfx("eshot");
+}
+function updateEnemies(dt) {
+  const diff = 1 + G.stageIdx * 0.25;
+  for (const e of G.enemies) {
+    e.t = (e.t || 0) + dt;
+    if (e.kind === "gram") {
+      if (e.move === "sine") { e.x -= e.vx * dt; e.y = e.y0 + Math.sin(e.t * 2.6 + e.phase) * 50; }
+      else if (e.move === "line") { e.x -= e.vx * dt; }
+      else if (e.move === "dive") {
+        e.x -= e.vx * dt;
+        if (e.x < W - 80) e.y += clamp(player.y - e.y, -1, 1) * 70 * dt;
+      } else if (e.move === "shooter") {
+        if (e.t < 6) e.x += (e.tx - e.x) * Math.min(1, dt * 2);
+        else e.x -= 220 * dt;
+        e.y = e.y0 + Math.sin(e.t * 1.8) * 18;
+      }
+      e.ft += dt * 7;
+      const f = 1 + (Math.floor(e.ft) % 6);
+      setFrameTex(e.mesh, TEX["alien" + f], e.h, -1);
+      // Shooting
+      e.shootCd -= dt * diff;
+      if (e.shootCd <= 0 && e.x < W - 30 && e.x > player.x + 60) {
+        if (e.move === "shooter") { e.shootCd = 1.4; for (let k = -1; k <= 1; k++) enemyShoot(e.x - 10, e.y, 150, k * 0.2); }
+        else { e.shootCd = rand(2.2, 4.5); if (Math.random() < 0.45) enemyShoot(e.x - 10, e.y); }
+      }
+    } else if (e.kind === "rock") {
+      e.x -= e.vx * dt; e.y += e.vy * dt; e.mesh.rotation.z += e.spin * dt;
+      if (e.y < 20 || e.y > H - 20) e.vy *= -1;
+    } else if (e.kind === "crate") {
+      e.x -= G.scroll * dt;
+      const b = G.terrain ? G.terrain.bounds(e.x) : { floor: 0 };
+      e.y = b.floor + 15;
+    }
+    e.mesh.position.set(e.x, e.y, e.mesh.position.z);
+    if (e.flash > 0) { e.flash -= dt; e.mesh.material.color.setRGB(1, 0.55, 0.7); } else e.mesh.material.color.setRGB(1, 1, 1);
+    if (e.x < -60 || e.y < -80 || e.y > H + 80) e.dead = "gone";
+    // Contact
+    if (!e.dead && player.alive && dist(e, player) < e.r + (player.giant > 0 ? 30 : 9)) {
+      if (player.giant > 0) damageEnemy(e, 50);
+      else hurtPlayer();
+    }
+  }
+  cleanup(G.enemies, (e) => {
+    if (e.wave) {
+      G.waves[e.wave]--;
+      if (e.dead === "gone") G.waves[e.wave] = -999; // wave broken
+      if (G.waves[e.wave] === 0 && e.dead === "killed") spawnCapsule(e.x, e.y);
+    }
+  });
+}
+function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+function cleanup(list, onRemove) {
+  for (let i = list.length - 1; i >= 0; i--) {
+    if (list[i].dead) { if (onRemove) onRemove(list[i]); unsprite(list[i].mesh); list.splice(i, 1); }
+  }
+}
+function damageEnemy(e, dmg) {
+  if (e.dead) return;
+  e.hp -= dmg; e.flash = 0.06;
+  if (e.hp > 0) { Audio.sfx("hit"); return; }
+  e.dead = "killed";
+  addScore(e.score);
+  if (e.kind === "rock") {
+    explode(e.x, e.y, e.big ? 1.1 : 0.6, "#ff952e");
+    burst(e.x, e.y, e.big ? 26 : 10, PAL.flame, 140, 0.6, 5);
+    if (e.big) { spawnRock(e.x, e.y + 8, false); spawnRock(e.x, e.y - 8, false); }
+  } else if (e.kind === "crate") {
+    explode(e.x, e.y, 0.9, "#eed878");
+    burst(e.x, e.y, 20, PAL.flame, 120, 0.6, 5);
+    spawnCapsule(e.x, e.y + 10);
+  } else {
+    explode(e.x, e.y, 0.9, "#2ce8f5");
+    burst(e.x, e.y, 22, PAL.cyan, 150, 0.6, 5);
+    if (Math.random() < (e.move === "shooter" ? 1 : 0.32)) spawnWord(e.x, e.y);
+  }
+  Audio.sfx("boom");
+}
+
+/* ---------------- Items: capsules, stolen words, bells ---------------- */
+function spawnCapsule(x, y) {
+  G.items.push({ kind: "capsule", mesh: sprite(TEX.capsule, 20, 15, 25), x, y, vx: -45, t: 0, r: 12 });
+}
+function spawnWord(x, y, vx = -40, vy = 0) {
+  const word = pick(WORDS);
+  G.items.push({ kind: "word", word, mesh: sprite(getWordTex(word), 30, 30, 26), x, y, vx, vy, t: 0, r: 14 });
+}
+const BELL_COLORS = [{ c: "#ffd94a", n: "dourado" }, { c: "#4aa8ff", n: "azul" }, { c: "#63e07a", n: "verde" }];
+function spawnBell() {
+  G.items.push({ kind: "bell", mesh: sprite(TEX.bell, 22, 24, 26, { color: BELL_COLORS[0].c }), x: W + 20, y: rand(110, H - 70), vx: -55, vy: 0, t: 0, r: 13, ci: 0, hits: 0 });
+}
+function updateItems(dt) {
+  for (const it of G.items) {
+    it.t += dt;
+    if (it.kind === "bell") {
+      it.vy -= 60 * dt; it.vy *= 0.98;
+      it.y += it.vy * dt + Math.sin(it.t * 2) * 0.4; it.x += it.vx * dt;
+      it.y = clamp(it.y, 30, H - 30);
+      it.mesh.rotation.z = Math.sin(it.t * 5) * 0.25;
+    } else {
+      it.x += it.vx * dt; it.y += (it.vy || 0) * dt + Math.sin(it.t * 3) * 0.3;
+      if (it.vy) it.vy *= 0.97;
+      it.mesh.rotation.z = it.kind === "capsule" ? Math.sin(it.t * 4) * 0.2 : 0;
+    }
+    it.mesh.position.set(it.x, it.y, it.mesh.position.z);
+    if (it.x < -40) it.dead = true;
+    if (player.alive && dist(it, player) < it.r + (player.giant > 0 ? 34 : 16)) collect(it);
+  }
+  cleanup(G.items);
+}
+let wordLineCd = 0;
+function collect(it) {
+  it.dead = true;
+  if (it.kind === "capsule") {
+    player.capsules = (player.capsules % 6) + 1;
+    Audio.sfx("capsule"); addScore(50); updatePowerBar();
+    burst(it.x, it.y, 10, PAL.berry, 80, 0.4, 4);
+    if (player.capsules === 1) Narrator.say("Cápsula na pata! Aperte X para usar o poder!");
+  } else if (it.kind === "word") {
+    G.words++; G.stageWords.push(it.word); addScore(300); Audio.sfx("word");
+    burst(it.x, it.y, 16, PAL.cyan, 90, 0.5, 5);
+    if (performance.now() - wordLineCd > 7000) { wordLineCd = performance.now(); Narrator.say("Partícula resgatada: " + it.word + "!"); }
+  } else if (it.kind === "bell") {
+    const b = BELL_COLORS[it.ci];
+    Audio.sfx("bellget");
+    burst(it.x, it.y, 30, [C(b.c), C("#ffffff")], 160, 0.6, 6);
+    if (it.ci === 0) { G.bellBonus = (G.bellBonus || 0) + 1; addScore(500 * G.bellBonus); Narrator.say("Sino dourado! " + 500 * G.bellBonus + " pontos!", true); }
+    if (it.ci === 1) {
+      Narrator.say("Sino azul! KABUM geral!", true);
+      G.flash = 0.5; G.shake = 0.4; Audio.sfx("bigboom");
+      for (const e of G.enemies) damageEnemy(e, 30);
+      if (G.boss) damageBoss(20);
+      G.ebullets.forEach((b2) => (b2.dead = true));
+    }
+    if (it.ci === 2) { player.giant = 7; player.inv = 0; Narrator.say("Sino verde! PONGO GIGANTE!", true); }
+  }
+}
+
+/* ---------------- Bullets ---------------- */
+function updateBullets(dt) {
+  for (const b of G.bullets) {
+    if (b.missile) {
+      b.vy -= 200 * dt;
+      if (b.vy < -160) b.vy = -160;
+      const floor = G.terrain ? G.terrain.bounds(b.x).floor : 0;
+      if (b.y - 3 <= floor + 2) { b.y = floor + 5; b.vy = 0; b.vx = 260; }
+      b.mesh.rotation.z = Math.atan2(b.vy, b.vx);
+    }
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    b.mesh.position.set(b.x, b.y, 15);
+    if (b.x > W + 30 || b.y > H + 20 || b.y < -20) b.dead = true;
+    if (G.terrain && !b.missile) { const bd = G.terrain.bounds(b.x); if (b.y < bd.floor || b.y > bd.ceil) { b.dead = true; burst(b.x, b.y, 3, PAL.flame, 50, 0.2, 3); } }
+    if (b.dead) continue;
+    for (const e of G.enemies) {
+      if (e.dead || (b.hitSet && b.hitSet.has(e))) continue;
+      if (dist(b, e) < e.r + b.r) {
+        damageEnemy(e, b.dmg);
+        burst(b.x, b.y, 3, PAL.flame, 60, 0.2, 3);
+        if (b.pierce) b.hitSet.add(e); else { b.dead = true; break; }
+      }
+    }
+    if (!b.dead && G.boss && G.boss.alive && dist(b, G.boss) < G.boss.r + b.r && !(b.hitSet && b.hitSet.has(G.boss))) {
+      damageBoss(b.dmg);
+      burst(b.x, b.y, 4, PAL.cyan, 80, 0.25, 4);
+      if (b.pierce) b.hitSet.add(G.boss); else b.dead = true;
+    }
+    if (!b.dead) {
+      for (const it of G.items) {
+        if (it.kind === "bell" && dist(b, it) < it.r + b.r) {
+          b.dead = true; it.vy = 90; it.hits++;
+          it.ci = (it.ci + 1) % BELL_COLORS.length;
+          it.mesh.material.color.set(BELL_COLORS[it.ci].c);
+          Audio.sfx("bell");
+          break;
+        }
+      }
+    }
+  }
+  cleanup(G.bullets);
+  for (const b of G.ebullets) {
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    if (b.crescent) { b.vy = Math.sin(b.t = (b.t || 0) + dt * 4) * 60; }
+    b.mesh.position.set(b.x, b.y, 30);
+    if (b.x < -30 || b.x > W + 30 || b.y < -30 || b.y > H + 30) b.dead = true;
+    if (!b.dead && player.alive && dist(b, player) < b.r + (player.giant > 0 ? 30 : 7)) {
+      b.dead = true;
+      if (player.giant <= 0) hurtPlayer();
+    }
+  }
+  cleanup(G.ebullets);
+}
+
+/* ---------------- Explosions (white strip tinted) ---------------- */
+function explode(x, y, scale, color) {
+  const m = sprite(TEX.boom_strip, 82 * scale * 0.7, 72 * scale * 0.7, 40, { ownGeo: true, add: true, color });
+  setStripFrame(m, 0, 3);
+  m.position.set(x, y, 40);
+  m.rotation.z = Math.random() * TAU;
+  G.booms.push({ mesh: m, t: 0, x, y });
+}
+function updateBooms(dt) {
+  for (const b of G.booms) {
+    b.t += dt;
+    const f = Math.floor(b.t / 0.07);
+    if (f >= 3) { b.dead = true; continue; }
+    setStripFrame(b.mesh, f, 3);
+    b.mesh.material.opacity = 1 - b.t * 2;
+  }
+  cleanup(G.booms);
+}
+
+/* =====================================================================
+   Boss
+   ===================================================================== */
+function spawnBoss() {
+  const st = STAGES[G.stageIdx];
+  const m = sprite(TEX.alien0, 100, 200, 12);
+  G.boss = { mesh: m, x: W + 120, y: H / 2, hp: st.boss.hp, max: st.boss.hp, r: 46, alive: true, t: 0, cd: 2.5, pat: 0, anim: null, ft: 0, dying: 0 };
+  G.bossSpawned = true;
+  $("#boss-name").textContent = st.boss.name;
+  $("#boss-bar").hidden = false;
+  $("#boss-fill").style.transform = "scaleX(1)";
+  Audio.sfx("warn");
+  Audio.play("boss");
+  Narrator.say("Atenção! Chegou o Gramático chefe: " + st.boss.name + "!", true);
+}
+function damageBoss(d) {
+  const b = G.boss;
+  if (!b || !b.alive || b.x > W - 40) return;
+  b.hp -= d;
+  b.flash = 0.06;
+  $("#boss-fill").style.transform = "scaleX(" + Math.max(0, b.hp / b.max) + ")";
+  if (b.hp <= 0) {
+    b.alive = false; b.dying = 2.4;
+    addScore(5000 * (G.stageIdx + 1));
+    G.ebullets.forEach((e) => (e.dead = true));
+    Narrator.say(STAGES[G.stageIdx].boss.name + " derrotado! As partículas estão livres!", true);
+    Audio.stop();
+  }
+}
+function updateBoss(dt) {
+  const b = G.boss;
+  if (!b) return;
+  b.t += dt;
+  const lvl = G.stageIdx + 1;
+  if (b.dying > 0) {
+    b.dying -= dt;
+    b.x += Math.sin(b.t * 50) * 1.5;
+    if (Math.random() < 0.35) { const ex = b.x + rand(-45, 45), ey = b.y + rand(-90, 90); explode(ex, ey, rand(0.7, 1.4), pick(["#2ce8f5", "#ff952e", "#ffffff"])); burst(ex, ey, 14, PAL.cyan, 140, 0.6, 5); }
+    if (Math.random() < 0.08) Audio.sfx("boom");
+    b.mesh.material.opacity = Math.min(1, b.dying / 1.2);
+    b.mesh.position.set(b.x, b.y, 12);
+    if (b.dying <= 0) {
+      explode(b.x, b.y, 3, "#ffffff");
+      burst(b.x, b.y, 160, PAL.fireworks, 260, 1.2, 7);
+      Audio.sfx("bigboom");
+      for (let i = 0; i < 6 + lvl * 2; i++) spawnWord(b.x, b.y, rand(-160, -40), rand(-120, 120));
+      unsprite(b.mesh); G.boss = null; $("#boss-bar").hidden = true;
+      G.clearTimer = 2.4;
+    }
+    return;
+  }
+  // Entrance, then hover with a slow figure-eight.
+  const tx = 530;
+  if (b.x > tx + 1) b.x += (tx - b.x) * Math.min(1, dt * 1.2);
+  else { b.x = tx + Math.sin(b.t * 0.7) * 25; }
+  b.y = H / 2 + Math.sin(b.t * 0.9) * (H / 2 - 120);
+  b.cd -= dt;
+  if (b.cd <= 0 && b.x < W - 60) {
+    const pats = lvl === 1 ? ["fan", "slash", "fan", "summon"] : lvl === 2 ? ["fan", "slash", "summon", "rain"] : ["spiral", "slash", "fan", "summon", "rain", "spiral"];
+    const p = pats[b.pat++ % pats.length];
+    b.cd = 2.6 - lvl * 0.3;
+    if (p === "fan") { const n = 5 + lvl * 2; for (let i = 0; i < n; i++) enemyShoot(b.x - 30, b.y + 20, 140 + lvl * 15, (i - (n - 1) / 2) * 0.16); }
+    if (p === "slash") b.anim = { frames: [1, 2, 3, 4, 4, 5], t: 0, fired: false };
+    if (p === "summon") { for (let i = 0; i < 3; i++) spawnGram(b.x - 20, b.y + (i - 1) * 50, "dive", { vx: 150 }); }
+    if (p === "rain") { for (let i = 0; i < 6 + lvl; i++) setTimeout(() => { if (G.boss && G.boss.alive && G.state === "play") enemyShoot(G.boss.x - 30, G.boss.y + rand(-60, 60), 170, rand(-0.3, 0.3)); }, i * 120); }
+    if (p === "spiral") {
+      for (let k = 0; k < 3; k++) setTimeout(() => {
+        if (!G.boss || !G.boss.alive || G.state !== "play") return;
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * TAU + k * 0.25;
+          G.ebullets.push({ mesh: sprite(TEX.orb, 12, 12, 30, { add: true }), x: G.boss.x, y: G.boss.y, vx: Math.cos(a) * 120, vy: Math.sin(a) * 120, r: 4 });
+        }
+        Audio.sfx("eshot");
+      }, k * 300);
+    }
+  }
+  // Animation
+  let frame;
+  if (b.anim) {
+    b.anim.t += dt * 9;
+    const i = Math.floor(b.anim.t);
+    if (i >= b.anim.frames.length) b.anim = null;
+    else {
+      frame = b.anim.frames[i];
+      if (frame === 4 && !b.anim.fired) {
+        b.anim.fired = true;
+        for (let k = -1; k <= 1; k++) {
+          G.ebullets.push({ mesh: sprite(TEX.crescent, 16, 34, 30, { add: true }), x: b.x - 50, y: b.y + k * 50, vx: -190 - lvl * 20, vy: 0, r: 11, crescent: true, t: k });
+        }
+        Audio.sfx("laser");
+      }
+    }
+  }
+  if (frame === undefined) { b.ft += dt * 2.5; frame = [0, 7, 6, 7][Math.floor(b.ft) % 4]; }
+  setFrameTex(b.mesh, TEX["alien" + frame], 200, -1);
+  b.mesh.position.set(b.x, b.y, 12);
+  if (b.flash > 0) { b.flash -= dt; b.mesh.material.color.setRGB(1, 0.5, 0.7); } else b.mesh.material.color.setRGB(1, 1, 1);
+  if (player.alive && dist(b, player) < b.r + 10) { if (player.giant > 0) damageBoss(1); else hurtPlayer(); }
+  if (Math.random() < 0.3) particles.spawn(b.x + rand(-30, 30), b.y + rand(-80, 80), rand(-20, 20), rand(10, 40), 0.8, pick(PAL.cyan), 4);
+}
+
+/* =====================================================================
+   Fireworks (stage clear celebration)
+   ===================================================================== */
+const Fireworks = {
+  active: false, t: 0, rockets: [], next: 0,
+  start(duration = 9) { this.active = true; this.t = 0; this.dur = duration; this.next = 0; },
+  stop() { this.active = false; this.rockets.forEach((r) => unsprite(r.mesh)); this.rockets = []; },
+  update(dt) {
+    if (!this.active) return;
+    this.t += dt; this.next -= dt;
+    if (this.next <= 0 && this.t < this.dur) {
+      this.next = rand(0.12, 0.32);
+      const col = pick(PAL.fireworks);
+      const m = sprite(TEX.glow, 10, 10, 50, { add: true, color: col });
+      this.rockets.push({ mesh: m, x: rand(60, W - 60), y: -10, vy: rand(260, 340), vx: rand(-30, 30), fuse: rand(0.7, 1.15), col });
+      Audio.sfx("launch");
+    }
+    for (const r of this.rockets) {
+      r.fuse -= dt; r.vy -= 160 * dt;
+      r.x += r.vx * dt; r.y += r.vy * dt;
+      r.mesh.position.set(r.x, r.y, 50);
+      particles.spawn(r.x, r.y, rand(-10, 10), rand(-40, -10), 0.4, r.col, 3);
+      if (r.fuse <= 0) {
+        r.dead = true;
+        const n = 110, s = rand(120, 190);
+        const second = pick(PAL.fireworks);
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * TAU;
+          particles.spawn(r.x, r.y, Math.cos(a) * s * rand(0.85, 1.05), Math.sin(a) * s * rand(0.85, 1.05), rand(1, 1.5), i % 3 ? r.col : second, 9, 60, 1.1);
+        }
+        for (let i = 0; i < 20; i++) { const a = Math.random() * TAU; particles.spawn(r.x, r.y, Math.cos(a) * 60, Math.sin(a) * 60, 0.9, C("#ffffff"), 7, 40, 1); }
+        burst(r.x, r.y, 1, [C("#ffffff")], 0, 0.25, 60);
+        explode(r.x, r.y, rand(0.9, 1.5), "#" + r.col.getHexString());
+        Audio.sfx("pop");
+      }
+    }
+    cleanup(this.rockets);
+  },
+};
+
+/* =====================================================================
+   Flow: title, stages, clear, game over, ending
+   ===================================================================== */
+let titleDogs = [];
+function clearWorld() {
+  [G.enemies, G.bullets, G.ebullets, G.items, G.booms].forEach((l) => { l.forEach((o) => unsprite(o.mesh)); l.length = 0; });
+  if (G.boss) { unsprite(G.boss.mesh); G.boss = null; }
+  G.bg.forEach((l) => l.dispose()); G.bg = [];
+  if (G.terrain) { G.terrain.dispose(); G.terrain = null; }
+  titleDogs.forEach(unsprite); titleDogs = [];
+  Fireworks.stop();
+  particles.clear();
+  $("#boss-bar").hidden = true;
+}
+function enterTitle() {
+  clearWorld();
+  G.state = "title";
+  renderer.setClearColor(0x140a1e);
+  STAGES[0].build(G.bg);
+  player.mesh.visible = false; player.jet.visible = false; player.shieldMesh.visible = false;
+  player.options.forEach((o) => unsprite(o.mesh)); player.options = [];
+  const dog = sprite(TEX.dog_jump3, 80, 80, 20); dog.position.set(150, 170, 20);
+  const al = sprite(TEX.alien0, 60, 120, 10); al.position.set(510, 180, 10); al.scale.x *= -1;
+  titleDogs.push(dog, al);
+  $("#hud").hidden = true;
+  $("#hiscore").textContent = "Recorde: " + fmt(G.hiscore);
+  $("#btn-continue").hidden = !(G.saved && G.saved.stageIdx > 0);
+  if (G.saved && G.saved.stageIdx > 0) $("#btn-continue").textContent = "CONTINUAR FASE " + (G.saved.stageIdx + 1);
+  show("title");
+  if (Audio.ctx) Audio.play("title");
+}
+function newGame(stageIdx = 0) {
+  G.score = 0; G.lives = 3; G.words = 0; G.nextLife = 30000; G.bellBonus = 0;
+  startStage(stageIdx);
+}
+function startStage(idx) {
+  clearWorld();
+  G.stageIdx = idx; G.saved = { stageIdx: idx };
+  const st = STAGES[idx];
+  G.state = "play"; G.t = 0; G.waveIdx = 0; G.bossSpawned = false; G.clearTimer = 0; G.stageWords = [];
+  G.waves = {}; G.pendingCrates = 0; G.crateTimer = 0;
+  renderer.setClearColor(st.clear);
+  st.build(G.bg);
+  if (st.cave) G.terrain = new Terrain();
+  resetPlayer(true);
+  hideScreens();
+  $("#hud").hidden = false;
+  $("#btn-power").hidden = !isTouch;
+  $("#hud-stage").textContent = "FASE " + (idx + 1) + " · " + st.name.toUpperCase();
+  hud(); updatePowerBar();
+  Audio.play(st.music);
+  setTimeout(() => Narrator.say(st.intro, true), 400);
+}
+function stageClear() {
+  G.state = "clear";
+  player.mesh.visible = true;
+  Fireworks.start(10);
+  Audio.play("fanfare");
+  Narrator.say(G.stageIdx === STAGES.length - 1 ? "VITÓRIA! O Rei dos Gramáticos caiu! Fogos para o Pongo!" : "FASE CONCLUÍDA! Fogos para o Pongo!", true);
+  const last = G.stageIdx === STAGES.length - 1;
+  const bonus = G.stageWords.length * 200 + Math.max(0, G.lives) * 1000;
+  addScore(bonus);
+  setTimeout(() => {
+    if (G.state !== "clear") return;
+    if (last) {
+      $("#end-tally").innerHTML = tallyHTML([["Pontuação final", fmt(G.score)], ["Partículas resgatadas", G.words], ["Recorde", fmt(G.hiscore)]]);
+      show("end");
+      setTimeout(() => { if (G.state === "clear") Audio.play("ending"); }, 4500);
+      Fireworks.start(30);
+    } else {
+      $("#clear-title").textContent = "Fase " + (G.stageIdx + 1) + " concluída!";
+      $("#clear-tally").innerHTML = tallyHTML([["Partículas nesta fase", G.stageWords.length], ["Bônus de partículas", "+" + G.stageWords.length * 200], ["Bônus de vidas", "+" + Math.max(0, G.lives) * 1000], ["Pontuação", fmt(G.score)]]);
+      const counts = {};
+      G.stageWords.forEach((w) => (counts[w] = (counts[w] || 0) + 1));
+      $("#clear-words").innerHTML = Object.entries(counts).map(([w, n]) => "<span>" + w + (n > 1 ? " ×" + n : "") + "</span>").join("");
+      show("clear");
+    }
+  }, 1800);
+}
+function tallyHTML(rows) { return rows.map(([a, b]) => "<span>" + a + "</span><span>" + b + "</span>").join(""); }
+function gameOver() {
+  G.state = "over";
+  Audio.stop();
+  $("#over-tally").innerHTML = tallyHTML([["Pontuação", fmt(G.score)], ["Partículas", G.words], ["Fase", G.stageIdx + 1]]);
+  show("over");
+  Narrator.say("Fim de jogo... mas um bom piloto sempre tenta de novo!", true);
+}
+function pause(on) {
+  if (on) { G.state = "paused"; show("pause"); if (Audio.ctx) Audio.ctx.suspend(); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
+  else { G.state = "play"; hideScreens(); if (Audio.ctx) Audio.ctx.resume(); }
+}
+function toggleSound() {
+  Audio.setEnabled(!Audio.enabled);
+  const label = Audio.enabled ? "SOM: LIGADO" : "SOM: DESLIGADO";
+  $("#btn-sound").textContent = label; $("#btn-sound2").textContent = Audio.enabled ? "SOM" : "SEM SOM";
+  try { localStorage.setItem("pongo-sound", Audio.enabled ? "1" : "0"); } catch (e) { /* optional */ }
+}
+function toggleVoice() {
+  Narrator.voice = !Narrator.voice;
+  if (!Narrator.voice && "speechSynthesis" in window) speechSynthesis.cancel();
+  $("#btn-voice").textContent = Narrator.voice ? "NARRAÇÃO: LIGADA" : "NARRAÇÃO: DESLIGADA";
+  try { localStorage.setItem("pongo-voice", Narrator.voice ? "1" : "0"); } catch (e) { /* optional */ }
+}
+
+/* ---------------- Stage timeline ---------------- */
+function updateStage(dt) {
+  const st = STAGES[G.stageIdx];
+  G.t += dt;
+  while (G.waveIdx < st.waves.length && st.waves[G.waveIdx][0] <= G.t) {
+    const [, type, arg] = st.waves[G.waveIdx++];
+    spawnWave(type, arg);
+  }
+  if (G.pendingCrates > 0 && G.terrain) {
+    G.crateTimer -= dt;
+    if (G.crateTimer <= 0) { G.crateTimer = 0.9; G.pendingCrates--; spawnCrate(W + 20, G.terrain.bounds(W - 8).floor); }
+  }
+  if (!G.bossSpawned && G.t > st.length && G.enemies.length === 0) {
+    if (G.terrain) G.terrain.active = false;
+    spawnBoss();
+  }
+  if (!G.bossSpawned && G.t > st.length + 12) { if (G.terrain) G.terrain.active = false; spawnBoss(); }
+  if (G.clearTimer > 0) {
+    G.clearTimer -= dt;
+    if (G.clearTimer <= 0) stageClear();
+  }
+}
+
+/* ---------------- Main loop ---------------- */
+let lastT = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  let dt = Math.min(0.05, (now - lastT) / 1000);
+  lastT = now;
+  if (G.state === "loading") return;
+  Narrator.update(dt);
+  if (G.state === "paused") { renderer.render(scene, camera); return; }
+  const scrollK = G.state === "play" ? 1 : 0.6;
+  G.bg.forEach((l) => l.update(dt, scrollK));
+  if (G.terrain && G.state === "play") G.terrain.update(dt, G.scroll);
+  if (G.state === "title") {
+    G.idleT += dt;
+    const [dog, al] = titleDogs;
+    if (dog) { setFrameTex(dog, TEX["dog_jump" + [2, 3, 4, 3][Math.floor(G.idleT * 7) % 4]], 84); dog.position.y = 170 + Math.sin(G.idleT * 2) * 8; }
+    if (al) { setFrameTex(al, TEX["alien" + [0, 7, 6, 7][Math.floor(G.idleT * 2.5) % 4]], 130, -1); al.position.y = 180 + Math.sin(G.idleT * 1.3) * 10; }
+    if (Math.random() < 0.6) particles.spawn(110, 160 + Math.sin(G.idleT * 2) * 8, rand(-140, -80), rand(-15, 15), 0.3, pick(PAL.flame), 7);
+  }
+  if (G.state === "play") {
+    updateStage(dt);
+    updatePlayer(dt);
+    updateEnemies(dt);
+    updateBoss(dt);
+    updateBullets(dt);
+    updateItems(dt);
+  }
+  if (G.state === "clear") {
+    // Pongo does a victory loop while the fireworks play.
+    G.idleT += dt;
+    player.x += (W / 2 - 60 - player.x) * dt * 1.5; player.y += (H / 2 - 10 - player.y) * dt * 1.5;
+    setFrameTex(player.mesh, TEX["dog_jump" + [2, 3, 4, 3][Math.floor(G.idleT * 8) % 4]], 60);
+    player.mesh.position.set(player.x, player.y + Math.sin(G.idleT * 3) * 8, 20);
+    player.jet.position.set(player.x - 30, player.y - 4 + Math.sin(G.idleT * 3) * 8, 19);
+    player.jet.visible = true; player.shieldMesh.visible = false;
+    player.options.forEach((o) => (o.mesh.visible = false));
+    updateItems(dt);
+    G.enemies.forEach((e) => (e.dead = "gone")); cleanup(G.enemies);
+    G.ebullets.forEach((e) => (e.dead = true)); cleanup(G.ebullets);
+    G.bullets.forEach((e) => (e.dead = true)); cleanup(G.bullets);
+  }
+  Fireworks.update(dt);
+  updateBooms(dt);
+  particles.update(dt);
+  // Screen shake and flash
+  if (G.shake > 0) { G.shake -= dt; camera.position.x = rand(-3, 3) * G.shake * 4; camera.position.y = rand(-3, 3) * G.shake * 4; }
+  else { camera.position.x = 0; camera.position.y = 0; }
+  if (G.flash > 0) { G.flash -= dt; renderer.setClearColor(0xffffff); } else if (G.state === "play" || G.state === "clear") renderer.setClearColor(STAGES[G.stageIdx].clear);
+  renderer.render(scene, camera);
+}
+
+/* ---------------- Boot ---------------- */
+function bindUI() {
+  const unlock = () => { Audio.init(); };
+  $("#btn-start").onclick = () => { unlock(); show("story"); Audio.play("title"); };
+  $("#btn-continue").onclick = () => { unlock(); newGame(G.saved.stageIdx); };
+  $("#btn-go").onclick = () => { unlock(); newGame(0); };
+  $("#btn-sound").onclick = () => { unlock(); toggleSound(); };
+  $("#btn-sound2").onclick = toggleSound;
+  $("#btn-voice").onclick = toggleVoice;
+  $("#btn-resume").onclick = () => pause(false);
+  $("#btn-quit").onclick = () => { if (Audio.ctx) Audio.ctx.resume(); enterTitle(); };
+  $("#btn-next").onclick = () => { Fireworks.stop(); startStage(G.stageIdx + 1); };
+  $("#btn-retry").onclick = () => { G.score = 0; G.lives = 3; G.nextLife = 30000; startStage(G.stageIdx); };
+  $("#btn-menu").onclick = enterTitle;
+  $("#btn-again").onclick = () => { G.saved = null; enterTitle(); };
+  $("#btn-pause").onclick = () => { if (G.state === "play") pause(true); };
+  const pw = $("#btn-power");
+  pw.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); activatePower(); });
+  addEventListener("keydown", (e) => {
+    if (e.code !== "Enter") return;
+    const vis = screens.find((s) => !$("#scr-" + s).hidden);
+    if (!vis) return;
+    const active = document.activeElement;
+    if (active && active.classList.contains("btn")) return; // native button handles Enter
+    $("#scr-" + vis).querySelector(".btn")?.click();
+  });
+}
+
+async function boot(saved) {
+  try { G.hiscore = parseInt(localStorage.getItem("pongo-hiscore") || "0", 10) || 0; } catch (e) { G.hiscore = 0; }
+  try {
+    if (localStorage.getItem("pongo-sound") === "0") { Audio.enabled = false; $("#btn-sound").textContent = "SOM: DESLIGADO"; }
+    if (localStorage.getItem("pongo-voice") === "0") { Narrator.voice = false; $("#btn-voice").textContent = "NARRAÇÃO: DESLIGADA"; }
+  } catch (e) { /* optional */ }
+  if (saved && Number.isInteger(saved.stageIdx)) G.saved = saved;
+  buildPowerBar();
+  bindUI();
+  Narrator.init();
+  buildTracks();
+  try {
+    if (document.fonts && document.fonts.load) await Promise.race([document.fonts.load("16px 'Kenney Mini Square'"), new Promise((r) => setTimeout(r, 1500))]);
+    await Promise.all([...PIXEL.map((n) => loadTex(n, true)), ...SMOOTH.map((n) => loadTex(n, false)), loadImg("pirate_strip")]);
+  } catch (err) {
+    $("#scr-loading .loading").textContent = err.message + ". Recarregue a página.";
+    return;
+  }
+  makeProcTextures();
+  particles = new Particles(4000);
+  resize();
+  createPlayer();
+  enterTitle();
+  requestAnimationFrame(frame);
+}
+window.claude?.hot?.snapshot?.(() => ({ stageIdx: G.saved ? G.saved.stageIdx : 0 }));
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+// Small hook for automated checks.
+window.__pongo = { G, player, startStage, spawnBoss, damageBoss, Fireworks, stageClear };
+</script>
+</body>
+</html>
