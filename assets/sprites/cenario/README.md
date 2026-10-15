@@ -22,5 +22,6 @@ Os usos de cada cor abaixo foram estimados a olho.
 
 | Arquivo | Tamanho | Cores | Descrição |
 |---------|---------|-------|-----------|
-| `reflexo_agua.png` | 170 × 10 | `#afc6d9`, `#ffffff` | Linhas claras de brilho/reflexo na superfície da água. |
+| `reflexo_agua/` | 170 × 10 × 4 frames | 2–3 | Brilho animado na superfície da água (veja o README da pasta). |
+| `ceu_mar_fundo.png` | 384 × 128 | 4 | Fundo de céu e mar: céu areia `#ddc6a1` (y 0–41), faixa de transição com listras `#d1aa9d`/`#ddc6a1` (y 42–47), céu rosado `#d1aa9d` (y 48–85), linha do horizonte branca (y 86) e mar `#92a9ce` (y 87–127). |
 | `palmeira_fundo/` | 51 × 53 × 4 frames | 6 | Palmeira de fundo animada (veja o README da pasta). |
