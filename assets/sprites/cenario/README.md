@@ -17,3 +17,10 @@ Os usos de cada cor abaixo foram estimados a olho.
   linha, cantos internos e variações com grama pendurada e pedras no miolo.
 - Paleta: escuro `#33323d` (interior), cinzas/lilás `#5a4e73` `#716b8e` `#9197b0`
   `#a9b6c3` (pedras), verdes `#335f61` `#407769` `#639d6d` `#92c191` (grama).
+
+## Outros
+
+| Arquivo | Tamanho | Cores | Descrição |
+|---------|---------|-------|-----------|
+| `reflexo_agua.png` | 170 × 10 | `#afc6d9`, `#ffffff` | Linhas claras de brilho/reflexo na superfície da água. |
+| `palmeira_fundo/` | 51 × 53 × 4 frames | 6 | Palmeira de fundo animada (veja o README da pasta). |
