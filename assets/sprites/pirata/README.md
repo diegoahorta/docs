@@ -17,7 +17,7 @@ tapa-olho, nariz/barba avermelhados, camisa laranja com cinto amarelo e calça r
 Os pés ficam fixos e o corpo "afunda" 3 px até o frame 3 e volta — o frame 5 é igual
 ao 1 em altura, então o loop fecha sem salto.
 
-## Paleta (11 cores opacas)
+## Paleta (10 cores opacas; usos aproximados)
 
 | Hex | Uso |
 |-----|-----|
