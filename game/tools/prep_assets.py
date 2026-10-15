@@ -72,7 +72,6 @@ copies = {
     "cenario/caixa_madeira.png": "crate.png",
     "cenario/palmeira_fundo/spritesheet.png": "palm_strip.png",
     "cenario/reflexo_agua/spritesheet.png": "water_strip.png",
-    "pirata/spritesheet.png": "pirate_strip.png",
     "efeitos/explosao_branca/spritesheet.png": "boom_strip.png",
     "ui/botao_normal.png": "btn.png",
     "ui/botao_destaque.png": "btn_hover.png",
@@ -80,6 +79,9 @@ copies = {
 for src, dst in copies.items():
     shutil.copy(sp / src, OUT / dst)
 shutil.copy(SRC / "fonts/Kenney_Mini_Square.ttf", OUT / "kenney_mini_square.ttf")
+# Rostos do Pongo (narrador), recortados da folha de expressões.
+for f in sorted((sp / "cachorro/expressoes").glob("*.png")):
+    shutil.copy(f, OUT / ("face_" + f.name))
 print("ok", len(list(OUT.iterdir())), "arquivos")
 
 # ---------------------------------------------------------------------------
@@ -133,7 +135,8 @@ def glyph_orb(char, romaji, out_name, sphere):
     d.text((64, cy + (27 if sphere else 22)), romaji, font=fl, anchor="mm", fill=(90, 40, 0, 255))
     img.save(OUT / out_name, optimize=True)
 
-for ch_, ro, name in [("は", "wa", "jp_wa"), ("を", "o", "jp_wo"), ("の", "no", "jp_no"), ("か", "ka", "jp_ka")]:
+for ch_, ro, name in [("は", "wa", "jp_wa"), ("を", "o", "jp_wo"), ("の", "no", "jp_no"), ("か", "ka", "jp_ka"),
+                      ("が", "ga", "jp_ga"), ("に", "ni", "jp_ni"), ("で", "de", "jp_de"), ("も", "mo", "jp_mo"), ("と", "to", "jp_to")]:
     glyph_orb(ch_, ro, name + ".png", False)
 for ch_, ro, name in [("人", "jin", "jp_jin"), ("語", "go", "jp_go")]:
     glyph_orb(ch_, ro, name + ".png", True)

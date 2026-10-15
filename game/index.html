@@ -98,7 +98,9 @@ body {
   display: flex; align-items: flex-end; gap: .8cqw; flex-direction: row-reverse;
   max-width: 46cqw;
 }
-.narrator canvas { width: 6cqw; height: 7cqw; image-rendering: pixelated; background: #1a0d24cc; border: .22cqw solid #fff; border-radius: .4cqw; flex: none; }
+.narrator img { width: 7.4cqw; height: 7.4cqw; object-fit: cover; background: var(--night); border: .3cqw solid #fff; border-radius: .9cqw; flex: none; box-shadow: 0 .4cqw 0 #0008; transform-origin: 50% 100%; }
+.narrator img.talk { animation: yap .18s ease-in-out 6 alternate; }
+@keyframes yap { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-.5cqw) rotate(2deg); } }
 .bubble {
   font-family: var(--body); font-weight: 600; font-size: 1.55cqw; line-height: 1.25;
   background: #fff; color: #1a0d24; padding: .7cqw 1cqw; border-radius: .6cqw .6cqw 0 .6cqw;
@@ -181,6 +183,7 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .bubble, .lesson { transition: none; }
+  .narrator img.talk { animation: none; }
 }
 </style>
 </head>
@@ -191,7 +194,7 @@ body {
       <div class="lives" id="hud-lives">PONGO x3</div>
       <div class="stage-name" id="hud-stage">FASE 1</div>
       <div class="score" id="hud-score">000000</div>
-      <div class="parts">PARTÍCULAS <b id="hud-parts">0</b> NIHONGO <b class="y" id="hud-jp">0</b></div>
+      <div class="parts">PARTÍCULAS <b class="y" id="hud-jp">0</b></div>
     </div>
     <div class="boss-bar" id="boss-bar" hidden><i id="boss-fill"></i><span id="boss-name">CHEFE</span></div>
     <div class="lesson hide" id="lesson" role="status" aria-live="polite">
@@ -202,7 +205,7 @@ body {
     </div>
     <div class="power" id="power"></div>
     <div class="narrator">
-      <canvas id="pirate" width="24" height="28" aria-hidden="true"></canvas>
+      <img id="face" alt="Rosto do Pongo" width="96" height="96">
       <div class="bubble hide" id="bubble" role="status" aria-live="polite"></div>
     </div>
     <button class="touch-btn" id="btn-power" type="button" hidden>PODER</button>
@@ -244,8 +247,7 @@ body {
     <div class="panel">
       <h2>Ano 3025</h2>
       <div class="story">
-        <p>Os <em>Gramáticos</em>, alienígenas de sombra que só falam em regras, invadiram a galáxia e roubaram as <em>Partículas</em>: o QUE, o SE, o DE, o EM e todas as palavrinhas que ligam uma frase à outra.</p>
-        <p>Da Academia U.A. levaram ainda as partículas japonesas <em>は, を, の, か</em> e as esferas <em>人</em> e <em>語</em>, que transformam o nome de um país em nacionalidade e idioma. Elas agora brilham em amarelo pelo espaço.</p>
+        <p>Os <em>Gramáticos</em>, alienígenas de sombra que só falam em regras, invadiram a galáxia e roubaram as <em>partículas japonesas</em> da Academia U.A.: は, を, の, か, が, に, で, も, と, além das esferas <em>人</em> e <em>語</em>, que transformam o nome de um país em nacionalidade e idioma.</p>
         <p>Sem elas, ninguém no universo consegue terminar uma frase. Os planetas ficaram em silêncio.</p>
         <p>Só um piloto aceitou a missão: <strong>Pongo</strong>, um jovem cachorro da Frota Latido, de roupinha estampada e coragem de sobra. Três setores separam Pongo do Rei dos Gramáticos.</p>
       </div>
@@ -339,7 +341,9 @@ const PIXEL = ["ship", "rock_big", "rock_small", "fire", "bg_sea", "clouds", "cl
   "tile_wine", "crate", "palm_strip", "water_strip", "boom_strip"];
 const SMOOTH = ["bg_space", "stars"];
 for (let i = 0; i < 8; i++) SMOOTH.push("dog_jump" + i, "dog_walk" + i, "alien" + i);
-SMOOTH.push("jp_wa", "jp_wo", "jp_no", "jp_ka", "jp_jin", "jp_go");
+SMOOTH.push("jp_wa", "jp_wo", "jp_no", "jp_ka", "jp_ga", "jp_ni", "jp_de", "jp_mo", "jp_to", "jp_jin", "jp_go");
+const FACES = ["feliz", "piscando", "empolgado", "curioso", "surpreso", "sonolento", "carinhoso", "brincalhao",
+  "atento", "bravo", "assustado", "pensativo", "triste", "com_osso", "barriga", "tchau"];
 const TEX = {};
 const IMG = {};
 
@@ -417,34 +421,22 @@ function makeProcTextures() {
     px(8, 19, 4, 3, "#33323d"); px(9, 19, 2, 2, "#b8b8b8");
   }, true);
 }
-const WORDS = ["QUE", "SE", "DE", "EM", "COM", "POR", "NÃO", "JÁ", "OU", "MAS", "E", "A", "O", "LHE", "PRA"];
 /* Japanese particles and suffixes from the lesson "Missão Internacional U.A.". */
 const JP = {
   wa: { ch: "は", ro: "wa", kind: "PARTÍCULA", info: "Marca o tema da frase.", ex: "お国はどこですか。", exRo: "Okuni wa doko desu ka", exPt: "De que país você é?", say: "Partícula wa! Marca o tema: okuni wa doko desu ka?" },
   wo: { ch: "を", ro: "o", kind: "PARTÍCULA", info: "Marca o objeto da ação.", ex: "日本語を話せますか。", exRo: "Nihongo o hanasemasu ka", exPt: "Você fala japonês?", say: "Partícula o! Marca o objeto: nihongo o hanasemasu ka?" },
   no: { ch: "の", ro: "no", kind: "PARTÍCULA", info: "Liga duas palavras: de onde, de quem.", ex: "ブラジルのポルトガル語", exRo: "Burajiru no porutogarugo", exPt: "Português do Brasil", say: "Partícula no! Burajiru no porutogarugo, português do Brasil!" },
   ka: { ch: "か", ro: "ka", kind: "PARTÍCULA", info: "No fim da frase, vira pergunta.", ex: "何人ですか。", exRo: "Nanijin desu ka", exPt: "Qual é a sua nacionalidade?", say: "Partícula ka! No fim da frase, vira pergunta!" },
+  ga: { ch: "が", ro: "ga", kind: "PARTÍCULA", info: "Marca o sujeito, quem faz ou sente.", ex: "日本語が分かります。", exRo: "Nihongo ga wakarimasu", exPt: "Eu entendo japonês.", say: "Partícula ga! Marca o sujeito: nihongo ga wakarimasu!" },
+  ni: { ch: "に", ro: "ni", kind: "PARTÍCULA", info: "Indica o destino, para onde.", ex: "日本に行きます。", exRo: "Nihon ni ikimasu", exPt: "Vou para o Japão.", say: "Partícula ni! Indica o destino: Nihon ni ikimasu!" },
+  de: { ch: "で", ro: "de", kind: "PARTÍCULA", info: "Indica o meio ou o lugar da ação.", ex: "日本語で話します。", exRo: "Nihongo de hanashimasu", exPt: "Falo em japonês.", say: "Partícula de! O meio da ação: nihongo de hanashimasu!" },
+  mo: { ch: "も", ro: "mo", kind: "PARTÍCULA", info: "Quer dizer \"também\".", ex: "私もブラジル人です。", exRo: "Watashi mo burajirujin desu", exPt: "Eu também sou brasileiro.", say: "Partícula mo! Quer dizer também!" },
+  to: { ch: "と", ro: "to", kind: "PARTÍCULA", info: "Liga nomes, como \"e\".", ex: "ブラジルと日本", exRo: "Burajiru to Nihon", exPt: "Brasil e Japão", say: "Partícula to! Burajiru to Nihon, Brasil e Japão!" },
   jin: { ch: "人", ro: "jin", kind: "ESFERA", sphere: true, info: "País + 人 = nacionalidade.", ex: "ブラジル人 · 日本人", exRo: "Burajirujin · Nihonjin", exPt: "Brasileiro · Japonês", say: "Esfera jin! País mais jin vira nacionalidade: burajirujin!" },
   go: { ch: "語", ro: "go", kind: "ESFERA", sphere: true, info: "País + 語 = idioma. Exceção: inglês é 英語 (eigo).", ex: "日本語 · イタリア語", exRo: "Nihongo · Itariago", exPt: "Japonês · Italiano", say: "Esfera go! País mais go vira idioma: nihongo!" },
 };
-const JP_PARTICLES = ["wa", "wo", "no", "ka"], JP_SPHERES = ["jin", "go"];
-const wordTex = {};
-function getWordTex(word) {
-  if (wordTex[word]) return wordTex[word];
-  const t = canvasTex(64, 64, (g) => {
-    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-    gr.addColorStop(0, "rgba(44,232,245,.95)"); gr.addColorStop(0.6, "rgba(44,232,245,.55)"); gr.addColorStop(1, "rgba(44,232,245,0)");
-    g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
-    g.fillStyle = "#1a0d24"; g.beginPath(); g.arc(32, 32, 19, 0, TAU); g.fill();
-    g.strokeStyle = "#ffffff"; g.lineWidth = 3; g.stroke();
-    g.fillStyle = "#ffffff";
-    g.font = (word.length > 2 ? 15 : 20) + "px 'Kenney Mini Square', monospace";
-    g.textAlign = "center"; g.textBaseline = "middle";
-    g.fillText(word, 32, 34);
-  });
-  wordTex[word] = t;
-  return t;
-}
+const JP_PARTICLES = ["wa", "wo", "no", "ka", "ga", "ni", "de", "mo", "to"], JP_SPHERES = ["jin", "go"];
+const JP_LESSON = ["wa", "wo", "no", "ka"]; // the four used in the lesson's sentences
 
 /* ---------------- Sprite helpers ---------------- */
 const QUAD = new THREE.PlaneGeometry(1, 1);
@@ -706,7 +698,6 @@ const Audio = {
         this.osc("sine", 90, t, 1, 0.8, d, { slideTo: 30 }); break;
       case "capsule": [72, 76, 79].forEach((n, i) => this.osc("square", this.freq(n), t + i * 0.05, 0.08, 0.08, d)); break;
       case "power": [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => this.osc("square", this.freq(n), t + i * 0.035, 0.1, 0.07, d)); break;
-      case "word": this.osc("sine", 1568, t, 0.25, 0.15, d); this.osc("sine", 2093, t + 0.06, 0.3, 0.12, d); break;
       case "jp": [76, 79, 81, 84, 88].forEach((n, i) => this.osc("sine", this.freq(n), t + i * 0.045, 0.3, 0.12, d)); this.osc("triangle", 2637, t + 0.2, 0.4, 0.05, d); break;
       case "sphere": [64, 69, 71, 76, 81, 83, 88].forEach((n, i) => this.osc("triangle", this.freq(n), t + i * 0.05, 0.45, 0.12, d)); this.noiseHit(t, 0.6, 0.08, d, "highpass", 8000); break;
       case "bell": this.osc("triangle", 1046, t, 0.4, 0.15, d); this.osc("sine", 2637, t, 0.25, 0.06, d); break;
@@ -768,15 +759,13 @@ function buildTracks() {
 }
 
 /* =====================================================================
-   Narrator (Capitão Caveirinha, live commentary)
+   Narrator: Pongo comments the run himself, with his expression faces
    ===================================================================== */
 const Narrator = {
-  voice: true, last: 0, hideTimer: null, frame: 0, ft: 0, talk: 0,
-  ctx: null, ptVoice: null,
+  voice: true, last: 0, hideTimer: null, moodTimer: null, ptVoice: null, img: null,
   init() {
-    const c = $("#pirate");
-    this.ctx = c.getContext("2d");
-    this.ctx.imageSmoothingEnabled = false;
+    this.img = $("#face");
+    this.face("feliz");
     if ("speechSynthesis" in window) {
       const pickVoice = () => {
         const vs = speechSynthesis.getVoices();
@@ -786,34 +775,32 @@ const Narrator = {
       speechSynthesis.onvoiceschanged = pickVoice;
     } else this.voice = false;
   },
-  say(text, priority = false) {
+  // Pongo's portrait: one of the expression faces.
+  face(mood) {
+    const im = IMG["face_" + mood];
+    if (im && this.img) { this.img.src = im.src; this.img.alt = "Pongo " + mood.replace("_", " "); }
+  },
+  say(text, priority = false, mood = "feliz") {
     const now = performance.now();
     if (!priority && now - this.last < 2600) return;
     this.last = now;
     const b = $("#bubble");
     b.textContent = text;
     b.classList.remove("hide");
-    this.talk = 1.6;
-    clearTimeout(this.hideTimer);
+    this.face(mood);
+    this.img.classList.remove("talk"); void this.img.offsetWidth; this.img.classList.add("talk");
+    clearTimeout(this.hideTimer); clearTimeout(this.moodTimer);
     this.hideTimer = setTimeout(() => b.classList.add("hide"), 2600);
+    this.moodTimer = setTimeout(() => { if (G.state === "play") this.face("feliz"); }, 3400);
     if (this.voice && Audio.enabled && "speechSynthesis" in window) {
       try {
         speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text.replace(/[!]+/g, "!"));
-        u.lang = "pt-BR"; u.rate = 1.15; u.pitch = 1.25; u.volume = 0.9;
+        u.lang = "pt-BR"; u.rate = 1.15; u.pitch = 1.35; u.volume = 0.9;
         if (this.ptVoice) u.voice = this.ptVoice;
         speechSynthesis.speak(u);
       } catch (e) { /* speech is optional */ }
     }
-  },
-  update(dt) {
-    if (!IMG.pirate_strip) return;
-    this.talk = Math.max(0, this.talk - dt);
-    this.ft += dt * (this.talk > 0 ? 14 : 7);
-    this.frame = Math.floor(this.ft) % 5;
-    const g = this.ctx;
-    g.clearRect(0, 0, 24, 28);
-    g.drawImage(IMG.pirate_strip, this.frame * 64 + 20, 4, 24, 28, 0, 0, 24, 28);
   },
 };
 
@@ -930,9 +917,9 @@ class Terrain {
    ===================================================================== */
 const STAGES = [
   {
-    name: "Cinturão das Vírgulas", music: "stage1", clear: 0x140a1e, length: 68,
+    name: "Odu Creative", music: "stage1", clear: 0x140a1e, length: 68,
     boss: { name: "SUJEITO OCULTO", hp: 140 },
-    intro: "Fase 1! Pongo entra no Cinturão das Vírgulas. Cuidado com os asteroides!",
+    intro: "Fase 1! Entrando na Odu Creative. Cuidado com os asteroides!", mood: "empolgado",
     build(bg) {
       bg.push(new Layer(TEX.bg_space, H, H / 2, 10, -60, { mirror: true }));
       bg.push(new Layer(TEX.stars, H, H / 2, 34, -55, { mirror: true }));
@@ -946,7 +933,7 @@ const STAGES = [
   {
     name: "Mar das Reticências", music: "stage2", clear: 0x92a9ce, length: 72,
     boss: { name: "CRASE INDEVIDA", hp: 210 },
-    intro: "Fase 2! Mar das Reticências... que vista linda! Mas os Gramáticos estão por toda parte!",
+    intro: "Fase 2! Mar das Reticências... que vista linda! Mas tem Gramático por toda parte!", mood: "curioso",
     build(bg) {
       bg.push(new Layer(TEX.bg_sea, H, H / 2, 4, -60));
       bg.push(new Layer(TEX.palm_strip, 54, 118 + 24, 9, -57, { aspect: 51 / 53, gap: 230, frames: { n: 4, fps: 5 } }));
@@ -964,7 +951,7 @@ const STAGES = [
   {
     name: "Caverna do Pleonasmo", music: "stage3", clear: 0x1b0f1c, length: 74, cave: true,
     boss: { name: "REI PLEONASMO", hp: 300 },
-    intro: "Fase 3! A Caverna do Pleonasmo! Não encoste nas paredes, Pongo!",
+    intro: "Fase 3! Caverna do Pleonasmo. Não posso encostar nas paredes!", mood: "atento",
     build(bg) {
       bg.push(new TiledPlane(TEX.tile_wine, 32, 20, -60));
     },
@@ -982,7 +969,7 @@ const STAGES = [
    ===================================================================== */
 const POWERS = ["VELOC", "MÍSSIL", "DUPLO", "LASER", "OPÇÃO", "ESCUDO"];
 const G = {
-  state: "loading", stageIdx: 0, t: 0, score: 0, hiscore: 0, lives: 3, words: 0, stageWords: [],
+  state: "loading", stageIdx: 0, t: 0, score: 0, hiscore: 0, lives: 3,
   jp: 0, jpSeen: {}, stageJp: [], allJp: {},
   nextLife: 30000, bg: [], terrain: null, waveIdx: 0, boss: null, bossSpawned: false,
   enemies: [], bullets: [], ebullets: [], items: [], booms: [], fireworks: null, clearTimer: 0,
@@ -1035,7 +1022,6 @@ function fmt(n) { return String(n).padStart(6, "0"); }
 function hud() {
   $("#hud-score").textContent = fmt(G.score);
   $("#hud-lives").textContent = "PONGO x" + Math.max(0, G.lives);
-  $("#hud-parts").textContent = G.words;
   $("#hud-jp").textContent = G.jp;
 }
 const powerEls = [];
@@ -1055,7 +1041,7 @@ function updatePowerBar() {
 }
 function addScore(n) {
   G.score += n;
-  if (G.score >= G.nextLife) { G.nextLife += 30000; G.lives++; Narrator.say("Vida extra! Mais um Pongo na reserva!", true); Audio.sfx("bellget"); }
+  if (G.score >= G.nextLife) { G.nextLife += 30000; G.lives++; Narrator.say("Vida extra! Mais um Pongo na reserva!", true, "carinhoso"); Audio.sfx("bellget"); }
   if (G.score > G.hiscore) { G.hiscore = G.score; try { localStorage.setItem("pongo-hiscore", String(G.hiscore)); } catch (e) { /* storage optional */ } }
   hud();
 }
@@ -1082,7 +1068,8 @@ function resetPlayer(full) {
 function activatePower() {
   const i = player.capsules - 1;
   if (i < 0 || !player.alive || powerMaxed(i)) return;
-  const lines = ["VELOCIDADE! Esse cachorro não para!", "MÍSSEIS armados!", "TIRO DUPLO!", "LASER! Que brilho, que brilho!", "OPÇÃO a bordo! Pongo tem companhia!", "ESCUDO ativado!"];
+  const lines = ["VELOCIDADE! Ninguém me alcança!", "MÍSSEIS armados!", "TIRO DUPLO!", "LASER! Que brilho, que brilho!", "OPÇÃO a bordo! Agora tenho companhia!", "ESCUDO ativado!"];
+  const moods = ["brincalhao", "atento", "piscando", "empolgado", "feliz", "piscando"];
   if (i === 0) player.speed++;
   if (i === 1) player.missile = true;
   if (i === 2) { player.double = true; player.laser = false; }
@@ -1092,7 +1079,7 @@ function activatePower() {
   player.options.forEach((o) => (o.mesh.rotation.z = -Math.PI / 2));
   player.capsules = 0;
   Audio.sfx("power");
-  Narrator.say(lines[i], true);
+  Narrator.say(lines[i], true, moods[i]);
   updatePowerBar();
 }
 function shootFrom(x, y) {
@@ -1116,7 +1103,7 @@ function updatePlayer(dt) {
     if (p.respawn <= 0) {
       if (G.lives < 0) { gameOver(); return; }
       resetPlayer(false);
-      if (G.lives === 0) Narrator.say("Última vida! Segura essa, Pongo!", true);
+      if (G.lives === 0) Narrator.say("Última vida... preciso tomar cuidado!", true, "assustado");
     }
     return;
   }
@@ -1199,7 +1186,7 @@ function hurtPlayer() {
   Audio.sfx("die");
   G.shake = 0.5;
   hud();
-  Narrator.say(pick(["Ai ai ai! Pongo foi atingido!", "Auuu! Essa doeu!", "Pongo caiu! Mas ainda não acabou!"]), true);
+  Narrator.say(pick(["Ai ai ai! Fui atingido!", "Auuu! Essa doeu!", "Caí! Mas ainda não acabou!"]), true, pick(["bravo", "assustado"]));
 }
 
 /* =====================================================================
@@ -1333,8 +1320,8 @@ function damageEnemy(e, dmg) {
   } else {
     explode(e.x, e.y, 0.9, "#2ce8f5");
     burst(e.x, e.y, 22, PAL.cyan, 150, 0.6, 5);
-    if (e.move === "shooter") { if (Math.random() < 0.5) spawnJP(e.x, e.y, pick(JP_SPHERES)); else spawnWord(e.x, e.y); }
-    else if (Math.random() < 0.36) { if (Math.random() < 0.5) spawnJP(e.x, e.y, pick(JP_PARTICLES)); else spawnWord(e.x, e.y); }
+    if (e.move === "shooter") spawnJP(e.x, e.y, Math.random() < 0.5 ? pick(JP_SPHERES) : pick(JP_PARTICLES));
+    else if (Math.random() < 0.36) spawnJP(e.x, e.y, pick(JP_PARTICLES));
   }
   Audio.sfx("boom");
 }
@@ -1342,10 +1329,6 @@ function damageEnemy(e, dmg) {
 /* ---------------- Items: capsules, stolen words, bells ---------------- */
 function spawnCapsule(x, y) {
   G.items.push({ kind: "capsule", mesh: sprite(TEX.capsule, 20, 15, 25), x, y, vx: -45, t: 0, r: 12 });
-}
-function spawnWord(x, y, vx = -40, vy = 0) {
-  const word = pick(WORDS);
-  G.items.push({ kind: "word", word, mesh: sprite(getWordTex(word), 30, 30, 26), x, y, vx, vy, t: 0, r: 14 });
 }
 function spawnJP(x, y, key, vx = -42, vy = 0) {
   const d = JP[key], size = d.sphere ? 64 : 46;
@@ -1355,7 +1338,7 @@ function spawnJP(x, y, key, vx = -42, vy = 0) {
 }
 // A row of glowing particles drifting in on a wave, like a bonus line.
 function spawnJPRow() {
-  const y0 = rand(90, H - 90), keys = [...JP_PARTICLES].sort(() => Math.random() - 0.5);
+  const y0 = rand(90, H - 90), keys = [...JP_PARTICLES].sort(() => Math.random() - 0.5).slice(0, 5);
   keys.forEach((k, i) => spawnJP(W + 30 + i * 46, y0 + Math.sin(i * 1.3) * 30, k, -70));
   if (Math.random() < 0.6) spawnJP(W + 30 + keys.length * 46 + 20, y0, pick(JP_SPHERES), -70);
 }
@@ -1392,18 +1375,13 @@ function updateItems(dt) {
   }
   cleanup(G.items);
 }
-let wordLineCd = 0;
 function collect(it) {
   it.dead = true;
   if (it.kind === "capsule") {
     player.capsules = (player.capsules % 6) + 1;
     Audio.sfx("capsule"); addScore(50); updatePowerBar();
     burst(it.x, it.y, 10, PAL.berry, 80, 0.4, 4);
-    if (player.capsules === 1) Narrator.say("Cápsula na pata! Aperte X para usar o poder!");
-  } else if (it.kind === "word") {
-    G.words++; G.stageWords.push(it.word); addScore(300); Audio.sfx("word");
-    burst(it.x, it.y, 16, PAL.cyan, 90, 0.5, 5);
-    if (performance.now() - wordLineCd > 7000) { wordLineCd = performance.now(); Narrator.say("Partícula resgatada: " + it.word + "!"); }
+    if (player.capsules === 1) Narrator.say("Cápsula na pata! Aperte X para usar o poder!", false, "curioso");
   } else if (it.kind === "jp") {
     const d = JP[it.key], first = !G.jpSeen[it.key];
     G.jpSeen[it.key] = true;
@@ -1413,20 +1391,20 @@ function collect(it) {
     burst(it.x, it.y, d.sphere ? 60 : 34, PAL.sun, d.sphere ? 200 : 140, 0.8, 7);
     explode(it.x, it.y, d.sphere ? 1.1 : 0.7, "#ffd23a");
     showLesson(it.key, first);
-    Narrator.say(d.say, first);
+    Narrator.say(d.say, first, d.sphere ? "empolgado" : first ? "curioso" : "pensativo");
   } else if (it.kind === "bell") {
     const b = BELL_COLORS[it.ci];
     Audio.sfx("bellget");
     burst(it.x, it.y, 30, [C(b.c), C("#ffffff")], 160, 0.6, 6);
-    if (it.ci === 0) { G.bellBonus = (G.bellBonus || 0) + 1; addScore(500 * G.bellBonus); Narrator.say("Sino dourado! " + 500 * G.bellBonus + " pontos!", true); }
+    if (it.ci === 0) { G.bellBonus = (G.bellBonus || 0) + 1; addScore(500 * G.bellBonus); Narrator.say("Sino dourado! " + 500 * G.bellBonus + " pontos!", true, "com_osso"); }
     if (it.ci === 1) {
-      Narrator.say("Sino azul! KABUM geral!", true);
+      Narrator.say("Sino azul! KABUM geral!", true, "bravo");
       G.flash = 0.5; G.shake = 0.4; Audio.sfx("bigboom");
       for (const e of G.enemies) damageEnemy(e, 30);
       if (G.boss) damageBoss(20);
       G.ebullets.forEach((b2) => (b2.dead = true));
     }
-    if (it.ci === 2) { player.giant = 7; player.inv = 0; Narrator.say("Sino verde! PONGO GIGANTE!", true); }
+    if (it.ci === 2) { player.giant = 7; player.inv = 0; Narrator.say("Sino verde! PONGO GIGANTE!", true, "empolgado"); }
   }
 }
 
@@ -1532,7 +1510,7 @@ function spawnBoss() {
   $("#boss-fill").style.transform = "scaleX(1)";
   Audio.sfx("warn");
   Audio.play("boss");
-  Narrator.say("Atenção! Chegou o Gramático chefe: " + st.boss.name + "!", true);
+  Narrator.say("Atenção! Chegou o Gramático chefe: " + st.boss.name + "!", true, "surpreso");
 }
 function damageBoss(d) {
   const b = G.boss;
@@ -1544,7 +1522,7 @@ function damageBoss(d) {
     b.alive = false; b.dying = 2.4;
     addScore(5000 * (G.stageIdx + 1));
     G.ebullets.forEach((e) => (e.dead = true));
-    Narrator.say(STAGES[G.stageIdx].boss.name + " derrotado! As partículas estão livres!", true);
+    Narrator.say(STAGES[G.stageIdx].boss.name + " derrotado! As partículas estão livres!", true, "feliz");
     Audio.stop();
   }
 }
@@ -1564,7 +1542,6 @@ function updateBoss(dt) {
       explode(b.x, b.y, 3, "#ffffff");
       burst(b.x, b.y, 160, PAL.fireworks, 260, 1.2, 7);
       Audio.sfx("bigboom");
-      for (let i = 0; i < 4 + lvl; i++) spawnWord(b.x, b.y, rand(-160, -40), rand(-120, 120));
       JP_PARTICLES.forEach((k) => spawnJP(b.x, b.y, k, rand(-170, -50), rand(-130, 130)));
       JP_SPHERES.forEach((k) => spawnJP(b.x, b.y, k, rand(-120, -40), rand(-90, 90)));
       unsprite(b.mesh); G.boss = null; $("#boss-bar").hidden = true;
@@ -1694,7 +1671,7 @@ function enterTitle() {
   if (Audio.ctx) Audio.play("title");
 }
 function newGame(stageIdx = 0) {
-  G.score = 0; G.lives = 3; G.words = 0; G.nextLife = 30000; G.bellBonus = 0;
+  G.score = 0; G.lives = 3; G.nextLife = 30000; G.bellBonus = 0;
   G.jp = 0; G.jpSeen = {}; G.allJp = {};
   startStage(stageIdx);
 }
@@ -1703,7 +1680,7 @@ function startStage(idx) {
   G.stageIdx = idx; G.saved = { stageIdx: idx };
   const st = STAGES[idx];
   st.waves.sort((a, b) => a[0] - b[0]);
-  G.state = "play"; G.t = 0; G.waveIdx = 0; G.bossSpawned = false; G.clearTimer = 0; G.stageWords = []; G.stageJp = [];
+  G.state = "play"; G.t = 0; G.waveIdx = 0; G.bossSpawned = false; G.clearTimer = 0; G.stageJp = [];
   $("#lesson").classList.add("hide");
   G.waves = {}; G.pendingCrates = 0; G.crateTimer = 0;
   renderer.setClearColor(st.clear);
@@ -1716,33 +1693,32 @@ function startStage(idx) {
   $("#hud-stage").textContent = "FASE " + (idx + 1) + " · " + st.name.toUpperCase();
   hud(); updatePowerBar();
   Audio.play(st.music);
-  setTimeout(() => Narrator.say(st.intro, true), 400);
+  setTimeout(() => Narrator.say(st.intro, true, st.mood), 400);
 }
 function stageClear() {
   G.state = "clear";
   player.mesh.visible = true;
   Fireworks.start(10);
   Audio.play("fanfare");
-  Narrator.say(G.stageIdx === STAGES.length - 1 ? "VITÓRIA! O Rei dos Gramáticos caiu! Fogos para o Pongo!" : "FASE CONCLUÍDA! Fogos para o Pongo!", true);
+  Narrator.say(G.stageIdx === STAGES.length - 1 ? "VITÓRIA! O Rei dos Gramáticos caiu! Fogos para mim!" : "FASE CONCLUÍDA! Hora dos fogos!", true, "barriga");
   const last = G.stageIdx === STAGES.length - 1;
-  const bonus = G.stageWords.length * 200 + G.stageJp.length * 300 + Math.max(0, G.lives) * 1000;
+  const bonus = G.stageJp.length * 300 + Math.max(0, G.lives) * 1000;
   addScore(bonus);
   setTimeout(() => {
     if (G.state !== "clear") return;
     if (last) {
-      $("#end-tally").innerHTML = tallyHTML([["Pontuação final", fmt(G.score)], ["Partículas resgatadas", G.words], ["Partículas japonesas", G.jp], ["Recorde", fmt(G.hiscore)]]);
+      $("#end-tally").innerHTML = tallyHTML([["Pontuação final", fmt(G.score)], ["Partículas resgatadas", G.jp], ["Recorde", fmt(G.hiscore)]]);
       $("#end-words").innerHTML = jpChips(G.allJp);
       show("end");
+      setTimeout(() => Narrator.face("tchau"), 3000);
       setTimeout(() => { if (G.state === "clear") Audio.play("ending"); }, 4500);
       Fireworks.start(30);
     } else {
       $("#clear-title").textContent = "Fase " + (G.stageIdx + 1) + " concluída!";
-      $("#clear-tally").innerHTML = tallyHTML([["Partículas nesta fase", G.stageWords.length], ["Partículas japonesas", G.stageJp.length], ["Bônus de partículas", "+" + (G.stageWords.length * 200 + G.stageJp.length * 300)], ["Bônus de vidas", "+" + Math.max(0, G.lives) * 1000], ["Pontuação", fmt(G.score)]]);
-      const counts = {};
-      G.stageWords.forEach((w) => (counts[w] = (counts[w] || 0) + 1));
+      $("#clear-tally").innerHTML = tallyHTML([["Partículas nesta fase", G.stageJp.length], ["Bônus de partículas", "+" + G.stageJp.length * 300], ["Bônus de vidas", "+" + Math.max(0, G.lives) * 1000], ["Pontuação", fmt(G.score)]]);
       const jc = {};
       G.stageJp.forEach((k) => (jc[k] = (jc[k] || 0) + 1));
-      $("#clear-words").innerHTML = jpChips(jc) + Object.entries(counts).map(([w, n]) => "<span>" + w + (n > 1 ? " ×" + n : "") + "</span>").join("");
+      $("#clear-words").innerHTML = jpChips(jc);
       show("clear");
     }
   }, 1800);
@@ -1751,13 +1727,13 @@ function tallyHTML(rows) { return rows.map(([a, b]) => "<span>" + a + "</span><s
 function gameOver() {
   G.state = "over";
   Audio.stop();
-  $("#over-tally").innerHTML = tallyHTML([["Pontuação", fmt(G.score)], ["Partículas", G.words], ["Partículas japonesas", G.jp], ["Fase", G.stageIdx + 1]]);
+  $("#over-tally").innerHTML = tallyHTML([["Pontuação", fmt(G.score)], ["Partículas", G.jp], ["Fase", G.stageIdx + 1]]);
   show("over");
-  Narrator.say("Fim de jogo... mas um bom piloto sempre tenta de novo!", true);
+  Narrator.say("Fim de jogo... mas um bom piloto sempre tenta de novo!", true, "triste");
 }
 function pause(on) {
-  if (on) { G.state = "paused"; show("pause"); if (Audio.ctx) Audio.ctx.suspend(); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
-  else { G.state = "play"; hideScreens(); if (Audio.ctx) Audio.ctx.resume(); }
+  if (on) { G.state = "paused"; show("pause"); Narrator.face("sonolento"); if (Audio.ctx) Audio.ctx.suspend(); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
+  else { G.state = "play"; hideScreens(); Narrator.face("feliz"); if (Audio.ctx) Audio.ctx.resume(); }
 }
 function toggleSound() {
   Audio.setEnabled(!Audio.enabled);
@@ -1802,7 +1778,6 @@ function frame(now) {
   let dt = Math.min(0.05, (now - lastT) / 1000);
   lastT = now;
   if (G.state === "loading") return;
-  Narrator.update(dt);
   if (G.state === "paused") { renderer.render(scene, camera); return; }
   const scrollK = G.state === "play" ? 1 : 0.6;
   G.bg.forEach((l) => l.update(dt, scrollK));
@@ -1883,16 +1858,16 @@ async function boot(saved) {
   if (saved && Number.isInteger(saved.stageIdx)) G.saved = saved;
   buildPowerBar();
   bindUI();
-  Narrator.init();
   buildTracks();
   try {
     if (document.fonts && document.fonts.load) await Promise.race([document.fonts.load("16px 'Kenney Mini Square'"), new Promise((r) => setTimeout(r, 1500))]);
-    await Promise.all([...PIXEL.map((n) => loadTex(n, true)), ...SMOOTH.map((n) => loadTex(n, false)), loadImg("pirate_strip")]);
+    await Promise.all([...PIXEL.map((n) => loadTex(n, true)), ...SMOOTH.map((n) => loadTex(n, false)), ...FACES.map((n) => loadImg("face_" + n))]);
   } catch (err) {
     $("#scr-loading .loading").textContent = err.message + ". Recarregue a página.";
     return;
   }
   makeProcTextures();
+  Narrator.init();
   particles = new Particles(4000);
   resize();
   createPlayer();
