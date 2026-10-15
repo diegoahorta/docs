@@ -32,6 +32,13 @@ Pongo, um jovem cachorro piloto da Frota Latido, atravessa três setores para re
   VELOC, MÍSSIL, DUPLO, LASER, OPÇÃO (mini-naves que seguem Pongo) e ESCUDO.
 - **Sinos:** atire para trocar a cor. Dourado dá pontos, azul explode a tela, verde deixa o Pongo gigante.
 - **Partículas roubadas:** caem dos Gramáticos e dos chefes; contam pontos e aparecem no placar da fase.
+- **Partículas japonesas (aula "Missão Internacional U.A."):** orbes amarelos brilhantes com
+  は (wa), を (o), の (no) e か (ka), e esferas maiores com 人 (jin, nacionalidade) e 語 (go, idioma).
+  Chegam em fileiras, caem dos Gramáticos e saem dos chefes derrotados. Ao pegar uma, aparece um
+  cartão com a função e um exemplo da aula (お国はどこですか。, 日本語を話せますか。,
+  ブラジルのポルトガル語, 何人ですか。, ブラジル人, 日本語) e o narrador lê em voz alta.
+  Os orbes são PNGs gerados por `tools/prep_assets.py` com a fonte IPAGothic, então aparecem mesmo
+  em aparelhos sem fonte japonesa.
 - **Narrador ao vivo:** o pirata Capitão Caveirinha comenta a partida (balão de texto e voz do
   navegador em pt-BR, que pode ser desligada).
 - **Trilha sci-fi:** sequenciador próprio (baixo, arpejos com eco, pad, bateria e melodia) com

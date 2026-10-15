@@ -81,3 +81,60 @@ for src, dst in copies.items():
     shutil.copy(sp / src, OUT / dst)
 shutil.copy(SRC / "fonts/Kenney_Mini_Square.ttf", OUT / "kenney_mini_square.ttf")
 print("ok", len(list(OUT.iterdir())), "arquivos")
+
+# ---------------------------------------------------------------------------
+# Orbes (partículas は を の か) e esferas (sufixos 人 語) amarelos e brilhantes,
+# do conteúdo da aula "Missão Internacional U.A.". Pré-renderizados para não
+# depender de fonte japonesa no aparelho de quem joga.
+from PIL import ImageDraw, ImageFilter, ImageFont
+
+JP_FONT = "/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf"
+LAT_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+
+def radial(size, cx, cy, r, stops):
+    """Gradiente radial RGBA. stops: [(t, (r,g,b,a)), ...] com t de 0 a 1."""
+    yy, xx = np.mgrid[0:size, 0:size]
+    t = np.clip(np.hypot(xx - cx, yy - cy) / r, 0, 1)
+    out = np.zeros((size, size, 4))
+    for (t0, c0), (t1, c1) in zip(stops, stops[1:]):
+        m = (t >= t0) & (t <= t1)
+        k = ((t - t0) / max(t1 - t0, 1e-6))[m][:, None]
+        out[m] = np.array(c0) * (1 - k) + np.array(c1) * k
+    return Image.fromarray(out.clip(0, 255).astype(np.uint8), "RGBA")
+
+def glyph_orb(char, romaji, out_name, sphere):
+    S = 128
+    img = radial(S, 64, 64, 64, [(0, (255, 214, 60, 230)), (0.45, (255, 190, 30, 140)), (1, (255, 170, 0, 0))])
+    r = 40 if sphere else 32
+    if sphere:
+        body = radial(S, 52, 50, r * 1.5, [(0, (255, 255, 225, 255)), (0.35, (255, 226, 80, 255)), (0.8, (240, 160, 10, 255)), (1, (170, 90, 0, 255))])
+    else:
+        body = radial(S, 64, 64, r, [(0, (255, 250, 200, 255)), (0.7, (255, 214, 50, 255)), (1, (235, 150, 10, 255))])
+    mask = Image.new("L", (S, S), 0)
+    ImageDraw.Draw(mask).ellipse((64 - r, 64 - r, 64 + r, 64 + r), fill=255)
+    img.paste(body, (0, 0), mask)
+    d = ImageDraw.Draw(img)
+    d.ellipse((64 - r, 64 - r, 64 + r, 64 + r), outline=(255, 255, 230, 255), width=3)
+    if sphere:
+        # brilho especular e anel orbital
+        hl = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        ImageDraw.Draw(hl).ellipse((40, 32, 66, 48), fill=(255, 255, 255, 170))
+        img.alpha_composite(hl.filter(ImageFilter.GaussianBlur(3)))
+        ring = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        ImageDraw.Draw(ring).ellipse((10, 50, 118, 78), outline=(255, 245, 170, 220), width=3)
+        ring_mask = Image.new("L", (S, S), 255)
+        ImageDraw.Draw(ring_mask).rectangle((0, 0, S, 64), fill=0)  # só a metade da frente do anel
+        img = Image.alpha_composite(img, Image.composite(ring, Image.new("RGBA", (S, S)), ring_mask))
+        d = ImageDraw.Draw(img)
+    f = ImageFont.truetype(JP_FONT, 40 if sphere else 34)
+    cy = 60 if sphere else 58
+    d.text((64, cy), char, font=f, anchor="mm", fill=(70, 30, 0, 255), stroke_width=2, stroke_fill=(255, 250, 215, 255))
+    fl = ImageFont.truetype(LAT_FONT, 12 if sphere else 11)
+    d.text((64, cy + (27 if sphere else 22)), romaji, font=fl, anchor="mm", fill=(90, 40, 0, 255))
+    img.save(OUT / out_name, optimize=True)
+
+for ch_, ro, name in [("は", "wa", "jp_wa"), ("を", "o", "jp_wo"), ("の", "no", "jp_no"), ("か", "ka", "jp_ka")]:
+    glyph_orb(ch_, ro, name + ".png", False)
+for ch_, ro, name in [("人", "jin", "jp_jin"), ("語", "go", "jp_go")]:
+    glyph_orb(ch_, ro, name + ".png", True)
+print("orbes japoneses ok")
