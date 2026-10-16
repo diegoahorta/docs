@@ -1,6 +1,6 @@
 // Trilha sonora drum and bass sintetizada em tempo real com a Web Audio API,
 // mais os efeitos sonoros. Também toca as faixas MP3 de assets/audio como alternativa.
-import { ASSETS } from './config.js';
+import { ASSETS, recurso } from './config.js';
 
 const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
 
@@ -151,7 +151,10 @@ export class Audio {
       this.mp3.loop = true;
       this.mp3.volume = 0.55;
     }
-    if (!this.mp3.src.endsWith(src.replace('../', ''))) this.mp3.src = src;
+    if (this.mp3Faixa !== src) {
+      this.mp3Faixa = src;
+      this.mp3.src = recurso(src);
+    }
     this.mp3.play().catch(() => {});
   }
 

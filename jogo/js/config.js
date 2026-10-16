@@ -5,6 +5,11 @@ export const ALTURA = 540;
 // Pasta com os assets compartilhados do repositório (fontes, UI, áudio).
 export const ASSETS = '../assets/';
 
+// Na versão em arquivo único (dist/), os arquivos vêm embutidos como data URIs.
+export function recurso(caminho) {
+  return globalThis.RECURSOS_EMBUTIDOS?.[caminho] ?? caminho;
+}
+
 // Faixa do chão onde os personagens andam (profundidade z, em px).
 // Tela: y = BASE_Y + z + altura.
 export const BASE_Y = 34;

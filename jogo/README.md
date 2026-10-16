@@ -6,6 +6,18 @@ Boulos atravessa a cidade para expulsar a Gangue dos Ratos: Avenida Paulista, Ce
 
 ## Como rodar
 
+### Arquivo único (mais fácil)
+
+`jogo/dist/boulos-vs-ratos.html` é o jogo inteiro em um só arquivo HTML5, com scripts,
+Three.js, sprites, fontes e músicas embutidos. Basta abrir no navegador (dá até para
+mandar para alguém ou abrir no celular). Para gerar de novo depois de mudar o código ou os assets:
+
+```bash
+node jogo/ferramentas/gerar_html_unico.mjs   # precisa de Node.js 18+; baixa o esbuild via npx
+```
+
+### Versão de desenvolvimento
+
 O jogo usa módulos ES e carrega arquivos de `../assets`, então precisa de um servidor
 HTTP servindo a **raiz do repositório** (abrir o `index.html` direto do disco não funciona):
 
@@ -73,7 +85,10 @@ jogo/
 │   ├── sprite.js         sprites 2D sobre planos do Three.js
 │   └── config.js         constantes
 ├── sprites/              quadros recortados de assets/sprites (gerados)
-├── ferramentas/processar_sprites.py
+├── dist/boulos-vs-ratos.html  o jogo em um único arquivo (gerado)
+├── ferramentas/
+│   ├── processar_sprites.py     recorta os sprites
+│   └── gerar_html_unico.mjs     gera o arquivo único
 └── vendor/three.module.min.js (Three.js r170, licença MIT)
 ```
 

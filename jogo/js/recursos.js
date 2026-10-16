@@ -1,6 +1,6 @@
 // Carrega sprites, texturas, fontes e gera as texturas procedurais.
 import * as THREE from 'three';
-import { ASSETS } from './config.js';
+import { ASSETS, recurso } from './config.js';
 import { gerarRato } from './ratos.js';
 
 export const R = {
@@ -16,7 +16,7 @@ function carregarImagem(url) {
     const img = new Image();
     img.onload = () => ok(img);
     img.onerror = () => erro(new Error('Falha ao carregar ' + url));
-    img.src = url;
+    img.src = recurso(url);
   });
 }
 
@@ -34,7 +34,7 @@ export function texturaDe(fonte, { repetir = false, suave = false } = {}) {
 }
 
 export async function carregarTudo(progresso = () => {}) {
-  const manifesto = await (await fetch('sprites/manifesto.json')).json();
+  const manifesto = await (await fetch(recurso('sprites/manifesto.json'))).json();
   R.manifesto = manifesto;
 
   const pedidos = [];
@@ -59,7 +59,7 @@ export async function carregarTudo(progresso = () => {}) {
     progresso(++feitos / pedidos.length);
   }));
 
-  const fnt = await (await fetch(`${ASSETS}fontes/Fonte_jogo.fnt`)).text();
+  const fnt = await (await fetch(recurso(`${ASSETS}fontes/Fonte_jogo.fnt`))).text();
   R.fonte = lerBMFont(fnt);
 
   for (const tipo of ['ratinho', 'ratazana', 'lixeiro', 'rei']) {

@@ -1,5 +1,5 @@
 // HUD (vida, energia, placar) e telas em HTML: título, menus, diálogos e cartelas.
-import { ASSETS } from './config.js';
+import { ASSETS, recurso } from './config.js';
 import { gerarRato, retratoRato } from './ratos.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -152,7 +152,7 @@ export class Telas {
     const conteudo = document.createElement('div');
     conteudo.className = 'capa';
     const heroi = document.createElement('img');
-    heroi.src = 'sprites/heroi_frente_pose.png';
+    heroi.src = recurso('sprites/heroi_frente_pose.png');
     heroi.className = 'retrato-grande';
     const ratos = document.createElement('canvas');
     const rei = gerarRato('rei').quadros.parado0;
@@ -224,7 +224,7 @@ export class Telas {
       caixa.innerHTML = '';
       if (f.quem === 'BOULOS') {
         const img = document.createElement('img');
-        img.src = 'sprites/heroi_retrato.png';
+        img.src = recurso('sprites/heroi_retrato.png');
         caixa.appendChild(img);
       } else if (f.retrato) {
         caixa.appendChild(retratoRato(f.retrato));
@@ -299,6 +299,6 @@ export function preCarregarUi() {
   // Garante que as imagens de botões estejam em cache antes do primeiro menu.
   for (const n of ['botao-verde', 'botao-verde-pressionado', 'tecla-esc', 'tecla-esc-pressionada']) {
     const img = new Image();
-    img.src = `${ASSETS}sprites/ui/${n}.png`;
+    img.src = recurso(`${ASSETS}sprites/ui/${n}.png`);
   }
 }
