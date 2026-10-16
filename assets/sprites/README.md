@@ -22,3 +22,6 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `ui/area-de-perigo.png` | 16×16, tile cinza-escuro sólido (área de perigo) |
 | `ui/bloco-atravessavel.png` | 16×16, preenchimento vinho semitransparente com borda de 1 px (bloco atravessável) |
 | `ui/botao-seta-baixo.png` | 80×80, botão circular branco com seta para baixo |
+| `ui/tecla-vazia.png` | 12×12, ícone de tecla em branco |
+| `ui/tecla-seta-baixo.png` | 11×12, ícone de tecla com seta para baixo |
+| `ui/tecla-seta-esquerda.png` | 12×12, ícone de tecla com seta para a esquerda |
