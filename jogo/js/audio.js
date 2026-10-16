@@ -38,7 +38,7 @@ const BATIDAS = {
   liquid: { bumbo: [0, 10], caixa: [4, 12], fantasma: [11], chimbal: [0, 2, 3, 4, 6, 8, 10, 11, 12, 14], aberto: [] },
 };
 
-const MUSICAS = {
+export const MUSICAS = {
   menu: { bpm: 172, acordes: 'menor', batidas: ['liquid', 'liquid', 'liquid', 'dois'], baixo: 'sub', pad: 0.5, arpejo: 0.22, intro: 4 },
   grajau: { bpm: 172, acordes: 'menor', batidas: ['dois', 'amen', 'dois', 'liquid'], baixo: 'reese', pad: 0.32, arpejo: 0.16, stab: true, intro: 2 },
   fase1: { bpm: 174, acordes: 'menor', batidas: ['dois', 'dois', 'amen', 'dois'], baixo: 'reese', pad: 0.28, arpejo: 0.1, stab: true, intro: 2 },
