@@ -10,3 +10,12 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `personagem-pular-acenar.png` | Personagem: parado de perfil, pulo (3 quadros), aceno e pose de frente |
 | `personagem-andar-direita-2.png` | Variação do ciclo de caminhada (parado de frente + 4 quadros) |
 | `personagem-retrato-frente.jpg` | Retrato do personagem de frente, em alta resolução (1728×1152), sorrindo com as mãos nos bolsos |
+
+## UI (`ui/`)
+
+| Arquivo | Conteúdo |
+| --- | --- |
+| `ui/scanlines.png` | 8×8, linhas horizontais escuras semitransparentes (padrão de scanlines em tile) |
+| `ui/tecla-alt.png` | 22×12, ícone da tecla "ALT" |
+| `ui/overlay-vermelho.png` | 16×16, preenchimento vermelho-escuro semitransparente (overlay de tile) |
+| `ui/destaque-tile-verde.png` | 16×16, preenchimento verde-água semitransparente com borda de 1 px (destaque/seleção de tile) |
