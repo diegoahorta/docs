@@ -40,6 +40,7 @@ const BATIDAS = {
 
 const MUSICAS = {
   menu: { bpm: 172, acordes: 'menor', batidas: ['liquid', 'liquid', 'liquid', 'dois'], baixo: 'sub', pad: 0.5, arpejo: 0.22, intro: 4 },
+  grajau: { bpm: 172, acordes: 'menor', batidas: ['dois', 'amen', 'dois', 'liquid'], baixo: 'reese', pad: 0.32, arpejo: 0.16, stab: true, intro: 2 },
   fase1: { bpm: 174, acordes: 'menor', batidas: ['dois', 'dois', 'amen', 'dois'], baixo: 'reese', pad: 0.28, arpejo: 0.1, stab: true, intro: 2 },
   fase2: { bpm: 174, acordes: 'menor', batidas: ['amen', 'dois', 'amen', 'amen'], baixo: 'reese', pad: 0.24, arpejo: 0.14, stab: true, intro: 2 },
   fase3: { bpm: 175, acordes: 'menor', batidas: ['amen', 'amen', 'dois', 'amen'], baixo: 'reese', pad: 0.2, arpejo: 0.18, stab: true, intro: 2 },
@@ -48,7 +49,7 @@ const MUSICAS = {
 };
 
 // Faixa MP3 do repositório usada no modo alternativo, por música.
-const FAIXAS_MP3 = { menu: 5, fase1: 1, fase2: 2, fase3: 3, chefe: 4, vitoria: 5 };
+const FAIXAS_MP3 = { menu: 5, grajau: 4, fase1: 1, fase2: 2, fase3: 3, chefe: 4, vitoria: 5 };
 
 // Linha de baixo por compasso: [passo, semitom relativo à fundamental, duração em passos]
 const LINHAS_BAIXO = [

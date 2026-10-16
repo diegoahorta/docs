@@ -1,139 +1,226 @@
 {
  "heroi": {
-  "andar0": {
-   "arquivo": "sprites/heroi_andar0.png",
-   "w": 83,
-   "h": 160
-  },
-  "andar1": {
-   "arquivo": "sprites/heroi_andar1.png",
-   "w": 89,
-   "h": 160
-  },
-  "andar2": {
-   "arquivo": "sprites/heroi_andar2.png",
-   "w": 83,
-   "h": 160
-  },
-  "andar3": {
-   "arquivo": "sprites/heroi_andar3.png",
-   "w": 87,
-   "h": 160
-  },
-  "andarb0": {
-   "arquivo": "sprites/heroi_andarb0.png",
-   "w": 83,
-   "h": 160
-  },
-  "andarb1": {
-   "arquivo": "sprites/heroi_andarb1.png",
-   "w": 89,
-   "h": 160
-  },
-  "andarb2": {
-   "arquivo": "sprites/heroi_andarb2.png",
-   "w": 83,
-   "h": 160
-  },
-  "andarb3": {
-   "arquivo": "sprites/heroi_andarb3.png",
-   "w": 87,
-   "h": 160
-  },
-  "frente": {
-   "arquivo": "sprites/heroi_frente.png",
-   "w": 77,
-   "h": 160
-  },
   "parado": {
    "arquivo": "sprites/heroi_parado.png",
    "w": 40,
-   "h": 160
+   "h": 160,
+   "ax": 0.5329
   },
   "impulso": {
    "arquivo": "sprites/heroi_impulso.png",
    "w": 112,
-   "h": 160
-  },
-  "voadora": {
-   "arquivo": "sprites/heroi_voadora.png",
-   "w": 112,
-   "h": 160
+   "h": 160,
+   "ax": 0.5493
   },
   "aterrissar": {
    "arquivo": "sprites/heroi_aterrissar.png",
    "w": 82,
-   "h": 160
+   "h": 160,
+   "ax": 0.5151
   },
   "acenar": {
    "arquivo": "sprites/heroi_acenar.png",
    "w": 75,
-   "h": 160
+   "h": 160,
+   "ax": 0.535
   },
   "frente_pose": {
    "arquivo": "sprites/heroi_frente_pose.png",
    "w": 90,
-   "h": 160
+   "h": 160,
+   "ax": 0.4744
   },
   "pegar_garrafa0": {
    "arquivo": "sprites/heroi_pegar_garrafa0.png",
    "w": 88,
-   "h": 158
+   "h": 158,
+   "ax": 0.6831
   },
   "pegar_garrafa1": {
    "arquivo": "sprites/heroi_pegar_garrafa1.png",
    "w": 97,
-   "h": 143
+   "h": 143,
+   "ax": 0.7573
   },
   "pegar_garrafa2": {
    "arquivo": "sprites/heroi_pegar_garrafa2.png",
    "w": 112,
-   "h": 111
+   "h": 111,
+   "ax": 0.6965
   },
   "pegar_garrafa3": {
    "arquivo": "sprites/heroi_pegar_garrafa3.png",
    "w": 101,
-   "h": 120
+   "h": 120,
+   "ax": 0.6913
   },
   "pegar_garrafa4": {
    "arquivo": "sprites/heroi_pegar_garrafa4.png",
    "w": 88,
-   "h": 154
+   "h": 154,
+   "ax": 0.6706
   },
   "pegar_garrafa5": {
    "arquivo": "sprites/heroi_pegar_garrafa5.png",
    "w": 75,
-   "h": 157
+   "h": 157,
+   "ax": 0.5777
   },
   "pegar_pedra0": {
    "arquivo": "sprites/heroi_pegar_pedra0.png",
    "w": 93,
-   "h": 134
+   "h": 134,
+   "ax": 0.7081
   },
   "pegar_pedra1": {
    "arquivo": "sprites/heroi_pegar_pedra1.png",
    "w": 107,
-   "h": 131
+   "h": 131,
+   "ax": 0.7474
   },
   "pegar_pedra2": {
    "arquivo": "sprites/heroi_pegar_pedra2.png",
    "w": 123,
-   "h": 113
+   "h": 113,
+   "ax": 0.6716
   },
   "pegar_pedra3": {
    "arquivo": "sprites/heroi_pegar_pedra3.png",
    "w": 109,
-   "h": 121
+   "h": 121,
+   "ax": 0.7368
   },
   "pegar_pedra4": {
    "arquivo": "sprites/heroi_pegar_pedra4.png",
    "w": 95,
-   "h": 134
+   "h": 134,
+   "ax": 0.708
   },
   "pegar_pedra5": {
    "arquivo": "sprites/heroi_pegar_pedra5.png",
    "w": 83,
-   "h": 134
+   "h": 134,
+   "ax": 0.5422
+  },
+  "soco0": {
+   "arquivo": "sprites/heroi_soco0.png",
+   "w": 105,
+   "h": 150,
+   "ax": 0.5983
+  },
+  "soco1": {
+   "arquivo": "sprites/heroi_soco1.png",
+   "w": 132,
+   "h": 149,
+   "ax": 0.5495
+  },
+  "soco2": {
+   "arquivo": "sprites/heroi_soco2.png",
+   "w": 156,
+   "h": 148,
+   "ax": 0.5159
+  },
+  "soco3": {
+   "arquivo": "sprites/heroi_soco3.png",
+   "w": 126,
+   "h": 151,
+   "ax": 0.6685
+  },
+  "soco4": {
+   "arquivo": "sprites/heroi_soco4.png",
+   "w": 167,
+   "h": 148,
+   "ax": 0.5395
+  },
+  "soco5": {
+   "arquivo": "sprites/heroi_soco5.png",
+   "w": 109,
+   "h": 150,
+   "ax": 0.6175
+  },
+  "chute0": {
+   "arquivo": "sprites/heroi_chute0.png",
+   "w": 110,
+   "h": 142,
+   "ax": 0.5742
+  },
+  "chute1": {
+   "arquivo": "sprites/heroi_chute1.png",
+   "w": 98,
+   "h": 144,
+   "ax": 0.374
+  },
+  "chute2": {
+   "arquivo": "sprites/heroi_chute2.png",
+   "w": 91,
+   "h": 145,
+   "ax": 0.3901
+  },
+  "chute3": {
+   "arquivo": "sprites/heroi_chute3.png",
+   "w": 150,
+   "h": 145,
+   "ax": 0.2154
+  },
+  "chute4": {
+   "arquivo": "sprites/heroi_chute4.png",
+   "w": 89,
+   "h": 144,
+   "ax": 0.4364
+  },
+  "chute5": {
+   "arquivo": "sprites/heroi_chute5.png",
+   "w": 110,
+   "h": 142,
+   "ax": 0.5723
+  },
+  "passo0": {
+   "arquivo": "sprites/heroi_passo0.png",
+   "w": 90,
+   "h": 166,
+   "ax": 0.549
+  },
+  "passo1": {
+   "arquivo": "sprites/heroi_passo1.png",
+   "w": 87,
+   "h": 168,
+   "ax": 0.5473
+  },
+  "passo2": {
+   "arquivo": "sprites/heroi_passo2.png",
+   "w": 69,
+   "h": 166,
+   "ax": 0.6048
+  },
+  "passo3": {
+   "arquivo": "sprites/heroi_passo3.png",
+   "w": 80,
+   "h": 166,
+   "ax": 0.5662
+  },
+  "passo4": {
+   "arquivo": "sprites/heroi_passo4.png",
+   "w": 88,
+   "h": 166,
+   "ax": 0.553
+  },
+  "passo5": {
+   "arquivo": "sprites/heroi_passo5.png",
+   "w": 90,
+   "h": 166,
+   "ax": 0.564
+  },
+  "passo6": {
+   "arquivo": "sprites/heroi_passo6.png",
+   "w": 80,
+   "h": 166,
+   "ax": 0.5778
+  },
+  "passo7": {
+   "arquivo": "sprites/heroi_passo7.png",
+   "w": 82,
+   "h": 166,
+   "ax": 0.5441
   },
   "retrato": {
    "arquivo": "sprites/heroi_retrato.png",
@@ -321,6 +408,126 @@
    "arquivo": "sprites/cenario_poste.png",
    "w": 96,
    "h": 269
+  },
+  "grajau_panorama": {
+   "arquivo": "sprites/cenario_grajau_panorama.png",
+   "w": 1502,
+   "h": 141
+  },
+  "grajau_por_do_sol": {
+   "arquivo": "sprites/cenario_grajau_por_do_sol.png",
+   "w": 518,
+   "h": 205
+  },
+  "grajau_caixa_dagua": {
+   "arquivo": "sprites/cenario_grajau_caixa_dagua.png",
+   "w": 284,
+   "h": 265
+  },
+  "grajau_casa_bege": {
+   "arquivo": "sprites/cenario_grajau_casa_bege.png",
+   "w": 171,
+   "h": 204
+  },
+  "grajau_casa_verde": {
+   "arquivo": "sprites/cenario_grajau_casa_verde.png",
+   "w": 107,
+   "h": 198
+  },
+  "grajau_muro_reboco": {
+   "arquivo": "sprites/cenario_grajau_muro_reboco.png",
+   "w": 65,
+   "h": 168
+  },
+  "grajau_casa_laranja": {
+   "arquivo": "sprites/cenario_grajau_casa_laranja.png",
+   "w": 126,
+   "h": 169
+  },
+  "grajau_mercadinho": {
+   "arquivo": "sprites/cenario_grajau_mercadinho.png",
+   "w": 199,
+   "h": 219
+  },
+  "grajau_comercio": {
+   "arquivo": "sprites/cenario_grajau_comercio.png",
+   "w": 265,
+   "h": 178
+  },
+  "grajau_garagem": {
+   "arquivo": "sprites/cenario_grajau_garagem.png",
+   "w": 112,
+   "h": 142
+  },
+  "grajau_muro_grade": {
+   "arquivo": "sprites/cenario_grajau_muro_grade.png",
+   "w": 125,
+   "h": 121
+  },
+  "grajau_onibus": {
+   "arquivo": "sprites/cenario_grajau_onibus.png",
+   "w": 352,
+   "h": 132
+  },
+  "grajau_carro_prata": {
+   "arquivo": "sprites/cenario_grajau_carro_prata.png",
+   "w": 162,
+   "h": 69
+  },
+  "grajau_carro_preto": {
+   "arquivo": "sprites/cenario_grajau_carro_preto.png",
+   "w": 132,
+   "h": 64
+  },
+  "grajau_poste": {
+   "arquivo": "sprites/cenario_grajau_poste.png",
+   "w": 62,
+   "h": 201
+  },
+  "grajau_luminaria": {
+   "arquivo": "sprites/cenario_grajau_luminaria.png",
+   "w": 85,
+   "h": 189
+  },
+  "grajau_arvore": {
+   "arquivo": "sprites/cenario_grajau_arvore.png",
+   "w": 199,
+   "h": 194
+  },
+  "grajau_portao": {
+   "arquivo": "sprites/cenario_grajau_portao.png",
+   "w": 69,
+   "h": 72
+  },
+  "grajau_arvore_fina": {
+   "arquivo": "sprites/cenario_grajau_arvore_fina.png",
+   "w": 101,
+   "h": 161
+  },
+  "grajau_grade": {
+   "arquivo": "sprites/cenario_grajau_grade.png",
+   "w": 151,
+   "h": 75
+  },
+  "grajau_placa": {
+   "arquivo": "sprites/cenario_grajau_placa.png",
+   "w": 54,
+   "h": 156
+  },
+  "grajau_lixeira": {
+   "arquivo": "sprites/cenario_grajau_lixeira.png",
+   "w": 36,
+   "h": 63
+  },
+  "grajau_escada": {
+   "arquivo": "sprites/cenario_grajau_escada.png",
+   "w": 222,
+   "h": 62
+  },
+  "grajau_bueiro": {
+   "arquivo": "sprites/cenario_grajau_bueiro.png",
+   "w": 209,
+   "h": 60
   }
  },
  "texturas": {
@@ -373,6 +580,36 @@
    "arquivo": "sprites/texturas_asfalto_rachado.png",
    "w": 130,
    "h": 83
+  },
+  "grajau_asfalto": {
+   "arquivo": "sprites/texturas_grajau_asfalto.png",
+   "w": 371,
+   "h": 94
+  },
+  "grajau_calcada": {
+   "arquivo": "sprites/texturas_grajau_calcada.png",
+   "w": 382,
+   "h": 77
+  },
+  "grajau_faixa": {
+   "arquivo": "sprites/texturas_grajau_faixa.png",
+   "w": 380,
+   "h": 71
+  },
+  "grajau_buraco": {
+   "arquivo": "sprites/texturas_grajau_buraco.png",
+   "w": 297,
+   "h": 64
+  },
+  "grajau_meio_fio": {
+   "arquivo": "sprites/texturas_grajau_meio_fio.png",
+   "w": 729,
+   "h": 45
+  },
+  "grajau_muro_baixo": {
+   "arquivo": "sprites/texturas_grajau_muro_baixo.png",
+   "w": 284,
+   "h": 61
   }
  },
  "itens": {
@@ -385,6 +622,388 @@
    "arquivo": "sprites/itens_pedra.png",
    "w": 28,
    "h": 22
+  }
+ },
+ "ratos": {
+  "ratinho_parado0": {
+   "arquivo": "sprites/ratos_ratinho_parado0.png",
+   "w": 131,
+   "h": 125,
+   "ax": 0.5902
+  },
+  "ratinho_parado1": {
+   "arquivo": "sprites/ratos_ratinho_parado1.png",
+   "w": 134,
+   "h": 125,
+   "ax": 0.5995
+  },
+  "ratinho_preparar": {
+   "arquivo": "sprites/ratos_ratinho_preparar.png",
+   "w": 113,
+   "h": 126,
+   "ax": 0.5201
+  },
+  "ratinho_atacar": {
+   "arquivo": "sprites/ratos_ratinho_atacar.png",
+   "w": 124,
+   "h": 125,
+   "ax": 0.5716
+  },
+  "ratinho_golpe": {
+   "arquivo": "sprites/ratos_ratinho_golpe.png",
+   "w": 131,
+   "h": 130,
+   "ax": 0.571
+  },
+  "ratinho_dor": {
+   "arquivo": "sprites/ratos_ratinho_dor.png",
+   "w": 114,
+   "h": 126,
+   "ax": 0.5222
+  },
+  "ratinho_arremessar": {
+   "arquivo": "sprites/ratos_ratinho_arremessar.png",
+   "w": 124,
+   "h": 125,
+   "ax": 0.5716
+  },
+  "ratinho_segurar": {
+   "arquivo": "sprites/ratos_ratinho_segurar.png",
+   "w": 114,
+   "h": 126,
+   "ax": 0.5285
+  },
+  "ratinho_investida": {
+   "arquivo": "sprites/ratos_ratinho_investida.png",
+   "w": 129,
+   "h": 100,
+   "ax": 0.5863
+  },
+  "ratinho_caido": {
+   "arquivo": "sprites/ratos_ratinho_caido.png",
+   "w": 126,
+   "h": 114
+  },
+  "ratinho_andar0": {
+   "arquivo": "sprites/ratos_ratinho_andar0.png",
+   "w": 109,
+   "h": 125,
+   "ax": 0.6123
+  },
+  "ratinho_andar1": {
+   "arquivo": "sprites/ratos_ratinho_andar1.png",
+   "w": 104,
+   "h": 124,
+   "ax": 0.5715
+  },
+  "ratinho_andar2": {
+   "arquivo": "sprites/ratos_ratinho_andar2.png",
+   "w": 105,
+   "h": 124,
+   "ax": 0.574
+  },
+  "ratinho_andar3": {
+   "arquivo": "sprites/ratos_ratinho_andar3.png",
+   "w": 103,
+   "h": 126,
+   "ax": 0.5728
+  },
+  "ratinho_andar4": {
+   "arquivo": "sprites/ratos_ratinho_andar4.png",
+   "w": 111,
+   "h": 125,
+   "ax": 0.6047
+  },
+  "ratinho_andar5": {
+   "arquivo": "sprites/ratos_ratinho_andar5.png",
+   "w": 94,
+   "h": 125,
+   "ax": 0.6052
+  },
+  "ratazana_parado0": {
+   "arquivo": "sprites/ratos_ratazana_parado0.png",
+   "w": 129,
+   "h": 135,
+   "ax": 0.5171
+  },
+  "ratazana_parado1": {
+   "arquivo": "sprites/ratos_ratazana_parado1.png",
+   "w": 125,
+   "h": 136,
+   "ax": 0.5376
+  },
+  "ratazana_preparar": {
+   "arquivo": "sprites/ratos_ratazana_preparar.png",
+   "w": 113,
+   "h": 133,
+   "ax": 0.5434
+  },
+  "ratazana_atacar": {
+   "arquivo": "sprites/ratos_ratazana_atacar.png",
+   "w": 152,
+   "h": 137,
+   "ax": 0.305
+  },
+  "ratazana_golpe": {
+   "arquivo": "sprites/ratos_ratazana_golpe.png",
+   "w": 125,
+   "h": 133,
+   "ax": 0.5834
+  },
+  "ratazana_dor": {
+   "arquivo": "sprites/ratos_ratazana_dor.png",
+   "w": 120,
+   "h": 136,
+   "ax": 0.5627
+  },
+  "ratazana_arremessar": {
+   "arquivo": "sprites/ratos_ratazana_arremessar.png",
+   "w": 152,
+   "h": 137,
+   "ax": 0.305
+  },
+  "ratazana_segurar": {
+   "arquivo": "sprites/ratos_ratazana_segurar.png",
+   "w": 113,
+   "h": 133,
+   "ax": 0.5434
+  },
+  "ratazana_investida": {
+   "arquivo": "sprites/ratos_ratazana_investida.png",
+   "w": 129,
+   "h": 102,
+   "ax": 0.5752
+  },
+  "ratazana_caido": {
+   "arquivo": "sprites/ratos_ratazana_caido.png",
+   "w": 136,
+   "h": 120
+  },
+  "ratazana_andar0": {
+   "arquivo": "sprites/ratos_ratazana_andar0.png",
+   "w": 121,
+   "h": 135,
+   "ax": 0.4946
+  },
+  "ratazana_andar1": {
+   "arquivo": "sprites/ratos_ratazana_andar1.png",
+   "w": 123,
+   "h": 137,
+   "ax": 0.5008
+  },
+  "ratazana_andar2": {
+   "arquivo": "sprites/ratos_ratazana_andar2.png",
+   "w": 118,
+   "h": 135,
+   "ax": 0.5504
+  },
+  "ratazana_andar3": {
+   "arquivo": "sprites/ratos_ratazana_andar3.png",
+   "w": 121,
+   "h": 136,
+   "ax": 0.5101
+  },
+  "ratazana_andar4": {
+   "arquivo": "sprites/ratos_ratazana_andar4.png",
+   "w": 120,
+   "h": 136,
+   "ax": 0.5458
+  },
+  "ratazana_andar5": {
+   "arquivo": "sprites/ratos_ratazana_andar5.png",
+   "w": 109,
+   "h": 136,
+   "ax": 0.5486
+  },
+  "lixeiro_parado0": {
+   "arquivo": "sprites/ratos_lixeiro_parado0.png",
+   "w": 110,
+   "h": 125,
+   "ax": 0.5492
+  },
+  "lixeiro_parado1": {
+   "arquivo": "sprites/ratos_lixeiro_parado1.png",
+   "w": 111,
+   "h": 126,
+   "ax": 0.5539
+  },
+  "lixeiro_preparar": {
+   "arquivo": "sprites/ratos_lixeiro_preparar.png",
+   "w": 98,
+   "h": 126,
+   "ax": 0.5028
+  },
+  "lixeiro_atacar": {
+   "arquivo": "sprites/ratos_lixeiro_atacar.png",
+   "w": 115,
+   "h": 126,
+   "ax": 0.567
+  },
+  "lixeiro_golpe": {
+   "arquivo": "sprites/ratos_lixeiro_golpe.png",
+   "w": 109,
+   "h": 130,
+   "ax": 0.5532
+  },
+  "lixeiro_dor": {
+   "arquivo": "sprites/ratos_lixeiro_dor.png",
+   "w": 107,
+   "h": 126,
+   "ax": 0.5472
+  },
+  "lixeiro_arremessar": {
+   "arquivo": "sprites/ratos_lixeiro_arremessar.png",
+   "w": 115,
+   "h": 126,
+   "ax": 0.567
+  },
+  "lixeiro_segurar": {
+   "arquivo": "sprites/ratos_lixeiro_segurar.png",
+   "w": 108,
+   "h": 126,
+   "ax": 0.544
+  },
+  "lixeiro_investida": {
+   "arquivo": "sprites/ratos_lixeiro_investida.png",
+   "w": 119,
+   "h": 103,
+   "ax": 0.6078
+  },
+  "lixeiro_caido": {
+   "arquivo": "sprites/ratos_lixeiro_caido.png",
+   "w": 126,
+   "h": 107
+  },
+  "lixeiro_andar0": {
+   "arquivo": "sprites/ratos_lixeiro_andar0.png",
+   "w": 107,
+   "h": 125,
+   "ax": 0.5539
+  },
+  "lixeiro_andar1": {
+   "arquivo": "sprites/ratos_lixeiro_andar1.png",
+   "w": 104,
+   "h": 125,
+   "ax": 0.5377
+  },
+  "lixeiro_andar2": {
+   "arquivo": "sprites/ratos_lixeiro_andar2.png",
+   "w": 107,
+   "h": 126,
+   "ax": 0.5515
+  },
+  "lixeiro_andar3": {
+   "arquivo": "sprites/ratos_lixeiro_andar3.png",
+   "w": 107,
+   "h": 125,
+   "ax": 0.5692
+  },
+  "lixeiro_andar4": {
+   "arquivo": "sprites/ratos_lixeiro_andar4.png",
+   "w": 108,
+   "h": 125,
+   "ax": 0.5674
+  },
+  "lixeiro_andar5": {
+   "arquivo": "sprites/ratos_lixeiro_andar5.png",
+   "w": 101,
+   "h": 125,
+   "ax": 0.6007
+  },
+  "rei_parado0": {
+   "arquivo": "sprites/ratos_rei_parado0.png",
+   "w": 179,
+   "h": 185,
+   "ax": 0.6227
+  },
+  "rei_parado1": {
+   "arquivo": "sprites/ratos_rei_parado1.png",
+   "w": 176,
+   "h": 184,
+   "ax": 0.6118
+  },
+  "rei_preparar": {
+   "arquivo": "sprites/ratos_rei_preparar.png",
+   "w": 154,
+   "h": 184,
+   "ax": 0.5625
+  },
+  "rei_atacar": {
+   "arquivo": "sprites/ratos_rei_atacar.png",
+   "w": 171,
+   "h": 183,
+   "ax": 0.5992
+  },
+  "rei_golpe": {
+   "arquivo": "sprites/ratos_rei_golpe.png",
+   "w": 170,
+   "h": 185,
+   "ax": 0.5951
+  },
+  "rei_dor": {
+   "arquivo": "sprites/ratos_rei_dor.png",
+   "w": 164,
+   "h": 183,
+   "ax": 0.5903
+  },
+  "rei_arremessar": {
+   "arquivo": "sprites/ratos_rei_arremessar.png",
+   "w": 171,
+   "h": 183,
+   "ax": 0.5992
+  },
+  "rei_segurar": {
+   "arquivo": "sprites/ratos_rei_segurar.png",
+   "w": 163,
+   "h": 183,
+   "ax": 0.5772
+  },
+  "rei_investida": {
+   "arquivo": "sprites/ratos_rei_investida.png",
+   "w": 173,
+   "h": 148,
+   "ax": 0.6151
+  },
+  "rei_caido": {
+   "arquivo": "sprites/ratos_rei_caido.png",
+   "w": 183,
+   "h": 164
+  },
+  "rei_andar0": {
+   "arquivo": "sprites/ratos_rei_andar0.png",
+   "w": 163,
+   "h": 185,
+   "ax": 0.5673
+  },
+  "rei_andar1": {
+   "arquivo": "sprites/ratos_rei_andar1.png",
+   "w": 161,
+   "h": 186,
+   "ax": 0.5736
+  },
+  "rei_andar2": {
+   "arquivo": "sprites/ratos_rei_andar2.png",
+   "w": 165,
+   "h": 186,
+   "ax": 0.5754
+  },
+  "rei_andar3": {
+   "arquivo": "sprites/ratos_rei_andar3.png",
+   "w": 162,
+   "h": 187,
+   "ax": 0.5858
+  },
+  "rei_andar4": {
+   "arquivo": "sprites/ratos_rei_andar4.png",
+   "w": 164,
+   "h": 186,
+   "ax": 0.581
+  },
+  "rei_andar5": {
+   "arquivo": "sprites/ratos_rei_andar5.png",
+   "w": 157,
+   "h": 187,
+   "ax": 0.6017
   }
  }
 }

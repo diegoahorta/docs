@@ -19,7 +19,15 @@ const SOLIDOS = {
   banca: { escala: 1.1, prof: 22, topo: 140, margem: 8 },
   ponto_onibus: { escala: 1.1, prof: 20, topo: 120, margem: 6 },
   feira: { escala: 1.1, prof: 20, topo: 138, margem: 10 },
+  grajau_onibus: { escala: 1.25, prof: 30, topo: 158, margem: 12 },
+  grajau_carro_prata: { escala: 1.25, prof: 26, topo: 84, margem: 26 },
+  grajau_carro_preto: { escala: 1.25, prof: 26, topo: 84, margem: 22 },
 };
+
+// Decoração padrão (quando a fase não define a sua) e escala de cada objeto.
+const DECORACAO_DIA = ['arvore', 'poste_luz', 'lixeira', 'banco', 'orelhao', 'arvore', 'semaforo', 'placa_pedestre', 'jardineira'];
+const DECORACAO_NOITE = ['poste_luz', 'lixeira', 'arvore', 'orelhao', 'poste_luz', 'jardineira', 'placa_rua'];
+const SO_NO_FUNDO = ['banco', 'jardineira', 'grajau_portao', 'grajau_grade'];
 
 function gradienteCeu(cores, noite) {
   const c = document.createElement('canvas');
@@ -139,14 +147,27 @@ export class Cenario {
     ceu.pos(LARGURA / 2, ALTURA / 2);
     ceu.ordem = CAMADA.CEU;
 
-    const horiz = silhuetaHorizonte(f.horizonte, f.noite);
+    // Horizonte: o panorama da fase (ex.: os morros do Grajaú) ou uma silhueta gerada.
+    let horiz;
+    let alturaH = 200;
+    if (f.panorama) {
+      horiz = R.tex[f.panorama].clone();
+      horiz.userData = { ...R.tex[f.panorama].userData };
+      horiz.wrapS = THREE.MirroredRepeatWrapping;
+      horiz.needsUpdate = true;
+      alturaH = horiz.userData.h * f.escalaPanorama;
+      this.larguraHorizonte = horiz.userData.w * f.escalaPanorama;
+    } else {
+      horiz = silhuetaHorizonte(f.horizonte, f.noite);
+      this.larguraHorizonte = 1024;
+    }
     this.texHorizonte = horiz;
-    horiz.repeat.set(LARGURA / 1024, 1);
+    horiz.repeat.set(LARGURA / this.larguraHorizonte, 1);
     const m = new THREE.Mesh(
-      new THREE.PlaneGeometry(LARGURA, 200),
+      new THREE.PlaneGeometry(LARGURA, alturaH),
       new THREE.MeshBasicMaterial({ map: horiz, transparent: true, depthTest: false, depthWrite: false }),
     );
-    m.position.set(LARGURA / 2, FUNDO_Y + 110, 0);
+    m.position.set(LARGURA / 2, FUNDO_Y + (f.panorama ? f.alturaPanorama : 10) + alturaH / 2, 0);
     m.renderOrder = CAMADA.HORIZONTE;
     this.fixo.add(m);
 
@@ -154,7 +175,7 @@ export class Cenario {
     const cor = new THREE.Color(f.horizonte).lerp(new THREE.Color(0xffffff), f.noite ? 0.25 : 0.45);
     let x = -100;
     let i = 0;
-    while (x < f.comprimento * 0.5 + LARGURA + 200) {
+    while (f.distantes.length && x < f.comprimento * 0.5 + LARGURA + 200) {
       const nome = f.distantes[i++ % f.distantes.length];
       const s = new Sprite(this.longe, R.tex['cenario_' + nome], { escala: 0.62, cor });
       s.pos(x, FUNDO_Y + 40);
@@ -168,7 +189,7 @@ export class Cenario {
     this.postesNoite = [];
     while (x < f.comprimento + LARGURA + 300) {
       const nome = f.fachadas[i++ % f.fachadas.length];
-      const escala = nome.startsWith('muro') ? 1.2 : 1.15;
+      const escala = f.escalas?.[nome] ?? (nome.startsWith('muro') ? 1.2 : 1.15);
       const s = new Sprite(this.mundo, R.tex['cenario_' + nome], { escala, cor: f.tinta });
       const w = s.mesh.scale.x;
       s.pos(x + w / 2, FUNDO_Y - 6);
@@ -190,18 +211,28 @@ export class Cenario {
     const x0 = -600;
     const x1 = f.comprimento + LARGURA + 600;
     const meio = BASE_Y + Z_MEIO_FIO;
-    plano(this.mundo, R.tex[f.calcada], x0, meio - 4, x1, FUNDO_Y + 4, { tileX: 64, tileY: 64, ordem: CAMADA.CHAO, cor: f.tinta });
-    plano(this.mundo, R.tex.texturas_asfalto, x0, 0, x1, meio - 12, { tileX: 120, tileY: 80, ordem: CAMADA.CHAO, cor: f.tinta });
-    plano(this.mundo, R.tex.texturas_calcada_meiofio, x0, meio - 16, x1, meio + 2, { tileX: 64, tileY: 18, ordem: CAMADA.CHAO + 1, cor: f.tinta });
+    const chao = f.chao ?? {};
+    const [calcada, tcx, tcy] = chao.calcada ?? [f.calcada, 64, 64];
+    const [asfalto, tax, tay] = chao.asfalto ?? ['texturas_asfalto', 120, 80];
+    const [meioFio, tmx, tmy] = chao.meioFio ?? ['texturas_calcada_meiofio', 64, 18];
+    plano(this.mundo, R.tex[calcada], x0, meio - 4, x1, FUNDO_Y + 4, { tileX: tcx, tileY: tcy, ordem: CAMADA.CHAO, cor: f.tinta });
+    plano(this.mundo, R.tex[asfalto], x0, 0, x1, meio - 12, { tileX: tax, tileY: tay, ordem: CAMADA.CHAO, cor: f.tinta });
+    plano(this.mundo, R.tex[meioFio], x0, meio - 16, x1, meio + 2, { tileX: tmx, tileY: tmy, ordem: CAMADA.CHAO + 1, cor: f.tinta });
     // Faixas da rua e faixas de pedestre
     const corFaixa = f.noite ? 0x9a9ab8 : 0xf0ecd8;
     const faixasPedestre = [];
     for (let x = 600; x < f.comprimento; x += 1500) faixasPedestre.push(x);
-    for (let x = x0; x < x1; x += 140) {
-      if (faixasPedestre.some((fx) => x + 60 > fx - 20 && x < fx + 170)) continue;
-      retangulo(this.mundo, corFaixa, x, BASE_Y + 18, x + 60, BASE_Y + 24, CAMADA.MARCAS);
+    if (!chao.semFaixas) {
+      for (let x = x0; x < x1; x += 140) {
+        if (faixasPedestre.some((fx) => x + 60 > fx - 20 && x < fx + 170)) continue;
+        retangulo(this.mundo, corFaixa, x, BASE_Y + 18, x + 60, BASE_Y + 24, CAMADA.MARCAS);
+      }
     }
     for (const x of faixasPedestre) {
+      if (chao.faixaPedestre) {
+        plano(this.mundo, R.tex[chao.faixaPedestre], x, 4, x + 200, meio - 16, { tileX: 200, tileY: meio - 20, ordem: CAMADA.MARCAS, cor: f.tinta });
+        continue;
+      }
       for (let k = 0; k < 7; k++) {
         retangulo(this.mundo, corFaixa, x + k * 22, 6, x + k * 22 + 12, meio - 16, CAMADA.MARCAS);
       }
@@ -212,6 +243,15 @@ export class Cenario {
       this.perigos.push(p);
       const y0 = BASE_Y + p.z0;
       const y1 = BASE_Y + p.z1;
+      if (chao.buraco) {
+        // buraco com água desenhado (um pouco maior que a área que machuca)
+        plano(this.mundo, R.tex[chao.buraco], p.x0 - 24, y0 - 10, p.x1 + 24, y1 + 10, {
+          tileX: p.x1 - p.x0 + 48, tileY: p.z1 - p.z0 + 20, ordem: CAMADA.MARCAS, cor: f.tinta,
+        });
+        this.decoracao('cone', p.x0 - 30, p.z1 + 6, 0.8);
+        this.decoracao('cone', p.x1 + 30, p.z0 - 2, 0.8);
+        continue;
+      }
       plano(this.mundo, borda, p.x0 - 6, y0 - 6, p.x1 + 6, y1 + 6, { tileX: 12, tileY: 12, ordem: CAMADA.MARCAS });
       plano(this.mundo, R.tex['ui_area-de-perigo'], p.x0, y0, p.x1, y1, { tileX: 32, tileY: 32, ordem: CAMADA.MARCAS + 1 });
       for (const [cx, cz] of [[p.x0 - 14, p.z1 + 4], [p.x1 + 14, p.z1 + 4], [p.x0 - 14, p.z0 - 2], [p.x1 + 14, p.z0 - 2]]) {
@@ -263,9 +303,7 @@ export class Cenario {
     }
 
     // Decoração: postes, árvores, lixeiras... evitando os sólidos.
-    const opcoes = this.fase.noite
-      ? ['poste_luz', 'lixeira', 'arvore', 'orelhao', 'poste_luz', 'jardineira', 'placa_rua']
-      : ['arvore', 'poste_luz', 'lixeira', 'banco', 'orelhao', 'arvore', 'semaforo', 'placa_pedestre', 'jardineira'];
+    const opcoes = f.decoracao ?? (f.noite ? DECORACAO_NOITE : DECORACAO_DIA);
     let k = 0;
     for (let x = 380; x < f.comprimento + LARGURA; x += 230) {
       const livre = (z) => ![...this.solidos, ...this.plataformas].some((s) => x > s.x0 - 70 && x < s.x1 + 70 && Math.abs(z - s.z0) < 60);
@@ -273,15 +311,15 @@ export class Cenario {
       const fundo = k % 2 === 0;
       const z = fundo ? 148 : Z_MEIO_FIO + 6;
       if (!livre(z)) continue;
-      if (!fundo && (nome === 'banco' || nome === 'jardineira')) continue;
-      this.decoracao(nome, x, z, nome === 'arvore' ? 1.1 : 1);
+      if (!fundo && SO_NO_FUNDO.includes(nome)) continue;
+      this.decoracao(nome, x, z, f.escalas?.[nome] ?? (nome === 'arvore' ? 1.1 : 1));
     }
   }
 
   atualizar(camX) {
     this.fixo.position.x = camX;
     this.longe.position.x = camX * 0.5;
-    this.texHorizonte.offset.x = (camX * 0.15) / 1024;
+    this.texHorizonte.offset.x = (camX * 0.15) / this.larguraHorizonte;
   }
 
   /** Superfície (sólido ou plataforma) sob (x, z) com topo até `alturaMax`. */

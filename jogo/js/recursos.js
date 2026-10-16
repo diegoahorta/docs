@@ -1,12 +1,11 @@
 // Carrega sprites, texturas, fontes e gera as texturas procedurais.
 import * as THREE from 'three';
 import { ASSETS, recurso } from './config.js';
-import { gerarRato } from './ratos.js';
 
 export const R = {
   manifesto: null,
   tex: {}, // 'heroi_andar0' -> THREE.Texture (com .userData.w/.h)
-  ratos: {}, // tipo -> { nome, tex: { pose: Texture } }
+  ratos: {}, // tipo -> { pose: Texture }
   fonte: null,
   imagens: {},
 };
@@ -40,7 +39,7 @@ export async function carregarTudo(progresso = () => {}) {
   const pedidos = [];
   for (const [grupo, itens] of Object.entries(manifesto)) {
     for (const [nome, info] of Object.entries(itens)) {
-      pedidos.push([`${grupo}_${nome}`, info.arquivo, grupo]);
+      pedidos.push([`${grupo}_${nome}`, info.arquivo, grupo, info.ax]);
     }
   }
   const ui = ['area-de-perigo', 'bloco-atravessavel', 'destaque-tile-verde', 'botao-seta-baixo'];
@@ -49,24 +48,24 @@ export async function carregarTudo(progresso = () => {}) {
   pedidos.push(['fonte_branca', `${ASSETS}fontes/Fonte_jogo_branca.png`, 'fonte']);
 
   let feitos = 0;
-  await Promise.all(pedidos.map(async ([chave, url, grupo]) => {
+  await Promise.all(pedidos.map(async ([chave, url, grupo, ancora]) => {
     const img = await carregarImagem(url);
     R.imagens[chave] = img;
     const repetir = grupo === 'texturas' || chave === 'ui_area-de-perigo' || chave === 'ui_bloco-atravessavel';
     // Os quadros do herói e do cenário são reduzidos na tela: filtragem linear evita serrilhado.
-    const suave = grupo === 'heroi' || grupo === 'cenario' || grupo === 'itens';
+    const suave = grupo === 'heroi' || grupo === 'cenario' || grupo === 'itens' || grupo === 'ratos';
     R.tex[chave] = texturaDe(img, { repetir, suave });
+    if (ancora !== undefined) R.tex[chave].userData.ax = ancora;
     progresso(++feitos / pedidos.length);
   }));
 
   const fnt = await (await fetch(recurso(`${ASSETS}fontes/Fonte_jogo.fnt`))).text();
   R.fonte = lerBMFont(fnt);
 
-  for (const tipo of ['ratinho', 'ratazana', 'lixeiro', 'rei']) {
-    const r = gerarRato(tipo);
-    const tex = {};
-    for (const [pose, canvas] of Object.entries(r.quadros)) tex[pose] = texturaDe(canvas);
-    R.ratos[tipo] = { nome: r.nome, tex };
+  // Ratos: 'ratos_rei_andar0' -> R.ratos.rei.andar0
+  for (const nome of Object.keys(manifesto.ratos)) {
+    const [tipo, ...pose] = nome.split('_');
+    (R.ratos[tipo] ??= {})[pose.join('_')] = R.tex['ratos_' + nome];
   }
 
   gerarTexturasProcedurais();

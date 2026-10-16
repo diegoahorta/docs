@@ -1,6 +1,6 @@
 // HUD (vida, energia, placar) e telas em HTML: título, menus, diálogos e cartelas.
 import { ASSETS, recurso } from './config.js';
-import { gerarRato, retratoRato } from './ratos.js';
+import { R } from './recursos.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -152,24 +152,23 @@ export class Telas {
     const conteudo = document.createElement('div');
     conteudo.className = 'capa';
     const heroi = document.createElement('img');
-    heroi.src = recurso('sprites/heroi_frente_pose.png');
+    heroi.src = recurso('sprites/heroi_soco0.png');
     heroi.className = 'retrato-grande';
+    // A gangue, virada para o herói.
     const ratos = document.createElement('canvas');
-    const rei = gerarRato('rei').quadros.parado0;
-    const rato = gerarRato('ratinho').quadros.preparar;
-    const taz = gerarRato('ratazana').quadros.parado0;
-    ratos.width = 200;
-    ratos.height = 140;
+    ratos.width = 330;
+    ratos.height = 190;
     const ctx = ratos.getContext('2d');
-    ctx.imageSmoothingEnabled = false;
-    ctx.save();
     ctx.scale(-1, 1);
-    ctx.drawImage(taz, -200, 140 - taz.height * 1.6, taz.width * 1.6, taz.height * 1.6);
-    ctx.drawImage(rato, -90, 140 - rato.height * 1.6, rato.width * 1.6, rato.height * 1.6);
-    ctx.drawImage(rei, -150, 140 - rei.height * 2, rei.width * 2, rei.height * 2);
-    ctx.restore();
+    for (const [img, x] of [
+      [R.imagens.ratos_ratazana_parado0, 330],
+      [R.imagens.ratos_ratinho_preparar, 130],
+      [R.imagens.ratos_rei_parado0, 250],
+    ]) {
+      ctx.drawImage(img, -x, 190 - img.height);
+    }
     ratos.className = 'retrato-grande';
-    ratos.style.height = 'calc(var(--u) * 190)';
+    ratos.style.height = 'calc(var(--u) * 200)';
     conteudo.append(heroi, ratos);
 
     return this.menu({
@@ -210,12 +209,18 @@ export class Telas {
   }
 
   // ---------- Diálogo com efeito de máquina de escrever ----------
-  dialogo(falas, { fundo = false } = {}) {
+  dialogo(falas, { fundo = false, imagem } = {}) {
     let i = 0;
     let visivel = 0;
     let acumulado = 0;
     const el = document.createElement('div');
     el.className = 'tela' + (fundo ? ' opaca' : '');
+    if (imagem) {
+      const ilustracao = document.createElement('img');
+      ilustracao.className = 'ilustracao';
+      ilustracao.src = recurso(imagem);
+      el.appendChild(ilustracao);
+    }
     const caixa = document.createElement('div');
     caixa.className = 'dialogo';
     el.appendChild(caixa);
@@ -293,6 +298,16 @@ export class Telas {
     this.raiz.appendChild(el);
     setTimeout(() => el.remove(), segundos * 1000);
   }
+}
+
+/** Cabeça do rato (para a caixa de diálogo), recortada do quadro parado. */
+function retratoRato(tipo) {
+  const img = R.imagens[`ratos_${tipo}_parado0`];
+  const c = document.createElement('canvas');
+  c.width = c.height = 120;
+  const lado = img.width * 0.62;
+  c.getContext('2d').drawImage(img, img.width - lado, 0, lado, lado, 0, 0, 120, 120);
+  return c;
 }
 
 export function preCarregarUi() {

@@ -10,6 +10,12 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `personagem-pular-acenar.png` | Personagem: parado de perfil, pulo (3 quadros), aceno e pose de frente |
 | `personagem-andar-direita-2.png` | Variação do ciclo de caminhada (parado de frente + 4 quadros) |
 | `personagem-retrato-frente.jpg` | Retrato do personagem de frente, em alta resolução (1728×1152), sorrindo com as mãos nos bolsos |
+| `personagem-golpes.png` | Golpes (6 colunas × 4 linhas): guarda, jab e direto (linhas 1–2) e joelhada e chute lateral (linhas 3–4), para a direita e para a esquerda |
+| `personagem-andar-8-quadros.png` | Ciclo de caminhada de 8 quadros: para a esquerda (linha de cima) e para a direita (linha de baixo) |
+| `ratos-andar.png` | Gangue dos Ratos andando (6 quadros por tipo): Ratinho de Esgoto, Ratazana, Rato do Lixão e Rei Rato |
+| `ratos-acoes.png` | Ações dos ratos (12 quadros por tipo, mesmas 4 linhas): parado, andar, preparar, atacar, dor, segurar e investida |
+| `grajau-bnh-tileset.png` | Tileset do Grajaú BNH: panorama dos morros, rua comercial, pôr do sol com a caixa d'água do BNH, casas, mercadinho, comércio, ônibus, carros, postes, árvores, grades, placa, lixeira e texturas (asfalto, calçada, faixa, buraco, meio-fio, muro, escada, bueiro) |
+| `capa-boulos-contra-ratus-nunes.png` | Arte de capa (1024×1536) "Boulos contra Ratus Nunes" |
 
 ## UI (`ui/`)
 

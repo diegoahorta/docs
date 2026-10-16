@@ -17,7 +17,7 @@ RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 ORIGEM = os.path.join(RAIZ, 'assets', 'sprites')
 DESTINO = os.path.join(RAIZ, 'jogo', 'sprites')
 
-manifesto = {'heroi': {}, 'cenario': {}, 'texturas': {}, 'itens': {}}
+manifesto = {'heroi': {}, 'cenario': {}, 'texturas': {}, 'itens': {}, 'ratos': {}}
 
 
 def componentes(img, fechamento=2):
@@ -58,9 +58,22 @@ def aparar(img):
     return img.crop(caixa)
 
 
+def ancora_x(img):
+    """Posição horizontal (0 a 1) do centro da cabeça/tronco: média dos pixels opacos do topo (cabeça).
+
+    Mantém o corpo parado na tela quando um braço ou uma perna esticada alarga o quadro.
+    """
+    alfa = np.array(img)[:, :, 3] > 60
+    topo = alfa[: max(1, img.height * 18 // 100)]
+    xs = np.where(topo)[1]
+    return round(float(xs.mean() + 0.5) / img.width, 4) if len(xs) else 0.5
+
+
 def salvar(grupo, nome, img, **extra):
     caminho = os.path.join(DESTINO, f'{grupo}_{nome}.png')
     img.save(caminho, optimize=True)
+    if grupo in ('heroi', 'ratos') and not nome.endswith('caido') and nome != 'retrato':
+        extra.setdefault('ax', ancora_x(img))
     manifesto[grupo][nome] = {'arquivo': f'sprites/{grupo}_{nome}.png',
                               'w': img.width, 'h': img.height, **extra}
 
@@ -73,21 +86,14 @@ def escalar(img, fator):
 
 
 def heroi():
-    andar = Image.open(os.path.join(ORIGEM, 'personagem-andar-direita.png')).convert('RGBA')
-    andar2 = Image.open(os.path.join(ORIGEM, 'personagem-andar-direita-2.png')).convert('RGBA')
     pular = Image.open(os.path.join(ORIGEM, 'personagem-pular-acenar.png')).convert('RGBA')
     pegar = Image.open(os.path.join(ORIGEM, 'personagem-pegar-garrafa-pedra.webp')).convert('RGBA')
 
-    # Ciclo de caminhada: quadros 1-4 das duas folhas (o quadro 0 é a pose de frente).
-    for i in range(4):
-        salvar('heroi', f'andar{i}', aparar(andar.crop((96 * (i + 1), 0, 96 * (i + 2), 160))))
-    for i in range(4):
-        salvar('heroi', f'andarb{i}', aparar(andar2.crop((96 * (i + 1), 0, 96 * (i + 2), 160))))
-    salvar('heroi', 'frente', aparar(andar.crop((0, 0, 96, 160))))
-
-    # Folha de pulo: parado, impulso (soco), voadora, aterrissagem, aceno, frente.
-    caixas = [(30, 0, 82), (106, 0, 224), (224, 0, 340), (345, 0, 440), (460, 0, 548), (565, 0, 672)]
-    nomes = ['parado', 'impulso', 'voadora', 'aterrissar', 'acenar', 'frente_pose']
+    # A caminhada agora vem de personagem-andar-8-quadros.png (heroi_novo).
+    # Folha de pulo: parado (usado deitado), impulso (arremesso), aterrissagem (dor), aceno, frente.
+    # O quadro da voadora (224-340) foi substituído pelo chute lateral da folha de golpes.
+    caixas = [(30, 0, 82), (106, 0, 224), (345, 0, 440), (460, 0, 548), (565, 0, 672)]
+    nomes = ['parado', 'impulso', 'aterrissar', 'acenar', 'frente_pose']
     for (x0, y0, x1), nome in zip(caixas, nomes):
         salvar('heroi', nome, aparar(pular.crop((x0, y0, x1, 160))))
 
@@ -119,6 +125,147 @@ def maiores_componentes(rotulos, caixa):
         ys, xs = np.where(janela == rotulo)
         pontos.append((x0 + xs[0], y0 + ys[0]))
     return pontos
+
+
+def quadros_da_linha(img, faixa, minimo=1500, fechamento=3):
+    """Separa os personagens de uma faixa horizontal da folha, da esquerda para a direita.
+
+    Cada personagem é o maior pedaço opaco; pedaços pequenos (rabo, taco, pé solto)
+    juntam-se ao personagem mais próximo.
+    """
+    y0, y1 = faixa
+    faixa_img = img.crop((0, y0, img.width, y1))
+    alfa = np.array(faixa_img)[:, :, 3] > 40
+    alfa = ndimage.binary_closing(alfa, iterations=fechamento)
+    rot, n = ndimage.label(alfa)
+    areas = ndimage.sum(alfa, rot, range(1, n + 1))
+    centros = ndimage.center_of_mass(alfa, rot, range(1, n + 1))
+    grandes = [i for i in range(n) if areas[i] >= minimo]
+    grandes.sort(key=lambda i: centros[i][1])
+    grupos = {i: [i + 1] for i in grandes}
+    caixas = ndimage.find_objects(rot)
+    for i in range(n):
+        if i in grupos or areas[i] < 40:
+            continue
+        cy, cx = centros[i]
+        # só junta pedaços que estejam dentro (ou bem perto) da caixa de um personagem
+        perto = [g for g in grandes
+                 if caixas[g][0].start - 20 <= cy <= caixas[g][0].stop + 20
+                 and caixas[g][1].start - 20 <= cx <= caixas[g][1].stop + 20]
+        if not perto:
+            continue
+        dono = min(perto, key=lambda g: abs(centros[g][1] - cx) + abs(centros[g][0] - cy))
+        grupos[dono].append(i + 1)
+    arr = np.array(faixa_img)
+    quadros = []
+    for g in grandes:
+        mascara = np.isin(rot, grupos[g])
+        ys, xs = np.where(mascara)
+        a = arr.copy()
+        a[~mascara, 3] = 0
+        quadros.append(Image.fromarray(a).crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)))
+    return quadros
+
+
+def heroi_novo():
+    """Golpes (socos, joelhada, chute) e o ciclo de caminhada de 8 quadros."""
+    golpes = Image.open(os.path.join(ORIGEM, 'personagem-golpes.png')).convert('RGBA')
+    socos = quadros_da_linha(golpes, (0, 256))
+    chutes = quadros_da_linha(golpes, (526, 768))
+    assert len(socos) == 6 and len(chutes) == 6, (len(socos), len(chutes))
+    fator = 150 / socos[0].height  # guarda com a altura da pose parada
+    for i, q in enumerate(socos):
+        salvar('heroi', f'soco{i}', escalar(q, fator))
+    for i, q in enumerate(chutes):
+        salvar('heroi', f'chute{i}', escalar(q, fator))
+
+    andar = Image.open(os.path.join(ORIGEM, 'personagem-andar-8-quadros.png')).convert('RGBA')
+    passos = quadros_da_linha(andar, (444, 887))  # linha de baixo: virado para a direita
+    assert len(passos) == 8, len(passos)
+    fator = 168 / max(q.height for q in passos)  # proporção mais cabeçuda: um pouco maior que 158
+    for i, q in enumerate(passos):
+        salvar('heroi', f'passo{i}', escalar(q, fator))
+
+
+RATOS = [('ratinho', 125), ('ratazana', 135), ('lixeiro', 125), ('rei', 185)]
+# Colunas da folha de ações usadas para cada pose do jogo.
+POSES_RATO = {'parado0': 0, 'parado1': 1, 'preparar': 6, 'atacar': 7, 'golpe': 8, 'dor': 9,
+              'arremessar': 7, 'segurar': 10, 'investida': 11}
+
+
+def ratos():
+    acoes = Image.open(os.path.join(ORIGEM, 'ratos-acoes.png')).convert('RGBA')
+    andar = Image.open(os.path.join(ORIGEM, 'ratos-andar.png')).convert('RGBA')
+    alt_acoes = acoes.height / 4
+    alt_andar = andar.height / 4
+    for linha, (tipo, altura) in enumerate(RATOS):
+        qa = quadros_da_linha(acoes, (round(linha * alt_acoes), round((linha + 1) * alt_acoes)))
+        qw = quadros_da_linha(andar, (round(linha * alt_andar), round((linha + 1) * alt_andar)))
+        assert len(qa) == 12 and len(qw) == 6, (tipo, len(qa), len(qw))
+        fator = altura / qa[0].height
+        poses = dict(POSES_RATO)
+        if tipo == 'ratazana':
+            poses['preparar'] = 10  # taco levantado atrás da cabeça
+        for pose, col in poses.items():
+            salvar('ratos', f'{tipo}_{pose}', escalar(qa[col], fator))
+        # caído: o quadro de dor deitado de costas (girado 90° no sentido anti-horário)
+        salvar('ratos', f'{tipo}_caido', escalar(qa[poses['dor']], fator).rotate(90, expand=True))
+        fator_andar = altura / qw[0].height
+        for i, q in enumerate(qw):
+            salvar('ratos', f'{tipo}_andar{i}', escalar(q, fator_andar))
+
+
+def grajau():
+    img = Image.open(os.path.join(ORIGEM, 'grajau-bnh-tileset.png')).convert('RGBA')
+
+    def objeto(nome, caixa, so_peca=True, apagar=()):
+        fonte = img
+        if apagar:
+            fonte = img.copy()
+            for ret in apagar:  # retângulos com pedaços de vizinhos encostados no objeto
+                fonte.paste((0, 0, 0, 0), ret)
+        recorte = fonte.crop(caixa)
+        if so_peca:
+            # descarta pedaços de objetos vizinhos que entraram no retângulo
+            pecas = quadros_da_linha(recorte, (0, recorte.height), minimo=1, fechamento=2)
+            recorte = max(pecas, key=lambda q: q.width * q.height)
+        salvar('cenario', 'grajau_' + nome, aparar(recorte))
+
+    objeto('panorama', (18, 12, 1520, 153), so_peca=False)
+    objeto('por_do_sol', (1003, 159, 1521, 364), so_peca=False)
+    objeto('caixa_dagua', (17, 372, 305, 641))
+    objeto('casa_bege', (312, 400, 487, 641))
+    objeto('casa_verde', (487, 400, 598, 641))
+    objeto('muro_reboco', (598, 460, 667, 641))
+    objeto('casa_laranja', (667, 400, 797, 641))
+    objeto('mercadinho', (800, 400, 1003, 641))
+    objeto('comercio', (1003, 440, 1272, 641))
+    objeto('garagem', (1275, 486, 1391, 632))
+    objeto('muro_grade', (1395, 505, 1524, 632))
+    objeto('onibus', (10, 696, 366, 832))
+    objeto('carro_prata', (375, 759, 541, 832))
+    objeto('carro_preto', (546, 764, 682, 832))
+    objeto('poste', (676, 641, 742, 846))
+    objeto('luminaria', (747, 641, 836, 846))
+    objeto('arvore', (965, 648, 1168, 846), apagar=[(960, 640, 1000, 700), (1137, 765, 1215, 846)])
+    objeto('portao', (1137, 770, 1210, 846))
+    objeto('arvore_fina', (1185, 680, 1290, 846), apagar=[(1137, 765, 1212, 846)])
+    objeto('grade', (1287, 760, 1442, 846))
+    objeto('placa', (1408, 686, 1470, 846), apagar=[(1395, 760, 1443, 846)])
+    objeto('lixeira', (1471, 778, 1512, 846))
+
+    def textura(nome, caixa, recuo=4):
+        x0, y0, x1, y1 = caixa
+        salvar('texturas', 'grajau_' + nome, img.crop((x0 + recuo, y0 + recuo, x1 - recuo, y1 - recuo)))
+
+    textura('asfalto', (18, 849, 397, 951))
+    textura('calcada', (405, 850, 795, 935))
+    textura('faixa', (808, 853, 1196, 932))
+    textura('buraco', (1209, 853, 1518, 929), recuo=6)
+    textura('meio_fio', (19, 957, 752, 1006), recuo=2)
+    textura('muro_baixo', (767, 942, 1055, 1007), recuo=2)
+    objeto('escada', (1071, 940, 1297, 1006))
+    objeto('bueiro', (1305, 942, 1518, 1006))
 
 
 def retrato():
@@ -187,8 +334,11 @@ def cenario():
 def main():
     os.makedirs(DESTINO, exist_ok=True)
     heroi()
+    heroi_novo()
+    ratos()
     retrato()
     cenario()
+    grajau()
     with open(os.path.join(DESTINO, 'manifesto.json'), 'w', encoding='utf-8') as f:
         json.dump(manifesto, f, ensure_ascii=False, indent=1)
     total = sum(len(v) for v in manifesto.values())

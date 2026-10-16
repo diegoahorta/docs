@@ -120,17 +120,40 @@ class Ator {
 // ---------------------------------------------------------------------------
 // Herói
 // ---------------------------------------------------------------------------
-const QUADROS_ANDAR = ['heroi_andar0', 'heroi_andar1', 'heroi_andar2', 'heroi_andar3'];
+const QUADROS_ANDAR = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => 'heroi_passo' + i);
+const GUARDA = 'heroi_soco0';
 
+// Sequência de golpes (apertando soco seguidas vezes): jab, direto, joelhada e chute lateral.
+// quadros: [instante em s, quadro]; ativo: janela em que o golpe acerta.
 const SOCOS = [
-  { quadro: 'heroi_pegar_garrafa1', dur: 0.24, ativo: [0.05, 0.13], alcance: [18, 78], dano: 8, impulso: 120 },
-  { quadro: 'heroi_impulso', dur: 0.28, ativo: [0.06, 0.15], alcance: [18, 84], dano: 10, impulso: 160, pulinho: 160 },
-  { quadro: 'heroi_voadora', dur: 0.42, ativo: [0.06, 0.26], alcance: [10, 92], dano: 18, impulso: 420, pulinho: 220, derruba: true },
+  {
+    nome: 'jab', dur: 0.22, ativo: [0.05, 0.12], alcance: [16, 98], dano: 7, impulso: 70,
+    quadros: [[0, 'heroi_soco1'], [0.05, 'heroi_soco2'], [0.15, 'heroi_soco1']],
+  },
+  {
+    nome: 'direto', dur: 0.26, ativo: [0.06, 0.14], alcance: [16, 106], dano: 9, impulso: 110,
+    quadros: [[0, 'heroi_soco3'], [0.06, 'heroi_soco4'], [0.19, 'heroi_soco5']],
+  },
+  {
+    nome: 'joelhada', dur: 0.28, ativo: [0.06, 0.15], alcance: [8, 72], dano: 11, impulso: 150,
+    quadros: [[0, 'heroi_chute1'], [0.06, 'heroi_chute2'], [0.21, 'heroi_chute1']],
+  },
+  {
+    nome: 'chute', dur: 0.44, ativo: [0.08, 0.24], alcance: [10, 122], dano: 18, impulso: 210, derruba: true,
+    quadros: [[0, 'heroi_chute1'], [0.08, 'heroi_chute3'], [0.3, 'heroi_chute4'], [0.37, 'heroi_chute5']],
+  },
 ];
+const ULTIMO_GOLPE = SOCOS.length - 1;
+
+function quadroDoGolpe(golpe, t) {
+  let q = golpe.quadros[0][1];
+  for (const [inicio, nome] of golpe.quadros) if (t >= inicio) q = nome;
+  return q;
+}
 
 export class Heroi extends Ator {
   constructor(jogo) {
-    super(jogo, R.tex.heroi_parado, HEROI.escala);
+    super(jogo, R.tex[GUARDA], HEROI.escala);
     this.vidaMax = HEROI.vidaMax;
     this.vida = this.vidaMax;
     this.vidas = HEROI.vidas;
@@ -206,7 +229,7 @@ export class Heroi extends Ator {
       } else if (ent.consumir('soco')) {
         if (this.segurando) this.mudar('arremessar');
         else {
-          this.combo = this.relogio - this.ultimoSoco < 0.5 ? (this.combo + 1) % 3 : 0;
+          this.combo = this.relogio - this.ultimoSoco < 0.5 ? (this.combo + 1) % SOCOS.length : 0;
           this.iniciarSoco();
         }
       }
@@ -235,11 +258,11 @@ export class Heroi extends Ator {
         if (this.t >= s.ativo[0] && this.t <= s.ativo[1]) this.golpear(s.alcance, s.dano, s.derruba, 50);
         if (this.t >= s.dur) {
           this.ultimoSoco = this.relogio;
-          if (this.socoFila && this.combo < 2) {
+          if (this.socoFila && this.combo < ULTIMO_GOLPE) {
             this.combo++;
             this.iniciarSoco();
           } else {
-            if (this.combo === 2) this.combo = -1;
+            if (this.combo === ULTIMO_GOLPE) this.combo = -1;
             this.mudar(this.noChao ? 'parado' : 'pular');
           }
         }
@@ -247,7 +270,7 @@ export class Heroi extends Ator {
       }
       case 'voadora':
         this.mover(this.dir * 120 * dt, 0, limites);
-        this.golpear([0, 86], 16, true, 70);
+        this.golpear([0, 112], 16, true, 70);
         break;
       case 'pegar':
         if (this.t >= 0.42) {
@@ -305,12 +328,6 @@ export class Heroi extends Ator {
     this.mudar('soco');
     this.socoFila = false;
     this.atingidos.clear();
-    const s = SOCOS[this.combo];
-    if (s.pulinho && this.noChao) {
-      this.vh = s.pulinho;
-      this.noChao = false;
-      this.suporte = null;
-    }
     this.jogo.audio.sfx('vento');
   }
 
@@ -370,22 +387,22 @@ export class Heroi extends Ator {
   }
 
   animar() {
-    let quadro = 'heroi_parado';
+    let quadro = GUARDA;
     let rot = 0;
     this.alturaY = 0;
     let cor = 0xffffff;
     switch (this.estado) {
       case 'andar':
-        quadro = QUADROS_ANDAR[Math.floor(this.t * 9) % 4];
+        quadro = QUADROS_ANDAR[Math.floor(this.t * 12) % QUADROS_ANDAR.length];
         break;
       case 'pular':
-        quadro = this.vh > 120 ? 'heroi_impulso' : 'heroi_aterrissar';
+        quadro = this.vh > 120 ? 'heroi_chute2' : 'heroi_chute1';
         break;
       case 'soco':
-        quadro = SOCOS[this.combo].quadro;
+        quadro = quadroDoGolpe(SOCOS[this.combo], this.t);
         break;
       case 'voadora':
-        quadro = 'heroi_voadora';
+        quadro = 'heroi_chute3';
         break;
       case 'pegar':
         quadro = `heroi_pegar_${this.pegando}${Math.min(5, Math.floor(this.t / 0.07))}`;
@@ -403,12 +420,12 @@ export class Heroi extends Ator {
       case 'voando':
       case 'caido':
       case 'morto':
-        quadro = 'heroi_parado';
+        quadro = 'heroi_parado'; // o quadro fino deitado
         rot = (Math.PI / 2) * this.dir * (this.estado === 'voando' ? Math.min(1, this.t * 3) : 1);
         this.alturaY = 14;
         break;
       case 'levantar':
-        quadro = 'heroi_aterrissar';
+        quadro = 'heroi_chute1';
         break;
       case 'vitoria':
         quadro = Math.floor(this.t * 3) % 2 ? 'heroi_acenar' : 'heroi_frente_pose';
@@ -458,19 +475,20 @@ export class Heroi extends Ator {
 // Ratos (inimigos)
 // ---------------------------------------------------------------------------
 const STATS = {
-  ratinho: { vida: 34, vel: 125, velZ: 85, dano: 7, alcance: 56, preparo: 0.32, escala: 1.8, pontos: 100, raio: 16 },
-  ratazana: { vida: 72, vel: 95, velZ: 65, dano: 13, alcance: 80, preparo: 0.5, escala: 2, pontos: 200, raio: 20 },
-  lixeiro: { vida: 40, vel: 110, velZ: 75, dano: 9, alcance: 56, preparo: 0.55, escala: 1.8, pontos: 150, raio: 16, distancia: 280 },
-  rei: { vida: 560, vel: 135, velZ: 90, dano: 16, alcance: 100, preparo: 0.42, escala: 2.8, pontos: 5000, raio: 30 },
+  // porte: tamanho relativo (para posicionar impactos e números); os sprites já vêm no tamanho certo.
+  ratinho: { nome: 'RATINHO DE ESGOTO', vida: 34, vel: 125, velZ: 85, dano: 7, alcance: 62, preparo: 0.32, porte: 1, pontos: 100, raio: 16 },
+  ratazana: { nome: 'RATAZANA', vida: 72, vel: 95, velZ: 65, dano: 13, alcance: 86, preparo: 0.5, porte: 1.1, pontos: 200, raio: 20 },
+  lixeiro: { nome: 'RATO DO LIXÃO', vida: 40, vel: 110, velZ: 75, dano: 9, alcance: 56, preparo: 0.55, porte: 1, pontos: 150, raio: 16, distancia: 280 },
+  rei: { nome: 'REI RATO', vida: 720, vel: 135, velZ: 90, dano: 16, alcance: 104, preparo: 0.42, porte: 1.5, pontos: 5000, raio: 30 },
 };
 
 export class Rato extends Ator {
   constructor(jogo, tipo, x, z) {
     const st = STATS[tipo];
-    super(jogo, R.ratos[tipo].tex.parado0, st.escala);
+    super(jogo, R.ratos[tipo].parado0, 1);
     this.tipo = tipo;
     this.st = st;
-    this.nome = R.ratos[tipo].nome;
+    this.nome = st.nome;
     this.vida = st.vida;
     this.vidaMax = st.vida;
     this.raio = st.raio;
@@ -737,15 +755,14 @@ export class Rato extends Ator {
   }
 
   animar() {
-    const tex = R.ratos[this.tipo].tex;
+    const tex = R.ratos[this.tipo];
     let q = 'parado' + (Math.floor(this.relogio * 2.5) % 2);
     let cor = 0xffffff;
     switch (this.estado) {
       case 'entrar':
       case 'perseguir':
       case 'rondar':
-        if (this.andando !== false) q = 'andar' + (Math.floor(this.relogio * 8) % 4);
-        if (this.estado === 'entrar') q = 'andar' + (Math.floor(this.relogio * 8) % 4);
+        if (this.andando !== false || this.estado === 'entrar') q = 'andar' + (Math.floor(this.relogio * 10) % 6);
         break;
       case 'preparar':
         q = 'preparar';

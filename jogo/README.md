@@ -1,8 +1,9 @@
 # Boulos vs. A Gangue dos Ratos
 
 Beat 'em up de plataforma em HTML5 (JavaScript + Three.js), ambientado em São Paulo.
-Boulos atravessa a cidade para expulsar a Gangue dos Ratos: Avenida Paulista, Centro
-(Copan e feira livre) e a periferia, onde enfrenta o Rei Rato.
+Boulos atravessa a cidade para expulsar a Gangue dos Ratos. A jornada começa no
+Grajaú (Conjunto BNH, com a caixa d'água) e passa pela Avenida Paulista, pelo Centro
+(Copan e feira livre) e pela periferia, onde ele enfrenta o Rei Rato.
 
 ## Como rodar
 
@@ -35,7 +36,7 @@ Não há etapa de build: o Three.js está incluído em `vendor/`.
 | --- | --- | --- |
 | Andar (inclusive para o fundo e para a frente) | Setas / WASD | Analógico / direcional |
 | Pular (baixo + pular desce da plataforma) | Espaço / K | A |
-| Soco (3 seguidos = combo; no ar = voadora) | J / Z | X |
+| Golpe (4 seguidos = combo; no ar = voadora) | J / Z | X |
 | Pegar e arremessar garrafa ou pedra | L / X | B |
 | Força do Povo (energia cheia) | U / C | Y |
 | Pausa | Esc / P | Start |
@@ -48,7 +49,7 @@ Em celulares e tablets aparecem botões de toque durante a partida.
 ## Mecânicas
 
 - **Ondas de inimigos:** a câmera trava até a gangue ser derrotada; depois aparece "SIGA".
-- **Combo:** soco, soco com impulso e voadora; o terceiro golpe derruba.
+- **Combo de 4 golpes:** jab, direto, joelhada e chute lateral; o chute derruba. No ar, a voadora é o chute lateral.
 - **Armas:** garrafas e pedras no chão (marcadas pelo destaque verde). A pedra cai de novo depois do arremesso.
 - **Comidas:** coxinha (+25 de vida), pastel (+45) e estrela (+50 de energia). Os ratos às vezes deixam itens.
 - **Plataformas:** ônibus, banca, ponto de ônibus, feira, carro e andaimes (bloco atravessável). Dá para subir pulando.
@@ -76,8 +77,7 @@ jogo/
 │   ├── jogo.js           laço principal, câmera, ondas, fluxo da história
 │   ├── atores.js         herói, ratos, projéteis, itens, efeitos
 │   ├── cenario.js        céu, prédios, calçada, rua, plataformas, perigos
-│   ├── fases.js          história e definição das 3 fases
-│   ├── ratos.js          pixel art procedural da Gangue dos Ratos
+│   ├── fases.js          história e definição das 4 fases
 │   ├── recursos.js       carregamento de sprites, fonte bitmap e texturas procedurais
 │   ├── audio.js          trilha drum and bass e efeitos sonoros
 │   ├── entrada.js        teclado, controle e toque
@@ -94,7 +94,8 @@ jogo/
 
 Recursos do repositório usados pelo jogo:
 
-- `assets/sprites`: herói (andar, pular, pegar objetos, retrato) e o tileset de São Paulo
+- `assets/sprites`: herói (golpes, caminhada de 8 quadros, pular, pegar objetos, retrato),
+  os ratos (caminhada e ações dos 4 tipos), o tileset de São Paulo e o tileset do Grajaú BNH
 - `assets/sprites/ui`: botões, teclas, scanlines, overlay de dano, bloco atravessável, área de perigo, destaque
 - `assets/fontes`: Upheaval (títulos e diálogos), SmallPixel-7 (HUD) e a fonte bitmap `Fonte_jogo` (números de dano)
 - `assets/audio/musica`: trilha alternativa em MP3

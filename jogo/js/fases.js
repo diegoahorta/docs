@@ -3,7 +3,8 @@
 export const INTRO = [
   { quem: 'NARRADOR', texto: 'São Paulo. A Gangue dos Ratos saiu dos bueiros e tomou conta da cidade.' },
   { quem: 'NARRADOR', texto: 'Eles picharam o MASP, saquearam a feira e espantaram o povo do ponto de ônibus.' },
-  { quem: 'BOULOS', texto: 'Essa cidade é do povo. Hora de colocar ordem na casa!' },
+  { quem: 'NARRADOR', texto: 'Tudo começou no extremo sul, embaixo da velha caixa d\'água do BNH do Grajaú.' },
+  { quem: 'BOULOS', texto: 'Essa cidade é do povo. Hora de colocar ordem na casa, começando pelo Grajaú!' },
 ];
 
 export const FINAL = [
@@ -18,6 +19,56 @@ export const FINAL = [
 export const FASES = [
   {
     nome: 'FASE 1',
+    titulo: 'GRAJAÚ: CONJUNTO BNH',
+    musica: 'grajau',
+    ceu: ['#4a8fe0', '#b4dcff'],
+    tinta: 0xffffff,
+    horizonte: '#8aa0c0',
+    panorama: 'cenario_grajau_panorama',
+    escalaPanorama: 1.5,
+    alturaPanorama: 70,
+    chao: {
+      calcada: ['texturas_grajau_calcada', 191, 77],
+      asfalto: ['texturas_grajau_asfalto', 370, 92],
+      meioFio: ['texturas_grajau_meio_fio', 364, 24],
+      faixaPedestre: 'texturas_grajau_faixa',
+      buraco: 'texturas_grajau_buraco',
+      semFaixas: true,
+    },
+    fachadas: [
+      'grajau_casa_bege', 'grajau_casa_verde', 'grajau_muro_reboco', 'grajau_casa_laranja', 'grajau_caixa_dagua',
+      'grajau_garagem', 'grajau_mercadinho', 'grajau_muro_grade', 'grajau_comercio', 'grajau_casa_verde',
+      'grajau_casa_bege', 'grajau_garagem', 'grajau_casa_laranja', 'grajau_mercadinho',
+    ],
+    escalas: {
+      grajau_caixa_dagua: 1.6, grajau_comercio: 1.35, grajau_mercadinho: 1.35,
+      grajau_poste: 1.25, grajau_luminaria: 1.3, grajau_arvore: 1.2, grajau_arvore_fina: 1.2,
+      grajau_placa: 1.1, grajau_lixeira: 1.1, grajau_portao: 1.2, grajau_grade: 1.2,
+    },
+    distantes: [],
+    decoracao: ['grajau_poste', 'grajau_arvore', 'grajau_lixeira', 'grajau_luminaria', 'grajau_portao', 'grajau_arvore_fina', 'grajau_placa', 'grajau_grade'],
+    comprimento: 4200,
+    historia: [
+      { quem: 'NARRADOR', texto: 'Fase 1: Grajaú, Conjunto BNH. Os ratos tomaram a rua do mercadinho.' },
+      { quem: 'BOULOS', texto: 'Aqui a gente se organiza. Bora, quebrada!' },
+    ],
+    objetos: [
+      { tipo: 'grajau_carro_prata', x: 1300, z: 16, solido: true },
+      { tipo: 'grajau_onibus', x: 2450, z: 14, solido: true },
+      { tipo: 'grajau_carro_preto', x: 3500, z: 18, solido: true },
+    ],
+    plataformas: [{ x0: 1750, x1: 1990, z0: 74, z1: 114, topo: 96 }],
+    perigos: [{ x0: 900, x1: 1020, z0: 20, z1: 50 }, { x0: 2950, x1: 3080, z0: 18, z1: 50 }],
+    itens: [['pedra', 620, 50], ['garrafa', 1500, 110], ['coxinha', 2100, 60], ['pedra', 2800, 120], ['pastel', 3700, 80]],
+    ondas: [
+      { camX: 250, inimigos: [['ratinho', 'dir'], ['ratinho', 'esq'], ['ratinho', 'bueiro']] },
+      { camX: 1100, inimigos: [['ratinho', 'dir'], ['lixeiro', 'dir'], ['ratinho', 'esq'], ['ratinho', 'bueiro']] },
+      { camX: 2000, inimigos: [['ratazana', 'dir'], ['ratinho', 'dir'], ['lixeiro', 'esq'], ['ratinho', 'bueiro']] },
+      { camX: 3240, inimigos: [['ratazana', 'dir'], ['ratazana', 'esq'], ['ratinho', 'bueiro'], ['lixeiro', 'dir'], ['ratinho', 'dir']] },
+    ],
+  },
+  {
+    nome: 'FASE 2',
     titulo: 'AVENIDA PAULISTA',
     musica: 'fase1',
     ceu: ['#5aa0e0', '#bfe3ff'],
@@ -28,7 +79,7 @@ export const FASES = [
     distantes: ['copan', 'predio', 'predio', 'copan'],
     comprimento: 4300,
     historia: [
-      { quem: 'NARRADOR', texto: 'Fase 1: Avenida Paulista. Os ratos ocuparam o vão do MASP.' },
+      { quem: 'NARRADOR', texto: 'Fase 2: Avenida Paulista. Os ratos ocuparam o vão do MASP.' },
       { quem: 'BOULOS', texto: 'Ninguém picha o MASP no meu turno!' },
     ],
     objetos: [
@@ -47,7 +98,7 @@ export const FASES = [
     ],
   },
   {
-    nome: 'FASE 2',
+    nome: 'FASE 3',
     titulo: 'CENTRO: COPAN E FEIRA LIVRE',
     musica: 'fase2',
     ceu: ['#e0784a', '#ffd08a'],
@@ -58,7 +109,7 @@ export const FASES = [
     distantes: ['predio', 'copan', 'predio'],
     comprimento: 4600,
     historia: [
-      { quem: 'NARRADOR', texto: 'Fase 2: Centro. Os ratos estão saqueando a feira perto do Copan.' },
+      { quem: 'NARRADOR', texto: 'Fase 3: Centro. Os ratos estão saqueando a feira perto do Copan.' },
       { quem: 'BOULOS', texto: 'Mexeu com o pastel da feira, mexeu comigo.' },
     ],
     objetos: [
@@ -81,7 +132,7 @@ export const FASES = [
     ],
   },
   {
-    nome: 'FASE 3',
+    nome: 'FASE 4',
     titulo: 'PERIFERIA: A TOCA DO REI RATO',
     musica: 'fase3',
     ceu: ['#141838', '#3a3070'],
@@ -93,7 +144,7 @@ export const FASES = [
     distantes: ['predio', 'predio', 'copan'],
     comprimento: 4200,
     historia: [
-      { quem: 'NARRADOR', texto: 'Fase 3: periferia. A toca do Rei Rato fica embaixo dessas ruas.' },
+      { quem: 'NARRADOR', texto: 'Fase 4: periferia. A toca do Rei Rato fica embaixo dessas ruas.' },
       { quem: 'BOULOS', texto: 'Aqui eu conheço cada viela. Vamos acabar com isso.' },
     ],
     objetos: [

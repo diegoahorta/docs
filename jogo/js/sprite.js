@@ -41,7 +41,9 @@ export class Sprite {
   }
 
   pos(x, y) {
-    this.mesh.position.x = x;
+    // âncora horizontal do quadro (centro do corpo); o espelhamento já vem no sinal de scale.x
+    const ax = this.tex?.userData.ax ?? 0.5;
+    this.mesh.position.x = x - (ax - 0.5) * this.mesh.scale.x;
     this.mesh.position.y = y;
   }
 

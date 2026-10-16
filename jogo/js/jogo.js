@@ -91,6 +91,8 @@ export class Jogo {
   atualizar(dt) {
     if (this.pausaGolpe > 0) {
       this.pausaGolpe -= dt;
+      // não perde o próximo golpe do combo apertado durante a pausa do impacto
+      if (this.heroi.estado === 'soco' && this.entrada.consumir('soco')) this.heroi.socoFila = true;
       return;
     }
     const h = this.heroi;
@@ -241,8 +243,8 @@ export class Jogo {
     this.comboN++;
     this.comboT = 1.3;
     heroi.energia = Math.min(100, heroi.energia + 6);
-    this.efeitos.impacto(rato.x - heroi.dir * 6, rato.z, rato.h + 70 * (rato.st.escala / 2), forte ? 1.2 : 0.9);
-    this.efeitos.numero(rato.x, rato.z, rato.h + 120 * (rato.st.escala / 2), String(dano));
+    this.efeitos.impacto(rato.x - heroi.dir * 6, rato.z, rato.h + 70 * rato.st.porte, forte ? 1.2 : 0.9);
+    this.efeitos.numero(rato.x, rato.z, rato.h + 120 * rato.st.porte, String(dano));
     this.audio.sfx(forte ? 'golpeForte' : 'soco');
     this.pausaGolpe = forte ? 0.07 : 0.04;
     if (forte) this.tremer(0.12, 5);
@@ -376,7 +378,7 @@ export class Jogo {
     this.heroi.vidas = HEROI.vidas;
     this.heroi.energia = 0;
     this.audio.tocar('menu');
-    await this.telas.dialogo(INTRO, { fundo: true });
+    await this.telas.dialogo(INTRO, { fundo: true, imagem: 'sprites/cenario_grajau_por_do_sol.png' });
     await this.jogarFase(0);
   }
 

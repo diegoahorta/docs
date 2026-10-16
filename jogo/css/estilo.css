@@ -299,6 +299,13 @@ img { image-rendering: pixelated; }
   border: calc(var(--u) * 3) solid #000;
   flex: none;
 }
+.tela .ilustracao {
+  position: absolute;
+  top: calc(var(--u) * 24);
+  width: calc(var(--u) * 700);
+  border: calc(var(--u) * 4) solid #000;
+  box-shadow: 0 0 0 calc(var(--u) * 3) var(--roxo);
+}
 .dialogo .continuar {
   position: absolute;
   right: calc(var(--u) * 14);
