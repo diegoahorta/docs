@@ -19,3 +19,6 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `ui/tecla-alt.png` | 22×12, ícone da tecla "ALT" |
 | `ui/overlay-vermelho.png` | 16×16, preenchimento vermelho-escuro semitransparente (overlay de tile) |
 | `ui/destaque-tile-verde.png` | 16×16, preenchimento verde-água semitransparente com borda de 1 px (destaque/seleção de tile) |
+| `ui/area-de-perigo.png` | 16×16, tile cinza-escuro sólido (área de perigo) |
+| `ui/bloco-atravessavel.png` | 16×16, preenchimento vinho semitransparente com borda de 1 px (bloco atravessável) |
+| `ui/botao-seta-baixo.png` | 80×80, botão circular branco com seta para baixo |
