@@ -58,18 +58,22 @@ await p.evaluate(() => {
 });
 
 const CENAS = {
-  marsilac_andar: { fase: 0, quadros: 170, cfg: { x: 140, z: 50, camX: 0, modo: 'andar' } },
-  marsilac_luta: { fase: 0, quadros: 220, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratinho', 1600, 60], ['ratinho', 1680, 95], ['lixeiro', 1900, 70], ['ratinho', 1250, 40]], modo: 'fixo' } },
+  marsilac_luta: { fase: 0, quadros: 200, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratinho', 1600, 60], ['ratinho', 1680, 95], ['lixeiro', 1900, 70], ['ratinho', 1250, 40]], modo: 'fixo' } },
   parelheiros_onibus: { fase: 1, quadros: 150, cfg: { x: 1830, z: 30, camX: 1530, modo: 'parado', noOnibus: true, ratos: [['ratinho', 2230, 30], ['ratinho', 2290, 50]],
     roteiro: Object.assign(Object.fromEntries([...Array(50).keys()].map((i) => [i + 8, ['+direita']])), { 30: ['+direita', 'pular'], 42: ['+direita', 'soco'] }) } },
-  parelheiros_luta: { fase: 1, quadros: 200, cfg: { x: 2400, z: 70, camX: 2100, ratos: [['ratazana', 2600, 70], ['ratinho', 2650, 100], ['lixeiro', 2950, 50], ['ratinho', 2200, 60]], modo: 'fixo' } },
-  grajau_luta: { fase: 2, quadros: 230, cfg: { x: 560, z: 70, camX: 260, ratos: [['ratinho', 760, 60], ['ratinho', 840, 95], ['ratazana', 980, 70], ['ratinho', 420, 40]], modo: 'fixo' } },
-  dutra_luta: { fase: 3, quadros: 220, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1600, 70], ['lixeiro', 1900, 100], ['ratinho', 1250, 40], ['ratinho', 1650, 120]], modo: 'fixo' } },
-  direitus: { fase: 3, quadros: 300, cfg: { x: 3450, z: 80, camX: 3150, ratos: [['direitus', 3700, 80]], modo: 'fixo' } },
-  direitus2: { fase: 0, quadros: 220, cfg: { x: 3100, z: 80, camX: 2800, ratos: [['direitus', 3350, 80], ['ratinho', 2950, 50]], modo: 'fixo' } },
-  paulista_luta: { fase: 4, quadros: 220, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1650, 70], ['lixeiro', 1950, 100], ['ratinho', 1250, 40], ['ratinho', 1700, 120]], modo: 'fixo' } },
-  chefe: { fase: 4, quadros: 330, cfg: { x: 3600, z: 90, camX: 3340, ratos: [['rei', 3900, 90]], modo: 'fixo' } },
-  especial: { fase: 4, quadros: 120, cfg: { x: 3650, z: 90, camX: 3340, energia: 100, ratos: [['rei', 3820, 90], ['ratinho', 3520, 60], ['direitus', 3900, 110], ['ratinho', 3800, 40]], modo: 'parado',
+  grajau_chuva: { fase: 2, quadros: 220, cfg: { x: 3300, z: 70, camX: 3000, ratos: [['ratazana', 3500, 70], ['ratinho', 3560, 100], ['ratinho', 3150, 40], ['lixeiro', 3800, 60]], modo: 'fixo' } },
+  jet_luta: { fase: 3, quadros: 240, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratinho', 1650, 60], ['ratazana', 1750, 100], ['ratinho', 1250, 40], ['lixeiro', 1950, 80]], modo: 'fixo' } },
+  jet_salto: { fase: 3, quadros: 120, cfg: { x: 2250, z: 100, camX: 1950, modo: 'parado', ratos: [['ratinho', 2520, 100], ['ratinho', 2580, 80]],
+    roteiro: Object.assign(Object.fromEntries([...Array(60).keys()].map((i) => [i + 4, ['+direita']])), { 22: ['+direita', 'pular'], 38: ['+direita', 'soco'] }) } },
+  jet_terra: { fase: 3, quadros: 150, cfg: { x: 3450, z: 70, camX: 3100, modo: 'andar' } },
+  belmira_pulo: { fase: 4, quadros: 170, cfg: { x: 2520, z: 50, camX: 2250, modo: 'parado', noOnibus: true, ratos: [['ratinho', 2780, 50], ['ratinho', 2400, 110]],
+    roteiro: Object.assign(Object.fromEntries([...Array(120).keys()].map((i) => [i + 6, i < 40 ? ['+direita', '+cima'] : ['+direita']])), { 14: ['+direita', '+cima', 'pular'], 70: ['+direita', 'pular'], 100: ['+direita', 'soco'] }) } },
+  belmira_luta: { fase: 4, quadros: 200, cfg: { x: 1550, z: 70, camX: 1250, noOnibus: true, ratos: [['ratinho', 1750, 70], ['ratazana', 1400, 90], ['lixeiro', 1900, 40]], modo: 'fixo' } },
+  dutra_luta: { fase: 5, quadros: 200, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1600, 70], ['lixeiro', 1900, 100], ['ratinho', 1250, 40], ['ratinho', 1650, 120]], modo: 'fixo' } },
+  direitus: { fase: 5, quadros: 260, cfg: { x: 3450, z: 80, camX: 3150, ratos: [['direitus', 3700, 80]], modo: 'fixo' } },
+  paulista_luta: { fase: 6, quadros: 200, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1650, 70], ['lixeiro', 1950, 100], ['ratinho', 1250, 40], ['ratinho', 1700, 120]], modo: 'fixo' } },
+  chefe: { fase: 6, quadros: 330, cfg: { x: 3600, z: 90, camX: 3340, ratos: [['rei', 3900, 90]], modo: 'fixo' } },
+  especial: { fase: 6, quadros: 120, cfg: { x: 3650, z: 90, camX: 3340, energia: 100, ratos: [['rei', 3820, 90], ['ratinho', 3520, 60], ['direitus', 3900, 110], ['ratinho', 3800, 40]], modo: 'parado',
     roteiro: { 30: ['especial'] } } },
 };
 

@@ -6,13 +6,11 @@
 
 | Tempo | Cena |
 | --- | --- |
-| 0–6 s | Relâmpagos revelam o Ratus Nunes; a Paulista à noite em câmera lenta: "SÃO PAULO. A CIDADE FOI TOMADA... PELA GANGUE DOS RATOS" |
-| 6–8 s | Impacto: o vilão em close (arte da capa), "RATUS NUNES, O REI DOS RATOS" |
-| 8–10 s | Impacto: o subchefe, "RATUS DIREITUS, O BRAÇO DIREITO" |
-| 10–12,6 s | Impacto: o herói, "MAS O POVO TEM UM LÍDER: BOULOS" |
-| 12,6–16 s | Cortes acelerando no chimbal: "PREPARE OS PUNHOS", "BORA!" |
-| 16–52,4 s | Drop drum and bass: a jornada pelo mapa da Zona Sul (o ônibus vai de bairro em bairro, que acende em vermelho), intercalada com a luta em cada fase: Marsilac, Parelheiros (voadora do ônibus em câmera lenta), Grajaú BNH, Cidade Dutra, cortes "JAB, DIRETO, JOELHADA, CHUTE!", Ratus Direitus, o ônibus saindo do mapa rumo à Paulista, Ratus Nunes, a Força do Povo e "5 BAIRROS, 1 SUBCHEFE, 1 CHEFÃO, 0 PIEDADE" |
-| 52,4–60 s | Logo "Boulos contra Ratus Nunes", katakana e "JOGUE AGORA NO NAVEGADOR" |
+| 0–6 s | Relâmpagos revelam o Ratus Nunes; o Grajaú sob o temporal em câmera lenta: "SÃO PAULO. A CIDADE FOI TOMADA... PELA GANGUE DOS RATOS" |
+| 6–12,6 s | Impactos: Ratus Nunes, Ratus Direitus e Boulos |
+| 12,6–16 s | Cortes acelerando: "PREPARE OS PUNHOS", "BORA!" |
+| 16–52,4 s | Drop drum and bass: o ônibus percorre o mapa da Zona Sul pelas 7 fases (cada bairro acende em vermelho), intercalado com a luta: Marsilac, Parelheiros, o temporal chegando no Grajaú, a nova fase de jet ski no BNH alagado (salto em câmera lenta), o novo engarrafamento da Belmira Marin (pulando de ônibus em ônibus), cortes "JAB, DIRETO, JOELHADA, CHUTE!", Cidade Dutra, Ratus Direitus, a Paulista contra Ratus Nunes, a Força do Povo e "7 FASES, 1 JET SKI, 1 CHEFÃO, 0 PIEDADE" |
+| 52,4–60 s | Logo, "NOVA ATUALIZAÇÃO: 7 FASES" e "JOGUE AGORA NO NAVEGADOR" |
 
 ## Como gerar de novo
 

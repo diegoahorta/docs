@@ -288,12 +288,16 @@ MAPA_BASE = Image.open(os.path.join(ARTE, 'ui_mapa_cinza.png')).convert('RGBA')
 MAPA_REG = {n: Image.open(os.path.join(ARTE, f'ui_mapa_{n}.png')).convert('RGBA') for n in MAPA_C}
 ONIBUS = Image.open(os.path.join(ARTE, 'ui_mapa_icone_onibus.png')).convert('RGBA')
 PINO = Image.open(os.path.join(ARTE, 'ui_mapa_icone_pino.png')).convert('RGBA')
-NOMES_MAPA = {'marsilac': 'FASE 1: MARSILAC', 'parelheiros': 'FASE 2: PARELHEIROS', 'grajau': 'FASE 3: GRAJAÚ BNH',
-              'cidade_dutra': 'FASE 4: CIDADE DUTRA', None: 'FASE FINAL: AV. PAULISTA'}
+# As 7 fases do jogo: (bairro aceso no mapa, deslocamento do pino, nome na faixa)
+ETAPAS = [('marsilac', (0, 0), 'FASE 1: MARSILAC'), ('parelheiros', (0, 0), 'FASE 2: PARELHEIROS'),
+          ('grajau', (0, 0), 'FASE 3: GRAJAÚ BNH'), ('grajau', (55, -5), 'FASE 4: BNH ALAGADO'),
+          ('grajau', (-70, -25), 'FASE 5: BELMIRA MARIN'), ('cidade_dutra', (0, 0), 'FASE 6: CIDADE DUTRA'),
+          (None, (0, 0), 'FASE 7: AV. PAULISTA')]
 _fundo_mapa = None
 
 
-def render_mapa(regiao, anterior, tt, dur):
+def render_mapa(etapa, etapa_ant, tt, dur):
+    regiao, _, nome_fase = ETAPAS[etapa]
     global _fundo_mapa
     if _fundo_mapa is None:
         yy, xx = np.mgrid[0:H, 0:W]
@@ -309,11 +313,12 @@ def render_mapa(regiao, anterior, tt, dur):
     def tela(p):
         return cx + (p[0] - mw / 2) * escala, cy + (p[1] - mh / 2) * escala
 
-    def pos(reg):
+    def pos(i):
+        reg, (dx, dy), _ = ETAPAS[i]
         if reg is None:
             return (mw * 0.82, mh * 0.1)
         c = MAPA_C[reg]
-        return (c[0], c[1] + 34)
+        return (c[0] + dx, c[1] + 34 + dy)
 
     mapa = MAPA_BASE.copy()
     viagem = min(1, max(0, (tt - 0.15) / (dur * 0.5)))
@@ -329,8 +334,8 @@ def render_mapa(regiao, anterior, tt, dur):
     img = mapa.resize((int(mw * escala), int(mh * escala)), Image.BILINEAR)
     base = colar(base, img, cx, cy, 1.0, 1.0)
     # ônibus
-    p0 = pos(anterior) if anterior else (pos(regiao)[0], mh + 30)
-    p1 = pos(regiao)
+    p0 = pos(etapa_ant) if etapa_ant is not None else (pos(etapa)[0], mh + 30)
+    p1 = pos(etapa)
     k = viagem * viagem * (3 - 2 * viagem)
     px, py = tela((p0[0] + (p1[0] - p0[0]) * k, p0[1] + (p1[1] - p0[1]) * k))
     bob = 0 if chegou else 3 * math.sin(tt * 40)
@@ -342,7 +347,7 @@ def render_mapa(regiao, anterior, tt, dur):
         if regiao is None:
             base = palavra_impacto(base, 'RUMO À PAULISTA', ta, tam=56, cor=(255, 60, 80), sombra=(40, 0, 10), brilho=None, cy=py + 90)
         # faixa com o nome da fase
-        base = palavra_impacto(base, NOMES_MAPA[regiao], ta, tam=84, cor=(255, 255, 255), sombra=(200, 16, 46), brilho=(255, 40, 60), cy=H - 90)
+        base = palavra_impacto(base, nome_fase, ta, tam=84, cor=(255, 255, 255), sombra=(200, 16, 46), brilho=(255, 40, 60), cy=H - 90)
     return base
 
 
@@ -356,32 +361,35 @@ def b(n):
 
 # Montagem do drop: (início em compassos, duração em compassos, clipe, quadro inicial, velocidade, zoom, legenda)
 MONTAGEM = [
-    (0, 2, 'mapa:marsilac:', 0, 1.0, 1.0, None),
-    (2, 2, 'marsilac_luta', 10, 1.0, 1.22, ('MARSILAC: A ESTAÇÃO', 'esq')),
-    (4, 1, 'mapa:parelheiros:marsilac', 0, 1.0, 1.0, None),
-    (5, 1, 'parelheiros_onibus', 14, 'onibus', 1.12, None),
-    (6, 1, 'parelheiros_luta', 20, 1.0, 1.25, ('PARELHEIROS: O TERMINAL', 'esq')),
-    (7, 1, 'mapa:grajau:parelheiros', 0, 1.0, 1.0, None),
-    (8, 2, 'grajau_luta', 10, 1.0, 1.22, ('GRAJAÚ: CONJUNTO BNH', 'esq')),
-    (10, 1, 'mapa:cidade_dutra:grajau', 0, 1.0, 1.0, None),
-    (11, 2, 'dutra_luta', 20, 1.0, 1.25, ('CIDADE DUTRA: INTERLAGOS', 'esq')),
-    (13, 2, 'rapido1', 0, 1.0, 1.3, None),
-    (15, 2, 'direitus', 30, 1.0, 1.3, ('RATUS DIREITUS EM CADA BAIRRO', 'esq')),
-    (17, 1, 'mapa::cidade_dutra', 0, 1.0, 1.0, None),
-    (18, 2, 'chefe', 20, 1.0, 1.28, ('PAULISTA: ENFRENTE RATUS NUNES', 'esq')),
-    (20, 2, 'especial', 14, 'especial', 1.15, ('FORÇA DO POVO', 'esq')),
-    (22, 2, 'rapido2', 0, 1.0, 1.3, None),
-    (24, 2, 'chefe', 140, 1.0, 1.3, ('A CIDADE É DO POVO', 'esq')),
+    (0, 2, 'mapa:0:', 0, 1.0, 1.0, None),
+    (2, 1, 'marsilac_luta', 10, 1.0, 1.22, ('MARSILAC', 'esq')),
+    (3, 1, 'parelheiros_onibus', 14, 'onibus', 1.12, ('PARELHEIROS', 'esq')),
+    (4, 1, 'mapa:2:1', 0, 1.0, 1.0, None),
+    (5, 2, 'grajau_chuva', 10, 1.0, 1.22, ('GRAJAÚ BNH: O TEMPORAL CHEGOU', 'esq')),
+    (7, 1, 'mapa:3:2', 0, 1.0, 1.0, None),
+    (8, 2, 'jet_luta', 10, 1.0, 1.2, ('NOVO: FASE DE JET SKI NO BNH ALAGADO', 'esq')),
+    (10, 1, 'jet_salto', 4, 'jetsalto', 1.15, ('PULE O ENTULHO, MERGULHE NOS RATOS', 'esq')),
+    (11, 1, 'mapa:4:3', 0, 1.0, 1.0, None),
+    (12, 2, 'belmira_pulo', 2, 1.0, 1.15, ('NOVO: ENGARRAFAMENTO NA BELMIRA MARIN', 'esq')),
+    (14, 1, 'belmira_luta', 20, 1.0, 1.22, ('PULE DE ÔNIBUS EM ÔNIBUS', 'esq')),
+    (15, 2, 'rapido1', 0, 1.0, 1.3, None),
+    (17, 1, 'mapa:5:4', 0, 1.0, 1.0, None),
+    (18, 1, 'dutra_luta', 20, 1.0, 1.25, ('CIDADE DUTRA', 'esq')),
+    (19, 1, 'direitus', 30, 1.0, 1.3, ('RATUS DIREITUS EM TODA FASE', 'esq')),
+    (20, 1, 'mapa:6:5', 0, 1.0, 1.0, None),
+    (21, 2, 'chefe', 20, 1.0, 1.28, ('PAULISTA: ENFRENTE RATUS NUNES', 'esq')),
+    (23, 1, 'especial', 14, 'especial', 1.15, ('FORÇA DO POVO', 'esq')),
+    (24, 2, 'rapido2', 0, 1.0, 1.3, None),
     (26, 1, 'final', 0, 1.0, 1.0, None),
 ]
 
 # Cortes rápidos (uma batida cada) com palavras de impacto a cada 2 batidas.
-RAPIDO1 = [('marsilac_luta', 60), ('parelheiros_luta', 80), ('grajau_luta', 60), ('dutra_luta', 70),
-           ('paulista_luta', 90), ('marsilac_luta', 140), ('dutra_luta', 130), ('grajau_luta', 150)]
+RAPIDO1 = [('jet_luta', 120), ('belmira_luta', 80), ('grajau_chuva', 60), ('jet_luta', 170),
+           ('marsilac_luta', 90), ('belmira_luta', 140), ('dutra_luta', 130), ('grajau_chuva', 150)]
 PALAVRAS1 = ['JAB', 'DIRETO', 'JOELHADA', 'CHUTE!']
-RAPIDO2 = [('marsilac_luta', 170), ('parelheiros_luta', 140), ('direitus2', 60), ('direitus', 150),
-           ('chefe', 230), ('paulista_luta', 160), ('chefe', 270), ('especial', 70)]
-PALAVRAS2 = ['5 BAIRROS', '1 SUBCHEFE', '1 CHEFÃO', '0 PIEDADE']
+RAPIDO2 = [('jet_luta', 200), ('belmira_pulo', 90), ('direitus', 60), ('jet_terra', 60),
+           ('chefe', 230), ('belmira_luta', 160), ('chefe', 270), ('especial', 70)]
+PALAVRAS2 = ['7 FASES', '1 JET SKI', '1 CHEFÃO', '0 PIEDADE']
 
 
 def tempo_clipe(vel, t):
@@ -394,6 +402,13 @@ def tempo_clipe(vel, t):
         if t < imp + 0.25:
             return (imp - 0.2) * 30 + (t - (imp - 0.2)) * 30 * 0.3
         return (imp - 0.2) * 30 + 0.45 * 30 * 0.3 + (t - imp - 0.25) * 30
+    if vel == 'jetsalto':
+        imp = 0.6
+        if t < imp:
+            return t * 30
+        if t < imp + 0.5:
+            return imp * 30 + (t - imp) * 30 * 0.35
+        return imp * 30 + 0.5 * 30 * 0.35 + (t - imp - 0.5) * 30
     if vel == 'especial':
         imp = 0.55
         if t < imp:
@@ -484,7 +499,7 @@ def quadro(t):
         else:
             # a cidade tomada: gameplay noturno em câmera lenta, frio e escuro
             tt = t - 1.5
-            base = gameplay('paulista_luta', 40 + tt * 30 * 0.45, 1.35, tt, tinta=(0.55, 0.65, 1.15), sat=0.6)
+            base = gameplay('grajau_chuva', 40 + tt * 30 * 0.45, 1.35, tt, tinta=(0.7, 0.75, 1.1), sat=0.7)
             base *= 0.55 + 0.5 * relampago(t)
             if t > 4.1:
                 over = arte_kb(RATO, t - 4.1, 1.9, 1.5, 1.7, 0.62, 0.33, 0.66, 0.30)
@@ -548,8 +563,8 @@ def quadro(t):
     elif t < D:
         # construção: cortes acelerando a cada semicolcheia do chimbal
         k = int((t - 12.65) / BEAT)
-        ordem = [('marsilac_luta', 60), ('parelheiros_luta', 30), ('grajau_luta', 80), ('dutra_luta', 100),
-                 ('chefe', 40), ('especial', 30), ('grajau_luta', 180), ('chefe', 120)]
+        ordem = [('marsilac_luta', 60), ('jet_luta', 30), ('belmira_luta', 80), ('grajau_chuva', 100),
+                 ('chefe', 40), ('especial', 30), ('jet_salto', 20), ('chefe', 120)]
         if t < 12.65 or k >= len(ordem):
             base = np.zeros((H, W, 3), np.float32)
             if t >= 15.35:
@@ -585,8 +600,8 @@ def quadro(t):
             base = palavra_impacto(base, w, tt - (k // 2) * 2 * BEAT, tam=200, cor=(255, 214, 63) if k % 4 < 2 else (255, 255, 255),
                                    sombra=(230, 30, 110), brilho=(255, 120, 0) if k % 4 < 2 else (40, 230, 255), dur=2 * BEAT)
         elif nome.startswith('mapa:'):
-            _, regiao, anterior = nome.split(':')
-            base = render_mapa(regiao or None, anterior or None, tt, dur)
+            _, etapa, ant = nome.split(':')
+            base = render_mapa(int(etapa), int(ant) if ant else None, tt, dur)
             cut_px = 8 * math.exp(-tt * 10)
             if tt < 0.05:
                 glitch_f = 0.5
@@ -630,9 +645,11 @@ def quadro(t):
         cut_px = 12 * math.exp(-tt * 4)
         if tt < 0.2:
             glitch_f = 1.0
+        if tt > 1.0:
+            base = palavra_impacto(base, 'NOVA ATUALIZAÇÃO: 7 FASES', tt - 1.0, tam=58, cor=(255, 214, 63), sombra=(200, 16, 46), brilho=None, cy=930)
         if tt > FIM - 3.4 - TIT:
             t2 = tt - (FIM - 3.4 - TIT)
-            base = palavra_impacto(base, 'JOGUE AGORA NO NAVEGADOR', t2, tam=66, cor=(255, 255, 255), sombra=(230, 30, 110), brilho=None, cy=1000)
+            base = palavra_impacto(base, 'JOGUE AGORA NO NAVEGADOR', t2, tam=60, cor=(255, 255, 255), sombra=(230, 30, 110), brilho=None, cy=1010)
         base *= min(1, max(0, (FIM - t) / 0.6))
 
     # ---------------- Pós-produção ----------------
