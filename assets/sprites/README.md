@@ -27,3 +27,5 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `ui/tecla-seta-esquerda.png` | 12×12, ícone de tecla com seta para a esquerda |
 | `ui/tecla-esc.png` | 16×15, tecla "ESC" (solta) |
 | `ui/tecla-esc-pressionada.png` | 16×15, tecla "ESC" pressionada |
+| `ui/botao-verde.png` | 33×19, botão retangular verde (solto) |
+| `ui/botao-verde-pressionado.png` | 33×19, botão retangular verde pressionado |
