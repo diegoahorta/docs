@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { ALTURA, HEROI, LARGURA, Z_MAX } from './config.js';
 import { Cenario } from './cenario.js';
+import { R } from './recursos.js';
 import { Efeitos, Heroi, Item, Projetil, Rato } from './atores.js';
 import { FASES, FINAL, INTRO } from './fases.js';
 import { lerPreferencia, salvarPreferencia } from './audio.js';
@@ -99,6 +100,12 @@ export class Jogo {
     const limites = [this.camX + 30, this.camX + LARGURA - 30];
     h.atualizar(dt, this.entrada, limites);
     for (const r of this.inimigos) r.atualizar(dt, limites);
+    // depois de desembarcar, a luta fica na área segura
+    if (this.fase.jet && !h.jet) {
+      const terra = this.fase.jet.terra;
+      if (h.x < terra) h.x = terra;
+      for (const r of this.inimigos) if (!r.jet && r.x < terra + 10) r.x = terra + 10;
+    }
     for (const p of this.projeteis) p.atualizar(dt);
     for (const i of this.itens) i.atualizar(dt);
     this.efeitos.atualizar(dt);
@@ -152,7 +159,7 @@ export class Jogo {
     }
     this.camera.position.x = Math.round(this.camX + ox);
     this.camera.position.y = oy;
-    this.cenario.atualizar(this.camX);
+    if (this.cenario.atualizar(this.camX, this.heroi.x, dt)) this.audio.sfx('tremor'); // relâmpago
     this.heroi.desenhar();
     for (const r of this.inimigos) r.desenhar();
     for (const p of this.projeteis) p.desenhar();
@@ -219,6 +226,8 @@ export class Jogo {
     }
     const zf = lado === 'bueiro' ? 20 + Math.random() * 40 : zz;
     const r = new Rato(this, tipo, x, zf);
+    // no BNH alagado, quem nasce na água vem de jet ski
+    r.jet = !!this.fase.jet && x < this.fase.jet.terra - 60 && !r.st.chefe && R.ratos['jet' + tipo] !== undefined;
     if (lado === 'bueiro') {
       r.mudar('entrar_bueiro');
       this.efeitos.bueiro(x, zf);
@@ -227,6 +236,17 @@ export class Jogo {
     if (r.st.chefe) this.chefe = r;
     this.inimigos.push(r);
     return r;
+  }
+
+  /** Belmira Marin: a rua alagada, fora das áreas seguras. */
+  enxurradaEm(x) {
+    const e = this.fase.enxurrada;
+    return !!e && !e.seguro.some(([a, b]) => x >= a && x <= b);
+  }
+
+  /** BNH alagado: entulho boiando que machuca quem bate de jet ski. */
+  obstaculoEm(x, z) {
+    return this.cenario.obstaculos.find((o) => Math.abs(o.x - x) < 34 && Math.abs(o.z - z) < 14);
   }
 
   pedirTurno(r) {
@@ -334,6 +354,8 @@ export class Jogo {
       this.heroi.energia = energiaAntes;
     }
     this.heroi.x = 160;
+    this.heroi.jet = !!this.fase.jet;
+    this.heroi.vx = 0;
     this.heroi.z = 70;
     this.camX = 0;
     this.ondas = this.fase.ondas;

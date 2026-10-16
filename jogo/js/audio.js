@@ -43,6 +43,8 @@ export const MUSICAS = {
   marsilac: { bpm: 170, acordes: 'menor', batidas: ['liquid', 'dois', 'liquid', 'amen'], baixo: 'sub', pad: 0.4, arpejo: 0.2, stab: false, intro: 2 },
   parelheiros: { bpm: 172, acordes: 'menor', batidas: ['dois', 'liquid', 'dois', 'amen'], baixo: 'reese', pad: 0.34, arpejo: 0.18, stab: true, intro: 2 },
   dutra: { bpm: 176, acordes: 'chefe', batidas: ['amen', 'dois', 'amen', 'amen'], baixo: 'reese', pad: 0.26, arpejo: 0.14, stab: true, intro: 2 },
+  alagado: { bpm: 174, acordes: 'chefe', batidas: ['amen', 'dois', 'amen', 'pesada'], baixo: 'reese', pad: 0.3, arpejo: 0.16, stab: true, sirene: true, intro: 1 },
+  belmira: { bpm: 176, acordes: 'menor', batidas: ['pesada', 'amen', 'dois', 'amen'], baixo: 'neuro', pad: 0.22, arpejo: 0.12, stab: true, intro: 1 },
   grajau: { bpm: 172, acordes: 'menor', batidas: ['dois', 'amen', 'dois', 'liquid'], baixo: 'reese', pad: 0.32, arpejo: 0.16, stab: true, intro: 2 },
   fase1: { bpm: 174, acordes: 'menor', batidas: ['dois', 'dois', 'amen', 'dois'], baixo: 'reese', pad: 0.28, arpejo: 0.1, stab: true, intro: 2 },
   fase2: { bpm: 174, acordes: 'menor', batidas: ['amen', 'dois', 'amen', 'amen'], baixo: 'reese', pad: 0.24, arpejo: 0.14, stab: true, intro: 2 },
@@ -52,7 +54,7 @@ export const MUSICAS = {
 };
 
 // Faixa MP3 do repositório usada no modo alternativo, por música.
-const FAIXAS_MP3 = { menu: 5, marsilac: 2, parelheiros: 3, dutra: 1, grajau: 4, fase1: 1, fase2: 2, fase3: 3, chefe: 4, vitoria: 5 };
+const FAIXAS_MP3 = { alagado: 2, belmira: 3, menu: 5, marsilac: 2, parelheiros: 3, dutra: 1, grajau: 4, fase1: 1, fase2: 2, fase3: 3, chefe: 4, vitoria: 5 };
 
 // Linha de baixo por compasso: [passo, semitom relativo à fundamental, duração em passos]
 const LINHAS_BAIXO = [

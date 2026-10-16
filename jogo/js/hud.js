@@ -282,13 +282,14 @@ export class Telas {
     const centros = R.manifesto.ui.mapa_cinza.centros;
     const W = R.manifesto.ui.mapa_cinza.w;
     const H = R.manifesto.ui.mapa_cinza.h;
-    const pos = (regiao) => {
-      if (!regiao) return [W * 0.82, H * 0.1]; // a Paulista fica ao norte, fora do mapa: canto de cima
-      return [centros[regiao][0], centros[regiao][1] + 34]; // um pouco abaixo do nome do bairro
+    const pos = (f) => {
+      if (!f.regiao) return [W * 0.82, H * 0.1]; // a Paulista fica ao norte, fora do mapa: canto de cima
+      const [dx, dy] = f.mapaDesloc ?? [0, 0]; // várias fases no mesmo bairro (Grajaú, BNH alagado, Belmira)
+      return [centros[f.regiao][0] + dx, centros[f.regiao][1] + 34 + dy]; // um pouco abaixo do nome do bairro
     };
     const pct = ([x, y]) => `left:${(x / W) * 100}%;top:${(y / H) * 100}%`;
-    const destino = pos(fase.regiao);
-    const origem = anterior ? pos(anterior.regiao) : [destino[0], H + 30];
+    const destino = pos(fase);
+    const origem = anterior ? pos(anterior) : [destino[0], H + 30];
     const el = document.createElement('div');
     el.className = 'tela opaca tela-mapa';
     el.innerHTML = `

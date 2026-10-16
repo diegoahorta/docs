@@ -397,6 +397,135 @@ def mapa():
         salvar('ui', f'mapa_icone_{nome}', aparar(img.crop(caixa)))
 
 
+
+def maior_peca(recorte):
+    pecas_ = quadros_da_linha(recorte, (0, recorte.height), minimo=1, fechamento=2)
+    return max(pecas_, key=lambda q: (np.array(q)[:, :, 3] > 40).sum())
+
+
+def pecas(img, caixa, nomes, prefixo, grupo='cenario', minimo=200):
+    """Divide a área em peças (da esquerda para a direita) e salva cada uma com um nome."""
+    recorte = img.crop(caixa)
+    qs = quadros_da_linha(recorte, (0, recorte.height), minimo=minimo, fechamento=2)
+    assert len(qs) == len(nomes), (prefixo, caixa, len(qs), nomes)
+    for nome, q in zip(nomes, qs):
+        if nome:
+            salvar(grupo, f'{prefixo}_{nome}', q)
+
+
+def bnh_alagado():
+    img = Image.open(os.path.join(ORIGEM, 'bnh-alagado-tileset.webp')).convert('RGBA')
+
+    def obj(nome, caixa, inteiro=False):
+        r = img.crop(caixa)
+        salvar('cenario', 'alagado_' + nome, aparar(r) if inteiro else maior_peca(r))
+
+    obj('panorama', (12, 2, 1113, 125), True)
+    obj('rua', (12, 128, 1113, 268), True)
+    obj('caixa_dagua', (12, 268, 215, 458), True)
+    obj('casas', (222, 275, 545, 456))
+    obj('mercadinho', (548, 275, 706, 458))
+    obj('comercio', (708, 300, 920, 458))
+    obj('garagem', (925, 318, 1008, 458))
+    obj('muro', (1012, 330, 1108, 458))
+    obj('onibus', (12, 440, 252, 560))
+    obj('carro_prata', (256, 470, 372, 560))
+    obj('carro_preto', (374, 470, 470, 560))
+    obj('poste', (465, 430, 508, 560))
+    obj('luminaria', (508, 430, 562, 560))
+    obj('arvore', (568, 445, 672, 560))
+    obj('escada', (835, 440, 972, 560))
+    obj('pier', (975, 445, 1112, 560))
+    for nome, caixa in {'agua': (15, 563, 126, 615), 'calcada': (133, 563, 293, 615), 'faixa': (301, 563, 458, 618),
+                        'bueiro': (465, 563, 571, 615), 'borda': (578, 563, 683, 615), 'redemoinho': (690, 563, 794, 616)}.items():
+        x0, y0, x1, y1 = caixa
+        salvar('texturas', 'alagado_' + nome, img.crop((x0 + 4, y0 + 4, x1 - 4, y1 - 4)))
+    for nome, x0, x1 in [('caixote', 800, 839), ('pneu', 839, 879), ('garrafa', 879, 913), ('caixa', 913, 951),
+                         ('sacos', 951, 1004), ('cone', 1004, 1047)]:
+        obj(nome, (x0, 566, x1, 620))
+    pecas(img, (1048, 540, 1114, 630), ['bandeira'], 'alagado')
+
+
+def belmira():
+    img = Image.open(os.path.join(ORIGEM, 'belmira-marin-tileset.webp')).convert('RGBA')
+
+    def obj(nome, caixa, inteiro=True):
+        r = img.crop(caixa)
+        salvar('cenario', 'belmira_' + nome, aparar(r) if inteiro else maior_peca(r))
+
+    obj('panorama', (2, 2, 1123, 155))
+    obj('panorama_chuva', (2, 160, 1123, 325))
+    obj('onibus_verde', (10, 343, 200, 408))
+    obj('onibus_azul', (350, 343, 516, 408))
+    obj('articulado', (678, 343, 984, 408))
+    obj('hb20', (8, 428, 100, 471))
+    obj('sedan', (227, 428, 326, 471))
+    obj('vermelho', (455, 428, 544, 471))
+    obj('cinza', (685, 428, 787, 471))
+    obj('moto', (923, 428, 980, 471))
+    obj('mercado', (10, 498, 78, 561))
+    obj('padaria', (78, 498, 140, 561))
+    obj('lanchonete', (140, 498, 216, 561))
+    obj('farmacia', (216, 498, 306, 561))
+    obj('poste', (309, 494, 447, 572))
+    obj('semaforo', (453, 494, 530, 558))
+    obj('placa', (537, 499, 600, 534))
+    obj('placa_e', (606, 506, 656, 568))
+    obj('ponto', (664, 500, 775, 567))
+    obj('luminaria', (775, 494, 830, 568))
+    obj('cones', (835, 494, 907, 557))
+    obj('defensa', (918, 508, 1010, 528))
+    obj('gradil', (1020, 508, 1116, 545))
+    for nome, caixa in {'seco': (11, 594, 153, 646), 'molhado': (160, 594, 297, 646), 'faixa': (301, 594, 390, 646),
+                        'buraco': (397, 594, 477, 646), 'sarjeta': (483, 594, 578, 646), 'calcada': (584, 594, 673, 646),
+                        'poca': (686, 594, 749, 646)}.items():
+        x0, y0, x1, y1 = caixa
+        salvar('texturas', 'belmira_' + nome, img.crop((x0 + 3, y0 + 3, x1 - 3, y1 - 3)))
+
+
+def jetski():
+    """Boulos e os ratos de jet ski."""
+    b = Image.open(os.path.join(ORIGEM, 'boulos-jetski.webp')).convert('RGBA')
+    for ret in [(0, 55, 155, 100), (0, 215, 155, 262), (0, 395, 104, 442), (0, 575, 104, 622), (0, 750, 104, 800),
+                (0, 912, 135, 962), (770, 912, 900, 962)]:
+        b.paste((0, 0, 0, 0), ret)  # rótulos
+    linhas = {'acelerar': (10, 175), 'curva': (335, 505), 'salto': (505, 710), 'frear': (712, 870)}
+    alturas = {}
+    for nome, faixa in linhas.items():
+        qs = quadros_da_linha(b, faixa, minimo=4000)
+        assert len(qs) == 6, (nome, len(qs))
+        if nome == 'acelerar':
+            fator = 150 / max(q.height for q in qs)
+        for i, q in enumerate(qs):
+            salvar('heroi', f'jet_{nome}{i}', escalar(q, fator))
+    # efeitos (splash 5 quadros e ripple 6 quadros)
+    fx = quadros_da_linha(b, (875, 990), minimo=150)
+    nomes = [f'splash{i}' for i in range(5)] + [f'ripple{i}' for i in range(6)]
+    assert len(fx) == 11, len(fx)
+    for nome, q in zip(nomes, fx):
+        salvar('itens', 'fx_jet_' + nome, q)
+
+    r = Image.open(os.path.join(ORIGEM, 'ratos-jetski.webp')).convert('RGBA')
+    for ret in [(0, 70, 100, 115), (0, 260, 80, 305), (0, 465, 85, 510), (0, 655, 60, 700)]:
+        r.paste((0, 0, 0, 0), ret)
+    faixas = {'ratinho': (15, 200), 'ratazana': (205, 395), 'lixeiro': (400, 595), 'rei': (598, 812)}
+    alturas = {'ratinho': 120, 'ratazana': 125, 'lixeiro': 120, 'rei': 150}
+    for tipo, faixa in faixas.items():
+        qs = quadros_da_linha(r, faixa, minimo=4000)
+        while len(qs) < 8:
+            # capas encostadas: separa a peça mais larga na coluna com menos pixels opacos
+            i = max(range(len(qs)), key=lambda k: qs[k].width)
+            a = np.array(qs[i])[:, :, 3] > 40
+            meio = range(a.shape[1] // 3, 2 * a.shape[1] // 3)
+            corte = min(meio, key=lambda c: a[:, c].sum())
+            esq, dir_ = qs[i].crop((0, 0, corte, qs[i].height)), qs[i].crop((corte, 0, qs[i].width, qs[i].height))
+            qs[i:i + 1] = [aparar(esq), aparar(dir_)]
+        assert len(qs) == 8, (tipo, len(qs))
+        fator = alturas[tipo] / qs[0].height
+        for i, q in enumerate(qs):
+            salvar('ratos', f'jet{tipo}_q{i}', escalar(q, fator))
+
+
 def retrato():
     """Remove o fundo branco do retrato (preenchimento a partir das bordas)."""
     img = Image.open(os.path.join(ORIGEM, 'personagem-retrato-frente.jpg')).convert('RGB')
@@ -473,6 +602,9 @@ def main():
     cidade_dutra()
     ratus_direitus()
     mapa()
+    bnh_alagado()
+    belmira()
+    jetski()
     with open(os.path.join(DESTINO, 'manifesto.json'), 'w', encoding='utf-8') as f:
         json.dump(manifesto, f, ensure_ascii=False, indent=1)
     total = sum(len(v) for v in manifesto.values())

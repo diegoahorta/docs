@@ -20,6 +20,10 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `parelheiros-tileset.webp` | Tileset de Parelheiros: igreja, padaria, mercado, terminal, sobrado, ônibus, ponto, feira, árvore, mata, muros, poste, grade, texturas (asfalto, calçada, faixa, terra, grama, córrego) |
 | `cidade-dutra-tileset.webp` | Tileset de Cidade Dutra/Interlagos: padaria, comércio, sobrado, portal de Interlagos, praça, placa, ônibus, carro, ponto, árvores, arquibancada, muro, pneus, bandeirolas, texturas |
 | `mapa-zona-sul.webp` | Mapa da Zona Sul (Socorro, Cidade Dutra, Grajaú, Parelheiros, Marsilac) em 3 versões, mais ícones (pino, ônibus, prédio, casa, árvore) |
+| `boulos-jetski.webp` | Boulos de jet ski: acelerar (→ e ←), curva, salto, frear (6 quadros cada) e efeitos de respingo e ondulação |
+| `ratos-jetski.webp` | Os 4 ratos de jet ski (bandana, boné, capuz, rei), 8 quadros cada, mais efeitos de água |
+| `bnh-alagado-tileset.webp` | Tileset do BNH alagado: panorama com chuva, rua alagada, caixa d'água, casas, comércio, ônibus, carros, postes, árvore, escada, píer, texturas de água e objetos boiando |
+| `belmira-marin-tileset.webp` | Tileset da Av. Belmira Marin: panoramas (dia e chuva), ônibus (verde, azul, articulado), carros, moto, fachadas, postes, semáforos, placas, ponto, texturas de rua e calçada |
 | `capa-boulos-contra-ratus-nunes.png` | Arte de capa (1024×1536) "Boulos contra Ratus Nunes" |
 
 ## UI (`ui/`)

@@ -1,9 +1,21 @@
 # Boulos vs Ratus Nunes
 
 Beat 'em up de plataforma em HTML5 (JavaScript + Three.js), ambientado em São Paulo.
-Boulos atravessa São Paulo para expulsar a Gangue dos Ratos de Ratus Nunes. São 5 fases:
-Marsilac, Parelheiros, Grajaú (Conjunto BNH), Cidade Dutra e, por último, a Avenida Paulista,
-onde ele enfrenta Ratus Nunes. O subchefe Ratus Direitus aparece no fim de todas as fases.
+Boulos atravessa São Paulo para expulsar a Gangue dos Ratos de Ratus Nunes. São 7 fases:
+
+1. **Marsilac**: a estação.
+2. **Parelheiros**: o terminal.
+3. **Grajaú, Conjunto BNH**: no meio da fase começa a chover, e a chuva vai engrossando.
+4. **BNH alagado, sentido Bola Branca**: fase de jet ski. A rua virou rio; o Boulos acelera com
+   inércia, pula entulho boiando, arranca contra os ratos (que também estão de jet ski) e
+   mergulha em cima deles. No fim, desce na área segura para enfrentar o Ratus Direitus a pé.
+5. **Belmira Marin, engarrafamento**: a enxurrada cobriu a avenida parada. Fora das calçadas
+   seguras, encostar no chão machuca e joga o herói para cima; é preciso pular de ônibus em
+   ônibus e de carro em carro. Os ratos nadam na enxurrada e pulam nos veículos atrás dele.
+6. **Cidade Dutra**: Interlagos.
+7. **Avenida Paulista**: a luta final contra Ratus Nunes.
+
+O subchefe Ratus Direitus aparece no fim de todas as fases.
 
 Antes de cada fase, um mapa da Zona Sul (como em Final Fight) mostra para onde o jogador vai:
 o bairro da fase acende em vermelho e o resto do mapa fica em preto e branco, enquanto o ônibus
@@ -82,7 +94,7 @@ jogo/
 │   ├── jogo.js           laço principal, câmera, ondas, fluxo da história
 │   ├── atores.js         herói, ratos, projéteis, itens, efeitos
 │   ├── cenario.js        céu, prédios, calçada, rua, plataformas, perigos
-│   ├── fases.js          história e definição das 5 fases
+│   ├── fases.js          história e definição das 7 fases
 │   ├── recursos.js       carregamento de sprites, fonte bitmap e texturas procedurais
 │   ├── audio.js          trilha drum and bass e efeitos sonoros
 │   ├── entrada.js        teclado, controle e toque
@@ -101,7 +113,8 @@ Recursos do repositório usados pelo jogo:
 
 - `assets/sprites`: herói (golpes, caminhada de 8 quadros, pular, pegar objetos, retrato),
   os ratos (caminhada e ações dos 4 tipos), o Ratus Direitus, o mapa da Zona Sul e os tilesets
-  de São Paulo, Marsilac, Parelheiros, Grajaú BNH e Cidade Dutra
+  de São Paulo, Marsilac, Parelheiros, Grajaú BNH, BNH alagado, Belmira Marin e Cidade Dutra,
+  e o Boulos e os ratos de jet ski
 - `assets/sprites/ui`: botões, teclas, scanlines, overlay de dano, bloco atravessável, área de perigo, destaque
 - `assets/fontes`: Upheaval (títulos e diálogos), SmallPixel-7 (HUD) e a fonte bitmap `Fonte_jogo` (números de dano)
 - `assets/audio/musica`: trilha alternativa em MP3

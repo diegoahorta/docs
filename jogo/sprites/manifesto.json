@@ -226,6 +226,150 @@
    "arquivo": "sprites/heroi_retrato.png",
    "w": 432,
    "h": 178
+  },
+  "jet_acelerar0": {
+   "arquivo": "sprites/heroi_jet_acelerar0.png",
+   "w": 224,
+   "h": 150,
+   "ax": 0.555
+  },
+  "jet_acelerar1": {
+   "arquivo": "sprites/heroi_jet_acelerar1.png",
+   "w": 222,
+   "h": 142,
+   "ax": 0.5426
+  },
+  "jet_acelerar2": {
+   "arquivo": "sprites/heroi_jet_acelerar2.png",
+   "w": 226,
+   "h": 140,
+   "ax": 0.543
+  },
+  "jet_acelerar3": {
+   "arquivo": "sprites/heroi_jet_acelerar3.png",
+   "w": 220,
+   "h": 133,
+   "ax": 0.5943
+  },
+  "jet_acelerar4": {
+   "arquivo": "sprites/heroi_jet_acelerar4.png",
+   "w": 221,
+   "h": 136,
+   "ax": 0.5778
+  },
+  "jet_acelerar5": {
+   "arquivo": "sprites/heroi_jet_acelerar5.png",
+   "w": 227,
+   "h": 139,
+   "ax": 0.5706
+  },
+  "jet_curva0": {
+   "arquivo": "sprites/heroi_jet_curva0.png",
+   "w": 241,
+   "h": 144,
+   "ax": 0.5088
+  },
+  "jet_curva1": {
+   "arquivo": "sprites/heroi_jet_curva1.png",
+   "w": 216,
+   "h": 143,
+   "ax": 0.5317
+  },
+  "jet_curva2": {
+   "arquivo": "sprites/heroi_jet_curva2.png",
+   "w": 209,
+   "h": 146,
+   "ax": 0.5633
+  },
+  "jet_curva3": {
+   "arquivo": "sprites/heroi_jet_curva3.png",
+   "w": 235,
+   "h": 152,
+   "ax": 0.4368
+  },
+  "jet_curva4": {
+   "arquivo": "sprites/heroi_jet_curva4.png",
+   "w": 224,
+   "h": 144,
+   "ax": 0.4838
+  },
+  "jet_curva5": {
+   "arquivo": "sprites/heroi_jet_curva5.png",
+   "w": 195,
+   "h": 143,
+   "ax": 0.4609
+  },
+  "jet_salto0": {
+   "arquivo": "sprites/heroi_jet_salto0.png",
+   "w": 233,
+   "h": 139,
+   "ax": 0.5767
+  },
+  "jet_salto1": {
+   "arquivo": "sprites/heroi_jet_salto1.png",
+   "w": 233,
+   "h": 148,
+   "ax": 0.6275
+  },
+  "jet_salto2": {
+   "arquivo": "sprites/heroi_jet_salto2.png",
+   "w": 228,
+   "h": 178,
+   "ax": 0.5837
+  },
+  "jet_salto3": {
+   "arquivo": "sprites/heroi_jet_salto3.png",
+   "w": 225,
+   "h": 191,
+   "ax": 0.4971
+  },
+  "jet_salto4": {
+   "arquivo": "sprites/heroi_jet_salto4.png",
+   "w": 231,
+   "h": 163,
+   "ax": 0.6252
+  },
+  "jet_salto5": {
+   "arquivo": "sprites/heroi_jet_salto5.png",
+   "w": 236,
+   "h": 133,
+   "ax": 0.584
+  },
+  "jet_frear0": {
+   "arquivo": "sprites/heroi_jet_frear0.png",
+   "w": 327,
+   "h": 138,
+   "ax": 0.6597
+  },
+  "jet_frear1": {
+   "arquivo": "sprites/heroi_jet_frear1.png",
+   "w": 223,
+   "h": 137,
+   "ax": 0.4219
+  },
+  "jet_frear2": {
+   "arquivo": "sprites/heroi_jet_frear2.png",
+   "w": 222,
+   "h": 137,
+   "ax": 0.4857
+  },
+  "jet_frear3": {
+   "arquivo": "sprites/heroi_jet_frear3.png",
+   "w": 221,
+   "h": 126,
+   "ax": 0.4802
+  },
+  "jet_frear4": {
+   "arquivo": "sprites/heroi_jet_frear4.png",
+   "w": 220,
+   "h": 127,
+   "ax": 0.4972
+  },
+  "jet_frear5": {
+   "arquivo": "sprites/heroi_jet_frear5.png",
+   "w": 240,
+   "h": 134,
+   "ax": 0.5367
   }
  },
  "cenario": {
@@ -868,6 +1012,236 @@
    "arquivo": "sprites/cenario_dutra_seta.png",
    "w": 64,
    "h": 57
+  },
+  "alagado_panorama": {
+   "arquivo": "sprites/cenario_alagado_panorama.png",
+   "w": 1100,
+   "h": 123
+  },
+  "alagado_rua": {
+   "arquivo": "sprites/cenario_alagado_rua.png",
+   "w": 1101,
+   "h": 140
+  },
+  "alagado_caixa_dagua": {
+   "arquivo": "sprites/cenario_alagado_caixa_dagua.png",
+   "w": 200,
+   "h": 190
+  },
+  "alagado_casas": {
+   "arquivo": "sprites/cenario_alagado_casas.png",
+   "w": 319,
+   "h": 163
+  },
+  "alagado_mercadinho": {
+   "arquivo": "sprites/cenario_alagado_mercadinho.png",
+   "w": 154,
+   "h": 156
+  },
+  "alagado_comercio": {
+   "arquivo": "sprites/cenario_alagado_comercio.png",
+   "w": 208,
+   "h": 130
+  },
+  "alagado_garagem": {
+   "arquivo": "sprites/cenario_alagado_garagem.png",
+   "w": 79,
+   "h": 115
+  },
+  "alagado_muro": {
+   "arquivo": "sprites/cenario_alagado_muro.png",
+   "w": 92,
+   "h": 100
+  },
+  "alagado_onibus": {
+   "arquivo": "sprites/cenario_alagado_onibus.png",
+   "w": 236,
+   "h": 111
+  },
+  "alagado_carro_prata": {
+   "arquivo": "sprites/cenario_alagado_carro_prata.png",
+   "w": 112,
+   "h": 69
+  },
+  "alagado_carro_preto": {
+   "arquivo": "sprites/cenario_alagado_carro_preto.png",
+   "w": 92,
+   "h": 68
+  },
+  "alagado_poste": {
+   "arquivo": "sprites/cenario_alagado_poste.png",
+   "w": 39,
+   "h": 125
+  },
+  "alagado_luminaria": {
+   "arquivo": "sprites/cenario_alagado_luminaria.png",
+   "w": 50,
+   "h": 111
+  },
+  "alagado_arvore": {
+   "arquivo": "sprites/cenario_alagado_arvore.png",
+   "w": 100,
+   "h": 110
+  },
+  "alagado_escada": {
+   "arquivo": "sprites/cenario_alagado_escada.png",
+   "w": 133,
+   "h": 108
+  },
+  "alagado_pier": {
+   "arquivo": "sprites/cenario_alagado_pier.png",
+   "w": 133,
+   "h": 96
+  },
+  "alagado_caixote": {
+   "arquivo": "sprites/cenario_alagado_caixote.png",
+   "w": 35,
+   "h": 28
+  },
+  "alagado_pneu": {
+   "arquivo": "sprites/cenario_alagado_pneu.png",
+   "w": 36,
+   "h": 23
+  },
+  "alagado_garrafa": {
+   "arquivo": "sprites/cenario_alagado_garrafa.png",
+   "w": 26,
+   "h": 25
+  },
+  "alagado_caixa": {
+   "arquivo": "sprites/cenario_alagado_caixa.png",
+   "w": 34,
+   "h": 34
+  },
+  "alagado_sacos": {
+   "arquivo": "sprites/cenario_alagado_sacos.png",
+   "w": 49,
+   "h": 34
+  },
+  "alagado_cone": {
+   "arquivo": "sprites/cenario_alagado_cone.png",
+   "w": 31,
+   "h": 45
+  },
+  "alagado_bandeira": {
+   "arquivo": "sprites/cenario_alagado_bandeira.png",
+   "w": 59,
+   "h": 85
+  },
+  "belmira_panorama": {
+   "arquivo": "sprites/cenario_belmira_panorama.png",
+   "w": 1121,
+   "h": 153
+  },
+  "belmira_panorama_chuva": {
+   "arquivo": "sprites/cenario_belmira_panorama_chuva.png",
+   "w": 1121,
+   "h": 165
+  },
+  "belmira_onibus_verde": {
+   "arquivo": "sprites/cenario_belmira_onibus_verde.png",
+   "w": 189,
+   "h": 60
+  },
+  "belmira_onibus_azul": {
+   "arquivo": "sprites/cenario_belmira_onibus_azul.png",
+   "w": 166,
+   "h": 60
+  },
+  "belmira_articulado": {
+   "arquivo": "sprites/cenario_belmira_articulado.png",
+   "w": 303,
+   "h": 61
+  },
+  "belmira_hb20": {
+   "arquivo": "sprites/cenario_belmira_hb20.png",
+   "w": 88,
+   "h": 40
+  },
+  "belmira_sedan": {
+   "arquivo": "sprites/cenario_belmira_sedan.png",
+   "w": 95,
+   "h": 41
+  },
+  "belmira_vermelho": {
+   "arquivo": "sprites/cenario_belmira_vermelho.png",
+   "w": 85,
+   "h": 40
+  },
+  "belmira_cinza": {
+   "arquivo": "sprites/cenario_belmira_cinza.png",
+   "w": 97,
+   "h": 42
+  },
+  "belmira_moto": {
+   "arquivo": "sprites/cenario_belmira_moto.png",
+   "w": 47,
+   "h": 42
+  },
+  "belmira_mercado": {
+   "arquivo": "sprites/cenario_belmira_mercado.png",
+   "w": 68,
+   "h": 62
+  },
+  "belmira_padaria": {
+   "arquivo": "sprites/cenario_belmira_padaria.png",
+   "w": 62,
+   "h": 62
+  },
+  "belmira_lanchonete": {
+   "arquivo": "sprites/cenario_belmira_lanchonete.png",
+   "w": 76,
+   "h": 62
+  },
+  "belmira_farmacia": {
+   "arquivo": "sprites/cenario_belmira_farmacia.png",
+   "w": 89,
+   "h": 61
+  },
+  "belmira_poste": {
+   "arquivo": "sprites/cenario_belmira_poste.png",
+   "w": 138,
+   "h": 77
+  },
+  "belmira_semaforo": {
+   "arquivo": "sprites/cenario_belmira_semaforo.png",
+   "w": 73,
+   "h": 60
+  },
+  "belmira_placa": {
+   "arquivo": "sprites/cenario_belmira_placa.png",
+   "w": 57,
+   "h": 32
+  },
+  "belmira_placa_e": {
+   "arquivo": "sprites/cenario_belmira_placa_e.png",
+   "w": 47,
+   "h": 61
+  },
+  "belmira_ponto": {
+   "arquivo": "sprites/cenario_belmira_ponto.png",
+   "w": 109,
+   "h": 63
+  },
+  "belmira_luminaria": {
+   "arquivo": "sprites/cenario_belmira_luminaria.png",
+   "w": 50,
+   "h": 73
+  },
+  "belmira_cones": {
+   "arquivo": "sprites/cenario_belmira_cones.png",
+   "w": 69,
+   "h": 63
+  },
+  "belmira_defensa": {
+   "arquivo": "sprites/cenario_belmira_defensa.png",
+   "w": 88,
+   "h": 15
+  },
+  "belmira_gradil": {
+   "arquivo": "sprites/cenario_belmira_gradil.png",
+   "w": 93,
+   "h": 32
   }
  },
  "texturas": {
@@ -1065,6 +1439,71 @@
    "arquivo": "sprites/texturas_dutra_grama.png",
    "w": 88,
    "h": 65
+  },
+  "alagado_agua": {
+   "arquivo": "sprites/texturas_alagado_agua.png",
+   "w": 103,
+   "h": 44
+  },
+  "alagado_calcada": {
+   "arquivo": "sprites/texturas_alagado_calcada.png",
+   "w": 152,
+   "h": 44
+  },
+  "alagado_faixa": {
+   "arquivo": "sprites/texturas_alagado_faixa.png",
+   "w": 149,
+   "h": 47
+  },
+  "alagado_bueiro": {
+   "arquivo": "sprites/texturas_alagado_bueiro.png",
+   "w": 98,
+   "h": 44
+  },
+  "alagado_borda": {
+   "arquivo": "sprites/texturas_alagado_borda.png",
+   "w": 97,
+   "h": 44
+  },
+  "alagado_redemoinho": {
+   "arquivo": "sprites/texturas_alagado_redemoinho.png",
+   "w": 96,
+   "h": 45
+  },
+  "belmira_seco": {
+   "arquivo": "sprites/texturas_belmira_seco.png",
+   "w": 136,
+   "h": 46
+  },
+  "belmira_molhado": {
+   "arquivo": "sprites/texturas_belmira_molhado.png",
+   "w": 131,
+   "h": 46
+  },
+  "belmira_faixa": {
+   "arquivo": "sprites/texturas_belmira_faixa.png",
+   "w": 83,
+   "h": 46
+  },
+  "belmira_buraco": {
+   "arquivo": "sprites/texturas_belmira_buraco.png",
+   "w": 74,
+   "h": 46
+  },
+  "belmira_sarjeta": {
+   "arquivo": "sprites/texturas_belmira_sarjeta.png",
+   "w": 89,
+   "h": 46
+  },
+  "belmira_calcada": {
+   "arquivo": "sprites/texturas_belmira_calcada.png",
+   "w": 83,
+   "h": 46
+  },
+  "belmira_poca": {
+   "arquivo": "sprites/texturas_belmira_poca.png",
+   "w": 57,
+   "h": 46
   }
  },
  "itens": {
@@ -1077,6 +1516,61 @@
    "arquivo": "sprites/itens_pedra.png",
    "w": 28,
    "h": 22
+  },
+  "fx_jet_splash0": {
+   "arquivo": "sprites/itens_fx_jet_splash0.png",
+   "w": 60,
+   "h": 50
+  },
+  "fx_jet_splash1": {
+   "arquivo": "sprites/itens_fx_jet_splash1.png",
+   "w": 89,
+   "h": 62
+  },
+  "fx_jet_splash2": {
+   "arquivo": "sprites/itens_fx_jet_splash2.png",
+   "w": 103,
+   "h": 82
+  },
+  "fx_jet_splash3": {
+   "arquivo": "sprites/itens_fx_jet_splash3.png",
+   "w": 117,
+   "h": 88
+  },
+  "fx_jet_splash4": {
+   "arquivo": "sprites/itens_fx_jet_splash4.png",
+   "w": 140,
+   "h": 101
+  },
+  "fx_jet_ripple0": {
+   "arquivo": "sprites/itens_fx_jet_ripple0.png",
+   "w": 47,
+   "h": 25
+  },
+  "fx_jet_ripple1": {
+   "arquivo": "sprites/itens_fx_jet_ripple1.png",
+   "w": 55,
+   "h": 27
+  },
+  "fx_jet_ripple2": {
+   "arquivo": "sprites/itens_fx_jet_ripple2.png",
+   "w": 68,
+   "h": 35
+  },
+  "fx_jet_ripple3": {
+   "arquivo": "sprites/itens_fx_jet_ripple3.png",
+   "w": 84,
+   "h": 45
+  },
+  "fx_jet_ripple4": {
+   "arquivo": "sprites/itens_fx_jet_ripple4.png",
+   "w": 100,
+   "h": 53
+  },
+  "fx_jet_ripple5": {
+   "arquivo": "sprites/itens_fx_jet_ripple5.png",
+   "w": 126,
+   "h": 65
   }
  },
  "ratos": {
@@ -1462,219 +1956,411 @@
   },
   "direitus_guarda0": {
    "arquivo": "sprites/ratos_direitus_guarda0.png",
-   "w": 186,
-   "h": 190,
-   "ax": 0.6235
+   "w": 174,
+   "h": 178,
+   "ax": 0.6251
   },
   "direitus_guarda1": {
    "arquivo": "sprites/ratos_direitus_guarda1.png",
-   "w": 184,
-   "h": 190,
-   "ax": 0.5635
+   "w": 173,
+   "h": 178,
+   "ax": 0.563
   },
   "direitus_guarda2": {
    "arquivo": "sprites/ratos_direitus_guarda2.png",
-   "w": 194,
-   "h": 189,
+   "w": 182,
+   "h": 177,
    "ax": 0.5679
   },
   "direitus_guarda3": {
    "arquivo": "sprites/ratos_direitus_guarda3.png",
-   "w": 211,
-   "h": 186,
-   "ax": 0.5625
+   "w": 198,
+   "h": 174,
+   "ax": 0.5617
   },
   "direitus_guarda4": {
    "arquivo": "sprites/ratos_direitus_guarda4.png",
-   "w": 198,
-   "h": 190,
-   "ax": 0.4741
+   "w": 185,
+   "h": 178,
+   "ax": 0.474
   },
   "direitus_guarda5": {
    "arquivo": "sprites/ratos_direitus_guarda5.png",
-   "w": 196,
-   "h": 188,
-   "ax": 0.5986
+   "w": 183,
+   "h": 176,
+   "ax": 0.5973
   },
   "direitus_andar0": {
    "arquivo": "sprites/ratos_direitus_andar0.png",
-   "w": 207,
-   "h": 172,
-   "ax": 0.7018
+   "w": 194,
+   "h": 161,
+   "ax": 0.7011
   },
   "direitus_andar1": {
    "arquivo": "sprites/ratos_direitus_andar1.png",
-   "w": 201,
-   "h": 172,
-   "ax": 0.6941
+   "w": 188,
+   "h": 161,
+   "ax": 0.6943
   },
   "direitus_andar2": {
    "arquivo": "sprites/ratos_direitus_andar2.png",
-   "w": 202,
-   "h": 172,
-   "ax": 0.7132
+   "w": 190,
+   "h": 161,
+   "ax": 0.7122
   },
   "direitus_andar3": {
    "arquivo": "sprites/ratos_direitus_andar3.png",
-   "w": 208,
-   "h": 172,
-   "ax": 0.7709
+   "w": 195,
+   "h": 161,
+   "ax": 0.7723
   },
   "direitus_andar4": {
    "arquivo": "sprites/ratos_direitus_andar4.png",
-   "w": 209,
-   "h": 172,
-   "ax": 0.761
+   "w": 196,
+   "h": 161,
+   "ax": 0.7605
   },
   "direitus_andar5": {
    "arquivo": "sprites/ratos_direitus_andar5.png",
-   "w": 198,
-   "h": 172,
-   "ax": 0.7172
+   "w": 185,
+   "h": 161,
+   "ax": 0.7168
   },
   "direitus_soco0": {
    "arquivo": "sprites/ratos_direitus_soco0.png",
-   "w": 187,
-   "h": 170,
-   "ax": 0.5733
+   "w": 175,
+   "h": 159,
+   "ax": 0.5723
   },
   "direitus_soco1": {
    "arquivo": "sprites/ratos_direitus_soco1.png",
-   "w": 237,
-   "h": 170,
-   "ax": 0.5415
+   "w": 222,
+   "h": 159,
+   "ax": 0.5413
   },
   "direitus_soco2": {
    "arquivo": "sprites/ratos_direitus_soco2.png",
-   "w": 281,
-   "h": 170,
-   "ax": 0.5639
+   "w": 263,
+   "h": 159,
+   "ax": 0.566
   },
   "direitus_soco3": {
    "arquivo": "sprites/ratos_direitus_soco3.png",
-   "w": 230,
-   "h": 170,
-   "ax": 0.7268
+   "w": 216,
+   "h": 159,
+   "ax": 0.7269
   },
   "direitus_soco4": {
    "arquivo": "sprites/ratos_direitus_soco4.png",
-   "w": 310,
-   "h": 170,
-   "ax": 0.6022
+   "w": 290,
+   "h": 159,
+   "ax": 0.6037
   },
   "direitus_soco5": {
    "arquivo": "sprites/ratos_direitus_soco5.png",
-   "w": 192,
-   "h": 170,
-   "ax": 0.6285
+   "w": 180,
+   "h": 159,
+   "ax": 0.6281
   },
   "direitus_chute0": {
    "arquivo": "sprites/ratos_direitus_chute0.png",
-   "w": 196,
-   "h": 179,
-   "ax": 0.5117
+   "w": 183,
+   "h": 168,
+   "ax": 0.5113
   },
   "direitus_chute1": {
    "arquivo": "sprites/ratos_direitus_chute1.png",
-   "w": 170,
-   "h": 179,
-   "ax": 0.5515
+   "w": 159,
+   "h": 168,
+   "ax": 0.5503
   },
   "direitus_chute2": {
    "arquivo": "sprites/ratos_direitus_chute2.png",
-   "w": 191,
-   "h": 179,
-   "ax": 0.5278
+   "w": 179,
+   "h": 168,
+   "ax": 0.5279
   },
   "direitus_chute3": {
    "arquivo": "sprites/ratos_direitus_chute3.png",
-   "w": 274,
-   "h": 179,
-   "ax": 0.5252
+   "w": 257,
+   "h": 168,
+   "ax": 0.5267
   },
   "direitus_chute4": {
    "arquivo": "sprites/ratos_direitus_chute4.png",
-   "w": 182,
-   "h": 179,
-   "ax": 0.5015
+   "w": 171,
+   "h": 168,
+   "ax": 0.5022
   },
   "direitus_chute5": {
    "arquivo": "sprites/ratos_direitus_chute5.png",
-   "w": 205,
-   "h": 179,
-   "ax": 0.5911
+   "w": 192,
+   "h": 168,
+   "ax": 0.5915
   },
   "direitus_investida0": {
    "arquivo": "sprites/ratos_direitus_investida0.png",
-   "w": 220,
-   "h": 133,
-   "ax": 0.7264
+   "w": 206,
+   "h": 125,
+   "ax": 0.7259
   },
   "direitus_investida1": {
    "arquivo": "sprites/ratos_direitus_investida1.png",
-   "w": 249,
-   "h": 148,
-   "ax": 0.6767
+   "w": 233,
+   "h": 138,
+   "ax": 0.6807
   },
   "direitus_investida2": {
    "arquivo": "sprites/ratos_direitus_investida2.png",
-   "w": 221,
-   "h": 146,
-   "ax": 0.7009
+   "w": 207,
+   "h": 137,
+   "ax": 0.701
   },
   "direitus_investida3": {
    "arquivo": "sprites/ratos_direitus_investida3.png",
-   "w": 314,
-   "h": 155,
+   "w": 294,
+   "h": 146,
    "ax": 0.6013
   },
   "direitus_investida4": {
    "arquivo": "sprites/ratos_direitus_investida4.png",
-   "w": 262,
-   "h": 160,
-   "ax": 0.542
+   "w": 245,
+   "h": 150,
+   "ax": 0.5381
   },
   "direitus_investida5": {
    "arquivo": "sprites/ratos_direitus_investida5.png",
-   "w": 199,
-   "h": 161,
-   "ax": 0.6042
+   "w": 186,
+   "h": 151,
+   "ax": 0.6031
   },
   "direitus_dano0": {
    "arquivo": "sprites/ratos_direitus_dano0.png",
-   "w": 246,
-   "h": 169,
-   "ax": 0.5103
+   "w": 230,
+   "h": 158,
+   "ax": 0.5108
   },
   "direitus_dano1": {
    "arquivo": "sprites/ratos_direitus_dano1.png",
-   "w": 237,
-   "h": 169,
-   "ax": 0.4533
+   "w": 222,
+   "h": 158,
+   "ax": 0.4526
   },
   "direitus_dano2": {
    "arquivo": "sprites/ratos_direitus_dano2.png",
-   "w": 177,
-   "h": 164,
-   "ax": 0.5953
+   "w": 165,
+   "h": 154,
+   "ax": 0.5947
   },
   "direitus_dano3": {
    "arquivo": "sprites/ratos_direitus_dano3.png",
-   "w": 247,
-   "h": 134,
-   "ax": 0.4065
+   "w": 231,
+   "h": 126,
+   "ax": 0.4059
   },
   "direitus_dano4": {
    "arquivo": "sprites/ratos_direitus_dano4.png",
-   "w": 284,
-   "h": 93,
-   "ax": 0.3595
+   "w": 266,
+   "h": 87,
+   "ax": 0.3579
   },
   "direitus_dano5": {
    "arquivo": "sprites/ratos_direitus_dano5.png",
-   "w": 246,
-   "h": 171,
-   "ax": 0.6089
+   "w": 230,
+   "h": 160,
+   "ax": 0.6068
+  },
+  "jetratinho_q0": {
+   "arquivo": "sprites/ratos_jetratinho_q0.png",
+   "w": 161,
+   "h": 120,
+   "ax": 0.5565
+  },
+  "jetratinho_q1": {
+   "arquivo": "sprites/ratos_jetratinho_q1.png",
+   "w": 154,
+   "h": 118,
+   "ax": 0.6088
+  },
+  "jetratinho_q2": {
+   "arquivo": "sprites/ratos_jetratinho_q2.png",
+   "w": 167,
+   "h": 116,
+   "ax": 0.4871
+  },
+  "jetratinho_q3": {
+   "arquivo": "sprites/ratos_jetratinho_q3.png",
+   "w": 118,
+   "h": 126,
+   "ax": 0.5199
+  },
+  "jetratinho_q4": {
+   "arquivo": "sprites/ratos_jetratinho_q4.png",
+   "w": 149,
+   "h": 118,
+   "ax": 0.514
+  },
+  "jetratinho_q5": {
+   "arquivo": "sprites/ratos_jetratinho_q5.png",
+   "w": 149,
+   "h": 118,
+   "ax": 0.4335
+  },
+  "jetratinho_q6": {
+   "arquivo": "sprites/ratos_jetratinho_q6.png",
+   "w": 123,
+   "h": 142,
+   "ax": 0.3838
+  },
+  "jetratinho_q7": {
+   "arquivo": "sprites/ratos_jetratinho_q7.png",
+   "w": 178,
+   "h": 120,
+   "ax": 0.4861
+  },
+  "jetratazana_q0": {
+   "arquivo": "sprites/ratos_jetratazana_q0.png",
+   "w": 156,
+   "h": 125,
+   "ax": 0.5455
+  },
+  "jetratazana_q1": {
+   "arquivo": "sprites/ratos_jetratazana_q1.png",
+   "w": 157,
+   "h": 123,
+   "ax": 0.5818
+  },
+  "jetratazana_q2": {
+   "arquivo": "sprites/ratos_jetratazana_q2.png",
+   "w": 160,
+   "h": 124,
+   "ax": 0.5152
+  },
+  "jetratazana_q3": {
+   "arquivo": "sprites/ratos_jetratazana_q3.png",
+   "w": 111,
+   "h": 130,
+   "ax": 0.4937
+  },
+  "jetratazana_q4": {
+   "arquivo": "sprites/ratos_jetratazana_q4.png",
+   "w": 145,
+   "h": 124,
+   "ax": 0.4931
+  },
+  "jetratazana_q5": {
+   "arquivo": "sprites/ratos_jetratazana_q5.png",
+   "w": 142,
+   "h": 123,
+   "ax": 0.4444
+  },
+  "jetratazana_q6": {
+   "arquivo": "sprites/ratos_jetratazana_q6.png",
+   "w": 119,
+   "h": 134,
+   "ax": 0.4179
+  },
+  "jetratazana_q7": {
+   "arquivo": "sprites/ratos_jetratazana_q7.png",
+   "w": 168,
+   "h": 124,
+   "ax": 0.5057
+  },
+  "jetlixeiro_q0": {
+   "arquivo": "sprites/ratos_jetlixeiro_q0.png",
+   "w": 146,
+   "h": 120,
+   "ax": 0.5776
+  },
+  "jetlixeiro_q1": {
+   "arquivo": "sprites/ratos_jetlixeiro_q1.png",
+   "w": 146,
+   "h": 120,
+   "ax": 0.5683
+  },
+  "jetlixeiro_q2": {
+   "arquivo": "sprites/ratos_jetlixeiro_q2.png",
+   "w": 147,
+   "h": 113,
+   "ax": 0.5363
+  },
+  "jetlixeiro_q3": {
+   "arquivo": "sprites/ratos_jetlixeiro_q3.png",
+   "w": 106,
+   "h": 125,
+   "ax": 0.567
+  },
+  "jetlixeiro_q4": {
+   "arquivo": "sprites/ratos_jetlixeiro_q4.png",
+   "w": 136,
+   "h": 121,
+   "ax": 0.4676
+  },
+  "jetlixeiro_q5": {
+   "arquivo": "sprites/ratos_jetlixeiro_q5.png",
+   "w": 134,
+   "h": 121,
+   "ax": 0.4069
+  },
+  "jetlixeiro_q6": {
+   "arquivo": "sprites/ratos_jetlixeiro_q6.png",
+   "w": 111,
+   "h": 132,
+   "ax": 0.3772
+  },
+  "jetlixeiro_q7": {
+   "arquivo": "sprites/ratos_jetlixeiro_q7.png",
+   "w": 158,
+   "h": 116,
+   "ax": 0.4927
+  },
+  "jetrei_q0": {
+   "arquivo": "sprites/ratos_jetrei_q0.png",
+   "w": 178,
+   "h": 150,
+   "ax": 0.5632
+  },
+  "jetrei_q1": {
+   "arquivo": "sprites/ratos_jetrei_q1.png",
+   "w": 178,
+   "h": 145,
+   "ax": 0.5897
+  },
+  "jetrei_q2": {
+   "arquivo": "sprites/ratos_jetrei_q2.png",
+   "w": 169,
+   "h": 138,
+   "ax": 0.5841
+  },
+  "jetrei_q3": {
+   "arquivo": "sprites/ratos_jetrei_q3.png",
+   "w": 127,
+   "h": 159,
+   "ax": 0.493
+  },
+  "jetrei_q4": {
+   "arquivo": "sprites/ratos_jetrei_q4.png",
+   "w": 167,
+   "h": 147,
+   "ax": 0.4551
+  },
+  "jetrei_q5": {
+   "arquivo": "sprites/ratos_jetrei_q5.png",
+   "w": 163,
+   "h": 141,
+   "ax": 0.4115
+  },
+  "jetrei_q6": {
+   "arquivo": "sprites/ratos_jetrei_q6.png",
+   "w": 126,
+   "h": 159,
+   "ax": 0.3619
+  },
+  "jetrei_q7": {
+   "arquivo": "sprites/ratos_jetrei_q7.png",
+   "w": 189,
+   "h": 143,
+   "ax": 0.4903
   }
  },
  "ui": {

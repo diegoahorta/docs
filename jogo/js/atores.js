@@ -173,6 +173,7 @@ export class Heroi extends Ator {
   }
 
   atualizar(dt, ent, limites) {
+    if (this.jet) return this.atualizarJet(dt, ent, limites);
     this.relogio += dt;
     this.t += dt;
     if (this.invulneravel > 0) this.invulneravel -= dt;
@@ -316,6 +317,24 @@ export class Heroi extends Ator {
         break;
     }
 
+    // Enxurrada (Belmira Marin): fora das áreas seguras, encostar no chão machuca e devolve para o alto.
+    if (J.enxurradaEm(this.x) && this.noChao && !this.suporte && !['caido', 'voando', 'morto', 'vitoria'].includes(this.estado)) {
+      if (this.invulneravel <= 0) {
+        this.vida = Math.max(0, this.vida - 7);
+        J.audio.sfx('dano');
+        J.flashDano();
+        this.invulneravel = 0.7;
+      }
+      J.efeitos.respingo(this.x, this.z, 0, 1.2);
+      this.vh = 700;
+      this.noChao = false;
+      this.mudar('pular');
+      if (this.vida <= 0) {
+        this.mudar('voando');
+        this.vh = 420;
+      }
+    }
+
     // Área de perigo (buraco): dano contínuo para quem está no chão.
     if (this.h <= 0.5 && this.invulneravel <= 0 && J.cenario.perigoEm(this.x, this.z) && this.estado !== 'caido' && this.estado !== 'voando') {
       this.sofrer(10, -this.dir, true);
@@ -386,7 +405,170 @@ export class Heroi extends Ator {
     return true;
   }
 
+  // -------------------------------------------------------------------------
+  // Jet ski (BNH alagado): inércia na água, arrancada, salto e mergulho
+  // -------------------------------------------------------------------------
+  atualizarJet(dt, ent, limites) {
+    this.relogio += dt;
+    this.t += dt;
+    if (this.invulneravel > 0) this.invulneravel -= dt;
+    const J = this.jogo;
+    const livre = ['parado', 'andar', 'pular'].includes(this.estado);
+    const dx = (ent.seg('direita') ? 1 : 0) - (ent.seg('esquerda') ? 1 : 0);
+    const dz = (ent.seg('cima') ? 1 : 0) - (ent.seg('baixo') ? 1 : 0);
+    this.vx = this.vx || 0;
+    if (livre) {
+      this.vx += dx * 950 * dt;
+      if (dx && !(this.estado === 'pular')) this.dir = dx;
+    }
+    this.vx *= Math.pow(0.3, dt);
+    if (this.estado === 'arrancada') this.vx = this.dir * 560;
+    if (this.estado === 'voando') this.vx = -this.dir * 220;
+    this.vx = Math.max(-340, Math.min(340, this.vx));
+    const antes = this.x;
+    this.mover(this.vx * dt, livre ? dz * HEROI.velZ * 1.15 * dt : 0, limites);
+    if (Math.abs(this.x - antes) < Math.abs(this.vx * dt) * 0.5) this.vx *= 0.5;
+
+    if (livre && this.noChao) {
+      if (ent.consumir('pular')) {
+        this.vh = 780;
+        this.noChao = false;
+        this.mudar('pular');
+        J.audio.sfx('pulo');
+        J.efeitos.respingo(this.x - this.dir * 30, this.z, 0, 1);
+      } else if (ent.consumir('especial') && this.energia >= 100) {
+        this.especial();
+      } else if (ent.consumir('soco')) {
+        this.mudar('arrancada');
+        this.atingidos.clear();
+        J.audio.sfx('vento');
+      } else {
+        const anda = Math.abs(this.vx) > 40 || dz;
+        if (anda && this.estado !== 'andar') this.mudar('andar');
+        if (!anda && this.estado !== 'parado') this.mudar('parado');
+      }
+    } else if (this.estado === 'pular' && ent.consumir('soco')) {
+      // mergulho: desce com tudo e espalha água em quem estiver embaixo
+      this.mudar('mergulho');
+      this.vh = -900;
+    }
+
+    if (this.fisica(dt)) {
+      J.efeitos.respingo(this.x, this.z, 0, 1.3);
+      J.efeitos.onda_agua(this.x, this.z);
+      J.audio.sfx('aterrissar');
+      if (this.estado === 'mergulho') {
+        this.atingidos.clear();
+        this.golpear([-70, 110], 20, true, 80);
+        J.tremer(0.2, 7);
+      }
+      if (this.estado === 'pular' || this.estado === 'mergulho') this.mudar('parado');
+      if (this.estado === 'voando') this.mudar('caido');
+    }
+
+    switch (this.estado) {
+      case 'arrancada':
+        this.golpear([0, 120], 13, true, 50);
+        if (this.t >= 0.32) this.mudar('parado');
+        break;
+      case 'especial':
+        if (this.t >= 0.7) this.mudar('parado');
+        break;
+      case 'dor':
+        if (this.t >= 0.3) this.mudar('parado');
+        break;
+      case 'caido':
+        if (this.t >= (this.vida <= 0 ? 1.2 : 0.6)) {
+          if (this.vida <= 0) J.heroiMorreu();
+          else {
+            this.mudar('parado');
+            this.invulneravel = 1.2;
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    // rastro de água e entulho boiando
+    this.rastro = (this.rastro || 0) - dt;
+    if (this.noChao && Math.abs(this.vx) > 150 && this.rastro <= 0) {
+      this.rastro = 0.12;
+      J.efeitos.respingo(this.x - this.dir * 60, this.z, 0, 0.55);
+    }
+    const ob = J.obstaculoEm(this.x, this.z);
+    if (ob && this.h < 14 && this.invulneravel <= 0 && !['caido', 'voando'].includes(this.estado)) {
+      this.sofrer(9, Math.sign(this.x - ob.x) || -this.dir, false);
+      this.vx = -this.vx * 0.6;
+      J.efeitos.respingo(ob.x, ob.z, 0, 1);
+    }
+    // chegou na área segura: desce do jet ski
+    if (J.fase.jet && this.x >= J.fase.jet.terra && this.noChao && livre) {
+      this.jet = false;
+      this.vh = 520;
+      this.noChao = false;
+      this.mudar('pular');
+      J.efeitos.respingo(this.x, this.z, 0, 1.4);
+      J.mensagem('ÁREA SEGURA!');
+    }
+    this.animarJet();
+  }
+
+  animarJet() {
+    const P = 'heroi_jet_';
+    let q = P + 'acelerar0';
+    let rot = 0;
+    let cor = 0xffffff;
+    this.alturaY = 0;
+    const ciclo = (nome, vel) => P + nome + (Math.floor(this.t * vel) % 6);
+    switch (this.estado) {
+      case 'parado':
+        q = P + 'acelerar' + (Math.floor(this.relogio * 3) % 2);
+        this.alturaY = Math.sin(this.relogio * 5) * 2;
+        break;
+      case 'andar':
+        q = Math.sign(this.vx) !== this.dir && Math.abs(this.vx) > 60 ? ciclo('frear', 10) : ciclo('acelerar', 12);
+        this.alturaY = Math.sin(this.relogio * 9) * 1.5;
+        break;
+      case 'pular':
+        q = P + (this.vh > 350 ? 'salto2' : this.vh > 0 ? 'salto3' : this.vh > -350 ? 'salto4' : 'salto5');
+        break;
+      case 'mergulho':
+        q = P + 'salto4';
+        rot = -0.25 * this.dir;
+        break;
+      case 'arrancada':
+        q = P + 'acelerar' + (4 + (Math.floor(this.t * 16) % 2));
+        break;
+      case 'especial':
+      case 'vitoria':
+        q = P + 'curva' + (4 + (Math.floor(this.relogio * 3) % 2));
+        break;
+      case 'dor':
+        q = P + 'frear1';
+        cor = 0xff9090;
+        break;
+      case 'voando':
+        q = P + 'salto3';
+        rot = this.t * 12 * this.dir;
+        break;
+      case 'caido':
+      case 'morto':
+        q = P + 'frear0';
+        cor = 0xff9090;
+        break;
+      default:
+        break;
+    }
+    this.sprite.trocar(R.tex[q]);
+    this.sprite.mesh.rotation.z = rot;
+    this.sprite.material.color.setHex(cor);
+    this.sprite.visivel = !(this.invulneravel > 0 && this.estado !== 'especial' && Math.floor(this.relogio * 20) % 2);
+    this.itemMao.visivel = false;
+  }
+
   animar() {
+    if (this.jet) return this.animarJet();
     let quadro = GUARDA;
     let rot = 0;
     this.alturaY = 0;
@@ -523,7 +705,7 @@ export class Rato extends Ator {
     if (this.invulneravel > 0) this.invulneravel -= dt;
     if (this.recarga > 0) this.recarga -= dt;
     const st = this.st;
-    const fator = this.st.chefe && this.vida < this.vidaMax / 3 ? 1.25 : 1;
+    const fator = (this.st.chefe && this.vida < this.vidaMax / 3 ? 1.25 : 1) * (this.jet ? 1.3 : 1);
 
     const aterrissou = this.fisica(dt);
     const dxH = heroi.x - this.x;
@@ -554,6 +736,16 @@ export class Rato extends Ator {
           break;
         }
         this.dir = Math.sign(dxH) || this.dir;
+        // herói em cima de um veículo: o rato pula atrás dele
+        if (heroi.suporte && heroi.h > 30 && this.noChao && this.h < heroi.h - 20 && Math.abs(dxH) < 190 && Math.abs(dzH) < 30 && Math.random() < 0.04) {
+          this.mudar('saltar');
+          this.vh = Math.sqrt(2 * 1900 * (heroi.h + 45));
+          this.noChao = false;
+          this.suporte = null;
+          this.alvoSalto = heroi.x - Math.sign(dxH || 1) * 45;
+          J.audio.sfx('guincho');
+          break;
+        }
         const lixeiro = this.tipo === 'lixeiro';
         const quer = this.estado === 'perseguir' || this.t > 1.2 || lixeiro;
         const podeAtacar = quer && this.recarga <= 0 && J.pedirTurno(this);
@@ -594,6 +786,12 @@ export class Rato extends Ator {
         }
         if (!podeAtacar && this.estado === 'perseguir' && !lixeiro) this.mudar('rondar');
         if (this.st.invoca) this.talvezInvocar();
+        break;
+      }
+      case 'saltar': {
+        const d = this.alvoSalto - this.x;
+        this.x += Math.sign(d) * Math.min(Math.abs(d), 260 * dt);
+        if (aterrissou) this.mudar('perseguir');
         break;
       }
       case 'parado':
@@ -680,7 +878,7 @@ export class Rato extends Ator {
     }
 
     // Buraco: os ratos também se machucam
-    if (this.h <= 0.5 && this.atingivel && !this.st.chefe && J.cenario.perigoEm(this.x, this.z)) {
+    if (this.h <= 0.5 && this.atingivel && !this.st.chefe && !this.jet && J.cenario.perigoEm(this.x, this.z)) {
       this.sofrer(12, -this.dir, true);
       J.efeitos.numero(this.x, this.z, this.h + 120, '12');
     }
@@ -756,7 +954,30 @@ export class Rato extends Ator {
     }
   }
 
+  animarJet() {
+    const tex = R.ratos['jet' + this.tipo];
+    const mapa = {
+      parado: 'q0', entrar: 'q1', perseguir: 'q1', rondar: 'q2', preparar: 'q0', atacar: 'q2', arremessar: 'q2',
+      segurar: 'q0', dor: 'q3', voando: 'q6', caido: 'q6', morto: 'q6', levantar: 'q7', investida: 'q2', saltar: 'q6',
+    };
+    let q = mapa[this.estado] ?? 'q0';
+    if (q === 'q1' && Math.floor(this.relogio * 6) % 2) q = 'q2';
+    this.sprite.trocar(tex[q]);
+    this.alturaY = this.noChao ? Math.sin(this.relogio * 6) * 2 : 0;
+    this.sprite.mesh.rotation.z = this.estado === 'voando' ? this.t * 10 * this.dir : 0;
+    let cor = 0xffffff;
+    if (this.estado === 'preparar') cor = Math.floor(this.t * 16) % 2 ? 0xffe0a0 : 0xffffff;
+    if (this.estado === 'dor') cor = 0xff9a9a;
+    this.sprite.material.color.setHex(cor);
+    let visivel = true;
+    if (this.estado === 'morto') visivel = Math.floor(this.t * 14) % 2 === 0;
+    else if (this.invulneravel > 0) visivel = Math.floor(this.relogio * 20) % 2 === 0;
+    this.sprite.visivel = visivel;
+    if (this.estado === 'atacar' && this.t < 0.05) this.jogo.efeitos.respingo(this.x - this.dir * 40, this.z, 0, 0.7);
+  }
+
   animar() {
+    if (this.jet) return this.animarJet();
     const tex = R.ratos[this.tipo];
     let q = 'parado' + (Math.floor(this.relogio * 2.5) % 2);
     let cor = 0xffffff;
@@ -993,6 +1214,20 @@ export class Efeitos {
     this.adicionar({ s, t: 0, dur: 0.6, tipo: 'onda' });
   }
 
+  respingo(x, z, h, escala = 1) {
+    const s = new Sprite(this.jogo.mundo, R.tex.itens_fx_jet_splash0, { escala: 0.55 * escala });
+    s.pos(x, BASE_Y + z + h);
+    s.ordem = ordemMundo(z) + 4;
+    this.adicionar({ s, t: 0, dur: 0.35, tipo: 'quadros', quadros: [0, 1, 2, 3, 4].map((i) => R.tex['itens_fx_jet_splash' + i]), esc: 0.55 * escala });
+  }
+
+  onda_agua(x, z) {
+    const s = new Sprite(this.jogo.mundo, R.tex.itens_fx_jet_ripple0, { centro: true, escala: 0.8 });
+    s.pos(x, BASE_Y + z + 4);
+    s.ordem = ordemMundo(z) - 2;
+    this.adicionar({ s, t: 0, dur: 0.5, tipo: 'quadros', quadros: [0, 1, 2, 3, 4, 5].map((i) => R.tex['itens_fx_jet_ripple' + i]), esc: 0.8 });
+  }
+
   bueiro(x, z) {
     const s = new Sprite(this.jogo.mundo, R.tex.sombra, { centro: true });
     s.material.color.setHex(0x000000);
@@ -1027,6 +1262,10 @@ export class Efeitos {
       } else if (e.tipo === 'onda') {
         e.s.mesh.scale.set(128 * (1 + k * 5), 40 * (1 + k * 5), 1);
         e.s.material.opacity = 1 - k;
+      } else if (e.tipo === 'quadros') {
+        const i = Math.min(e.quadros.length - 1, Math.floor(k * e.quadros.length));
+        e.s.trocar(e.quadros[i], e.esc);
+        e.s.material.opacity = k < 0.7 ? 1 : 1 - (k - 0.7) / 0.3;
       } else if (e.tipo === 'fixo' && e.desvanece) {
         e.s.material.opacity = k < 0.7 ? 1 : 1 - (k - 0.7) / 0.3;
       }
