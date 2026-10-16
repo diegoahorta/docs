@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Boulos vs. Gangue dos Ratos</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <div id="palco">
+    <div id="tela-jogo"></div>
+
+    <div id="hud" hidden>
+      <div class="hud-jogador">
+        <img class="hud-retrato" src="sprites/heroi_retrato.png" alt="">
+        <div class="hud-info">
+          <div class="hud-nome">BOULOS <span id="hud-vidas"></span></div>
+          <div class="barra barra-vida"><div id="hud-vida"></div></div>
+          <div class="barra barra-energia"><div id="hud-energia"></div></div>
+        </div>
+      </div>
+      <div class="hud-centro">
+        <div id="hud-fase"></div>
+        <div id="hud-inimigo" hidden>
+          <div id="hud-inimigo-nome"></div>
+          <div class="barra barra-inimigo"><div id="hud-inimigo-vida"></div></div>
+        </div>
+      </div>
+      <div class="hud-placar">
+        <div id="hud-pontos">0</div>
+        <div id="hud-combo"></div>
+      </div>
+      <div id="hud-siga" hidden><span>SIGA</span><img src="../assets/sprites/ui/botao-seta-baixo.png" alt=""></div>
+      <div id="hud-segurando" hidden></div>
+    </div>
+
+    <div id="efeito-dano"></div>
+    <div id="scanlines"></div>
+
+    <!-- Telas: título, controles, história, pausa, fim de jogo -->
+    <div id="telas"></div>
+
+    <!-- Controles de toque (aparecem em telas sensíveis ao toque) -->
+    <div id="toque" hidden>
+      <div class="dpad">
+        <button data-tecla="cima" class="seta cima"></button>
+        <button data-tecla="esquerda" class="seta esquerda"></button>
+        <button data-tecla="direita" class="seta direita"></button>
+        <button data-tecla="baixo" class="seta baixo"></button>
+      </div>
+      <div class="acoes">
+        <button data-tecla="especial" class="botao-verde">ESP</button>
+        <button data-tecla="pegar" class="botao-verde">PEGA</button>
+        <button data-tecla="pular" class="botao-verde">PULA</button>
+        <button data-tecla="soco" class="botao-verde">SOCO</button>
+      </div>
+      <button data-tecla="pausa" class="toque-pausa"><img src="../assets/sprites/ui/tecla-esc.png" alt="Pausa"></button>
+    </div>
+
+    <div id="carregando">CARREGANDO...</div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

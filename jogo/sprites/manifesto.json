@@ -1,0 +1,390 @@
+{
+ "heroi": {
+  "andar0": {
+   "arquivo": "sprites/heroi_andar0.png",
+   "w": 83,
+   "h": 160
+  },
+  "andar1": {
+   "arquivo": "sprites/heroi_andar1.png",
+   "w": 89,
+   "h": 160
+  },
+  "andar2": {
+   "arquivo": "sprites/heroi_andar2.png",
+   "w": 83,
+   "h": 160
+  },
+  "andar3": {
+   "arquivo": "sprites/heroi_andar3.png",
+   "w": 87,
+   "h": 160
+  },
+  "andarb0": {
+   "arquivo": "sprites/heroi_andarb0.png",
+   "w": 83,
+   "h": 160
+  },
+  "andarb1": {
+   "arquivo": "sprites/heroi_andarb1.png",
+   "w": 89,
+   "h": 160
+  },
+  "andarb2": {
+   "arquivo": "sprites/heroi_andarb2.png",
+   "w": 83,
+   "h": 160
+  },
+  "andarb3": {
+   "arquivo": "sprites/heroi_andarb3.png",
+   "w": 87,
+   "h": 160
+  },
+  "frente": {
+   "arquivo": "sprites/heroi_frente.png",
+   "w": 77,
+   "h": 160
+  },
+  "parado": {
+   "arquivo": "sprites/heroi_parado.png",
+   "w": 40,
+   "h": 160
+  },
+  "impulso": {
+   "arquivo": "sprites/heroi_impulso.png",
+   "w": 112,
+   "h": 160
+  },
+  "voadora": {
+   "arquivo": "sprites/heroi_voadora.png",
+   "w": 112,
+   "h": 160
+  },
+  "aterrissar": {
+   "arquivo": "sprites/heroi_aterrissar.png",
+   "w": 82,
+   "h": 160
+  },
+  "acenar": {
+   "arquivo": "sprites/heroi_acenar.png",
+   "w": 75,
+   "h": 160
+  },
+  "frente_pose": {
+   "arquivo": "sprites/heroi_frente_pose.png",
+   "w": 90,
+   "h": 160
+  },
+  "pegar_garrafa0": {
+   "arquivo": "sprites/heroi_pegar_garrafa0.png",
+   "w": 88,
+   "h": 158
+  },
+  "pegar_garrafa1": {
+   "arquivo": "sprites/heroi_pegar_garrafa1.png",
+   "w": 97,
+   "h": 143
+  },
+  "pegar_garrafa2": {
+   "arquivo": "sprites/heroi_pegar_garrafa2.png",
+   "w": 112,
+   "h": 111
+  },
+  "pegar_garrafa3": {
+   "arquivo": "sprites/heroi_pegar_garrafa3.png",
+   "w": 101,
+   "h": 120
+  },
+  "pegar_garrafa4": {
+   "arquivo": "sprites/heroi_pegar_garrafa4.png",
+   "w": 88,
+   "h": 154
+  },
+  "pegar_garrafa5": {
+   "arquivo": "sprites/heroi_pegar_garrafa5.png",
+   "w": 75,
+   "h": 157
+  },
+  "pegar_pedra0": {
+   "arquivo": "sprites/heroi_pegar_pedra0.png",
+   "w": 93,
+   "h": 134
+  },
+  "pegar_pedra1": {
+   "arquivo": "sprites/heroi_pegar_pedra1.png",
+   "w": 107,
+   "h": 131
+  },
+  "pegar_pedra2": {
+   "arquivo": "sprites/heroi_pegar_pedra2.png",
+   "w": 123,
+   "h": 113
+  },
+  "pegar_pedra3": {
+   "arquivo": "sprites/heroi_pegar_pedra3.png",
+   "w": 109,
+   "h": 121
+  },
+  "pegar_pedra4": {
+   "arquivo": "sprites/heroi_pegar_pedra4.png",
+   "w": 95,
+   "h": 134
+  },
+  "pegar_pedra5": {
+   "arquivo": "sprites/heroi_pegar_pedra5.png",
+   "w": 83,
+   "h": 134
+  },
+  "retrato": {
+   "arquivo": "sprites/heroi_retrato.png",
+   "w": 432,
+   "h": 178
+  }
+ },
+ "cenario": {
+  "masp": {
+   "arquivo": "sprites/cenario_masp.png",
+   "w": 541,
+   "h": 351
+  },
+  "copan": {
+   "arquivo": "sprites/cenario_copan.png",
+   "w": 317,
+   "h": 399
+  },
+  "predio": {
+   "arquivo": "sprites/cenario_predio.png",
+   "w": 217,
+   "h": 399
+  },
+  "casa_tijolo": {
+   "arquivo": "sprites/cenario_casa_tijolo.png",
+   "w": 201,
+   "h": 254
+  },
+  "padaria": {
+   "arquivo": "sprites/cenario_padaria.png",
+   "w": 270,
+   "h": 272
+  },
+  "casa_azul": {
+   "arquivo": "sprites/cenario_casa_azul.png",
+   "w": 177,
+   "h": 237
+  },
+  "muro_grafite": {
+   "arquivo": "sprites/cenario_muro_grafite.png",
+   "w": 235,
+   "h": 97
+  },
+  "muro_tijolo": {
+   "arquivo": "sprites/cenario_muro_tijolo.png",
+   "w": 193,
+   "h": 101
+  },
+  "janela_grade": {
+   "arquivo": "sprites/cenario_janela_grade.png",
+   "w": 77,
+   "h": 80
+  },
+  "janela_flores": {
+   "arquivo": "sprites/cenario_janela_flores.png",
+   "w": 72,
+   "h": 86
+  },
+  "janela_veneziana": {
+   "arquivo": "sprites/cenario_janela_veneziana.png",
+   "w": 75,
+   "h": 69
+  },
+  "sacada_plantas": {
+   "arquivo": "sprites/cenario_sacada_plantas.png",
+   "w": 104,
+   "h": 102
+  },
+  "sacada_roupas": {
+   "arquivo": "sprites/cenario_sacada_roupas.png",
+   "w": 112,
+   "h": 102
+  },
+  "porta": {
+   "arquivo": "sprites/cenario_porta.png",
+   "w": 52,
+   "h": 92
+  },
+  "portao_aco": {
+   "arquivo": "sprites/cenario_portao_aco.png",
+   "w": 88,
+   "h": 95
+  },
+  "janela_pequena": {
+   "arquivo": "sprites/cenario_janela_pequena.png",
+   "w": 65,
+   "h": 65
+  },
+  "cobogo": {
+   "arquivo": "sprites/cenario_cobogo.png",
+   "w": 52,
+   "h": 84
+  },
+  "caixa_dagua": {
+   "arquivo": "sprites/cenario_caixa_dagua.png",
+   "w": 57,
+   "h": 77
+  },
+  "janelinha": {
+   "arquivo": "sprites/cenario_janelinha.png",
+   "w": 58,
+   "h": 102
+  },
+  "onibus": {
+   "arquivo": "sprites/cenario_onibus.png",
+   "w": 521,
+   "h": 135
+  },
+  "ponto_onibus": {
+   "arquivo": "sprites/cenario_ponto_onibus.png",
+   "w": 250,
+   "h": 117
+  },
+  "banca": {
+   "arquivo": "sprites/cenario_banca.png",
+   "w": 240,
+   "h": 135
+  },
+  "feira": {
+   "arquivo": "sprites/cenario_feira.png",
+   "w": 279,
+   "h": 134
+  },
+  "carro": {
+   "arquivo": "sprites/cenario_carro.png",
+   "w": 190,
+   "h": 81
+  },
+  "moto": {
+   "arquivo": "sprites/cenario_moto.png",
+   "w": 130,
+   "h": 85
+  },
+  "poste_luz": {
+   "arquivo": "sprites/cenario_poste_luz.png",
+   "w": 67,
+   "h": 159
+  },
+  "arvore": {
+   "arquivo": "sprites/cenario_arvore.png",
+   "w": 126,
+   "h": 158
+  },
+  "semaforo": {
+   "arquivo": "sprites/cenario_semaforo.png",
+   "w": 43,
+   "h": 134
+  },
+  "placa_pedestre": {
+   "arquivo": "sprites/cenario_placa_pedestre.png",
+   "w": 68,
+   "h": 135
+  },
+  "placa_rua": {
+   "arquivo": "sprites/cenario_placa_rua.png",
+   "w": 75,
+   "h": 119
+  },
+  "orelhao": {
+   "arquivo": "sprites/cenario_orelhao.png",
+   "w": 62,
+   "h": 123
+  },
+  "cone": {
+   "arquivo": "sprites/cenario_cone.png",
+   "w": 43,
+   "h": 67
+  },
+  "lixeira": {
+   "arquivo": "sprites/cenario_lixeira.png",
+   "w": 38,
+   "h": 76
+  },
+  "banco": {
+   "arquivo": "sprites/cenario_banco.png",
+   "w": 137,
+   "h": 70
+  },
+  "jardineira": {
+   "arquivo": "sprites/cenario_jardineira.png",
+   "w": 87,
+   "h": 75
+  },
+  "poste": {
+   "arquivo": "sprites/cenario_poste.png",
+   "w": 96,
+   "h": 269
+  }
+ },
+ "texturas": {
+  "pedra_onda": {
+   "arquivo": "sprites/texturas_pedra_onda.png",
+   "w": 70,
+   "h": 71
+  },
+  "pedra_onda2": {
+   "arquivo": "sprites/texturas_pedra_onda2.png",
+   "w": 85,
+   "h": 71
+  },
+  "calcada": {
+   "arquivo": "sprites/texturas_calcada.png",
+   "w": 67,
+   "h": 71
+  },
+  "calcada_tatil": {
+   "arquivo": "sprites/texturas_calcada_tatil.png",
+   "w": 67,
+   "h": 71
+  },
+  "calcada_meiofio": {
+   "arquivo": "sprites/texturas_calcada_meiofio.png",
+   "w": 67,
+   "h": 71
+  },
+  "asfalto": {
+   "arquivo": "sprites/texturas_asfalto.png",
+   "w": 129,
+   "h": 83
+  },
+  "asfalto_faixa": {
+   "arquivo": "sprites/texturas_asfalto_faixa.png",
+   "w": 111,
+   "h": 83
+  },
+  "asfalto_amarela": {
+   "arquivo": "sprites/texturas_asfalto_amarela.png",
+   "w": 79,
+   "h": 83
+  },
+  "faixa_pedestre": {
+   "arquivo": "sprites/texturas_faixa_pedestre.png",
+   "w": 126,
+   "h": 83
+  },
+  "asfalto_rachado": {
+   "arquivo": "sprites/texturas_asfalto_rachado.png",
+   "w": 130,
+   "h": 83
+  }
+ },
+ "itens": {
+  "garrafa": {
+   "arquivo": "sprites/itens_garrafa.png",
+   "w": 18,
+   "h": 46
+  },
+  "pedra": {
+   "arquivo": "sprites/itens_pedra.png",
+   "w": 28,
+   "h": 22
+  }
+ }
+}
