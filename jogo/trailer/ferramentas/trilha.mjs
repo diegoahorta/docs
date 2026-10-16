@@ -74,6 +74,7 @@ const b64 = await p.evaluate(async (L) => {
   for (const t of L.trovoes) trovao(t);
   boom(L.impactos[0], 0.8);
   a.sirene(6.2, 3.5);
+  boom(8.0, 0.9);
   boom(L.impactos[1], 1);
   for (let i = 0; i < 8; i++) a.chimbal(12.65 + i * L.bar / 4, 0.4 + i * 0.05, false, true);
   subida(12.6, L.drop);

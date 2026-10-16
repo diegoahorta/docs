@@ -21,7 +21,9 @@ BEAT = BAR / 4
 D = L['drop']
 TIT = L['titulo']
 FIM = L['fim']
-FONTE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'assets', 'fontes', 'upheavtt.ttf')
+# Raiz do repositório: variável BOULOS_REPO ou, por padrão, três pastas acima deste arquivo.
+REPO = os.environ.get('BOULOS_REPO', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
+FONTE = os.path.join(REPO, 'assets', 'fontes', 'upheavtt.ttf')
 rng = np.random.default_rng(7)
 
 
@@ -82,6 +84,7 @@ def carregar_arte(nome):
 
 CAPA = carregar_arte('capa.png')
 RATO = carregar_arte('rato.png')
+DIREITUS = Image.open(os.path.join(ARTE, 'direitus.png')).convert('RGBA')
 BOULOS = carregar_arte('boulos.png')
 LOGO = Image.open(os.path.join(ARTE, 'logo.png')).convert('RGB')
 KATA = Image.open(os.path.join(ARTE, 'katakana.png')).convert('RGB')
@@ -277,6 +280,73 @@ def palavra_impacto(base, texto, t, tam=210, cor=(255, 255, 255), sombra=(230, 3
 
 
 # ---------------------------------------------------------------------------
+# Mapa da Zona Sul (como no jogo): bairro em vermelho, resto em preto e branco
+# ---------------------------------------------------------------------------
+_man = json.load(open(os.path.join(REPO, 'jogo', 'sprites', 'manifesto.json')))['ui']['mapa_cinza']
+MAPA_C = _man['centros']
+MAPA_BASE = Image.open(os.path.join(ARTE, 'ui_mapa_cinza.png')).convert('RGBA')
+MAPA_REG = {n: Image.open(os.path.join(ARTE, f'ui_mapa_{n}.png')).convert('RGBA') for n in MAPA_C}
+ONIBUS = Image.open(os.path.join(ARTE, 'ui_mapa_icone_onibus.png')).convert('RGBA')
+PINO = Image.open(os.path.join(ARTE, 'ui_mapa_icone_pino.png')).convert('RGBA')
+NOMES_MAPA = {'marsilac': 'FASE 1: MARSILAC', 'parelheiros': 'FASE 2: PARELHEIROS', 'grajau': 'FASE 3: GRAJAÚ BNH',
+              'cidade_dutra': 'FASE 4: CIDADE DUTRA', None: 'FASE FINAL: AV. PAULISTA'}
+_fundo_mapa = None
+
+
+def render_mapa(regiao, anterior, tt, dur):
+    global _fundo_mapa
+    if _fundo_mapa is None:
+        yy, xx = np.mgrid[0:H, 0:W]
+        r = np.sqrt(((xx - W / 2) / W) ** 2 + ((yy - H / 2) / H) ** 2)
+        _fundo_mapa = (np.array([60, 40, 110], np.float32) * (1 - r[..., None] * 1.4).clip(0.15, 1)).astype(np.float32)
+    base = _fundo_mapa.copy()
+    escala = 1.42 * (1 + 0.04 * tt / dur)
+    zoom_in = min(1, tt / 0.25)
+    escala *= 1 + 0.5 * (1 - zoom_in) ** 2
+    mw, mh = MAPA_BASE.width, MAPA_BASE.height
+    cx, cy = W / 2, H / 2 - 40
+
+    def tela(p):
+        return cx + (p[0] - mw / 2) * escala, cy + (p[1] - mh / 2) * escala
+
+    def pos(reg):
+        if reg is None:
+            return (mw * 0.82, mh * 0.1)
+        c = MAPA_C[reg]
+        return (c[0], c[1] + 34)
+
+    mapa = MAPA_BASE.copy()
+    viagem = min(1, max(0, (tt - 0.15) / (dur * 0.5)))
+    chegou = viagem >= 1
+    if regiao and chegou:
+        ta = tt - (0.15 + dur * 0.5)
+        pisca = (ta < 0.3 and int(ta * 14) % 2 == 1)
+        if not pisca:
+            reg = MAPA_REG[regiao]
+            glow = reg.filter(ImageFilter.GaussianBlur(8))
+            mapa.alpha_composite(glow)
+            mapa.alpha_composite(reg)
+    img = mapa.resize((int(mw * escala), int(mh * escala)), Image.BILINEAR)
+    base = colar(base, img, cx, cy, 1.0, 1.0)
+    # ônibus
+    p0 = pos(anterior) if anterior else (pos(regiao)[0], mh + 30)
+    p1 = pos(regiao)
+    k = viagem * viagem * (3 - 2 * viagem)
+    px, py = tela((p0[0] + (p1[0] - p0[0]) * k, p0[1] + (p1[1] - p0[1]) * k))
+    bob = 0 if chegou else 3 * math.sin(tt * 40)
+    base = colar(base, ONIBUS, px, py + bob, escala * 0.95, 1.0)
+    if chegou:
+        ta = tt - (0.15 + dur * 0.5)
+        queda = min(1, ta / 0.18)
+        base = colar(base, PINO, px, py - 70 * escala * 0.5 - 120 * (1 - queda), escala * 0.6, queda)
+        if regiao is None:
+            base = palavra_impacto(base, 'RUMO À PAULISTA', ta, tam=56, cor=(255, 60, 80), sombra=(40, 0, 10), brilho=None, cy=py + 90)
+        # faixa com o nome da fase
+        base = palavra_impacto(base, NOMES_MAPA[regiao], ta, tam=84, cor=(255, 255, 255), sombra=(200, 16, 46), brilho=(255, 40, 60), cy=H - 90)
+    return base
+
+
+# ---------------------------------------------------------------------------
 # Roteiro
 # ---------------------------------------------------------------------------
 def b(n):
@@ -286,30 +356,32 @@ def b(n):
 
 # Montagem do drop: (início em compassos, duração em compassos, clipe, quadro inicial, velocidade, zoom, legenda)
 MONTAGEM = [
-    (0, 2, 'grajau_andar', 10, 1.0, 1.18, ('DO GRAJAÚ...', 'esq')),
-    (2, 2, 'grajau_luta', 10, 1.0, 1.22, ('A GANGUE DOS RATOS TOMOU A QUEBRADA', 'esq')),
-    (4, 1, 'onibus', 12, 'onibus', 1.12, None),
-    (5, 1, 'grajau_luta', 120, 1.0, 1.3, None),
-    (6, 2, 'paulista', 50, 1.0, 1.25, ('...ATÉ A PAULISTA', 'esq')),
-    (8, 2, 'centro_garrafa', 2, 1.0, 1.22, ('TUDO VIRA ARMA', 'esq')),
-    (10, 2, 'centro_luta', 20, 1.0, 1.25, ('COMBO DE 4 GOLPES', 'esq')),
-    (12, 2, 'rapido1', 0, 1.0, 1.3, None),
-    (14, 2, 'noite', 20, 1.0, 1.25, ('A PERIFERIA RESISTE', 'esq')),
-    (16, 2, 'chefe', 20, 1.0, 1.28, ('ENFRENTE RATUS NUNES', 'esq')),
-    (18, 2, 'especial', 14, 'especial', 1.15, ('FORÇA DO POVO', 'esq')),
-    (20, 2, 'chefe', 110, 1.0, 1.3, None),
+    (0, 2, 'mapa:marsilac:', 0, 1.0, 1.0, None),
+    (2, 2, 'marsilac_luta', 10, 1.0, 1.22, ('MARSILAC: A ESTAÇÃO', 'esq')),
+    (4, 1, 'mapa:parelheiros:marsilac', 0, 1.0, 1.0, None),
+    (5, 1, 'parelheiros_onibus', 14, 'onibus', 1.12, None),
+    (6, 1, 'parelheiros_luta', 20, 1.0, 1.25, ('PARELHEIROS: O TERMINAL', 'esq')),
+    (7, 1, 'mapa:grajau:parelheiros', 0, 1.0, 1.0, None),
+    (8, 2, 'grajau_luta', 10, 1.0, 1.22, ('GRAJAÚ: CONJUNTO BNH', 'esq')),
+    (10, 1, 'mapa:cidade_dutra:grajau', 0, 1.0, 1.0, None),
+    (11, 2, 'dutra_luta', 20, 1.0, 1.25, ('CIDADE DUTRA: INTERLAGOS', 'esq')),
+    (13, 2, 'rapido1', 0, 1.0, 1.3, None),
+    (15, 2, 'direitus', 30, 1.0, 1.3, ('RATUS DIREITUS EM CADA BAIRRO', 'esq')),
+    (17, 1, 'mapa::cidade_dutra', 0, 1.0, 1.0, None),
+    (18, 2, 'chefe', 20, 1.0, 1.28, ('PAULISTA: ENFRENTE RATUS NUNES', 'esq')),
+    (20, 2, 'especial', 14, 'especial', 1.15, ('FORÇA DO POVO', 'esq')),
     (22, 2, 'rapido2', 0, 1.0, 1.3, None),
-    (24, 2, 'chefe', 200, 1.0, 1.3, ('A CIDADE É DO POVO', 'esq')),
+    (24, 2, 'chefe', 140, 1.0, 1.3, ('A CIDADE É DO POVO', 'esq')),
     (26, 1, 'final', 0, 1.0, 1.0, None),
 ]
 
 # Cortes rápidos (uma batida cada) com palavras de impacto a cada 2 batidas.
-RAPIDO1 = [('grajau_luta', 40), ('paulista', 90), ('centro_luta', 60), ('grajau_luta', 70),
-           ('paulista', 140), ('centro_luta', 110), ('noite', 70), ('grajau_luta', 150)]
+RAPIDO1 = [('marsilac_luta', 60), ('parelheiros_luta', 80), ('grajau_luta', 60), ('dutra_luta', 70),
+           ('paulista_luta', 90), ('marsilac_luta', 140), ('dutra_luta', 130), ('grajau_luta', 150)]
 PALAVRAS1 = ['JAB', 'DIRETO', 'JOELHADA', 'CHUTE!']
-RAPIDO2 = [('chefe', 60), ('noite', 120), ('chefe', 150), ('especial', 40),
-           ('chefe', 250), ('noite', 160), ('paulista', 170), ('chefe', 280)]
-PALAVRAS2 = ['4 FASES', '4 GOLPES', '1 CHEFÃO', '0 PIEDADE']
+RAPIDO2 = [('marsilac_luta', 170), ('parelheiros_luta', 140), ('direitus2', 60), ('direitus', 150),
+           ('chefe', 230), ('paulista_luta', 160), ('chefe', 270), ('especial', 70)]
+PALAVRAS2 = ['5 BAIRROS', '1 SUBCHEFE', '1 CHEFÃO', '0 PIEDADE']
 
 
 def tempo_clipe(vel, t):
@@ -375,7 +447,7 @@ def flash(t):
     """Clarões brancos nos cortes principais e trovões."""
     v = 0.0
     for tt, forca, decai in [(L['trovoes'][0], 0.6, 7), (L['trovoes'][1], 0.75, 6), (L['trovoes'][2], 0.7, 6),
-                             (L['impactos'][0], 1.0, 7), (L['impactos'][1], 1.0, 7), (D, 1.0, 5), (TIT, 1.0, 4)]:
+                             (L['impactos'][0], 1.0, 7), (8.0, 0.9, 7), (L['impactos'][1], 1.0, 7), (D, 1.0, 5), (TIT, 1.0, 4)]:
         if t >= tt:
             v = max(v, forca * math.exp(-(t - tt) * decai))
     for n in range(1, 27):
@@ -412,7 +484,7 @@ def quadro(t):
         else:
             # a cidade tomada: gameplay noturno em câmera lenta, frio e escuro
             tt = t - 1.5
-            base = gameplay('noite', 40 + tt * 30 * 0.45, 1.35, tt, tinta=(0.65, 0.75, 1.15), sat=0.6)
+            base = gameplay('paulista_luta', 40 + tt * 30 * 0.45, 1.35, tt, tinta=(0.55, 0.65, 1.15), sat=0.6)
             base *= 0.55 + 0.5 * relampago(t)
             if t > 4.1:
                 over = arte_kb(RATO, t - 4.1, 1.9, 1.5, 1.7, 0.62, 0.33, 0.66, 0.30)
@@ -427,6 +499,22 @@ def quadro(t):
             base = palavra_impacto(base, 'PELA GANGUE DOS RATOS', t - 4.2, tam=96, cor=(255, 255, 255), sombra=(200, 20, 60), brilho=(255, 40, 80), cy=H - 250, dur=6.0 - 4.2)
         if t >= 4.1 and t < 4.35:
             glitch_f = 1.0
+    elif 8.0 <= t < L['impactos'][1]:
+        # O SUBCHEFE: Ratus Direitus
+        tt = t - 8.0
+        base = arte_kb(RATO, tt + 2, 4.0, 1.4, 1.5, 0.3, 0.6, 0.32, 0.6)
+        base = graduar(base, sat=0.5, tinta=(0.9, 0.35, 0.45), brilho=0.45)
+        k = min(1, tt / 0.15)
+        esc = 4.3 * (1 + 0.35 * (1 - k) ** 2) * (1 + 0.02 * tt)
+        dirA = DIREITUS.resize((int(DIREITUS.width * esc), int(DIREITUS.height * esc)), Image.NEAREST)
+        base = colar(base, dirA, W / 2 + 300, H / 2 - 30, 1.0, min(1, tt / 0.06))
+        sx, sy = tremor(t, 8.0, 0.4, 18)
+        base = palavra_impacto(base, 'RATUS DIREITUS', tt, tam=150, cor=(255, 120, 190), sombra=(60, 10, 40), brilho=(255, 30, 120), cy=730, dur=2.0)
+        if tt > 0.6:
+            base = palavra_impacto(base, 'O BRAÇO DIREITO', tt - 0.6, tam=64, cor=(255, 214, 63), sombra=(40, 10, 30), brilho=None, cy=850, dur=1.4)
+        cut_px = 10 * math.exp(-tt * 6)
+        if tt < 0.2:
+            glitch_f = 0.8
     elif t < L['impactos'][1]:
         # O VILÃO
         tt = t - L['impactos'][0]
@@ -460,7 +548,7 @@ def quadro(t):
     elif t < D:
         # construção: cortes acelerando a cada semicolcheia do chimbal
         k = int((t - 12.65) / BEAT)
-        ordem = [('grajau_luta', 60), ('paulista', 30), ('centro_luta', 80), ('noite', 100),
+        ordem = [('marsilac_luta', 60), ('parelheiros_luta', 30), ('grajau_luta', 80), ('dutra_luta', 100),
                  ('chefe', 40), ('especial', 30), ('grajau_luta', 180), ('chefe', 120)]
         if t < 12.65 or k >= len(ordem):
             base = np.zeros((H, W, 3), np.float32)
@@ -496,6 +584,12 @@ def quadro(t):
             w = palavras[k // 2]
             base = palavra_impacto(base, w, tt - (k // 2) * 2 * BEAT, tam=200, cor=(255, 214, 63) if k % 4 < 2 else (255, 255, 255),
                                    sombra=(230, 30, 110), brilho=(255, 120, 0) if k % 4 < 2 else (40, 230, 255), dur=2 * BEAT)
+        elif nome.startswith('mapa:'):
+            _, regiao, anterior = nome.split(':')
+            base = render_mapa(regiao or None, anterior or None, tt, dur)
+            cut_px = 8 * math.exp(-tt * 10)
+            if tt < 0.05:
+                glitch_f = 0.5
         elif nome == 'final':
             # um compasso: o Boulos aproxima rápido, a tela escurece até o título
             base = arte_kb(BOULOS, tt, BAR, 1.2, 1.9, 0.52, 0.32, 0.55, 0.28)
@@ -509,7 +603,7 @@ def quadro(t):
             sx2, sy2 = (0, 0)
             if nome == 'onibus' and 0.95 < tt < 1.4:
                 sx2, sy2 = tremor(tt, 0.95, 0.35, 14)
-            base = gameplay(nome, i, zoom, tt, pul, sx2, sy2, tinta=(1.0, 0.98, 1.05) if nome in ('noite', 'chefe', 'especial') else (1, 1, 1))
+            base = gameplay(nome, i, zoom, tt, pul, sx2, sy2, tinta=(1.0, 0.98, 1.05) if nome in ('chefe', 'especial') else (1, 1, 1))
             if nome == 'especial' and 0.55 < tt < 1.65:
                 cut_px = 8
             cut_px = max(cut_px, 12 * math.exp(-tt * 14))

@@ -58,19 +58,19 @@ await p.evaluate(() => {
 });
 
 const CENAS = {
-  grajau_andar: { fase: 0, quadros: 200, cfg: { x: 140, z: 40, camX: 0, modo: 'andar' } },
-  grajau_luta: { fase: 0, quadros: 260, cfg: { x: 560, z: 70, camX: 260, ratos: [['ratinho', 760, 60], ['ratinho', 840, 95], ['ratazana', 980, 70], ['ratinho', 420, 40]], modo: 'fixo' } },
-  onibus: { fase: 0, quadros: 150, cfg: { x: 2380, z: 30, camX: 2080, modo: 'parado', noOnibus: true, ratos: [['ratinho', 2780, 30], ['ratinho', 2840, 50]],
+  marsilac_andar: { fase: 0, quadros: 170, cfg: { x: 140, z: 50, camX: 0, modo: 'andar' } },
+  marsilac_luta: { fase: 0, quadros: 220, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratinho', 1600, 60], ['ratinho', 1680, 95], ['lixeiro', 1900, 70], ['ratinho', 1250, 40]], modo: 'fixo' } },
+  parelheiros_onibus: { fase: 1, quadros: 150, cfg: { x: 1830, z: 30, camX: 1530, modo: 'parado', noOnibus: true, ratos: [['ratinho', 2230, 30], ['ratinho', 2290, 50]],
     roteiro: Object.assign(Object.fromEntries([...Array(50).keys()].map((i) => [i + 8, ['+direita']])), { 30: ['+direita', 'pular'], 42: ['+direita', 'soco'] }) } },
-  paulista: { fase: 1, quadros: 230, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1650, 70], ['lixeiro', 1950, 100], ['ratinho', 1250, 40], ['ratinho', 1700, 120]], modo: 'fixo' } },
-  centro_garrafa: { fase: 2, quadros: 170, cfg: { x: 2070, z: 42, camX: 1750, modo: 'parado', ratos: [['ratazana', 2450, 42], ['ratinho', 2520, 60]],
-    roteiro: { 4: ['pegar'], 30: ['+direita'], 31: ['+direita'], 32: ['+direita'], 45: ['pegar'] } } },
-  centro_luta: { fase: 2, quadros: 200, cfg: { x: 3600, z: 70, camX: 3300, ratos: [['ratazana', 3800, 70], ['ratinho', 3850, 100], ['lixeiro', 4150, 50], ['ratinho', 3400, 60]], modo: 'fixo' } },
-  noite: { fase: 3, quadros: 200, cfg: { x: 1750, z: 70, camX: 1450, ratos: [['ratazana', 1950, 70], ['ratazana', 1550, 90], ['lixeiro', 2300, 60], ['ratinho', 2000, 110]], modo: 'fixo' } },
-  chefe: { fase: 3, quadros: 330, cfg: { x: 3050, z: 90, camX: 2700, energia: 0, ratos: [['rei', 3350, 90]], modo: 'fixo' } },
-  especial: { fase: 3, quadros: 120, cfg: { x: 3100, z: 90, camX: 2800, energia: 100, ratos: [['rei', 3270, 90], ['ratinho', 2970, 60], ['ratazana', 3350, 110], ['ratinho', 3250, 40]], modo: 'parado',
+  parelheiros_luta: { fase: 1, quadros: 200, cfg: { x: 2400, z: 70, camX: 2100, ratos: [['ratazana', 2600, 70], ['ratinho', 2650, 100], ['lixeiro', 2950, 50], ['ratinho', 2200, 60]], modo: 'fixo' } },
+  grajau_luta: { fase: 2, quadros: 230, cfg: { x: 560, z: 70, camX: 260, ratos: [['ratinho', 760, 60], ['ratinho', 840, 95], ['ratazana', 980, 70], ['ratinho', 420, 40]], modo: 'fixo' } },
+  dutra_luta: { fase: 3, quadros: 220, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1600, 70], ['lixeiro', 1900, 100], ['ratinho', 1250, 40], ['ratinho', 1650, 120]], modo: 'fixo' } },
+  direitus: { fase: 3, quadros: 300, cfg: { x: 3450, z: 80, camX: 3150, ratos: [['direitus', 3700, 80]], modo: 'fixo' } },
+  direitus2: { fase: 0, quadros: 220, cfg: { x: 3100, z: 80, camX: 2800, ratos: [['direitus', 3350, 80], ['ratinho', 2950, 50]], modo: 'fixo' } },
+  paulista_luta: { fase: 4, quadros: 220, cfg: { x: 1400, z: 70, camX: 1100, ratos: [['ratazana', 1650, 70], ['lixeiro', 1950, 100], ['ratinho', 1250, 40], ['ratinho', 1700, 120]], modo: 'fixo' } },
+  chefe: { fase: 4, quadros: 330, cfg: { x: 3600, z: 90, camX: 3340, ratos: [['rei', 3900, 90]], modo: 'fixo' } },
+  especial: { fase: 4, quadros: 120, cfg: { x: 3650, z: 90, camX: 3340, energia: 100, ratos: [['rei', 3820, 90], ['ratinho', 3520, 60], ['direitus', 3900, 110], ['ratinho', 3800, 40]], modo: 'parado',
     roteiro: { 30: ['especial'] } } },
-  vitoria: { fase: 0, quadros: 110, cfg: { x: 1680, z: 60, camX: 1300, modo: 'parado' } },
 };
 
 for (const [nome, c] of Object.entries(CENAS)) {
