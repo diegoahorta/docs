@@ -174,7 +174,7 @@ export class Telas {
     return this.menu({
       classe: 'escura titulo-tela',
       lado: true,
-      titulo: '<div class="titulo">BOULOS<small>vs. A GANGUE DOS RATOS</small></div>',
+      titulo: '<div class="titulo">BOULOS<small>vs. RATUS NUNES</small></div>',
       conteudo,
       itens: [
         { texto: 'JOGAR', valor: 'jogar' },
@@ -275,6 +275,56 @@ export class Telas {
     });
   }
 
+  // ---------- Mapa da Zona Sul (abertura de cada fase, estilo Final Fight) ----------
+  // O bairro da fase acende em vermelho; o resto do mapa fica em preto e branco.
+  // O ônibus sai do bairro da fase anterior e vai até o da fase atual.
+  mapa(fase, anterior) {
+    const centros = R.manifesto.ui.mapa_cinza.centros;
+    const W = R.manifesto.ui.mapa_cinza.w;
+    const H = R.manifesto.ui.mapa_cinza.h;
+    const pos = (regiao) => {
+      if (!regiao) return [W * 0.82, H * 0.1]; // a Paulista fica ao norte, fora do mapa: canto de cima
+      return [centros[regiao][0], centros[regiao][1] + 34]; // um pouco abaixo do nome do bairro
+    };
+    const pct = ([x, y]) => `left:${(x / W) * 100}%;top:${(y / H) * 100}%`;
+    const destino = pos(fase.regiao);
+    const origem = anterior ? pos(anterior.regiao) : [destino[0], H + 30];
+    const el = document.createElement('div');
+    el.className = 'tela opaca tela-mapa';
+    el.innerHTML = `
+      <div class="mapa-titulo">${fase.nome}</div>
+      <div class="mapa">
+        <img class="mapa-base" src="${recurso('sprites/ui_mapa_cinza.png')}" alt="">
+        ${fase.regiao ? `<img class="mapa-regiao" src="${recurso(`sprites/ui_mapa_${fase.regiao}.png`)}" alt="">` : ''}
+        ${fase.regiao ? '' : `<div class="mapa-norte" style="${pct(destino)}">▲ AV. PAULISTA</div>`}
+        <img class="mapa-pino" src="${recurso('sprites/ui_mapa_icone_pino.png')}" style="${pct(destino)}" alt="">
+        <img class="mapa-onibus" src="${recurso('sprites/ui_mapa_icone_onibus.png')}" style="${pct(origem)}" alt="">
+      </div>
+      <div class="mapa-nome">${fase.titulo}</div>`;
+    const onibus = el.querySelector('.mapa-onibus');
+    const nome = el.querySelector('.mapa-nome');
+    let t = 0;
+    let partiu = false;
+    return this.abrir({
+      el,
+      atualizar: (dt, ent) => {
+        t += dt;
+        if (!partiu && t > 0.6) {
+          partiu = true;
+          onibus.style.cssText = pct(destino);
+          onibus.classList.add('andando');
+          this.audio.sfx('arremesso');
+        }
+        if (t > 2.2 && !el.classList.contains('chegou')) {
+          el.classList.add('chegou');
+          this.audio.sfx('confirmar');
+          nome.classList.add('visivel');
+        }
+        if (t > 4.6 || (t > 0.5 && (ent.consumir('confirmar') || ent.consumir('soco')))) this.fechar();
+      },
+    });
+  }
+
   // ---------- Cartela de fase ----------
   cartela(titulo, subtitulo, segundos = 2.4) {
     const el = document.createElement('div');
@@ -302,7 +352,7 @@ export class Telas {
 
 /** Cabeça do rato (para a caixa de diálogo), recortada do quadro parado. */
 function retratoRato(tipo) {
-  const img = R.imagens[`ratos_${tipo}_parado0`];
+  const img = R.imagens[`ratos_${tipo}_parado0`] ?? R.imagens[`ratos_${tipo}_guarda0`];
   const c = document.createElement('canvas');
   c.width = c.height = 120;
   const lado = img.width * 0.62;

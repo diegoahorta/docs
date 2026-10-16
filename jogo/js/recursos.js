@@ -67,6 +67,12 @@ export async function carregarTudo(progresso = () => {}) {
     const [tipo, ...pose] = nome.split('_');
     (R.ratos[tipo] ??= {})[pose.join('_')] = R.tex['ratos_' + nome];
   }
+  // Ratus Direitus tem folha própria: liga as poses do jogo aos quadros dela.
+  const d = R.ratos.direitus;
+  Object.assign(d, {
+    parado0: d.guarda0, parado1: d.guarda3, preparar: d.soco1, atacar: d.soco2,
+    preparar2: d.chute2, atacar2: d.chute3, dor: d.dano0, caido: d.dano4, investida: d.investida3,
+  });
 
   gerarTexturasProcedurais();
   await Promise.all([

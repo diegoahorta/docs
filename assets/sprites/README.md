@@ -15,6 +15,11 @@ Arte em pixel art para um jogo ambientado em São Paulo.
 | `ratos-andar.png` | Gangue dos Ratos andando (6 quadros por tipo): Ratinho de Esgoto, Ratazana, Rato do Lixão e Rei Rato |
 | `ratos-acoes.png` | Ações dos ratos (12 quadros por tipo, mesmas 4 linhas): parado, andar, preparar, atacar, dor, segurar e investida |
 | `grajau-bnh-tileset.png` | Tileset do Grajaú BNH: panorama dos morros, rua comercial, pôr do sol com a caixa d'água do BNH, casas, mercadinho, comércio, ônibus, carros, postes, árvores, grades, placa, lixeira e texturas (asfalto, calçada, faixa, buraco, meio-fio, muro, escada, bueiro) |
+| `ratus-direitus.webp` | Subchefe Ratus Direitus (6 linhas × 6 quadros): guarda, andar, socos, chute, investida, dano/queda |
+| `marsilac-tileset.webp` | Tileset de Marsilac: estação, mercearia, casa, ponte, sinal ferroviário, mata, árvores, bananeiras, cerca, ponto, texturas (terra, asfalto, trilho, água) e prévias das telas |
+| `parelheiros-tileset.webp` | Tileset de Parelheiros: igreja, padaria, mercado, terminal, sobrado, ônibus, ponto, feira, árvore, mata, muros, poste, grade, texturas (asfalto, calçada, faixa, terra, grama, córrego) |
+| `cidade-dutra-tileset.webp` | Tileset de Cidade Dutra/Interlagos: padaria, comércio, sobrado, portal de Interlagos, praça, placa, ônibus, carro, ponto, árvores, arquibancada, muro, pneus, bandeirolas, texturas |
+| `mapa-zona-sul.webp` | Mapa da Zona Sul (Socorro, Cidade Dutra, Grajaú, Parelheiros, Marsilac) em 3 versões, mais ícones (pino, ônibus, prédio, casa, árvore) |
 | `capa-boulos-contra-ratus-nunes.png` | Arte de capa (1024×1536) "Boulos contra Ratus Nunes" |
 
 ## UI (`ui/`)

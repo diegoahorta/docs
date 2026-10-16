@@ -1,4 +1,4 @@
-// Gera jogo/dist/boulos-vs-ratos.html: o jogo inteiro em um único arquivo HTML5
+// Gera jogo/dist/boulos-vs-ratus-nunes.html: o jogo inteiro em um único arquivo HTML5
 // (scripts, Three.js, CSS, sprites, fontes e músicas embutidos), que abre direto
 // no navegador, sem servidor.
 //
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const JOGO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RAIZ = path.resolve(JOGO, '..');
-const SAIDA = path.join(JOGO, 'dist', 'boulos-vs-ratos.html');
+const SAIDA = path.join(JOGO, 'dist', 'boulos-vs-ratus-nunes.html');
 
 const TIPOS = {
   '.png': 'image/png', '.json': 'application/json', '.fnt': 'text/plain',

@@ -1,15 +1,19 @@
-# Boulos vs. A Gangue dos Ratos
+# Boulos vs Ratus Nunes
 
 Beat 'em up de plataforma em HTML5 (JavaScript + Three.js), ambientado em São Paulo.
-Boulos atravessa a cidade para expulsar a Gangue dos Ratos. A jornada começa no
-Grajaú (Conjunto BNH, com a caixa d'água) e passa pela Avenida Paulista, pelo Centro
-(Copan e feira livre) e pela periferia, onde ele enfrenta o Rei Rato.
+Boulos atravessa São Paulo para expulsar a Gangue dos Ratos de Ratus Nunes. São 5 fases:
+Marsilac, Parelheiros, Grajaú (Conjunto BNH), Cidade Dutra e, por último, a Avenida Paulista,
+onde ele enfrenta Ratus Nunes. O subchefe Ratus Direitus aparece no fim de todas as fases.
+
+Antes de cada fase, um mapa da Zona Sul (como em Final Fight) mostra para onde o jogador vai:
+o bairro da fase acende em vermelho e o resto do mapa fica em preto e branco, enquanto o ônibus
+viaja do bairro anterior até o novo. Na última fase o ônibus sai do mapa rumo à Paulista.
 
 ## Como rodar
 
 ### Arquivo único (mais fácil)
 
-`jogo/dist/boulos-vs-ratos.html` é o jogo inteiro em um só arquivo HTML5, com scripts,
+`jogo/dist/boulos-vs-ratus-nunes.html` é o jogo inteiro em um só arquivo HTML5, com scripts,
 Three.js, sprites, fontes e músicas embutidos. Basta abrir no navegador (dá até para
 mandar para alguém ou abrir no celular). Para gerar de novo depois de mudar o código ou os assets:
 
@@ -56,7 +60,8 @@ Em celulares e tablets aparecem botões de toque durante a partida.
 - **Buracos na rua** (área de perigo): machucam quem pisar, inclusive os ratos.
 - **Força do Povo:** com a barra de energia cheia, derruba todos os ratos da tela.
 - **Inimigos:** Ratinho de Esgoto (rápido), Ratazana (taco de beisebol), Rato do Lixão (arremessa sacos de lixo)
-  e o chefe Rei Rato (investida, salto com onda de choque e reforços).
+  o subchefe Ratus Direitus (socos, chute e investida, no fim de toda fase) e o chefe Ratus Nunes
+  (investida, salto com onda de choque e reforços).
 
 ## Trilha sonora
 
@@ -77,7 +82,7 @@ jogo/
 │   ├── jogo.js           laço principal, câmera, ondas, fluxo da história
 │   ├── atores.js         herói, ratos, projéteis, itens, efeitos
 │   ├── cenario.js        céu, prédios, calçada, rua, plataformas, perigos
-│   ├── fases.js          história e definição das 4 fases
+│   ├── fases.js          história e definição das 5 fases
 │   ├── recursos.js       carregamento de sprites, fonte bitmap e texturas procedurais
 │   ├── audio.js          trilha drum and bass e efeitos sonoros
 │   ├── entrada.js        teclado, controle e toque
@@ -85,7 +90,7 @@ jogo/
 │   ├── sprite.js         sprites 2D sobre planos do Three.js
 │   └── config.js         constantes
 ├── sprites/              quadros recortados de assets/sprites (gerados)
-├── dist/boulos-vs-ratos.html  o jogo em um único arquivo (gerado)
+├── dist/boulos-vs-ratus-nunes.html  o jogo em um único arquivo (gerado)
 ├── ferramentas/
 │   ├── processar_sprites.py     recorta os sprites
 │   └── gerar_html_unico.mjs     gera o arquivo único
@@ -95,7 +100,8 @@ jogo/
 Recursos do repositório usados pelo jogo:
 
 - `assets/sprites`: herói (golpes, caminhada de 8 quadros, pular, pegar objetos, retrato),
-  os ratos (caminhada e ações dos 4 tipos), o tileset de São Paulo e o tileset do Grajaú BNH
+  os ratos (caminhada e ações dos 4 tipos), o Ratus Direitus, o mapa da Zona Sul e os tilesets
+  de São Paulo, Marsilac, Parelheiros, Grajaú BNH e Cidade Dutra
 - `assets/sprites/ui`: botões, teclas, scanlines, overlay de dano, bloco atravessável, área de perigo, destaque
 - `assets/fontes`: Upheaval (títulos e diálogos), SmallPixel-7 (HUD) e a fonte bitmap `Fonte_jogo` (números de dano)
 - `assets/audio/musica`: trilha alternativa em MP3

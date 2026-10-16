@@ -314,6 +314,59 @@ img { image-rendering: pixelated; }
   animation: pisca 0.8s steps(2) infinite;
 }
 
+.tela-mapa { gap: calc(var(--u) * 6); overflow: hidden; }
+.tela-mapa .mapa {
+  position: relative;
+  width: calc(var(--u) * 640);
+  animation: mapa-zoom 0.7s cubic-bezier(.2, .8, .3, 1) both;
+}
+.tela-mapa .mapa img { display: block; }
+.mapa-base, .mapa-regiao { width: 100%; }
+.mapa-base { filter: brightness(0.75) contrast(1.1); }
+.mapa-regiao {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  filter: drop-shadow(0 0 calc(var(--u) * 6) #ff2040);
+}
+.chegou .mapa-regiao { opacity: 1; animation: pisca-regiao 0.5s steps(2) 3, brilha-regiao 1.2s ease-in-out 1.5s infinite alternate; }
+.mapa-pino, .mapa-onibus, .mapa-norte { position: absolute; transform: translate(-50%, -100%); }
+.mapa-pino { width: calc(var(--u) * 34); opacity: 0; }
+.chegou .mapa-pino { animation: pino-cai 0.4s cubic-bezier(.3, 1.6, .5, 1) both; }
+.mapa-onibus { width: calc(var(--u) * 64); transform: translate(-50%, -50%); transition: left 1.5s ease-in-out, top 1.5s ease-in-out; z-index: 2; }
+.mapa-onibus.andando { animation: chacoalha 0.18s steps(2) infinite; }
+.chegou .mapa-onibus { animation: none; }
+.mapa-norte {
+  transform: translate(-50%, -260%);
+  white-space: nowrap;
+  font-family: 'Upheaval', monospace;
+  font-size: calc(var(--u) * 26);
+  color: #ff3050;
+  opacity: 0;
+}
+.chegou .mapa-norte { opacity: 1; animation: pisca 0.5s steps(2) infinite; }
+.mapa-titulo {
+  font-family: 'Upheaval', monospace;
+  font-size: calc(var(--u) * 34);
+  color: var(--amarelo);
+  text-shadow: calc(var(--u) * 3) calc(var(--u) * 3) 0 var(--vermelho);
+}
+.mapa-nome {
+  font-family: 'Upheaval', monospace;
+  font-size: calc(var(--u) * 36);
+  color: #fff;
+  background: #c8102e;
+  padding: calc(var(--u) * 4) calc(var(--u) * 22);
+  box-shadow: calc(var(--u) * 5) calc(var(--u) * 5) 0 #000;
+  transform: translateX(-120vw) skewX(-10deg);
+  transition: transform 0.35s cubic-bezier(.2, .9, .3, 1.2);
+}
+.mapa-nome.visivel { transform: translateX(0) skewX(-10deg); }
+@keyframes mapa-zoom { from { transform: scale(1.6); filter: brightness(2); } to { transform: scale(1); filter: none; } }
+@keyframes pisca-regiao { 50% { opacity: 0; } }
+@keyframes brilha-regiao { to { filter: drop-shadow(0 0 calc(var(--u) * 14) #ff2040) brightness(1.25); } }
+@keyframes pino-cai { from { transform: translate(-50%, -260%); opacity: 0; } to { transform: translate(-50%, -100%); opacity: 1; } }
+@keyframes chacoalha { 50% { margin-top: calc(var(--u) * -2); } }
 .cartela {
   font-family: 'Upheaval', monospace;
   font-size: calc(var(--u) * 46);

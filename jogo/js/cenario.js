@@ -22,6 +22,9 @@ const SOLIDOS = {
   grajau_onibus: { escala: 1.25, prof: 30, topo: 158, margem: 12 },
   grajau_carro_prata: { escala: 1.25, prof: 26, topo: 84, margem: 26 },
   grajau_carro_preto: { escala: 1.25, prof: 26, topo: 84, margem: 22 },
+  parelheiros_onibus: { escala: 0.9, prof: 30, topo: 140, margem: 12 },
+  dutra_onibus: { escala: 1.15, prof: 30, topo: 142, margem: 12 },
+  dutra_carro: { escala: 1.25, prof: 26, topo: 80, margem: 24 },
 };
 
 // Decoração padrão (quando a fase não define a sua) e escala de cada objeto.
@@ -189,7 +192,7 @@ export class Cenario {
     this.postesNoite = [];
     while (x < f.comprimento + LARGURA + 300) {
       const nome = f.fachadas[i++ % f.fachadas.length];
-      const escala = f.escalas?.[nome] ?? (nome.startsWith('muro') ? 1.2 : 1.15);
+      const escala = f.escalas?.[nome] ?? f.escalaFachada ?? (nome.startsWith('muro') ? 1.2 : 1.15);
       const s = new Sprite(this.mundo, R.tex['cenario_' + nome], { escala, cor: f.tinta });
       const w = s.mesh.scale.x;
       s.pos(x + w / 2, FUNDO_Y - 6);

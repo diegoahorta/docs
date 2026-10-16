@@ -10,14 +10,14 @@ import json
 import os
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 from scipy import ndimage
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 ORIGEM = os.path.join(RAIZ, 'assets', 'sprites')
 DESTINO = os.path.join(RAIZ, 'jogo', 'sprites')
 
-manifesto = {'heroi': {}, 'cenario': {}, 'texturas': {}, 'itens': {}, 'ratos': {}}
+manifesto = {'heroi': {}, 'cenario': {}, 'texturas': {}, 'itens': {}, 'ratos': {}, 'ui': {}}
 
 
 def componentes(img, fechamento=2):
@@ -268,6 +268,135 @@ def grajau():
     objeto('bueiro', (1305, 942, 1518, 1006))
 
 
+
+def tileset(arquivo, prefixo, objetos, texturas, so_peca=()):
+    """Recorta objetos (retângulos) e texturas de um tileset com fundo transparente."""
+    img = Image.open(os.path.join(ORIGEM, arquivo)).convert('RGBA')
+    for nome, caixa in objetos.items():
+        recorte = img.crop(caixa)
+        if nome in so_peca:
+            pecas = quadros_da_linha(recorte, (0, recorte.height), minimo=1, fechamento=2)
+            recorte = max(pecas, key=lambda q: q.width * q.height)
+        salvar('cenario', f'{prefixo}_{nome}', aparar(recorte))
+    for nome, caixa in texturas.items():
+        x0, y0, x1, y1 = caixa
+        r = 4
+        salvar('texturas', f'{prefixo}_{nome}', img.crop((x0 + r, y0 + r, x1 - r, y1 - r)))
+
+
+def marsilac():
+    tileset('marsilac-tileset.webp', 'marsilac', {
+        'estacao': (7, 7, 336, 222), 'mercearia': (338, 35, 535, 200), 'casa': (540, 60, 730, 200),
+        'ponte': (782, 78, 1046, 220), 'sinal': (1026, 5, 1115, 219),
+        'mata': (8, 236, 252, 416), 'arvore': (250, 230, 410, 415), 'arvore2': (411, 232, 553, 413),
+        'bananeira': (548, 237, 678, 373), 'bananeira2': (682, 241, 829, 370),
+        'cerca': (849, 304, 961, 363), 'poste': (953, 233, 1040, 417), 'ponto': (1036, 300, 1120, 417),
+        'caixote': (608, 501, 676, 568), 'barril': (689, 500, 731, 568), 'pneu': (740, 524, 796, 565),
+        'kit': (915, 516, 965, 568), 'bandeira': (984, 493, 1043, 569), 'seta': (1054, 508, 1119, 565),
+        'ponte_madeira': (12, 506, 187, 565),
+    }, {
+        'terra': (12, 430, 164, 495), 'terra2': (170, 430, 276, 495), 'terra_bloco': (367, 425, 448, 495),
+        'asfalto': (558, 428, 667, 487), 'asfalto_faixa': (765, 428, 842, 484), 'trilho': (848, 436, 1114, 487),
+        'agua': (193, 513, 290, 564), 'agua2': (297, 513, 375, 564),
+    }, so_peca=('arvore', 'arvore2', 'bananeira', 'bananeira2', 'cerca', 'poste', 'ponto', 'sinal'))
+
+
+def parelheiros():
+    tileset('parelheiros-tileset.webp', 'parelheiros', {
+        'igreja': (8, 11, 325, 322), 'padaria': (327, 11, 616, 322), 'mercado': (617, 45, 897, 322),
+        'terminal': (893, 95, 1272, 322), 'sobrado': (1268, 11, 1494, 327),
+        'onibus': (8, 355, 568, 514), 'ponto': (565, 364, 812, 512), 'feira': (808, 388, 963, 514),
+        'arvore': (948, 329, 1163, 516), 'mata': (1165, 340, 1491, 516),
+        'muro_grafite': (9, 524, 530, 641), 'muro_tijolo': (541, 528, 836, 642), 'poste': (836, 516, 1064, 654),
+        'grade': (1071, 530, 1470, 639),
+        'caixote': (845, 667, 903, 749), 'barril': (911, 667, 959, 749), 'cone': (966, 687, 1010, 749),
+        'lixeira': (1015, 670, 1072, 749), 'banco': (1080, 693, 1175, 749), 'kit': (1282, 698, 1339, 756),
+        'bandeira': (1353, 654, 1411, 762), 'placa_saida': (1415, 680, 1486, 757),
+    }, {
+        'asfalto': (13, 650, 163, 769), 'calcada': (170, 655, 247, 770), 'meio_fio': (253, 655, 357, 770),
+        'faixa': (362, 655, 503, 775), 'terra': (509, 653, 603, 764), 'grama': (609, 656, 706, 772),
+        'corrego': (715, 659, 833, 777),
+    }, so_peca=('arvore', 'ponto', 'feira'))
+
+
+def cidade_dutra():
+    tileset('cidade-dutra-tileset.webp', 'dutra', {
+        'padaria': (11, 20, 352, 282), 'comercio': (354, 60, 672, 282), 'sobrado': (672, 25, 882, 282),
+        'interlagos': (882, 60, 1180, 282), 'praca': (1178, 15, 1422, 282), 'placa': (1418, 150, 1492, 282),
+        'onibus': (14, 336, 413, 463), 'carro': (414, 393, 553, 462), 'ponto': (556, 358, 704, 469),
+        'arvore': (706, 295, 839, 468), 'palmeira': (832, 329, 934, 469), 'arbusto': (793, 398, 857, 468),
+        'arquibancada': (932, 319, 1112, 469), 'muro_grafite': (1110, 385, 1251, 469), 'poste': (1245, 299, 1300, 469),
+        'portao': (1278, 390, 1341, 469), 'bandeirolas': (1346, 328, 1477, 392), 'pneus': (1380, 420, 1486, 468),
+        'caixote': (892, 495, 955, 562), 'barril': (962, 495, 1003, 561), 'cone': (1008, 504, 1055, 562),
+        'lixeira': (1059, 500, 1099, 563), 'banco': (1107, 510, 1191, 564), 'kit': (1298, 515, 1348, 561),
+        'bandeira': (1362, 478, 1414, 564), 'seta': (1424, 501, 1488, 558),
+    }, {
+        'asfalto': (14, 491, 113, 564), 'asfalto2': (118, 491, 213, 564), 'asfalto_amarela': (308, 491, 405, 564),
+        'faixa': (409, 491, 512, 564), 'calcada': (517, 491, 614, 564), 'ladrilho': (619, 491, 697, 564),
+        'tijolo': (701, 491, 783, 564), 'grama': (788, 491, 884, 564),
+    }, so_peca=('arvore', 'palmeira', 'arbusto', 'poste', 'portao', 'bandeirolas', 'pneus'))
+
+
+def ratus_direitus():
+    """Subchefe: 6 linhas (guarda, andar, socos, chute, investida, dano/queda) x 6 quadros."""
+    img = Image.open(os.path.join(ORIGEM, 'ratus-direitus.webp')).convert('RGBA')
+    img = img.crop((118, 0, img.width, img.height))  # tira os rótulos da esquerda
+    faixas = [(0, 178), (180, 340), (342, 500), (506, 672), (676, 826), (834, 1000)]
+    nomes = ['guarda', 'andar', 'soco', 'chute', 'investida', 'dano']
+    linhas = [quadros_da_linha(img, f, minimo=4000) for f in faixas]
+    assert all(len(l) == 6 for l in linhas), [len(l) for l in linhas]
+    fator = 178 / linhas[0][0].height
+    for nome, quadros in zip(nomes, linhas):
+        for i, q in enumerate(quadros):
+            salvar('ratos', f'direitus_{nome}{i}', escalar(q, fator))
+
+
+def mapa():
+    """Mapa da Zona Sul: base em preto e branco e uma camada vermelha por região."""
+    img = Image.open(os.path.join(ORIGEM, 'mapa-zona-sul.webp')).convert('RGBA')
+    topo = img.crop((60, 0, 850, 515))
+    arr = np.array(topo).astype(float)
+    alfa = arr[:, :, 3] > 40
+    cinza = (arr[:, :, :3] @ [0.3, 0.59, 0.11])[..., None].repeat(3, 2)
+    base = np.dstack([cinza, arr[:, :, 3]]).astype(np.uint8)
+    salvar('ui', 'mapa_cinza', Image.fromarray(base, 'RGBA'))
+
+    # Divisas dos bairros traçadas à mão sobre as ruas do desenho (coordenadas do recorte 790x515).
+    # Cada polígono é pintado por cima do anterior; o que sobra fica com Marsilac.
+    divisas = {
+        'parelheiros': [(0, 150), (200, 150), (205, 245), (318, 245), (410, 250), (410, 300), (540, 320),
+                        (615, 395), (560, 400), (400, 395), (200, 400), (0, 325)],
+        'cidade_dutra': [(0, 73), (250, 73), (258, 98), (445, 102), (430, 140), (330, 180), (318, 245),
+                         (205, 245), (200, 150), (0, 150)],
+        'grajau': [(445, 102), (790, 102), (790, 395), (615, 395), (540, 320), (410, 300), (410, 250),
+                   (318, 245), (330, 180), (430, 140)],
+        'socorro': [(0, 0), (790, 0), (790, 100), (445, 102), (258, 98), (250, 73), (0, 73)],
+    }
+    dono = Image.new('L', topo.size, 0)
+    d = ImageDraw.Draw(dono)
+    nomes = ['marsilac'] + list(divisas)
+    for k, nome in enumerate(nomes[1:], start=1):
+        d.polygon(divisas[nome], fill=k)
+    dono = np.array(dono)
+    regioes = {nome: (dono == k) & alfa for k, nome in enumerate(nomes)}
+    centros = {}
+    for nome, mascara in regioes.items():
+        ys, xs = np.where(mascara)
+        centros[nome] = [round(float(xs.mean()), 1), round(float(ys.mean()), 1)]
+        vermelho = arr.copy()
+        lum = cinza[:, :, 0] / 255
+        vermelho[:, :, 0] = 120 + 135 * lum
+        vermelho[:, :, 1] = 20 + 60 * lum
+        vermelho[:, :, 2] = 30 + 60 * lum
+        vermelho[:, :, 3] = np.where(mascara, 255, 0)
+        salvar('ui', f'mapa_{nome}', Image.fromarray(vermelho.astype(np.uint8), 'RGBA'))
+    manifesto['ui']['mapa_cinza']['centros'] = centros
+
+    # Ícones (coluna da direita)
+    for nome, caixa in {'pino': (875, 1320, 990, 1420), 'onibus': (860, 735, 1000, 830), 'ponto': (880, 245, 950, 305)}.items():
+        salvar('ui', f'mapa_icone_{nome}', aparar(img.crop(caixa)))
+
+
 def retrato():
     """Remove o fundo branco do retrato (preenchimento a partir das bordas)."""
     img = Image.open(os.path.join(ORIGEM, 'personagem-retrato-frente.jpg')).convert('RGB')
@@ -339,6 +468,11 @@ def main():
     retrato()
     cenario()
     grajau()
+    marsilac()
+    parelheiros()
+    cidade_dutra()
+    ratus_direitus()
+    mapa()
     with open(os.path.join(DESTINO, 'manifesto.json'), 'w', encoding='utf-8') as f:
         json.dump(manifesto, f, ensure_ascii=False, indent=1)
     total = sum(len(v) for v in manifesto.values())

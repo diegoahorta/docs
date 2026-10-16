@@ -356,7 +356,7 @@ export class Heroi extends Ator {
     for (const r of J.inimigos) {
       if (!r.atingivel) continue;
       if (Math.abs(r.x - this.x) < 520) {
-        r.sofrer(r.tipo === 'rei' ? 45 : 40, r.x >= this.x ? 1 : -1, true);
+        r.sofrer(r.st.chefe ? 45 : 40, r.x >= this.x ? 1 : -1, true);
         J.acertou(this, r, 40, true);
       }
     }
@@ -479,7 +479,8 @@ const STATS = {
   ratinho: { nome: 'RATINHO DE ESGOTO', vida: 34, vel: 125, velZ: 85, dano: 7, alcance: 62, preparo: 0.32, porte: 1, pontos: 100, raio: 16 },
   ratazana: { nome: 'RATAZANA', vida: 72, vel: 95, velZ: 65, dano: 13, alcance: 86, preparo: 0.5, porte: 1.1, pontos: 200, raio: 20 },
   lixeiro: { nome: 'RATO DO LIXÃO', vida: 40, vel: 110, velZ: 75, dano: 9, alcance: 56, preparo: 0.55, porte: 1, pontos: 150, raio: 16, distancia: 280 },
-  rei: { nome: 'REI RATO', vida: 720, vel: 135, velZ: 90, dano: 16, alcance: 104, preparo: 0.42, porte: 1.5, pontos: 5000, raio: 30 },
+  direitus: { nome: 'RATUS DIREITUS', vida: 300, vel: 115, velZ: 80, dano: 13, alcance: 104, preparo: 0.38, porte: 1.4, pontos: 2500, raio: 26, chefe: true, investida: true },
+  rei: { nome: 'RATUS NUNES', chefe: true, investida: true, salto: true, invoca: true, vida: 720, vel: 135, velZ: 90, dano: 16, alcance: 104, preparo: 0.42, porte: 1.5, pontos: 5000, raio: 30 },
 };
 
 export class Rato extends Ator {
@@ -522,7 +523,7 @@ export class Rato extends Ator {
     if (this.invulneravel > 0) this.invulneravel -= dt;
     if (this.recarga > 0) this.recarga -= dt;
     const st = this.st;
-    const fator = this.tipo === 'rei' && this.vida < this.vidaMax / 3 ? 1.25 : 1;
+    const fator = this.st.chefe && this.vida < this.vidaMax / 3 ? 1.25 : 1;
 
     const aterrissou = this.fisica(dt);
     const dxH = heroi.x - this.x;
@@ -582,9 +583,9 @@ export class Rato extends Ator {
         const alcanceH = Math.abs(heroi.h - this.h) < 50;
         if (!lixeiro && podeAtacar && Math.abs(dxH) < st.alcance && Math.abs(dzH) < 14 && alcanceH) {
           this.escolherAtaque();
-        } else if (this.tipo === 'rei' && podeAtacar && Math.abs(dxH) > 260 && Math.abs(dzH) < 20 && Math.random() < 0.02) {
+        } else if (this.st.investida && podeAtacar && Math.abs(dxH) > 260 && Math.abs(dzH) < 20 && Math.random() < 0.02) {
           this.mudar('preparar_investida');
-        } else if (this.tipo === 'rei' && podeAtacar && this.vida < this.vidaMax * 0.66 && Math.random() < 0.006) {
+        } else if (this.st.salto && podeAtacar && this.vida < this.vidaMax * 0.66 && Math.random() < 0.006) {
           this.mudar('salto');
           this.vh = 760;
           this.noChao = false;
@@ -592,7 +593,7 @@ export class Rato extends Ator {
           this.saltoAlvo = heroi.x;
         }
         if (!podeAtacar && this.estado === 'perseguir' && !lixeiro) this.mudar('rondar');
-        if (this.tipo === 'rei') this.talvezInvocar();
+        if (this.st.invoca) this.talvezInvocar();
         break;
       }
       case 'parado':
@@ -608,7 +609,7 @@ export class Rato extends Ator {
         break;
       case 'atacar':
         if (this.t < 0.12) this.mover(this.dir * 140 * dt, 0);
-        if (!this.golpeAcertou && this.t < 0.14) this.tentarAcertar(st.alcance + 10, st.dano, this.tipo === 'ratazana' || this.tipo === 'rei');
+        if (!this.golpeAcertou && this.t < 0.14) this.tentarAcertar(st.alcance + 10, st.dano, this.tipo === 'ratazana' || this.st.chefe);
         if (this.t >= 0.35) this.fimAtaque();
         break;
       case 'arremessar':
@@ -652,7 +653,7 @@ export class Rato extends Ator {
         break;
       case 'dor':
         this.mover(-this.dir * 90 * dt * Math.max(0, 1 - this.t * 3), 0, limites);
-        if (this.t >= (this.tipo === 'rei' ? 0.18 : 0.38)) this.mudar('perseguir');
+        if (this.t >= (this.st.chefe ? 0.18 : 0.38)) this.mudar('perseguir');
         break;
       case 'voando':
         this.mover(-this.dir * 230 * dt, 0, [limites[0] - 30, limites[1] + 30]);
@@ -679,7 +680,7 @@ export class Rato extends Ator {
     }
 
     // Buraco: os ratos também se machucam
-    if (this.h <= 0.5 && this.atingivel && this.tipo !== 'rei' && J.cenario.perigoEm(this.x, this.z)) {
+    if (this.h <= 0.5 && this.atingivel && !this.st.chefe && J.cenario.perigoEm(this.x, this.z)) {
       this.sofrer(12, -this.dir, true);
       J.efeitos.numero(this.x, this.z, this.h + 120, '12');
     }
@@ -688,12 +689,13 @@ export class Rato extends Ator {
   }
 
   escolherAtaque() {
+    this.variante = Math.random() < 0.4; // o subchefe alterna soco e chute
     this.mudar('preparar');
     this.jogo.audio.sfx('guincho');
   }
 
   fimAtaque(recarga = aleat(0.8, 1.6)) {
-    this.recarga = recarga * (this.tipo === 'rei' ? 0.7 : 1);
+    this.recarga = recarga * (this.st.chefe ? 0.7 : 1);
     this.jogo.liberarTurno(this);
     this.mudar(Math.random() < 0.5 ? 'rondar' : 'perseguir');
     this.ladoRonda = Math.random() < 0.5 ? -1 : 1;
@@ -719,7 +721,7 @@ export class Rato extends Ator {
       this.invocacoes++;
       const J = this.jogo;
       J.audio.sfx('guincho');
-      J.mensagem('O REI CHAMOU REFORCOS');
+      J.mensagem('RATUS NUNES CHAMOU REFORÇOS');
       J.gerarInimigo('ratinho', 'bueiro');
       J.gerarInimigo(this.invocacoes === 2 ? 'lixeiro' : 'ratinho', 'bueiro');
       if (this.invocacoes === 2) J.gerarInimigo('ratazana', 'dir');
@@ -734,7 +736,7 @@ export class Rato extends Ator {
     this.vida = Math.max(0, this.vida - dano);
     this.dir = -dirGolpe;
     J.audio.sfx('guincho');
-    if (this.tipo === 'rei') {
+    if (this.st.chefe) {
       // O chefe tem "armadura": só cai a cada três golpes fortes ou no especial.
       this.armadura += derruba ? 1 : 0;
       if (this.vida > 0 && (this.estado === 'investida' || this.estado === 'salto')) return;
@@ -765,7 +767,7 @@ export class Rato extends Ator {
         if (this.andando !== false || this.estado === 'entrar') q = 'andar' + (Math.floor(this.relogio * 10) % 6);
         break;
       case 'preparar':
-        q = 'preparar';
+        q = this.variante && tex.preparar2 ? 'preparar2' : 'preparar';
         cor = Math.floor(this.t * 16) % 2 ? 0xffe0a0 : 0xffffff;
         break;
       case 'preparar_investida':
@@ -773,7 +775,7 @@ export class Rato extends Ator {
         cor = Math.floor(this.t * 16) % 2 ? 0xff7070 : 0xffffff;
         break;
       case 'atacar':
-        q = 'atacar';
+        q = this.variante && tex.atacar2 ? 'atacar2' : 'atacar';
         break;
       case 'investida':
         q = 'investida';

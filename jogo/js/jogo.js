@@ -178,7 +178,8 @@ export class Jogo {
       this.ondaAtiva = onda;
       this.ondaIdx++;
       this.filaInimigos = onda.inimigos.map((d, i) => ({ d, t: i * 0.7 }));
-      if (onda.chefe) this.introChefe();
+      if (onda.chefe) this.introChefe(this.fase.chefeFala);
+      else if (onda.subchefe) this.introChefe(this.fase.subchefeFala);
     }
     if (this.filaInimigos?.length) {
       for (const item of this.filaInimigos) item.t -= dt;
@@ -188,8 +189,14 @@ export class Jogo {
     }
     if (this.ondaAtiva && !this.filaInimigos?.length && this.inimigos.length === 0) {
       const eraChefe = this.ondaAtiva.chefe;
+      const eraSub = this.ondaAtiva.subchefe;
       this.ondaAtiva = null;
+      this.chefe = null;
       if (eraChefe) this.vencerJogo();
+      else if (eraSub) {
+        this.audio.tocar(this.fase.musica);
+        this.telas.aviso('RATUS DIREITUS CAIU!', 1.6);
+      }
       else if (this.ondaIdx < this.ondas.length) this.telas.aviso('SIGA!', 1.2);
     }
     // fim da fase
@@ -217,14 +224,14 @@ export class Jogo {
       this.efeitos.bueiro(x, zf);
       this.audio.sfx('guincho');
     }
-    if (tipo === 'rei') this.chefe = r;
+    if (r.st.chefe) this.chefe = r;
     this.inimigos.push(r);
     return r;
   }
 
   pedirTurno(r) {
-    if (r.tipo === 'rei' || this.turnos.has(r)) return true;
-    const ativos = [...this.turnos.keys()].filter((k) => k.tipo !== 'rei').length;
+    if (r.st.chefe || this.turnos.has(r)) return true;
+    const ativos = [...this.turnos.keys()].filter((k) => !k.st.chefe).length;
     if (ativos >= MAX_ATACANTES) return false;
     this.turnos.set(r, performance.now());
     return true;
@@ -252,7 +259,7 @@ export class Jogo {
       rato.pontuado = true;
       this.pontos += rato.st.pontos;
       this.efeitos.numero(rato.x, rato.z, rato.h + 150, String(rato.st.pontos), 'branca');
-      if (rato.tipo !== 'rei' && Math.random() < 0.25) {
+      if (!rato.st.chefe && Math.random() < 0.25) {
         this.soltarItem(['coxinha', 'estrela', 'pedra', 'garrafa'][Math.floor(Math.random() * 4)], rato.x, rato.z);
       }
     }
@@ -378,7 +385,7 @@ export class Jogo {
     this.heroi.vidas = HEROI.vidas;
     this.heroi.energia = 0;
     this.audio.tocar('menu');
-    await this.telas.dialogo(INTRO, { fundo: true, imagem: 'sprites/cenario_grajau_por_do_sol.png' });
+    await this.telas.dialogo(INTRO, { fundo: true, imagem: 'sprites/cenario_marsilac_estacao.png' });
     await this.jogarFase(0);
   }
 
@@ -386,7 +393,7 @@ export class Jogo {
     this.carregarFase(i);
     this.estado = 'cena';
     this.hud.mostrar(false);
-    await this.telas.cartela(this.fase.nome, this.fase.titulo);
+    await this.telas.mapa(this.fase, FASES[i - 1]);
     await this.telas.dialogo(this.fase.historia);
     this.hud.mostrar(true);
     this.estado = 'jogando';
@@ -412,10 +419,10 @@ export class Jogo {
     this.aoFimFase('proxima');
   }
 
-  async introChefe() {
+  async introChefe(falas) {
     this.estado = 'cena';
     this.audio.tocar('chefe');
-    await this.telas.dialogo(this.fase.chefeFala);
+    if (falas) await this.telas.dialogo(falas);
     this.estado = 'jogando';
   }
 
@@ -425,7 +432,7 @@ export class Jogo {
     this.pontos += 10000;
     this.tremer(0.6, 10);
     this.audio.tocar('vitoria');
-    await this.telas.cartela('VITÓRIA!', 'A GANGUE DOS RATOS FOI DERROTADA', 2.8);
+    await this.telas.cartela('VITÓRIA!', 'RATUS NUNES FOI DERROTADO', 2.8);
     await this.telas.dialogo(FINAL);
     this.hud.mostrar(false);
     const recorde = Math.max(this.pontos, +lerPreferencia('recorde', 0));
@@ -448,7 +455,7 @@ export class Jogo {
       h.reviver();
       // derruba quem estiver por perto, como nos fliperamas
       for (const r of this.inimigos) {
-        if (r.atingivel && r.tipo !== 'rei') r.sofrer(0, r.x >= h.x ? 1 : -1, true);
+        if (r.atingivel && !r.st.chefe) r.sofrer(0, r.x >= h.x ? 1 : -1, true);
       }
       this.efeitos.onda(h.x, h.z, 0);
       return;
