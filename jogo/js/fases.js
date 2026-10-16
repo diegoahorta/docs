@@ -236,8 +236,13 @@ export const FASES = [
       meioFio: ['texturas_belmira_sarjeta', 89, 18],
       semFaixas: true,
     },
-    // a enxurrada tomou a avenida: fora das áreas seguras, só dá para andar por cima dos veículos
-    enxurrada: { seguro: [[-1000, 430], [2200, 2380], [4150, 9999]] },
+    // a enxurrada tomou a avenida; o engarrafamento de ônibus, colados lado a lado em 3 faixas,
+    // vira o caminho: o Boulos anda por cima dos tetos. Cair na água machuca e devolve para cima.
+    enxurrada: { seguro: [] },
+    engarrafamento: {
+      faixas: [4, 44, 84], // z inicial de cada faixa (cada uma tem 40 de profundidade)
+      onibus: ['belmira_onibus_verde', 'belmira_articulado', 'belmira_onibus_azul', 'belmira_onibus_verde', 'belmira_onibus_azul', 'belmira_articulado'],
+    },
     fachadas: ['belmira_mercado', 'belmira_padaria', 'belmira_lanchonete', 'belmira_farmacia', 'belmira_padaria', 'belmira_mercado', 'belmira_farmacia', 'belmira_lanchonete'],
     escalas: { belmira_poste: 1.7, belmira_luminaria: 2.2, belmira_semaforo: 1.6, belmira_placa: 2, belmira_placa_e: 1.8, belmira_ponto: 2, belmira_cones: 1.6 },
     distantes: [],
@@ -245,24 +250,14 @@ export const FASES = [
     comprimento: 4900,
     historia: [
       { quem: 'NARRADOR', texto: 'Fase 5: Avenida Belmira Marin, engarrafamento na Bola Branca. A enxurrada cobriu o asfalto.' },
-      { quem: 'BOULOS', texto: 'Trânsito parado e rua alagada? Então eu vou por cima!' },
-      { quem: 'NARRADOR', texto: 'Pule de ônibus em ônibus, de carro em carro. Cair na enxurrada machuca!' },
+      { quem: 'BOULOS', texto: 'Trânsito parado e rua alagada? Então eu vou por cima dos ônibus!' },
+      { quem: 'NARRADOR', texto: 'Ande pelos tetos dos ônibus parados. Cair na enxurrada machuca!' },
     ],
     objetos: [
-      { tipo: 'belmira_hb20', x: 560, z: 30, solido: true },
-      { tipo: 'belmira_onibus_verde', x: 860, z: 70, solido: true },
-      { tipo: 'belmira_vermelho', x: 1180, z: 20, solido: true },
-      { tipo: 'belmira_articulado', x: 1600, z: 60, solido: true },
-      { tipo: 'belmira_sedan', x: 2040, z: 24, solido: true },
-      { tipo: 'belmira_cinza', x: 2540, z: 40, solido: true },
-      { tipo: 'belmira_onibus_azul', x: 2860, z: 80, solido: true },
-      { tipo: 'belmira_hb20', x: 3170, z: 22, solido: true },
-      { tipo: 'belmira_articulado', x: 3570, z: 66, solido: true },
-      { tipo: 'belmira_vermelho', x: 3990, z: 30, solido: true },
     ],
     plataformas: [],
     perigos: [],
-    itens: [['coxinha', 2290, 90], ['garrafa', 300, 100], ['pastel', 4300, 80]],
+    itens: [['garrafa', 600, 60], ['coxinha', 2290, 90], ['pedra', 3000, 30], ['pastel', 4300, 70]],
     ondas: [
       { camX: 250, inimigos: [['ratinho', 'dir'], ['ratinho', 'bueiro'], ['ratinho', 'dir']] },
       { camX: 1250, inimigos: [['ratazana', 'dir'], ['ratinho', 'bueiro'], ['lixeiro', 'dir']] },
@@ -270,7 +265,7 @@ export const FASES = [
       { camX: 3940, subchefe: true, inimigos: [['direitus', 'dir', 80], ['ratinho', 'dir'], ['lixeiro', 'esq']] },
     ],
     subchefeFala: [
-      { quem: 'RATUS DIREITUS', retrato: 'direitus', texto: 'Essa avenida é minha! O trânsito só anda quando eu mandar!' },
+      { quem: 'RATUS DIREITUS', retrato: 'direitus', texto: 'Em cima do ônibus também é meu território! O trânsito só anda quando eu mandar!' },
       { quem: 'BOULOS', texto: 'Então se prepara, porque o povo vai passar.' },
     ],
   },

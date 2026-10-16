@@ -122,7 +122,7 @@ export class Jogo {
     // comidas: pega ao passar por cima
     for (const it of [...this.itens]) {
       if (it.def.arma) continue;
-      if (Math.abs(it.x - h.x) < 34 && Math.abs(it.z - h.z) < 18 && h.h < 20 && h.vida > 0) {
+      if (Math.abs(it.x - h.x) < 34 && Math.abs(it.z - h.z) < 18 && Math.abs(h.h - it.h) < 20 && h.vida > 0) {
         if (it.def.vida) h.vida = Math.min(h.vidaMax, h.vida + it.def.vida);
         if (it.def.energia) h.energia = Math.min(100, h.energia + it.def.energia);
         this.efeitos.numero(it.x, it.z, 80, it.def.vida ? String(it.def.vida) : '50', 'branca');
@@ -228,14 +228,33 @@ export class Jogo {
     const r = new Rato(this, tipo, x, zf);
     // no BNH alagado, quem nasce na água vem de jet ski
     r.jet = !!this.fase.jet && x < this.fase.jet.terra - 60 && !r.st.chefe && R.ratos['jet' + tipo] !== undefined;
-    if (lado === 'bueiro') {
+    if (lado === 'bueiro' && !this.fase.engarrafamento) {
       r.mudar('entrar_bueiro');
       this.efeitos.bueiro(x, zf);
       this.audio.sfx('guincho');
     }
+    if (this.fase.engarrafamento && lado === 'bueiro') {
+      // pula da enxurrada para o teto do ônibus
+      r.mudar('saltar');
+      r.vh = 860;
+      r.noChao = false;
+      r.alvoSalto = x;
+    } else if (this.fase.engarrafamento) {
+      this.subirNoTeto(r);
+    }
     if (r.st.chefe) this.chefe = r;
     this.inimigos.push(r);
     return r;
+  }
+
+  /** Coloca o ator em cima do ônibus que estiver embaixo dele (Belmira Marin). */
+  subirNoTeto(a) {
+    if (!this.fase.engarrafamento) return;
+    const s = this.cenario.superficie(a.x, a.z, 9999);
+    if (!s) return;
+    a.h = s.topo;
+    a.suporte = s;
+    a.noChao = true;
   }
 
   /** Belmira Marin: a rua alagada, fora das áreas seguras. */
@@ -301,7 +320,7 @@ export class Jogo {
     for (const it of this.itens) {
       if (!it.def.arma) continue;
       const d = Math.abs(it.x - heroi.x) + Math.abs(it.z - heroi.z) * 1.5;
-      if (d < dist && Math.abs(heroi.h) < 4) {
+      if (d < dist && Math.abs(heroi.h - it.h) < 4) {
         dist = d;
         melhor = it;
       }
@@ -355,6 +374,7 @@ export class Jogo {
     }
     this.heroi.x = 160;
     this.heroi.jet = !!this.fase.jet;
+    this.subirNoTeto(this.heroi);
     this.heroi.vx = 0;
     this.heroi.z = 70;
     this.camX = 0;

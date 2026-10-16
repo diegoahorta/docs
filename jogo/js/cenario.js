@@ -26,8 +26,8 @@ const SOLIDOS = {
   dutra_onibus: { escala: 1.15, prof: 30, topo: 142, margem: 12 },
   dutra_carro: { escala: 1.25, prof: 26, topo: 80, margem: 24 },
   belmira_onibus_verde: { escala: 2, prof: 30, topo: 118, margem: 8 },
-  belmira_onibus_azul: { escala: 2.1, prof: 30, topo: 120, margem: 8 },
-  belmira_articulado: { escala: 2, prof: 30, topo: 116, margem: 8 },
+  belmira_onibus_azul: { escala: 2.1, prof: 30, topo: 118, margem: 8 },
+  belmira_articulado: { escala: 2, prof: 30, topo: 118, margem: 8 },
   belmira_hb20: { escala: 1.9, prof: 26, topo: 66, margem: 22 },
   belmira_sedan: { escala: 1.85, prof: 26, topo: 64, margem: 24 },
   belmira_vermelho: { escala: 1.9, prof: 26, topo: 66, margem: 22 },
@@ -371,6 +371,27 @@ export class Cenario {
       s.ordem = ordemMundo(o.z);
       const meia = s.mesh.scale.x / 2 - d.margem;
       this.solidos.push({ x0: o.x - meia, x1: o.x + meia, z0: o.z, z1: o.z + d.prof, topo: d.topo, solido: true });
+    }
+
+    // Engarrafamento (Belmira Marin): fileiras de ônibus encostados, sem vão entre eles,
+    // formando um caminho contínuo de tetos na mesma altura.
+    if (f.engarrafamento) {
+      const { faixas, onibus } = f.engarrafamento;
+      faixas.forEach((z, k) => {
+        let x = -500 + k * 170; // as faixas começam desencontradas, como num trânsito de verdade
+        let i = k * 2;
+        while (x < f.comprimento + LARGURA + 400) {
+          const tipo = onibus[i++ % onibus.length];
+          const d = SOLIDOS[tipo];
+          const s = new Sprite(this.mundo, R.tex['cenario_' + tipo], { escala: d.escala, cor: f.tinta });
+          const w = s.mesh.scale.x;
+          s.pos(x + w / 2, BASE_Y + z);
+          s.ordem = ordemMundo(z);
+          // o teto vai até o para-choque do vizinho (sobreposição de 12 px para não abrir buraco)
+          this.solidos.push({ x0: x - 6, x1: x + w + 6, z0: z, z1: z + 40, topo: d.topo, solido: true });
+          x += w - 6;
+        }
+      });
     }
 
     // Plataformas atravessáveis (andaimes com o bloco atravessável)

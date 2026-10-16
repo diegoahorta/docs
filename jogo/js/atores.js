@@ -1130,6 +1130,8 @@ export class Item {
     this.tipo = tipo;
     this.def = ITENS[tipo];
     this.x = x;
+    this.sup = jogo.cenario.superficie(x, z, 9999); // em cima do ônibus, se houver
+    this.h = this.sup?.topo ?? 0;
     this.z = z;
     this.t = Math.random() * 3;
     this.destaque = new Sprite(jogo.mundo, R.tex['ui_destaque-tile-verde'], { centro: true, opacidade: 0.75 });
@@ -1143,11 +1145,12 @@ export class Item {
 
   desenhar() {
     const o = ordemMundo(this.z);
-    this.destaque.pos(this.x, BASE_Y + this.z + 2);
-    this.destaque.ordem = o - 1;
+    const o2 = this.sup ? ordemMundo(this.sup.z0 - 0.5) + 1 : o;
+    this.destaque.pos(this.x, BASE_Y + this.z + this.h + 2);
+    this.destaque.ordem = o2 - 1;
     this.destaque.material.opacity = 0.45 + Math.sin(this.t * 6) * 0.3;
-    this.sprite.pos(this.x, BASE_Y + this.z + 2 + (this.def.arma ? 0 : Math.abs(Math.sin(this.t * 3)) * 6));
-    this.sprite.ordem = o;
+    this.sprite.pos(this.x, BASE_Y + this.z + this.h + 2 + (this.def.arma ? 0 : Math.abs(Math.sin(this.t * 3)) * 6));
+    this.sprite.ordem = o2;
   }
 
   remover() {

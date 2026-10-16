@@ -9,9 +9,10 @@ Boulos atravessa São Paulo para expulsar a Gangue dos Ratos de Ratus Nunes. Sã
 4. **BNH alagado, sentido Bola Branca**: fase de jet ski. A rua virou rio; o Boulos acelera com
    inércia, pula entulho boiando, arranca contra os ratos (que também estão de jet ski) e
    mergulha em cima deles. No fim, desce na área segura para enfrentar o Ratus Direitus a pé.
-5. **Belmira Marin, engarrafamento**: a enxurrada cobriu a avenida parada. Fora das calçadas
-   seguras, encostar no chão machuca e joga o herói para cima; é preciso pular de ônibus em
-   ônibus e de carro em carro. Os ratos nadam na enxurrada e pulam nos veículos atrás dele.
+5. **Belmira Marin, engarrafamento**: a enxurrada cobriu a avenida, e três fileiras de ônibus
+   parados, colados uns nos outros, viram o caminho: o Boulos anda e luta por cima dos tetos,
+   trocando de faixa. Cair na água machuca e joga o herói de volta para cima. Os ratos saltam
+   da enxurrada para os tetos, e o Ratus Direitus também luta em cima dos ônibus.
 6. **Cidade Dutra**: Interlagos.
 7. **Avenida Paulista**: a luta final contra Ratus Nunes.
 
