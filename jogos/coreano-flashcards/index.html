@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>이·그·저 Flashcards</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Layout: a single flashcard deck centered on a Three.js candy sky; HUD on top, answer buttons under the card. Cards flip in 3D to show the answer. */
+:root{
+  --bg:#FFF3F9; --bg2:#EFE7FF;
+  --ink:#4B3A66; --ink-soft:#7E6C9B;
+  --card:#FFFFFF; --line:#EBDDF8;
+  --pink:#FF8FC0; --pink-soft:#FFE1EF;
+  --mint:#6FD8B4; --mint-soft:#DBF6EC;
+  --sky:#86C3FF; --sky-soft:#DEEEFF;
+  --lemon:#FFDF7E; --lilac:#B9A3FF; --lilac-soft:#EEE7FF;
+  --good:#2FB386; --bad:#F2657F;
+  --veil:rgba(255,243,249,.8);
+  --shadow:0 8px 0 rgba(75,58,102,.10);
+  --font-display:'Jua','Nunito',system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --font-body:'Nunito',system-ui,-apple-system,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#221B36; --bg2:#2D2348; --ink:#F7EFFF; --ink-soft:#C3B4DE; --card:#30274D; --line:#4B3E6E;
+    --pink-soft:#4C2D4C; --mint-soft:#21443D; --sky-soft:#243A58; --lilac-soft:#3A3060;
+    --good:#5FE0B0; --bad:#FF8DA2; --veil:rgba(34,27,54,.82); --shadow:0 8px 0 rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#221B36; --bg2:#2D2348; --ink:#F7EFFF; --ink-soft:#C3B4DE; --card:#30274D; --line:#4B3E6E;
+  --pink-soft:#4C2D4C; --mint-soft:#21443D; --sky-soft:#243A58; --lilac-soft:#3A3060;
+  --good:#5FE0B0; --bad:#FF8DA2; --veil:rgba(34,27,54,.82); --shadow:0 8px 0 rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0; overflow-x:hidden; background:linear-gradient(165deg, var(--bg), var(--bg2)); background-color:var(--bg);
+  color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.45}
+button{font:inherit; color:inherit}
+button:focus-visible{outline:3px solid var(--lilac); outline-offset:3px}
+.ko{font-family:var(--font-display)}
+#bg{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none}
+
+#app{position:relative; z-index:1; min-height:100%; max-width:620px; margin:0 auto; display:flex; flex-direction:column; gap:12px;
+  padding-block:12px 20px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+/* HUD */
+.hud{display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:space-between}
+.hud-group{display:flex; gap:6px; flex-wrap:wrap}
+.pill{display:inline-flex; align-items:center; gap:6px; background:var(--card); border:2px solid var(--line); border-radius:999px; padding:5px 12px;
+  font-family:var(--font-display); font-size:1.02rem; box-shadow:0 3px 0 var(--line); font-variant-numeric:tabular-nums}
+.pill small{font-family:var(--font-body); font-weight:900; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+.pill.bump{animation:bump .45s}
+.streak.hot{background:var(--lemon); color:#4B3A66; border-color:#F5C94E} .streak.hot small{color:#7A5A12}
+.toggle{cursor:pointer; font-family:var(--font-body); font-weight:800; font-size:.8rem}
+.toggle[aria-pressed="false"]{opacity:.55}
+.mastery{display:flex; align-items:center; gap:10px; font-weight:800; font-size:.8rem; color:var(--ink-soft)}
+.bar{flex:1; height:12px; border-radius:999px; background:var(--card); border:2px solid var(--line); overflow:hidden}
+.bar i{display:block; height:100%; width:0; border-radius:999px; background:linear-gradient(90deg, var(--pink), var(--lilac), var(--sky)); transition:width .5s cubic-bezier(.3,1.4,.5,1)}
+
+/* Deck + card */
+.deck{position:relative; perspective:1400px}
+.deck::before,.deck::after{content:""; position:absolute; inset:10px 8px -8px; border-radius:30px; background:var(--card); border:3px solid var(--line); transform:rotate(-2.5deg); z-index:-1}
+.deck::after{inset:16px 14px -14px; transform:rotate(2deg); background:var(--lilac-soft)}
+.card-wrap{transition:transform .25s ease-out; transform-style:preserve-3d}
+.card-wrap.enter{animation:enter .55s cubic-bezier(.25,1.4,.5,1)}
+.card-wrap.leave{animation:leave .35s ease-in forwards}
+.card{display:grid; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.4,1.5,.5,1)}
+.card.flipped{transform:rotateY(180deg)}
+.face{grid-area:1/1; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:var(--card); border:3px solid var(--line); border-radius:30px;
+  box-shadow:var(--shadow); padding:14px 16px 16px; display:flex; flex-direction:column; gap:10px; min-width:0}
+.back{transform:rotateY(180deg); align-items:center; justify-content:center; text-align:center; gap:12px;
+  background:radial-gradient(circle at 50% 0%, var(--pink-soft), transparent 60%), var(--card)}
+.back.ok{border-color:var(--good)} .back.no{border-color:var(--bad)}
+.cardtop{display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:space-between}
+.chip{font-weight:900; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:var(--lilac-soft); color:var(--ink-soft)}
+.chip.review{background:var(--lemon); color:#6B4E0E}
+.cardno{font-weight:800; font-size:.75rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+
+/* mini scene inside the card */
+.mini{position:relative; width:100%; aspect-ratio:16/9.5; max-width:100%; border-radius:22px; overflow:hidden;
+  background:linear-gradient(180deg, var(--sky-soft) 0%, var(--pink-soft) 58%, var(--lilac-soft) 58.5%, var(--lilac-soft) 100%)}
+.mini .ped{position:absolute; left:50%; top:30%; width:16%; height:28%; transform:translateX(-50%); border-radius:12px 12px 6px 6px; background:var(--card); border:3px solid var(--line)}
+.mini .char{position:absolute; bottom:3%; width:27%; height:auto; pointer-events:none; animation:bob 2.6s ease-in-out infinite}
+.mini .char.ana{left:2%} .mini .char.junho{right:2%; animation-delay:-1.3s}
+.mini .char.talk{animation:talk .5s ease-in-out infinite}
+.mini .nm{position:absolute; bottom:2%; font-family:var(--font-display); font-size:.78rem; padding:0 8px; border-radius:999px; background:var(--card); border:2px solid var(--line)}
+.mini .nm.ana{left:11%} .mini .nm.junho{right:11%}
+.spot{position:absolute; width:17%; aspect-ratio:1; border-radius:50%; display:grid; place-items:center; padding:0; border:3px solid transparent; background:transparent}
+.spot.left{left:28%; bottom:12%} .spot.right{right:28%; bottom:12%} .spot.far{left:50%; top:9%; width:13%; transform:translateX(-50%)}
+.spot .obj{width:100%; height:100%; border-radius:50%; display:grid; place-items:center; background:#FFFFFF; border:3px solid #EBDDF8;
+  font-size:clamp(1.3rem, 6.5vw, 2.3rem); line-height:1; box-shadow:0 4px 0 rgba(75,58,102,.12); animation:pop .45s cubic-bezier(.3,1.7,.5,1) both; position:relative}
+.spot.far .obj{font-size:clamp(1rem, 4.8vw, 1.7rem)}
+.spot .obj .e2{position:absolute; right:-6%; bottom:-6%; font-size:55%}
+.spot.glow .obj{box-shadow:0 0 0 6px rgba(255,223,126,.75), 0 0 26px 10px rgba(255,214,120,.65); animation:pop .45s cubic-bezier(.3,1.7,.5,1) both, pulse 1.4s ease-in-out .45s infinite}
+button.spot{cursor:pointer}
+button.spot:hover .obj{transform:scale(1.1)}
+button.spot.ok .obj{border-color:var(--good); box-shadow:0 0 0 6px var(--good)}
+button.spot.bad .obj{border-color:var(--bad); box-shadow:0 0 0 6px var(--bad); animation:shake .4s}
+.bubble{position:absolute; top:22%; font-family:var(--font-display); font-size:clamp(.7rem, 2.6vw, .95rem); background:#FFFFFF; color:#4B3A66; border:2px solid #4B3A66; border-radius:12px; padding:2px 8px; animation:pop .4s both}
+.bubble::after{content:""; position:absolute; bottom:-7px; width:10px; height:10px; background:#FFFFFF; border:2px solid #4B3A66; border-top:0; border-left:0; transform:rotate(45deg)}
+.bubble.ana{left:8%} .bubble.ana::after{left:30%}
+.bubble.junho{right:8%} .bubble.junho::after{right:30%}
+.thought{position:absolute; right:5%; top:4%; width:20%; aspect-ratio:1.2; border-radius:50%; background:#FFFFFF; border:2px solid #4B3A66; display:grid; place-items:center; font-size:clamp(1.1rem,5vw,1.8rem); animation:pop .5s both}
+.thought::after{content:""; position:absolute; bottom:-14%; left:22%; width:14%; aspect-ratio:1; border-radius:50%; background:#FFFFFF; border:2px solid #4B3A66}
+
+.speaker{font-weight:800; font-size:.8rem; padding:3px 10px; border-radius:999px; background:var(--pink-soft)}
+.speaker.junho{background:var(--mint-soft)}
+.situation{margin:0; font-weight:700; color:var(--ink-soft)}
+.ko-line{font-family:var(--font-display); font-size:clamp(1.45rem, 6vw, 2rem); line-height:1.2; text-wrap:balance}
+.blank{display:inline-block; min-width:2.4em; padding:0 .3em; border-radius:12px; background:var(--lemon); color:#4B3A66; text-align:center}
+
+.verdict{font-family:var(--font-display); font-size:1.5rem}
+.back.ok .verdict{color:var(--good)} .back.no .verdict{color:var(--bad)}
+.big-ko{font-family:var(--font-display); font-size:clamp(1.8rem, 8vw, 2.6rem); line-height:1.15; text-wrap:balance; margin:0}
+.tr{margin:0; font-weight:800; font-size:1.05rem}
+.why{margin:0; color:var(--ink-soft); font-weight:700; max-width:42ch}
+.pts{font-family:var(--font-display); font-size:1.1rem; padding:4px 14px; border-radius:999px; background:var(--mint-soft); color:var(--ink)}
+.back.no .pts{background:var(--pink-soft)}
+.ghost{cursor:pointer; border:2px solid var(--line); background:var(--bg); border-radius:999px; padding:7px 14px; font-weight:800; font-size:.85rem}
+
+/* answers */
+.answers{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px}
+.opt{position:relative; font-family:var(--font-display); font-size:1.25rem; padding:13px 12px 12px; border-radius:18px; border:3px solid var(--line); background:var(--card); color:var(--ink);
+  box-shadow:0 5px 0 var(--line); cursor:pointer; transition:transform .12s, background .2s}
+.opt:hover:not(:disabled){transform:translateY(-2px); background:var(--pink-soft)}
+.opt:active:not(:disabled){transform:translateY(3px); box-shadow:0 2px 0 var(--line)}
+.opt:disabled{cursor:default}
+.opt .num{position:absolute; top:5px; left:10px; font-family:var(--font-body); font-weight:900; font-size:.66rem; color:var(--ink-soft)}
+.opt.ok{background:var(--mint-soft); border-color:var(--good); box-shadow:0 5px 0 var(--good)}
+.opt.bad{background:var(--pink-soft); border-color:var(--bad); box-shadow:0 5px 0 var(--bad); animation:shake .4s}
+.opt.dim{opacity:.45}
+.hint{grid-column:1/-1; text-align:center; font-weight:800; color:var(--ink-soft); background:var(--card); border:2px dashed var(--line); border-radius:18px; padding:12px}
+.hint .hand{display:inline-block; animation:tapH 1s infinite}
+.cta{cursor:pointer; border:0; border-radius:999px; padding:12px 24px; font-family:var(--font-display); font-size:1.15rem; color:#4B3A66;
+  background:linear-gradient(135deg, var(--pink), var(--lilac)); box-shadow:0 5px 0 #A983E8; position:relative; overflow:hidden; transition:transform .12s}
+.cta:hover{transform:translateY(-2px)} .cta:active{transform:translateY(3px); box-shadow:0 2px 0 #A983E8}
+.next-row{display:flex; justify-content:center}
+
+/* overlays */
+.overlay{position:fixed; inset:0; z-index:10; display:flex; align-items:center; justify-content:center; background:var(--veil); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); overflow-y:auto;
+  padding-block:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-bottom, 0px)); padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.ov-card{width:min(500px, 100%); background:var(--card); border:3px solid var(--line); border-radius:30px; padding:22px; box-shadow:var(--shadow); text-align:center; display:flex; flex-direction:column; gap:12px; align-items:center; animation:popIn .45s cubic-bezier(.3,1.6,.5,1)}
+.logo{font-family:var(--font-display); font-size:clamp(2.2rem, 9vw, 3.3rem); line-height:1.05; margin:0; text-shadow:3px 3px 0 var(--pink), 6px 6px 0 var(--lilac)}
+.logo span{display:inline-block; animation:wiggle 2.4s ease-in-out infinite}
+.logo span:nth-child(2){animation-delay:.2s} .logo span:nth-child(3){animation-delay:.4s}
+.eyebrow{font-weight:900; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); margin:0}
+.lead{margin:0; max-width:44ch; font-weight:700}
+.howto{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; width:100%}
+.howto div{background:var(--bg); border:2px solid var(--line); border-radius:16px; padding:8px 6px; font-size:.78rem; font-weight:700; color:var(--ink-soft); min-width:0}
+.howto b{display:block; font-family:var(--font-display); font-weight:400; font-size:1.15rem; color:var(--ink)}
+.best{font-size:.85rem; font-weight:800; color:var(--ink-soft)}
+.stars{font-size:2.6rem; letter-spacing:.1em; line-height:1}
+.stars .off{opacity:.2; filter:grayscale(1)}
+.stats{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; width:100%}
+.stat{background:var(--bg); border:2px solid var(--line); border-radius:16px; padding:10px 6px; min-width:0}
+.stat b{display:block; font-family:var(--font-display); font-weight:400; font-size:1.5rem; font-variant-numeric:tabular-nums}
+.stat span{font-size:.68rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+.endtitle{font-family:var(--font-display); font-size:clamp(1.7rem, 7vw, 2.3rem); margin:0}
+.floater{position:fixed; z-index:5; pointer-events:none; font-family:var(--font-display); font-size:1.7rem; color:var(--good); transform:translate(-50%,-50%);
+  text-shadow:0 2px 0 var(--card), 0 -2px 0 var(--card), 2px 0 0 var(--card), -2px 0 0 var(--card); animation:floatUp 1.3s ease-out forwards}
+.floater.combo{color:#E3A400; font-size:1.3rem}
+
+@keyframes enter{from{transform:translateX(110%) rotate(14deg); opacity:0}to{transform:none; opacity:1}}
+@keyframes leave{to{transform:translateX(-120%) rotate(-14deg); opacity:0}}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes popIn{from{transform:scale(.7); opacity:0}to{transform:scale(1); opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3%)}}
+@keyframes talk{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-6%) scale(1.03,.97)}}
+@keyframes shake{0%,100%{translate:0}20%{translate:-7px}40%{translate:7px}60%{translate:-4px}80%{translate:4px}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes floatUp{0%{opacity:0; margin-top:10px}15%{opacity:1}100%{opacity:0; margin-top:-80px}}
+@keyframes wiggle{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-6px) rotate(-4deg)}75%{transform:translateY(-3px) rotate(3deg)}}
+@keyframes tapH{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (max-width:480px){ .answers{grid-template-columns:repeat(2, minmax(0,1fr))} .opt{font-size:1.1rem} }
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important} }
+</style>
+</head>
+<body>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="app">
+  <div class="hud">
+    <div class="hud-group">
+      <span class="pill" id="scorePill"><small>점수</small><span id="score">0</span></span>
+      <span class="pill streak" id="streakPill"><small>콤보</small><span id="streak">x0</span></span>
+    </div>
+    <div class="hud-group">
+      <button class="pill toggle" id="musicBtn" aria-pressed="true">♪ Música</button>
+      <button class="pill toggle" id="voiceBtn" aria-pressed="true">Voz</button>
+    </div>
+  </div>
+  <div class="mastery"><span>Domínio</span><div class="bar" role="progressbar" aria-label="Cards dominados" aria-valuemin="0" aria-valuemax="16" id="masteryBar"><i id="masteryFill"></i></div><span id="masteryTxt">0/16</span></div>
+
+  <div class="deck">
+    <div class="card-wrap" id="cardWrap">
+      <div class="card" id="card">
+        <section class="face front" id="front" aria-live="polite">
+          <div class="cardtop"><span class="chip" id="chip">이 · 그 · 저 + N</span><span class="speaker" id="speaker">Quem fala: Ana</span><span class="cardno" id="cardNo">1/16</span></div>
+          <div class="mini" id="mini"></div>
+          <p class="situation" id="situation"></p>
+          <div class="ko-line" id="koLine"></div>
+        </section>
+        <section class="face back" id="back" aria-live="polite">
+          <div class="verdict" id="verdict"></div>
+          <p class="big-ko" id="answerKo"></p>
+          <p class="tr" id="answerTr"></p>
+          <p class="why" id="why"></p>
+          <span class="pts" id="ptsBadge"></span>
+          <button class="ghost" id="replayBtn">Ouvir em coreano</button>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="answers" id="answers"></div>
+  <div class="next-row"><button class="cta" id="nextBtn" hidden>Próximo card →</button></div>
+</div>
+
+<div class="overlay" id="startOv">
+  <div class="ov-card">
+    <p class="eyebrow">Aula 17/10/2026 · TOPIK I · Ponto A</p>
+    <h1 class="logo ko"><span>이</span>·<span>그</span>·<span>저</span><br>Flashcards</h1>
+    <p class="lead">Cada card mostra a Ana, o 준호 e um objeto. Diga com o demonstrativo certo onde ele está, ou toque no objeto que a frase indica.</p>
+    <div class="howto">
+      <div><b>이 · 이거 · 여기</b>perto de quem fala</div>
+      <div><b>그 · 그거 · 거기</b>perto de quem ouve ou já citado</div>
+      <div><b>저 · 저거 · 저기</b>longe dos dois</div>
+    </div>
+    <p class="lead" style="font-size:.88rem">Card errado volta para o deck depois. Domine os 16 cards para terminar!</p>
+    <button class="cta" id="playBtn">Começar ▶</button>
+    <span class="best" id="bestLine"></span>
+  </div>
+</div>
+
+<div class="overlay" id="endOv" hidden>
+  <div class="ov-card">
+    <p class="eyebrow">Deck dominado · 수고했어요!</p>
+    <div class="stars" id="stars"></div>
+    <h2 class="endtitle" id="endTitle"></h2>
+    <div class="stats">
+      <div class="stat"><b id="endScore">0</b><span>pontos</span></div>
+      <div class="stat"><b id="endFirst">0/16</b><span>de primeira</span></div>
+      <div class="stat"><b id="endStreak">0</b><span>maior combo</span></div>
+    </div>
+    <span class="best" id="endBest"></span>
+    <button class="cta" id="againBtn">Embaralhar e jogar de novo ↻</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* =====================================================================
+   Lesson content: 이/그/저 (Ponto A of the 17/10 class)
+   ===================================================================== */
+const hasBatchim = w => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return c >= 0 && c < 11172 && c % 28 !== 0; };
+const copula = w => w + (hasBatchim(w) ? '이에요' : '예요');
+const top = w => w + (hasBatchim(w) ? '은' : '는');
+const DEM = {
+  i:   { det: '이', thing: '이것', talk: '이거', place: '여기', person: '이분', pt: ['este', 'esta'], ptThing: 'Isto', ptPlace: 'Aqui' },
+  geu: { det: '그', thing: '그것', talk: '그거', place: '거기', person: '그분', pt: ['esse', 'essa'], ptThing: 'Isso', ptPlace: 'Aí' },
+  jeo: { det: '저', thing: '저것', talk: '저거', place: '저기', person: '저분', pt: ['aquele', 'aquela'], ptThing: 'Aquilo', ptPlace: 'Ali' }
+};
+const KEYS = ['i', 'geu', 'jeo'];
+const NAMES = { ana: 'Ana', junho: '준호' };
+const other = sp => sp === 'ana' ? 'junho' : 'ana';
+const cap = s => s[0].toUpperCase() + s.slice(1);
+
+const ITEMS = [
+  { ko: '책', pt: 'livro', f: 0, e: '📕', adj: '예뻐요' },
+  { ko: '볼펜', pt: 'caneta', f: 1, e: '🖊️', adj: '예뻐요' },
+  { ko: '가방', pt: 'bolsa', f: 1, e: '🎒', adj: '예뻐요' },
+  { ko: '우산', pt: 'guarda-chuva', f: 0, e: '☂️', adj: '예뻐요' },
+  { ko: '과자', pt: 'salgadinho', f: 0, e: '🍿', adj: '맛있어요' },
+  { ko: '바나나 우유', pt: 'leite de banana', f: 0, e: '🥛', e2: '🍌', adj: '맛있어요' },
+  { ko: '커피', pt: 'café', f: 0, e: '☕', adj: '맛있어요' },
+  { ko: '김치', pt: 'kimchi', f: 0, e: '🥬', adj: '맛있어요' }
+];
+const PLACES = [{ ko: '학교', pt: 'a escola', e: '🏫' }, { ko: '식당', pt: 'o restaurante', e: '🍜' }, { ko: '편의점', pt: 'a loja de conveniência', e: '🏪' }];
+const PEOPLE = [{ ko: '선생님', pt: 'o(a) professor(a)', e: '🧑‍🏫' }, { ko: '할머니', pt: 'a avó', e: '👵' }];
+
+function demFor(zone, sp) { if (zone === 'far') return 'jeo'; return zone === (sp === 'ana' ? 'left' : 'right') ? 'i' : 'geu'; }
+const WHERE = { left: 'na mão da Ana', right: 'na mão do 준호', far: 'lá longe, na prateleira' };
+const NEAR = { left: 'perto da Ana', right: 'perto do 준호', far: 'longe dos dois' };
+function why(zone, sp, where = WHERE, form) {
+  const dk = demFor(zone, sp), f = form ? form(dk) : DEM[dk].det;
+  if (dk === 'jeo') return `Está ${where[zone]}: longe de quem fala e de quem ouve → ${f}.`;
+  if (dk === 'i') return `Está ${where[zone]}, perto de quem fala (${NAMES[sp]}) → ${f}.`;
+  return `Está ${where[zone]}, perto de quem ouve (${NAMES[other(sp)]}) → ${f}.`;
+}
+let lastZones = [], lastItem = null;
+function pickZone(sp) {
+  const pool = sp === 'junho' ? ['left', 'right', 'left', 'right', 'far'] : ['left', 'right', 'far'];
+  let z, n = 0;
+  do { z = rand(pool); n++; } while (n < 20 && lastZones[0] === z && lastZones[1] === z);
+  lastZones.unshift(z); lastZones.length = Math.min(lastZones.length, 2); return z;
+}
+function pickItem(list = ITEMS) { let it, n = 0; do { it = rand(list); n++; } while (n < 20 && it === lastItem); lastItem = it; return it; }
+const B = '<span class="blank">?</span>';
+
+/* ---------- card builders: each returns a plain card object ---------- */
+const BUILD = {
+  det(sp) {
+    const it = pickItem(), z = pickZone(sp), dk = demFor(z, sp);
+    return { tag: '이 · 그 · 저 + substantivo', sp, target: z, show: [{ o: it, z }],
+      situation: `${NAMES[sp]} indica o objeto que brilha (${it.ko} = ${it.pt}). Como ${NAMES[sp]} diz?`, ko: `${B} ${it.ko}`,
+      options: KEYS.map(k => ({ label: `${DEM[k].det} ${it.ko}`, ok: k === dk })),
+      answer: `${DEM[dk].det} ${it.ko}`, tr: `${cap(DEM[dk].pt[it.f])} ${it.pt}`, why: why(z, sp) };
+  },
+  point(sp) {
+    const it = pickItem(), z = pickZone(sp), dk = demFor(z, sp);
+    const phrase = `${DEM[dk].det} ${top(it.ko)} ${it.adj}!`;
+    const adjPt = it.adj === '예뻐요' ? (it.f ? 'bonita' : 'bonito') : (it.f ? 'gostosa' : 'gostoso');
+    return { tag: 'Aponte o objeto', sp, target: z, point: true, show: ['left', 'right', 'far'].map(zz => ({ o: it, z: zz })),
+      situation: `Há três ${it.ko} (${it.pt}). ${NAMES[sp]} diz a frase abaixo. Toque no ${it.ko} de que ${NAMES[sp]} está falando.`, ko: phrase, speakFirst: phrase,
+      answer: phrase, tr: `${cap(DEM[dk].pt[it.f])} ${it.pt} é ${adjPt}!`, why: why(z, sp) };
+  },
+  ask(sp) {
+    const it = pickItem(), z = pickZone(sp), dk = demFor(z, sp);
+    const ptq = { i: 'O que é isto?', geu: 'O que é isso (aí com você)?', jeo: 'O que é aquilo (lá)?' };
+    return { tag: '이거 · 그거 · 저거 뭐예요?', sp, target: z, show: [{ o: it, z }],
+      situation: `${NAMES[sp]} não sabe o que é o objeto que brilha. Complete a pergunta.`, ko: `${B} 뭐예요?`,
+      options: KEYS.map(k => ({ label: `${DEM[k].talk} 뭐예요?`, ok: k === dk })),
+      answer: `${DEM[dk].talk} 뭐예요?`, tr: ptq[dk], why: why(z, sp, WHERE, k => DEM[k].talk) };
+  },
+  is(sp) {
+    const it = pickItem(), z = pickZone(sp), dk = demFor(z, sp), b = hasBatchim(it.ko);
+    const good = `${DEM[dk].thing}은 ${copula(it.ko)}.`;
+    const opts = shuffle([{ label: good, ok: true }, { label: `${DEM[dk].thing}은 ${it.ko}${b ? '예요' : '이에요'}.`, ok: false },
+      ...KEYS.filter(k => k !== dk).map(k => ({ label: `${DEM[k].thing}은 ${copula(it.ko)}.`, ok: false }))]);
+    return { tag: '이것 · 그것 · 저것 + 이에요/예요', sp, target: z, show: [{ o: it, z }], small: true,
+      situation: `${NAMES[other(sp)]} pergunta “뭐예요?”. ${NAMES[sp]} responde que é ${it.f ? 'uma' : 'um'} ${it.pt}.`, ko: `${B}은 ${it.ko}${B}.`,
+      options: opts, answer: good, tr: `${DEM[dk].ptThing} é ${it.f ? 'uma' : 'um'} ${it.pt}.`,
+      why: `${why(z, sp, WHERE, k => DEM[k].thing)} ${it.ko} ${b ? 'tem batchim → 이에요' : 'termina em vogal → 예요'}.` };
+  },
+  place(sp) {
+    const p = pickItem(PLACES), z = pickZone(sp), dk = demFor(z, sp);
+    return { tag: '여기 · 거기 · 저기', sp, target: z, show: [{ o: p, z }], small: true,
+      situation: `${NAMES[sp]} fala do lugar que brilha (${p.ko} = ${p.pt.replace(/^(o|a) /, '')}).`, ko: `${B}는 ${copula(p.ko)}.`,
+      options: KEYS.map(k => ({ label: `${DEM[k].place}는 ${copula(p.ko)}.`, ok: k === dk })),
+      answer: `${DEM[dk].place}는 ${copula(p.ko)}.`, tr: `${DEM[dk].ptPlace} é ${p.pt}.`, why: why(z, sp, NEAR, k => DEM[k].place) };
+  },
+  person(sp) {
+    const p = pickItem(PEOPLE), z = pickZone(sp), dk = demFor(z, sp);
+    return { tag: '이분 · 그분 · 저분 (respeito)', sp, target: z, show: [{ o: p, z }], small: true,
+      situation: `${NAMES[sp]} apresenta com respeito a pessoa que brilha (${p.ko}).`, ko: `${B}은 ${copula(p.ko)}.`,
+      options: KEYS.map(k => ({ label: `${DEM[k].person}은 ${copula(p.ko)}.`, ok: k === dk })),
+      answer: `${DEM[dk].person}은 ${copula(p.ko)}.`, tr: `${cap(DEM[dk].pt[1])} pessoa é ${p.pt}.`, why: why(z, sp, NEAR, k => DEM[k].person) };
+  },
+  mentioned() {
+    return { tag: '그 = algo já mencionado', sp: 'ana', target: null, thought: '🎬', show: [], small: true,
+      situation: 'O 준호 contou de um filme que viu ontem. O filme não está à vista. Ana pergunta:', ko: `${B} 영화는 재미있어요?`,
+      options: KEYS.map(k => ({ label: `${DEM[k].det} 영화는 재미있어요?`, ok: k === 'geu' })),
+      answer: '그 영화는 재미있어요?', tr: 'Esse filme é legal?', why: '그 também indica algo de que já se falou e que não está à vista.' };
+  },
+  fix(sp) {
+    const it = pickItem(), z = pickZone(sp), dk = demFor(z, sp);
+    const shown = Math.random() < 0.35 ? dk : rand(KEYS.filter(k => k !== dk));
+    const ptq = { i: 'O que é isto?', geu: 'O que é isso?', jeo: 'O que é aquilo?' };
+    return { tag: 'Erro comum: está certo?', sp, target: z, show: [{ o: it, z }], small: true,
+      situation: `${NAMES[sp]} pergunta sobre o objeto que brilha. A frase está certa?`, ko: `${DEM[shown].thing}은 뭐예요?`,
+      options: [{ label: 'Está certa!', ok: shown === dk }, ...KEYS.filter(k => k !== shown).map(k => ({ label: `Troque por ${DEM[k].thing}`, ok: k === dk }))],
+      answer: `${DEM[dk].thing}은 뭐예요?`, tr: ptq[dk],
+      why: (shown === dk ? 'A frase já estava certa. ' : `${DEM[shown].thing} não serve aqui. `) + why(z, sp, WHERE, k => DEM[k].thing) };
+  }
+};
+const PLAN = [['det', 'ana'], ['det', 'ana'], ['det', 'ana'], ['point', 'ana'], ['point', 'ana'], ['ask', 'ana'], ['ask', 'ana'], ['is', 'ana'],
+  ['fix', 'ana'], ['det', 'junho'], ['point', 'junho'], ['is', 'junho'], ['place', 'ana'], ['person', 'junho'], ['mentioned'], ['fix', 'junho']];
+const DECK_SIZE = PLAN.length;
+
+const Sound = (() => {
+  let ctx = null, master, musicBus, sfxBus, pump, leadBus, noiseBuf;
+  let playing = false, step = 0, nextT = 0, timer = null;
+  const BPM = 116, S = 60 / BPM / 4;
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  function ensure() {
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    ctx = new AC();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4; comp.connect(ctx.destination);
+    master = ctx.createGain(); master.gain.value = 0.9; master.connect(comp);
+    musicBus = ctx.createGain(); musicBus.gain.value = 0.5; musicBus.connect(master);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = 0.8; sfxBus.connect(master);
+    pump = ctx.createGain(); pump.connect(musicBus);
+    leadBus = ctx.createGain(); leadBus.connect(musicBus);
+    const d = ctx.createDelay(1); d.delayTime.value = S * 3;
+    const fb = ctx.createGain(); fb.gain.value = 0.3; const wet = ctx.createGain(); wet.gain.value = 0.26;
+    leadBus.connect(d); d.connect(fb); fb.connect(d); d.connect(wet); wet.connect(musicBus);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.5, ctx.sampleRate);
+    const ch = noiseBuf.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+    return true;
+  }
+  function env(g, t, a, peak, dec) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + dec); }
+  function tone(type, freq, t, dur, peak, dest, o2 = {}) {
+    const attack = o2.attack || 0.005;
+    const o = ctx.createOscillator(); o.type = type; o.frequency.setValueAtTime(freq, t); if (o2.detune) o.detune.value = o2.detune;
+    if (o2.slide) o.frequency.exponentialRampToValueAtTime(o2.slide, t + dur);
+    const g = ctx.createGain(); env(g, t, attack, peak, dur);
+    let node = o;
+    if (o2.cutoff) { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = o2.cutoff; o.connect(f); node = f; }
+    node.connect(g); g.connect(dest); o.start(t); o.stop(t + attack + dur + 0.05);
+  }
+  function noise(t, dur, peak, type, freq, dest, q = 1) {
+    const s = ctx.createBufferSource(); s.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    const g = ctx.createGain(); env(g, t, 0.002, peak, dur);
+    s.connect(f); f.connect(g); g.connect(dest); s.start(t); s.stop(t + dur + 0.05);
+  }
+  function kick(t) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.13);
+    const g = ctx.createGain(); env(g, t, 0.002, 0.9, 0.32); o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + 0.4);
+    pump.gain.setValueAtTime(0.3, t); pump.gain.linearRampToValueAtTime(1, t + 0.22); // sidechain pump
+  }
+  // Fmaj7 – G – Em7 – Am7 (IV–V–iii–vi), the classic bright K-pop loop
+  const CH = [{ root: 41, pad: [53, 57, 60, 64] }, { root: 43, pad: [55, 59, 62, 67] }, { root: 40, pad: [52, 55, 59, 62] }, { root: 45, pad: [57, 60, 64, 67] }];
+  const MEL = [[0,0,72,2],[0,2,74,2],[0,4,76,3],[0,8,79,2],[0,10,76,2],[0,12,74,4],
+    [1,0,74,2],[1,2,76,2],[1,4,79,3],[1,8,81,2],[1,10,79,2],[1,12,76,4],
+    [2,0,76,2],[2,2,79,2],[2,4,81,3],[2,8,79,2],[2,10,76,2],[2,12,74,2],[2,14,76,2],
+    [3,0,72,4],[3,6,69,2],[3,8,72,2],[3,10,74,2],[3,12,76,4]];
+  const MEL_END = [[3,0,76,4],[3,4,74,2],[3,6,72,2],[3,8,69,8]];
+  function playStep(st, t) {
+    const bar = Math.floor(st / 16) % 16, s = st % 16, ch = CH[bar % 4], chorus = bar >= 8;
+    if (s % 4 === 0) kick(t);
+    if (chorus && (s === 4 || s === 12)) { noise(t, 0.16, 0.42, 'bandpass', 1600, musicBus, 0.7); tone('triangle', 200, t, 0.08, 0.22, musicBus); }
+    if (bar === 7 && s >= 8) noise(t, 0.07, 0.06 + 0.025 * (s - 8), 'bandpass', 1900, musicBus);
+    if (s % 4 === 2) noise(t, chorus ? 0.11 : 0.05, chorus ? 0.12 : 0.08, 'highpass', 7500, musicBus);
+    else if (s % 2 === 1) noise(t, 0.03, 0.035, 'highpass', 9000, musicBus);
+    if (s % 2 === 0) {
+      const n = (s / 2) % 2 ? ch.root + 12 : ch.root;
+      tone('sawtooth', mtof(n), t, S * 1.6, 0.15, pump, { cutoff: 520 });
+      tone('square', mtof(n), t, S * 1.4, 0.06, pump, { cutoff: 380 });
+    }
+    if ([0, 3, 6, 8, 11, 14].includes(s)) ch.pad.forEach((n, i) => tone('sawtooth', mtof(n + 12), t, 0.16, 0.03, pump, { cutoff: 2600, detune: i % 2 ? 7 : -7 }));
+    if (chorus && s === 0) ch.pad.forEach(n => tone('triangle', mtof(n), t, S * 15, 0.03, pump, { attack: 0.25 }));
+    if (!chorus && (s === 0 || s === 6 || s === 10)) tone('sine', mtof(ch.pad[s === 0 ? 3 : s === 6 ? 1 : 2] + 24), t, 0.45, 0.06, leadBus);
+    if (chorus) {
+      const lb = (bar - 8) % 4, notes = (bar >= 12 && lb === 3) ? MEL_END : MEL;
+      for (const [b, ss, m, len] of notes) if (b === lb && ss === s) {
+        tone('square', mtof(m), t, S * len * 0.9, 0.055, leadBus, { cutoff: 3200 });
+        tone('triangle', mtof(m + 12), t, S * len * 0.9, 0.03, leadBus);
+      }
+    }
+  }
+  function tick() { while (nextT < ctx.currentTime + 0.12) { playStep(step, nextT); nextT += S; step = (step + 1) % 256; } }
+  return {
+    unlock: ensure,
+    get playing() { return playing; },
+    start() { if (!ensure() || playing) return; playing = true; step = 0; nextT = ctx.currentTime + 0.06; timer = setInterval(tick, 25); },
+    stop() { playing = false; clearInterval(timer); },
+    duck(on) { if (ctx) musicBus.gain.setTargetAtTime(on ? 0.14 : 0.5, ctx.currentTime, 0.08); },
+    suspend(on) { if (ctx) on ? ctx.suspend() : ctx.resume(); },
+    correct() { if (!ensure()) return; const t = ctx.currentTime;
+      [84, 88, 91, 96].forEach((m, i) => { tone('triangle', mtof(m), t + i * 0.07, 0.35, 0.2, sfxBus); tone('sine', mtof(m + 12), t + i * 0.07, 0.25, 0.07, sfxBus); });
+      noise(t + 0.28, 0.4, 0.05, 'highpass', 8000, sfxBus); },
+    wrong() { if (!ensure()) return; const t = ctx.currentTime;
+      tone('square', 330, t, 0.22, 0.12, sfxBus, { slide: 250, cutoff: 1400 }); tone('square', 247, t + 0.2, 0.32, 0.12, sfxBus, { slide: 180, cutoff: 1200 }); },
+    tap() { if (!ctx) return; tone('sine', 1046, ctx.currentTime, 0.06, 0.1, sfxBus); },
+    flip() { if (!ctx) return; noise(ctx.currentTime, 0.18, 0.1, 'bandpass', 2400, sfxBus, 0.6); tone('sine', 700, ctx.currentTime, 0.15, 0.06, sfxBus, { slide: 1400 }); },
+    pop() { if (!ctx) return; tone('sine', 520, ctx.currentTime, 0.12, 0.08, sfxBus, { slide: 1100 }); },
+    fanfare() { if (!ensure()) return; const t = ctx.currentTime;
+      [72, 76, 79, 84, 79, 84, 88].forEach((m, i) => { tone('square', mtof(m), t + i * 0.11, i === 6 ? 0.7 : 0.14, 0.08, sfxBus, { cutoff: 3000 }); tone('triangle', mtof(m + 12), t + i * 0.11, 0.2, 0.06, sfxBus); }); }
+  };
+})();
+
+let voiceOn = true, koVoice = null;
+function loadVoices() { try { koVoice = speechSynthesis.getVoices().find(v => /^ko/i.test(v.lang)) || null; } catch (e) {} }
+if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function speak(text) {
+  if (!voiceOn || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ko-KR'; if (koVoice) u.voice = koVoice; u.rate = 0.88; u.pitch = 1.15;
+    u.onstart = () => Sound.duck(true); u.onend = u.onerror = () => Sound.duck(false);
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+/* =====================================================================
+   Character art (canvas → image) for the card scenes
+   ===================================================================== */
+function charImage(kind) {
+  const c = document.createElement('canvas'); c.width = c.height = 360; const g = c.getContext('2d');
+  g.scale(360 / 512, 360 / 512);
+  const ink = '#4B3A66', body = kind === 'ana' ? '#FFC6DF' : '#BEF0DA', deep = kind === 'ana' ? '#FF8DBB' : '#58C7A1';
+  g.lineJoin = 'round'; g.lineCap = 'round'; g.strokeStyle = ink; g.lineWidth = 12;
+  const ell = (x, y, rx, ry, fill, stroke = true, rot = 0) => { g.beginPath(); g.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); if (stroke) g.stroke(); };
+  ell(196, 468, 46, 24, deep); ell(316, 468, 46, 24, deep);
+  if (kind === 'ana') ell(440, 340, 48, 30, body, true, -0.5); else ell(72, 340, 48, 30, body, true, 0.5);
+  ell(256, 300, 188, 172, body); ell(256, 356, 108, 74, 'rgba(255,255,255,.45)', false);
+  for (const x of [196, 316]) { ell(x, 284, 20, 24, ink, false); ell(x + 7, 274, 7, 8, '#FFFFFF', false); }
+  ell(150, 330, 30, 17, 'rgba(255,110,160,.5)', false); ell(362, 330, 30, 17, 'rgba(255,110,160,.5)', false);
+  g.beginPath(); g.moveTo(228, 318); g.quadraticCurveTo(242, 338, 256, 320); g.quadraticCurveTo(270, 338, 284, 318); g.lineWidth = 8; g.stroke(); g.lineWidth = 12;
+  if (kind === 'ana') {
+    g.fillStyle = '#FF6FA8';
+    g.beginPath(); g.moveTo(330, 118); g.lineTo(270, 80); g.lineTo(276, 152); g.closePath(); g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(330, 118); g.lineTo(392, 82); g.lineTo(388, 156); g.closePath(); g.fill(); g.stroke();
+    ell(330, 118, 20, 20, '#FF9EC7');
+  } else {
+    g.beginPath(); g.arc(256, 176, 140, Math.PI, 0); g.closePath(); g.fillStyle = '#86C3FF'; g.fill(); g.stroke();
+    ell(350, 174, 96, 22, '#5AA9F2'); ell(256, 40, 16, 16, '#FFE28A');
+  }
+  return c.toDataURL('image/png');
+}
+const CHAR_IMG = { ana: charImage('ana'), junho: charImage('junho') };
+
+/* =====================================================================
+   Three.js background: floating pastel shapes + 3D confetti
+   ===================================================================== */
+const bgCanvas = $('#bg');
+const renderer = new THREE.WebGLRenderer({ canvas: bgCanvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.setClearColor(0, 0);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100); camera.position.set(0, 0, 10);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xffd6ec, 0.95));
+const dl = new THREE.DirectionalLight(0xffffff, 0.55); dl.position.set(3, 6, 5); scene.add(dl);
+const PASTELS = [0xFF9EC7, 0xFFC2DD, 0x9BE3C8, 0x9ACDFF, 0xFFE28A, 0xC8B6FF, 0xFFB38A];
+function heartShape() {
+  const s = new THREE.Shape();
+  s.moveTo(5, 5); s.bezierCurveTo(5, 5, 4, 0, 0, 0); s.bezierCurveTo(-6, 0, -6, 7, -6, 7);
+  s.bezierCurveTo(-6, 11, -3, 15.4, 5, 19); s.bezierCurveTo(12, 15.4, 16, 11, 16, 7);
+  s.bezierCurveTo(16, 7, 16, 0, 10, 0); s.bezierCurveTo(7, 0, 5, 5, 5, 5); return s;
+}
+function starShape(R, r) { const s = new THREE.Shape(); for (let i = 0; i < 10; i++) { const a = Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r : R; i ? s.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : s.moveTo(Math.cos(a) * rr, Math.sin(a) * rr); } s.closePath(); return s; }
+function roundRect(w, h, r) { const s = new THREE.Shape(), x = -w / 2, y = -h / 2; s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r); s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h); s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y); return s; }
+const heartGeo = new THREE.ExtrudeGeometry(heartShape(), { depth: 4, bevelEnabled: true, bevelSize: 1.2, bevelThickness: 1.2, bevelSegments: 3 }); heartGeo.center(); heartGeo.scale(0.035, 0.035, 0.035); heartGeo.rotateZ(Math.PI);
+const starGeo = new THREE.ExtrudeGeometry(starShape(0.5, 0.24), { depth: 0.15, bevelEnabled: true, bevelSize: 0.06, bevelThickness: 0.06, bevelSegments: 2 }); starGeo.center();
+const cardGeo = new THREE.ExtrudeGeometry(roundRect(0.8, 1.1, 0.14), { depth: 0.05, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03, bevelSegments: 2 }); cardGeo.center();
+const blobGeo = new THREE.IcosahedronGeometry(0.36, 1);
+const floaters = [];
+for (let i = 0, n = reduceMotion ? 8 : 22; i < n; i++) {
+  const m = new THREE.Mesh([heartGeo, starGeo, cardGeo, blobGeo][i % 4], new THREE.MeshToonMaterial({ color: PASTELS[i % PASTELS.length] }));
+  m.position.set((Math.random() * 2 - 1) * 9, (Math.random() * 2 - 1) * 6, -2 - Math.random() * 8);
+  m.scale.setScalar(0.6 + Math.random() * 0.8);
+  m.userData = { base: m.position.clone(), ph: Math.random() * 6.3, sp: 0.3 + Math.random() * 0.5, rs: (Math.random() - 0.5) * 1.2, spin: 0 };
+  scene.add(m); floaters.push(m);
+}
+const confGeos = [new THREE.PlaneGeometry(0.13, 0.21), new THREE.CircleGeometry(0.075, 10), new THREE.ShapeGeometry(heartShape()).center().scale(0.012, 0.012, 1).rotateZ(Math.PI), new THREE.ShapeGeometry(starShape(0.12, 0.055))];
+const confMats = PASTELS.concat([0xFFFFFF]).map(c => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide }));
+const confetti = [];
+function burst(pos, n = 160, power = 1) {
+  if (reduceMotion) n = Math.min(n, 30);
+  for (let i = 0; i < n && confetti.length < 800; i++) {
+    const m = new THREE.Mesh(rand(confGeos), rand(confMats)); m.position.copy(pos);
+    const a = Math.random() * Math.PI * 2, sp = (1 + Math.random() * 3.4) * power;
+    m.userData = { v: new THREE.Vector3(Math.cos(a) * sp, (3 + Math.random() * 5.5) * power, Math.sin(a) * sp * 0.5 + 1), rv: new THREE.Vector3(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5), life: 0, max: 2 + Math.random() * 1.2, s: 0.8 + Math.random() * 0.8 };
+    m.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6); m.scale.setScalar(m.userData.s);
+    scene.add(m); confetti.push(m);
+  }
+}
+// screen point → world point on the z = 1 plane in front of the shapes
+function screenToWorld(x, y) {
+  const v = new THREE.Vector3((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1, 0.5).unproject(camera);
+  const dir = v.sub(camera.position).normalize(); const d = (1 - camera.position.z) / dir.z;
+  return camera.position.clone().add(dir.multiplyScalar(d));
+}
+function celebrateAt(el, big) {
+  const r = el.getBoundingClientRect();
+  burst(screenToWorld(r.left + r.width / 2, r.top + r.height * 0.4), big ? 200 : 160, big ? 1.3 : 1);
+  if (big) { burst(screenToWorld(innerWidth * 0.15, innerHeight * 0.7), 120, 1.2); burst(screenToWorld(innerWidth * 0.85, innerHeight * 0.7), 120, 1.2); }
+  for (const f of floaters) f.userData.spin = 1;
+}
+function resize() { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+let lastT = performance.now() / 1000;
+function loop() {
+  const t = performance.now() / 1000, dt = Math.min(0.05, t - lastT); lastT = t;
+  const amp = reduceMotion ? 0.2 : 1;
+  for (const f of floaters) {
+    const u = f.userData;
+    f.position.y = u.base.y + Math.sin(t * u.sp + u.ph) * 0.4 * amp;
+    f.position.x = u.base.x + Math.cos(t * u.sp * 0.6 + u.ph) * 0.3 * amp;
+    f.rotation.y += (u.rs + u.spin * 9) * dt * amp; f.rotation.z = Math.sin(t * 0.7 + u.ph) * 0.3;
+    u.spin = Math.max(0, u.spin - dt * 0.8);
+  }
+  for (let i = confetti.length - 1; i >= 0; i--) {
+    const m = confetti[i], u = m.userData;
+    u.life += dt; u.v.y -= 7 * dt; u.v.multiplyScalar(1 - 0.9 * dt); m.position.addScaledVector(u.v, dt);
+    m.rotation.x += u.rv.x * dt; m.rotation.y += u.rv.y * dt; m.rotation.z += u.rv.z * dt;
+    if (u.life > u.max - 0.4) m.scale.setScalar(u.s * Math.max(0, (u.max - u.life) / 0.4));
+    if (u.life > u.max) { scene.remove(m); confetti.splice(i, 1); }
+  }
+  renderer.render(scene, camera); requestAnimationFrame(loop);
+}
+
+/* =====================================================================
+   Flashcard game: Leitner-style queue — a missed card comes back 3 cards later
+   ===================================================================== */
+const el = { score: $('#score'), streak: $('#streak'), scorePill: $('#scorePill'), streakPill: $('#streakPill'), fill: $('#masteryFill'), mtxt: $('#masteryTxt'), mbar: $('#masteryBar'),
+  wrap: $('#cardWrap'), card: $('#card'), back: $('#back'), chip: $('#chip'), speaker: $('#speaker'), no: $('#cardNo'), mini: $('#mini'), situation: $('#situation'), ko: $('#koLine'),
+  answers: $('#answers'), next: $('#nextBtn'), verdict: $('#verdict'), aKo: $('#answerKo'), aTr: $('#answerTr'), why: $('#why'), pts: $('#ptsBadge') };
+const G = { queue: [], card: null, answered: false, score: 0, shown: 0, streak: 0, best: 0, mastered: 0, first: 0, seen: 0, t0: 0 };
+let bestScore = store.get('igeujeo-fc-best', 0);
+
+function newDeck() {
+  lastZones = []; lastItem = null;
+  return shuffle(PLAN).map((p, i) => ({ id: i, misses: 0, data: BUILD[p[0]](p[1]) }));
+}
+function objHtml(o) { return `<span class="obj" aria-hidden="true">${o.e}${o.e2 ? `<span class="e2">${o.e2}</span>` : ''}</span>`; }
+const ZONE_LABEL = { left: 'na mão da Ana', right: 'na mão do 준호', far: 'na prateleira, lá longe' };
+function renderMini(c) {
+  const d = c.data;
+  let h = `<div class="ped"></div>
+    <img class="char ana${d.sp === 'ana' ? ' talk' : ''}" src="${CHAR_IMG.ana}" alt="Ana">
+    <img class="char junho${d.sp === 'junho' ? ' talk' : ''}" src="${CHAR_IMG.junho}" alt="준호">
+    <span class="nm ana">Ana</span><span class="nm junho">준호</span>
+    <span class="bubble ${d.sp}">말해요!</span>`;
+  if (d.thought) h += `<span class="thought" aria-label="pensando em um filme">${d.thought}</span>`;
+  for (const s of d.show) {
+    const glow = !d.point && s.z === d.target ? ' glow' : '';
+    h += d.point
+      ? `<button class="spot ${s.z}" data-zone="${s.z}" aria-label="${s.o.ko} ${ZONE_LABEL[s.z]}">${objHtml(s.o)}</button>`
+      : `<div class="spot ${s.z}${glow}" aria-label="${s.o.ko} ${ZONE_LABEL[s.z]}">${objHtml(s.o)}</div>`;
+  }
+  el.mini.innerHTML = h;
+}
+function updateHud() {
+  el.streak.textContent = 'x' + G.streak; el.streakPill.classList.toggle('hot', G.streak >= 3);
+  el.fill.style.width = (G.mastered / DECK_SIZE * 100) + '%'; el.mtxt.textContent = `${G.mastered}/${DECK_SIZE}`; el.mbar.setAttribute('aria-valuenow', G.mastered);
+}
+function countScore() {
+  const target = G.score, start = G.shown, t0 = performance.now();
+  const step = () => { const k = Math.min(1, (performance.now() - t0) / 600); G.shown = Math.round(start + (target - start) * k); el.score.textContent = G.shown.toLocaleString('pt-BR'); if (k < 1) requestAnimationFrame(step); };
+  step();
+}
+function bump(e) { e.classList.remove('bump'); void e.offsetWidth; e.classList.add('bump'); }
+function floatText(x, y, text, cls = '') { const d = document.createElement('div'); d.className = 'floater ' + cls; d.textContent = text; d.style.left = x + 'px'; d.style.top = y + 'px'; document.body.appendChild(d); setTimeout(() => d.remove(), 1400); }
+
+function start() {
+  Sound.unlock(); if (musicOn) Sound.start();
+  Object.assign(G, { queue: newDeck(), score: 0, shown: 0, streak: 0, best: 0, mastered: 0, first: 0, seen: 0 });
+  el.score.textContent = '0'; $('#startOv').hidden = true; $('#endOv').hidden = true;
+  updateHud(); showCard();
+}
+function showCard() {
+  const c = G.queue.shift(); if (!c) return finish();
+  G.card = c; G.answered = false; G.seen++;
+  const d = c.data;
+  el.card.classList.remove('flipped');
+  el.chip.textContent = c.misses ? 'Revisão · ' + d.tag : d.tag; el.chip.classList.toggle('review', !!c.misses);
+  el.speaker.textContent = `Quem fala: ${NAMES[d.sp]}`; el.speaker.classList.toggle('junho', d.sp === 'junho');
+  el.no.textContent = `Card ${G.seen}`;
+  renderMini(c);
+  el.situation.textContent = d.situation; el.ko.innerHTML = d.ko;
+  el.next.hidden = true;
+  if (d.point) {
+    el.answers.innerHTML = `<div class="hint"><span class="hand" aria-hidden="true">👆</span> Toque no objeto certo dentro do card (ou use as teclas 1 = Ana, 2 = 준호, 3 = longe)</div>`;
+    if ($('#startOv').hidden) setTimeout(() => speak(d.speakFirst), 450);
+  } else {
+    el.answers.innerHTML = d.options.map((o, i) => `<button class="opt${d.small ? ' small' : ''}" data-i="${i}"><span class="num">${i + 1}</span>${o.label}</button>`).join('');
+  }
+  el.wrap.classList.remove('leave', 'enter'); void el.wrap.offsetWidth; el.wrap.classList.add('enter');
+  Sound.pop();
+  G.t0 = performance.now();
+}
+el.answers.addEventListener('click', e => { const b = e.target.closest('.opt'); if (b && !G.answered) chooseOption(+b.dataset.i); });
+el.mini.addEventListener('click', e => { const b = e.target.closest('button.spot'); if (b && !G.answered) chooseZone(b.dataset.zone); });
+function chooseOption(i) {
+  const d = G.card && G.card.data; if (!d || G.answered || d.point || !d.options[i]) return;
+  const btns = [...el.answers.querySelectorAll('.opt')];
+  btns.forEach((b, j) => { b.disabled = true; b.classList.add(d.options[j].ok ? 'ok' : j === i ? 'bad' : 'dim'); });
+  resolve(d.options[i].ok, btns[i]);
+}
+function chooseZone(z) {
+  const d = G.card && G.card.data; if (!d || G.answered || !d.point) return;
+  const spots = [...el.mini.querySelectorAll('button.spot')];
+  spots.forEach(s => { s.disabled = true; if (s.dataset.zone === d.target) s.classList.add('ok'); else if (s.dataset.zone === z) s.classList.add('bad'); });
+  resolve(z === d.target, spots.find(s => s.dataset.zone === z));
+}
+function resolve(ok, srcEl) {
+  const c = G.card, d = c.data; G.answered = true;
+  const secs = (performance.now() - G.t0) / 1000;
+  let pts = 0;
+  if (ok) {
+    G.streak++; G.best = Math.max(G.best, G.streak); G.mastered++; if (!c.misses) G.first++;
+    const combo = Math.min(100, 25 * (G.streak - 1));
+    pts = c.misses ? 50 + combo : 100 + Math.max(0, Math.round(50 - secs * 4)) + combo;
+    G.score += pts; countScore(); bump(el.scorePill); if (G.streak > 1) bump(el.streakPill);
+    Sound.correct(); celebrateAt(el.wrap, false);
+    const r = (srcEl || el.wrap).getBoundingClientRect();
+    floatText(r.left + r.width / 2, r.top, `+${pts}`);
+    if (G.streak >= 2) setTimeout(() => floatText(r.left + r.width / 2, r.top + 34, `콤보 x${G.streak}!`, 'combo'), 160);
+  } else {
+    G.streak = 0; c.misses++; Sound.wrong();
+    // rebuild the same card type later with a fresh situation so it is not memorised by position
+    const p = PLAN[c.id];
+    const again = { id: c.id, misses: c.misses, data: BUILD[p[0]](p[1]) };
+    G.queue.splice(Math.min(3, G.queue.length), 0, again);
+  }
+  el.back.className = 'face back ' + (ok ? 'ok' : 'no');
+  el.verdict.textContent = ok ? rand(['정답! 잘했어요!', '대박! Certo!', '최고예요!', '완벽해요!']) : '아쉬워요! Este card volta já já.';
+  el.aKo.textContent = d.answer; el.aTr.textContent = d.tr; el.why.textContent = d.why;
+  el.pts.textContent = ok ? `+${pts} pontos` : '0 pontos · revisão em 3 cards';
+  updateHud();
+  setTimeout(() => { el.card.classList.add('flipped'); Sound.flip(); }, ok ? 650 : 900);
+  setTimeout(() => speak(d.answer), ok ? 1100 : 1300);
+  el.next.hidden = false; el.next.textContent = G.queue.length ? 'Próximo card →' : 'Ver resultado ★';
+  setTimeout(() => el.next.focus({ preventScroll: true }), 50);
+}
+function next() {
+  if (!G.answered) return;
+  Sound.tap();
+  el.wrap.classList.remove('enter'); el.wrap.classList.add('leave');
+  setTimeout(showCard, reduceMotion ? 0 : 330);
+}
+function finish() {
+  G.card = null;
+  const acc = G.first / DECK_SIZE, stars = acc >= 0.9 ? 3 : acc >= 0.7 ? 2 : acc >= 0.4 ? 1 : 0;
+  $('#stars').innerHTML = [0, 1, 2].map(i => `<span class="${i < stars ? '' : 'off'}">⭐</span>`).join('');
+  $('#endTitle').textContent = ['Fã dedicado: bora de novo!', 'Trainee em treino', 'Trainee estrela', 'K-pop idol do 한국어'][stars];
+  $('#endScore').textContent = G.score.toLocaleString('pt-BR'); $('#endFirst').textContent = `${G.first}/${DECK_SIZE}`; $('#endStreak').textContent = G.best;
+  const isNew = G.score > bestScore; if (isNew) { bestScore = G.score; store.set('igeujeo-fc-best', bestScore); }
+  $('#endBest').textContent = isNew ? 'Novo recorde! 신기록!' : `Recorde: ${bestScore.toLocaleString('pt-BR')} pontos`;
+  $('#endOv').hidden = false; $('#againBtn').focus();
+  Sound.fanfare(); celebrateAt($('#endOv .ov-card'), true);
+}
+
+// card tilt follows the pointer (desktop)
+el.wrap.parentElement.addEventListener('pointermove', e => {
+  if (reduceMotion || e.pointerType !== 'mouse') return;
+  const r = el.wrap.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+  el.wrap.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 6}deg)`;
+});
+el.wrap.parentElement.addEventListener('pointerleave', () => { el.wrap.style.transform = ''; });
+
+let musicOn = store.get('igeujeo-music', true);
+const musicBtn = $('#musicBtn'), voiceBtn = $('#voiceBtn');
+const sync = () => { musicBtn.setAttribute('aria-pressed', String(musicOn)); voiceBtn.setAttribute('aria-pressed', String(voiceOn)); };
+sync();
+musicBtn.addEventListener('click', () => { musicOn = !musicOn; store.set('igeujeo-music', musicOn); sync(); musicOn ? Sound.start() : Sound.stop(); });
+voiceBtn.addEventListener('click', () => { voiceOn = !voiceOn; sync(); if (!voiceOn) try { speechSynthesis.cancel(); } catch (e) {} });
+$('#playBtn').addEventListener('click', start);
+$('#againBtn').addEventListener('click', start);
+el.next.addEventListener('click', next);
+$('#replayBtn').addEventListener('click', () => G.card && speak(G.card.data.answer));
+document.addEventListener('keydown', e => {
+  if (!G.card || !$('#startOv').hidden || !$('#endOv').hidden) return;
+  const n = parseInt(e.key, 10);
+  if (!G.answered && n >= 1) { if (G.card.data.point) { const z = ['left', 'right', 'far'][n - 1]; if (z) chooseZone(z); } else chooseOption(n - 1); }
+  else if (G.answered && (e.key === 'Enter' || e.key === ' ') && document.activeElement !== el.next && document.activeElement !== $('#replayBtn')) { e.preventDefault(); next(); }
+});
+document.addEventListener('visibilitychange', () => Sound.suspend(document.hidden));
+$('#bestLine').textContent = bestScore ? `Recorde: ${bestScore.toLocaleString('pt-BR')} pontos` : 'Ligue o som: trilha K-pop e voz em coreano!';
+
+// a sample card sits behind the start screen
+G.queue = newDeck(); showCard(); G.seen = 0;
+loop();
+})();
+</script>
+</body>
+</html>
