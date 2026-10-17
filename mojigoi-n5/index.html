@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mojigoi N5 Kawaii</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: uma coluna central (máx. 880px) sobre um céu 3D pastel; cabeçalho com placar, abas em japonês, mascote fixo no canto. */
+:root{
+  --bg:#FFF5FA; --bg2:#EEF4FF; --surface:#FFFFFF; --surface2:#FFF0F7;
+  --ink:#4B3A5E; --muted:#8A7A9E; --line:#F2DCEA;
+  --pink:#FF94C2; --pink-soft:#FFE0EE; --lav:#B9A2FF; --lav-soft:#EEE7FF;
+  --mint:#7FDDBF; --mint-soft:#DDF7EE; --butter:#FFDF7E; --butter-soft:#FFF5D3;
+  --sky:#93CCFF; --sky-soft:#E1F1FF;
+  --good:#2FAF80; --bad:#F2617D; --shadow:0 10px 30px -12px rgba(160,90,140,.35);
+  --font-display:"Mochiy Pop One","Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --font-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+  --r-lg:28px; --r-md:18px; --r-sm:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1C1533; --bg2:#2B1E4A; --surface:#2A2147; --surface2:#33285A;
+  --ink:#FBF0FF; --muted:#BBAAD8; --line:#43376D;
+  --pink:#FF8CC2; --pink-soft:#4A2B55; --lav:#A88BFF; --lav-soft:#3A2D66;
+  --mint:#6EDDBD; --mint-soft:#203F45; --butter:#FFD56B; --butter-soft:#4A3D35;
+  --sky:#7CC2FF; --sky-soft:#22345C;
+  --good:#5BE0A8; --bad:#FF7F98; --shadow:0 12px 34px -14px rgba(0,0,0,.6);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1C1533; --bg2:#2B1E4A; --surface:#2A2147; --surface2:#33285A;
+  --ink:#FBF0FF; --muted:#BBAAD8; --line:#43376D;
+  --pink:#FF8CC2; --pink-soft:#4A2B55; --lav:#A88BFF; --lav-soft:#3A2D66;
+  --mint:#6EDDBD; --mint-soft:#203F45; --butter:#FFD56B; --butter-soft:#4A3D35;
+  --sky:#7CC2FF; --sky-soft:#22345C;
+  --good:#5BE0A8; --bad:#FF7F98; --shadow:0 12px 34px -14px rgba(0,0,0,.6);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{background:var(--bg);background-image:linear-gradient(170deg,var(--bg) 0%,var(--bg2) 100%);background-attachment:fixed;
+  color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px;overflow-x:hidden}
+#bg3d{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.7}
+#confetti{position:fixed;inset:0;width:100%;height:100%;z-index:60;pointer-events:none}
+.wrap{position:relative;z-index:2;max-width:880px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--lav);outline-offset:3px}
+.jp{font-family:var(--font-body);font-feature-settings:"palt"}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;text-wrap:balance;margin:0}
+
+/* Header */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-block:18px 10px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:var(--pink);color:#fff;
+  font-family:var(--font-display);font-size:26px;box-shadow:var(--shadow);transform:rotate(-6deg)}
+.brand h1{font-size:clamp(20px,4.4vw,28px);line-height:1.1}
+.brand h1 small{display:block;font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.hud{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;background:var(--surface);
+  border:2px solid var(--line);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.pts{background:var(--butter-soft);border-color:var(--butter)}
+.pill.lvl{background:var(--lav-soft);border-color:var(--lav)}
+.pill.combo{background:var(--pink-soft);border-color:var(--pink);transition:transform .2s}
+.pill.combo.hot{transform:scale(1.12)}
+.pill.bump{animation:bump .45s}
+@keyframes bump{40%{transform:scale(1.18)}}
+.btn-music{border:2px solid var(--mint);background:var(--mint-soft)}
+.btn-music[aria-pressed="true"]{background:var(--mint);color:#21413A}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:14px}
+.eq i{width:3px;height:4px;background:currentColor;border-radius:2px}
+.btn-music[aria-pressed="true"] .eq i{animation:eq .8s infinite ease-in-out}
+.eq i:nth-child(2){animation-delay:.2s!important}.eq i:nth-child(3){animation-delay:.4s!important}
+@keyframes eq{50%{height:14px}}
+
+/* Tabs */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-block:8px 18px;padding:6px;background:var(--surface);
+  border-radius:22px;border:2px solid var(--line);box-shadow:var(--shadow)}
+.tab{border:0;background:transparent;border-radius:16px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1.2}
+.tab b{font-family:var(--font-display);font-weight:400;font-size:clamp(14px,3.4vw,18px)}
+.tab span{font-size:12px;color:var(--muted);font-weight:700}
+.tab[aria-selected="true"]{background:var(--pink-soft)}
+.tab[aria-selected="true"] b{color:var(--pink)}
+
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--r-lg);padding:clamp(16px,3.5vw,28px);box-shadow:var(--shadow)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.between{justify-content:space-between}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--lav);border-color:var(--lav);color:#fff}
+.btn{border:0;border-radius:var(--r-md);padding:12px 20px;font-weight:900;font-size:16px;background:var(--surface2);border:2px solid var(--line);
+  transition:transform .12s, box-shadow .12s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 6px 0 -1px color-mix(in srgb,var(--pink) 60%,#7a2950)}
+.btn.lav{background:var(--lav);border-color:var(--lav);color:#fff}
+.btn.mint{background:var(--mint);border-color:var(--mint);color:#173A31}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.bar{height:10px;border-radius:99px;background:var(--surface2);overflow:hidden;border:2px solid var(--line)}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--lav));border-radius:99px;transition:width .4s}
+
+/* Flashcards */
+.flip-wrap{perspective:1400px}
+.flip{position:relative;height:clamp(340px,52vh,400px);transform-style:preserve-3d;transition:transform .65s cubic-bezier(.3,1.4,.5,1);cursor:pointer}
+.flip.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-lg);
+  padding:22px;display:flex;flex-direction:column;border:3px solid var(--line);background:var(--surface);overflow:auto}
+.face.front{background:radial-gradient(circle at 85% 12%,var(--butter-soft) 0 18%,transparent 19%),radial-gradient(circle at 10% 92%,var(--sky-soft) 0 22%,transparent 23%),var(--surface)}
+.face.front.star{border-color:var(--pink);background:radial-gradient(circle at 85% 12%,var(--surface) 0 18%,transparent 19%),var(--pink-soft)}
+.face.back{transform:rotateY(180deg);background:var(--surface2)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font-size:12px;font-weight:900;letter-spacing:.08em;padding:4px 10px;border-radius:999px;background:var(--lav-soft);color:var(--ink)}
+.tag.star{background:var(--pink);color:#fff}
+.tag.num{margin-left:auto;background:transparent;color:var(--muted)}
+.word{flex:1;display:grid;place-items:center;text-align:center;font-family:var(--font-display);font-size:clamp(46px,13vw,88px);line-height:1.15;word-break:keep-all;overflow-wrap:anywhere}
+.word.long{font-size:clamp(34px,9vw,60px)}
+.prompt{text-align:center;color:var(--muted);font-weight:700}
+.reading{font-family:var(--font-display);font-size:clamp(30px,8vw,48px);line-height:1.2;text-align:center}
+.meaning{text-align:center;font-weight:900;font-size:20px;color:var(--pink)}
+.example{background:var(--surface);border-radius:var(--r-md);padding:12px 14px;border:2px dashed var(--line)}
+.example .jp{font-size:19px;font-weight:700}
+.tip{background:var(--butter-soft);border-radius:var(--r-md);padding:10px 14px;font-weight:700;font-size:15px;border:2px solid var(--butter)}
+.back-body{display:flex;flex-direction:column;gap:10px;justify-content:center;flex:1}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rate .btn{padding:12px 6px;font-size:15px}
+.rate .nao{background:var(--pink-soft);border-color:var(--pink)}
+.rate .quase{background:var(--butter-soft);border-color:var(--butter)}
+.rate .sei{background:var(--mint-soft);border-color:var(--mint)}
+.rate .btn.cur{outline:3px solid var(--lav);outline-offset:2px}
+.empty{text-align:center;padding:40px 10px}
+
+/* Quiz / Simulado */
+.mondai{display:flex;flex-direction:column;gap:4px;padding:12px 16px;border-radius:var(--r-md);background:var(--sky-soft);border:2px solid var(--sky)}
+.mondai b{font-family:var(--font-display);font-weight:400;font-size:18px}
+.qtext{font-size:clamp(22px,5.4vw,30px);font-weight:700;line-height:1.6}
+.qtext u{text-decoration:none;border-bottom:4px solid var(--pink);padding-inline:2px}
+.qtext .blank{display:inline-block;min-width:3.2em;border-bottom:4px solid var(--lav);text-align:center;color:var(--lav)}
+.qnum{font-family:var(--font-display);display:inline-grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--lav);color:#fff;font-size:18px;margin-right:10px;vertical-align:middle}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.opts.col{grid-template-columns:1fr}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;border-radius:var(--r-md);border:3px solid var(--line);background:var(--surface);
+  font-size:clamp(18px,4.4vw,22px);font-weight:700;transition:transform .12s,border-color .2s,background .2s;min-width:0}
+.opt .k{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--lav-soft);font-size:15px;font-family:var(--font-display);font-weight:400}
+.opt:hover{transform:translateY(-2px);border-color:var(--lav)}
+.opt.sel{border-color:var(--lav);background:var(--lav-soft)}
+.opt.ok{border-color:var(--good);background:var(--mint-soft);animation:pop .4s}
+.opt.ok .k{background:var(--good);color:#fff}
+.opt.no{border-color:var(--bad);background:var(--pink-soft);animation:shake .4s}
+.opt.no .k{background:var(--bad);color:#fff}
+.opts.locked .opt{pointer-events:none}
+@keyframes pop{50%{transform:scale(1.05)}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.feedback{border-radius:var(--r-md);padding:14px 16px;border:2px solid var(--line);background:var(--surface2);display:flex;flex-direction:column;gap:6px}
+.feedback.ok{border-color:var(--good)}
+.feedback.no{border-color:var(--bad)}
+.feedback h3{font-size:20px}
+.feedback.ok h3{color:var(--good)} .feedback.no h3{color:var(--bad)}
+.linkbtn{background:none;border:0;padding:0;color:var(--lav);font-weight:900;text-decoration:underline;text-underline-offset:3px}
+.dots{display:flex;flex-wrap:wrap;gap:6px}
+.dot{width:30px;height:30px;border-radius:10px;border:2px solid var(--line);background:var(--surface);font-size:12px;font-weight:900;display:grid;place-items:center;font-variant-numeric:tabular-nums;padding:0}
+.dot.cur{border-color:var(--lav);background:var(--lav-soft)}
+.dot.done{background:var(--sky-soft);border-color:var(--sky)}
+.dot.ok{background:var(--mint);border-color:var(--mint);color:#173A31}
+.dot.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.timer{font-family:var(--font-display);font-variant-numeric:tabular-nums}
+.timebar{height:12px}
+.timebar>i{background:linear-gradient(90deg,var(--mint),var(--sky));transition:width .1s linear}
+.timebar.warn>i{background:linear-gradient(90deg,var(--bad),var(--pink))}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.mode{text-align:left;border:3px solid var(--line);background:var(--surface2);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:6px}
+.mode:hover{border-color:var(--pink)}
+.mode h3{font-size:20px}
+.secgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.sec{border-radius:var(--r-md);padding:12px 14px;background:var(--surface2);border:2px solid var(--line);display:flex;flex-direction:column;gap:6px;min-width:0}
+.sec b{font-family:var(--font-display);font-weight:400}
+.big{font-family:var(--font-display);font-size:clamp(48px,12vw,76px);line-height:1;font-variant-numeric:tabular-nums}
+.score-hero{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 28px}
+.wrong-list{display:flex;flex-direction:column;gap:10px}
+.wrong{border-left:6px solid var(--bad);background:var(--surface2);border-radius:var(--r-sm);padding:10px 14px;min-width:0}
+.wrong.ok{border-left-color:var(--good)}
+
+/* Stats */
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{border-radius:var(--r-md);padding:14px;background:var(--surface2);border:2px solid var(--line)}
+.stat .v{font-family:var(--font-display);font-size:30px;font-variant-numeric:tabular-nums}
+.pile{display:flex;height:22px;border-radius:99px;overflow:hidden;border:2px solid var(--line)}
+.pile i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;font-weight:700}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.diag{display:flex;flex-direction:column;gap:10px}
+.diag p{margin:0;max-width:68ch}
+.confirm{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px;border-radius:var(--r-md);background:var(--pink-soft)}
+
+/* Mascote + pontos flutuantes */
+.mascot{position:fixed;z-index:50;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:8px;pointer-events:none}
+.mascot svg{width:78px;height:78px;filter:drop-shadow(0 6px 10px rgba(140,80,130,.3));animation:bob 2.6s ease-in-out infinite;pointer-events:auto;cursor:pointer}
+.mascot.jump svg{animation:jump .6s}
+.bubble{max-width:min(260px,62vw);background:var(--surface);border:2px solid var(--line);border-radius:18px 18px 4px 18px;padding:10px 14px;font-weight:700;font-size:14px;
+  box-shadow:var(--shadow);opacity:0;transform:translateY(8px) scale(.95);transition:.25s}
+.bubble.show{opacity:1;transform:none}
+@keyframes bob{50%{transform:translateY(-6px)}}
+@keyframes jump{30%{transform:translateY(-26px) rotate(-8deg)}60%{transform:translateY(0) scale(1.1,.9)}}
+.mascot .happy{display:none}.mascot.is-happy .happy{display:inline}.mascot.is-happy .normal{display:none}
+.mascot .sad{display:none}.mascot.is-sad .sad{display:inline}.mascot.is-sad .normal{display:none}
+.floatpts{position:fixed;z-index:70;pointer-events:none;font-family:var(--font-display);font-size:26px;color:var(--pink);
+  text-shadow:0 2px 0 var(--surface),0 0 12px var(--surface);animation:floatup 1.1s ease-out forwards}
+@keyframes floatup{from{opacity:1;transform:translate(-50%,0) scale(.8)}to{opacity:0;transform:translate(-50%,-80px) scale(1.25)}}
+.levelup{position:fixed;inset:0;z-index:65;display:grid;place-items:center;pointer-events:none}
+.levelup div{font-family:var(--font-display);font-size:clamp(34px,9vw,64px);color:var(--pink);text-shadow:0 4px 0 var(--surface);animation:lv 1.8s ease-out forwards;text-align:center}
+@keyframes lv{0%{transform:scale(.3);opacity:0}25%{transform:scale(1.15);opacity:1}80%{opacity:1}100%{transform:scale(1);opacity:0}}
+footer{margin-top:22px;text-align:center;font-size:13px}
+
+@media (max-width:560px){
+  .opts{grid-template-columns:1fr}
+  .tab span{display:none}
+  .hud{width:100%}
+  .rate .btn{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<canvas id="bg3d" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo jp" aria-hidden="true">字</div>
+      <h1>もじごい N5<small>Simulado 文字・語彙 · TRY! N5 L1–31</small></h1>
+    </div>
+    <div class="hud">
+      <span class="pill pts" id="hudPts" title="Pontos">★ <span id="ptsVal">0</span> pts</span>
+      <span class="pill lvl" id="hudLvl">Lv 1 · たまご</span>
+      <span class="pill combo" id="hudCombo" title="Acertos seguidos">コンボ ×0</span>
+      <button class="pill btn-music" id="btnMusic" aria-pressed="false" title="Trilha City Pop original">
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span> City Pop
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Modos de estudo">
+    <button class="tab" role="tab" id="tab-cards" aria-controls="view-cards" aria-selected="true"><b class="jp">カード</b><span>Flashcards</span></button>
+    <button class="tab" role="tab" id="tab-sim" aria-controls="view-sim" aria-selected="false"><b class="jp">もぎしけん</b><span>Simulado</span></button>
+    <button class="tab" role="tab" id="tab-quiz" aria-controls="view-quiz" aria-selected="false"><b class="jp">チャレンジ</b><span>Desafio</span></button>
+    <button class="tab" role="tab" id="tab-stats" aria-controls="view-stats" aria-selected="false"><b class="jp">きろく</b><span>Progresso</span></button>
+  </nav>
+
+  <main>
+    <!-- FLASHCARDS -->
+    <section id="view-cards" role="tabpanel" aria-labelledby="tab-cards" class="panel stack">
+      <div class="row between">
+        <div class="row" id="deckChips" role="group" aria-label="Escolher baralho"></div>
+        <button class="btn ghost small" id="btnShuffle">Embaralhar</button>
+      </div>
+      <div class="row between small"><span class="muted" id="cardCount">Cartão 1 / 32</span><span class="muted">Espaço vira · ← → navega</span></div>
+      <div class="bar" aria-hidden="true"><i id="cardBar"></i></div>
+      <div class="flip-wrap">
+        <div class="flip" id="flip" tabindex="0" role="button" aria-label="Virar cartão">
+          <div class="face front" id="faceFront"></div>
+          <div class="face back" id="faceBack"></div>
+        </div>
+      </div>
+      <div class="rate" id="rateRow">
+        <button class="btn nao" data-r="nao">Não sei</button>
+        <button class="btn quase" data-r="quase">Quase</button>
+        <button class="btn sei" data-r="sei">Sei! +10</button>
+      </div>
+      <div class="row between">
+        <button class="btn" id="btnPrev" aria-label="Cartão anterior">← Anterior</button>
+        <button class="btn lav" id="btnSpeak">Ouvir ♪</button>
+        <button class="btn" id="btnNext" aria-label="Próximo cartão">Próximo →</button>
+      </div>
+      <p class="small muted" style="margin:0">Como estudar: diga a leitura e o significado em voz alta antes de virar. No verso, leia o exemplo inteiro. Separe em três montes (sei / quase / não sei) e repita o monte “não sei” no dia seguinte.</p>
+    </section>
+
+    <!-- SIMULADO -->
+    <section id="view-sim" role="tabpanel" aria-labelledby="tab-sim" class="panel stack" hidden></section>
+
+    <!-- DESAFIO -->
+    <section id="view-quiz" role="tabpanel" aria-labelledby="tab-quiz" class="panel stack" hidden></section>
+
+    <!-- PROGRESSO -->
+    <section id="view-stats" role="tabpanel" aria-labelledby="tab-stats" class="panel stack" hidden></section>
+  </main>
+
+  <footer class="muted">Conteúdo: Simulado N5 文字・語彙 (24 questões) e Flashcards Mojigoi N5 (32 cartões) · Trilha sonora original gerada no navegador, no estilo City Pop.</footer>
+</div>
+
+<div class="mascot" id="mascot" aria-live="polite">
+  <div class="bubble" id="bubble">やあ！ Vamos estudar?</div>
+  <svg viewBox="0 0 100 100" id="mascotSvg" role="img" aria-label="Mascote Neko">
+    <path d="M18 40 L24 10 L44 28 Z" fill="#FFD9A0" stroke="#4B3A5E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M82 40 L76 10 L56 28 Z" fill="#FFD9A0" stroke="#4B3A5E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M24 16 L28 30 L36 26 Z M76 16 L72 30 L64 26 Z" fill="#FF9EC7"/>
+    <ellipse cx="50" cy="58" rx="40" ry="34" fill="#FFF3DD" stroke="#4B3A5E" stroke-width="3"/>
+    <g class="normal"><ellipse cx="36" cy="56" rx="4.5" ry="6" fill="#4B3A5E"/><ellipse cx="64" cy="56" rx="4.5" ry="6" fill="#4B3A5E"/>
+      <circle cx="37.5" cy="54" r="1.6" fill="#fff"/><circle cx="65.5" cy="54" r="1.6" fill="#fff"/></g>
+    <g class="happy"><path d="M30 58 Q36 50 42 58 M58 58 Q64 50 70 58" stroke="#4B3A5E" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
+    <g class="sad"><path d="M30 54 L42 58 M70 54 L58 58" stroke="#4B3A5E" stroke-width="3.5" stroke-linecap="round"/></g>
+    <ellipse cx="26" cy="68" rx="7" ry="4" fill="#FF9EC7" opacity=".7"/><ellipse cx="74" cy="68" rx="7" ry="4" fill="#FF9EC7" opacity=".7"/>
+    <path d="M44 66 Q47 70 50 66 Q53 70 56 66" stroke="#4B3A5E" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <rect x="30" y="80" width="40" height="10" rx="3" fill="#5A4A73"/>
+  </svg>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+"use strict";
+/* ============ DADOS ============ */
+const CARDS = [
+ {id:1,w:"電気屋",r:"でんきや",m:"loja de eletrônicos",c:"LUGAR",src:"U2 · Q1",ex:"でんきやで カメラを かいました。",pt:"Comprei uma câmera na loja de eletrônicos."},
+ {id:2,w:"駅",r:"えき",m:"estação (de trem)",c:"LUGAR",src:"U4 L17 · Q2",ex:"えきの まえで まって います。",pt:"Estou esperando em frente à estação."},
+ {id:3,w:"新しい",r:"あたらしい",m:"novo",c:"ADJETIVO い",src:"U2 L5 · Q3",ex:"あたらしい でんしじしょです。",pt:"É um dicionário eletrônico novo."},
+ {id:4,w:"安い",r:"やすい",m:"barato",c:"ADJETIVO い",src:"U4 L21 · Q4",ex:"この みせは やすいです。",pt:"Esta loja é barata."},
+ {id:5,w:"公園",r:"こうえん",m:"parque",c:"LUGAR",s:1,src:"U4 L18 · Q5",ex:"こうえんが あります。",pt:"Há um parque.",tip:"Vogal longa: こ-う-え-ん (não こえん)"},
+ {id:6,w:"読みます",r:"よみます",m:"ler",c:"VERBO",src:"U5 L24 · Q6",ex:"まんがを よみます。",pt:"Leio mangá."},
+ {id:7,w:"三時",r:"さんじ",m:"três horas",c:"TEMPO",src:"U5 時間 · Q7",ex:"三時に かえります。",pt:"Volto às três horas."},
+ {id:8,w:"上手",r:"じょうず",m:"habilidoso, bom em",c:"ADJETIVO な",src:"U5 L23 · Q8",ex:"サッカーが じょうずです。",pt:"É bom em futebol."},
+ {id:9,w:"店",r:"みせ",m:"loja",c:"LUGAR",src:"U4 L21 · Q9",ex:"みせは えきの ちかくに あります。",pt:"A loja fica perto da estação."},
+ {id:10,w:"高い",r:"たかい",m:"caro; alto",c:"ADJETIVO い",s:1,src:"U2 L7 · Q10",ex:"この カメラは たかいです。",pt:"Esta câmera é cara.",tip:"Não confunda: 高 (たかい) ≠ 京 (きょう)"},
+ {id:11,w:"前",r:"まえ",m:"frente; antes",c:"POSIÇÃO",src:"U4 L17 · Q11",ex:"えきの まえで あいましょう。",pt:"Vamos nos encontrar em frente à estação."},
+ {id:12,w:"父",r:"ちち",m:"(meu) pai",c:"FAMÍLIA",src:"U5 家族 · Q12",ex:"ちちは ぎんこういんです。",pt:"Meu pai é bancário."},
+ {id:13,w:"見ます",r:"みます",m:"ver, assistir",c:"VERBO",src:"U5 L27 · Q13",ex:"えいがを みます。",pt:"Assisto a um filme."},
+ {id:14,w:"チェックイン",r:"ちぇっくいん",m:"check-in",c:"AEROPORTO",s:1,src:"U6 L31 · Q14/Q18",ex:"くうこうで チェックインします。",pt:"Faço o check-in no aeroporto.",tip:"Katakana: チェ + ッ + ク + イ + ン"},
+ {id:15,w:"買います",r:"かいます",m:"comprar",c:"VERBO",s:1,src:"U3 L9 · Q15",ex:"でんきやで じしょを かいました。",pt:"Comprei um dicionário na loja de eletrônicos.",tip:"Bloco fixo: 〜を かいます"},
+ {id:16,w:"安くて",r:"やすくて",m:"barato e…",c:"CONJUGAÇÃO",s:1,src:"U4 L22 · Q16",ex:"やすくて おいしいです。",pt:"É barato e gostoso.",tip:"い-adj: やすい → やす + くて"},
+ {id:17,w:"家族",r:"かぞく",m:"família",c:"FAMÍLIA",s:1,src:"U5 家族 · Q17",ex:"わたしの かぞくは 4にんです。",pt:"Minha família tem 4 pessoas.",tip:"かぞく (família) ≠ きょうだい (irmãos)"},
+ {id:18,w:"多い",r:"おおい",m:"muitos, numeroso",c:"ADJETIVO い",s:1,src:"U4 L21 · Q19",ex:"やすい みせが おおいです。",pt:"Há muitas lojas baratas.",tip:"Antônimo: すくない (poucos)"},
+ {id:19,w:"上手に なります",r:"じょうずに なります",m:"ficar bom em",c:"GRAMÁTICA",src:"U5 L23 · Q20",ex:"にほんごが じょうずに なりました。",pt:"Meu japonês ficou bom."},
+ {id:20,w:"見に 行きます",r:"みに いきます",m:"ir ver",c:"GRAMÁTICA",s:1,src:"U5 L27 · Q21",ex:"えいがを みに いきませんか。",pt:"Vamos ver um filme?",tip:"Finalidade: み(ます) + に 行きます"},
+ {id:21,w:"古い",r:"ふるい",m:"velho (objeto)",c:"ADJETIVO い",s:1,src:"U2 L5 · Q22",ex:"この かばんは ふるいです。",pt:"Esta bolsa é velha.",tip:"= あたらしく ありません"},
+ {id:22,w:"あさって",r:"あさって",m:"depois de amanhã",c:"TEMPO",src:"U5 カレンダー · Q23",ex:"あさって アメよこに いきます。",pt:"Depois de amanhã vou à Ameyoko."},
+ {id:23,w:"図書館",r:"としょかん",m:"biblioteca",c:"LUGAR",s:1,src:"U4 ところ · Q24",ex:"としょかんで 本を かります。",pt:"Pego livros emprestados na biblioteca.",tip:"= 本を かりる ところ"},
+ {id:24,w:"映画",r:"えいが",m:"filme",c:"LAZER",src:"U5 L27 · Q13/Q21",ex:"いっしょに えいがを みましょう。",pt:"Vamos ver um filme juntos."},
+ {id:25,w:"新しく ありません",r:"あたらしく ありません",m:"não é novo",c:"CONJUGAÇÃO",s:1,src:"U2 L5 · reforço Q22",ex:"この かばんは あたらしく ありません。",pt:"Esta bolsa não é nova.",tip:"い-adj negativo: 〜い → 〜く ありません"},
+ {id:26,w:"少ない",r:"すくない",m:"poucos",c:"ADJETIVO い",s:1,src:"reforço Q19",ex:"この まちは みせが すくないです。",pt:"Esta cidade tem poucas lojas.",tip:"Par: おおい ↔ すくない"},
+ {id:27,w:"安くない",r:"やすくない",m:"não é barato",c:"CONJUGAÇÃO",s:1,src:"reforço Q16",ex:"この とけいは やすくないです。",pt:"Este relógio não é barato.",tip:"やすい → やすくない / やすく ありません"},
+ {id:28,w:"母",r:"はは",m:"(minha) mãe",c:"FAMÍLIA",src:"U5 家族 · reforço Q17",ex:"ちちと ははと あねと わたしです。",pt:"Meu pai, minha mãe, minha irmã mais velha e eu."},
+ {id:29,w:"兄弟",r:"きょうだい",m:"irmãos",c:"FAMÍLIA",s:1,src:"U5 家族 · reforço Q17",ex:"きょうだいは いますか。",pt:"Você tem irmãos?",tip:"Não é “família” (かぞく)"},
+ {id:30,w:"空港",r:"くうこう",m:"aeroporto",c:"AEROPORTO",s:1,src:"U6 · reforço Q18",ex:"くうこうに つきました。",pt:"Cheguei ao aeroporto.",tip:"Duas vogais longas: く-う-こ-う"},
+ {id:31,w:"ところ",r:"ところ",m:"lugar",c:"GRAMÁTICA",s:1,src:"U4 L20 · reforço Q24",ex:"「アメよこ」と いう ところ",pt:"Um lugar chamado Ameyoko.",tip:"Paráfrase: 〜する ところ = lugar onde se faz…"},
+ {id:32,w:"ほしい",r:"ほしい",m:"querer (algo)",c:"ADJETIVO い",src:"U3 L10 · reforço Q15",ex:"あたらしい パソコンが ほしいです。",pt:"Quero um computador novo."}
+];
+const CARD = Object.fromEntries(CARDS.map(c => [c.id, c]));
+const PAIRS = [4,16,27,18,26,3,21,25];
+
+const SECTIONS = {
+ 1:{t:"もんだい1",pt:"Leitura de kanji",ins:"＿＿＿の ことばは ひらがなで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんで ください。"},
+ 2:{t:"もんだい2",pt:"Escrita (kanji/katakana)",ins:"＿＿＿の ことばは どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんで ください。"},
+ 3:{t:"もんだい3",pt:"Vocabulário em contexto",ins:"（　　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんで ください。"},
+ 4:{t:"もんだい4",pt:"Paráfrase",ins:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんで ください。"}
+};
+// a = alternativa correta (1–4), conforme o gabarito comentado
+const QS = [
+ {n:1,s:1,q:"あの [電気屋]は とても 大きいです。",o:["でんきや","てんきや","でんぎや","てんきいや"],a:1,cd:[1],x:"電気屋 = でんきや. Atenção ao で com dakuten e ao き sem dakuten nem い extra."},
+ {n:2,s:1,q:"[駅]の まえで まって います。",o:["いき","えぎ","えいき","えき"],a:4,cd:[2],x:"駅 = えき (estação). Duas sílabas curtas, sem dakuten."},
+ {n:3,s:1,q:"きのう [新しい] かばんを かいました。",o:["あだらしい","あらたしい","あたらしい","あたらし"],a:3,cd:[3],x:"新しい = あ・た・ら・しい. É た (sem dakuten) e o adjetivo termina em い."},
+ {n:4,s:1,q:"この みせは [安い]です。",o:["たかい","やすい","やさい","あすい"],a:2,cd:[4],x:"安い = やすい (barato). たかい é o contrário; やさい é “verdura”."},
+ {n:5,s:1,q:"[公園]に いきましょう。",o:["こうえん","こえん","こうえい","こおえん"],a:1,cd:[5],x:"公園 = こうえん. A vogal longa do “o” se escreve com う: こ-う-え-ん."},
+ {n:6,s:1,q:"まいにち 日本の まんがを [読みます]。",o:["のみます","よみます","よびます","やみます"],a:2,cd:[6],x:"読みます = よみます (ler). のみます é “beber”, よびます é “chamar”."},
+ {n:7,s:1,q:"ちちは [三時]に かえります。",o:["さんし","さじ","みっじ","さんじ"],a:4,cd:[7],x:"三時 = さんじ. O 時 de horas se lê じ."},
+ {n:8,s:1,q:"あには サッカーが [上手]です。",o:["じょうしゅ","じょず","じょうず","うえず"],a:3,cd:[8],x:"上手 = じょうず: じょ com vogal longa (う) + ず."},
+ {n:9,s:2,q:"[みせ]は えきの ちかくに あります。",o:["占","店","床","応"],a:2,cd:[9],x:"みせ = 店. 占, 床 e 応 são parecidos, mas só 店 tem 广 + 占 formando “loja”."},
+ {n:10,s:2,q:"[たかい] カメラは かいません。",o:["高い","京い","亭い","古い"],a:1,cd:[10],x:"たかい = 高い. 京 e 亭 têm a parte de cima parecida; 古い é “velho”."},
+ {n:11,s:2,q:"えきの [まえ]で あいましょう。",o:["則","煎","前","剪"],a:3,cd:[11],x:"まえ = 前 (frente). Os outros kanji só se parecem visualmente."},
+ {n:12,s:2,q:"わたしの [ちち]は ぎんこういんです。",o:["交","文","又","父"],a:4,cd:[12],x:"ちち = 父 (meu pai). 交 e 文 têm traços parecidos."},
+ {n:13,s:2,q:"あした えいがを [みます]。",o:["貝ます","見ます","兄ます","目ます"],a:2,cd:[13],x:"みます = 見ます: 目 (olho) + pernas 儿. 兄 = irmão mais velho, 貝 = concha."},
+ {n:14,s:2,q:"くうこうで [ちぇっくいん]を します。",o:["チェックイソ","テェックイン","チェックイン","チェツクイン"],a:3,cd:[14],x:"チェックイン: チ (não テ), ッ pequeno, e ン no fim (não ソ)."},
+ {n:15,s:3,q:"でんきやで でんしじしょを （　　）。",o:["かいました","よみました","ききました","ねました"],a:1,cd:[15,32],x:"Na loja de eletrônicos se COMPRA o dicionário: 〜を かいました."},
+ {n:16,s:3,q:"この みせの すしは （　　）くて おいしいです。",o:["ひく","やす","おお","あお"],a:2,cd:[16,27,4],x:"やすい → やすくて: “barato e gostoso”. As outras formam ひくくて, おおくて, あおくて, que não combinam com sushi."},
+ {n:17,s:3,q:"わたしの （　　）は 4にんです。ちちと ははと あねと わたしです。",o:["りょうしん","きょうだい","かぞく","ともだち"],a:3,cd:[17,29,28],x:"Pai, mãe, irmã e eu = かぞく (família). きょうだい são só os irmãos; りょうしん são só os pais."},
+ {n:18,s:3,q:"くうこうに ついてから、（　　）を します。",o:["チェックイン","カレンダー","コンビニ","カメラ"],a:1,cd:[14,30],x:"Ao chegar no aeroporto (くうこう) se faz o チェックイン."},
+ {n:19,s:3,q:"「アメよこ」は やすい みせが （　　）です。",o:["わかい","ひくい","おおい","さむい"],a:3,cd:[18,26],x:"みせが おおい = há muitas lojas. Antônimo: すくない."},
+ {n:20,s:3,q:"まいにち れんしゅうしました。にほんごが （　　）に なりました。",o:["きらい","じょうず","しずか","ひま"],a:2,cd:[19,8],x:"Treinou todo dia → じょうずに なりました (ficou bom)."},
+ {n:21,s:3,q:"しゅうまつ、いっしょに えいがを （　　）に いきませんか。",o:["ね","き","か","み"],a:4,cd:[20,24],x:"Finalidade: verbo-ます sem ます + に 行きます. 見ます → み + に いきませんか (vamos ver?)."},
+ {n:22,s:4,q:"[この かばんは あたらしく ありません。]",o:["この かばんは たかいです。","この かばんは ふるいです。","この かばんは やすいです。","この かばんは ちいさいです。"],a:2,cd:[25,21,3],x:"あたらしく ありません (não é nova) = ふるい (velha). Negativo de い-adj: 〜い → 〜く ありません."},
+ {n:23,s:4,q:"きょうは 15にちです。[あさって アメよこに いきます。]",o:["13にちに アメよこに いきます。","14にちに アメよこに いきます。","16にちに アメよこに いきます。","17にちに アメよこに いきます。"],a:4,cd:[22],x:"あさって = depois de amanhã. Hoje é 15 → 15 + 2 = 17."},
+ {n:24,s:4,q:"[きのう としょかんへ いきました。]",o:["きのう 本を かう ところへ いきました。","きのう 本を かりる ところへ いきました。","きのう ごはんを たべる ところへ いきました。","きのう ひこうきに のる ところへ いきました。"],a:2,cd:[23,31],x:"としょかん = 本を かりる ところ (lugar onde se pega livro emprestado). Comprar livros (かう) é na livraria."}
+];
+const ORIGINAL_WRONG = [5,10,15,16,17,18,19,21,22,24];
+const ORIGINAL = {score:14, by:{1:[7,8],2:[5,6],3:[1,7],4:[1,3]}};
+
+const LEVELS = ["たまご","ひよこ","こねこ","うさぎ","パンダ","さくら","おにぎり","ほし","にんじゃ","せんせい"];
+const XP_PER_LV = 400;
+
+/* ============ ESTADO ============ */
+const KEY = "mojigoi-n5-kawaii-v1";
+const DEF = {xp:0, ratings:{}, simBest:null, simLast:null, quizBest:0, plays:0, combo:0};
+let S;
+try { S = Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){ S = Object.assign({}, DEF); }
+S.combo = 0;
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ============ HUD / PONTOS ============ */
+const lvlOf = xp => Math.floor(xp / XP_PER_LV) + 1;
+const lvlName = l => LEVELS[Math.min(l-1, LEVELS.length-1)];
+function renderHud(){
+  $("#ptsVal").textContent = S.xp.toLocaleString("pt-BR");
+  const l = lvlOf(S.xp);
+  $("#hudLvl").textContent = `Lv ${l} · ${lvlName(l)}`;
+  const c = $("#hudCombo");
+  c.textContent = `コンボ ×${S.combo}`;
+  c.classList.toggle("hot", S.combo >= 3);
+}
+function addXP(n, x, y){
+  if (n <= 0) return;
+  const before = lvlOf(S.xp);
+  S.xp += Math.round(n); save(); renderHud();
+  const p = $("#hudPts"); p.classList.remove("bump"); void p.offsetWidth; p.classList.add("bump");
+  if (x != null){
+    const f = document.createElement("div");
+    f.className = "floatpts"; f.textContent = "+" + Math.round(n);
+    f.style.left = x + "px"; f.style.top = (y - 20) + "px";
+    document.body.appendChild(f); setTimeout(() => f.remove(), 1200);
+  }
+  const after = lvlOf(S.xp);
+  if (after > before){
+    const lv = document.createElement("div"); lv.className = "levelup";
+    lv.innerHTML = `<div class="jp">レベルアップ！<br>Lv ${after} · ${lvlName(after)}</div>`;
+    document.body.appendChild(lv); setTimeout(() => lv.remove(), 1900);
+    sfx.levelup(); confetti.rain();
+    say(`レベルアップ！ Agora você é ${lvlName(after)}!`, "happy");
+  }
+}
+const multiplier = () => 1 + Math.min(S.combo, 10) * 0.1;
+function hit(){ S.combo++; renderHud(); }
+function miss(){ S.combo = 0; renderHud(); }
+
+/* ============ MASCOTE ============ */
+let sayT;
+function say(msg, mood){
+  const b = $("#bubble"), m = $("#mascot");
+  b.textContent = msg; b.classList.add("show");
+  m.classList.remove("is-happy","is-sad","jump");
+  if (mood === "happy"){ void m.offsetWidth; m.classList.add("is-happy","jump"); }
+  if (mood === "sad") m.classList.add("is-sad");
+  clearTimeout(sayT); sayT = setTimeout(() => { b.classList.remove("show"); m.classList.remove("is-happy","is-sad"); }, 3200);
+}
+const CHEERS = ["すごい！","やった！","かんぺき！","いいね！","じょうず！","さすが！"];
+const COMFORT = ["だいじょうぶ！","ドンマイ！","つぎ がんばろう！"];
+const pick = a => a[Math.floor(Math.random()*a.length)];
+$("#mascotSvg").addEventListener("click", () => say(pick(["がんばって！ Você consegue!","Estude primeiro os cartões ★ REVISAR.","Dica: もんだい3 e 4 cobram o SENTIDO da palavra.","Pares: 安い / 安くて / 安くない"]), "happy"));
+
+/* ============ CONFETE ============ */
+const confetti = (() => {
+  const cv = $("#confetti"), ctx = cv.getContext("2d");
+  const COLORS = ["#FF94C2","#B9A2FF","#7FDDBF","#FFDF7E","#93CCFF","#FFB3A7","#FFFFFF"];
+  let parts = [], running = false, W = 0, H = 0, dpr = 1;
+  function size(){ dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  addEventListener("resize", size); size();
+  function star(r){ ctx.beginPath(); for (let i=0;i<10;i++){ const a = i*Math.PI/5 - Math.PI/2, rr = i%2 ? r*.45 : r; ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); } ctx.closePath(); ctx.fill(); }
+  function heart(r){ ctx.beginPath(); ctx.moveTo(0, r*.35); ctx.bezierCurveTo(r, -r*.4, r*.5, -r*1.1, 0, -r*.45); ctx.bezierCurveTo(-r*.5, -r*1.1, -r, -r*.4, 0, r*.35); ctx.fill(); }
+  function spawn(x, y, n, spread, speed, up){
+    for (let i=0;i<n;i++){
+      const a = (up ? -Math.PI/2 : 0) + (Math.random()-.5) * spread;
+      const v = speed * (.45 + Math.random()*.75);
+      parts.push({x, y, vx:Math.cos(a)*v, vy:Math.sin(a)*v, g:.16+Math.random()*.08, r:4+Math.random()*6,
+        rot:Math.random()*6.28, vr:(Math.random()-.5)*.3, tilt:Math.random()*6.28, vt:.08+Math.random()*.12,
+        col:COLORS[(Math.random()*COLORS.length)|0], shape:(Math.random()*4)|0, life:0, max:140+Math.random()*80});
+    }
+    if (!running){ running = true; requestAnimationFrame(tick); }
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    parts = parts.filter(p => p.life < p.max && p.y < H + 40);
+    for (const p of parts){
+      p.life++; p.vx *= .985; p.vy = p.vy*.985 + p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.tilt += p.vt;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(1, Math.cos(p.tilt));
+      ctx.globalAlpha = Math.min(1, (p.max - p.life)/30); ctx.fillStyle = p.col;
+      if (p.shape === 0) ctx.fillRect(-p.r/2, -p.r, p.r, p.r*2);
+      else if (p.shape === 1){ ctx.beginPath(); ctx.arc(0,0,p.r*.6,0,7); ctx.fill(); }
+      else if (p.shape === 2) star(p.r);
+      else heart(p.r*.9);
+      ctx.restore();
+    }
+    if (parts.length) requestAnimationFrame(tick); else { running = false; ctx.clearRect(0,0,W,H); }
+  }
+  const k = reduced ? .3 : 1;
+  return {
+    burst(x, y, power = 1){ spawn(x, y, Math.round(70*power*k), Math.PI*1.3, 13 + 3*power, true); },
+    rain(){ for (let i=0;i<6;i++) setTimeout(() => spawn(Math.random()*W, -10, Math.round(35*k), Math.PI*.6, 4, false), i*160);
+            spawn(W*.15, H, Math.round(60*k), .9, 20, true); spawn(W*.85, H, Math.round(60*k), .9, 20, true); }
+  };
+})();
+function celebrate(el, power){
+  const r = el ? el.getBoundingClientRect() : {left:innerWidth/2, width:0, top:innerHeight/2, height:0};
+  const x = r.left + r.width/2, y = r.top + r.height/2;
+  confetti.burst(x, y, power);
+  window.dispatchEvent(new CustomEvent("kawaii:correct"));
+  return {x, y};
+}
+
+/* ============ ÁUDIO: trilha City Pop original + efeitos ============ */
+let AC = null, master = null, musicBus = null, sfxBus = null;
+function audio(){
+  if (AC) { if (AC.state === "suspended") AC.resume(); return AC; }
+  const C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
+  AC = new C();
+  const comp = AC.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3;
+  master = AC.createGain(); master.gain.value = .9; master.connect(comp); comp.connect(AC.destination);
+  musicBus = AC.createGain(); musicBus.gain.value = 0; musicBus.connect(master);
+  sfxBus = AC.createGain(); sfxBus.gain.value = .5; sfxBus.connect(master);
+  return AC;
+}
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+
+const music = (() => {
+  // 106 BPM, semicolcheias. Progressão 王道進行 (IVmaj7–V7–iii7–vi7) com variação, timbres de Rhodes, baixo funk e bateria eletrônica.
+  const BPM = 106, STEP = 60 / BPM / 4;
+  const N = {C:0,"C#":1,D:2,Eb:3,E:4,F:5,"F#":6,G:7,Ab:8,A:9,Bb:10,B:11};
+  const ch = (root, oct, ints) => ints.map(i => 12*(oct+1) + N[root] + i);
+  const M7=[0,4,7,11,14], D7=[0,4,7,10,14], m7=[0,3,7,10,14], S4=[0,5,7,10,14];
+  const PROG = [
+    {c:ch("F",3,M7), b:"F"}, {c:ch("G",3,D7), b:"G"}, {c:ch("E",3,m7), b:"E"}, {c:ch("A",3,m7), b:"A"},
+    {c:ch("D",3,m7), b:"D"}, {c:ch("E",3,m7), b:"E"}, {c:ch("F",3,M7), b:"F"}, {c:ch("G",3,S4), b:"G"}
+  ];
+  // melodia original em notas MIDI por semicolcheia (null = pausa), 16 passos por compasso
+  const _ = null;
+  const MEL = [
+    [_,_,_,_, 76,_,79,_, 81,_,_,79, _,76,_,_],
+    [74,_,_,_, _,_,71,_, 74,_,76,_, _,_,_,_],
+    [_,_,79,_, 79,_,76,_, 79,_,83,_, 81,_,79,_],
+    [76,_,_,_, _,_,_,_, 72,_,74,_, 76,_,_,_],
+    [_,_,77,_, 76,_,74,_, 72,_,_,74, _,_,77,_],
+    [79,_,_,_, _,_,76,_, 74,_,71,_, _,_,_,_],
+    [72,_,74,_, 76,_,_,79, _,_,81,_, 79,_,76,_],
+    [74,_,_,_, _,_,_,_, _,_,72,_, 74,_,79,_]
+  ];
+  const BASS = [ [0,0],[3,0],[6,12],[8,0],[10,7],[11,12],[14,0] ]; // [passo, intervalo]
+  let playing = false, step = 0, next = 0, timer = null, noiseBuf = null, delay = null, trem = null;
+
+  function setup(){
+    if (delay) return;
+    delay = AC.createDelay(1); delay.delayTime.value = STEP*3;
+    const fb = AC.createGain(); fb.gain.value = .32;
+    const wet = AC.createGain(); wet.gain.value = .28;
+    const lp = AC.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600;
+    delay.connect(lp); lp.connect(fb); fb.connect(delay); lp.connect(wet); wet.connect(musicBus);
+    noiseBuf = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
+    const d = noiseBuf.getChannelData(0); for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+    // tremolo do Rhodes
+    trem = AC.createGain(); trem.gain.value = .85; trem.connect(musicBus); trem.connect(delay);
+    const lfo = AC.createOscillator(), lg = AC.createGain(); lfo.frequency.value = 4.2; lg.gain.value = .15;
+    lfo.connect(lg); lg.connect(trem.gain); lfo.start();
+  }
+  function rhodes(note, t, dur, vel){
+    const f = mtof(note);
+    const o1 = AC.createOscillator(), o2 = AC.createOscillator(), g = AC.createGain(), g2 = AC.createGain();
+    o1.type = "sine"; o1.frequency.value = f; o2.type = "triangle"; o2.frequency.value = f*2.003;
+    g2.gain.value = .18; o2.connect(g2); g2.connect(g); o1.connect(g); g.connect(trem);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.075*vel, t+.008);
+    g.gain.exponentialRampToValueAtTime(.025*vel, t+.25); g.gain.exponentialRampToValueAtTime(.0005, t+dur);
+    o1.start(t); o2.start(t); o1.stop(t+dur+.05); o2.stop(t+dur+.05);
+  }
+  function bass(note, t, dur){
+    const o = AC.createOscillator(), f = AC.createBiquadFilter(), g = AC.createGain();
+    o.type = "sawtooth"; o.frequency.value = mtof(note);
+    f.type = "lowpass"; f.Q.value = 6; f.frequency.setValueAtTime(1500, t); f.frequency.exponentialRampToValueAtTime(220, t+.14);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.24, t+.005); g.gain.exponentialRampToValueAtTime(.0005, t+dur);
+    o.connect(f); f.connect(g); g.connect(musicBus); o.start(t); o.stop(t+dur+.02);
+  }
+  function lead(note, t, dur){
+    const o = AC.createOscillator(), o2 = AC.createOscillator(), f = AC.createBiquadFilter(), g = AC.createGain();
+    o.type = "square"; o2.type = "sawtooth"; o.frequency.value = mtof(note); o2.frequency.value = mtof(note)*1.004;
+    const vib = AC.createOscillator(), vg = AC.createGain(); vib.frequency.value = 5.5; vg.gain.value = 3;
+    vib.connect(vg); vg.connect(o.frequency); vg.connect(o2.frequency);
+    f.type = "lowpass"; f.frequency.value = 2400;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.045, t+.02); g.gain.setValueAtTime(.04, t+dur*.7); g.gain.exponentialRampToValueAtTime(.0005, t+dur);
+    o.connect(f); o2.connect(f); f.connect(g); g.connect(musicBus); g.connect(delay);
+    [o,o2,vib].forEach(x => { x.start(t); x.stop(t+dur+.05); });
+  }
+  function kick(t){
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t+.12);
+    g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(.001, t+.3);
+    o.connect(g); g.connect(musicBus); o.start(t); o.stop(t+.32);
+  }
+  function noise(t, dur, type, freq, vol, dest){
+    const s = AC.createBufferSource(), f = AC.createBiquadFilter(), g = AC.createGain();
+    s.buffer = noiseBuf; f.type = type; f.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0008, t+dur);
+    s.connect(f); f.connect(g); g.connect(dest || musicBus); s.start(t, Math.random()*.5); s.stop(t+dur+.02);
+  }
+  function snare(t){
+    noise(t, .18, "bandpass", 1900, .3);
+    const o = AC.createOscillator(), g = AC.createGain(); o.type = "triangle"; o.frequency.value = 190;
+    g.gain.setValueAtTime(.18, t); g.gain.exponentialRampToValueAtTime(.001, t+.09); o.connect(g); g.connect(musicBus); o.start(t); o.stop(t+.1);
+  }
+  function schedule(s, t){
+    const bar = Math.floor(s / 16) % PROG.length, i = s % 16, P = PROG[bar];
+    if (i === 0 || i === 6 || i === 10) P.c.forEach((n, k) => rhodes(n + (k===4 ? 0 : 12), t + k*.006, i === 0 ? 1.4 : .7, i === 0 ? 1 : .8));
+    if (i === 0 || i === 8 || (i === 10 && bar % 2)) kick(t);
+    if (i === 4 || i === 12) snare(t);
+    if (i % 2 === 0) noise(t, .05, "highpass", 8000, i % 4 === 2 ? .09 : .05);
+    if (i === 14) noise(t, .22, "highpass", 7000, .06);
+    const root = 12*2 + N[P.b] + 12; // oitava 2
+    for (const [st, iv] of BASS) if (st === i) bass(root + iv, t, iv === 12 ? .12 : .2);
+    const m = MEL[bar][i];
+    if (m != null && Math.floor(s / 128) % 2 === 1) { // melodia entra na 2ª volta e alterna
+      let len = 1; while (i+len < 16 && MEL[bar][i+len] == null && len < 4) len++;
+      lead(m, t, STEP*len*.95);
+    }
+  }
+  function loop(){
+    while (next < AC.currentTime + .15){ schedule(step, next); step++; next += STEP * (step % 2 ? 1.04 : .96); } // leve swing
+  }
+  return {
+    get on(){ return playing; },
+    toggle(){
+      if (!audio()) return false;
+      setup();
+      playing = !playing;
+      const t = AC.currentTime;
+      musicBus.gain.cancelScheduledValues(t);
+      musicBus.gain.setValueAtTime(musicBus.gain.value, t);
+      musicBus.gain.linearRampToValueAtTime(playing ? .5 : 0, t + (playing ? .6 : .4));
+      if (playing){ step = 0; next = t + .08; clearInterval(timer); timer = setInterval(loop, 25); }
+      else setTimeout(() => { if (!playing) clearInterval(timer); }, 450);
+      return playing;
+    },
+    noise
+  };
+})();
+
+const sfx = (() => {
+  function tone(f, t, dur, type = "sine", vol = .25){
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t+.01); g.gain.exponentialRampToValueAtTime(.0005, t+dur);
+    o.connect(g); g.connect(sfxBus); o.start(t); o.stop(t+dur+.02);
+  }
+  return {
+    ok(){ if (!audio()) return; const t = AC.currentTime; [84,88,91,96].forEach((m,i) => tone(mtof(m), t+i*.07, .35, "triangle", .22)); tone(mtof(96), t+.28, .6, "sine", .12); },
+    bad(){ if (!audio()) return; const t = AC.currentTime; tone(mtof(62), t, .18, "square", .07); tone(mtof(58), t+.14, .3, "square", .06); },
+    flip(){ if (!audio()) return; const t = AC.currentTime; tone(mtof(79), t, .08, "sine", .08); tone(mtof(86), t+.05, .1, "sine", .06); },
+    levelup(){ if (!audio()) return; const t = AC.currentTime; [72,76,79,84,79,84,88].forEach((m,i) => tone(mtof(m), t+i*.09, .3, "triangle", .2)); }
+  };
+})();
+
+$("#btnMusic").addEventListener("click", e => {
+  const on = music.toggle();
+  e.currentTarget.setAttribute("aria-pressed", on ? "true" : "false");
+  if (on) say("♪ City Pop ligado! Ritmo de estudo noturno.", "happy");
+});
+
+/* ============ ABAS ============ */
+const VIEWS = ["cards","sim","quiz","stats"];
+function showTab(name){
+  VIEWS.forEach(v => {
+    $("#tab-"+v).setAttribute("aria-selected", v === name ? "true" : "false");
+    $("#view-"+v).hidden = v !== name;
+  });
+  if (name === "stats") renderStats();
+  if (name === "sim" && !sim.active) renderSimIntro();
+  if (name === "quiz" && !quiz.active) renderQuizIntro();
+  try { sessionStorage.setItem(KEY+"-tab", name); } catch(e){}
+}
+VIEWS.forEach(v => $("#tab-"+v).addEventListener("click", () => showTab(v)));
+
+/* ============ FLASHCARDS ============ */
+const fc = {deck:"all", list:[], i:0, flipped:false, custom:null};
+const DECKS = [
+  {k:"all", label:"Todos", ids:() => CARDS.map(c => c.id)},
+  {k:"star", label:"★ Revisar", ids:() => CARDS.filter(c => c.s).map(c => c.id)},
+  {k:"pairs", label:"Pares de reforço", ids:() => PAIRS},
+  {k:"nao", label:"Não sei", ids:() => CARDS.filter(c => S.ratings[c.id] === "nao").map(c => c.id)},
+  {k:"custom", label:"Meus erros", ids:() => fc.custom || []}
+];
+function renderChips(){
+  $("#deckChips").innerHTML = DECKS.filter(d => d.k !== "custom" || fc.custom).map(d =>
+    `<button class="chip" data-deck="${d.k}" aria-pressed="${fc.deck === d.k}">${d.label} (${d.ids().length})</button>`).join("");
+}
+$("#deckChips").addEventListener("click", e => {
+  const b = e.target.closest("[data-deck]"); if (!b) return;
+  setDeck(b.dataset.deck);
+});
+function setDeck(k, shuffled){
+  fc.deck = k; const d = DECKS.find(x => x.k === k);
+  fc.list = shuffled ? shuffle(d.ids()) : d.ids().slice(); fc.i = 0;
+  renderChips(); renderCard();
+}
+$("#btnShuffle").addEventListener("click", () => { fc.list = shuffle(fc.list); fc.i = 0; renderCard(); say("シャッフル！ Cartões embaralhados.", "happy"); });
+
+function renderCard(){
+  const flip = $("#flip");
+  flip.classList.remove("on"); fc.flipped = false;
+  const n = fc.list.length;
+  $("#rateRow").hidden = !n;
+  if (!n){
+    $("#faceFront").className = "face front";
+    $("#faceFront").innerHTML = `<div class="empty"><h2 class="jp">からっぽ！</h2><p class="muted">Nenhum cartão neste monte ainda. Marque “Não sei” em algum cartão para ele aparecer aqui.</p></div>`;
+    $("#faceBack").innerHTML = ""; $("#cardCount").textContent = "0 cartões"; $("#cardBar").style.width = "0"; return;
+  }
+  const c = CARD[fc.list[fc.i]];
+  const long = c.w.length > 4;
+  $("#faceFront").className = "face front" + (c.s ? " star" : "");
+  $("#faceFront").innerHTML = `
+    <div class="tags"><span class="tag">${esc(c.c)}</span>${c.s ? '<span class="tag star">★ REVISAR</span>' : ""}<span class="tag num">#${c.id}</span></div>
+    <div class="word jp${long ? " long" : ""}">${esc(c.w)}</div>
+    <div class="prompt">Como se lê? O que significa? <span class="muted">(toque para virar)</span></div>`;
+  $("#faceBack").innerHTML = `
+    <div class="tags"><span class="tag">#${c.id} · ${esc(c.src)}</span></div>
+    <div class="back-body">
+      <div class="reading jp">${esc(c.r)}</div>
+      <div class="meaning">${esc(c.m)}</div>
+      <div class="example"><div class="jp">${esc(c.ex)}</div><div class="muted small">${esc(c.pt)}</div></div>
+      ${c.tip ? `<div class="tip jp">★ ${esc(c.tip)}</div>` : ""}
+    </div>`;
+  $("#cardCount").textContent = `Cartão ${fc.i+1} / ${n}`;
+  $("#cardBar").style.width = ((fc.i+1)/n*100) + "%";
+  document.querySelectorAll("#rateRow .btn").forEach(b => b.classList.toggle("cur", S.ratings[c.id] === b.dataset.r));
+}
+function flipCard(){ if (!fc.list.length) return; fc.flipped = !fc.flipped; $("#flip").classList.toggle("on", fc.flipped); sfx.flip(); }
+function move(d){ if (!fc.list.length) return; fc.i = (fc.i + d + fc.list.length) % fc.list.length; renderCard(); }
+$("#flip").addEventListener("click", flipCard);
+$("#flip").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); flipCard(); } });
+$("#btnPrev").addEventListener("click", () => move(-1));
+$("#btnNext").addEventListener("click", () => move(1));
+$("#rateRow").addEventListener("click", e => {
+  const b = e.target.closest("[data-r]"); if (!b || !fc.list.length) return;
+  const c = CARD[fc.list[fc.i]], r = b.dataset.r, prev = S.ratings[c.id];
+  S.ratings[c.id] = r; save();
+  if (r === "sei"){ const p = celebrate(b, .6); sfx.ok(); addXP(prev === "sei" ? 2 : 10, p.x, p.y); say(pick(CHEERS) + ` ${c.w} = ${c.r}`, "happy"); }
+  else if (r === "quase"){ const r2 = b.getBoundingClientRect(); addXP(5, r2.left + r2.width/2, r2.top); say("もうすこし！ Quase lá. Ele volta logo.", null); }
+  else { say("だいじょうぶ！ Foi para o monte “Não sei”.", "sad"); }
+  renderChips();
+  if (fc.deck === "nao" && r !== "nao"){ fc.list.splice(fc.i, 1); if (fc.i >= fc.list.length) fc.i = 0; renderCard(); }
+  else setTimeout(() => move(1), r === "sei" ? 450 : 200);
+});
+function speak(text){
+  try {
+    if (!("speechSynthesis" in window)) throw 0;
+    const u = new SpeechSynthesisUtterance(text); u.lang = "ja-JP"; u.rate = .85;
+    const v = speechSynthesis.getVoices().find(v => /ja/i.test(v.lang)); if (v) u.voice = v;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    if (!v && speechSynthesis.getVoices().length) say("Seu navegador não tem voz japonesa instalada.", null);
+  } catch(e){ say("Este navegador não consegue falar em voz alta.", null); }
+}
+$("#btnSpeak").addEventListener("click", () => { if (!fc.list.length) return; const c = CARD[fc.list[fc.i]]; speak(fc.flipped ? c.ex : c.r); });
+
+/* ============ SIMULADO ============ */
+const sim = {active:false, mode:"estudo", list:[], i:0, ans:{}, t0:0, timer:null, deadline:0};
+const view = $("#view-sim");
+const qHTML = s => esc(s).replace(/\[(.+?)\]/g, "<u>$1</u>").replace(/（　　）/g, '<span class="blank">（　）</span>');
+
+function renderSimIntro(){
+  sim.active = false; clearInterval(sim.timer);
+  const best = S.simBest;
+  view.innerHTML = `
+    <div class="stack">
+      <div class="eyebrow">日本語能力試験 N5 模擬試験</div>
+      <h2 class="jp" style="font-size:clamp(24px,5.5vw,34px)">言語知識（文字・語彙）</h2>
+      <p class="muted" style="margin:0">Vocabulário e Kanji · 24 questões · 20 minutos · TRY! N5 L1–31</p>
+      <div class="secgrid">${[1,2,3,4].map(k => `<div class="sec"><b class="jp">${SECTIONS[k].t}</b><span class="small">${SECTIONS[k].pt}</span><span class="muted small">${QS.filter(q => q.s === k).length} questões</span></div>`).join("")}</div>
+      <div class="modes">
+        <button class="mode" data-mode="estudo"><span class="eyebrow">Recomendado</span><h3 class="jp">べんきょう · Modo estudo</h3><span class="small">Correção na hora, explicação de cada alternativa, confete a cada acerto e bônus de combo.</span></button>
+        <button class="mode" data-mode="prova"><span class="eyebrow">Como no JLPT</span><h3 class="jp">ほんばん · Modo prova</h3><span class="small">Cronômetro de 20 minutos, sem correção até entregar. Dá para voltar e trocar respostas.</span></button>
+        <button class="mode" data-mode="erros"><span class="eyebrow">Diagnóstico do aluno</span><h3 class="jp">ふくしゅう · Só os pontos fracos</h3><span class="small">As 10 questões erradas no simulado original: 5, 10, 15, 16, 17, 18, 19, 21, 22, 24.</span></button>
+      </div>
+      <p class="small muted" style="margin:0">${best ? `Seu recorde: <b>${best.score}/24</b> (${Math.round(best.score/24*100)}%).` : "Primeira vez? O resultado original do aluno foi 14/24 (58%). Bora superar!"}</p>
+    </div>`;
+  view.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => {
+    const m = b.dataset.mode;
+    startSim(m === "erros" ? "estudo" : m, m === "erros" ? ORIGINAL_WRONG : null);
+  }));
+}
+function startSim(mode, subset){
+  sim.active = true; sim.mode = mode; sim.i = 0; sim.ans = {};
+  sim.list = subset ? QS.filter(q => subset.includes(q.n)) : QS.slice();
+  sim.t0 = Date.now(); clearInterval(sim.timer);
+  if (mode === "prova"){ sim.deadline = Date.now() + 20*60*1000; sim.timer = setInterval(tickSim, 500); }
+  renderQ();
+  say(mode === "prova" ? "はじめ！ 20 minutos. Boa prova!" : "がんばって！ Cada acerto vale confete.", "happy");
+}
+function tickSim(){
+  const left = Math.max(0, sim.deadline - Date.now());
+  const el = $("#simTimer"); if (el) el.textContent = fmt(left);
+  if (left <= 0){ clearInterval(sim.timer); say("おわり！ O tempo acabou.", null); finishSim(); }
+}
+const fmt = ms => { const s = Math.ceil(ms/1000); return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`; };
+
+function renderQ(){
+  const q = sim.list[sim.i], sec = SECTIONS[q.s], a = sim.ans[q.n];
+  const study = sim.mode === "estudo", locked = study && a != null;
+  const isCol = q.s === 4;
+  view.innerHTML = `
+    <div class="row between">
+      <span class="eyebrow">${study ? "Modo estudo" : "Modo prova"} · ${sim.i+1} / ${sim.list.length}</span>
+      ${study ? `<span class="pill combo">コンボ ×${S.combo}</span>` : `<span class="pill timer" id="simTimer">${fmt(sim.deadline - Date.now())}</span>`}
+    </div>
+    <div class="dots" id="dots">${sim.list.map((x, k) => {
+      const v = sim.ans[x.n]; let cl = "dot";
+      if (k === sim.i) cl += " cur";
+      if (v != null) cl += study ? (v === x.a ? " ok" : " no") : " done";
+      return `<button class="${cl}" data-k="${k}" aria-label="Questão ${x.n}">${x.n}</button>`; }).join("")}</div>
+    <div class="mondai"><b class="jp">${sec.t} <span class="small" style="font-family:var(--font-body)">· ${sec.pt}</span></b><span class="jp small">${sec.ins}</span></div>
+    <div class="qtext jp"><span class="qnum">${q.n}</span>${qHTML(q.q)}</div>
+    <div class="opts ${isCol ? "col" : ""} ${locked ? "locked" : ""}" id="opts">${q.o.map((o, k) => {
+      let cl = "opt jp";
+      if (locked){ if (k+1 === q.a) cl += " ok"; else if (k+1 === a) cl += " no"; }
+      else if (a === k+1) cl += " sel";
+      return `<button class="${cl}" data-o="${k+1}"><span class="k">${k+1}</span><span>${esc(o)}</span></button>`; }).join("")}</div>
+    <div id="fb">${locked ? feedbackHTML(q, a) : ""}</div>
+    <div class="row between">
+      <button class="btn" id="qPrev" ${sim.i === 0 ? "disabled" : ""}>← Anterior</button>
+      <button class="btn ghost small" id="qQuit">Sair</button>
+      ${sim.i === sim.list.length - 1
+        ? `<button class="btn primary" id="qFinish">${study ? "Ver resultado" : "Entregar prova"}</button>`
+        : `<button class="btn ${locked || (!study && a != null) ? "primary" : ""}" id="qNext">Próxima →</button>`}
+    </div>`;
+  $("#opts").addEventListener("click", e => { const b = e.target.closest("[data-o]"); if (b) choose(+b.dataset.o, b); });
+  $("#dots").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b){ sim.i = +b.dataset.k; renderQ(); } });
+  $("#qPrev").addEventListener("click", () => { sim.i--; renderQ(); });
+  $("#qQuit").addEventListener("click", renderSimIntro);
+  const nx = $("#qNext"); if (nx) nx.addEventListener("click", () => { sim.i++; renderQ(); });
+  const fi = $("#qFinish"); if (fi) fi.addEventListener("click", finishSim);
+  bindCardLinks(view);
+}
+function feedbackHTML(q, a){
+  const ok = a === q.a;
+  const weak = ORIGINAL_WRONG.includes(q.n);
+  return `<div class="feedback ${ok ? "ok" : "no"}">
+    <h3 class="jp">${ok ? pick(CHEERS) + " Correto!" : "ざんねん… Resposta: " + q.a + ". " + esc(q.o[q.a-1])}</h3>
+    <span>${esc(q.x)}</span>
+    ${weak ? `<span class="small muted">★ Esta foi uma das questões erradas no simulado original.</span>` : ""}
+    <span class="small">Revisar: ${q.cd.map(id => `<button class="linkbtn" data-card="${id}">#${id} ${esc(CARD[id].w)}</button>`).join(" · ")}</span>
+  </div>`;
+}
+function bindCardLinks(root){
+  root.querySelectorAll("[data-card]").forEach(b => b.addEventListener("click", () => openCards([+b.dataset.card])));
+}
+function openCards(ids){
+  fc.custom = ids; showTab("cards"); setDeck("custom");
+  say(`Revisando ${ids.length} cartão(ões). Vire para ver o exemplo!`, "happy");
+}
+function choose(k, btn){
+  const q = sim.list[sim.i];
+  if (sim.mode === "prova"){
+    sim.ans[q.n] = k; sfx.flip();
+    if (sim.i < sim.list.length - 1) setTimeout(() => { sim.i++; renderQ(); }, 220); else renderQ();
+    return;
+  }
+  if (sim.ans[q.n] != null) return;
+  sim.ans[q.n] = k;
+  if (k === q.a){
+    hit(); const pts = 100 * multiplier();
+    const p = celebrate(btn, S.combo >= 5 ? 1.6 : 1); sfx.ok(); addXP(pts, p.x, p.y);
+    say(`${pick(CHEERS)} +${Math.round(pts)} pts${S.combo >= 3 ? ` · コンボ ×${S.combo}!` : ""}`, "happy");
+  } else {
+    miss(); sfx.bad(); say(`${pick(COMFORT)} Veja o cartão #${q.cd[0]}.`, "sad");
+  }
+  renderQ();
+}
+function finishSim(){
+  clearInterval(sim.timer);
+  const study = sim.mode === "estudo";
+  const total = sim.list.length;
+  const res = sim.list.map(q => ({q, a:sim.ans[q.n], ok:sim.ans[q.n] === q.a}));
+  const score = res.filter(r => r.ok).length;
+  const by = {}; res.forEach(r => { by[r.q.s] = by[r.q.s] || [0,0]; by[r.q.s][1]++; if (r.ok) by[r.q.s][0]++; });
+  const full = total === QS.length;
+  if (!study){ // pontos da prova saem no final
+    addXP(score * 100 + (score/total >= .8 ? 300 : 0));
+  }
+  if (full){
+    S.simLast = {score, by, mode:sim.mode, when:Date.now(), wrong:res.filter(r => !r.ok).map(r => r.q.n)};
+    if (!S.simBest || score > S.simBest.score) S.simBest = S.simLast;
+    S.plays++; save();
+  }
+  sim.active = false;
+  const pct = Math.round(score/total*100);
+  const wrongIds = [...new Set(res.filter(r => !r.ok).flatMap(r => r.q.cd))];
+  view.innerHTML = `
+    <div class="stack">
+      <div class="eyebrow">結果 · Resultado ${full ? "" : "· revisão dos pontos fracos"}</div>
+      <div class="score-hero">
+        <div><div class="big">${score}<span style="font-size:.45em">/${total}</span></div><div class="muted">${pct}% de acertos</div></div>
+        ${full ? `<div class="small">Simulado original do aluno: <b>14/24 (58%)</b><br>${score > 14 ? `<b style="color:var(--good)">+${score-14} questões acima!</b>` : score === 14 ? "Mesmo resultado. Revise os ★ e tente de novo." : "Abaixo do original. Revise os cartões ★ primeiro."}</div>` : ""}
+      </div>
+      <div class="secgrid">${Object.keys(by).map(k => {
+        const [o, t] = by[k], orig = ORIGINAL.by[k];
+        return `<div class="sec"><b class="jp">${SECTIONS[k].t}</b><span class="small">${SECTIONS[k].pt}</span>
+          <span style="font-family:var(--font-display);font-size:22px">${o}/${t}</span>
+          <div class="bar"><i style="width:${o/t*100}%"></i></div>
+          ${full ? `<span class="muted small">original: ${orig[0]}/${orig[1]}</span>` : ""}</div>`; }).join("")}</div>
+      <div class="row">
+        <button class="btn primary" id="rAgain">Refazer tudo</button>
+        ${wrongIds.length ? `<button class="btn lav" id="rWrong">Refazer só os erros</button><button class="btn mint" id="rCards">Estudar cartões dos erros (${wrongIds.length})</button>` : ""}
+        <button class="btn ghost" id="rBack">Menu do simulado</button>
+      </div>
+      <h3 class="jp" style="font-size:20px">こたえあわせ · Correção</h3>
+      <div class="wrong-list">${res.map(r => `
+        <div class="wrong ${r.ok ? "ok" : ""}">
+          <div class="jp"><b>${r.q.n}.</b> ${qHTML(r.q.q)}</div>
+          <div class="small">${r.ok ? "✓ " : `✗ Sua resposta: ${r.a ? r.a + ". " + esc(r.q.o[r.a-1]) : "em branco"} · `}Correta: <b class="jp">${r.q.a}. ${esc(r.q.o[r.q.a-1])}</b></div>
+          ${r.ok ? "" : `<div class="small muted">${esc(r.q.x)}</div>`}
+        </div>`).join("")}</div>
+    </div>`;
+  if (score) { confetti.rain(); if (pct >= 80) sfx.levelup(); else sfx.ok(); }
+  say(pct >= 80 ? "ごうかく レベル！ Excelente!" : pct >= 58 ? "いいね！ Continue revisando os ★." : "だいじょうぶ！ Os cartões vão ajudar.", pct >= 58 ? "happy" : "sad");
+  $("#rAgain").addEventListener("click", () => startSim(sim.mode));
+  $("#rBack").addEventListener("click", renderSimIntro);
+  const w = $("#rWrong"); if (w) w.addEventListener("click", () => startSim("estudo", res.filter(r => !r.ok).map(r => r.q.n)));
+  const c = $("#rCards"); if (c) c.addEventListener("click", () => openCards(wrongIds));
+}
+
+/* ============ DESAFIO RÁPIDO ============ */
+const quiz = {active:false, qs:[], i:0, score:0, pts:0, timer:null, t0:0, locked:false};
+const qview = $("#view-quiz");
+const QTIME = 12000;
+const DAKU = {"か":"が","き":"ぎ","く":"ぐ","け":"げ","こ":"ご","さ":"ざ","し":"じ","す":"ず","せ":"ぜ","そ":"ぞ","た":"だ","ち":"ぢ","て":"で","と":"ど","は":"ば","ひ":"び","ふ":"ぶ","へ":"べ","ほ":"ぼ"};
+const UNDAKU = Object.fromEntries(Object.entries(DAKU).map(([a,b]) => [b,a]));
+function trap(r){ // distratores no estilo do simulado: vogal longa, dakuten
+  const out = [];
+  if (/[こくそとおょ]う/.test(r)) out.push(r.replace(/([こくそとおょ])う/, "$1"));
+  for (let i=0;i<r.length;i++){ const ch = r[i]; const t = DAKU[ch] || UNDAKU[ch]; if (t){ out.push(r.slice(0,i) + t + r.slice(i+1)); break; } }
+  if (/[えけせてねへめれ]/.test(r)) out.push(r.replace(/([えけせてねへめれ])/, "$1い"));
+  return out.filter(x => x !== r);
+}
+function makeQuiz(){
+  const weight = c => 1 + (c.s ? 1 : 0) + (S.ratings[c.id] === "nao" ? 2 : 0) + (S.ratings[c.id] === "quase" ? 1 : 0);
+  const pool = []; CARDS.forEach(c => { for (let k=0;k<weight(c);k++) pool.push(c); });
+  const chosen = []; const used = new Set();
+  for (const c of shuffle(pool)){ if (!used.has(c.id)){ used.add(c.id); chosen.push(c); } if (chosen.length === 10) break; }
+  return chosen.map(c => {
+    const types = ["mean","word"]; if (c.w !== c.r) types.push("read","read");
+    const t = pick(types);
+    let prompt, answer, sub, field;
+    if (t === "read"){ prompt = c.w; sub = "Como se lê?"; answer = c.r; field = "r"; }
+    else if (t === "mean"){ prompt = c.w; sub = "O que significa?"; answer = c.m; field = "m"; }
+    else { prompt = c.m; sub = "Qual é a palavra?"; answer = c.w; field = "w"; }
+    let distract = t === "read" ? trap(c.r) : [];
+    const others = shuffle(CARDS.filter(o => o.id !== c.id && o[field] !== answer)).map(o => o[field]);
+    distract = [...new Set([...distract, ...others])].filter(x => x !== answer).slice(0, 3);
+    return {c, t, prompt, sub, answer, opts:shuffle([answer, ...distract])};
+  });
+}
+function renderQuizIntro(){
+  quiz.active = false; clearInterval(quiz.timer);
+  qview.innerHTML = `
+    <div class="stack">
+      <div class="eyebrow">スピード チャレンジ</div>
+      <h2 class="jp" style="font-size:clamp(24px,5.5vw,34px)">10 perguntas · 12 segundos cada</h2>
+      <p style="margin:0;max-width:62ch">Perguntas geradas a partir dos 32 cartões: leitura do kanji, significado e palavra a partir do significado. Os cartões ★ e os do monte “Não sei” aparecem mais. As alternativas erradas imitam as pegadinhas do simulado: vogal longa (こうえん / こえん) e dakuten (でんき / てんき).</p>
+      <div class="statgrid">
+        <div class="stat"><div class="eyebrow">Acerto</div><div class="v">50</div><div class="small muted">+5 por segundo restante</div></div>
+        <div class="stat"><div class="eyebrow">Combo</div><div class="v">×2</div><div class="small muted">até ×2 com 10 seguidos</div></div>
+        <div class="stat"><div class="eyebrow">Recorde</div><div class="v">${S.quizBest}</div><div class="small muted">pontos em um desafio</div></div>
+      </div>
+      <div class="row"><button class="btn primary" id="qzStart">スタート！ Começar</button><span class="small muted">Teclas 1–4 também respondem.</span></div>
+    </div>`;
+  $("#qzStart").addEventListener("click", startQuiz);
+}
+function startQuiz(){
+  quiz.active = true; quiz.qs = makeQuiz(); quiz.i = 0; quiz.score = 0; quiz.pts = 0;
+  renderQuizQ();
+}
+function renderQuizQ(){
+  const Q = quiz.qs[quiz.i]; quiz.locked = false;
+  const isWord = Q.t === "word";
+  qview.innerHTML = `
+    <div class="row between"><span class="eyebrow">Desafio · ${quiz.i+1} / ${quiz.qs.length}</span><span class="pill pts">★ ${quiz.pts}</span></div>
+    <div class="bar timebar" id="tb"><i style="width:100%"></i></div>
+    <div class="stack" style="align-items:center;text-align:center;gap:6px">
+      <span class="tag">${esc(Q.c.c)}${Q.c.s ? " · ★" : ""}</span>
+      <div class="${isWord ? "" : "jp"}" style="font-family:var(--font-display);font-size:${isWord ? "clamp(28px,7vw,40px)" : "clamp(44px,12vw,76px)"};line-height:1.2">${esc(Q.prompt)}</div>
+      <div class="muted" style="font-weight:700">${Q.sub}</div>
+    </div>
+    <div class="opts" id="qopts">${Q.opts.map((o, k) => `<button class="opt ${Q.t === "mean" ? "" : "jp"}" data-o="${k}"><span class="k">${k+1}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div id="qfb"></div>`;
+  $("#qopts").addEventListener("click", e => { const b = e.target.closest("[data-o]"); if (b) answerQuiz(+b.dataset.o, b); });
+  quiz.t0 = performance.now(); clearInterval(quiz.timer);
+  quiz.timer = setInterval(() => {
+    const left = Math.max(0, QTIME - (performance.now() - quiz.t0));
+    const tb = $("#tb"); if (!tb) return;
+    tb.firstElementChild.style.width = (left/QTIME*100) + "%";
+    tb.classList.toggle("warn", left < 4000);
+    if (left <= 0){ clearInterval(quiz.timer); answerQuiz(-1, null); }
+  }, 80);
+}
+function answerQuiz(k, btn){
+  if (quiz.locked) return; quiz.locked = true; clearInterval(quiz.timer);
+  const Q = quiz.qs[quiz.i], ok = k >= 0 && Q.opts[k] === Q.answer;
+  const left = Math.max(0, QTIME - (performance.now() - quiz.t0));
+  const btns = [...qview.querySelectorAll("#qopts .opt")];
+  btns.forEach((b, j) => { if (Q.opts[j] === Q.answer) b.classList.add("ok"); else if (j === k) b.classList.add("no"); });
+  $("#qopts").classList.add("locked");
+  if (ok){
+    hit(); quiz.score++;
+    const pts = (50 + Math.ceil(left/1000)*5) * multiplier(); quiz.pts += Math.round(pts);
+    const p = celebrate(btn, S.combo >= 5 ? 1.5 : .9); sfx.ok(); addXP(pts, p.x, p.y);
+    say(`${pick(CHEERS)} ${Q.c.w} = ${Q.c.r}`, "happy");
+  } else {
+    miss(); sfx.bad(); say(k < 0 ? "じかん！ O tempo acabou." : pick(COMFORT), "sad");
+  }
+  $("#qfb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><h3 class="jp">${esc(Q.c.w)} · ${esc(Q.c.r)} · ${esc(Q.c.m)}</h3>
+    <span class="jp">${esc(Q.c.ex)}</span><span class="small muted">${esc(Q.c.pt)}</span>${Q.c.tip ? `<span class="small jp">★ ${esc(Q.c.tip)}</span>` : ""}
+    <div class="row" style="justify-content:flex-end"><button class="btn primary" id="qzNext">${quiz.i === quiz.qs.length-1 ? "Ver resultado" : "Próxima →"}</button></div></div>`;
+  $("#qzNext").addEventListener("click", nextQuiz); $("#qzNext").focus({preventScroll:true});
+}
+function nextQuiz(){
+  if (quiz.i < quiz.qs.length - 1){ quiz.i++; renderQuizQ(); return; }
+  quiz.active = false;
+  const rec = quiz.pts > S.quizBest; if (rec){ S.quizBest = quiz.pts; save(); }
+  qview.innerHTML = `
+    <div class="stack" style="align-items:flex-start">
+      <div class="eyebrow">けっか · Resultado do desafio</div>
+      <div class="score-hero"><div><div class="big">${quiz.score}<span style="font-size:.45em">/10</span></div><div class="muted">acertos</div></div>
+      <div><div class="big" style="color:var(--pink)">${quiz.pts}</div><div class="muted">pontos ${rec ? "· NOVO RECORDE!" : ""}</div></div></div>
+      <div class="row"><button class="btn primary" id="qzAgain">De novo!</button><button class="btn ghost" id="qzMenu">Menu</button></div>
+    </div>`;
+  if (quiz.score >= 7 || rec){ confetti.rain(); sfx.levelup(); }
+  say(quiz.score >= 8 ? "すごすぎ！ Mandou muito!" : "Continue! Cada rodada fixa melhor.", quiz.score >= 6 ? "happy" : null);
+  $("#qzAgain").addEventListener("click", startQuiz); $("#qzMenu").addEventListener("click", renderQuizIntro);
+}
+
+/* ============ PROGRESSO ============ */
+function renderStats(){
+  const l = lvlOf(S.xp), into = S.xp % XP_PER_LV;
+  const cnt = {sei:0, quase:0, nao:0}; CARDS.forEach(c => { const r = S.ratings[c.id]; if (r) cnt[r]++; });
+  const novo = CARDS.length - cnt.sei - cnt.quase - cnt.nao;
+  const pct = n => (n / CARDS.length * 100) + "%";
+  const last = S.simLast, best = S.simBest;
+  const starsKnown = CARDS.filter(c => c.s && S.ratings[c.id] === "sei").length;
+  const v = $("#view-stats");
+  v.innerHTML = `
+    <div class="stack">
+      <div class="row between"><div><div class="eyebrow">きろく · Seu progresso</div><h2 class="jp" style="font-size:28px">Lv ${l} · ${lvlName(l)}</h2></div>
+        <div class="small muted">${XP_PER_LV - into} pts para o Lv ${l+1} (${lvlName(l+1)})</div></div>
+      <div class="bar"><i style="width:${into/XP_PER_LV*100}%"></i></div>
+      <div class="statgrid">
+        <div class="stat"><div class="eyebrow">Pontos</div><div class="v">${S.xp.toLocaleString("pt-BR")}</div></div>
+        <div class="stat"><div class="eyebrow">Melhor simulado</div><div class="v">${best ? best.score + "/24" : "—"}</div><div class="small muted">original: 14/24</div></div>
+        <div class="stat"><div class="eyebrow">★ dominados</div><div class="v">${starsKnown}/16</div><div class="small muted">cartões REVISAR em “sei”</div></div>
+        <div class="stat"><div class="eyebrow">Recorde desafio</div><div class="v">${S.quizBest}</div></div>
+      </div>
+      <h3 class="jp" style="font-size:20px">カードの山 · Montes dos 32 cartões</h3>
+      <div class="pile" role="img" aria-label="Sei ${cnt.sei}, quase ${cnt.quase}, não sei ${cnt.nao}, sem marcar ${novo}">
+        <i style="width:${pct(cnt.sei)};background:var(--mint)"></i><i style="width:${pct(cnt.quase)};background:var(--butter)"></i>
+        <i style="width:${pct(cnt.nao)};background:var(--pink)"></i><i style="width:${pct(novo)};background:var(--surface2)"></i></div>
+      <div class="legend"><span style="--c:var(--mint)">Sei ${cnt.sei}</span><span style="--c:var(--butter)">Quase ${cnt.quase}</span><span style="--c:var(--pink)">Não sei ${cnt.nao}</span><span style="--c:var(--line)">Sem marcar ${novo}</span></div>
+      ${cnt.nao ? `<div><button class="btn lav" id="stNao">Estudar o monte “Não sei” (${cnt.nao})</button></div>` : ""}
+      <h3 class="jp" style="font-size:20px">もんだい別 · Por tipo de questão</h3>
+      <div class="secgrid">${[1,2,3,4].map(k => {
+        const o = ORIGINAL.by[k], cur = last && last.by[k];
+        return `<div class="sec"><b class="jp">${SECTIONS[k].t}</b><span class="small">${SECTIONS[k].pt}</span>
+          <span class="small">Original: <b>${o[0]}/${o[1]}</b></span><div class="bar"><i style="width:${o[0]/o[1]*100}%;background:var(--muted)"></i></div>
+          <span class="small">Último seu: <b>${cur ? cur[0] + "/" + cur[1] : "—"}</b></span><div class="bar"><i style="width:${cur ? cur[0]/cur[1]*100 : 0}%"></i></div></div>`; }).join("")}</div>
+      <h3 class="jp" style="font-size:20px">しんだん · Diagnóstico do simulado original (14/24)</h3>
+      <div class="diag small">
+        <p><b>Forma × significado:</b> acertou 12/14 em leitura e escrita de kanji, mas só 2/10 em vocabulário em contexto e paráfrase. Reconhece a palavra, ainda não domina o sentido e o uso. Ex.: leu 安い (Q4) e 新しい (Q3), mas errou 安くて (Q16) e あたらしく ありません = ふるい (Q22).</p>
+        <p><b>Adjetivos い (prioridade 1):</b> Q16, Q19, Q22 · 安くて, 多い, negativa 〜く ありません.</p>
+        <p><b>Verbo + partícula / finalidade:</b> Q15, Q21 · を 買います; 見に 行きます (L27).</p>
+        <p><b>Vocabulário temático U4–U6:</b> Q17 かぞく, Q18 チェックイン, Q24 としょかん.</p>
+        <p><b>Forma:</b> Q5 vogal longa こうえん; Q10 高 confundido com 京/亭.</p>
+      </div>
+      <div class="row"><button class="btn mint" id="stStar">Estudar os 16 cartões ★</button><button class="btn" id="stPairs">Pares de reforço</button><button class="btn ghost" id="stReset">Zerar progresso</button></div>
+      <div id="stConfirm"></div>
+    </div>`;
+  const n = $("#stNao"); if (n) n.addEventListener("click", () => { showTab("cards"); setDeck("nao"); });
+  $("#stStar").addEventListener("click", () => { showTab("cards"); setDeck("star"); });
+  $("#stPairs").addEventListener("click", () => { showTab("cards"); setDeck("pairs"); });
+  $("#stReset").addEventListener("click", () => {
+    $("#stConfirm").innerHTML = `<div class="confirm"><span>Apagar pontos, montes e recordes deste navegador?</span><button class="btn primary" id="stYes">Sim, zerar</button><button class="btn" id="stNo">Cancelar</button></div>`;
+    $("#stYes").addEventListener("click", () => { S = Object.assign({}, DEF, {ratings:{}}); save(); renderHud(); renderChips(); renderStats(); say("Progresso zerado. Novo começo!", null); });
+    $("#stNo").addEventListener("click", () => { $("#stConfirm").innerHTML = ""; });
+  });
+}
+
+/* ============ TECLADO ============ */
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input,textarea")) return;
+  if (!$("#view-cards").hidden){
+    if (e.key === " " ){ e.preventDefault(); flipCard(); }
+    else if (e.key === "ArrowRight") move(1);
+    else if (e.key === "ArrowLeft") move(-1);
+  } else if (!$("#view-sim").hidden && sim.active && /^[1-4]$/.test(e.key)){
+    const b = view.querySelector(`[data-o="${e.key}"]`); if (b) b.click();
+  } else if (!$("#view-quiz").hidden && quiz.active && /^[1-4]$/.test(e.key)){
+    const b = qview.querySelector(`#qopts [data-o="${+e.key-1}"]`); if (b) b.click();
+  }
+});
+
+/* ============ FUNDO 3D (Three.js) ============ */
+(function bg3d(){
+  if (!window.THREE) return;
+  const cv = $("#bg3d");
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas:cv, alpha:true, antialias:true}); } catch(e){ return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(50, 1, .1, 100); cam.position.z = 14;
+  scene.add(new THREE.AmbientLight(0xffffff, .75));
+  const dl = new THREE.DirectionalLight(0xffffff, .6); dl.position.set(4, 6, 8); scene.add(dl);
+  const pl = new THREE.PointLight(0xff9ec7, .9, 40); pl.position.set(-6, -3, 6); scene.add(pl);
+  const COLS = [0xff9ec7, 0xb9a2ff, 0x7fddbf, 0xffdf7e, 0x93ccff, 0xffb8a8];
+  const GEOS = [new THREE.IcosahedronGeometry(.7, 0), new THREE.TorusGeometry(.55, .22, 14, 32), new THREE.SphereGeometry(.5, 24, 16),
+                new THREE.OctahedronGeometry(.65, 0), new THREE.TorusKnotGeometry(.4, .14, 64, 10), new THREE.DodecahedronGeometry(.6, 0)];
+  // estrelinha 2D extrudada
+  const sh = new THREE.Shape(); for (let i=0;i<10;i++){ const a = i*Math.PI/5 + Math.PI/2, r = i%2 ? .28 : .65; i ? sh.lineTo(Math.cos(a)*r, Math.sin(a)*r) : sh.moveTo(Math.cos(a)*r, Math.sin(a)*r); }
+  GEOS.push(new THREE.ExtrudeGeometry(sh, {depth:.22, bevelEnabled:true, bevelSize:.06, bevelThickness:.06, bevelSegments:2}));
+  const objs = [];
+  const count = innerWidth < 600 ? 14 : 24;
+  for (let i=0;i<count;i++){
+    const m = new THREE.Mesh(GEOS[i % GEOS.length], new THREE.MeshStandardMaterial({color:COLS[i % COLS.length], roughness:.45, metalness:.05, flatShading:i % 3 === 0}));
+    m.position.set((Math.random()-.5)*22, (Math.random()-.5)*14, (Math.random()-.5)*8 - 2);
+    const s = .6 + Math.random()*.9; m.scale.setScalar(s);
+    m.userData = {base:s, ph:Math.random()*6.28, sp:.2 + Math.random()*.5, rx:(Math.random()-.5)*.01, ry:(Math.random()-.5)*.012, y0:m.position.y};
+    scene.add(m); objs.push(m);
+  }
+  let mx = 0, my = 0, boost = 0, running = true;
+  addEventListener("pointermove", e => { mx = e.clientX/innerWidth - .5; my = e.clientY/innerHeight - .5; });
+  addEventListener("kawaii:correct", () => { boost = 1; });
+  document.addEventListener("visibilitychange", () => { running = !document.hidden; if (running && !reduced) requestAnimationFrame(frame); });
+  function size(){ renderer.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix(); }
+  addEventListener("resize", size); size();
+  const clock = new THREE.Clock();
+  function frame(){
+    if (!running) return;
+    const t = clock.getElapsedTime();
+    boost *= .95;
+    for (const o of objs){
+      const u = o.userData;
+      o.rotation.x += u.rx * (1 + boost*12); o.rotation.y += u.ry * (1 + boost*12);
+      o.position.y = u.y0 + Math.sin(t*u.sp + u.ph) * .6;
+      o.scale.setScalar(u.base * (1 + boost*.25*Math.sin(t*20 + u.ph)));
+    }
+    cam.position.x += (mx*2 - cam.position.x) * .03; cam.position.y += (-my*1.5 - cam.position.y) * .03; cam.lookAt(0,0,0);
+    renderer.render(scene, cam);
+    if (!reduced) requestAnimationFrame(frame);
+  }
+  frame();
+  if (reduced) addEventListener("resize", () => renderer.render(scene, cam));
+})();
+
+/* ============ INÍCIO ============ */
+renderHud(); setDeck("all");
+let startTab = "cards"; try { startTab = sessionStorage.getItem(KEY+"-tab") || "cards"; } catch(e){}
+showTab(VIEWS.includes(startTab) ? startTab : "cards");
+setTimeout(() => say("やあ！ Comece pelos cartões ★ REVISAR. Ligue o City Pop ♪", "happy"), 600);
+})();
+</script>
+
+</html>
