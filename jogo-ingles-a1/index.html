@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pop English A1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap">
+<style>
+/* Layout: um "adesivo" central (cartão da pergunta) flutuando sobre um playground 3D pastel; HUD em pílulas gordinhas no topo; mascote Mochi no canto. */
+:root {
+  --bg1: #FFF3F9;
+  --bg2: #EEE6FF;
+  --bg3: #E0F7EE;
+  --ink: #4B3A66;
+  --ink-soft: #7A6A96;
+  --pink: #FFB8D5;
+  --pink-d: #EE82B2;
+  --lav: #D2C4FF;
+  --lav-d: #9F8AF0;
+  --mint: #B2EBD4;
+  --mint-d: #5EC79E;
+  --sky: #B8DEFF;
+  --sky-d: #6FB2EC;
+  --lemon: #FFEBA6;
+  --lemon-d: #E9C24F;
+  --peach: #FFD0B8;
+  --peach-d: #F29C78;
+  --card: rgba(255, 255, 255, .9);
+  --line: #ECE2F8;
+  --good: #4FBF92;
+  --good-bg: #E2F8EE;
+  --bad: #EE7094;
+  --bad-bg: #FFE7EF;
+  --white: #FFFFFF;
+  --f-display: "Mochiy Pop One", "M PLUS Rounded 1c", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body: "M PLUS Rounded 1c", "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif;
+  color-scheme: light;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg1);
+  background-image: radial-gradient(circle at 15% 10%, var(--pink) 0, transparent 38%),
+    radial-gradient(circle at 90% 20%, var(--sky) 0, transparent 35%),
+    radial-gradient(circle at 70% 95%, var(--mint) 0, transparent 40%),
+    linear-gradient(160deg, var(--bg1), var(--bg2) 55%, var(--bg3));
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  overflow: hidden;
+}
+canvas.layer { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+#bg { z-index: 0; }
+#fx { z-index: 20; }
+#app {
+  position: relative; z-index: 1; height: 100%; box-sizing: border-box; overflow-y: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+}
+button { font: inherit; color: inherit; }
+button:focus-visible { outline: 3px dashed var(--lav-d); outline-offset: 3px; }
+
+/* top bar */
+.top { width: min(900px, 100%); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.logo { font-family: var(--f-display); font-size: 1.05rem; display: flex; align-items: center; gap: 8px; background: none; border: 0; padding: 6px 0; cursor: pointer; }
+.logo .dot { width: 30px; height: 30px; border-radius: 50%; background: var(--pink); box-shadow: inset -4px -4px 0 var(--pink-d); display: grid; place-items: center; font-size: .8rem; }
+.pill-btn {
+  border: 3px solid var(--white); background: var(--white); border-radius: 999px; padding: 7px 14px;
+  font-weight: 800; font-size: .9rem; box-shadow: 0 4px 0 var(--lav); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.pill-btn[aria-pressed="false"] { opacity: .65; }
+.pill-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--lav); }
+
+/* menu */
+.hero { width: min(900px, 100%); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 6px; }
+.title { font-family: var(--f-display); font-weight: 400; font-size: clamp(2.3rem, 8vw, 4.2rem); line-height: 1.05; margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.title span { display: inline-block; animation: hop 2.4s ease-in-out infinite; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ink); }
+.title .c1 { color: var(--pink); } .title .c2 { color: var(--lemon); } .title .c3 { color: var(--mint); } .title .c4 { color: var(--sky); } .title .c5 { color: var(--lav); } .title .c6 { color: var(--peach); }
+.title .lvl { font-size: .5em; vertical-align: super; background: var(--ink); color: var(--white); -webkit-text-stroke: 0; text-shadow: none; border-radius: 14px; padding: 2px 10px; animation: none; }
+.lead { max-width: 52ch; margin: 0; font-size: 1.05rem; line-height: 1.55; color: var(--ink-soft); text-wrap: balance; }
+.totals { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.chip { background: var(--white); border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: .9rem; box-shadow: 0 3px 0 var(--line); font-variant-numeric: tabular-nums; }
+.worlds { width: min(900px, 100%); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.world {
+  --c: var(--pink); --cd: var(--pink-d);
+  text-align: left; background: var(--white); border: 3px solid var(--white); border-radius: 26px; padding: 16px;
+  box-shadow: 0 6px 0 var(--cd); cursor: pointer; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: center;
+  transition: transform .18s cubic-bezier(.3,1.6,.5,1);
+}
+.world:hover { transform: translateY(-4px) rotate(-1deg); }
+.world:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--cd); }
+.world .badge { grid-row: span 2; width: 58px; height: 58px; border-radius: 20px; background: var(--c); box-shadow: inset -5px -5px 0 var(--cd); display: grid; place-items: center; font-family: var(--f-display); font-size: .9rem; }
+.world h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 1.05rem; }
+.world p { margin: 0; font-size: .86rem; color: var(--ink-soft); line-height: 1.35; }
+.world .meta { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; font-size: .85rem; font-weight: 800; padding-top: 6px; border-top: 2px dashed var(--line); font-variant-numeric: tabular-nums; }
+.stars { letter-spacing: 2px; color: var(--line); font-size: 1.05rem; }
+.stars .on { color: var(--lemon-d); }
+.world.mix { grid-column: 1 / -1; grid-template-columns: auto 1fr auto; background: linear-gradient(100deg, var(--white), var(--bg2)); }
+.world.mix .badge { grid-row: auto; }
+.world.mix .go { font-family: var(--f-display); background: var(--lav); padding: 10px 16px; border-radius: 999px; box-shadow: 0 4px 0 var(--lav-d); }
+.world.mix .meta { grid-column: 1 / -1; }
+.credit { font-size: .8rem; color: var(--ink-soft); text-align: center; margin: 0; }
+
+/* game */
+.hud { width: min(700px, 100%); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.hud .grp { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.hearts { font-size: 1.25rem; letter-spacing: 2px; color: var(--bad); }
+.hearts .off { color: var(--line); }
+.combo { background: var(--lemon); box-shadow: 0 3px 0 var(--lemon-d); }
+.combo.pulse { animation: pulse .5s; }
+.progress { width: min(700px, 100%); height: 14px; border-radius: 999px; background: var(--white); box-shadow: inset 0 2px 0 var(--line); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; border-radius: 999px; background: repeating-linear-gradient(45deg, var(--pink) 0 12px, var(--lav) 12px 24px); transition: width .5s cubic-bezier(.3,1.4,.5,1); }
+
+.card {
+  width: min(700px, 100%); box-sizing: border-box; background: var(--card); border: 3px solid var(--white); border-radius: 30px;
+  box-shadow: 0 8px 0 var(--lav), 0 20px 40px rgba(159, 138, 240, .25); padding: 22px; display: flex; flex-direction: column; gap: 16px;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.card.enter { animation: popin .45s cubic-bezier(.3,1.5,.5,1); }
+.qhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tag { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; background: var(--bg2); padding: 5px 12px; border-radius: 999px; }
+.qnum { font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; font-size: .9rem; }
+.timer { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.timer i { display: block; height: 100%; background: linear-gradient(90deg, var(--mint-d), var(--lemon-d), var(--peach-d)); transform-origin: left; }
+.timer-note { font-size: .78rem; color: var(--ink-soft); margin-top: -8px; }
+.prompt { font-size: clamp(1.25rem, 4.4vw, 1.6rem); font-weight: 800; line-height: 1.35; margin: 0; text-wrap: balance; }
+.hint { margin: -6px 0 0; color: var(--ink-soft); font-size: .95rem; line-height: 1.45; }
+.blank { display: inline-block; min-width: 3.2em; border-bottom: 4px dotted var(--lav-d); color: transparent; }
+.blank.filled { color: var(--good); border-bottom-color: var(--good); animation: popin .4s; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; font-size: 1.08rem; font-weight: 700;
+  padding: 13px 14px; border-radius: 18px; border: 3px solid var(--line); background: var(--white); box-shadow: 0 4px 0 var(--line);
+  cursor: pointer; transition: transform .12s, border-color .12s;
+}
+.opt:hover:not(:disabled) { border-color: var(--lav); transform: translateY(-2px); }
+.opt:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.opt:disabled { cursor: default; }
+.opt .key { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--bg2); font-size: .85rem; font-weight: 800; }
+.opt.correct { background: var(--good-bg); border-color: var(--good); box-shadow: 0 4px 0 var(--good); }
+.opt.correct .key { background: var(--good); color: var(--white); }
+.opt.wrong { background: var(--bad-bg); border-color: var(--bad); box-shadow: 0 4px 0 var(--bad); animation: shake .45s; }
+.opt.wrong .key { background: var(--bad); color: var(--white); }
+.opt.dim { opacity: .5; }
+
+/* build the sentence */
+.slot { min-height: 64px; border-radius: 20px; border: 3px dashed var(--lav); background: var(--bg1); padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+.slot:empty::before { content: "Toque nos blocos na ordem certa"; color: var(--ink-soft); font-size: .9rem; align-self: center; padding-left: 6px; }
+.bank { display: flex; flex-wrap: wrap; gap: 8px; min-height: 52px; }
+.chunk {
+  --rc: var(--white); --rd: var(--line);
+  border: 3px solid var(--rd); background: var(--rc); border-radius: 14px; padding: 9px 13px; font-weight: 800; font-size: 1.02rem;
+  box-shadow: 0 4px 0 var(--rd); cursor: pointer; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; animation: popin .25s;
+}
+.chunk:disabled { cursor: default; }
+.chunk small { font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+.chunk.shake { animation: shake .45s; }
+.build-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; font-size: .74rem; font-weight: 800; }
+.legend span { padding: 3px 9px; border-radius: 999px; background: var(--rc); }
+.answer-line { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.btn {
+  border: 0; border-radius: 999px; padding: 13px 22px; background: var(--pink); box-shadow: 0 5px 0 var(--pink-d);
+  font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform .1s, box-shadow .1s;
+}
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--pink-d); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.alt { background: var(--white); box-shadow: 0 5px 0 var(--line); }
+.btn.mint { background: var(--mint); box-shadow: 0 5px 0 var(--mint-d); }
+.btn.big { font-family: var(--f-display); font-weight: 400; font-size: 1.1rem; padding: 15px 28px; }
+
+.fb { border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 8px; animation: popin .35s cubic-bezier(.3,1.5,.5,1); }
+.fb.good { background: var(--good-bg); }
+.fb.bad { background: var(--bad-bg); }
+.fb h4 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 1.25rem; }
+.fb.good h4 { color: var(--good); } .fb.bad h4 { color: var(--bad); }
+.fb p { margin: 0; line-height: 1.5; }
+.fb .pts { font-size: .85rem; font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.fb .row { display: flex; justify-content: flex-end; }
+
+/* end */
+.end { text-align: center; align-items: center; }
+.end h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 0; }
+.big-stars { font-size: 3.2rem; letter-spacing: 8px; color: var(--line); }
+.big-stars span { display: inline-block; }
+.big-stars .on { color: var(--lemon-d); animation: starpop .6s cubic-bezier(.3,1.8,.5,1) both; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.stat { background: var(--bg1); border-radius: 18px; padding: 12px 6px; }
+.stat b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .8rem; color: var(--ink-soft); font-weight: 700; }
+.end .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.newbest { background: var(--lemon); padding: 5px 14px; border-radius: 999px; font-weight: 800; animation: pulse 1s infinite; }
+
+/* floating bits */
+#bubble {
+  position: fixed; z-index: 15; transform: translate(-50%, -100%); background: var(--white); border-radius: 18px; padding: 8px 14px;
+  font-family: var(--f-display); font-size: .95rem; box-shadow: 0 4px 0 var(--lav); pointer-events: none; white-space: nowrap;
+  opacity: 0; transition: opacity .25s;
+}
+#bubble::after { content: ""; position: absolute; left: 50%; bottom: -8px; border: 8px solid transparent; border-top-color: var(--white); border-bottom: 0; transform: translateX(-50%); }
+#bubble.show { opacity: 1; }
+.floaty { position: fixed; z-index: 25; pointer-events: none; font-family: var(--f-display); font-size: 1.6rem; color: var(--pink-d); -webkit-text-stroke: 1.5px var(--white); paint-order: stroke fill; animation: floatup 1.2s ease-out forwards; transform: translate(-50%, -50%); }
+
+@keyframes hop { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-6px) rotate(-3deg); } }
+@keyframes popin { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes starpop { from { transform: scale(0) rotate(-90deg); } to { transform: scale(1) rotate(0); } }
+@keyframes floatup { from { opacity: 1; transform: translate(-50%, -50%) scale(.8); } to { opacity: 0; transform: translate(-50%, -160%) scale(1.25); } }
+
+@media (max-width: 760px) { .worlds { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 470px) {
+  .worlds { grid-template-columns: minmax(0, 1fr); }
+  .world.mix { grid-template-columns: auto 1fr; }
+  .world.mix .go { grid-column: 1 / -1; text-align: center; }
+  .card { padding: 16px; border-radius: 24px; }
+  .big-stars { font-size: 2.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<canvas id="bg" class="layer" aria-hidden="true"></canvas>
+<canvas id="fx" class="layer" aria-hidden="true"></canvas>
+<div id="bubble" aria-hidden="true"></div>
+
+<main id="app">
+  <div class="top">
+    <button class="logo" id="home" type="button" aria-label="Voltar ao menu"><span class="dot">A1</span> Pop English</button>
+    <button class="pill-btn" id="musicBtn" type="button" aria-pressed="true">♪ Música: on</button>
+  </div>
+
+  <section id="menu" class="hero" aria-labelledby="ttl">
+    <h1 class="title" id="ttl"><span class="c1">P</span><span class="c2">o</span><span class="c3">p</span> <span class="c4">E</span><span class="c5">n</span><span class="c6">g</span><span class="c1">l</span><span class="c2">i</span><span class="c3">s</span><span class="c4">h</span> <span class="lvl">A1</span></h1>
+    <p class="lead">Revise tudo o que você aprendeu nas aulas! Escolha um mundo, responda rápido para ganhar bônus e faça combos para subir no placar.</p>
+    <div class="totals">
+      <span class="chip" id="totalChip">🏆 Recorde total: 0</span>
+      <span class="chip" id="starsChip">⭐ 0 / 21 estrelas</span>
+    </div>
+    <div class="worlds" id="worlds"></div>
+    <p class="credit">Conteúdo baseado nas aulas ODU Creative: Verb Be, Do/Does, Don't/Doesn't, WH-questions, At/In/On, A/An e plurais.</p>
+  </section>
+
+  <section id="game" hidden>
+    <div class="hud">
+      <div class="grp">
+        <span class="chip" id="scoreChip">0 pts</span>
+        <span class="chip combo" id="comboChip" hidden>Combo x2</span>
+      </div>
+      <span class="hearts" id="hearts" aria-label="Vidas"></span>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+    <div class="card" id="card"></div>
+  </section>
+
+  <section id="end" hidden>
+    <div class="card end" id="endCard"></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (s) => document.querySelector(s);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
+/* ---------------- Conteúdo das aulas ---------------- */
+// Cores do método ODU Chunking
+const ROLES = {
+  S: ["Sujeito", "#FFB8D5", "#EE82B2"], V: ["Verbo", "#B8DEFF", "#6FB2EC"], O: ["Objeto", "#B2EBD4", "#5EC79E"],
+  C: ["Complemento", "#B2EBD4", "#5EC79E"], AUX: ["Auxiliar", "#D2C4FF", "#9F8AF0"], NEG: ["Negação", "#FFD0B8", "#F29C78"],
+  ADV: ["Tempo/Lugar", "#FFEBA6", "#E9C24F"], WH: ["WH-word", "#FFC2CC", "#EE7094"], PREP: ["Preposição", "#C4EEF0", "#5DBFC4"]
+};
+const mc = (q, opts, why, extra) => Object.assign({ t: "mc", q, opts, a: opts[0], why }, extra || {});
+const fix = (opts, why) => ({ t: "mc", kind: "fix", q: "Qual frase está correta?", opts, a: opts[0], why });
+const build = (pt, spec, why) => ({ t: "build", q: pt, chunks: spec.split("|").map((s) => { const k = s.lastIndexOf("_"); return [s.slice(0, k), s.slice(k + 1)]; }), why });
+const nat = (country, opts, why) => mc(country + " → ?", opts, why, { hint: "Qual é a nacionalidade?" });
+
+const TOPICS = [
+  { id: "be", badge: "BE", name: "Verb Be", sub: "am · is · are, pronomes e nacionalidades", c: "--pink", qs: [
+    mc("I ___ a student.", ["am", "is", "are"], "Com I usamos sempre am."),
+    mc("Brazil ___ in South America.", ["is", "are", "am"], "Brazil = it (singular) → is."),
+    mc("My friend and I ___ from São Paulo.", ["are", "is", "am"], "My friend and I = we → are."),
+    mc("Mr. Tanaka ___ from Japan.", ["is", "are", "am"], "Mr. Tanaka = he → is."),
+    mc("We ___ from Japan.", ["are", "is", "am"], "We → are."),
+    mc("Yuna is from Seoul. ___ is Korean.", ["She", "He", "It"], "Yuna é uma menina → she."),
+    fix(["She is a musician.", "She are a musician.", "She am a musician."], "She → is. “She are” é o erro mais comum desta aula!"),
+    nat("Brazil", ["Brazilian", "Brazilish", "Brazilese"], "Padrão -ian: Brazil → Brazilian."),
+    nat("Mexico", ["Mexican", "Mexicese", "Mexicish"], "Padrão -an: Mexico → Mexican."),
+    nat("Japan", ["Japanese", "Japanian", "Japanish"], "Padrão -ese: Japan → Japanese."),
+    nat("China", ["Chinese", "Chinian", "Chinish"], "Padrão -ese: China → Chinese."),
+    nat("Poland", ["Polish", "Polandese", "Polandian"], "Padrão -ish: Poland → Polish."),
+    nat("France", ["French", "Francese", "Franish"], "Irregular: France → French."),
+    nat("Spain", ["Spanish", "Spainese", "Spainian"], "Irregular: Spain → Spanish."),
+    nat("the UK", ["British", "Kingdomese", "UKian"], "Irregular: the United Kingdom → British."),
+    nat("the US", ["American", "Statesian", "Unitedese"], "Irregular: the United States → American."),
+    nat("South Korea", ["Korean", "Koreese", "Korish"], "South Korea → Korean."),
+    mc("“Hi! My name is Lucas. I'm from Recife, Brazil, and I'm a student and a guitar player.” — What is Lucas's nationality?", ["Brazilian", "Korean", "Mexican"], "Lucas é de Recife, Brazil → Brazilian.", { kind: "read" }),
+    mc("“My friend Yuna is from Seoul. She's Korean, and her mother is a teacher.” — Who is a teacher?", ["Yuna's mother", "Yuna", "Lucas"], "“her mother is a teacher” → a mãe da Yuna é professora.", { kind: "read" }),
+    mc("I'm from Brazil. ___ famous for samba, football and açaí.", ["We're", "We is", "Us are"], "We + are = We're. Ex: We're famous for…"),
+    build("“Ela é musicista.”", "She_S|is_V|a musician_C", "S + BE + C. She → is."),
+    build("“Nós somos do Japão.”", "We_S|are_V|from Japan_C", "S + BE + C. We → are.")
+  ]},
+  { id: "ques", badge: "DO?", name: "Do / Does?", sub: "Perguntas sim/não e short answers", c: "--lav", qs: [
+    mc("___ you like spicy food?", ["Do", "Does", "Are"], "I / you / we / they → Do."),
+    mc("___ your father work on Saturdays?", ["Does", "Do", "Is"], "your father = he → Does."),
+    mc("___ it rain a lot in Curitiba?", ["Does", "Do", "Is"], "it → Does."),
+    mc("___ your friends speak English?", ["Do", "Does", "Are"], "Sujeito no plural → Do."),
+    mc("___ Mei have a car?", ["Does", "Do", "Has"], "Mei = she → Does (e o verbo fica na base: have)."),
+    mc("___ we need a dictionary?", ["Do", "Does", "Are"], "we → Do."),
+    mc("“Do you speak English?” (✓)", ["Yes, I do.", "Yes, I speak.", "Yes, I does."], "Short answer usa só o auxiliar: Yes, I do.", { hint: "Escolha a short answer." }),
+    mc("“Does your mother speak English?” (✗)", ["No, she doesn't.", "No, she don't.", "No, she isn't."], "your mother = she → No, she doesn't.", { hint: "Escolha a short answer." }),
+    mc("“Do your parents live in Santos?” (✓)", ["Yes, they do.", "Yes, they does.", "Yes, they live."], "they → Yes, they do.", { hint: "Escolha a short answer." }),
+    mc("“Does it rain a lot in Curitiba?” (✓)", ["Yes, it does.", "Yes, it do.", "Yes, it rains."], "it → Yes, it does.", { hint: "Escolha a short answer." }),
+    fix(["Does she work on Sundays?", "Does she works on Sundays?", "Do she work on Sundays?"], "O -s fica no does; o verbo volta à base (work)."),
+    fix(["Do you like chocolate?", "You like chocolate?", "Does you like chocolate?"], "A pergunta precisa do auxiliar do/does na frente."),
+    mc("“Você gosta de café?”", ["Do you like coffee?", "You like coffee?", "Are you like coffee?"], "Do + you + like + coffee?", { hint: "Como se diz em inglês?" }),
+    mc("Do you like coffee? — “Não gosto de café, mas gosto de chá.”", ["I don't like coffee, but I like tea.", "I not like coffee, but I like tea.", "I doesn't like coffee, but I like tea."], "I → don't. But = mas."),
+    mc("What is your ___?", ["favorite song", "song favorite", "favorite songs is"], "Em inglês o adjetivo vem antes do substantivo: favorite song, blue jeans."),
+    build("“Seu irmão joga videogame?”", "Does_AUX|your brother_S|play_V|video games?_O", "AUX + S + V base + O?"),
+    build("“Você gosta de comida apimentada?”", "Do_AUX|you_S|like_V|spicy food?_O", "AUX + S + V base + O?")
+  ]},
+  { id: "neg", badge: "N'T", name: "Don't / Doesn't", sub: "Negativa do Simple Present", c: "--peach", qs: [
+    mc("My grandparents ___ use WhatsApp.", ["don't", "doesn't", "not"], "Sujeito plural → don't."),
+    mc("Ana ___ eat meat.", ["doesn't", "don't", "isn't"], "Ana = she → doesn't."),
+    mc("I ___ understand this word.", ["don't", "doesn't", "not"], "I → don't."),
+    mc("The bus ___ here.", ["doesn't stop", "don't stop", "doesn't stops"], "The bus = it → doesn't + verbo base."),
+    mc("We ___ a garden.", ["don't have", "doesn't have", "don't has"], "We → don't + have."),
+    mc("Kenji ___ exercise.", ["doesn't do", "don't do", "doesn't does"], "Kenji = he → doesn't + do (base)."),
+    mc("Lucas ___ horror movies.", ["doesn't like", "doesn't likes", "don't like"], "Com doesn't, o -s sai do verbo principal."),
+    mc("Tom drinks tea, but he ___ coffee.", ["doesn't drink", "don't drink", "doesn't drinks"], "he → doesn't + drink."),
+    mc("“Ela não trabalha hoje.”", ["She doesn't work today.", "She don't work today.", "She doesn't works today."], "she → doesn't + work.", { hint: "Como se diz em inglês?" }),
+    mc("Escolha a negativa certa: ___ tired.", ["I'm not", "I don't", "I don't be"], "To be nega com not: I'm not tired. Nunca “I don't be”."),
+    fix(["She doesn't like pizza.", "She don't like pizza.", "She not like pizza."], "He / she / it pede doesn't."),
+    fix(["He doesn't work here.", "He doesn't works here.", "He don't works here."], "O -s já está em does → work fica na base."),
+    fix(["I don't understand.", "I not understand.", "I doesn't understand."], "Verbos comuns precisam do auxiliar para negar."),
+    build("“Ela não trabalha aos domingos.”", "She_S|doesn't_NEG|work_V|on_PREP|Sundays._ADV", "S + doesn't + V base. On + dia da semana."),
+    build("“Eu não tomo café à noite.”", "I_S|don't_NEG|drink_V|coffee_O|at night._ADV", "S + don't + V base + O.")
+  ]},
+  { id: "wh", badge: "WH", name: "WH + Do", sub: "Where, What time, How often, What do you do?", c: "--sky", qs: [
+    mc("She lives in Santos. → Pergunte com WHERE:", ["Where does she live?", "Where she lives?", "Where lives she?"], "WH + does + S + V base."),
+    mc("What time ___ the class start?", ["does", "do", "is"], "the class = it → does."),
+    mc("___ do you go to the gym? — Twice a week.", ["How often", "What time", "Where"], "How often = com que frequência."),
+    mc("___ do you study English? — Because I love travelling.", ["Why", "Where", "What time"], "Responda why com because."),
+    mc("___ does the class start? — At 7.", ["What time", "How often", "Why"], "What time = a que horas."),
+    mc("“What do you do?” significa…", ["Qual é a sua profissão?", "O que você está fazendo agora?", "Você faz isso?"], "O 1º do é auxiliar; o 2º é o verbo fazer → profissão."),
+    mc("My sister ___ yoga every morning.", ["does", "do", "is"], "do (verbo fazer) na 3ª pessoa → does."),
+    mc("He doesn't ___ sports.", ["do", "does", "doing"], "Depois de doesn't, verbo na base: do."),
+    mc("What does your dad ___?", ["do", "does", "doing"], "Depois de does, verbo na base: do."),
+    fix(["Where does your sister live?", "Where lives your sister?", "Where your sister lives?"], "Quem vai para a frente é o does, não o verbo."),
+    fix(["What time does the class start?", "What time does the class starts?", "What time the class starts?"], "Depois de does, verbo na base."),
+    fix(["Are you tired?", "Do you are tired?", "Does you tired?"], "To be não usa do/does."),
+    mc("“A que horas o banco abre?”", ["What time does the bank open?", "What time the bank opens?", "What time do the bank open?"], "WH + does + the bank + open.", { hint: "Como se diz em inglês?" }),
+    build("“Onde a Mei trabalha?”", "Where_WH|does_AUX|Mei_S|work?_V", "Trem: WH + does + S + V."),
+    build("“O que você faz?” (profissão)", "What_WH|do_AUX|you_S|do?_V", "1º do = auxiliar, 2º do = verbo fazer."),
+    build("“Com que frequência eles visitam a avó?”", "How often_WH|do_AUX|they_S|visit_V|their grandma?_O", "WH + do + S + V + O.")
+  ]},
+  { id: "prep", badge: "AT", name: "At · In · On", sub: "Preposições de tempo", c: "--mint", qs: [
+    mc("I study English ___ the morning.", ["in", "on", "at"], "IN: períodos do dia (in the morning)."),
+    mc("I wake up ___ 7 o'clock.", ["at", "in", "on"], "AT: horário."),
+    mc("I study English ___ Monday.", ["on", "in", "at"], "ON: dia da semana."),
+    mc("My birthday is ___ May.", ["in", "on", "at"], "IN: mês."),
+    mc("The World Cup is ___ 2026.", ["in", "on", "at"], "IN: ano."),
+    mc("She doesn't work ___ Sundays.", ["on", "in", "at"], "ON: dia."),
+    mc("The class starts ___ 8 p.m.", ["at", "on", "in"], "AT: horário."),
+    mc("We have a party ___ December 25th.", ["on", "in", "at"], "ON: data."),
+    mc("IN é usado para…", ["mês, ano e período", "dia e data", "horário"], "IN – mês, ano, período."),
+    mc("ON é usado para…", ["dia e data", "horário", "mês e ano"], "On – dia, data."),
+    mc("AT é usado para…", ["horário", "dia da semana", "ano"], "At – horário."),
+    mc("“Eu estudo coreano de manhã.”", ["I study Korean in the morning.", "I study Korean on the morning.", "I study Korean at the morning."], "In the morning (período).", { hint: "Como se diz em inglês?" }),
+    build("“Eu estudo coreano de manhã.”", "I_S|study_V|Korean_O|in_PREP|the morning._ADV", "S + V + O + in + período."),
+    build("“Eu acordo às 7 horas.”", "I_S|wake up_V|at_PREP|7 o'clock._ADV", "S + V + at + horário.")
+  ]},
+  { id: "nouns", badge: "A/AN", name: "A / An + Plurals", sub: "Artigos, plurais regulares e irregulares", c: "--lemon", qs: [
+    mc("I bought ___ game.", ["a", "an", "(sem artigo)"], "game começa com som de consoante → a."),
+    mc("She has ___ idea.", ["an", "a", "(sem artigo)"], "idea começa com som de vogal → an."),
+    mc("He is ___ European.", ["a", "an", "(sem artigo)"], "European soa “iu” (som de y, consoante) → a. A regra é pelo SOM!"),
+    mc("Rico buys ___ gift for his sister.", ["a", "an", "(sem artigo)"], "gift: som de consoante → a."),
+    mc("I want ___ apple.", ["an", "a", "(sem artigo)"], "apple: som de vogal → an."),
+    mc("___ concert tickets are popular gifts.", ["(sem artigo)", "A", "An"], "Nunca use a/an com plural: Concert tickets are…"),
+    mc("child → ?", ["children", "childs", "childrens"], "Plural irregular: child → children.", { hint: "Qual é o plural?" }),
+    mc("man → ?", ["men", "mans", "mens"], "Plural irregular: man → men.", { hint: "Qual é o plural?" }),
+    mc("woman → ?", ["women", "womans", "womens"], "Plural irregular: woman → women.", { hint: "Qual é o plural?" }),
+    mc("person → ?", ["people", "peoples", "personies"], "Plural irregular: person → people.", { hint: "Qual é o plural?" }),
+    mc("gift → ?", ["gifts", "giftes", "gift"], "Plural regular: + s.", { hint: "Qual é o plural?" }),
+    mc("I have three ___.", ["bags", "bag", "a bags"], "Três = plural → bags."),
+    mc("Many ___ like concerts.", ["people", "person", "peoples"], "Many + plural: people."),
+    fix(["The children are playing games.", "The childs are playing games.", "The childrens are playing games."], "children já é plural; não leva -s."),
+    fix(["Picture frames aren't expensive.", "A picture frames aren't expensive.", "An picture frames aren't expensive."], "Nunca a/an antes de substantivo no plural."),
+    fix(["She has an idea.", "She has a idea.", "She has an ideas."], "idea: som de vogal → an (e singular)."),
+    build("“Talvez uma bolsa peruana colorida seja um presente melhor!”", "Maybe_ADV|a colorful Peruvian bag_S|is_V|a better gift!_C", "a + singular (a bag, a gift)."),
+    build("“Todo ano, Rico compra um presente para a irmã.”", "Every year,_ADV|Rico_S|buys_V|a gift for his sister._O", "Rico = he → buys. a + gift (singular).")
+  ]}
+];
+const MIX = { id: "mix", badge: "MIX", name: "Mix Mania", sub: "Desafio final com perguntas de todos os mundos", c: "--lav" };
+const ROUND = 10, MIX_ROUND = 15, HEARTS = 3, SPEED_FAST = 6, SPEED_OK = 12;
+
+/* ---------------- Áudio: trilha pop + efeitos (Web Audio) ---------------- */
+const Sound = (() => {
+  let ctx = null, comp, musicBus, sfxBus, noise, timer = null, nextT = 0, step = 0;
+  const BPM = 116, EIGHTH = 60 / BPM / 2;
+  const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
+  // I – V – vi – IV (C – G – Am – F)
+  const CHORDS = [[60, 64, 67], [59, 62, 67], [57, 60, 64], [57, 60, 65]];
+  const BASS = [36, 43, 45, 41];
+  const MEL_A = [[72, 0, 76, 79, 76, 0, 74, 72], [74, 0, 71, 74, 79, 0, 77, 74], [76, 0, 72, 76, 81, 79, 76, 0], [77, 76, 74, 72, 74, 0, 72, 0]];
+  const MEL_B = [[79, 79, 0, 76, 79, 0, 81, 79], [79, 0, 74, 0, 79, 81, 83, 0], [84, 0, 81, 79, 76, 0, 79, 0], [77, 0, 81, 0, 79, 77, 76, 74]];
+
+  function init() {
+    if (ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    ctx = new AC();
+    comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 4; comp.connect(ctx.destination);
+    musicBus = ctx.createGain(); musicBus.gain.value = 0.3; musicBus.connect(comp);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = 0.55; sfxBus.connect(comp);
+    noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    return true;
+  }
+  function tone(bus, m, t, dur, o) {
+    o = o || {};
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = o.type || "sine"; osc.frequency.setValueAtTime(mtof(m), t);
+    if (o.slide) osc.frequency.exponentialRampToValueAtTime(mtof(m + o.slide), t + dur);
+    const v = o.vol || 0.2;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + (o.attack || 0.005));
+    if (o.sustain) g.gain.setValueAtTime(v, t + dur * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    if (o.cutoff) { const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = o.cutoff; osc.connect(f); f.connect(g); } else osc.connect(g);
+    g.connect(bus); osc.start(t); osc.stop(t + dur + 0.05);
+  }
+  function hit(bus, t, type, freq, vol, dur) {
+    const src = ctx.createBufferSource(); src.buffer = noise;
+    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+    const g = ctx.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f); f.connect(g); g.connect(bus); src.start(t); src.stop(t + dur + 0.02);
+  }
+  function kick(t) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.14);
+    g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+    o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + 0.3);
+  }
+  function bell(bus, m, t, dur, vol) {
+    tone(bus, m, t, dur, { vol: vol, type: "sine" });
+    tone(bus, m + 12, t, dur * 0.6, { vol: vol * 0.35, type: "sine" });
+    tone(bus, m + 19, t, dur * 0.3, { vol: vol * 0.12, type: "triangle" });
+  }
+  function playStep(s, t) {
+    const pos = s % 8, bar = Math.floor(s / 8) % 4, section = Math.floor(s / 32) % 4, first = s < 32;
+    // bateria four-on-the-floor
+    kick(t);
+    if (pos % 2 === 1) hit(musicBus, t, "highpass", 7500, 0.12, 0.05);
+    if (pos === 2 || pos === 6) { hit(musicBus, t, "bandpass", 1600, 0.45, 0.16); tone(musicBus, 55, t, 0.08, { vol: 0.12, type: "triangle" }); }
+    if (pos % 2 === 1) { /* off-beat */ } else hit(musicBus, t, "highpass", 9000, 0.04, 0.03);
+    // baixo disco (oitavas)
+    tone(musicBus, BASS[bar] + (pos % 2 ? 12 : 0), t, EIGHTH * 0.9, { type: "square", vol: 0.12, cutoff: 700 });
+    // acordes
+    const ch = CHORDS[bar];
+    if (pos === 0) ch.forEach((n) => tone(musicBus, n, t, EIGHTH * 7, { type: "triangle", vol: 0.05, attack: 0.08, sustain: true }));
+    if (pos === 3 || pos === 6) ch.forEach((n) => tone(musicBus, n + 12, t, EIGHTH * 0.8, { type: "square", vol: 0.025, cutoff: 2600 }));
+    // melodia kawaii
+    if (first || section === 0 || section === 3) {
+      if (pos % 2 === 0) bell(musicBus, ch[(pos / 2) % 3] + 24, t, 0.25, 0.04);
+    } else {
+      const mel = section === 1 ? MEL_A : MEL_B, n = mel[bar][pos];
+      if (n) bell(musicBus, n, t, EIGHTH * 1.6, 0.11);
+    }
+  }
+  function tick() { while (nextT < ctx.currentTime + 0.12) { playStep(step, nextT); nextT += EIGHTH; step++; } }
+  return {
+    unlock() { if (!init()) return; if (ctx.state === "suspended") ctx.resume(); },
+    startMusic() { if (!init()) return; ctx.resume(); if (timer) return; step = 0; nextT = ctx.currentTime + 0.08; timer = setInterval(tick, 25); },
+    stopMusic() { clearInterval(timer); timer = null; },
+    sfx(kind) {
+      if (!ctx) return;
+      const t = ctx.currentTime + 0.01;
+      if (kind === "click") tone(sfxBus, 88, t, 0.06, { vol: 0.12 });
+      if (kind === "pick") tone(sfxBus, 79, t, 0.07, { vol: 0.12, type: "triangle" });
+      if (kind === "good") [72, 76, 79, 84].forEach((n, i) => bell(sfxBus, n, t + i * 0.07, 0.35, 0.22));
+      if (kind === "combo") [84, 88, 91, 96, 100].forEach((n, i) => bell(sfxBus, n, t + 0.3 + i * 0.05, 0.25, 0.12));
+      if (kind === "bad") { tone(sfxBus, 64, t, 0.18, { type: "triangle", vol: 0.25 }); tone(sfxBus, 59, t + 0.17, 0.3, { type: "triangle", vol: 0.25, slide: -3 }); }
+      if (kind === "end") [72, 76, 79, 84, 79, 84, 88].forEach((n, i) => bell(sfxBus, n, t + i * 0.11, 0.5, 0.2));
+      if (kind === "pop") hit(sfxBus, t, "bandpass", 2400, 0.3, 0.08);
+    }
+  };
+})();
+
+/* ---------------- Cena 3D (Three.js) ---------------- */
+const Scene3D = (() => {
+  const api = { burst() {}, mood() {}, mochiScreen: null, ok: false };
+  if (!window.THREE) return api;
+  let bgR, fxR;
+  try {
+    bgR = new THREE.WebGLRenderer({ canvas: $("#bg"), antialias: true, alpha: true });
+    fxR = new THREE.WebGLRenderer({ canvas: $("#fx"), antialias: true, alpha: true });
+  } catch (e) { return api; }
+  api.ok = true;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  bgR.setPixelRatio(DPR); fxR.setPixelRatio(DPR);
+  bgR.setClearColor(0x000000, 0); fxR.setClearColor(0x000000, 0);
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 14);
+  const bg = new THREE.Scene(), fx = new THREE.Scene();
+  bg.add(new THREE.AmbientLight(0xffffff, 0.7));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.65); sun.position.set(4, 6, 8); bg.add(sun);
+  const PASTEL = [0xFFB8D5, 0xD2C4FF, 0xB2EBD4, 0xB8DEFF, 0xFFEBA6, 0xFFD0B8, 0xFF9EC7];
+  const toon = (c) => new THREE.MeshToonMaterial({ color: c });
+  const tanHalf = Math.tan(THREE.MathUtils.degToRad(22.5));
+  const viewH = (z) => 2 * tanHalf * (camera.position.z - z);
+  const viewW = (z) => viewH(z) * camera.aspect;
+
+  function heartShape() {
+    const s = new THREE.Shape();
+    s.moveTo(0, 0.35); s.bezierCurveTo(0, 0.6, -0.4, 0.75, -0.62, 0.5); s.bezierCurveTo(-0.85, 0.22, -0.6, -0.15, 0, -0.6);
+    s.bezierCurveTo(0.6, -0.15, 0.85, 0.22, 0.62, 0.5); s.bezierCurveTo(0.4, 0.75, 0, 0.6, 0, 0.35);
+    return s;
+  }
+  function starShape() {
+    const s = new THREE.Shape();
+    for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.45 : 1, a = (i / 10) * Math.PI * 2 + Math.PI / 2, x = Math.cos(a) * r, y = Math.sin(a) * r; i ? s.lineTo(x, y) : s.moveTo(x, y); }
+    s.closePath(); return s;
+  }
+  const ext = { depth: 0.25, bevelEnabled: true, bevelThickness: 0.14, bevelSize: 0.12, bevelSegments: 4, curveSegments: 18 };
+  const heartGeo = new THREE.ExtrudeGeometry(heartShape(), ext); heartGeo.center();
+  const starGeo = new THREE.ExtrudeGeometry(starShape(), ext); starGeo.center();
+  const ballGeo = new THREE.SphereGeometry(0.6, 32, 24);
+  const donutGeo = new THREE.TorusGeometry(0.55, 0.25, 18, 36);
+
+  // nuvem fofinha
+  function cloud() {
+    const g = new THREE.Group(), m = toon(0xFFFFFF);
+    [[0, 0, 0.7], [0.7, -0.1, 0.55], [-0.7, -0.1, 0.55], [0.3, 0.35, 0.5], [-0.3, 0.3, 0.45]].forEach(([x, y, r]) => {
+      const b = new THREE.Mesh(ballGeo, m); b.position.set(x, y, 0); b.scale.setScalar(r / 0.6); g.add(b);
+    });
+    g.scale.set(1, 0.8, 0.7); return g;
+  }
+  const floaters = [];
+  const COUNT = reduceMotion ? 10 : 22;
+  for (let i = 0; i < COUNT; i++) {
+    const kind = i % 5;
+    let obj;
+    if (kind === 4) obj = cloud();
+    else obj = new THREE.Mesh([heartGeo, starGeo, ballGeo, donutGeo][kind], toon(pick(PASTEL)));
+    const z = -2 - Math.random() * 9;
+    obj.userData = { fx: (i / COUNT - 0.5) + (Math.random() - 0.5) * 0.08, fy: Math.random() - 0.5, z, ph: Math.random() * 6.28, sp: 0.4 + Math.random() * 0.6, rx: (Math.random() - 0.5) * 0.6, ry: (Math.random() - 0.5) * 0.9 };
+    obj.scale.multiplyScalar(0.55 + Math.random() * 0.6);
+    bg.add(obj); floaters.push(obj);
+  }
+
+  // Mascote Mochi (gatinho-mochi)
+  const mochi = new THREE.Group();
+  const bodyMat = toon(0xFFCFE3), black = new THREE.MeshBasicMaterial({ color: 0x4B3A66 }), white = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const body = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 36), bodyMat); body.scale.set(1.18, 0.95, 1); mochi.add(body);
+  [-1, 1].forEach((sx) => {
+    const ear = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.55, 20), bodyMat); ear.position.set(sx * 0.58, 0.85, 0); ear.rotation.z = -sx * 0.45; mochi.add(ear);
+    const inner = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.3, 16), toon(0xFF9EC7)); inner.position.set(sx * 0.6, 0.82, 0.14); inner.rotation.z = -sx * 0.45; mochi.add(inner);
+    const cheek = new THREE.Mesh(new THREE.CircleGeometry(0.15, 24), new THREE.MeshBasicMaterial({ color: 0xFF8FBC, transparent: true, opacity: 0.75 }));
+    cheek.position.set(sx * 0.66, -0.12, 0.8); cheek.rotation.y = sx * 0.6; mochi.add(cheek);
+  });
+  const eyes = [];
+  [-1, 1].forEach((sx) => {
+    const eye = new THREE.Group();
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.13, 20, 16), black); eye.add(pupil);
+    const shine = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10), white); shine.position.set(0.04, 0.05, 0.1); eye.add(shine);
+    eye.position.set(sx * 0.36, 0.12, 0.9); mochi.add(eye); eyes.push(eye);
+  });
+  const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.032, 8, 20, Math.PI), black);
+  mouth.position.set(0, -0.1, 0.98); mouth.rotation.z = Math.PI; mochi.add(mouth);
+  bg.add(mochi);
+  let mochiBase = new THREE.Vector3(), mochiScale = 1, moodName = "idle", moodT = 0, blinkAt = 2;
+  function placeMochi() {
+    const narrow = camera.aspect < 0.9, vh = viewH(0), vw = viewW(0);
+    mochiScale = narrow ? 0.62 : 0.95;
+    mochiBase.set(vw / 2 - (narrow ? 0.95 : 1.8), -vh / 2 + (narrow ? 0.85 : 1.5), 0);
+  }
+
+  // Confete 3D (InstancedMesh)
+  function makeBurst(geo, n) {
+    const mesh = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }), n);
+    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    const col = new THREE.Color();
+    for (let i = 0; i < n; i++) mesh.setColorAt(i, col.setHex(pick(PASTEL.concat([0xF27BAE, 0x9F8AF0, 0x6FB2EC, 0xE9C24F]))));
+    mesh.instanceColor.needsUpdate = true;
+    const P = { mesh, n, cursor: 0, pos: new Float32Array(n * 3), vel: new Float32Array(n * 3), rot: new Float32Array(n * 3), rv: new Float32Array(n * 3), life: new Float32Array(n), size: new Float32Array(n) };
+    fx.add(mesh); return P;
+  }
+  const strips = makeBurst(new THREE.PlaneGeometry(0.14, 0.26), reduceMotion ? 90 : 420);
+  const smallHeart = heartGeo.clone(); smallHeart.scale(0.17, 0.17, 0.1);
+  const smallStar = starGeo.clone(); smallStar.scale(0.15, 0.15, 0.1);
+  const hearts = makeBurst(smallHeart, reduceMotion ? 20 : 90);
+  const stars = makeBurst(smallStar, reduceMotion ? 20 : 90);
+  const systems = [strips, hearts, stars];
+  let activeUntil = 0;
+  function spawn(P, count, o, dir) {
+    for (let k = 0; k < count; k++) {
+      const i = P.cursor; P.cursor = (P.cursor + 1) % P.n;
+      P.pos[i * 3] = o.x; P.pos[i * 3 + 1] = o.y; P.pos[i * 3 + 2] = o.z;
+      const sp = 5 + Math.random() * 7, a = Math.random() * Math.PI * 2;
+      let vx = Math.cos(a) * sp * 0.75, vy = 4 + Math.random() * 8;
+      if (dir) { vx = dir * (4 + Math.random() * 6); vy = 7 + Math.random() * 7; }
+      P.vel[i * 3] = vx; P.vel[i * 3 + 1] = vy; P.vel[i * 3 + 2] = (Math.random() - 0.3) * 4;
+      for (let j = 0; j < 3; j++) { P.rot[i * 3 + j] = Math.random() * 6.28; P.rv[i * 3 + j] = (Math.random() - 0.5) * 14; }
+      P.life[i] = 2.6 + Math.random() * 1.4; P.size[i] = 0.7 + Math.random() * 0.7;
+    }
+  }
+  function screenToWorld(x, y, z) {
+    const v = new THREE.Vector3((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1, 0.5).unproject(camera);
+    const dir = v.sub(camera.position).normalize(), dist = (z - camera.position.z) / dir.z;
+    return camera.position.clone().add(dir.multiplyScalar(dist));
+  }
+  api.burst = (x, y, power) => {
+    power = power || 1;
+    const o = screenToWorld(x, y, 2), m = reduceMotion ? 0.3 : 1;
+    spawn(strips, Math.round(110 * power * m), o); spawn(hearts, Math.round(22 * power * m), o); spawn(stars, Math.round(22 * power * m), o);
+    if (power > 1.2) {
+      const l = screenToWorld(0, innerHeight, 1), r = screenToWorld(innerWidth, innerHeight, 1);
+      spawn(strips, Math.round(90 * m), l, 1); spawn(strips, Math.round(90 * m), r, -1);
+      spawn(hearts, Math.round(15 * m), l, 1); spawn(stars, Math.round(15 * m), r, -1);
+    }
+    activeUntil = clock.getElapsedTime() + 4.2;
+  };
+  api.mood = (m) => { moodName = m; moodT = 0; };
+  const dummy = new THREE.Object3D();
+  function updateBurst(P, dt, t) {
+    for (let i = 0; i < P.n; i++) {
+      if (P.life[i] <= 0) { dummy.scale.setScalar(0); dummy.updateMatrix(); P.mesh.setMatrixAt(i, dummy.matrix); continue; }
+      P.life[i] -= dt;
+      const b = i * 3;
+      P.vel[b + 1] -= 11 * dt;
+      const drag = Math.max(0, 1 - 1.7 * dt);
+      P.vel[b] *= drag; P.vel[b + 1] *= drag; P.vel[b + 2] *= drag;
+      if (P.vel[b + 1] < -2.6) P.vel[b + 1] = -2.6; // flutua como papel
+      P.pos[b] += (P.vel[b] + Math.sin(t * 4 + i) * 0.6) * dt; P.pos[b + 1] += P.vel[b + 1] * dt; P.pos[b + 2] += P.vel[b + 2] * dt;
+      for (let j = 0; j < 3; j++) P.rot[b + j] += P.rv[b + j] * dt;
+      dummy.position.set(P.pos[b], P.pos[b + 1], P.pos[b + 2]);
+      dummy.rotation.set(P.rot[b], P.rot[b + 1], P.rot[b + 2]);
+      dummy.scale.setScalar(P.size[i] * Math.min(1, P.life[i] * 2));
+      dummy.updateMatrix(); P.mesh.setMatrixAt(i, dummy.matrix);
+    }
+    P.mesh.instanceMatrix.needsUpdate = true;
+  }
+
+  function resize() {
+    const w = innerWidth, h = innerHeight;
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    bgR.setSize(w, h, false); fxR.setSize(w, h, false); placeMochi();
+  }
+  addEventListener("resize", resize); resize();
+
+  const clock = new THREE.Clock();
+  const proj = new THREE.Vector3();
+  let fxWasActive = false;
+  function frame() {
+    const dt = Math.min(clock.getDelta(), 0.05), t = clock.getElapsedTime();
+    const motion = reduceMotion ? 0.25 : 1;
+    floaters.forEach((o) => {
+      const u = o.userData;
+      o.position.set(u.fx * (viewW(u.z) + 2), u.fy * viewH(u.z) + Math.sin(t * u.sp + u.ph) * 0.4 * motion, u.z);
+      o.rotation.x += u.rx * dt * motion; o.rotation.y += u.ry * dt * motion;
+    });
+    // Mochi
+    moodT += dt;
+    let jump = 0, spin = 0, squash = 1 + Math.sin(t * 3) * 0.03 * motion, tilt = 0;
+    if (moodName === "happy") {
+      const k = Math.min(moodT / 0.9, 1);
+      jump = Math.sin(Math.PI * k) * 1.3; spin = k * Math.PI * 2; squash = 1 + Math.sin(Math.PI * k * 2) * 0.12;
+      if (k >= 1) moodName = "idle";
+    } else if (moodName === "sad") {
+      const k = Math.min(moodT / 1.2, 1);
+      squash = 0.86 + k * 0.14; tilt = Math.sin(k * Math.PI * 5) * 0.18 * (1 - k);
+      mouth.rotation.z = k < 0.95 ? 0 : Math.PI;
+      if (k >= 1) moodName = "idle";
+    } else mouth.rotation.z = Math.PI;
+    if (moodName === "happy") mouth.rotation.z = Math.PI;
+    mochi.position.set(mochiBase.x, mochiBase.y + jump * mochiScale + Math.sin(t * 2) * 0.06, 0);
+    mochi.rotation.set(0, spin + Math.sin(t * 0.8) * 0.25, tilt);
+    mochi.scale.set(mochiScale / Math.sqrt(squash), mochiScale * squash, mochiScale);
+    if (t > blinkAt) { eyes.forEach((e) => (e.scale.y = 0.12)); if (t > blinkAt + 0.12) { eyes.forEach((e) => (e.scale.y = 1)); blinkAt = t + 2 + Math.random() * 3; } }
+    proj.set(mochiBase.x, mochiBase.y + 1.35 * mochiScale, 0).project(camera);
+    api.mochiScreen = { x: (proj.x + 1) / 2 * innerWidth, y: (1 - proj.y) / 2 * innerHeight };
+    bgR.render(bg, camera);
+    const active = t < activeUntil;
+    if (active) { systems.forEach((P) => updateBurst(P, dt, t)); fxR.render(fx, camera); }
+    else if (fxWasActive) fxR.clear();
+    fxWasActive = active;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  return api;
+})();
+
+/* ---------------- Mochi fala ---------------- */
+const bubble = $("#bubble");
+let bubbleTimer;
+function say(text, ms) {
+  // no celular o Mochi fica atrás do cartão, então o balão sairia por cima do conteúdo
+  if (!Scene3D.ok || !Scene3D.mochiScreen || innerWidth < 700) return;
+  bubble.textContent = text;
+  const p = Scene3D.mochiScreen;
+  const half = bubble.offsetWidth / 2 + 8;
+  bubble.style.left = Math.min(Math.max(p.x, half), innerWidth - half) + "px";
+  bubble.style.top = p.y + "px";
+  bubble.classList.add("show");
+  clearTimeout(bubbleTimer); bubbleTimer = setTimeout(() => bubble.classList.remove("show"), ms || 1800);
+}
+const PRAISE = ["Awesome!", "Great job!", "You rock!", "Perfect!", "Super!", "Amazing!", "Yay!"];
+const OOPS = ["Oops! Keep going!", "Almost!", "Don't give up!", "Next one!"];
+
+/* ---------------- Estado e telas ---------------- */
+const best = store.get("popEnglishBest", {});
+let musicOn = store.get("popEnglishMusic", true);
+const S = { topic: null, qs: [], i: 0, score: 0, streak: 0, maxStreak: 0, hearts: HEARTS, correct: 0, answered: false, t0: 0, build: null };
+
+function show(id) { ["menu", "game", "end"].forEach((s) => ($("#" + s).hidden = s !== id)); $("#app").scrollTop = 0; }
+const starStr = (n) => [0, 1, 2].map((i) => `<span class="${i < n ? "on" : ""}">★</span>`).join("");
+
+function renderMenu() {
+  const all = TOPICS.concat([MIX]);
+  $("#worlds").innerHTML = all.map((t) => {
+    const b = best[t.id] || { score: 0, stars: 0 };
+    const count = t.qs ? t.qs.length : TOPICS.reduce((n, x) => n + x.qs.length, 0);
+    return `<button type="button" class="world${t.id === "mix" ? " mix" : ""}" data-id="${t.id}" style="--c:var(${t.c});--cd:var(${t.c}-d)">
+      <span class="badge">${t.badge}</span><h3>${esc(t.name)}</h3><p>${esc(t.sub)}</p>
+      ${t.id === "mix" ? '<span class="go">Jogar ▸</span>' : ""}
+      <span class="meta"><span class="stars">${starStr(b.stars)}</span><span>${b.score ? "Recorde " + b.score : count + " perguntas"}</span></span>
+    </button>`;
+  }).join("");
+  const total = all.reduce((n, t) => n + ((best[t.id] && best[t.id].score) || 0), 0);
+  const stars = all.reduce((n, t) => n + ((best[t.id] && best[t.id].stars) || 0), 0);
+  $("#totalChip").textContent = "🏆 Recorde total: " + total.toLocaleString("pt-BR");
+  $("#starsChip").textContent = "⭐ " + stars + " / " + all.length * 3 + " estrelas";
+  show("menu");
+}
+
+function startTopic(id) {
+  S.topic = id === "mix" ? MIX : TOPICS.find((t) => t.id === id);
+  const pool = id === "mix" ? TOPICS.flatMap((t) => t.qs) : S.topic.qs;
+  S.qs = shuffle(pool).slice(0, id === "mix" ? MIX_ROUND : ROUND);
+  Object.assign(S, { i: 0, score: 0, streak: 0, maxStreak: 0, hearts: HEARTS, correct: 0 });
+  if (musicOn) Sound.startMusic();
+  show("game"); renderQ();
+  say("Let's go! " + S.topic.name, 1800);
+}
+
+function renderHud() {
+  $("#scoreChip").textContent = S.score.toLocaleString("pt-BR") + " pts";
+  const combo = $("#comboChip");
+  combo.hidden = S.streak < 2;
+  combo.textContent = "🔥 Combo x" + S.streak;
+  $("#hearts").innerHTML = Array.from({ length: HEARTS }, (_, i) => `<span class="${i < S.hearts ? "" : "off"}">♥</span>`).join("");
+  $("#hearts").setAttribute("aria-label", S.hearts + " vidas");
+  $("#prog").style.width = (S.i / S.qs.length) * 100 + "%";
+}
+
+function promptHTML(q) {
+  return esc(q.q).replace("___", '<span class="blank" id="blank">___</span>');
+}
+
+function renderQ() {
+  const q = S.qs[S.i];
+  S.answered = false; S.t0 = performance.now();
+  renderHud();
+  const label = q.t === "build" ? "Monte a frase" : q.kind === "fix" ? "Corrija o erro" : q.kind === "read" ? "Leitura" : "Escolha";
+  let body = "";
+  if (q.t === "mc") {
+    const opts = shuffle(q.opts);
+    body = `<p class="prompt">${promptHTML(q)}</p>${q.hint ? `<p class="hint">${esc(q.hint)}</p>` : ""}
+      <div class="opts">${opts.map((o, i) => `<button type="button" class="opt" data-v="${esc(o)}"><span class="key">${i + 1}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
+  } else {
+    let order = shuffle(q.chunks.map((c, i) => i));
+    if (order.length > 1) while (order.every((v, i) => v === i)) order = shuffle(order);
+    S.build = { placed: [], bank: order };
+    body = `<p class="prompt">${esc(q.q)}</p><p class="hint">Coloque os blocos na ordem certa em inglês.</p>
+      <div class="slot" id="slot"></div><div class="bank" id="bank"></div>
+      <div class="build-actions"><button type="button" class="btn mint" id="checkBtn" disabled>Verificar ✓</button><button type="button" class="btn alt" id="resetBtn">Limpar</button></div>`;
+  }
+  const card = $("#card");
+  card.innerHTML = `<div class="qhead"><span class="tag">${S.topic.badge} · ${label}</span><span class="qnum">${S.i + 1} / ${S.qs.length}</span></div>
+    <div class="timer"><i id="timerBar"></i></div><div class="timer-note">Responda rápido para ganhar bônus de velocidade ⚡</div>
+    ${body}<div id="fbWrap"></div>`;
+  card.classList.remove("enter"); void card.offsetWidth; card.classList.add("enter");
+  const bar = $("#timerBar");
+  bar.style.transition = "none"; bar.style.transform = "scaleX(1)"; void bar.offsetWidth;
+  bar.style.transition = `transform ${SPEED_OK}s linear`; bar.style.transform = "scaleX(0)";
+  if (q.t === "build") renderBuild();
+  const first = card.querySelector(".opt, .chunk");
+  if (first && matchMedia("(hover: hover)").matches) first.focus({ preventScroll: true });
+}
+
+function chunkHTML(c, idx, from, reveal) {
+  const [txt, role] = c, r = ROLES[role];
+  const style = reveal ? ` style="--rc:${r[1]};--rd:${r[2]}"` : "";
+  return `<button type="button" class="chunk" data-i="${idx}" data-from="${from}"${style}${reveal ? " disabled" : ""}>${esc(txt)}${reveal ? `<small>${role}</small>` : ""}</button>`;
+}
+function renderBuild() {
+  const q = S.qs[S.i], b = S.build;
+  $("#slot").innerHTML = b.placed.map((i) => chunkHTML(q.chunks[i], i, "slot")).join("");
+  $("#bank").innerHTML = b.bank.map((i) => chunkHTML(q.chunks[i], i, "bank")).join("");
+  $("#checkBtn").disabled = b.bank.length > 0;
+}
+
+function pointsFor() {
+  const secs = (performance.now() - S.t0) / 1000;
+  const speed = secs < SPEED_FAST ? 50 : secs < SPEED_OK ? 25 : 0;
+  const combo = Math.min((S.streak - 1) * 20, 100);
+  return { base: 100, combo, speed, total: 100 + combo + speed };
+}
+
+function freezeTimer() {
+  const bar = $("#timerBar"); if (!bar) return;
+  const m = getComputedStyle(bar).transform; bar.style.transition = "none"; bar.style.transform = m;
+}
+
+function finishAnswer(ok, anchorEl, correctHTML) {
+  const q = S.qs[S.i];
+  S.answered = true; freezeTimer();
+  let pts = null;
+  if (ok) {
+    S.streak++; S.maxStreak = Math.max(S.maxStreak, S.streak); S.correct++;
+    pts = pointsFor(); S.score += pts.total;
+    const r = anchorEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    Scene3D.burst(cx, cy, S.streak >= 3 ? 1.5 : 1);
+    Scene3D.mood("happy");
+    Sound.sfx("good"); Sound.sfx("pop"); if (S.streak >= 3) Sound.sfx("combo");
+    floaty("+" + pts.total, cx, r.top);
+    say(S.streak >= 3 ? "Combo x" + S.streak + "! " + pick(PRAISE) : pick(PRAISE));
+    if (S.streak >= 2) { const c = $("#comboChip"); c.classList.remove("pulse"); void c.offsetWidth; c.classList.add("pulse"); }
+  } else {
+    S.streak = 0; S.hearts--;
+    Scene3D.mood("sad"); Sound.sfx("bad"); say(pick(OOPS));
+  }
+  renderHud();
+  $("#prog").style.width = ((S.i + 1) / S.qs.length) * 100 + "%";
+  const last = S.i === S.qs.length - 1 || S.hearts <= 0;
+  const ptsLine = ok ? `<span class="pts">+${pts.base} acerto${pts.combo ? " · +" + pts.combo + " combo" : ""}${pts.speed ? " · +" + pts.speed + " rapidez ⚡" : ""}</span>` : "";
+  $("#fbWrap").innerHTML = `<div class="fb ${ok ? "good" : "bad"}" role="status">
+    <h4>${ok ? pick(["Correct!", "Yes! Correct!", "Well done!"]) : "Not quite…"}</h4>
+    ${ptsLine}${ok ? "" : `<p><b>Resposta certa:</b> ${correctHTML}</p>`}
+    <p>💡 ${esc(q.why)}</p>
+    <div class="row"><button type="button" class="btn big" id="nextBtn">${last ? "Ver resultado ▸" : "Next ▸"}</button></div></div>`;
+  const nb = $("#nextBtn"); nb.focus({ preventScroll: true });
+  $("#fbWrap").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
+}
+
+function answerMC(btn) {
+  if (S.answered) return;
+  const q = S.qs[S.i], ok = btn.dataset.v === q.a;
+  document.querySelectorAll(".opt").forEach((b) => {
+    b.disabled = true;
+    if (b.dataset.v === q.a) b.classList.add("correct");
+    else if (b === btn) b.classList.add("wrong"); else b.classList.add("dim");
+  });
+  const blank = $("#blank");
+  if (blank && q.a !== "(sem artigo)") { blank.textContent = q.a; blank.classList.add("filled"); }
+  finishAnswer(ok, btn, `<b>${esc(q.a)}</b>`);
+}
+
+function checkBuild() {
+  if (S.answered) return;
+  const q = S.qs[S.i], b = S.build;
+  const given = b.placed.map((i) => q.chunks[i][0]).join("|"), target = q.chunks.map((c) => c[0]).join("|");
+  const ok = given === target;
+  $("#slot").innerHTML = b.placed.map((i) => chunkHTML(q.chunks[i], i, "slot", true)).join("");
+  if (!ok) $("#slot").querySelectorAll(".chunk").forEach((c) => c.classList.add("shake"));
+  $("#bank").innerHTML = ""; $("#checkBtn").disabled = true; $("#resetBtn").disabled = true;
+  const legend = [...new Set(q.chunks.map((c) => c[1]))].map((r) => `<span style="--rc:${ROLES[r][1]}">${r} = ${ROLES[r][0]}</span>`).join("");
+  $("#bank").innerHTML = `<div class="legend">${legend}</div>`;
+  const correctHTML = `<span class="answer-line">${q.chunks.map((c, i) => chunkHTML(c, i, "x", true)).join("")}</span>`;
+  finishAnswer(ok, $("#slot"), correctHTML);
+}
+
+function next() {
+  Sound.sfx("click");
+  if (S.hearts <= 0 || S.i >= S.qs.length - 1) return endRound();
+  S.i++; renderQ();
+}
+
+function endRound() {
+  const total = S.qs.length, acc = S.correct / total;
+  const stars = acc >= 0.9 ? 3 : acc >= 0.7 ? 2 : acc >= 0.4 ? 1 : 0;
+  const prev = best[S.topic.id] || { score: 0, stars: 0 };
+  const isBest = S.score > prev.score;
+  best[S.topic.id] = { score: Math.max(prev.score, S.score), stars: Math.max(prev.stars, stars) };
+  store.set("popEnglishBest", best);
+  const out = S.hearts <= 0;
+  const title = out ? "Game over!" : ["Keep practicing!", "Good try!", "Great job!", "Perfect! You're a star!"][stars];
+  const msg = out ? "Suas vidas acabaram, mas cada erro ensina. Tente de novo!" : ["Revise a matéria e jogue outra vez.", "Você está no caminho certo!", "Muito bem! Falta pouco para as 3 estrelas.", "Você dominou este mundo!"][stars];
+  $("#endCard").innerHTML = `<span class="tag">${S.topic.badge} · ${esc(S.topic.name)}</span>
+    <h2>${title}</h2>
+    <div class="big-stars">${[0, 1, 2].map((i) => `<span class="${i < stars ? "on" : ""}" style="animation-delay:${0.25 + i * 0.25}s">★</span>`).join("")}</div>
+    ${isBest && S.score > 0 ? '<span class="newbest">🏆 Novo recorde!</span>' : ""}
+    <p class="lead">${msg}</p>
+    <div class="stats">
+      <div class="stat"><b>${S.score.toLocaleString("pt-BR")}</b><span>pontos</span></div>
+      <div class="stat"><b>${S.correct}/${total}</b><span>acertos</span></div>
+      <div class="stat"><b>x${S.maxStreak}</b><span>maior combo</span></div>
+    </div>
+    <div class="row"><button type="button" class="btn big" id="againBtn">Jogar de novo ↻</button><button type="button" class="btn alt big" id="menuBtn">Outros mundos</button></div>`;
+  show("end");
+  Sound.sfx("end");
+  if (stars >= 2) {
+    setTimeout(() => Scene3D.burst(innerWidth / 2, innerHeight * 0.35, 1.6), 200);
+    setTimeout(() => Scene3D.burst(innerWidth * 0.25, innerHeight * 0.4, 1), 700);
+    setTimeout(() => Scene3D.burst(innerWidth * 0.75, innerHeight * 0.4, 1), 1100);
+    Scene3D.mood("happy"); say(stars === 3 ? "You're a superstar!" : "Great job!", 2500);
+  } else { Scene3D.mood(stars ? "happy" : "sad"); say("Let's try again!", 2200); }
+  $("#againBtn").focus({ preventScroll: true });
+}
+
+function floaty(text, x, y) {
+  const el = document.createElement("div");
+  el.className = "floaty"; el.textContent = text; el.style.left = x + "px"; el.style.top = y + "px";
+  document.body.appendChild(el); setTimeout(() => el.remove(), 1300);
+}
+
+/* ---------------- Eventos ---------------- */
+document.addEventListener("click", (e) => {
+  const w = e.target.closest(".world");
+  if (w) { Sound.unlock(); Sound.sfx("click"); return startTopic(w.dataset.id); }
+  const opt = e.target.closest(".opt");
+  if (opt) return answerMC(opt);
+  const ch = e.target.closest(".chunk");
+  if (ch && !ch.disabled && S.build && !S.answered) {
+    const i = +ch.dataset.i, b = S.build;
+    if (ch.dataset.from === "bank") { b.bank.splice(b.bank.indexOf(i), 1); b.placed.push(i); }
+    else { b.placed.splice(b.placed.indexOf(i), 1); b.bank.push(i); }
+    Sound.sfx("pick"); renderBuild();
+    const nextChunk = $("#bank .chunk") || $("#checkBtn"); if (nextChunk && matchMedia("(hover: hover)").matches) nextChunk.focus({ preventScroll: true });
+    return;
+  }
+  const id = e.target.closest("button") && e.target.closest("button").id;
+  if (id === "checkBtn") return checkBuild();
+  if (id === "resetBtn") { S.build.bank = S.build.bank.concat(S.build.placed); S.build.placed = []; Sound.sfx("click"); return renderBuild(); }
+  if (id === "nextBtn") return next();
+  if (id === "againBtn") return startTopic(S.topic.id);
+  if (id === "menuBtn" || id === "home") { Sound.sfx("click"); return renderMenu(); }
+});
+
+document.addEventListener("keydown", (e) => {
+  if ($("#game").hidden || e.target.closest("input, textarea")) return;
+  const q = S.qs[S.i];
+  if (!S.answered && q && q.t === "mc" && /^[1-4]$/.test(e.key)) {
+    const btn = document.querySelectorAll(".opt")[+e.key - 1]; if (btn) answerMC(btn);
+  }
+});
+
+const musicBtn = $("#musicBtn");
+function syncMusicBtn() { musicBtn.setAttribute("aria-pressed", String(musicOn)); musicBtn.textContent = "♪ Música: " + (musicOn ? "on" : "off"); }
+musicBtn.addEventListener("click", () => {
+  musicOn = !musicOn; store.set("popEnglishMusic", musicOn); syncMusicBtn();
+  Sound.unlock();
+  if (musicOn) Sound.startMusic(); else Sound.stopMusic();
+});
+syncMusicBtn();
+
+renderMenu();
+setTimeout(() => say("Hi! I'm Mochi! Let's play!", 3200), 900);
+})();
+</script>
+</html>
