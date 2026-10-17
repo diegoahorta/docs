@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>이·그·저 Pop!</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Layout: one-screen game. A 3D stage on top acts out the 이/그/저 triangle (Ana · 준호 · far shelf); the answer panel docks below. */
+:root{
+  --bg:#FFF3F9; --bg2:#EFE7FF;
+  --ink:#4B3A66; --ink-soft:#7E6C9B;
+  --card:#FFFFFF; --line:#EBDDF8;
+  --pink:#FF8FC0; --pink-soft:#FFE1EF;
+  --mint:#6FD8B4; --mint-soft:#DBF6EC;
+  --sky:#86C3FF; --sky-soft:#DEEEFF;
+  --lemon:#FFDF7E; --lilac:#B9A3FF;
+  --good:#2FB386; --bad:#F2657F;
+  --ground:#F1DDFF; --shelf:#FFCFE4;
+  --veil:rgba(255,243,249,.78);
+  --shadow:0 6px 0 rgba(75,58,102,.10);
+  --font-display:'Jua','Nunito',system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --font-body:'Nunito',system-ui,-apple-system,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#221B36; --bg2:#2D2348;
+    --ink:#F7EFFF; --ink-soft:#C3B4DE;
+    --card:#30274D; --line:#4B3E6E;
+    --pink-soft:#4C2D4C; --mint-soft:#21443D; --sky-soft:#243A58;
+    --good:#5FE0B0; --bad:#FF8DA2;
+    --ground:#3A2E5A; --shelf:#5B3E68;
+    --veil:rgba(34,27,54,.8);
+    --shadow:0 6px 0 rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#221B36; --bg2:#2D2348;
+  --ink:#F7EFFF; --ink-soft:#C3B4DE;
+  --card:#30274D; --line:#4B3E6E;
+  --pink-soft:#4C2D4C; --mint-soft:#21443D; --sky-soft:#243A58;
+  --good:#5FE0B0; --bad:#FF8DA2;
+  --ground:#3A2E5A; --shelf:#5B3E68;
+  --veil:rgba(34,27,54,.8);
+  --shadow:0 6px 0 rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{
+  margin:0; overflow-x:hidden;
+  background:radial-gradient(circle at 12% 8%, var(--pink-soft), transparent 40%),
+             radial-gradient(circle at 90% 90%, var(--sky-soft), transparent 45%),
+             linear-gradient(160deg, var(--bg), var(--bg2));
+  background-color:var(--bg);
+  color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.45;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:12px;
+}
+button{font:inherit; color:inherit}
+button:focus-visible{outline:3px solid var(--lilac); outline-offset:3px}
+.ko{font-family:var(--font-display); letter-spacing:.01em}
+
+#app{position:relative; height:100%; min-height:600px; max-width:1040px; margin:0 auto; display:flex; flex-direction:column; gap:12px}
+
+/* ---------- stage ---------- */
+.stage{position:relative; flex:1 1 auto; min-height:280px; border-radius:30px; overflow:hidden;
+  background:linear-gradient(180deg, var(--sky-soft) 0%, var(--pink-soft) 62%, var(--ground) 100%);
+  border:3px solid var(--line); box-shadow:var(--shadow)}
+#scene{position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:manipulation}
+#scene.pointing{cursor:pointer}
+.hud{position:absolute; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap; pointer-events:none; z-index:2}
+.hud-group{display:flex; gap:6px; flex-wrap:wrap; pointer-events:auto}
+.pill{display:inline-flex; align-items:center; gap:6px; background:var(--card); border:2px solid var(--line); border-radius:999px; padding:5px 12px; font-family:var(--font-display); font-size:1.02rem; box-shadow:0 3px 0 var(--line); font-variant-numeric:tabular-nums}
+.pill small{font-family:var(--font-body); font-weight:800; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+.pill.bump{animation:bump .45s}
+.streak.hot{background:var(--lemon); color:#4B3A66; border-color:#F5C94E}
+.streak.hot small{color:#7A5A12}
+.toggle{cursor:pointer; font-family:var(--font-body); font-weight:800; font-size:.8rem}
+.toggle[aria-pressed="false"]{opacity:.55}
+.dots{display:flex; gap:5px; padding:6px 10px}
+.dot{width:10px; height:10px; border-radius:50%; background:var(--line)}
+.dot.now{background:var(--lilac); transform:scale(1.25)}
+.dot.ok{background:var(--good)} .dot.no{background:var(--bad)}
+
+.floater{position:absolute; z-index:3; pointer-events:none; font-family:var(--font-display); font-size:1.6rem; color:var(--good);
+  text-shadow:0 2px 0 var(--card), 0 -2px 0 var(--card), 2px 0 0 var(--card), -2px 0 0 var(--card); animation:floatUp 1.3s ease-out forwards; transform:translate(-50%,-50%)}
+.floater.combo{color:#E3A400; font-size:1.25rem}
+
+.feedback{position:absolute; z-index:4; left:50%; bottom:12px; transform:translateX(-50%); width:min(560px, calc(100% - 24px));
+  background:var(--card); border:3px solid var(--line); border-radius:24px; padding:12px 16px; box-shadow:var(--shadow);
+  display:grid; grid-template-columns:1fr auto; gap:4px 14px; align-items:center; animation:popIn .35s cubic-bezier(.3,1.6,.5,1)}
+.feedback.ok{border-color:var(--good)} .feedback.no{border-color:var(--bad)}
+.fb-title{font-family:var(--font-display); font-size:1.3rem}
+.feedback.ok .fb-title{color:var(--good)} .feedback.no .fb-title{color:var(--bad)}
+.fb-answer{font-family:var(--font-display); font-size:1.15rem}
+.fb-why{grid-column:1/-1; margin:0; color:var(--ink-soft); font-size:.92rem}
+.fb-actions{grid-row:1/3; grid-column:2; display:flex; flex-direction:column; gap:6px}
+
+/* ---------- panel ---------- */
+.panel{flex:0 0 auto; background:var(--card); border:3px solid var(--line); border-radius:30px; padding:14px 18px 16px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px}
+.qmeta{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.chip{font-family:var(--font-body); font-weight:900; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:var(--bg2); color:var(--ink-soft)}
+.speaker{font-weight:800; font-size:.85rem; padding:4px 10px; border-radius:999px; background:var(--pink-soft)}
+.speaker.junho{background:var(--mint-soft)}
+.situation{margin:0; font-weight:700; color:var(--ink-soft); max-width:65ch}
+.ko-line{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:var(--font-display); font-size:clamp(1.5rem, 4.6vw, 2.1rem); line-height:1.2; text-wrap:balance}
+.blank{display:inline-block; min-width:2.6em; padding:0 .3em; border-radius:12px; background:var(--lemon); color:#4B3A66; text-align:center}
+.options{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px}
+.opt{position:relative; font-family:var(--font-display); font-size:1.3rem; padding:13px 12px 12px; border-radius:18px; border:3px solid var(--line); background:var(--bg); color:var(--ink);
+  box-shadow:0 5px 0 var(--line); cursor:pointer; transition:transform .12s, box-shadow .12s, background .2s; text-align:center}
+.opt:hover:not(:disabled){transform:translateY(-2px); background:var(--pink-soft)}
+.opt:active:not(:disabled){transform:translateY(3px); box-shadow:0 2px 0 var(--line)}
+.opt:disabled{cursor:default}
+.opt .num{position:absolute; top:6px; left:10px; font-family:var(--font-body); font-weight:900; font-size:.68rem; color:var(--ink-soft)}
+.opt small{display:block; font-family:var(--font-body); font-weight:700; font-size:.75rem; color:var(--ink-soft)}
+.opt.ok{background:var(--mint-soft); border-color:var(--good); box-shadow:0 5px 0 var(--good)}
+.opt.bad{background:var(--pink-soft); border-color:var(--bad); box-shadow:0 5px 0 var(--bad); animation:shake .4s}
+.opt.dim{opacity:.5}
+.point-hint{display:flex; align-items:center; gap:8px; font-weight:800; color:var(--ink-soft)}
+.point-hint .hand{display:inline-block; animation:tap 1s infinite}
+.zone-btns .opt{font-family:var(--font-body); font-weight:800; font-size:.95rem}
+
+.cta{cursor:pointer; border:0; border-radius:999px; padding:12px 22px; font-family:var(--font-display); font-size:1.15rem; color:#4B3A66;
+  background:linear-gradient(135deg, var(--pink), var(--lilac)); box-shadow:0 5px 0 #A983E8; position:relative; overflow:hidden; transition:transform .12s}
+.cta:hover{transform:translateY(-2px)} .cta:active{transform:translateY(3px); box-shadow:0 2px 0 #A983E8}
+.cta .bar{position:absolute; left:0; bottom:0; height:4px; width:0; background:rgba(255,255,255,.8)}
+.cta .bar.run{animation:fill 2.4s linear forwards}
+.ghost{cursor:pointer; border:2px solid var(--line); background:var(--bg); border-radius:999px; padding:8px 14px; font-weight:800; font-size:.85rem}
+.icon-btn{cursor:pointer; border:2px solid var(--line); background:var(--bg); border-radius:999px; padding:4px 12px; font-family:var(--font-body); font-weight:800; font-size:.8rem; vertical-align:middle}
+
+/* ---------- overlays ---------- */
+.overlay{position:absolute; inset:0; z-index:10; display:flex; align-items:center; justify-content:center; padding:16px; background:var(--veil); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-radius:30px; overflow-y:auto}
+.ov-card{width:min(520px, 100%); background:var(--card); border:3px solid var(--line); border-radius:30px; padding:22px 22px 20px; box-shadow:var(--shadow); text-align:center; display:flex; flex-direction:column; gap:12px; align-items:center; animation:popIn .45s cubic-bezier(.3,1.6,.5,1)}
+.logo{font-family:var(--font-display); font-size:clamp(2.4rem, 9vw, 3.6rem); line-height:1; margin:0;
+  color:var(--ink); text-shadow:3px 3px 0 var(--pink), 6px 6px 0 var(--lilac)}
+.logo span{display:inline-block; animation:wiggle 2.4s ease-in-out infinite}
+.logo span:nth-child(2){animation-delay:.2s} .logo span:nth-child(3){animation-delay:.4s} .logo span:nth-child(4){animation-delay:.6s} .logo span:nth-child(5){animation-delay:.8s}
+.eyebrow{font-weight:900; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); margin:0}
+.lead{margin:0; max-width:46ch; font-weight:700}
+.tri{width:100%; max-width:340px; height:auto}
+.tri .edge{stroke:var(--line); stroke-width:4; stroke-dasharray:2 9; stroke-linecap:round}
+.tri .n-i{fill:var(--pink-soft); stroke:var(--pink); stroke-width:4}
+.tri .n-g{fill:var(--mint-soft); stroke:var(--mint); stroke-width:4}
+.tri .n-j{fill:var(--sky-soft); stroke:var(--sky); stroke-width:4}
+.tri .big{font-family:var(--font-display); font-size:26px; fill:var(--ink)}
+.tri .lbl{font-family:var(--font-body); font-weight:800; font-size:12.5px; fill:var(--ink-soft)}
+.rules{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; width:100%}
+.rule{background:var(--bg); border:2px solid var(--line); border-radius:16px; padding:8px 6px; font-size:.8rem; font-weight:700; color:var(--ink-soft); min-width:0}
+.rule b{display:block; font-family:var(--font-display); font-weight:400; font-size:1.15rem; color:var(--ink)}
+.best{font-size:.85rem; font-weight:800; color:var(--ink-soft)}
+.lvl-ko{font-family:var(--font-display); font-size:clamp(1.8rem, 7vw, 2.5rem); margin:0; line-height:1.15; text-wrap:balance}
+.lvl-body{margin:0; max-width:44ch; font-weight:700; color:var(--ink-soft)}
+.lvl-body .ko{color:var(--ink)}
+.banner{font-family:var(--font-display); font-size:1.15rem; padding:6px 16px; border-radius:999px; background:var(--lemon); color:#4B3A66}
+.stars{font-size:2.6rem; letter-spacing:.1em; line-height:1}
+.stars .off{opacity:.2; filter:grayscale(1)}
+.stats{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; width:100%}
+.stat{background:var(--bg); border:2px solid var(--line); border-radius:16px; padding:10px 6px; min-width:0}
+.stat b{display:block; font-family:var(--font-display); font-weight:400; font-size:1.5rem; font-variant-numeric:tabular-nums}
+.stat span{font-size:.72rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+.foot{font-size:.75rem; font-weight:700; color:var(--ink-soft); margin:0}
+
+@keyframes popIn{from{transform:scale(.7); opacity:0}to{transform:scale(1); opacity:1}}
+.feedback{animation-name:fbIn}
+@keyframes fbIn{from{transform:translate(-50%, 30px); opacity:0}to{transform:translate(-50%,0); opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes floatUp{0%{opacity:0; margin-top:10px}15%{opacity:1}100%{opacity:0; margin-top:-70px}}
+@keyframes wiggle{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-6px) rotate(-4deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-3px) rotate(3deg)}}
+@keyframes tap{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fill{from{width:0}to{width:100%}}
+@media (max-width:520px){
+  body{font-size:14px}
+  .feedback{grid-template-columns:1fr}
+  .fb-actions{grid-row:auto; grid-column:1; flex-direction:row; justify-content:flex-end}
+  .opt{font-size:1.15rem}
+  .options{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="stage" id="stage">
+    <canvas id="scene" aria-label="Cena com Ana à esquerda, 준호 à direita e uma prateleira ao fundo"></canvas>
+    <div class="hud">
+      <div class="hud-group">
+        <span class="pill" id="scorePill"><small>점수</small><span id="score">0</span></span>
+        <span class="pill streak" id="streakPill"><small>콤보</small><span id="streak">x0</span></span>
+        <span class="pill dots" id="dots" aria-label="Progresso do nível"></span>
+      </div>
+      <div class="hud-group">
+        <button class="pill toggle" id="musicBtn" aria-pressed="false">♪ Música</button>
+        <button class="pill toggle" id="voiceBtn" aria-pressed="true">Voz</button>
+        <button class="pill toggle" id="tipBtn" aria-pressed="true">Dica</button>
+      </div>
+    </div>
+    <div class="feedback" id="feedback" hidden role="status" aria-live="polite">
+      <div class="fb-title" id="fbTitle"></div>
+      <div class="fb-answer ko" id="fbAnswer"></div>
+      <p class="fb-why" id="fbWhy"></p>
+      <div class="fb-actions">
+        <button class="cta" id="nextBtn">Próxima →<span class="bar" id="nextBar"></span></button>
+        <button class="ghost" id="replayBtn">Ouvir de novo</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel" id="panel" aria-live="polite">
+    <div class="qmeta">
+      <span class="chip" id="qChip">Nível 1 · 1/8</span>
+      <span class="speaker" id="speakerTag">Quem fala: Ana</span>
+    </div>
+    <p class="situation" id="situation">Ana aponta para o objeto que brilha. Como Ana diz?</p>
+    <div class="ko-line"><span id="koLine"><span class="blank">?</span> 책</span><button class="icon-btn" id="listenBtn" hidden>Ouvir</button></div>
+    <div class="options" id="options"></div>
+  </section>
+
+  <!-- start -->
+  <div class="overlay" id="startOv">
+    <div class="ov-card">
+      <p class="eyebrow">Aula 17/10/2026 · TOPIK I · Iniciante</p>
+      <h1 class="logo ko" aria-label="이 그 저 Pop!"><span>이</span>·<span>그</span>·<span>저</span> <span>P</span><span>op!</span></h1>
+      <p class="lead">Aponte objetos, lugares e pessoas com os demonstrativos coreanos. Acerte rápido para ganhar bônus e manter o combo!</p>
+      <svg class="tri" viewBox="0 0 340 200" role="img" aria-label="Triângulo: 이 perto de quem fala, 그 perto de quem ouve, 저 longe dos dois">
+        <line class="edge" x1="64" y1="146" x2="276" y2="146"/><line class="edge" x1="64" y1="146" x2="170" y2="40"/><line class="edge" x1="276" y1="146" x2="170" y2="40"/>
+        <circle class="n-j" cx="170" cy="40" r="28"/><text class="big" x="170" y="49" text-anchor="middle">저</text>
+        <text class="lbl" x="206" y="36">longe dos dois</text>
+        <circle class="n-i" cx="64" cy="146" r="28"/><text class="big" x="64" y="155" text-anchor="middle">이</text>
+        <text class="lbl" x="64" y="192" text-anchor="middle">minha mão</text>
+        <circle class="n-g" cx="276" cy="146" r="28"/><text class="big" x="276" y="155" text-anchor="middle">그</text>
+        <text class="lbl" x="276" y="192" text-anchor="middle">sua mão</text>
+      </svg>
+      <button class="cta" id="playBtn">Jogar ▶</button>
+      <span class="best" id="bestLine"></span>
+    </div>
+  </div>
+
+  <!-- level intro -->
+  <div class="overlay" id="levelOv" hidden>
+    <div class="ov-card">
+      <span class="banner" id="lvlBanner" hidden></span>
+      <p class="eyebrow" id="lvlEyebrow">Nível 1 de 3</p>
+      <h2 class="lvl-ko ko" id="lvlKo"></h2>
+      <p class="lead" id="lvlSub"></p>
+      <p class="lvl-body" id="lvlBody"></p>
+      <button class="cta" id="lvlBtn">Começar</button>
+    </div>
+  </div>
+
+  <!-- tip -->
+  <div class="overlay" id="tipOv" hidden>
+    <div class="ov-card">
+      <p class="eyebrow">Dica · pense num triângulo</p>
+      <div class="rules">
+        <div class="rule"><b>이 · 이거 · 여기</b>perto de quem fala</div>
+        <div class="rule"><b>그 · 그거 · 거기</b>perto de quem ouve ou já citado</div>
+        <div class="rule"><b>저 · 저거 · 저기</b>longe dos dois, mas visível</div>
+      </div>
+      <p class="lvl-body">Quem fala muda tudo: se o <span class="ko">준호</span> fala, a mão dele é <span class="ko">이</span>. Com batchim: <span class="ko">책이에요</span>. Sem batchim: <span class="ko">학교예요</span>.</p>
+      <button class="cta" id="tipClose">Entendi!</button>
+    </div>
+  </div>
+
+  <!-- end -->
+  <div class="overlay" id="endOv" hidden>
+    <div class="ov-card">
+      <p class="eyebrow">Fim de jogo · 수고했어요!</p>
+      <div class="stars" id="stars"></div>
+      <h2 class="lvl-ko ko" id="endTitle"></h2>
+      <div class="stats">
+        <div class="stat"><b id="endScore">0</b><span>pontos</span></div>
+        <div class="stat"><b id="endAcc">0/24</b><span>acertos</span></div>
+        <div class="stat"><b id="endStreak">0</b><span>maior combo</span></div>
+      </div>
+      <span class="best" id="endBest"></span>
+      <button class="cta" id="againBtn">Jogar de novo ↻</button>
+      <p class="foot">Desafio da aula: escolha 3 objetos ao seu redor e pergunte <span class="ko">이거/그거/저거 뭐예요?</span></p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* =====================================================================
+   Korean content (from the lesson: Ponto A · 이/그/저 + N)
+   ===================================================================== */
+const hasBatchim = w => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return c >= 0 && c < 11172 && c % 28 !== 0; };
+const copula = w => w + (hasBatchim(w) ? '이에요' : '예요');
+const wrongCopula = w => w + (hasBatchim(w) ? '예요' : '이에요');
+
+const DEM = {
+  i:   { det: '이', thing: '이것', talk: '이거', place: '여기', person: '이분', rule: 'perto de quem fala' },
+  geu: { det: '그', thing: '그것', talk: '그거', place: '거기', person: '그분', rule: 'perto de quem ouve' },
+  jeo: { det: '저', thing: '저것', talk: '저거', place: '저기', person: '저분', rule: 'longe dos dois' }
+};
+const KEYS = ['i', 'geu', 'jeo'];
+const NAMES = { ana: 'Ana', junho: '준호' };
+const other = sp => sp === 'ana' ? 'junho' : 'ana';
+
+const ITEMS = [
+  { ko: '책', pt: 'livro', e: '📕', adj: '예뻐요' },
+  { ko: '볼펜', pt: 'caneta', e: '🖊️', adj: '예뻐요' },
+  { ko: '가방', pt: 'bolsa / mochila', e: '🎒', adj: '예뻐요' },
+  { ko: '우산', pt: 'guarda-chuva', e: '☂️', adj: '예뻐요' },
+  { ko: '과자', pt: 'salgadinho', e: '🍿', adj: '맛있어요' },
+  { ko: '바나나 우유', pt: 'leite de banana', e: '🥛', e2: '🍌', adj: '맛있어요' },
+  { ko: '커피', pt: 'café', e: '☕', adj: '맛있어요' },
+  { ko: '김치', pt: 'kimchi', e: '🥬', adj: '맛있어요' }
+];
+const PLACES = [
+  { ko: '학교', pt: 'escola', e: '🏫' },
+  { ko: '식당', pt: 'restaurante', e: '🍜' },
+  { ko: '편의점', pt: 'loja de conveniência', e: '🏪' }
+];
+const PEOPLE = [
+  { ko: '선생님', pt: 'professor(a)', e: '🧑‍🏫' },
+  { ko: '할머니', pt: 'avó / senhora idosa', e: '👵' }
+];
+
+// zone: left = Ana's hand, right = 준호's hand, far = shelf far from both
+function demFor(zone, speaker) {
+  if (zone === 'far') return 'jeo';
+  const own = speaker === 'ana' ? 'left' : 'right';
+  return zone === own ? 'i' : 'geu';
+}
+const whereThing = { left: 'na mão da Ana', right: 'na mão do 준호', far: 'lá longe, na prateleira' };
+const whereNear = { left: 'perto da Ana', right: 'perto do 준호', far: 'lá longe dos dois' };
+function why(zone, sp, where = whereThing) {
+  const dk = demFor(zone, sp);
+  if (dk === 'jeo') return `Está ${where[zone]}: longe de quem fala e de quem ouve → 저.`;
+  if (dk === 'i') return `Está ${where[zone]}, perto de quem fala (${NAMES[sp]}) → 이.`;
+  return `Está ${where[zone]}, perto de quem ouve (${NAMES[other(sp)]}) → 그.`;
+}
+
+let lastZones = [], lastItem = null;
+function pickZone(pool = ['left', 'right', 'far']) {
+  let z, n = 0;
+  do { z = rand(pool); n++; } while (n < 20 && lastZones.length >= 2 && lastZones[0] === z && lastZones[1] === z);
+  lastZones.unshift(z); lastZones.length = Math.min(lastZones.length, 2);
+  return z;
+}
+function pickItem(list = ITEMS) {
+  let it, n = 0;
+  do { it = rand(list); n++; } while (n < 20 && it === lastItem);
+  lastItem = it; return it;
+}
+const blank = '<span class="blank">?</span>';
+
+/* ---------- question generators ---------- */
+function qPickDet(sp) {
+  const item = pickItem(), zone = pickZone(sp === 'junho' ? ['left', 'right', 'left', 'right', 'far'] : undefined), dk = demFor(zone, sp);
+  return { mode: 'choice', speaker: sp, target: zone, show: [{ obj: item, zone }],
+    tag: '이 · 그 · 저 + substantivo',
+    situation: `${NAMES[sp]} aponta para o objeto que brilha (${item.ko} = ${item.pt}). Como ${NAMES[sp]} diz?`,
+    ko: `${blank} ${item.ko}`,
+    options: KEYS.map(k => ({ label: `${DEM[k].det} ${item.ko}`, ok: k === dk })),
+    answer: `${DEM[dk].det} ${item.ko}`, why: why(zone, sp) };
+}
+function qPoint(sp, style) {
+  const item = pickItem(), zone = pickZone(sp === 'junho' ? ['left', 'right', 'left', 'right', 'far'] : undefined), dk = demFor(zone, sp);
+  const phrase = style === 'talk' ? `${DEM[dk].talk} ${item.adj}!` : `${DEM[dk].det} ${item.ko}${hasBatchim(item.ko) ? '은' : '는'} ${item.adj}!`;
+  const adjPt = item.adj === '예뻐요' ? 'é bonito(a)' : 'é gostoso(a)';
+  return { mode: 'point', speaker: sp, target: zone, show: ['left', 'right', 'far'].map(z => ({ obj: item, zone: z, pick: true })),
+    tag: style === 'talk' ? '이거 · 그거 · 저거' : '이 · 그 · 저 + substantivo',
+    situation: `${NAMES[sp]} fala de um dos três ${item.ko} (${item.pt}; ${item.adj} = ${adjPt}). De qual? Toque no objeto certo na cena.`,
+    ko: phrase, speakPrompt: phrase,
+    answer: phrase, why: why(zone, sp) };
+}
+function qAskWhat(sp) {
+  const item = pickItem(), zone = pickZone(sp === 'junho' ? ['left', 'right', 'left', 'right', 'far'] : undefined), dk = demFor(zone, sp);
+  return { mode: 'choice', speaker: sp, target: zone, show: [{ obj: item, zone }],
+    tag: '이거 · 그거 · 저거 뭐예요?',
+    situation: `${NAMES[sp]} não sabe o que é o objeto que brilha. Complete a pergunta.`,
+    ko: `${blank} 뭐예요?`,
+    options: KEYS.map(k => ({ label: `${DEM[k].talk} 뭐예요?`, ok: k === dk })),
+    answer: `${DEM[dk].talk} 뭐예요?`, why: why(zone, sp) };
+}
+function qAnswerIs(sp) {
+  const item = pickItem(), zone = pickZone(sp === 'junho' ? ['left', 'right', 'left', 'right', 'far'] : undefined), dk = demFor(zone, sp);
+  const good = `${DEM[dk].thing}은 ${copula(item.ko)}.`;
+  const opts = [
+    { label: good, ok: true },
+    { label: `${DEM[dk].thing}은 ${wrongCopula(item.ko)}.`, ok: false },
+    ...KEYS.filter(k => k !== dk).map(k => ({ label: `${DEM[k].thing}은 ${copula(item.ko)}.`, ok: false }))
+  ];
+  const b = hasBatchim(item.ko);
+  return { mode: 'choice', speaker: sp, target: zone, show: [{ obj: item, zone }],
+    tag: '이것 · 그것 · 저것 + 이에요/예요',
+    situation: `${NAMES[other(sp)]} pergunta “뭐예요?”. ${NAMES[sp]} responde que é ${item.pt}. Qual frase está certa?`,
+    ko: `${blank}은 ${item.ko}${blank}.`,
+    options: shuffle(opts).map(o => ({ ...o, small: true })),
+    answer: good, why: `${why(zone, sp)} ${item.ko} ${b ? 'termina em batchim → 이에요' : 'termina em vogal → 예요'}.` };
+}
+function qPlace(sp) {
+  const place = pickItem(PLACES), zone = pickZone(), dk = demFor(zone, sp);
+  return { mode: 'choice', speaker: sp, target: zone, show: [{ obj: place, zone, big: true }],
+    tag: '여기 · 거기 · 저기',
+    situation: `${NAMES[sp]} fala do lugar que brilha (${place.ko} = ${place.pt}). Complete a frase.`,
+    ko: `${blank}는 ${copula(place.ko)}.`,
+    options: KEYS.map(k => ({ label: `${DEM[k].place}는 ${copula(place.ko)}.`, ok: k === dk, small: true })),
+    answer: `${DEM[dk].place}는 ${copula(place.ko)}.`, why: why(zone, sp, whereNear).replace(/→ (.)\.$/, (m, d) => `→ ${({ '이': '여기', '그': '거기', '저': '저기' })[d]}.`) };
+}
+function qPerson(sp) {
+  const p = pickItem(PEOPLE), zone = pickZone(), dk = demFor(zone, sp);
+  return { mode: 'choice', speaker: sp, target: zone, show: [{ obj: p, zone, big: true }],
+    tag: '이분 · 그분 · 저분 (respeitoso)',
+    situation: `${NAMES[sp]} apresenta a pessoa que brilha com respeito (${p.ko} = ${p.pt}).`,
+    ko: `${blank}은 ${copula(p.ko)}.`,
+    options: KEYS.map(k => ({ label: `${DEM[k].person}은 ${copula(p.ko)}.`, ok: k === dk, small: true })),
+    answer: `${DEM[dk].person}은 ${copula(p.ko)}.`, why: why(zone, sp, whereNear).replace(/→ (.)\.$/, (m, d) => `→ ${d}분.`) };
+}
+function qMentioned() {
+  return { mode: 'choice', speaker: 'ana', target: null, thought: '🎬', show: [],
+    tag: '그 = algo já mencionado',
+    situation: '준호 contou de um filme que viu ontem. O filme não está à vista. Ana pergunta:',
+    ko: `${blank} 영화는 재미있어요?`,
+    options: KEYS.map(k => ({ label: `${DEM[k].det} 영화는 재미있어요?`, ok: k === 'geu', small: true })),
+    answer: '그 영화는 재미있어요?', why: '그 também indica algo de que já se falou e que não está à vista.' };
+}
+
+const LEVELS = [
+  { ko: '이 · 그 · 저 + N', sub: 'Demonstrativos: isto, esse, aquilo',
+    body: 'Três distâncias, não duas: <span class="ko">이</span> = perto de mim · <span class="ko">그</span> = perto de você · <span class="ko">저</span> = longe de nós dois, mas visível. Aqui quem fala é sempre a Ana.',
+    plan: () => [qPickDet, qPickDet, qPickDet, qPickDet, s => qPoint(s, 'det'), s => qPoint(s, 'det'), s => qPoint(s, 'det'), s => qPoint(s, 'det')].map(f => () => f('ana')) },
+  { ko: '이거 · 그거 · 저거 뭐예요?', sub: 'Coisas: 이것/그것/저것, na fala 이거/그거/저거',
+    body: 'Pergunte com <span class="ko">뭐예요?</span> e responda com <span class="ko">이에요/예요</span>. Com batchim: <span class="ko">책이에요</span>. Sem batchim: <span class="ko">과자예요</span>.',
+    plan: () => [qAskWhat, qAskWhat, qAskWhat, qAnswerIs, qAnswerIs, qAnswerIs, s => qPoint(s, 'talk'), s => qPoint(s, 'talk')].map(f => () => f('ana')) },
+  { ko: 'Mestre do triângulo', sub: 'Quem fala muda, e entram lugares e pessoas',
+    body: 'Quando o <span class="ko">준호</span> fala, a mão dele vira <span class="ko">이</span>! Lugares: <span class="ko">여기/거기/저기</span>. Pessoas: <span class="ko">이분/그분/저분</span>. E <span class="ko">그</span> também vale para algo já mencionado.',
+    plan: () => [() => qPickDet('junho'), () => qAnswerIs('junho'), () => qPoint('junho', 'talk'), () => qAskWhat('junho'),
+                 () => qPlace('ana'), () => qPlace('junho'), () => qPerson('ana'), qMentioned] }
+];
+
+/* =====================================================================
+   Audio: K-pop style loop (Web Audio, synthesized) + SFX + TTS
+   ===================================================================== */
+const Sound = (() => {
+  let ctx = null, master, musicBus, sfxBus, pump, leadBus, noiseBuf;
+  let playing = false, step = 0, nextT = 0, timer = null;
+  const BPM = 116, S = 60 / BPM / 4;
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  function ensure() {
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    ctx = new AC();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4; comp.connect(ctx.destination);
+    master = ctx.createGain(); master.gain.value = 0.9; master.connect(comp);
+    musicBus = ctx.createGain(); musicBus.gain.value = 0.5; musicBus.connect(master);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = 0.8; sfxBus.connect(master);
+    pump = ctx.createGain(); pump.connect(musicBus);
+    leadBus = ctx.createGain(); leadBus.connect(musicBus);
+    const d = ctx.createDelay(1); d.delayTime.value = S * 3;
+    const fb = ctx.createGain(); fb.gain.value = 0.3; const wet = ctx.createGain(); wet.gain.value = 0.26;
+    leadBus.connect(d); d.connect(fb); fb.connect(d); d.connect(wet); wet.connect(musicBus);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.5, ctx.sampleRate);
+    const ch = noiseBuf.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+    return true;
+  }
+  function env(g, t, a, peak, dec) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + dec); }
+  function tone(type, freq, t, dur, peak, dest, o2 = {}) {
+    const attack = o2.attack || 0.005;
+    const o = ctx.createOscillator(); o.type = type; o.frequency.setValueAtTime(freq, t); if (o2.detune) o.detune.value = o2.detune;
+    if (o2.slide) o.frequency.exponentialRampToValueAtTime(o2.slide, t + dur);
+    const g = ctx.createGain(); env(g, t, attack, peak, dur);
+    let node = o;
+    if (o2.cutoff) { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = o2.cutoff; o.connect(f); node = f; }
+    node.connect(g); g.connect(dest); o.start(t); o.stop(t + attack + dur + 0.05);
+  }
+  function noise(t, dur, peak, type, freq, dest, q = 1) {
+    const s = ctx.createBufferSource(); s.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    const g = ctx.createGain(); env(g, t, 0.002, peak, dur);
+    s.connect(f); f.connect(g); g.connect(dest); s.start(t); s.stop(t + dur + 0.05);
+  }
+  function kick(t) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.13);
+    const g = ctx.createGain(); env(g, t, 0.002, 0.9, 0.32); o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + 0.4);
+    pump.gain.setValueAtTime(0.3, t); pump.gain.linearRampToValueAtTime(1, t + 0.22); // sidechain pump
+  }
+  // Fmaj7 – G – Em7 – Am7 (IV–V–iii–vi), the classic bright K-pop loop
+  const CH = [{ root: 41, pad: [53, 57, 60, 64] }, { root: 43, pad: [55, 59, 62, 67] }, { root: 40, pad: [52, 55, 59, 62] }, { root: 45, pad: [57, 60, 64, 67] }];
+  const MEL = [[0,0,72,2],[0,2,74,2],[0,4,76,3],[0,8,79,2],[0,10,76,2],[0,12,74,4],
+    [1,0,74,2],[1,2,76,2],[1,4,79,3],[1,8,81,2],[1,10,79,2],[1,12,76,4],
+    [2,0,76,2],[2,2,79,2],[2,4,81,3],[2,8,79,2],[2,10,76,2],[2,12,74,2],[2,14,76,2],
+    [3,0,72,4],[3,6,69,2],[3,8,72,2],[3,10,74,2],[3,12,76,4]];
+  const MEL_END = [[3,0,76,4],[3,4,74,2],[3,6,72,2],[3,8,69,8]];
+  function playStep(st, t) {
+    const bar = Math.floor(st / 16) % 16, s = st % 16, ch = CH[bar % 4], chorus = bar >= 8;
+    if (s % 4 === 0) kick(t);
+    if (chorus && (s === 4 || s === 12)) { noise(t, 0.16, 0.42, 'bandpass', 1600, musicBus, 0.7); tone('triangle', 200, t, 0.08, 0.22, musicBus); }
+    if (bar === 7 && s >= 8) noise(t, 0.07, 0.06 + 0.025 * (s - 8), 'bandpass', 1900, musicBus);
+    if (s % 4 === 2) noise(t, chorus ? 0.11 : 0.05, chorus ? 0.12 : 0.08, 'highpass', 7500, musicBus);
+    else if (s % 2 === 1) noise(t, 0.03, 0.035, 'highpass', 9000, musicBus);
+    if (s % 2 === 0) {
+      const n = (s / 2) % 2 ? ch.root + 12 : ch.root;
+      tone('sawtooth', mtof(n), t, S * 1.6, 0.15, pump, { cutoff: 520 });
+      tone('square', mtof(n), t, S * 1.4, 0.06, pump, { cutoff: 380 });
+    }
+    if ([0, 3, 6, 8, 11, 14].includes(s)) ch.pad.forEach((n, i) => tone('sawtooth', mtof(n + 12), t, 0.16, 0.03, pump, { cutoff: 2600, detune: i % 2 ? 7 : -7 }));
+    if (chorus && s === 0) ch.pad.forEach(n => tone('triangle', mtof(n), t, S * 15, 0.03, pump, { attack: 0.25 }));
+    if (!chorus && (s === 0 || s === 6 || s === 10)) tone('sine', mtof(ch.pad[s === 0 ? 3 : s === 6 ? 1 : 2] + 24), t, 0.45, 0.06, leadBus);
+    if (chorus) {
+      const lb = (bar - 8) % 4, notes = (bar >= 12 && lb === 3) ? MEL_END : MEL;
+      for (const [b, ss, m, len] of notes) if (b === lb && ss === s) {
+        tone('square', mtof(m), t, S * len * 0.9, 0.055, leadBus, { cutoff: 3200 });
+        tone('triangle', mtof(m + 12), t, S * len * 0.9, 0.03, leadBus);
+      }
+    }
+  }
+  function tick() { while (nextT < ctx.currentTime + 0.12) { playStep(step, nextT); nextT += S; step = (step + 1) % 256; } }
+  return {
+    unlock: ensure,
+    get playing() { return playing; },
+    start() { if (!ensure() || playing) return; playing = true; step = 0; nextT = ctx.currentTime + 0.06; timer = setInterval(tick, 25); },
+    stop() { playing = false; clearInterval(timer); },
+    duck(on) { if (ctx) musicBus.gain.setTargetAtTime(on ? 0.14 : 0.5, ctx.currentTime, 0.08); },
+    suspend(on) { if (ctx) on ? ctx.suspend() : ctx.resume(); },
+    correct() { if (!ensure()) return; const t = ctx.currentTime;
+      [84, 88, 91, 96].forEach((m, i) => { tone('triangle', mtof(m), t + i * 0.07, 0.35, 0.2, sfxBus); tone('sine', mtof(m + 12), t + i * 0.07, 0.25, 0.07, sfxBus); });
+      noise(t + 0.28, 0.4, 0.05, 'highpass', 8000, sfxBus); },
+    wrong() { if (!ensure()) return; const t = ctx.currentTime;
+      tone('square', 330, t, 0.22, 0.12, sfxBus, { slide: 250, cutoff: 1400 }); tone('square', 247, t + 0.2, 0.32, 0.12, sfxBus, { slide: 180, cutoff: 1200 }); },
+    tap() { if (!ctx) return; tone('sine', 1046, ctx.currentTime, 0.06, 0.1, sfxBus); },
+    pop() { if (!ctx) return; tone('sine', 520, ctx.currentTime, 0.12, 0.08, sfxBus, { slide: 1100 }); },
+    fanfare() { if (!ensure()) return; const t = ctx.currentTime;
+      [72, 76, 79, 84, 79, 84, 88].forEach((m, i) => { tone('square', mtof(m), t + i * 0.11, i === 6 ? 0.7 : 0.14, 0.08, sfxBus, { cutoff: 3000 }); tone('triangle', mtof(m + 12), t + i * 0.11, 0.2, 0.06, sfxBus); }); }
+  };
+})();
+
+let voiceOn = true, koVoice = null;
+function loadVoices() { try { koVoice = speechSynthesis.getVoices().find(v => /^ko/i.test(v.lang)) || null; } catch (e) {} }
+if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function speak(text) {
+  if (!voiceOn || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ko-KR'; if (koVoice) u.voice = koVoice; u.rate = 0.88; u.pitch = 1.15;
+    u.onstart = () => Sound.duck(true); u.onend = u.onerror = () => Sound.duck(false);
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+/* =====================================================================
+   Three.js scene
+   ===================================================================== */
+const stageEl = $('#stage'), canvas = $('#scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setClearColor(0x000000, 0);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xffd6ec, 0.95));
+const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(3, 6, 5); scene.add(sun);
+
+const PASTELS = [0xFF9EC7, 0xFFC2DD, 0x9BE3C8, 0x9ACDFF, 0xFFE28A, 0xC8B6FF, 0xFFB38A];
+const SLOTS = { left: new THREE.Vector3(-1.75, -0.3, 2.3), right: new THREE.Vector3(1.75, -0.3, 2.3), far: new THREE.Vector3(0, 0.55, -6) };
+const GROUND_Y = -1.6;
+
+// ground, pedestal, zone rings
+const groundMat = new THREE.MeshBasicMaterial({ color: 0xF1DDFF });
+const ground = new THREE.Mesh(new THREE.CircleGeometry(16, 48), groundMat);
+ground.rotation.x = -Math.PI / 2; ground.position.y = GROUND_Y; scene.add(ground);
+const shelfMat = new THREE.MeshToonMaterial({ color: 0xFFCFE4 });
+const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.35, 1.6, 32), shelfMat);
+pedestal.position.set(0, GROUND_Y + 0.8, -6); scene.add(pedestal);
+const pedTop = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 0.18, 32), new THREE.MeshToonMaterial({ color: 0xFFFFFF }));
+pedTop.position.set(0, GROUND_Y + 1.65, -6); scene.add(pedTop);
+const ringMat = new THREE.MeshBasicMaterial({ color: 0xB9A3FF, transparent: true, opacity: 0.5 });
+const rings = {};
+for (const z of ['left', 'right']) {
+  const r = new THREE.Mesh(new THREE.RingGeometry(0.62, 0.8, 40), ringMat);
+  r.rotation.x = -Math.PI / 2; r.position.set(SLOTS[z].x, GROUND_Y + 0.01, SLOTS[z].z); scene.add(r); rings[z] = r;
+}
+function applyThemeToScene() {
+  try { groundMat.color.set(cssVar('--ground') || '#F6E6FF'); shelfMat.color.set(cssVar('--shelf') || '#FFCFE4'); ringMat.color.set(cssVar('--lilac') || '#B9A3FF'); } catch (e) {}
+}
+applyThemeToScene();
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyThemeToScene);
+new MutationObserver(applyThemeToScene).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// shapes for floaters + confetti
+function heartShape() {
+  const s = new THREE.Shape();
+  s.moveTo(5, 5); s.bezierCurveTo(5, 5, 4, 0, 0, 0); s.bezierCurveTo(-6, 0, -6, 7, -6, 7);
+  s.bezierCurveTo(-6, 11, -3, 15.4, 5, 19); s.bezierCurveTo(12, 15.4, 16, 11, 16, 7);
+  s.bezierCurveTo(16, 7, 16, 0, 10, 0); s.bezierCurveTo(7, 0, 5, 5, 5, 5);
+  return s;
+}
+function starShape(R = 1, r = 0.48) {
+  const s = new THREE.Shape();
+  for (let i = 0; i < 10; i++) { const a = Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r : R; const x = Math.cos(a) * rr, y = Math.sin(a) * rr; i ? s.lineTo(x, y) : s.moveTo(x, y); }
+  s.closePath(); return s;
+}
+const heartGeo = new THREE.ExtrudeGeometry(heartShape(), { depth: 4, bevelEnabled: true, bevelSize: 1.2, bevelThickness: 1.2, bevelSegments: 3 });
+heartGeo.center(); heartGeo.scale(0.035, 0.035, 0.035); heartGeo.rotateZ(Math.PI);
+const starGeo = new THREE.ExtrudeGeometry(starShape(0.5, 0.24), { depth: 0.15, bevelEnabled: true, bevelSize: 0.06, bevelThickness: 0.06, bevelSegments: 2 });
+starGeo.center();
+const blobGeo = new THREE.IcosahedronGeometry(0.38, 1);
+
+const floaters = [];
+const FLOAT_N = reduceMotion ? 6 : 16;
+for (let i = 0; i < FLOAT_N; i++) {
+  const geo = [heartGeo, starGeo, blobGeo][i % 3];
+  const m = new THREE.Mesh(geo, new THREE.MeshToonMaterial({ color: PASTELS[i % PASTELS.length] }));
+  m.position.set((Math.random() * 2 - 1) * 10, 1.2 + Math.random() * 4.5, -4 - Math.random() * 9);
+  const s = 0.6 + Math.random() * 0.9; m.scale.setScalar(s);
+  m.userData = { base: m.position.clone(), ph: Math.random() * 6.28, sp: 0.4 + Math.random() * 0.6, rs: (Math.random() - 0.5) * 1.2 };
+  scene.add(m); floaters.push(m);
+}
+
+// canvas textures
+const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Twemoji Mozilla",sans-serif';
+const texCache = {};
+function canvasTex(w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t; }
+function objTexture(o) {
+  const key = o.e + (o.e2 || '');
+  if (texCache[key]) return texCache[key];
+  return texCache[key] = canvasTex(256, 256, (g) => {
+    g.beginPath(); g.arc(128, 128, 112, 0, Math.PI * 2); g.fillStyle = 'rgba(255,255,255,.94)'; g.fill();
+    g.lineWidth = 8; g.strokeStyle = '#EBDDF8'; g.stroke();
+    g.beginPath(); g.arc(128, 128, 92, Math.PI * 1.1, Math.PI * 1.45); g.lineWidth = 9; g.lineCap = 'round'; g.strokeStyle = 'rgba(255,190,220,.8)'; g.stroke();
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = `128px ${EMOJI_FONT}`; g.fillText(o.e, 128, 138);
+    if (o.e2) { g.font = `74px ${EMOJI_FONT}`; g.fillText(o.e2, 186, 186); }
+  });
+}
+function glowTexture() {
+  return canvasTex(256, 256, (g) => {
+    const gr = g.createRadialGradient(128, 128, 20, 128, 128, 128);
+    gr.addColorStop(0, 'rgba(255,240,150,.95)'); gr.addColorStop(0.45, 'rgba(255,214,120,.5)'); gr.addColorStop(1, 'rgba(255,214,120,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    g.fillStyle = 'rgba(255,255,255,.95)';
+    for (const [x, y, r] of [[40, 70, 9], [210, 60, 7], [220, 190, 10], [50, 200, 6]]) { g.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? r * 0.35 : r * 1.6; g.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } g.fill(); }
+  });
+}
+function charTexture(kind) {
+  return canvasTex(512, 512, (g) => {
+    const ink = '#4B3A66', body = kind === 'ana' ? '#FFC6DF' : '#BEF0DA', deep = kind === 'ana' ? '#FF8DBB' : '#58C7A1';
+    g.lineJoin = 'round'; g.lineCap = 'round'; g.strokeStyle = ink; g.lineWidth = 12;
+    const ell = (x, y, rx, ry, fill, stroke = true, rot = 0) => { g.beginPath(); g.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); if (stroke) g.stroke(); };
+    ell(196, 468, 46, 24, deep); ell(316, 468, 46, 24, deep);
+    // arm reaching toward their hand slot (Ana → right side, 준호 → left side)
+    if (kind === 'ana') ell(440, 340, 48, 30, body, true, -0.5); else ell(72, 340, 48, 30, body, true, 0.5);
+    ell(256, 300, 188, 172, body);
+    ell(256, 356, 108, 74, 'rgba(255,255,255,.45)', false);
+    for (const x of [196, 316]) { ell(x, 284, 20, 24, ink, false); ell(x + 7, 274, 7, 8, '#FFFFFF', false); }
+    ell(150, 330, 30, 17, 'rgba(255,110,160,.5)', false); ell(362, 330, 30, 17, 'rgba(255,110,160,.5)', false);
+    g.beginPath(); g.moveTo(228, 318); g.quadraticCurveTo(242, 338, 256, 320); g.quadraticCurveTo(270, 338, 284, 318); g.lineWidth = 8; g.stroke();
+    g.lineWidth = 12;
+    if (kind === 'ana') {
+      g.fillStyle = '#FF6FA8';
+      g.beginPath(); g.moveTo(330, 118); g.lineTo(270, 80); g.lineTo(276, 152); g.closePath(); g.fill(); g.stroke();
+      g.beginPath(); g.moveTo(330, 118); g.lineTo(392, 82); g.lineTo(388, 156); g.closePath(); g.fill(); g.stroke();
+      ell(330, 118, 20, 20, '#FF9EC7');
+    } else {
+      g.beginPath(); g.arc(256, 176, 140, Math.PI, 0); g.closePath(); g.fillStyle = '#86C3FF'; g.fill(); g.stroke();
+      ell(350, 174, 96, 22, '#5AA9F2');
+      ell(256, 40, 16, 16, '#FFE28A');
+    }
+  });
+}
+function tagTexture(text, bg) {
+  return canvasTex(256, 96, (g) => {
+    g.fillStyle = bg; g.strokeStyle = '#4B3A66'; g.lineWidth = 6;
+    const r = 40; g.beginPath(); g.moveTo(8 + r, 8); g.arcTo(248, 8, 248, 88, r); g.arcTo(248, 88, 8, 88, r); g.arcTo(8, 88, 8, 8, r); g.arcTo(8, 8, 248, 8, r); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = '#4B3A66'; g.font = '46px Jua, Nunito, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, 128, 52);
+  });
+}
+function bubbleTexture(content, isThought) {
+  return canvasTex(256, 220, (g) => {
+    g.fillStyle = '#FFFFFF'; g.strokeStyle = '#4B3A66'; g.lineWidth = 7;
+    if (isThought) {
+      for (const [x, y, r] of [[128, 92, 78], [70, 108, 48], [188, 108, 48], [96, 54, 42], [164, 54, 42]]) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }
+      for (const [x, y, r] of [[60, 180, 16], [36, 206, 9]]) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.stroke(); }
+      g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `88px ${EMOJI_FONT}`; g.fillText(content, 128, 96);
+    } else {
+      g.beginPath(); g.moveTo(40, 20); g.lineTo(216, 20); g.quadraticCurveTo(244, 20, 244, 48); g.lineTo(244, 128); g.quadraticCurveTo(244, 156, 216, 156);
+      g.lineTo(150, 156); g.lineTo(118, 204); g.lineTo(112, 156); g.lineTo(40, 156); g.quadraticCurveTo(12, 156, 12, 128); g.lineTo(12, 48); g.quadraticCurveTo(12, 20, 40, 20); g.closePath(); g.fill(); g.stroke();
+      g.fillStyle = '#4B3A66'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '58px Jua, Nunito, sans-serif'; g.fillText(content, 128, 90);
+    }
+  });
+}
+const sprite = (map, sx, sy) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent: true, depthWrite: false })); s.scale.set(sx, sy, 1); return s; };
+
+const chars = {
+  ana: sprite(charTexture('ana'), 2.6, 2.6),
+  junho: sprite(charTexture('junho'), 2.6, 2.6)
+};
+chars.ana.position.set(-3.15, -0.3, 1.2); chars.junho.position.set(3.15, -0.3, 1.2);
+for (const k in chars) { chars[k].userData = { base: chars[k].position.clone(), ph: k === 'ana' ? 0 : 1.7 }; scene.add(chars[k]); }
+const tags = {};
+function buildTags() {
+  for (const k in tags) scene.remove(tags[k]);
+  tags.ana = sprite(tagTexture('Ana', '#FFE1EF'), 1.1, 0.41); tags.ana.position.set(-3.15, -1.4, 1.9);
+  tags.junho = sprite(tagTexture('준호', '#DBF6EC'), 1.1, 0.41); tags.junho.position.set(3.15, -1.4, 1.9);
+  for (const k in tags) { tags[k].material.depthTest = false; tags[k].renderOrder = 5; }
+  scene.add(tags.ana, tags.junho);
+  if (speakBubble) { const sp = speakBubble.userData.who; scene.remove(speakBubble); speakBubble = null; setSpeaker(sp); }
+}
+let speakBubble = null, thoughtBubble = null;
+function setSpeaker(sp) {
+  if (speakBubble && speakBubble.userData.who === sp) return;
+  if (speakBubble) scene.remove(speakBubble);
+  speakBubble = sprite(bubbleTexture('말해요!', false), 1.3, 1.12);
+  speakBubble.userData = { who: sp, born: now() };
+  speakBubble.position.set(chars[sp].position.x + (sp === 'ana' ? 0.7 : -0.7), 1.65, 1.3);
+  scene.add(speakBubble);
+}
+function setThought(content) {
+  if (thoughtBubble) { scene.remove(thoughtBubble); thoughtBubble = null; }
+  if (!content) return;
+  thoughtBubble = sprite(bubbleTexture(content, true), 1.4, 1.2);
+  thoughtBubble.position.set(3.6, 1.85, 1.0); thoughtBubble.userData = { born: now() };
+  scene.add(thoughtBubble);
+}
+
+// objects in the scene for the current question
+const glowTex = glowTexture();
+let objs = [], pickables = [], hovered = null;
+function clearObjects() { for (const o of objs) { scene.remove(o); if (o.userData.glow) scene.remove(o.userData.glow); } objs = []; pickables = []; hovered = null; }
+function addObject(o, zone, opts = {}) {
+  const base = zone === 'far' ? 1.75 : 1.25;
+  const s = sprite(objTexture(o), base, base);
+  s.position.copy(SLOTS[zone]);
+  if (opts.big && zone !== 'far') s.position.y += 0.15;
+  s.userData = { zone, base, pop: 0, born: now() + Math.random() * 0.12, hover: 0, shake: -10, ph: Math.random() * 6 };
+  if (opts.glow) { const g = sprite(glowTex, base * 2, base * 2); g.position.copy(s.position); g.position.z -= 0.05; g.userData = { base: base * 2 }; s.userData.glow = g; scene.add(g); }
+  scene.add(s); objs.push(s); if (opts.pick) pickables.push(s);
+  return s;
+}
+function setGlow(sprite) { if (sprite.userData.glow) return; const b = sprite.userData.base * 2; const g = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false })); g.scale.set(b, b, 1); g.position.copy(sprite.position); g.position.z -= 0.05; g.userData = { base: b }; sprite.userData.glow = g; scene.add(g); }
+
+// confetti
+const confGeos = [new THREE.PlaneGeometry(0.13, 0.21), new THREE.CircleGeometry(0.075, 10), new THREE.ShapeGeometry(heartShape()).center().scale(0.012, 0.012, 1).rotateZ(Math.PI), new THREE.ShapeGeometry(starShape(0.12, 0.055))];
+const confMats = PASTELS.concat([0xFFFFFF]).map(c => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide }));
+const confetti = [];
+function burst(pos, n = 150, power = 1) {
+  if (reduceMotion) n = Math.min(n, 30);
+  for (let i = 0; i < n && confetti.length < 700; i++) {
+    const m = new THREE.Mesh(rand(confGeos), rand(confMats));
+    m.position.copy(pos);
+    const a = Math.random() * Math.PI * 2, sp = (1 + Math.random() * 3.2) * power;
+    m.userData = { v: new THREE.Vector3(Math.cos(a) * sp, (3 + Math.random() * 5) * power, Math.sin(a) * sp * 0.6 + 1.2), rv: new THREE.Vector3(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5), life: 0, max: 1.8 + Math.random() * 1.1, s: 0.8 + Math.random() * 0.7 };
+    m.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+    m.scale.setScalar(m.userData.s);
+    scene.add(m); confetti.push(m);
+  }
+}
+function bigCelebration() {
+  burst(new THREE.Vector3(-3, 0.5, 2), 120, 1.2); burst(new THREE.Vector3(3, 0.5, 2), 120, 1.2);
+  setTimeout(() => burst(new THREE.Vector3(0, 1.2, 0), 160, 1.3), 220);
+}
+
+// resize
+function resize() {
+  const w = stageEl.clientWidth, h = stageEl.clientHeight; if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  const aspect = w / h; camera.aspect = aspect;
+  const camZ = Math.max(9, 1 + 11.2 / aspect);
+  camera.position.set(0, 1.5 + (camZ - 9) * 0.12, camZ); camera.lookAt(0, -0.05, -1);
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stageEl); resize();
+
+// picking
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+function pickAt(ev) {
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(pickables, false)[0];
+  return hit ? hit.object : null;
+}
+canvas.addEventListener('pointermove', ev => {
+  if (!game.q || game.q.mode !== 'point' || game.answered) { hovered = null; canvas.classList.remove('pointing'); return; }
+  hovered = pickAt(ev); canvas.classList.toggle('pointing', !!hovered);
+});
+canvas.addEventListener('pointerdown', ev => {
+  if (!game.q || game.q.mode !== 'point' || game.answered) return;
+  const s = pickAt(ev); if (s) choosePoint(s.userData.zone);
+});
+
+// screen-space helpers
+function toScreen(v) { const p = v.clone().project(camera); return { x: (p.x + 1) / 2 * stageEl.clientWidth, y: (1 - p.y) / 2 * stageEl.clientHeight }; }
+function floatText(world, text, cls = '') {
+  const p = toScreen(world), d = document.createElement('div');
+  d.className = 'floater ' + cls; d.textContent = text; d.style.left = p.x + 'px'; d.style.top = p.y + 'px';
+  stageEl.appendChild(d); setTimeout(() => d.remove(), 1400);
+}
+
+// animation loop
+const now = () => performance.now() / 1000;
+const easeOutBack = k => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+let lastT = now();
+function loop() {
+  const t = now(), dt = Math.min(0.05, t - lastT); lastT = t;
+  const amp = reduceMotion ? 0.2 : 1;
+  for (const f of floaters) {
+    const u = f.userData;
+    f.position.y = u.base.y + Math.sin(t * u.sp + u.ph) * 0.35 * amp;
+    f.position.x = u.base.x + Math.cos(t * u.sp * 0.6 + u.ph) * 0.3 * amp;
+    f.rotation.y += u.rs * dt * amp; f.rotation.z = Math.sin(t * 0.7 + u.ph) * 0.3;
+  }
+  const speaker = game.q ? game.q.speaker : 'ana';
+  for (const k in chars) {
+    const c = chars[k], u = c.userData, talking = k === speaker;
+    const b = Math.sin(t * (talking ? 6 : 2.4) + u.ph);
+    c.position.y = u.base.y + Math.max(0, b) * (talking ? 0.16 : 0.05) * amp;
+    c.scale.set(2.6 * (1 + b * 0.025 * amp), 2.6 * (1 - b * 0.025 * amp), 1);
+  }
+  if (speakBubble) { const k = Math.min(1, (t - speakBubble.userData.born) / 0.4); const s = easeOutBack(k); speakBubble.scale.set(1.3 * s, 1.12 * s, 1); speakBubble.position.y = 1.65 + Math.sin(t * 3) * 0.05 * amp; }
+  if (thoughtBubble) { const k = Math.min(1, (t - thoughtBubble.userData.born) / 0.5); const s = easeOutBack(k); thoughtBubble.scale.set(1.4 * s, 1.2 * s, 1); }
+  for (const o of objs) {
+    const u = o.userData, k = Math.max(0, Math.min(1, (t - u.born) / 0.5));
+    u.hover += ((o === hovered ? 1 : 0) - u.hover) * Math.min(1, dt * 12);
+    const s = u.base * easeOutBack(k) * (1 + u.hover * 0.18) * (1 + Math.sin(t * 2.2 + u.ph) * 0.03 * amp);
+    o.scale.set(s, s, 1);
+    const sk = t - u.shake; o.material.rotation = sk < 0.5 ? Math.sin(sk * 40) * 0.25 * (1 - sk / 0.5) : Math.sin(t * 1.5 + u.ph) * 0.05 * amp;
+    if (u.glow) { const g = u.glow, gs = u.glow.userData.base * easeOutBack(k) * (1 + Math.sin(t * 4) * 0.08); g.scale.set(gs, gs, 1); g.material.rotation = t * 0.4; }
+  }
+  for (let i = confetti.length - 1; i >= 0; i--) {
+    const m = confetti[i], u = m.userData;
+    u.life += dt; u.v.y -= 7 * dt; u.v.multiplyScalar(1 - 0.9 * dt);
+    m.position.addScaledVector(u.v, dt);
+    m.rotation.x += u.rv.x * dt; m.rotation.y += u.rv.y * dt; m.rotation.z += u.rv.z * dt;
+    if (u.life > u.max - 0.4) m.scale.setScalar(u.s * Math.max(0, (u.max - u.life) / 0.4));
+    if (u.life > u.max || m.position.y < GROUND_Y - 0.2) { scene.remove(m); confetti.splice(i, 1); }
+  }
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+
+/* =====================================================================
+   Game flow
+   ===================================================================== */
+const game = { level: 0, qi: 0, list: [], q: null, answered: false, score: 0, shown: 0, streak: 0, best: 0, correct: 0, total: 0, levelCorrect: 0, results: [], t0: 0, autoT: null };
+const els = { score: $('#score'), streak: $('#streak'), scorePill: $('#scorePill'), streakPill: $('#streakPill'), dots: $('#dots'),
+  chip: $('#qChip'), speaker: $('#speakerTag'), situation: $('#situation'), ko: $('#koLine'), options: $('#options'), listen: $('#listenBtn'),
+  fb: $('#feedback'), fbTitle: $('#fbTitle'), fbAnswer: $('#fbAnswer'), fbWhy: $('#fbWhy'), next: $('#nextBtn'), nextBar: $('#nextBar'), replay: $('#replayBtn') };
+const TOTAL_Q = 24;
+let bestScore = store.get('igeujeo-best', 0);
+
+function countScore() {
+  const target = game.score, start = game.shown, t0 = performance.now();
+  const step = () => { const k = Math.min(1, (performance.now() - t0) / 600); game.shown = Math.round(start + (target - start) * k); els.score.textContent = game.shown.toLocaleString('pt-BR'); if (k < 1) requestAnimationFrame(step); };
+  step();
+}
+function bump(el) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+function updateHud() {
+  els.streak.textContent = 'x' + game.streak;
+  els.streakPill.classList.toggle('hot', game.streak >= 3);
+  els.dots.innerHTML = game.list.map((_, i) => `<span class="dot ${game.results[i] === true ? 'ok' : game.results[i] === false ? 'no' : i === game.qi ? 'now' : ''}"></span>`).join('');
+}
+
+function showOverlay(id) { for (const o of ['#startOv', '#levelOv', '#endOv', '#tipOv']) $(o).hidden = o !== id; }
+function hideOverlays() { for (const o of ['#startOv', '#levelOv', '#endOv', '#tipOv']) $(o).hidden = true; }
+
+function startGame() {
+  Sound.unlock();
+  if (musicOn) Sound.start();
+  Object.assign(game, { level: 0, score: 0, shown: 0, streak: 0, best: 0, correct: 0, total: 0 });
+  els.score.textContent = '0';
+  lastZones = []; lastItem = null;
+  levelIntro(0, null);
+}
+function levelIntro(i, banner) {
+  const L = LEVELS[i];
+  $('#lvlEyebrow').textContent = `Nível ${i + 1} de ${LEVELS.length}`;
+  $('#lvlKo').textContent = L.ko; $('#lvlSub').textContent = L.sub; $('#lvlBody').innerHTML = L.body;
+  const b = $('#lvlBanner'); b.hidden = !banner; if (banner) b.textContent = banner;
+  showOverlay('#levelOv'); $('#lvlBtn').focus();
+  game.level = i;
+}
+function startLevel() {
+  hideOverlays();
+  const L = LEVELS[game.level];
+  game.list = shuffle(L.plan()); game.qi = 0; game.results = []; game.levelCorrect = 0;
+  nextQuestion(true);
+}
+function nextQuestion(first) {
+  clearTimeout(game.autoT); els.nextBar.classList.remove('run');
+  els.fb.hidden = true;
+  if (!first) game.qi++;
+  if (game.qi >= game.list.length) return endLevel();
+  const q = game.list[game.qi]();
+  game.list[game.qi] = (() => q); // keep the built question for this slot
+  game.q = q; game.answered = false; game.t0 = performance.now();
+  renderQuestion(q);
+}
+function renderQuestion(q) {
+  clearObjects(); setThought(q.thought || null); setSpeaker(q.speaker);
+  for (const s of q.show) addObject(s.obj, s.zone, { glow: q.mode === 'choice', pick: !!s.pick, big: s.big });
+  if (q.show.length) Sound.pop();
+  els.chip.textContent = `Nível ${game.level + 1} · ${game.qi + 1}/${game.list.length} · ${q.tag}`;
+  els.speaker.textContent = `Quem fala: ${NAMES[q.speaker]}${q.speaker === 'junho' ? ' (troca de perspectiva!)' : ''}`;
+  els.speaker.classList.toggle('junho', q.speaker === 'junho');
+  els.situation.textContent = q.situation;
+  els.ko.innerHTML = q.ko;
+  els.listen.hidden = !q.speakPrompt;
+  els.options.className = 'options';
+  if (q.mode === 'choice') {
+    els.options.innerHTML = q.options.map((o, i) => `<button class="opt" data-i="${i}"><span class="num">${i + 1}</span>${o.label}</button>`).join('');
+  } else {
+    els.options.classList.add('zone-btns');
+    const zl = [['left', 'Mão da Ana'], ['right', 'Mão do 준호'], ['far', 'Prateleira (longe)']];
+    els.options.innerHTML = `<div class="point-hint" style="grid-column:1/-1"><span class="hand" aria-hidden="true">👆</span> Toque no objeto na cena, ou escolha aqui:</div>` +
+      zl.map(([z, l], i) => `<button class="opt" data-zone="${z}"><span class="num">${i + 1}</span>${l}</button>`).join('');
+    setTimeout(() => speak(q.speakPrompt), 350);
+  }
+  updateHud();
+}
+els.options.addEventListener('click', ev => {
+  const b = ev.target.closest('.opt'); if (!b || game.answered) return;
+  if (b.dataset.zone) return choosePoint(b.dataset.zone);
+  chooseOption(+b.dataset.i);
+});
+function chooseOption(i) {
+  const q = game.q; if (!q || game.answered || q.mode !== 'choice' || !q.options[i]) return;
+  const ok = q.options[i].ok;
+  [...els.options.children].forEach((b, j) => { b.disabled = true; if (q.options[j].ok) b.classList.add('ok'); else if (j === i) b.classList.add('bad'); else b.classList.add('dim'); });
+  resolve(ok);
+}
+function choosePoint(zone) {
+  const q = game.q; if (!q || game.answered || q.mode !== 'point') return;
+  const ok = zone === q.target;
+  const picked = objs.find(o => o.userData.zone === zone), right = objs.find(o => o.userData.zone === q.target);
+  if (!ok && picked) picked.userData.shake = now();
+  if (right) setGlow(right);
+  [...els.options.querySelectorAll('.opt')].forEach(b => { b.disabled = true; if (b.dataset.zone === q.target) b.classList.add('ok'); else if (b.dataset.zone === zone) b.classList.add('bad'); else b.classList.add('dim'); });
+  canvas.classList.remove('pointing'); hovered = null;
+  resolve(ok);
+}
+function targetWorld(q) {
+  if (q.target) return SLOTS[q.target].clone();
+  return chars.junho.position.clone().add(new THREE.Vector3(0, 1.2, 0));
+}
+function resolve(ok) {
+  const q = game.q; game.answered = true; game.total++;
+  game.results[game.qi] = ok;
+  const secs = (performance.now() - game.t0) / 1000;
+  const pos = targetWorld(q);
+  if (ok) {
+    game.streak++; game.correct++; game.levelCorrect++; game.best = Math.max(game.best, game.streak);
+    const speed = Math.max(0, Math.round(50 - secs * 4)), combo = Math.min(100, 25 * (game.streak - 1));
+    const pts = 100 + speed + combo; game.score += pts;
+    Sound.correct(); burst(pos, 150, 1);
+    floatText(pos, `+${pts}`);
+    if (game.streak >= 2) setTimeout(() => floatText(pos.clone().add(new THREE.Vector3(0, -0.6, 0)), `콤보 x${game.streak}!`, 'combo'), 180);
+    bump(els.scorePill); if (game.streak >= 2) bump(els.streakPill);
+    countScore();
+    els.fb.className = 'feedback ok';
+    els.fbTitle.textContent = rand(['정답! 잘했어요!', '대박! Certo!', '최고예요! Certo!', '완벽해요! Certo!']);
+  } else {
+    game.streak = 0; Sound.wrong();
+    els.fb.className = 'feedback no';
+    els.fbTitle.textContent = '아쉬워요! Quase…';
+  }
+  els.fbAnswer.textContent = (ok ? '' : 'Resposta: ') + q.answer;
+  els.fbWhy.textContent = q.why;
+  els.fb.hidden = false;
+  updateHud();
+  setTimeout(() => speak(q.answer), ok ? 450 : 250);
+  els.next.focus({ preventScroll: true });
+  if (ok) { void els.nextBar.offsetWidth; els.nextBar.classList.add('run'); game.autoT = setTimeout(() => nextQuestion(), 2600); }
+}
+function endLevel() {
+  clearObjects(); game.q = null;
+  const perfect = game.levelCorrect === game.list.length;
+  if (perfect) { game.score += 300; countScore(); }
+  Sound.fanfare(); bigCelebration();
+  if (game.level + 1 < LEVELS.length) {
+    levelIntro(game.level + 1, perfect ? 'Nível perfeito! +300 pontos' : `Nível ${game.level + 1} completo! ${game.levelCorrect}/${game.list.length}`);
+  } else endGame();
+}
+function endGame() {
+  const acc = game.correct / TOTAL_Q;
+  const stars = acc >= 0.9 ? 3 : acc >= 0.7 ? 2 : acc >= 0.4 ? 1 : 0;
+  $('#stars').innerHTML = [0, 1, 2].map(i => `<span class="${i < stars ? '' : 'off'}">⭐</span>`).join('');
+  $('#endTitle').textContent = ['Fã dedicado: tente de novo!', 'Trainee em treino', 'Trainee estrela', 'K-pop idol do 한국어'][stars];
+  $('#endScore').textContent = game.score.toLocaleString('pt-BR');
+  $('#endAcc').textContent = `${game.correct}/${TOTAL_Q}`;
+  $('#endStreak').textContent = game.best;
+  const isNew = game.score > bestScore; if (isNew) { bestScore = game.score; store.set('igeujeo-best', bestScore); }
+  $('#endBest').textContent = isNew ? 'Novo recorde! 신기록!' : `Recorde: ${bestScore.toLocaleString('pt-BR')} pontos`;
+  showOverlay('#endOv');
+  setTimeout(bigCelebration, 700);
+  $('#againBtn').focus();
+}
+
+// controls
+let musicOn = store.get('igeujeo-music', true);
+const musicBtn = $('#musicBtn'), voiceBtn = $('#voiceBtn');
+function syncToggles() { musicBtn.setAttribute('aria-pressed', String(musicOn)); voiceBtn.setAttribute('aria-pressed', String(voiceOn)); }
+syncToggles();
+musicBtn.addEventListener('click', () => { musicOn = !musicOn; store.set('igeujeo-music', musicOn); syncToggles(); musicOn ? Sound.start() : Sound.stop(); });
+voiceBtn.addEventListener('click', () => { voiceOn = !voiceOn; syncToggles(); if (!voiceOn) try { speechSynthesis.cancel(); } catch (e) {} });
+let tipReturn = null;
+$('#tipBtn').addEventListener('click', () => { tipReturn = ['#startOv', '#levelOv', '#endOv'].find(o => !$(o).hidden) || null; showOverlay('#tipOv'); $('#tipClose').focus(); });
+$('#tipClose').addEventListener('click', () => { if (tipReturn) showOverlay(tipReturn); else hideOverlays(); });
+$('#playBtn').addEventListener('click', startGame);
+$('#lvlBtn').addEventListener('click', () => { Sound.tap(); startLevel(); });
+$('#againBtn').addEventListener('click', startGame);
+els.next.addEventListener('click', () => { Sound.tap(); nextQuestion(); });
+els.replay.addEventListener('click', () => game.q && speak(game.q.answer));
+els.listen.addEventListener('click', () => game.q && speak(game.q.speakPrompt));
+document.addEventListener('keydown', ev => {
+  if (!$('#tipOv').hidden && ev.key === 'Escape') { $('#tipClose').click(); return; }
+  if (!game.q || [...document.querySelectorAll('.overlay')].some(o => !o.hidden)) return;
+  const n = parseInt(ev.key, 10);
+  if (!game.answered && n >= 1) {
+    if (game.q.mode === 'choice') chooseOption(n - 1);
+    else { const z = ['left', 'right', 'far'][n - 1]; if (z) choosePoint(z); }
+  } else if (game.answered && (ev.key === 'Enter' || ev.key === ' ') && document.activeElement !== els.next && document.activeElement !== els.replay) {
+    ev.preventDefault(); nextQuestion();
+  }
+});
+document.addEventListener('visibilitychange', () => Sound.suspend(document.hidden));
+$('#bestLine').textContent = bestScore ? `Recorde: ${bestScore.toLocaleString('pt-BR')} pontos` : 'Jogue com som: tem trilha K-pop e voz em coreano!';
+
+// demo state behind the start overlay: a question already on stage
+game.list = LEVELS[0].plan(); game.qi = 0;
+const demo = qPickDet('ana'); game.q = demo; renderQuestion(demo); game.q = null;
+lastZones = []; lastItem = null;
+
+const fontsReady = (document.fonts && document.fonts.ready) ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve();
+buildTags();
+fontsReady.then(buildTags);
+loop();
+})();
+</script>
+</body>
+</html>
