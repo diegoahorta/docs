@@ -53,7 +53,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .skyline svg{width:100%;height:100%;display:block}
 
 /* ---------- top bar ---------- */
-.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px;
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px;
   background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:2px solid var(--line)}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;border:0;background:none;padding:0;white-space:nowrap}
 .brand .logo{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--lav));color:var(--on-pastel);font-size:18px;box-shadow:0 3px 0 rgba(0,0,0,.08)}
@@ -1125,7 +1125,7 @@ document.addEventListener('click',e=>{
     case 'topicgo': startQuiz('topic',{t:+b.dataset.t}); window.scrollTo({top:0}); break;
     case 'ans': answer(+b.dataset.i,b); break;
     case 'next': next(); break;
-    case 'quit': if(confirm('Sair desta rodada? Os pontos desta rodada serão perdidos.')) home(); break;
+    case 'quit': if(b.dataset.armed){ home(); } else { b.dataset.armed='1'; b.textContent='Sair?'; toast('Toque de novo em “Sair?” para encerrar a rodada'); setTimeout(()=>{ if(b.isConnected){ delete b.dataset.armed; b.textContent='✕'; } },2500); } break;
     case 'again': if(Q.mode==='build') startBuilder(); else startQuiz(Q.mode,Q.opt); break;
     case 'say': e.stopPropagation(); speak(b.dataset.txt); break;
     case 'tile': moveTile(b.dataset.where,+b.dataset.i); break;
