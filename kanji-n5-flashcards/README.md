@@ -3,7 +3,9 @@
 Jogo em HTML5 + JavaScript + Three.js para estudar, revisar e aprender os **79 kanji do JLPT N5**,
 feito a partir dos *Cards de Kanji · Método Doshisha* (Prof. Diego Horta · ODU Creative).
 
-Abra `index.html` num navegador (ou sirva a pasta: `python3 -m http.server`).
+**Arquivo único:** `Kanji_Cards_N5_Jogo.html` tem tudo embutido (dados, imagens, Three.js, música) e funciona offline — é só abrir com dois cliques.
+
+Versão em vários arquivos: abra `index.html` num navegador (ou sirva a pasta: `python3 -m http.server`).
 
 ## Modos
 - **読 Estudar** — flashcards 3D que viram: kanji na frente; no verso, 音読み/訓読み, significado, nº de traços,
