@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marugoto Party A1</title>
+<meta name="description" content="Jogo de revisão do Marugoto A1 (Tópicos 1–5) — ODU Creative">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#ffe4ef; --bg2:#ece3ff; --bg3:#dcf3ff;
+  --ink:#4a3f63; --ink-soft:#7d7196; --card:rgba(255,255,255,.82); --card-solid:#ffffff; --line:#ecdff8;
+  --pink:#ffb8cf; --lav:#cfbdff; --mint:#a3e6c9; --peach:#ffd0a6; --sky:#acd9ff; --lemon:#fff0a3;
+  --on-pastel:#3b2f55;
+  --good:#3cb983; --good-bg:#dbf7e9; --bad:#ee6b95; --bad-bg:#ffe2eb;
+  --accent:#ff7fae; --accent2:#9a7bff;
+  --shadow:0 12px 32px rgba(140,100,190,.18);
+  --sky-line:rgba(154,123,255,.16);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg1:#1d1838; --bg2:#2a1f4c; --bg3:#3b2557;
+    --ink:#f6eeff; --ink-soft:#c9bce6; --card:rgba(43,35,74,.84); --card-solid:#2b234a; --line:#4a3e75;
+    --good:#6fe0ac; --good-bg:#1d4a3b; --bad:#ff8fb4; --bad-bg:#4f2343;
+    --shadow:0 12px 32px rgba(0,0,0,.35);
+    --sky-line:rgba(255,184,207,.22);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#1d1838; --bg2:#2a1f4c; --bg3:#3b2557;
+  --ink:#f6eeff; --ink-soft:#c9bce6; --card:rgba(43,35,74,.84); --card-solid:#2b234a; --line:#4a3e75;
+  --good:#6fe0ac; --good-bg:#1d4a3b; --bad:#ff8fb4; --bad-bg:#4f2343;
+  --shadow:0 12px 32px rgba(0,0,0,.35);
+  --sky-line:rgba(255,184,207,.22);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:"M PLUS Rounded 1c",system-ui,sans-serif;color:var(--ink);
+  background:linear-gradient(165deg,var(--bg1),var(--bg2) 55%,var(--bg3)) fixed;
+  background-color:var(--bg2);
+  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+#bg3d{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+#confetti{position:fixed;inset:0;width:100vw;height:100vh;z-index:50;pointer-events:none}
+.skyline{position:fixed;left:0;right:0;bottom:0;height:22vh;z-index:0;pointer-events:none;color:var(--sky-line)}
+.skyline svg{width:100%;height:100%;display:block}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px;
+  background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:2px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;border:0;background:none;padding:0;white-space:nowrap}
+.brand .logo{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--lav));color:var(--on-pastel);font-size:18px;box-shadow:0 3px 0 rgba(0,0,0,.08)}
+.brand small{font-weight:500;color:var(--ink-soft);font-size:12px}
+.spacer{flex:1}
+.pill{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card-solid);border:2px solid var(--line);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.combo{transition:transform .2s}
+.pill.combo.hot{background:linear-gradient(90deg,var(--pink),var(--peach),var(--lemon),var(--mint),var(--sky),var(--lav));background-size:300% 100%;animation:rainbow 2s linear infinite;color:var(--on-pastel);border-color:transparent}
+@keyframes rainbow{to{background-position:300% 0}}
+.icon-btn{width:40px;height:40px;border-radius:14px;border:2px solid var(--line);background:var(--card-solid);display:grid;place-items:center;font-size:18px;transition:transform .15s}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn.off{opacity:.45}
+@media (max-width:620px){.brand small,.brand .txt{display:none}.pill{padding:5px 9px;font-size:14px}.icon-btn{width:36px;height:36px}}
+
+/* ---------- layout ---------- */
+main{position:relative;z-index:5;max-width:980px;margin:0 auto;padding:20px 16px 140px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:22px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+h1,h2,h3{margin:0}
+.muted{color:var(--ink-soft)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:20px}
+.hero h1{font-size:clamp(30px,6vw,52px);line-height:1.05;letter-spacing:.5px}
+.hero h1 .jp{display:block;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:10px 0 0;font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;color:var(--on-pastel)}
+.hero-mascot{width:150px}
+@media (max-width:620px){.hero{grid-template-columns:1fr}.hero-mascot{display:none}}
+
+.modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.mode{position:relative;text-align:left;border:0;border-radius:24px;padding:18px;color:var(--on-pastel);box-shadow:0 6px 0 rgba(0,0,0,.08);transition:transform .18s,box-shadow .18s;overflow:hidden;min-height:150px;display:flex;flex-direction:column;gap:6px}
+.mode:hover{transform:translateY(-4px) rotate(-.6deg);box-shadow:0 10px 0 rgba(0,0,0,.08)}
+.mode:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.mode .emo{font-size:30px;line-height:1}
+.mode h3{font-size:18px}
+.mode p{margin:0;font-size:13px;opacity:.85}
+.mode .best{margin-top:auto;font-size:12px;font-weight:800;opacity:.75}
+.mode::after{content:"";position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.35)}
+.bg-pink{background:var(--pink)}.bg-lav{background:var(--lav)}.bg-mint{background:var(--mint)}.bg-peach{background:var(--peach)}.bg-sky{background:var(--sky)}.bg-lemon{background:var(--lemon)}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.stat{flex:1;min-width:140px;padding:14px;border-radius:20px;background:var(--card-solid);border:2px solid var(--line)}
+.stat b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.tip{margin-top:18px;padding:14px 16px;border-radius:20px;border:2px dashed var(--lav);font-size:14px;line-height:1.6}
+
+/* topic picker */
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.back{border:2px solid var(--line);background:var(--card-solid);border-radius:14px;padding:8px 14px;font-weight:700}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.topic{border:0;border-radius:22px;padding:16px;color:var(--on-pastel);text-align:left;box-shadow:0 5px 0 rgba(0,0,0,.08);transition:transform .15s}
+.topic:hover{transform:translateY(-3px)}
+.topic .n{font-size:12px;font-weight:800;opacity:.7}
+.topic .t{font-size:22px;font-weight:800;margin:2px 0}
+.topic .s{font-size:13px}
+
+/* quiz */
+.quiz-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;color:var(--on-pastel)}
+.progress{flex:1;min-width:120px;height:14px;border-radius:999px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink),var(--lav),var(--sky));transition:width .4s}
+.timer i{background:linear-gradient(90deg,var(--mint),var(--lemon),var(--peach))}
+.timer.low i{background:var(--bad)}
+.count{font-weight:800;font-variant-numeric:tabular-nums}
+.part-banner{font-size:13px;font-weight:700;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:2px solid var(--line);margin-bottom:12px}
+.passage{background:var(--card-solid);border:2px solid var(--line);border-radius:20px;padding:14px 16px;margin-bottom:14px;font-size:16px;line-height:1.9}
+.passage summary{font-weight:800;cursor:pointer}
+.prompt{display:flex;gap:10px;align-items:flex-start}
+.prompt h2{font-size:clamp(20px,4vw,28px);line-height:1.45;flex:1;word-break:break-word}
+.speak{flex:none;width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--card-solid);font-size:18px}
+.hint{margin:6px 0 0;color:var(--ink-soft);font-size:14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{position:relative;display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;border-radius:20px;border:3px solid var(--line);background:var(--card-solid);box-shadow:0 5px 0 var(--line);font-size:18px;font-weight:700;transition:transform .12s,box-shadow .12s,background .2s,border-color .2s;min-height:62px}
+.opt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 0 var(--line);border-color:var(--lav)}
+.opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt .k{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:14px;background:var(--lav);color:var(--on-pastel)}
+.opt:nth-child(2) .k{background:var(--pink)}.opt:nth-child(3) .k{background:var(--mint)}.opt:nth-child(4) .k{background:var(--peach)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good-bg);border-color:var(--good);box-shadow:0 5px 0 var(--good);animation:bounce .5s}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);box-shadow:0 5px 0 var(--bad);animation:shake .4s}
+.opt.dim{opacity:.5}
+@keyframes bounce{40%{transform:scale(1.05)}70%{transform:scale(.98)}}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.feedback{margin-top:18px;padding:16px;border-radius:20px;border:2px solid var(--line);background:var(--card-solid);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.feedback.good{border-color:var(--good)}
+.feedback.bad{border-color:var(--bad)}
+.feedback .msg{flex:1;min-width:200px;line-height:1.6}
+.feedback .msg b{font-size:18px}
+.btn{border:0;border-radius:18px;padding:12px 20px;font-weight:800;font-size:16px;color:var(--on-pastel);background:linear-gradient(135deg,var(--pink),var(--lav));box-shadow:0 5px 0 rgba(0,0,0,.12);transition:transform .12s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.12)}
+.btn.alt{background:var(--card-solid);color:var(--ink);border:2px solid var(--line)}
+.btn.mint{background:linear-gradient(135deg,var(--mint),var(--sky))}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.kbd{font-size:12px;color:var(--ink-soft);margin-top:12px;text-align:center}
+.floaty{position:fixed;z-index:60;pointer-events:none;font-weight:800;font-size:26px;color:var(--accent);text-shadow:0 2px 0 #fff;animation:floaty 1s ease-out forwards}
+@keyframes floaty{from{opacity:1;transform:translate(-50%,0) scale(.8)}to{opacity:0;transform:translate(-50%,-80px) scale(1.2)}}
+
+/* builder */
+.slots,.bank{display:flex;flex-wrap:wrap;gap:10px;min-height:68px;padding:12px;border-radius:20px}
+.slots{border:3px dashed var(--lav);margin-top:16px;background:var(--card-solid)}
+.slots.right{border-color:var(--good);border-style:solid;background:var(--good-bg)}
+.slots.wrong{border-color:var(--bad);border-style:solid;background:var(--bad-bg);animation:shake .4s}
+.bank{margin-top:10px}
+.tile{border:0;border-radius:16px;padding:10px 14px;font-size:19px;font-weight:700;color:var(--on-pastel);box-shadow:0 4px 0 rgba(0,0,0,.1);transition:transform .12s;animation:pop .3s both}
+.tile:hover{transform:translateY(-2px) rotate(-1deg)}
+.belt{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;margin-top:12px}
+.belt span{padding:4px 8px;border-radius:10px;background:var(--card-solid);border:2px solid var(--line);font-weight:700}
+
+/* results */
+.results{text-align:center}
+.stars{font-size:54px;letter-spacing:6px;margin:6px 0}
+.stars .s{display:inline-block;animation:pop .5s both}
+.stars .off{filter:grayscale(1);opacity:.3}
+.big{font-size:clamp(40px,9vw,64px);font-weight:800;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}
+.review{text-align:left;margin-top:16px}
+.review .item{padding:12px 14px;border-radius:16px;background:var(--card-solid);border:2px solid var(--line);margin-top:8px;line-height:1.6;font-size:14px}
+.review .item b{color:var(--good)}
+.review .item s{color:var(--bad)}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+details.model{text-align:left;margin-top:14px;background:var(--card-solid);border:2px solid var(--line);border-radius:18px;padding:12px 16px;line-height:1.8}
+details.model summary{font-weight:800;cursor:pointer}
+
+/* notebook */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{border:0;border-radius:14px;padding:8px 14px;font-weight:800;color:var(--on-pastel);opacity:.55}
+.tabs button.on{opacity:1;box-shadow:0 4px 0 rgba(0,0,0,.1)}
+.nb h3{margin:18px 0 8px;font-size:17px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:15px}
+.tbl td{padding:10px 12px;background:var(--card-solid);vertical-align:top;line-height:1.6}
+.tbl td:first-child{border-radius:14px 0 0 14px;font-weight:700}
+.tbl td:last-child{border-radius:0 14px 14px 0}
+.tbl .say{border:0;background:none;font-size:16px;padding:0 4px}
+.wrongtxt{color:var(--bad);text-decoration:line-through}
+.righttxt{color:var(--good);font-weight:700}
+@media (max-width:620px){.tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}.tbl tr{margin-bottom:8px}.tbl td{border-radius:0!important}.tbl td:first-child{border-radius:14px 14px 0 0!important}.tbl td:last-child{border-radius:0 0 14px 14px!important}}
+.flash-wrap{perspective:1000px;margin:10px auto;max-width:420px}
+.flash{position:relative;height:230px;transition:transform .6s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip{transform:rotateY(180deg)}
+.flash .face{position:absolute;inset:0;border-radius:26px;display:grid;place-items:center;text-align:center;padding:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;color:var(--on-pastel);box-shadow:0 8px 0 rgba(0,0,0,.08)}
+.flash .face.back{transform:rotateY(180deg)}
+.flash .main{font-size:46px;font-weight:800}
+
+/* can-do */
+.cando-group{margin-top:14px}
+.cando-group h3{display:flex;align-items:center;gap:8px;font-size:17px}
+.check{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:2px solid var(--line);background:var(--card-solid);border-radius:16px;padding:10px 14px;margin-top:8px;font-size:15px;transition:background .2s}
+.check .box{flex:none;width:26px;height:26px;border-radius:9px;border:3px solid var(--lav);display:grid;place-items:center;font-size:15px;color:var(--on-pastel)}
+.check.on{background:var(--good-bg);border-color:var(--good)}
+.check.on .box{background:var(--mint);border-color:var(--good)}
+.ring{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ring svg{width:90px;height:90px}
+
+/* mascot */
+.mascot{position:fixed;right:14px;bottom:12px;z-index:30;width:96px;pointer-events:none;transition:transform .3s}
+.mascot svg{width:100%;display:block;filter:drop-shadow(0 6px 8px rgba(120,80,160,.25));animation:idle 3s ease-in-out infinite}
+@keyframes idle{50%{transform:translateY(-6px) rotate(2deg)}}
+.mascot.happy svg{animation:jump .6s ease}
+.mascot.sad svg{animation:wobble .6s ease}
+@keyframes jump{30%{transform:translateY(-26px) scale(1.06,.94)}60%{transform:translateY(0) scale(.96,1.04)}}
+@keyframes wobble{25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+.bubble{position:absolute;right:76px;bottom:72px;white-space:nowrap;background:var(--card-solid);border:2px solid var(--line);border-radius:16px;padding:6px 12px;font-weight:800;font-size:14px;opacity:0;transform:translateY(6px);transition:all .25s}
+.bubble.show{opacity:1;transform:none}
+.e-happy,.e-sad,.m-happy,.m-sad{display:none}
+.mascot.happy .e-idle,.mascot.happy .m-idle,.mascot.sad .e-idle,.mascot.sad .m-idle{display:none}
+.mascot.happy .e-happy,.mascot.happy .m-happy{display:inline}
+.mascot.sad .e-sad,.mascot.sad .m-sad{display:inline}
+.hero-mascot svg{width:100%;animation:idle 3s ease-in-out infinite}
+@media (max-width:620px){.mascot{width:70px}.bubble{right:56px;bottom:52px}}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);z-index:70;background:var(--card-solid);border:2px solid var(--line);border-radius:16px;padding:10px 16px;font-weight:700;opacity:0;transition:all .3s;box-shadow:var(--shadow);max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.sound-gate{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<canvas id="bg3d" aria-hidden="true"></canvas>
+<div class="skyline" aria-hidden="true">
+  <svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path fill="currentColor" d="M0 200V120h40V90h30v30h20V60h40v60h25V100h35V40h20V20h10v20h20v80h30V80h50v40h20V70h15V50h30v20h15v50h40V95h30v25h25V30h45v90h20V85h40v35h30V65h25V45h20v20h25v55h35V100h30V55h50v65h20V90h30V60h15V35h20v25h15v60h40V80h35v40h30V70h40v50h25V95h40v105z"/></svg>
+</div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <button class="brand" data-act="home" aria-label="Início">
+    <span class="logo">✿</span><span class="txt">まるごと Party <small>A1 · ODU Creative</small></span>
+  </button>
+  <span class="spacer"></span>
+  <span class="pill" title="Pontos"><span>⭐</span><span id="scoreEl">0</span></span>
+  <span class="pill combo" id="comboPill" title="Combo"><span>🔥</span><span id="comboEl">0</span></span>
+  <button class="icon-btn" id="musicBtn" title="Trilha City Pop" aria-label="Música">🎵</button>
+  <button class="icon-btn" id="sfxBtn" title="Efeitos sonoros" aria-label="Efeitos">🔔</button>
+  <button class="icon-btn" id="themeBtn" title="Tema dia/noite" aria-label="Tema">🌙</button>
+</header>
+
+<main id="app"></main>
+
+<div class="mascot" id="mascot" aria-hidden="true">
+  <div class="bubble" id="bubble">がんばって！</div>
+  <svg viewBox="0 0 120 120"><defs><clipPath id="oni"><path d="M60 10C82 10 110 66 108 90c-2 18-94 18-96 0C10 66 38 10 60 10z"/></clipPath></defs><path d="M60 10C82 10 110 66 108 90c-2 18-94 18-96 0C10 66 38 10 60 10z" fill="#fffdf9" stroke="#4a3f63" stroke-width="3.5"/><rect x="28" y="80" width="64" height="40" rx="6" fill="#3c3557" clip-path="url(#oni)"/><ellipse cx="38" cy="70" rx="8" ry="5" fill="#ffb8cf"/><ellipse cx="82" cy="70" rx="8" ry="5" fill="#ffb8cf"/><g class="e-idle" fill="#4a3f63"><circle cx="45" cy="58" r="5"/><circle cx="75" cy="58" r="5"/><circle cx="47" cy="56" r="1.6" fill="#fff"/><circle cx="77" cy="56" r="1.6" fill="#fff"/></g><g class="e-happy" fill="none" stroke="#4a3f63" stroke-width="3.5" stroke-linecap="round"><path d="M39 60q6-8 12 0"/><path d="M69 60q6-8 12 0"/></g><g class="e-sad" fill="none" stroke="#4a3f63" stroke-width="3.5" stroke-linecap="round"><path d="M40 54l10 5-10 5"/><path d="M80 54l-10 5 10 5"/></g><path class="m-idle" d="M54 68q6 6 12 0" fill="none" stroke="#4a3f63" stroke-width="3" stroke-linecap="round"/><path class="m-happy" d="M52 66q8 12 16 0z" fill="#ff7fae" stroke="#4a3f63" stroke-width="2.5" stroke-linejoin="round"/><path class="m-sad" d="M54 72q6-6 12 0" fill="none" stroke="#4a3f63" stroke-width="3" stroke-linecap="round"/></svg>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   DADOS — extraídos de "Revisão para o Simulado — Marugoto A1 (ODU Creative)"
+   ===================================================================== */
+const TOPICS = [
+  {id:1, jp:'にほんご', pt:'Língua japonesa', les:'だい1・2か', ico:'あ', bg:'bg-pink'},
+  {id:2, jp:'わたし',   pt:'Eu',              les:'だい3・4か', ico:'🙋', bg:'bg-lav'},
+  {id:3, jp:'たべもの', pt:'Comida',          les:'だい5・6か', ico:'🍙', bg:'bg-mint'},
+  {id:4, jp:'いえ',     pt:'Casa',            les:'だい7・8か', ico:'🏠', bg:'bg-peach'},
+  {id:5, jp:'せいかつ', pt:'Vida cotidiana',  les:'だい9・10か', ico:'⏰', bg:'bg-sky'},
+];
+const tp = id => TOPICS[id-1];
+
+const VOCAB = {
+ 1:[['おはようございます','bom dia'],['こんにちは','boa tarde / olá'],['こんばんは','boa noite'],['さようなら','tchau'],['ありがとうございます','obrigado(a)'],['すみません','com licença / desculpe'],['きいて ください','ouça, por favor'],['いって ください','diga, por favor'],['もう いちど','mais uma vez'],['コーヒー','café'],['パン','pão'],['テレビ','televisão'],['ブラジル','Brasil'],['サッカー','futebol']],
+ 2:[['にほん','Japão'],['アメリカ','Estados Unidos'],['ちゅうごく','China'],['かんこく','Coreia do Sul'],['えいご','inglês'],['ポルトガルご','português'],['スペインご','espanhol'],['がくせい','estudante'],['かいしゃいん','funcionário(a) de empresa'],['せんせい','professor(a)'],['エンジニア','engenheiro(a)'],['ちち','(meu) pai'],['はは','(minha) mãe'],['あに','(meu) irmão mais velho'],['あね','(minha) irmã mais velha'],['おとうと','(meu) irmão mais novo'],['いもうと','(minha) irmã mais nova'],['ひとり','1 pessoa'],['ふたり','2 pessoas'],['さんにん','3 pessoas'],['よにん','4 pessoas'],['ごにん','5 pessoas']],
+ 3:[['にく','carne'],['さかな','peixe'],['やさい','verduras e legumes'],['くだもの','frutas'],['たまご','ovo'],['ごはん','arroz / refeição'],['みず','água'],['おちゃ','chá'],['ぎゅうにゅう','leite'],['すし','sushi'],['てんぷら','tempurá'],['しょくどう','refeitório'],['よく','frequentemente'],['ときどき','às vezes'],['あまり〜ません','não muito'],['ぜんぜん〜ません','nem um pouco / nunca']],
+ 4:[['アパート','apartamento (prédio baixo)'],['いっけんや','casa (independente)'],['にわ','jardim'],['だいどころ','cozinha'],['リビング','sala de estar'],['しんしつ','quarto (de dormir)'],['おふろ','banheira / banho'],['つくえ','escrivaninha'],['いす','cadeira'],['うえ','em cima'],['した','embaixo'],['なか','dentro'],['となり','ao lado'],['まえ','na frente'],['うしろ','atrás'],['ひろい','amplo'],['せまい','apertado'],['あたらしい','novo'],['ふるい','velho (coisas)'],['きれい','bonito / limpo'],['みっつ','3 (objetos)'],['いつつ','5 (objetos)']],
+ 5:[['おきます','acordar'],['ねます','dormir'],['はたらきます','trabalhar'],['べんきょうします','estudar'],['はん','meia (hora)'],['ごぜん','da manhã (a.m.)'],['ごご','da tarde (p.m.)'],['げつようび','segunda-feira'],['かようび','terça-feira'],['すいようび','quarta-feira'],['もくようび','quinta-feira'],['きんようび','sexta-feira'],['どようび','sábado'],['にちようび','domingo'],['パーティー','festa'],['しあい','jogo / partida'],['コンサート','show'],['たんじょうび','aniversário'],['こうえん','parque'],['えき','estação'],['がっこう','escola'],['かいしゃ','empresa']],
+};
+
+const GRAMMAR = {
+ 1:[['〜って どういう いみですか','「すみません」って どういう いみですか。','O que significa "~"?'],['〜て ください (sala de aula)','ゆっくり いって ください。','Fale devagar, por favor.'],['のばす音 (ー / う / い)','コーヒー ・ せんせい ・ おかあさん','vogal longa: em katakana sempre ー'],['ちいさい っ ・ ッ','きって ・ ベッド','consoante dobrada: pausa de uma batida'],['ようおん ゃ・ゅ・ょ','きょう ・ しゃしん ・ ジュース','sílabas contraídas (kya, sha, ju…)']],
+ 2:[['N1 は N2 です','わたしは がくせいです。','Eu sou estudante.'],['N1 は N2 じゃありません','わたしは せんせいじゃありません。','negativa de です'],['N も','マリアさんも ブラジルじんです。','também'],['N が できます','わたしは えいごが できます。','saber / conseguir'],['〜に すんで います','あには リオに すんで います。','morar em ~'],['N は 〜にんです','かぞくは よにんです。','Somos ~ pessoas na família.'],['〜は なんさいですか','いもうとは 12さいです。','idade (おいくつですか = mais educado)']],
+ 3:[['N が すきです','わたしは さかなが すきです。','gostar de ~'],['N は あまり すきじゃないです','やさいは あまり すきじゃないです。','não gostar muito'],['N を V-ます','まいあさ パンを たべます。','objeto direto + を'],['よく / ときどき + V','コーヒーを よく のみます。','frequência antes do verbo'],['すきな N は N です','すきな りょうりは カレーです。','Meu ~ favorito é ~'],['[lugar] で N を V','しょくどうで ラーメンを たべます。','lugar da ação + で'],['N を ひとつ ください','すみません、コーヒー ひとつ ください。','pedir no balcão']],
+ 4:[['[lugar] に N が あります','へやに エアコンが あります。','existir (objetos)'],['[lugar] に N が います','にわに ねこが います。','existir (seres vivos)'],['N が [número] あります','へやが みっつ あります。','quantidade antes do verbo'],['N は い-adj です','わたしの いえは せまいです。','adjetivo -i'],['N は な-adj です','この へやは きれいです。','adjetivo -na (sem な antes de です)'],['N1 は N2 の うえに あります','ほんは つくえの うえに あります。','localizar objetos'],['〜は どこですか','トイレは どこですか。','perguntar onde fica']],
+ 5:[['いま なんじですか','いま 9じ はんです。','Que horas são? (9h30)'],['[hora] に V','7じに おきます。','hora exata + に'],['〜から 〜まで','かいしゃは 9じから 5じまでです。','de ~ até ~'],['まいにち / まいあさ + V (sem に)','まいにち にほんごを べんきょうします。','expressões relativas sem に'],['〜ようびに V','きんようびに しごとを します。','dia da semana + に'],['いつが いいですか','パーティーは いつが いいですか。','Quando é bom para você?'],['〜が いいです','どようびが いいです。','escolher a melhor opção']],
+};
+
+const ERRORS = {
+ 1:[['シーナ (シ/ツ trocados)','ツ: traços verticais ・ シ: horizontais','シ/ツ e ソ/ン se diferenciam pela direção do traço'],['こひー','コーヒー','palavra estrangeira → katakana + ー'],['きて (selo)','きって','o っ muda o sentido: きて = venha']],
+ 2:[['わたしは ブラジルです。','わたしは ブラジルじんです。','nacionalidade = país + じん'],['かぞくは にじんです。','かぞくは ふたりです。','1 e 2 pessoas: ひとり・ふたり'],['サンパウロで すんで います。','サンパウロに すんで います。','すむ pede に'],['わたしは ディエゴさんです。','わたしは ディエゴです。','nunca use さん para si mesmo']],
+ 3:[['にくを すきです。','にくが すきです。','すき usa が, não を'],['レストランに たべます。','レストランで たべます。','ação em um lugar → で'],['あまり すきです。','あまり すきじゃないです。','あまり exige forma negativa']],
+ 4:[['にわに ねこが あります。','にわに ねこが います。','seres vivos → います'],['つくえに うえに あります。','つくえの うえに あります。','N の うえ (o の é obrigatório)'],['きれいいです。','きれいです。','きれい é adjetivo -na']],
+ 5:[['よんじ ・ きゅうじ ・ ななじ','よじ ・ くじ ・ しちじ','leituras especiais das horas'],['まいにちに おきます。','まいにち おきます。','まいにち/あした/きょう: sem に'],['3ぶん','3ぷん（さんぷん）','1・3・4・6・8・10 → ぷん']],
+};
+
+const CANDO = {
+ 1:['Cumprimentar','Ler cumprimentos','Falar palavras japonesas conhecidas','Escrever nome e país'],
+ 2:['Apresentar-se','Ler cartão de visita','Falar da família','Falar da família com foto'],
+ 3:['Dizer comidas favoritas','Oferecer bebida/comida','Falar do café da manhã','Dizer prato favorito','Combinar onde almoçar','Ler cardápio','Pedir em fast-food'],
+ 4:['Dizer onde mora','Dizer o que há em casa','E-mail convidando p/ casa','Dizer onde estão as coisas','Mostrar / visitar casa','Apresentar cômodos','Ler anúncio de imóvel'],
+ 5:['Dizer a hora de uma ação','Falar da rotina','Falar da agenda semanal','Combinar dia de festa','Escrever cartão de aniversário'],
+};
+
+const KANJI = [
+ ['魚','さかな','peixe',3],['肉','にく','carne',3],['卵','たまご','ovo',3],['水','みず','água',3],['食','た(べる)','comer',3],['飲','の(む)','beber',3],
+ ['大','おお(きい)','grande',4],['小','ちい(さい)','pequeno',4],['新','あたら(しい)','novo',4],['古','ふる(い)','velho',4],
+ ['時','じ','hora',5],['分','ふん／ぷん','minuto',5],['半','はん','meia',5],
+ ['月','げつ','segunda (月よう日)',5],['火','か','terça (火よう日)',5],['水','すい','quarta (水よう日)',5],['木','もく','quinta (木よう日)',5],['金','きん','sexta (金よう日)',5],['土','ど','sábado (土よう日)',5],['日','にち','domingo (日よう日)',5],
+];
+
+/* Questões por tópico — a resposta certa é sempre a 1ª; as opções são embaralhadas no jogo */
+const TQ = {
+ 1:[
+  {q:'Para perguntar o significado de uma palavra, você diz:',o:['〜って どういう いみですか','〜は どこですか','〜を ください','〜が すきですか'],e:'〜って どういう いみですか = "O que significa ~?"'},
+  {q:'Como se escreve "café" corretamente?',o:['コーヒー','こひー','コヒー','コーヒ'],e:'Palavra estrangeira → katakana; a vogal longa em katakana é sempre ー.'},
+  {q:'Qual palavra significa "selo"?',o:['きって','きて','きいて','きっって'],e:'O っ pequeno marca consoante dobrada. きて = "venha".'},
+  {q:'Qual destes é o katakana "tsu"?',o:['ツ','シ','ソ','ン'],e:'ツ tem traços mais verticais; シ, mais horizontais.'},
+  {q:'Qual destes é o katakana "n"?',o:['ン','ソ','シ','ツ'],e:'ソ e ン se diferenciam pela direção do traço.'},
+  {q:'「ゆっくり いって ください」 significa:',o:['Fale devagar, por favor.','Ouça, por favor.','Mais uma vez, por favor.','Com licença.'],e:'いって ください = diga, por favor; ゆっくり = devagar.'},
+  {q:'Como se lê 「きょう」?',o:['kyou','kiyou','kyo','kiyo'],e:'ようおん: き + ょ pequeno = kyo; + う alonga → kyou.'},
+  {q:'Como se escreve "Brasil" em japonês?',o:['ブラジル','ぶらじる','ブラジール','プラジル'],e:'Nomes de países estrangeiros → katakana.'},
+  {q:'São 20h e você encontra um amigo. Você diz:',o:['こんばんは','おはようございます','こんにちは','さようなら'],e:'À noite: こんばんは.'},
+  {q:'Você quer que o professor repita. Você diz:',o:['もう いちど おねがいします','いただきます','さようなら','ありがとうございます'],e:'もう いちど = mais uma vez.'},
+  {q:'Qual palavra tem vogal longa?',o:['せんせい','きって','しゃしん','パン'],e:'せんせい: o い depois de e alonga o som (sensee).'},
+  {q:'Você esbarrou em alguém sem querer. Você diz:',o:['すみません','こんばんは','ありがとうございます','いただきます'],e:'すみません = com licença / desculpe.'},
+ ],
+ 2:[
+  {q:'わたしは ブラジル（　）です。',h:'nacionalidade',o:['じん','ご','にん','さん'],e:'Nacionalidade = país + じん.'},
+  {q:'かぞくは（　）です。',h:'2 pessoas',o:['ふたり','ににん','にじん','ふたつ'],e:'1 e 2 pessoas são irregulares: ひとり・ふたり.'},
+  {q:'あには リオ（　）すんで います。',o:['に','で','を','が'],e:'すむ pede に (lugar onde se fica).'},
+  {q:'Qual autoapresentação está correta?',o:['わたしは ディエゴです。','わたしは ディエゴさんです。','わたしは ディエゴじんです。','わたしも ディエゴさんです。'],e:'Nunca use さん para si mesmo.'},
+  {q:'わたしは せんせい（　）。',h:'"não sou professor"',o:['じゃありません','です','も','が できます'],e:'Negativa de です: じゃありません.'},
+  {q:'わたしは にほんご（　）できます。',o:['が','を','に','で'],e:'できます pede が.'},
+  {q:'マリアさん（　）ブラジルじんです。',h:'também',o:['も','は','が','の'],e:'も = também.'},
+  {q:'Como se diz "4 pessoas"?',o:['よにん','よんにん','しにん','よっつ'],e:'4 pessoas = よにん.'},
+  {q:'Primeira frase ao conhecer alguém:',o:['はじめまして','ただいま','いただきます','おやすみなさい'],e:'はじめまして → apresentação → どうぞ よろしく.'},
+  {q:'Forma mais educada de perguntar a idade:',o:['おいくつですか','なんさいですか','いくらですか','なんにんですか'],e:'おいくつですか é mais educado que なんさいですか.'},
+  {q:'「めいし」 é:',o:['cartão de visita','nome','profissão','país'],e:'Ler um めいし é uma meta do Tópico 2.'},
+  {q:'「あね」 é:',o:['(minha) irmã mais velha','(minha) irmã mais nova','(minha) mãe','(meu) irmão mais velho'],e:'あね = irmã mais velha; いもうと = irmã mais nova.'},
+ ],
+ 3:[
+  {q:'わたしは にく（　）すきです。',o:['が','を','で','に'],e:'すき usa が, não を.'},
+  {q:'レストラン（　）たべます。',o:['で','に','を','が'],e:'Ação em um lugar → で.'},
+  {q:'やさいは あまり（　）。',o:['すきじゃないです','すきです','すきな','すきに'],e:'あまり exige forma negativa.'},
+  {q:'まいあさ パン（　）たべます。',o:['を','が','に','は'],e:'Objeto direto + を.'},
+  {q:'「すきな りょうりは カレーです」 significa:',o:['Meu prato favorito é curry.','Eu não gosto de curry.','Eu como curry às vezes.','Onde tem curry?'],e:'すきな N は N です = Meu ~ favorito é ~.'},
+  {q:'Como oferecer café a um amigo?',o:['コーヒー、のみますか。','コーヒー ひとつ ください。','コーヒーが すきです。','コーヒーは どこですか。'],e:'Oferecer: 〜、のみますか。'},
+  {q:'Recusar uma oferta educadamente:',o:['いいえ、けっこうです。','はい、いただきます。','いいえ、のみます。','はい、すきじゃないです。'],e:'いいえ、けっこうです = não, obrigado(a).'},
+  {q:'さかなは ぜんぜん（　）。',o:['たべません','たべます','すきです','よく たべます'],e:'ぜんぜん também exige negativa.'},
+  {q:'No fast-food, para pedir um hambúrguer:',o:['ハンバーガー ひとつ ください。','ハンバーガーが すきです。','ハンバーガーを たべますか。','ハンバーガーは どこですか。'],e:'Pedido: N ひとつ ください.'},
+  {q:'コーヒーを（　）のみます。',h:'frequentemente',o:['よく','あまり','ぜんぜん','すき'],e:'Frequência vem antes do verbo: よく のみます.'},
+  {q:'しょくどう（　）ラーメンを たべます。',o:['で','に','が','の'],e:'Lugar da ação + で.'},
+  {q:'A: 「おちゃ、のみますか。」 B (aceitando):',o:['はい、いただきます。','いいえ、のみます。','はい、けっこうです。','おちゃが すきじゃないです。'],e:'Aceitar oferta: はい、いただきます.'},
+ ],
+ 4:[
+  {q:'にわに ねこが（　）。',o:['います','あります','です','ありません'],e:'Seres vivos → います.'},
+  {q:'へやに エアコンが（　）。',o:['あります','います','です','すきです'],e:'Objetos → あります.'},
+  {q:'ほんは つくえ（　）うえに あります。',o:['の','に','で','が'],e:'N の うえ (o の é obrigatório).'},
+  {q:'Qual está correto?',o:['きれいです。','きれいいです。','きれいなです。','きれくないです。'],e:'きれい é adjetivo -na, apesar do い final.'},
+  {q:'へやが（　）あります。',h:'3 cômodos',o:['みっつ','さんにん','みつ','さんつ'],e:'Contagem genérica: ひとつ、ふたつ、みっつ… antes do verbo.'},
+  {q:'O oposto de 「あたらしい」 é:',o:['ふるい','せまい','ちいさい','ひろい'],e:'あたらしい ⇔ ふるい; ひろい ⇔ せまい.'},
+  {q:'トイレは（　）ですか。',o:['どこ','だれ','いつ','なん'],e:'Perguntar onde fica: 〜は どこですか.'},
+  {q:'Ao chegar à porta da casa de alguém, você diz:',o:['ごめんください','いってきます','ただいま','おやすみなさい'],e:'ごめんください = "Com licença, tem alguém?"'},
+  {q:'Para elogiar o quarto do amigo:',o:['いい へやですね。','へやは どこですか。','へやを ください。','へやが いますか。'],e:'Elogio: いい へやですね.'},
+  {q:'「しんしつ」 é:',o:['quarto (de dormir)','cozinha','banheiro','sala de estar'],e:'だいどころ = cozinha; リビング = sala; しんしつ = quarto.'},
+  {q:'ねこは いすの（　）に います。',h:'ao lado',o:['となり','うえ','した','なか'],e:'となり = ao lado.'},
+  {q:'わたしの いえは（　）です。',h:'apertada',o:['せまい','ひろい','あたらしい','きれい'],e:'せまい = apertado; ひろい = amplo.'},
+ ],
+ 5:[
+  {q:'4:00 lê-se:',o:['よじ','よんじ','しじ','よっつじ'],e:'Leitura especial: 4時 = よじ.'},
+  {q:'9:00 lê-se:',o:['くじ','きゅうじ','くうじ','きゅじ'],e:'Leitura especial: 9時 = くじ.'},
+  {q:'7:00 lê-se:',o:['しちじ','ななじ','ななつじ','ひちじ'],e:'Leitura especial: 7時 = しちじ.'},
+  {q:'3 minutos:',o:['さんぷん','さんふん','さんぶん','みっつふん'],e:'1・3・4・6・8・10 → ぷん.'},
+  {q:'10 minutos:',o:['じゅっぷん','じゅうふん','とおふん','じゅうぶん'],e:'10分 = じゅっぷん.'},
+  {q:'わたしは 7じ（　）おきます。',o:['に','で','を','から'],e:'Hora exata + に.'},
+  {q:'まいにち（　）にほんごを べんきょうします。',o:['— (sem partícula)','に','で','を'],e:'まいにち / あした / きょう: sem に.'},
+  {q:'かいしゃは 9じ（　）5じまでです。',o:['から','まで','に','で'],e:'〜から〜まで = de ~ até ~.'},
+  {q:'9:30 é:',o:['くじはん','くじさんじゅう','きゅうじはん','はんくじ'],e:'はん = meia.'},
+  {q:'「すいようび」 é:',o:['quarta-feira','quinta-feira','terça-feira','sábado'],e:'げつ・か・すい・もく・きん・ど・にち.'},
+  {q:'A: 「パーティーは いつが いいですか。」 B:',o:['どようびが いいです。','こうえんが いいです。','5にんです。','ケーキです。'],e:'いつ pede uma data/dia.'},
+  {q:'No cartão de aniversário você escreve:',o:['おたんじょうび おめでとう','おやすみなさい','いただきます','ごめんください'],e:'Felicitação de aniversário.'},
+  {q:'きんようび（　）しごとを します。',o:['に','で','を','が'],e:'Dia da semana + に.'},
+ ],
+};
+
+/* Simulado oficial (もぎしけん) — 40 questões, ordem original */
+const PARTS = {1:'もんだい1 もじ・ごい — Escolha a melhor resposta',2:'もんだい2 ぶんぽう — (　) に なにを いれますか',3:'もんだい3 かいわ — Qual é a fala mais adequada?',4:'もんだい4 どっかい — Leia o texto e responda'};
+const PART_PTS = {1:1,2:2,3:2,4:2};
+const PASSAGE = 'はじめまして。アナです。ブラジルじんです。<br>わたしは だいがくせいです。えいごと にほんごが できます。<br>かぞくは よにんです。ちちと ははと おとうとが います。<br>わたしの いえは アパートです。へやが ふたつ あります。ちいさいですが、きれいです。<br>わたしは すしが すきです。でも、さかなは あまり すきじゃないです。<br>まいあさ 6じはんに おきます。だいがくは 8じから 12じまでです。<br>どようびに いえで パーティーを します。きませんか。';
+const SIM = [
+ [1,'「コーヒー」の よみかたは？',['kohi','koohii','kooho','kohii'],1,'コーヒー tem duas vogais longas (ー).',1],
+ [1,'「さかな」を かんじで かくと？',['肉','卵','魚','水'],2,'魚 = さかな. 肉 carne, 卵 ovo, 水 água.',3],
+ [1,'「新しい」の よみかたは？',['ふるい','あたらしい','おおきい','ちいさい'],1,'新しい = あたらしい (novo).',4],
+ [1,'「きって」（selo）を ただしく かいたのは？',['きて','きいて','きって','きっって'],2,'っ pequeno marca consoante dobrada.',1],
+ [1,'つぎの なかで カタカナの ことばは？',['ベッド','へや','いえ','ほん'],0,'ベッド (bed) é palavra estrangeira → katakana.',1],
+ [1,'「水よう日」の よみかたは？',['みずようび','すいようび','もくようび','かようび'],1,'水 em dia da semana lê-se すい.',5],
+ [1,'ちち・はは・あに・いもうと は なんの ことば？',['しごと','くに','かぞく','へや'],2,'São membros da família (かぞく).',2],
+ [1,'「4:00」は？',['よんじ','しじ','よじ','よっつじ'],2,'4時 = よじ (leitura especial).',5],
+ [1,'「ひろい」の はんたいは？',['ふるい','せまい','ちいさい','あたらしい'],1,'ひろい ⇔ せまい.',4],
+ [1,'ごはんを たべる へやは？',['だいどころ','おふろ','トイレ','しんしつ'],0,'だいどころ = cozinha.',4],
+ [2,'わたし（　）ブラジルじんです。',['が','は','を','で'],1,'Tópico da frase: は.',2],
+ [2,'マリアさん（　）ブラジルじんです。（também）',['も','に','で','を'],0,'も = também.',2],
+ [2,'わたしは えいご（　）できます。',['を','に','が','で'],2,'できます pede が.',2],
+ [2,'あには サンパウロ（　）すんで います。',['で','に','を','へ'],1,'すんでいます pede に.',2],
+ [2,'わたしは さかな（　）すきです。',['を','が','で','に'],1,'すきです pede が.',3],
+ [2,'まいあさ パン（　）たべます。',['が','に','を','は'],2,'Objeto direto: を.',3],
+ [2,'しょくどう（　）ラーメンを たべます。',['に','を','で','が'],2,'Lugar onde a ação acontece: で.',3],
+ [2,'にわに ねこが（　）。',['あります','います','です','ありません'],1,'Ser vivo → います.',4],
+ [2,'ほんは つくえ（　）うえに あります。',['に','の','で','が'],1,'N の うえ.',4],
+ [2,'わたしは 7じ（　）おきます。',['に','で','を','から'],0,'Hora exata + に.',5],
+ [2,'かいしゃは 9じ（　）5じまでです。',['に','から','まで','で'],1,'〜から〜まで.',5],
+ [2,'やさいは あまり（　）。',['すきです','すきじゃないです','すきな','すきに'],1,'あまり exige negativa.',3],
+ [3,'Você encontra seu professor às 8h da manhã. Você diz:',['こんばんは','おはようございます','さようなら','すみません'],1,'De manhã: おはようございます.',1],
+ [3,'Você não entendeu uma palavra nova. Você pergunta:',['〜って どういう いみですか','〜は どこですか','〜は いつですか','〜が すきですか'],0,'Pedir significado: 〜って どういう いみですか.',1],
+ [3,'Você conhece alguém pela primeira vez. A última frase é:',['どうぞ よろしく おねがいします','いただきます','ごちそうさま','ごめんください'],0,'Encerramento da apresentação.',2],
+ [3,'A: 「この ひとは だれですか。」 B: 「（　）」',['あねです','ブラジルです','3にんです','にほんごです'],0,'だれ pergunta "quem" → a pessoa (あね).',2],
+ [3,'A: 「コーヒー、のみますか。」 B (aceitando):',['いいえ、けっこうです','はい、いただきます','はい、すきじゃないです','いいえ、のみます'],1,'Aceitar oferta: はい、いただきます.',3],
+ [3,'No fast-food, você quer pedir um café:',['コーヒーが すきです','コーヒー ひとつ ください','コーヒーは どこですか','コーヒーを たべます'],1,'Pedido: N ひとつ ください.',3],
+ [3,'Você chega à porta da casa de um amigo e diz:',['いってきます','ごめんください','おやすみなさい','ただいま'],1,'Chegando à casa de alguém: ごめんください.',4],
+ [3,'Visitando a casa, você quer elogiar o quarto:',['いい へやですね','へやは どこですか','へやが ありますか','へやを ください'],0,'Elogio: いい へやですね.',4],
+ [3,'A: 「パーティーは いつが いいですか。」 B: 「（　）」',['こうえんが いいです','どようびが いいです','5にんです','ケーキです'],1,'いつ pede uma data/dia.',5],
+ [3,'É aniversário da sua amiga. No cartão você escreve:',['おたんじょうび おめでとう','おやすみなさい','いただきます','すみません'],0,'Felicitação de aniversário.',5],
+ [4,'アナさんは なにじんですか。',['にほんじん','ブラジルじん','アメリカじん','かんこくじん'],1,'ブラジルじんです.',0],
+ [4,'アナさんの しごとは？',['せんせい','かいしゃいん','がくせい','エンジニア'],2,'だいがくせい = universitária.',0],
+ [4,'アナさんの かぞくは なんにんですか。',['ふたり','さんにん','よにん','ごにん'],2,'ちち・はは・おとうと + ela = 4.',0],
+ [4,'アナさんの へやは どうですか。',['ひろくて あたらしい','ちいさいですが きれい','ふるくて せまい','おおきいですが ふるい'],1,'ちいさいですが、きれいです.',0],
+ [4,'アナさんが すきじゃない ものは？',['すし','さかな','にく','やさい'],1,'さかなは あまり すきじゃないです.',0],
+ [4,'アナさんは なんじに おきますか。',['6:00','6:30','8:00','12:00'],1,'6じはん = 6:30.',0],
+ [4,'だいがくは なんじまでですか。',['6じはん','8じ','12じ','5じ'],2,'8じから 12じまで.',0],
+ [4,'パーティーは いつ、どこですか。',['どようび・いえ','にちようび・だいがく','どようび・だいがく','きんようび・いえ'],0,'どようびに いえで.',0],
+];
+const MODEL_ANSWER = 'はじめまして。カルロスです。ブラジルじんです。かいしゃいんです。えいごが できます。かぞくは さんにんです。つまと むすめが います。わたしは カレーが すきです。でも、やさいは あまり すきじゃないです。わたしの いえは マンションです。へやが みっつ あります。あたらしくて きれいです。まいあさ 6じに おきます。にちようびに いえで パーティーを します。きませんか。どうぞ よろしく おねがいします。';
+
+/* Monte a frase — esteira: QUEM は → QUANDO → ONDE で/に → O QUÊ を/が → VERBO */
+const SENTENCES = [
+ [['わたしは','どようびに','いえで','パーティーを','します'],'Eu faço uma festa em casa no sábado.',3],
+ [['わたしは','まいあさ','パンを','たべます'],'Eu como pão todas as manhãs.',3],
+ [['あには','リオに','すんで います'],'Meu irmão mais velho mora no Rio.',2],
+ [['わたしは','えいごが','できます'],'Eu sei inglês.',2],
+ [['しょくどうで','ラーメンを','たべます'],'Como lámen no refeitório.',3],
+ [['へやに','エアコンが','あります'],'Há ar-condicionado no quarto.',4],
+ [['にわに','ねこが','います'],'Há um gato no jardim.',4],
+ [['ほんは','つくえの','うえに','あります'],'O livro está em cima da escrivaninha.',4],
+ [['わたしは','7じに','おきます'],'Eu acordo às 7h.',5],
+ [['かいしゃは','9じから','5じまでです'],'A empresa funciona das 9h às 17h.',5],
+ [['きんようびに','しごとを','します'],'Trabalho na sexta-feira.',5],
+ [['マリアさんも','ブラジルじんです'],'A Maria também é brasileira.',2],
+ [['すみません、','コーヒー','ひとつ','ください'],'Com licença, um café, por favor.',3],
+ [['わたしは','さかなが','すきです'],'Eu gosto de peixe.',3],
+ [['やさいは','あまり','すきじゃないです'],'Não gosto muito de verduras.',3],
+ [['わたしは','まいにち','にほんごを','べんきょうします'],'Eu estudo japonês todos os dias.',5],
+];
+
+/* =====================================================================
+   UTILITÁRIOS
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const rnd = n => Math.floor(Math.random()*n);
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];} return a; };
+const sample = (a,n) => shuffle(a).slice(0,n);
+const hasJP = s => /[぀-ヿ一-龯]/.test(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem('mgp_'+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem('mgp_'+k, JSON.stringify(v)); }catch(e){} }
+};
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2200); }
+
+function speak(txt){
+  try{
+    const s=window.speechSynthesis; if(!s){ toast('Voz em japonês indisponível neste navegador'); return; }
+    s.cancel();
+    const clean=txt.replace(/（\s*）|\(\s*\)/g,'、').replace(/<[^>]+>/g,'').replace(/[A-Za-zÀ-ú:()]+/g,' ');
+    const u=new SpeechSynthesisUtterance(clean); u.lang='ja-JP'; u.rate=.85;
+    const v=s.getVoices().find(v=>/^ja/i.test(v.lang)); if(v) u.voice=v;
+    s.speak(u);
+  }catch(e){}
+}
+
+/* =====================================================================
+   ÁUDIO — trilha City Pop original gerada em tempo real (Web Audio API)
+   Groove 100 BPM, piano elétrico FM, baixo sincopado, pad, bateria e lead.
+   ===================================================================== */
+const Audio = (() => {
+  let ctx=null, master, musicBus, sfxBus, revIn, dlyIn, noise, timer=null;
+  let musicOn = store.get('music', true), sfxOn = store.get('sfx', true);
+  let step=0, nextTime=0, loop=0, fever=false;
+  const BPM=100, S16=60/BPM/4;
+  const mtof = m => 440*Math.pow(2,(m-69)/12);
+
+  // progressão (8 compassos) — [batida inicial, duração em batidas, baixo, voicing]
+  const PROG = [
+    [[0,4,41,[57,60,64,67]]],                          // Fmaj9
+    [[0,2,40,[55,59,62,64]],[2,2,33,[55,59,61,64]]],   // Em7  A7
+    [[0,4,38,[53,57,60,64]]],                          // Dm9
+    [[0,2,43,[53,58,62,65]],[2,2,36,[52,58,62,67]]],   // Gm7  C9
+    [[0,4,34,[60,62,65,69]]],                          // Bbmaj9
+    [[0,2,45,[55,60,64,67]],[2,2,38,[54,57,60,64]]],   // Am7  D9
+    [[0,4,43,[58,62,65,69]]],                          // Gm9
+    [[0,2,36,[53,58,62,67]],[2,2,36,[52,58,62,67]]],   // C7sus C7
+  ];
+  // melodia original — [batida, nota, duração]
+  const MEL = [
+    [[1.5,76,.5],[2,77,.5],[2.5,79,1],[3.5,76,.5]],
+    [[0,74,1],[1,76,.5],[2,73,1],[3,76,.5],[3.5,79,.5]],
+    [[0,81,1.5],[1.5,79,.5],[2,77,.5],[2.5,76,1.5]],
+    [[0,74,.5],[.5,77,.5],[1,74,1],[2,72,.5],[2.5,70,1.5]],
+    [[.5,74,.5],[1,77,.5],[1.5,81,1],[2.5,79,.5],[3,77,1]],
+    [[0,76,1],[1,72,.5],[1.5,76,.5],[2,78,1.5],[3.5,76,.5]],
+    [[0,74,1.5],[1.5,77,.5],[2,81,.5],[2.5,79,.5],[3,77,.5],[3.5,74,.5]],
+    [[0,72,2],[2.5,70,.5],[3,72,.5],[3.5,74,.5]],
+  ];
+  const STEPS = 128, EV = Array.from({length:STEPS},()=>[]);
+  (function build(){
+    PROG.forEach((bar,b)=>bar.forEach(([st,len,bs,v])=>{
+      const s0=b*16+st*4;
+      const hits = len===4 ? [[0,1.25],[6,.5],[10,1.5]] : [[0,1],[6,.4]];
+      hits.forEach(([o,d])=>EV[s0+o].push({k:'ep',v,d}));
+      EV[s0].push({k:'pad',v,d:len});
+      const bp = len===4 ? [[0,0,2],[3,12,1],[6,0,2],[8,7,2],[11,12,1],[14,10,2]] : [[0,0,2],[3,12,1],[6,7,2]];
+      bp.forEach(([o,iv,d])=>EV[s0+o].push({k:'bass',n:bs+iv,d}));
+    }));
+    MEL.forEach((bar,b)=>bar.forEach(([st,n,d])=>EV[b*16+st*4].push({k:'lead',n,d})));
+    for(let b=0;b<8;b++){
+      const s0=b*16;
+      [0,10].concat(b%2?[7]:[]).forEach(o=>EV[s0+o].push({k:'kick'}));
+      [4,12].forEach(o=>EV[s0+o].push({k:'snare'}));
+      for(let o=0;o<16;o+=2) EV[s0+o].push({k: (o===14&&b%2)?'ohat':'hat', a:o%4===0?.6:1});
+      for(let o=1;o<16;o+=2) EV[s0+o].push({k:'shk'});
+    }
+    [125,126,127].forEach(s=>EV[s].push({k:'snare',g:.5}));
+  })();
+
+  function init(){
+    if(ctx) return true;
+    const AC = window.AudioContext||window.webkitAudioContext; if(!AC) return false;
+    ctx = new AC();
+    const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-14; comp.ratio.value=3;
+    master=ctx.createGain(); master.gain.value=.9; master.connect(comp); comp.connect(ctx.destination);
+    musicBus=ctx.createGain(); musicBus.gain.value=0; musicBus.connect(master);
+    sfxBus=ctx.createGain(); sfxBus.gain.value=.55; sfxBus.connect(master);
+    // reverb
+    const conv=ctx.createConvolver(), len=ctx.sampleRate*2.4, ir=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let c=0;c<2;c++){const d=ir.getChannelData(c); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);}
+    conv.buffer=ir; revIn=ctx.createGain(); const rOut=ctx.createGain(); rOut.gain.value=.32;
+    revIn.connect(conv); conv.connect(rOut); rOut.connect(musicBus); rOut.connect(sfxBus);
+    // delay pingue-pongue simples
+    dlyIn=ctx.createGain(); const dl=ctx.createDelay(1), fb=ctx.createGain(), dOut=ctx.createGain();
+    dl.delayTime.value=S16*3; fb.gain.value=.32; dOut.gain.value=.3;
+    dlyIn.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(dOut); dOut.connect(musicBus);
+    // ruído
+    noise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate); const nd=noise.getChannelData(0);
+    for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+    return true;
+  }
+  function env(g,t,a,peak,dec,sus,end){ g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(peak,t+a); g.gain.exponentialRampToValueAtTime(Math.max(sus,.0001),t+a+dec); g.gain.exponentialRampToValueAtTime(.0001,end); }
+  function out(node, bus, rev=0, dly=0){ node.connect(bus); if(rev){const s=ctx.createGain(); s.gain.value=rev; node.connect(s); s.connect(revIn);} if(dly){const s=ctx.createGain(); s.gain.value=dly; node.connect(s); s.connect(dlyIn);} }
+
+  function ep(t,m,dur,vel=.07,bus=musicBus){
+    const f=mtof(m), car=ctx.createOscillator(), mod=ctx.createOscillator(), mg=ctx.createGain(), g=ctx.createGain(), p=ctx.createStereoPanner?ctx.createStereoPanner():null;
+    car.frequency.value=f; mod.frequency.value=f; mg.gain.setValueAtTime(f*1.4,t); mg.gain.exponentialRampToValueAtTime(f*.08,t+.5);
+    mod.connect(mg); mg.connect(car.frequency); car.connect(g);
+    env(g,t,.006,vel,.6,vel*.25,t+dur*60/BPM+.4);
+    let n=g; if(p){p.pan.value=(m%2?.25:-.25); g.connect(p); n=p;}
+    out(n,bus,.5);
+    car.start(t); mod.start(t); const e=t+dur*60/BPM+.45; car.stop(e); mod.stop(e);
+  }
+  function pad(t,v,beats){
+    const end=t+beats*60/BPM, lp=ctx.createBiquadFilter(), g=ctx.createGain();
+    lp.type='lowpass'; lp.frequency.value=1100; g.gain.setValueAtTime(.0001,t); g.gain.linearRampToValueAtTime(.016,t+.35); g.gain.setValueAtTime(.016,end-.1); g.gain.linearRampToValueAtTime(.0001,end+.3);
+    lp.connect(g); out(g,musicBus,.7);
+    v.forEach(m=>[-6,6].forEach(dt=>{const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=mtof(m+12); o.detune.value=dt; o.connect(lp); o.start(t); o.stop(end+.35);}));
+  }
+  function bass(t,m,steps){
+    const d=steps*S16, o=ctx.createOscillator(), sub=ctx.createOscillator(), lp=ctx.createBiquadFilter(), g=ctx.createGain();
+    o.type='sawtooth'; o.frequency.value=mtof(m); sub.type='sine'; sub.frequency.value=mtof(m);
+    lp.type='lowpass'; lp.Q.value=6; lp.frequency.setValueAtTime(1400,t); lp.frequency.exponentialRampToValueAtTime(260,t+.18);
+    o.connect(lp); sub.connect(lp); lp.connect(g); env(g,t,.004,.22,.15,.12,t+d+.05); out(g,musicBus);
+    o.start(t); sub.start(t); o.stop(t+d+.1); sub.stop(t+d+.1);
+  }
+  function lead(t,m,beats,bus=musicBus,vol=.05){
+    const d=beats*60/BPM, o=ctx.createOscillator(), o2=ctx.createOscillator(), lfo=ctx.createOscillator(), lg=ctx.createGain(), lp=ctx.createBiquadFilter(), g=ctx.createGain();
+    o.type='square'; o.frequency.value=mtof(m); o2.type='sine'; o2.frequency.value=mtof(m+12);
+    lfo.frequency.value=5.5; lg.gain.value=4; lfo.connect(lg); lg.connect(o.detune); lg.connect(o2.detune);
+    lp.type='lowpass'; lp.frequency.value=2600; o.connect(lp); o2.connect(lp); lp.connect(g);
+    env(g,t,.03,vol,.2,vol*.6,t+d+.15); out(g,bus,.4,.5);
+    [o,o2,lfo].forEach(x=>{x.start(t); x.stop(t+d+.2);});
+  }
+  function noiseHit(t,{type='highpass',f=8000,q=1,vol=.05,dur=.05,bus=musicBus,rev=0}){
+    const s=ctx.createBufferSource(), fl=ctx.createBiquadFilter(), g=ctx.createGain();
+    s.buffer=noise; fl.type=type; fl.frequency.value=f; fl.Q.value=q; s.connect(fl); fl.connect(g);
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur); out(g,bus,rev);
+    s.start(t, Math.random()*.5); s.stop(t+dur+.02);
+  }
+  function kick(t){ const o=ctx.createOscillator(), g=ctx.createGain(); o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(45,t+.12); g.gain.setValueAtTime(.55,t); g.gain.exponentialRampToValueAtTime(.0001,t+.38); o.connect(g); out(g,musicBus); o.start(t); o.stop(t+.4); }
+  function snare(t,gm=1){ noiseHit(t,{type:'bandpass',f:1900,q:.8,vol:.16*gm,dur:.2,rev:.5}); const o=ctx.createOscillator(), g=ctx.createGain(); o.type='triangle'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(160,t+.08); g.gain.setValueAtTime(.12*gm,t); g.gain.exponentialRampToValueAtTime(.0001,t+.12); o.connect(g); out(g,musicBus); o.start(t); o.stop(t+.15); }
+
+  function play(e,t){
+    const hum=(Math.random()-.5)*.006; t+=hum;
+    switch(e.k){
+      case 'ep': e.v.forEach(m=>ep(t,m,e.d)); break;
+      case 'pad': pad(t,e.v,e.d); break;
+      case 'bass': bass(t,e.n,e.d); break;
+      case 'lead': if(loop%4!==0){ lead(t,e.n,e.d); if(fever||loop%4===3) ep(t,e.n+12,e.d,.03); } break;
+      case 'kick': kick(t); break;
+      case 'snare': snare(t,e.g||1); break;
+      case 'hat': noiseHit(t,{vol:.035*e.a,dur:.04}); break;
+      case 'ohat': noiseHit(t,{vol:.03,dur:.22}); break;
+      case 'shk': noiseHit(t,{f:6000,vol:.012,dur:.03}); break;
+    }
+  }
+  function sched(){
+    while(nextTime < ctx.currentTime + .15){
+      EV[step].forEach(e=>play(e,nextTime));
+      nextTime += S16; step=(step+1)%STEPS; if(step===0) loop++;
+    }
+  }
+  function startMusic(){
+    if(!init()) return;
+    ctx.resume();
+    musicBus.gain.cancelScheduledValues(ctx.currentTime);
+    musicBus.gain.setTargetAtTime(.75,ctx.currentTime,.4);
+    if(!timer){ step=0; loop=0; nextTime=ctx.currentTime+.08; timer=setInterval(sched,25); }
+  }
+  function stopMusic(){
+    if(!ctx) return;
+    musicBus.gain.setTargetAtTime(0,ctx.currentTime,.15);
+    clearInterval(timer); timer=null;
+  }
+  function note(t,m,d,type='sine',vol=.18){
+    const o=ctx.createOscillator(), o2=ctx.createOscillator(), g=ctx.createGain();
+    o.type=type; o.frequency.value=mtof(m); o2.type='sine'; o2.frequency.value=mtof(m)*3.01;
+    const g2=ctx.createGain(); g2.gain.value=.15; o2.connect(g2); g2.connect(g); o.connect(g);
+    env(g,t,.005,vol,.25,vol*.2,t+d); out(g,sfxBus,.6);
+    o.start(t); o2.start(t); o.stop(t+d+.05); o2.stop(t+d+.05);
+  }
+  const sfx = {
+    good(combo=0){ if(!sfxOn||!init()) return; ctx.resume(); const t=ctx.currentTime, up=Math.min(combo,7); [84,88,91,96].forEach((m,i)=>note(t+i*.06,m+up,.5)); noiseHit(t,{f:9000,vol:.05,dur:.3,bus:sfxBus,rev:.8}); },
+    bad(){ if(!sfxOn||!init()) return; ctx.resume(); const t=ctx.currentTime; note(t,64,.25,'triangle',.16); note(t+.14,59,.4,'triangle',.16); },
+    tap(){ if(!sfxOn||!init()) return; ctx.resume(); note(ctx.currentTime,91,.12,'sine',.08); },
+    fanfare(){ if(!sfxOn||!init()) return; ctx.resume(); const t=ctx.currentTime; [72,76,79,84,79,84,88,91,96].forEach((m,i)=>note(t+i*.09,m,.6,'triangle',.14)); [60,64,67,71].forEach(m=>ep(t+.8,m,3,.06,sfxBus)); },
+    tick(){ if(!sfxOn||!init()) return; note(ctx.currentTime,100,.05,'square',.03); },
+  };
+  document.addEventListener('visibilitychange',()=>{ if(!ctx) return; if(document.hidden) ctx.suspend(); else if(musicOn && timer) ctx.resume(); });
+  return {
+    get musicOn(){return musicOn}, get sfxOn(){return sfxOn},
+    toggleMusic(){ musicOn=!musicOn; store.set('music',musicOn); musicOn?startMusic():stopMusic(); return musicOn; },
+    toggleSfx(){ sfxOn=!sfxOn; store.set('sfx',sfxOn); return sfxOn; },
+    unlock(){ if(musicOn) startMusic(); else init(); },
+    setFever(v){ fever=v; },
+    sfx,
+  };
+})();
+
+/* =====================================================================
+   CONFETES — canvas 2D
+   ===================================================================== */
+const Confetti = (() => {
+  const cv=$('#confetti'), c=cv.getContext('2d'); let W,H,parts=[],raf=null;
+  const COLORS=['#ffb8cf','#cfbdff','#a3e6c9','#ffd0a6','#acd9ff','#fff0a3','#ff7fae','#9a7bff'];
+  const GLYPHS=['✿','♡','★','や','た','!'];
+  function size(){ const d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; cv.width=W*d; cv.height=H*d; c.setTransform(d,0,0,d,0,0); }
+  size(); addEventListener('resize',size);
+  function add(x,y,n,power,spread=Math.PI*2,dir=-Math.PI/2){
+    if(reduceMotion) n=Math.ceil(n/4);
+    for(let i=0;i<n;i++){
+      const a=dir+(Math.random()-.5)*spread, v=power*(.45+Math.random()*.75);
+      parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.35,s:6+Math.random()*7,
+        col:COLORS[rnd(COLORS.length)],shape:Math.random()<.12?'g':['rect','circ','star','heart'][rnd(4)],g:GLYPHS[rnd(GLYPHS.length)],life:0,max:110+rnd(70),wob:Math.random()*10});
+    }
+    if(!raf) raf=requestAnimationFrame(tick);
+  }
+  function star(s){ c.beginPath(); for(let i=0;i<10;i++){const r=i%2?s*.45:s, a=i*Math.PI/5-Math.PI/2; c.lineTo(Math.cos(a)*r,Math.sin(a)*r);} c.closePath(); c.fill(); }
+  function heart(s){ c.beginPath(); c.moveTo(0,s*.35); c.bezierCurveTo(s,-s*.4,s*.4,-s*1.1,0,-s*.45); c.bezierCurveTo(-s*.4,-s*1.1,-s,-s*.4,0,s*.35); c.fill(); }
+  function tick(){
+    c.clearRect(0,0,W,H);
+    parts=parts.filter(p=>p.life<p.max && p.y<H+40);
+    for(const p of parts){
+      p.life++; p.vx*=.985; p.vy=p.vy*.985+.22; p.x+=p.vx+Math.sin((p.life+p.wob)*.1)*.6; p.y+=p.vy; p.r+=p.vr;
+      c.save(); c.translate(p.x,p.y); c.rotate(p.r); c.globalAlpha=Math.min(1,(p.max-p.life)/30); c.fillStyle=p.col;
+      if(p.shape==='rect'){ c.scale(1,Math.cos(p.life*.2)); c.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66); }
+      else if(p.shape==='circ'){ c.beginPath(); c.arc(0,0,p.s/2,0,7); c.fill(); }
+      else if(p.shape==='star') star(p.s*.7);
+      else if(p.shape==='heart') heart(p.s*.8);
+      else { c.font=`800 ${p.s*2}px "M PLUS Rounded 1c",sans-serif`; c.textAlign='center'; c.textBaseline='middle'; c.fillText(p.g,0,0); }
+      c.restore();
+    }
+    raf = parts.length ? requestAnimationFrame(tick) : (c.clearRect(0,0,W,H), null);
+  }
+  return {
+    burst(x,y,n=90){ add(x,y,n,13); },
+    party(){ add(W*.1,H,110,22,Math.PI/3,-Math.PI/2+.5); add(W*.9,H,110,22,Math.PI/3,-Math.PI/2-.5); setTimeout(()=>add(W/2,H*.35,120,15),250); },
+    rain(n=60){ for(let i=0;i<n;i++) setTimeout(()=>add(Math.random()*W,-10,1,3,1,Math.PI/2),i*20); },
+  };
+})();
+
+/* =====================================================================
+   FUNDO 3D — Three.js (formas pastel flutuantes + pétalas de sakura)
+   ===================================================================== */
+const BG = (() => {
+  const api={pulse(){},shake(){}};
+  if(!window.THREE) return api;
+  let renderer;
+  try{ renderer=new THREE.WebGLRenderer({canvas:$('#bg3d'),alpha:true,antialias:true}); }catch(e){ return api; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+  const scene=new THREE.Scene(), cam=new THREE.PerspectiveCamera(50,1,.1,100); cam.position.z=16;
+  scene.add(new THREE.HemisphereLight(0xffffff,0xffc8dd,.95));
+  const dl=new THREE.DirectionalLight(0xffffff,.55); dl.position.set(4,6,8); scene.add(dl);
+  const COLS=[0xffb8cf,0xcfbdff,0xa3e6c9,0xffd0a6,0xacd9ff,0xfff0a3];
+  const GEOS=[new THREE.IcosahedronGeometry(1,0),new THREE.TorusGeometry(.8,.32,14,32),new THREE.SphereGeometry(.9,24,16),new THREE.OctahedronGeometry(1,0),new THREE.TorusKnotGeometry(.6,.22,64,10),new THREE.DodecahedronGeometry(.9,0)];
+  const meshes=[];
+  for(let i=0;i<18;i++){
+    const m=new THREE.Mesh(GEOS[i%GEOS.length],new THREE.MeshStandardMaterial({color:COLS[i%COLS.length],roughness:.45,metalness:.05,flatShading:i%3!==2}));
+    const s=.5+Math.random()*.9; m.scale.setScalar(s);
+    m.position.set((Math.random()-.5)*26,(Math.random()-.5)*16,-10+Math.random()*8);
+    m.userData={s,by:m.position.y,ph:Math.random()*6,fs:.4+Math.random()*.6,rx:(Math.random()-.5)*.01,ry:(Math.random()-.5)*.012};
+    scene.add(m); meshes.push(m);
+  }
+  // pétalas
+  const pc=document.createElement('canvas'); pc.width=pc.height=64; const px=pc.getContext('2d');
+  px.fillStyle='#ffc4d8'; px.beginPath(); px.moveTo(32,6); px.bezierCurveTo(58,18,52,52,32,58); px.bezierCurveTo(12,52,6,18,32,6); px.fill();
+  px.fillStyle='#ffe3ec'; px.beginPath(); px.ellipse(32,30,6,16,0,0,7); px.fill();
+  const N=reduceMotion?40:150, pos=new Float32Array(N*3), vel=[];
+  for(let i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*34; pos[i*3+1]=(Math.random()-.5)*22; pos[i*3+2]=-6+Math.random()*10; vel.push({vy:.01+Math.random()*.025,ph:Math.random()*6}); }
+  const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const petals=new THREE.Points(pg,new THREE.PointsMaterial({map:new THREE.CanvasTexture(pc),size:.55,transparent:true,depthWrite:false,opacity:.9}));
+  scene.add(petals);
+  let mx=0,my=0,pulse=0,shake=0,t=0;
+  addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5; my=e.clientY/innerHeight-.5;});
+  function size(){ renderer.setSize(innerWidth,innerHeight,false); cam.aspect=innerWidth/innerHeight; cam.updateProjectionMatrix(); }
+  size(); addEventListener('resize',size);
+  function frame(){
+    t+=reduceMotion?.004:.016; pulse*=.94; shake*=.88;
+    const boost=1+pulse*8;
+    meshes.forEach(m=>{const u=m.userData; m.rotation.x+=u.rx*boost; m.rotation.y+=u.ry*boost; m.position.y=u.by+Math.sin(t*u.fs+u.ph)*.7; m.scale.setScalar(u.s*(1+pulse*.35*Math.sin(t*20+u.ph)));});
+    const p=pg.attributes.position.array;
+    for(let i=0;i<N;i++){ const v=vel[i]; p[i*3+1]-=v.vy*(1+pulse*4); p[i*3]+=Math.sin(t+v.ph)*.01; if(p[i*3+1]<-12){p[i*3+1]=12; p[i*3]=(Math.random()-.5)*34;} }
+    pg.attributes.position.needsUpdate=true;
+    cam.position.x+=(mx*2-cam.position.x)*.03+(Math.random()-.5)*shake;
+    cam.position.y+=(-my*1.2-cam.position.y)*.03+(Math.random()-.5)*shake;
+    cam.lookAt(0,0,0);
+    renderer.render(scene,cam); requestAnimationFrame(frame);
+  }
+  frame();
+  return {pulse(){pulse=1;}, shake(){shake=.5;}};
+})();
+
+/* =====================================================================
+   ESTADO, PONTOS & MASCOTE
+   ===================================================================== */
+const S = { score:0, combo:0, shown:0, timers:[] };
+let Q = null; // sessão de quiz atual
+
+function clearTimers(){ S.timers.forEach(clearInterval); S.timers=[]; }
+function setScore(v){
+  S.score=v; const from=S.shown, to=v, t0=performance.now();
+  (function anim(now){ const k=Math.min(1,(now-t0)/450); S.shown=Math.round(from+(to-from)*k); $('#scoreEl').textContent=S.shown; if(k<1) requestAnimationFrame(anim); })(t0);
+}
+function setCombo(v){
+  S.combo=v; $('#comboEl').textContent=v; const p=$('#comboPill'); p.classList.toggle('hot',v>=5);
+  p.style.transform='scale(1.25)'; setTimeout(()=>p.style.transform='',180); Audio.setFever(v>=5);
+}
+function floaty(x,y,txt){ const d=document.createElement('div'); d.className='floaty'; d.style.left=x+'px'; d.style.top=y+'px'; d.textContent=txt; document.body.appendChild(d); setTimeout(()=>d.remove(),1000); }
+const HAPPY=['すごい！','やった！','せいかい！','いいね！','かんぺき！','じょうず！'], SAD=['おしい！','だいじょうぶ！','がんばって！','もう いちど！'];
+function mascot(mood,msg){
+  const m=$('#mascot'), b=$('#bubble'); m.classList.remove('happy','sad'); void m.offsetWidth;
+  if(mood) m.classList.add(mood);
+  b.textContent=msg||(mood==='happy'?HAPPY[rnd(HAPPY.length)]:mood==='sad'?SAD[rnd(SAD.length)]:'がんばって！');
+  b.classList.add('show'); clearTimeout(mascot._t); mascot._t=setTimeout(()=>{b.classList.remove('show'); m.classList.remove('happy','sad');},1800);
+}
+function addLifetime(pts){ store.set('total', store.get('total',0)+pts); }
+
+/* =====================================================================
+   GERADORES DE QUESTÕES
+   ===================================================================== */
+function mkQ(base){ // embaralha opções; certa = índice 0 do array original
+  const idx=shuffle(base.o.map((_,i)=>i));
+  return {...base, o:idx.map(i=>base.o[i]), a:idx.indexOf(0)};
+}
+function vocabQ(t){
+  const pool=VOCAB[t], [jp,pt]=pool[rnd(pool.length)];
+  const others=sample(pool.filter(p=>p[0]!==jp),3);
+  return Math.random()<.5
+    ? mkQ({t,q:`O que significa 「${jp}」?`,o:[pt,...others.map(p=>p[1])],e:`${jp} = ${pt}`,say:jp})
+    : mkQ({t,q:`Como se diz “${pt}” em japonês?`,o:[jp,...others.map(p=>p[0])],e:`${pt} = ${jp}`,say:jp});
+}
+function kanjiQ(k){
+  k=k||KANJI[rnd(KANJI.length)]; const [c,r,m,t]=k;
+  const others=sample(KANJI.filter(x=>x[0]!==c && x[1]!==r),3), type=rnd(3);
+  if(type===0) return mkQ({t,q:`「${c}」の よみかたは？`,h:`significado: ${m}`,o:[r,...others.map(x=>x[1])],e:`${c} = ${r} (${m})`,say:r,kanji:true});
+  if(type===1) return mkQ({t,q:`「${c}」 significa:`,o:[m,...others.map(x=>x[2])],e:`${c} (${r}) = ${m}`,say:r,kanji:true});
+  return mkQ({t,q:`Qual kanji é 「${r}」 (${m})?`,o:[c,...others.map(x=>x[0])],e:`${r} = ${c}`,say:r,kanji:true});
+}
+function topicQ(t){ const b=TQ[t][rnd(TQ[t].length)]; return mkQ({...b,t}); }
+function simQs(){ return SIM.map(([part,q,o,a,e,t],i)=>({n:i+1,part,q,o,a,e,t,pts:PART_PTS[part]})); }
+
+/* =====================================================================
+   TELAS
+   ===================================================================== */
+const MODES = [
+  {id:'sim',  emo:'📝', t:'Simulado Oficial', d:'As 40 questões da もぎしけん, com nota e gabarito comentado.', bg:'bg-pink'},
+  {id:'topic',emo:'🌸', t:'Trilha por Tópico', d:'10 questões de vocabulário, gramática e erros comuns.', bg:'bg-lav'},
+  {id:'kanji',emo:'漢', t:'Kanji Dojo', d:'Os kanji dos Tópicos 3–5: leitura, significado e escrita.', bg:'bg-mint'},
+  {id:'rush', emo:'⚡', t:'Partícula Rush', d:'60 segundos! Acertos dão +2s, erros tiram 3s.', bg:'bg-peach'},
+  {id:'build',emo:'🧩', t:'Monte a Frase', d:'Organize os blocos: は → quando → で/に → を/が → verbo.', bg:'bg-sky'},
+  {id:'nb',   emo:'📒', t:'Caderno de Revisão', d:'Vocabulário, gramática, erros comuns e flashcards com áudio.', bg:'bg-lemon'},
+  {id:'cando',emo:'✅', t:'Checklist Can-do', d:'As 27 metas do かつどう. Marque o que você domina.', bg:'bg-mint'},
+];
+const mascotSVG = () => $('#mascot svg').outerHTML.replace('<svg','<svg class="hm"');
+
+function home(){
+  clearTimers(); Q=null;
+  const total=store.get('total',0), cd=store.get('cando',{}), cdn=Object.values(cd).filter(Boolean).length;
+  app.innerHTML = `
+  <section class="card hero pop">
+    <div>
+      <h1>Revisão A1 <span class="jp">まるごと パーティー！</span></h1>
+      <p class="muted">Marugoto 入門 A1 · りかい ＋ かつどう · Tópicos 1–5 (だい1か〜だい10か)</p>
+      <div class="chips">${TOPICS.map(t=>`<span class="chip ${t.bg}">${t.ico} ${t.jp}</span>`).join('')}</div>
+      ${Audio.musicOn?'<div class="sound-gate muted">🎧 A trilha City Pop começa no seu primeiro clique. Use 🎵 para desligar.</div>':''}
+    </div>
+    <div class="hero-mascot">${mascotSVG()}</div>
+  </section>
+  <div class="modes">
+    ${MODES.map((m,i)=>`<button class="mode ${m.bg} pop" style="animation-delay:${i*50}ms" data-act="mode" data-id="${m.id}">
+      <span class="emo">${m.emo}</span><h3>${m.t}</h3><p>${m.d}</p>
+      ${store.get('best_'+m.id,0)?`<span class="best">🏆 Recorde: ${store.get('best_'+m.id,0)}</span>`:''}
+      ${m.id==='cando'?`<span class="best">${cdn}/27 dominadas</span>`:''}
+    </button>`).join('')}
+  </div>
+  <div class="stats pop">
+    <div class="stat">⭐ Pontos acumulados<b>${total}</b></div>
+    <div class="stat">📝 Melhor nota no simulado<b>${store.get('simgrade',null)==null?'—':store.get('simgrade')+' / 70'}</b></div>
+    <div class="stat">✅ Metas Can-do<b>${cdn} / 27</b></div>
+  </div>
+  <div class="tip card pop"><b>DICA ODU — Leia em blocos</b><br>
+    ➤ Toda frase do A1 segue a esteira: <b>QUEM は → QUANDO → ONDE で/に → O QUÊ を/が → VERBO</b>.<br>
+    ➤ Errou uma partícula? Pergunte: “qual é a função deste bloco?” — lugar da ação (で), destino/existência (に), objeto (を), gosto/habilidade (が).</div>`;
+  mascot(null,'こんにちは！');
+}
+
+function pickTopic(kind){
+  clearTimers();
+  app.innerHTML = `<section class="card pop">
+    <div class="section-title"><button class="back" data-act="home">← Início</button><h2>${kind==='nb'?'📒 Caderno de Revisão':'🌸 Escolha o tópico'}</h2></div>
+    <div class="topics">
+      ${TOPICS.map(t=>`<button class="topic ${t.bg}" data-act="${kind==='nb'?'nb':'topicgo'}" data-t="${t.id}">
+        <div class="n">TÓPICO ${t.id} · ${t.les}</div><div class="t">${t.ico} ${t.jp}</div><div class="s">${t.pt}</div>
+        ${kind!=='nb'&&store.get('best_topic'+t.id,0)?`<div class="s">🏆 ${store.get('best_topic'+t.id,0)}</div>`:''}</button>`).join('')}
+      ${kind==='nb'?'':`<button class="topic bg-lemon" data-act="topicgo" data-t="0"><div class="n">TODOS</div><div class="t">🌈 Mix 1–5</div><div class="s">15 questões misturadas</div></button>`}
+    </div></section>`;
+}
+
+/* ---------- quiz ---------- */
+function startQuiz(mode,opt={}){
+  clearTimers();
+  let qs=[], label='';
+  if(mode==='sim'){ qs=simQs(); label='Simulado'; }
+  else if(mode==='topic'){
+    const t=opt.t;
+    if(t){ qs=shuffle([...sample(TQ[t],6).map(b=>mkQ({...b,t})), ...Array.from({length:4},()=>vocabQ(t))]); label=`Tópico ${t} · ${tp(t).jp}`; }
+    else { qs=Array.from({length:15},(_,i)=>{const tt=1+rnd(5); return i%3===2?vocabQ(tt):topicQ(tt);}); label='Mix 1–5'; }
+  }
+  else if(mode==='kanji'){ qs=shuffle(KANJI).slice(0,12).map(k=>kanjiQ(k)); label='Kanji Dojo'; }
+  else if(mode==='rush'){ qs=[rushQ()]; label='Partícula Rush'; }
+  Q={id:Math.random(),mode,opt,qs,i:0,pts:0,right:0,wrong:[],grade:0,label,maxCombo:0,time:60,answered:false};
+  setCombo(0);
+  if(mode==='rush'){
+    S.timers.push(setInterval(()=>{
+      Q.time-=.1;
+      const bar=$('.timer'); if(bar){ bar.querySelector('i').style.width=Math.max(0,Q.time/60*100)+'%'; bar.classList.toggle('low',Q.time<10); $('#tleft').textContent=Math.max(0,Math.ceil(Q.time))+'s'; }
+      if(Q.time<10 && Math.abs(Q.time%1)<.1) Audio.sfx.tick();
+      if(Q.time<=0) results();
+    },100));
+  }
+  renderQ();
+}
+const recent=[];
+function rushQ(){
+  for(let tries=0;tries<12;tries++){
+    const r=Math.random(), t=1+rnd(5);
+    let q = r<.5 ? topicQ(t) : r<.62 ? (()=>{const s=SIM.filter(x=>x[0]===2)[rnd(12)]; return {q:s[1],o:s[2],a:s[3],e:s[4],t:s[5]};})() : r<.85 ? vocabQ(t) : kanjiQ();
+    if(!recent.includes(q.q)){ recent.push(q.q); if(recent.length>10) recent.shift(); return q; }
+  }
+  return vocabQ(1+rnd(5));
+}
+function renderQ(){
+  const q=Q.qs[Q.i], total=Q.qs.length, t=q.t?tp(q.t):null;
+  const rush=Q.mode==='rush';
+  const head = rush
+    ? `<span class="tag bg-peach">⚡ Rush</span><div class="progress timer"><i style="width:${Q.time/60*100}%"></i></div><span class="count" id="tleft">${Math.ceil(Q.time)}s</span><span class="count">✔ ${Q.right}</span>`
+    : `<span class="tag ${t?t.bg:'bg-lemon'}">${t?`${t.ico} T${t.id}`:'📖 Leitura'}</span><div class="progress"><i style="width:${Q.i/total*100}%"></i></div><span class="count">${Q.i+1}/${total}</span>`;
+  const partBanner = Q.mode==='sim' && (Q.i===0 || Q.qs[Q.i-1].part!==q.part) ? `<div class="part-banner">${PARTS[q.part]}</div>` : (Q.mode==='sim'?`<div class="part-banner muted" style="opacity:.7">${PARTS[q.part]}</div>`:'');
+  const passage = q.part===4 ? `<details class="passage" open><summary>📩 アナさんの メール <button class="say" data-act="say" data-txt="${esc(PASSAGE.replace(/<br>/g,''))}" title="Ouvir">🔊</button></summary><div>${PASSAGE}</div></details>` : '';
+  app.innerHTML = `<section class="card quiz pop">
+    <div class="quiz-head"><button class="back" data-act="quit">✕</button>${head}</div>
+    ${partBanner}${passage}
+    <div class="prompt"><h2>${q.n?q.n+'. ':''}${esc(q.q)}</h2>${hasJP(q.q)?`<button class="speak" data-act="say" data-txt="${esc(q.q)}" title="Ouvir">🔊</button>`:''}</div>
+    ${q.h?`<p class="hint">💡 ${esc(q.h)}</p>`:''}
+    <div class="opts">${q.o.map((o,i)=>`<button class="opt" data-act="ans" data-i="${i}"><span class="k">${i+1}</span><span>${esc(o)}</span></button>`).join('')}</div>
+    <div id="fb"></div>
+    <div class="kbd">Teclado: 1–4 para responder · Enter para continuar</div>
+  </section>`;
+  Q.answered=false;
+}
+function answer(i,btn){
+  if(!Q||Q.answered) return; Q.answered=true;
+  const q=Q.qs[Q.i], ok=i===q.a, btns=[...document.querySelectorAll('.opt')];
+  btns.forEach((b,j)=>{ b.disabled=true; if(j===q.a) b.classList.add('right'); else if(j===i) b.classList.add('wrong'); else b.classList.add('dim'); });
+  const r=(btn||btns[i]).getBoundingClientRect();
+  if(ok){
+    setCombo(S.combo+1); Q.maxCombo=Math.max(Q.maxCombo,S.combo);
+    const gain=100+Math.min(S.combo-1,10)*20;
+    Q.pts+=gain; Q.right++; if(q.pts) Q.grade+=q.pts;
+    setScore(S.score+gain); floaty(r.left+r.width/2,r.top,'+'+gain);
+    Confetti.burst(r.left+r.width/2,r.top+r.height/2, S.combo>=5?140:90);
+    if(S.combo%5===0) Confetti.rain(50);
+    BG.pulse(); Audio.sfx.good(S.combo); mascot('happy', S.combo>=5?`${S.combo} コンボ！🔥`:null);
+    if(Q.mode==='rush') Q.time=Math.min(60,Q.time+2);
+  } else {
+    setCombo(0); Q.wrong.push(q); BG.shake(); Audio.sfx.bad(); mascot('sad');
+    if(Q.mode==='rush') Q.time-=3;
+  }
+  if(Q.mode==='rush'){ const sid=Q.id; setTimeout(()=>{ if(Q&&Q.id===sid&&Q.time>0){ Q.qs.push(rushQ()); Q.i++; renderQ(); } }, ok?550:1100);
+    if(!ok) $('#fb').innerHTML=`<div class="feedback bad"><div class="msg">💡 ${esc(q.e)}</div></div>`; return; }
+  const ans=q.o[q.a], t=q.t?tp(q.t):null;
+  $('#fb').innerHTML=`<div class="feedback ${ok?'good':'bad'} pop">
+    <div class="msg"><b>${ok?'せいかい！ Correto ✨':'ざんねん… Quase!'}</b><br>${ok?'':`Resposta: <b>${esc(ans)}</b><br>`}💡 ${esc(q.e)}
+    ${!ok&&t?`<br><span class="muted">Revise: Tópico ${t.id} · ${t.jp}</span>`:''}</div>
+    ${hasJP(ans)?`<button class="btn alt" data-act="say" data-txt="${esc(ans)}">🔊</button>`:''}
+    <button class="btn" data-act="next" id="nextBtn">${Q.i+1<Q.qs.length?'Próxima ➜':'Ver resultado 🎉'}</button></div>`;
+  $('#nextBtn').focus({preventScroll:true});
+  $('#fb').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'nearest'});
+}
+function next(){ if(!Q) return; if(Q.i+1<Q.qs.length){ Q.i++; renderQ(); window.scrollTo({top:0,behavior:'smooth'}); } else results(); }
+
+const RANKS=[[85,'Pronto(a) para a prova! 🎓','Faça só o checklist Can-do e descanse.'],[60,'Quase lá! 💪','Releia os tópicos indicados abaixo.'],[0,'Revisar antes 📚','Releia a gramática dos tópicos e refaça o simulado em 2 dias.']];
+function results(){
+  clearTimers();
+  const mode=Q.mode, answered = mode==='rush' ? Q.i+(Q.answered?1:0) : Q.qs.length;
+  const pct = Math.round(Q.right/Math.max(1,answered)*100);
+  const grade = mode==='sim' ? Math.round(Q.grade/70*100) : pct;
+  const rank = RANKS.find(r=>grade>=r[0]);
+  const stars = grade>=85?3:grade>=60?2:grade>=30?1:0;
+  const key = mode==='topic' ? 'topic'+(Q.opt.t||'') : mode;
+  const best = store.get('best_'+key,0), isBest = Q.pts>best;
+  if(isBest){ store.set('best_'+key,Q.pts); if(mode==='topic') store.set('best_topic',Math.max(store.get('best_topic',0),Q.pts)); }
+  if(mode==='sim' && Q.grade>store.get('simgrade',-1)) store.set('simgrade',Q.grade);
+  addLifetime(Q.pts);
+  const weak={}; Q.wrong.forEach(q=>{ if(q.t) weak[q.t]=(weak[q.t]||0)+1; });
+  const weakT=Object.keys(weak).sort((a,b)=>weak[b]-weak[a]);
+  app.innerHTML = `<section class="card results pop">
+    <h2>${Q.label} — resultado</h2>
+    <div class="stars">${[0,1,2].map(i=>`<span class="s ${i<stars?'':'off'}" style="animation-delay:${.2+i*.2}s">⭐</span>`).join('')}</div>
+    <div class="big">${Q.pts} pts</div>
+    ${isBest&&Q.pts>0?'<div class="tag bg-lemon">🏆 Novo recorde!</div>':''}
+    <div class="rgrid">
+      <div class="stat">Acertos<b>${Q.right}/${answered}</b></div>
+      <div class="stat">Aproveitamento<b>${pct}%</b></div>
+      ${mode==='sim'?`<div class="stat">Nota objetiva<b>${Q.grade}/70</b></div>`:''}
+      <div class="stat">Maior combo<b>🔥 ${Q.maxCombo}</b></div>
+    </div>
+    <h3>${rank[1]}</h3><p class="muted">${rank[2]}${mode==='sim'?' (escala do material: 0–100, partes 1–4 valem 70 pontos)':''}</p>
+    ${weakT.length?`<p>Tópicos para revisar: ${weakT.map(t=>`<button class="chip ${tp(t).bg}" style="border:0" data-act="nb" data-t="${t}">${tp(t).ico} T${t} ${tp(t).jp} (${weak[t]})</button>`).join(' ')}</p>`:''}
+    ${mode==='sim'?`<details class="model"><summary>✍️ もんだい5 さくぶん — Produção escrita (30 pts, faça no caderno)</summary>
+      <p>Escreva uma autoapresentação para um(a) novo(a) amigo(a) japonês(a): nome, nacionalidade, trabalho/estudo, idioma (T2) · família (T2) · comida que gosta e que não gosta muito (T3) · como é sua casa (T4) · hora que acorda e um convite com dia da semana (T5).</p>
+      <p><b>Modelo:</b> ${MODEL_ANSWER} <button class="say" data-act="say" data-txt="${esc(MODEL_ANSWER)}">🔊</button></p></details>`:''}
+    ${Q.wrong.length?`<div class="review"><h3>Revise seus erros</h3>${Q.wrong.slice(0,40).map(q=>`<div class="item">${q.n?q.n+'. ':''}${esc(q.q)}<br>✓ <b>${esc(q.o[q.a])}</b> — ${esc(q.e)}</div>`).join('')}</div>`:''}
+    <div class="actions"><button class="btn" data-act="again">Jogar de novo 🔁</button><button class="btn alt" data-act="home">Início</button></div>
+  </section>`;
+  if(stars>=2){ Confetti.party(); Audio.sfx.fanfare(); mascot('happy','おめでとう！🎉'); }
+  else if(stars===1){ Confetti.rain(40); mascot('happy','がんばったね！'); }
+  else mascot('sad','がんばって！');
+  window.scrollTo({top:0});
+}
+
+/* ---------- monte a frase ---------- */
+let B=null;
+function startBuilder(){
+  clearTimers(); setCombo(0);
+  B={list:shuffle(SENTENCES).slice(0,8),i:0,pts:0,right:0,maxCombo:0,wrong:[]};
+  renderBuilder();
+}
+const TILE_BG=['bg-pink','bg-lav','bg-mint','bg-peach','bg-sky','bg-lemon'];
+function renderBuilder(){
+  const [parts,pt,t]=B.list[B.i];
+  let bank=parts.map((p,i)=>({p,i}));
+  do{ bank=shuffle(bank); }while(parts.length>1 && bank.every((b,k)=>b.i===k));
+  B.bank=bank; B.ans=[]; B.done=false;
+  app.innerHTML=`<section class="card pop">
+    <div class="quiz-head"><button class="back" data-act="quit">✕</button><span class="tag ${tp(t).bg}">${tp(t).ico} T${t}</span><div class="progress"><i style="width:${B.i/B.list.length*100}%"></i></div><span class="count">${B.i+1}/${B.list.length}</span></div>
+    <p class="muted" style="margin:0">Monte a frase em japonês:</p>
+    <div class="prompt"><h2>“${esc(pt)}”</h2></div>
+    <div class="slots" id="slots"></div>
+    <div class="bank" id="bank"></div>
+    <div class="belt"><span>QUEM は</span>→<span>QUANDO</span>→<span>ONDE で/に</span>→<span>O QUÊ を/が</span>→<span>VERBO</span></div>
+    <div id="fb"><div class="actions"><button class="btn alt" data-act="bclear">↺ Limpar</button><button class="btn mint" data-act="bcheck" id="bcheck" disabled>Verificar ✔</button></div></div>
+  </section>`;
+  drawTiles();
+}
+function drawTiles(){
+  const tile=(o,where)=>`<button class="tile ${TILE_BG[o.i%6]}" data-act="tile" data-where="${where}" data-i="${o.i}">${esc(o.p)}</button>`;
+  $('#slots').innerHTML=B.ans.map(o=>tile(o,'ans')).join('')||'<span class="muted" style="align-self:center">Toque nos blocos abaixo ✨</span>';
+  $('#bank').innerHTML=B.bank.map(o=>tile(o,'bank')).join('');
+  const c=$('#bcheck'); if(c) c.disabled=B.bank.length>0;
+}
+function moveTile(where,i){
+  if(B.done) return; Audio.sfx.tap();
+  const from=where==='bank'?B.bank:B.ans, to=where==='bank'?B.ans:B.bank, k=from.findIndex(o=>o.i===i);
+  if(k<0) return; to.push(from.splice(k,1)[0]); drawTiles();
+}
+function checkBuilder(){
+  if(B.done||B.bank.length) return; B.done=true;
+  const [parts,pt,t]=B.list[B.i], ok=B.ans.map(o=>o.p).join('')===parts.join('');
+  const sl=$('#slots'); sl.classList.add(ok?'right':'wrong');
+  const r=sl.getBoundingClientRect(), sentence=parts.join(' ');
+  if(ok){ setCombo(S.combo+1); B.maxCombo=Math.max(B.maxCombo,S.combo); const gain=150+Math.min(S.combo-1,10)*25; B.pts+=gain; B.right++; setScore(S.score+gain);
+    floaty(r.left+r.width/2,r.top,'+'+gain); Confetti.burst(r.left+r.width/2,r.top+r.height/2,120); BG.pulse(); Audio.sfx.good(S.combo); mascot('happy'); speak(sentence); }
+  else { setCombo(0); B.wrong.push(B.list[B.i]); BG.shake(); Audio.sfx.bad(); mascot('sad'); }
+  $('#fb').innerHTML=`<div class="feedback ${ok?'good':'bad'} pop"><div class="msg"><b>${ok?'せいかい！ ✨':'Ordem certa:'}</b><br>${esc(sentence)}<br><span class="muted">${esc(pt)}</span></div>
+    <button class="btn alt" data-act="say" data-txt="${esc(sentence)}">🔊</button><button class="btn" data-act="bnext" id="nextBtn">${B.i+1<B.list.length?'Próxima ➜':'Ver resultado 🎉'}</button></div>`;
+  $('#nextBtn').focus({preventScroll:true});
+}
+function nextBuilder(){
+  if(B.i+1<B.list.length){ B.i++; renderBuilder(); return; }
+  Q={mode:'build',opt:{},qs:B.list.map(([p,pt,t])=>({q:pt,o:[p.join(' ')],a:0,e:'',t})),pts:B.pts,right:B.right,wrong:B.wrong.map(([p,pt,t])=>({q:pt,o:[p.join(' ')],a:0,e:'esteira: QUEM は → QUANDO → ONDE → O QUÊ → VERBO',t})),grade:0,label:'Monte a Frase',maxCombo:B.maxCombo,answered:true};
+  results();
+}
+
+/* ---------- caderno ---------- */
+function notebook(t){
+  clearTimers(); t=+t||1; const T=tp(t);
+  const say=s=>`<button class="say" data-act="say" data-txt="${esc(s)}" title="Ouvir">🔊</button>`;
+  app.innerHTML=`<section class="card nb pop">
+    <div class="section-title"><button class="back" data-act="home">← Início</button><h2>📒 Caderno de Revisão</h2></div>
+    <div class="tabs">${TOPICS.map(x=>`<button class="${x.bg} ${x.id===t?'on':''}" data-act="nb" data-t="${x.id}">${x.ico} ${x.id} ${x.jp}</button>`).join('')}<button class="bg-mint ${t===6?'on':''}" data-act="nbk">漢 Kanji</button></div>
+    <h2>${T.ico} TÓPICO ${t} — ${T.jp} <span class="muted" style="font-size:15px">${T.pt} · ${T.les}</span></h2>
+    <h3>🃏 Flashcards</h3><div id="flash"></div>
+    <h3>■ もじと ことば — Vocabulário</h3>
+    <table class="tbl"><tbody>${VOCAB[t].map(([j,p])=>`<tr><td>${j} ${say(j)}</td><td>${p}</td></tr>`).join('')}</tbody></table>
+    <h3>■ ぶんぽう — Gramática essencial</h3>
+    <table class="tbl"><tbody>${GRAMMAR[t].map(([f,ex,fn])=>`<tr><td>${f}</td><td>${ex} ${say(ex)}</td><td class="muted">${fn}</td></tr>`).join('')}</tbody></table>
+    <h3>■ Erro comum — cuidado!</h3>
+    <table class="tbl"><tbody>${ERRORS[t].map(([w,r,why])=>`<tr><td><span class="wrongtxt">✗ ${w}</span></td><td><span class="righttxt">✓ ${r}</span></td><td class="muted">${why}</td></tr>`).join('')}</tbody></table>
+    <h3>■ かつどう — Na prova você precisa conseguir</h3>
+    <ul>${CANDO[t].map(c=>`<li>${c}</li>`).join('')}</ul>
+    <div class="actions"><button class="btn" data-act="topicgo" data-t="${t}">Treinar Tópico ${t} 🌸</button></div>
+  </section>`;
+  flashDeck(VOCAB[t].map(([j,p])=>({f:j,b:p,s:j})), T.bg);
+}
+function notebookKanji(){
+  clearTimers();
+  app.innerHTML=`<section class="card nb pop">
+    <div class="section-title"><button class="back" data-act="home">← Início</button><h2>📒 Caderno de Revisão</h2></div>
+    <div class="tabs">${TOPICS.map(x=>`<button class="${x.bg}" data-act="nb" data-t="${x.id}">${x.ico} ${x.id} ${x.jp}</button>`).join('')}<button class="bg-mint on" data-act="nbk">漢 Kanji</button></div>
+    <h2>かんじ — Kanji do Marugoto A1 (Tópicos 3–5)</h2>
+    <h3>🃏 Flashcards</h3><div id="flash"></div>
+    <table class="tbl"><tbody>${KANJI.map(([k,r,m,t])=>`<tr><td style="font-size:26px">${k}</td><td>${r} <button class="say" data-act="say" data-txt="${esc(r)}">🔊</button></td><td>${m}</td><td class="muted">T${t}</td></tr>`).join('')}</tbody></table>
+    <div class="tip"><b>Atenção às leituras</b><br>➤ 水 aparece duas vezes: みず (água, T3) e すい (すいようび, T5).<br>➤ 日 em にちようび = にち. 時 em 4時 = よじ (nunca よんじ).<br>➤ 分: 1ぷん・2ふん・3ぷん・4ぷん・5ふん・6ぷん・7ふん・8ぷん・9ふん・10ぷん.</div>
+    <div class="actions"><button class="btn" data-act="mode" data-id="kanji">Ir ao Kanji Dojo 漢</button></div>
+  </section>`;
+  flashDeck(KANJI.map(([k,r,m])=>({f:k,b:`${r}<br><small>${m}</small>`,s:r})),'bg-mint');
+}
+function flashDeck(cards,bg){
+  let deck=shuffle(cards), i=0;
+  const draw=()=>{ const c=deck[i];
+    $('#flash').innerHTML=`<div class="flash-wrap"><div class="flash" id="fc"><div class="face ${bg}"><div><div class="main">${c.f}</div><small>toque para virar</small></div></div><div class="face back bg-lav"><div class="main" style="font-size:28px">${c.b}</div></div></div></div>
+    <div class="actions"><button class="btn alt" data-act="fprev">←</button><button class="btn alt" data-act="say" data-txt="${esc(c.s)}">🔊</button><span class="count" style="align-self:center">${i+1}/${deck.length}</span><button class="btn alt" data-act="fnext">→</button></div>`;
+    $('#fc').onclick=()=>{ $('#fc').classList.toggle('flip'); Audio.sfx.tap(); };
+  };
+  flashDeck.prev=()=>{ i=(i-1+deck.length)%deck.length; draw(); };
+  flashDeck.next=()=>{ i=(i+1)%deck.length; draw(); };
+  draw();
+}
+
+/* ---------- can-do ---------- */
+function cando(){
+  clearTimers();
+  const st=store.get('cando',{}); let n=0;
+  const groups=TOPICS.map(T=>{ const items=CANDO[T.id].map(c=>{ n++; const id=String(n).padStart(2,'0'); return `<button class="check ${st[id]?'on':''}" data-act="cd" data-id="${id}"><span class="box">${st[id]?'✓':''}</span><span><b>${id}</b> ${c}</span></button>`; }).join('');
+    return `<div class="cando-group"><h3><span class="tag ${T.bg}">${T.ico} ${T.id}</span>${T.jp}</h3>${items}</div>`; }).join('');
+  const done=Object.values(st).filter(Boolean).length, p=done/27, C=2*Math.PI*38;
+  app.innerHTML=`<section class="card pop">
+    <div class="section-title"><button class="back" data-act="home">← Início</button><h2>✅ CHECKLIST CAN-DO — かつどう 01–27</h2></div>
+    <div class="ring"><svg viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="var(--line)" stroke-width="10"/><circle cx="45" cy="45" r="38" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" transform="rotate(-90 45 45)"/><text x="45" y="51" text-anchor="middle" font-weight="800" font-size="18" fill="currentColor">${done}/27</text></svg>
+    <p class="muted" style="flex:1;min-width:200px">Marque <b>Domino</b> só se você consegue fazer SEM olhar o livro. Na véspera: releia os quadros “Erro comum” e treine em voz alta a autoapresentação e o convite. Durma bem! 😴</p></div>
+    ${groups}</section>`;
+}
+function toggleCando(id,btn){
+  const st=store.get('cando',{}); st[id]=!st[id]; store.set('cando',st);
+  if(st[id]){ const r=btn.getBoundingClientRect(); Confetti.burst(r.left+30,r.top+r.height/2,40); Audio.sfx.good(0); mascot('happy','できた！'); }
+  const done=Object.values(st).filter(Boolean).length;
+  const y=scrollY; cando(); scrollTo(0,y);
+  if(st[id] && done===27){ Confetti.party(); Audio.sfx.fanfare(); mascot('happy','ぜんぶ できた！🎉'); }
+}
+
+/* =====================================================================
+   EVENTOS
+   ===================================================================== */
+let unlocked=false;
+document.addEventListener('pointerdown',()=>{ if(!unlocked){ unlocked=true; Audio.unlock(); } },{capture:true});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return;
+  const a=b.dataset.act;
+  if(a!=='ans' && a!=='say' && a!=='tile') Audio.sfx.tap();
+  switch(a){
+    case 'home': home(); break;
+    case 'mode': {
+      const id=b.dataset.id;
+      if(id==='topic') pickTopic('topic'); else if(id==='nb') pickTopic('nb'); else if(id==='cando') cando();
+      else if(id==='build') startBuilder(); else startQuiz(id);
+      window.scrollTo({top:0}); break; }
+    case 'topicgo': startQuiz('topic',{t:+b.dataset.t}); window.scrollTo({top:0}); break;
+    case 'ans': answer(+b.dataset.i,b); break;
+    case 'next': next(); break;
+    case 'quit': if(confirm('Sair desta rodada? Os pontos desta rodada serão perdidos.')) home(); break;
+    case 'again': if(Q.mode==='build') startBuilder(); else startQuiz(Q.mode,Q.opt); break;
+    case 'say': e.stopPropagation(); speak(b.dataset.txt); break;
+    case 'tile': moveTile(b.dataset.where,+b.dataset.i); break;
+    case 'bclear': if(!B.done){ B.bank=B.bank.concat(B.ans); B.ans=[]; drawTiles(); } break;
+    case 'bcheck': checkBuilder(); break;
+    case 'bnext': nextBuilder(); break;
+    case 'nb': notebook(b.dataset.t); window.scrollTo({top:0}); break;
+    case 'nbk': notebookKanji(); break;
+    case 'fprev': flashDeck.prev(); break;
+    case 'fnext': flashDeck.next(); break;
+    case 'cd': toggleCando(b.dataset.id,b); break;
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(e.target.closest('input,textarea')) return;
+  if(Q && !Q.answered && /^[1-4]$/.test(e.key) && document.querySelector('.opt')){ const i=+e.key-1; const btn=document.querySelectorAll('.opt')[i]; if(btn){ unlocked||(unlocked=true,Audio.unlock()); answer(i,btn);} }
+  else if(e.key==='Enter'){ const n=$('#nextBtn'); if(n && document.activeElement!==n){ e.preventDefault(); n.click(); } }
+});
+const musicBtn=$('#musicBtn'), sfxBtn=$('#sfxBtn'), themeBtn=$('#themeBtn');
+const syncBtns=()=>{ musicBtn.classList.toggle('off',!Audio.musicOn); sfxBtn.classList.toggle('off',!Audio.sfxOn); };
+musicBtn.onclick=()=>{ unlocked=true; const on=Audio.toggleMusic(); toast(on?'🎵 Trilha City Pop ligada':'🎵 Trilha desligada'); syncBtns(); };
+sfxBtn.onclick=()=>{ const on=Audio.toggleSfx(); toast(on?'🔔 Efeitos ligados':'🔕 Efeitos desligados'); syncBtns(); };
+function applyTheme(t){ if(t) document.documentElement.dataset.theme=t; else delete document.documentElement.dataset.theme;
+  const dark = t ? t==='dark' : matchMedia('(prefers-color-scheme: dark)').matches; themeBtn.textContent=dark?'☀️':'🌙'; }
+themeBtn.onclick=()=>{ const cur=document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'); const nt=cur==='dark'?'light':'dark'; store.set('theme',nt); applyTheme(nt); };
+applyTheme(store.get('theme',null)); syncBtns();
+home();
+</script>
+</body>
+</html>
