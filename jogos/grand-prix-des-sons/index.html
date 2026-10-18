@@ -7,7 +7,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Baloo+2:wght@500;600;700;800&family=Noto+Sans:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Baloo+2:wght@500;600;700;800&display=swap">
 <style>
 /* Layout: palco 3D em tela cheia (mascote + coração do concurso); cartão de jogo à direita no desktop e embaixo no celular. */
 :root {
@@ -30,7 +30,6 @@
   --bg: #fde3f0;
   --font-display: "Mochiy Pop One", "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif;
   --font-body: "Baloo 2", "Nunito", "Segoe UI", system-ui, sans-serif;
-  --font-ipa: "Noto Sans", "Segoe UI", "DejaVu Sans", "Lucida Sans Unicode", sans-serif;
   color-scheme: light;
 }
 html, body { height: 100%; }
@@ -124,7 +123,40 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 }
 .lead { margin: 0; color: var(--ink); }
 .muted { color: var(--ink-soft); font-size: 15px; margin: 0; }
-.ipa { font-family: var(--font-ipa); font-weight: 500; }
+
+/* ---------- Méthode phonique ---------- */
+.phon { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 0; font-size: 26px; font-weight: 800; line-height: 1.1; }
+.syl { padding: 0 3px 7px; margin: 0 2px; border-bottom: 3px solid; border-radius: 0 0 50% 50% / 0 0 12px 12px; }
+.syl.a { color: #d6457c; border-color: #f5a3c3; }
+.syl.b { color: #4a72d1; border-color: #a6bff3; }
+.mute { color: #b3a7c1 !important; font-weight: 600; }
+.tgt { background: var(--butter); border-radius: 6px; padding: 0 2px; font-weight: 800; }
+.sep { color: var(--ink-soft); opacity: .6; margin: 0 1px; }
+.lia { color: var(--pink-deep); font-weight: 800; }
+.phon .lia { font-size: 30px; margin: 0 -1px; padding-bottom: 6px; }
+.gap { width: 14px; }
+.legend { margin: 0; font-size: 13.5px; color: var(--ink-soft); line-height: 2; }
+.legend .syl { padding: 0 2px 2px; margin: 0 1px; border-bottom-width: 2px; font-weight: 800; }
+.fb-read { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fb-lbl { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.inline-ph { font-weight: 700; }
+.fiche { display: flex; gap: 12px; align-items: flex-start; background: #fff; border-radius: 18px; padding: 10px 12px; margin-top: 4px; }
+.fiche .emo { font-size: 42px; line-height: 1; flex: none; }
+.fiche-body { min-width: 0; }
+.fiche-t { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; font-size: 16px; }
+.snd { font-family: var(--font-display); font-weight: 400; color: var(--pink-deep); }
+.graph { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.graph span { background: var(--lilac); border-radius: 8px; padding: 0 8px; font-weight: 700; font-size: 14px; }
+.bouche { margin: 6px 0 0; font-size: 14.5px; }
+.wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.tile {
+  border: 3px solid #fff; background: #fff; border-radius: 18px; padding: 8px 4px; cursor: pointer; font: inherit; color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--line); min-width: 0;
+}
+.tile .emo { font-size: 30px; line-height: 1.2; }
+.tile .ex { font-size: 14px; font-weight: 700; }
+.tile.on { border-color: var(--pink-deep); background: #fff3f8; }
+.wall-btn { font-size: 16px; padding: 9px 18px; align-self: flex-start; }
 
 /* ---------- Escolha de manche ---------- */
 .rounds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -198,7 +230,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   box-shadow: 0 5px 0 var(--line); transition: transform .12s, box-shadow .12s, background .2s;
   min-width: 0;
 }
-.opt .t { min-width: 0; overflow-wrap: anywhere; font-family: var(--font-body), var(--font-ipa); }
+.opt .t { min-width: 0; overflow-wrap: anywhere; }
 .opt .k {
   flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--lilac);
   display: grid; place-items: center; font-size: 13px; font-weight: 800;
@@ -316,126 +348,153 @@ const store = {
 const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
 
+// ---------- Méthode phonique: o mural dos sons ----------
+// Cada som tem rótulo entre colchetes, uma palavra-referência com imagem, os grafemas que o escrevem
+// e o gesto da boca. Transcrição das palavras: sílabas separadas por ·, letras mudas entre ( ),
+// grafema do som estudado entre { } e ligação marcada com ‿.
+const SONS = {
+  u:  { label: "[u]",  ex: "tortue", emo: "🐢", graph: ["u", "û"], bouche: "Diga “i” e, sem mexer a língua, faça bico com os lábios. Esse som não existe em português." },
+  ou: { label: "[ou]", ex: "loup",   emo: "🐺", graph: ["ou", "où", "oû"], bouche: "Lábios em bico e língua recuada: é o nosso “u” de “tudo”." },
+  an: { label: "[an]", ex: "enfant", emo: "🧒", graph: ["an", "am", "en", "em"], bouche: "Boca bem aberta e ar pelo nariz: um “ã” grave. Não feche a boca no n." },
+  in: { label: "[in]", ex: "lapin",  emo: "🐰", graph: ["in", "im", "ain", "ein", "un"], bouche: "Boca aberta em sorriso e ar pelo nariz: um “é” nasal. Não feche a boca no n." },
+  on: { label: "[on]", ex: "bonbon", emo: "🍬", graph: ["on", "om"], bouche: "Lábios redondos e ar pelo nariz: o “õ” de “bom”, sem fechar a boca no fim." },
+  oi: { label: "[oi]", ex: "roi",    emo: "👑", graph: ["oi"], bouche: "[ou] e [a] colados, bem rápido: “uá”." },
+  r:  { label: "[r]",  ex: "rat",    emo: "🐀", graph: ["r", "rr"], bouche: "No fundo da garganta, como um gargarejo suave ou o rr carioca. Vale em todas as posições." },
+  e:  { label: "[e]",  ex: "cheval", emo: "🐴", graph: ["e sem acento"], bouche: "Um “â” curto e relaxado, com os lábios levemente redondos. Na fala rápida ele costuma cair." },
+  "é": { label: "[é]", ex: "bébé",   emo: "👶", graph: ["é", "er", "ez", "et"], bouche: "Sorria, com a língua alta: é o nosso “ê” fechado de “você”." },
+  "è": { label: "[è]", ex: "chèvre", emo: "🐐", graph: ["è", "ê", "ai", "ei", "e + consoante"], bouche: "Abaixe o queixo e abra a boca: é o nosso “é” de “pé”." },
+  eu: { label: "[eu]", ex: "feu",    emo: "🔥", graph: ["eu", "œu"], bouche: "Diga “ê” e faça bico. É um som só, sem deslizar para “u”." },
+  "œ": { label: "[œ]", ex: "fleur",  emo: "🌸", graph: ["eu", "œu", "antes de consoante que soa"], bouche: "Diga “é” e faça bico. Aparece quando uma consoante soa logo depois." },
+  "ô": { label: "[ô]", ex: "vélo",   emo: "🚲", graph: ["o no fim", "ô", "au", "eau"], bouche: "Lábios bem redondos e fechados: o nosso “ô” de “avô”." },
+  o:  { label: "[o]",  ex: "pomme",  emo: "🍎", graph: ["o + consoante que soa"], bouche: "Boca mais aberta e redonda: o nosso “ó” de “pó”." },
+  z:  { label: "[z]",  ex: "zèbre",  emo: "🦓", graph: ["z", "s entre vogais", "s ou x de ligação"], bouche: "Zumbido de abelha, com voz: zzz." }
+};
+const SND = (k) => SONS[k].label + " " + SONS[k].emo + " " + SONS[k].ex;
+
 // ---------- Banco de perguntas (do caderno) ----------
 // L = ouvir e escolher · W = palavra na tela + pergunta sobre o som · Q = pergunta de múltipla escolha
-const L = (word, opts, ipa, tip) => ({ type: "listen", say: word, answer: word, opts, ipa, tip });
-const W = (word, ipa, q, opts, ans, tip) => ({ type: "word", word, say: word, ipa, q, opts, answer: opts[ans], tip });
-const Q = (q, opts, ans, tip, say, ipa) => ({ type: "quiz", q, opts, answer: opts[ans], tip, say, ipa });
+const L = (word, opts, ph, son, tip, clue) => ({ type: "listen", say: word, answer: word, opts, ph, son, tip, clue });
+const W = (word, ph, son, q, opts, ans, tip) => ({ type: "word", word, say: word, ph, son, q, opts, answer: opts[ans], tip });
+const Q = (q, opts, ans, tip, say, ph, son) => ({ type: "quiz", q, opts, answer: opts[ans], tip, say, ph, son });
 const group = (tag, items) => items.map((it) => Object.assign(it, { tag }));
+const OPEN_CLOSED_O = [SND("ô") + ", fechado", SND("o") + ", aberto"];
+const OPEN_CLOSED_EU = [SND("eu") + ", fechado", SND("œ") + ", aberto"];
+const E_SOUNDS = [SND("é") + ", nosso “ê”", SND("è") + ", nosso “é”"];
 
 const ROUNDS = {
   a1: {
     num: "Aula 01", name: "Sons-chave", color: "c-pink",
-    topics: "u × ou · nasais · letras mudas · alfabeto · cumprimentos",
+    topics: "[u] × [ou] · [an] [in] [on] · letras mudas · alfabeto · cumprimentos",
     items: [
-      ...group("u /y/ × ou /u/", [
-        L("tu", ["tu", "tout"], "/ty/", "u francês: diga “i” e faça bico. tu /ty/ (você) × tout /tu/ (tudo)."),
-        L("vous", ["vu", "vous"], "/vu/", "ou = o nosso “u”. vous /vu/ (vocês) × vu /vy/ (visto)."),
-        L("rue", ["rue", "roue"], "/ʁy/", "rue /ʁy/ é rua; roue /ʁu/ é roda. Trocar o som muda a palavra."),
-        L("dessous", ["dessus", "dessous"], "/dəsu/", "dessus /dəsy/ = em cima · dessous /dəsu/ = embaixo."),
-        L("pour", ["pur", "pour"], "/puʁ/", "pur /pyʁ/ = puro · pour /puʁ/ = para."),
-        W("salut", "/saly/", "Qual é o som do u em salut?", ["/y/ “i” com bico", "/u/ u português"], 0, "u sozinho = /y/: “salü”. E o t final é mudo."),
-        W("bonjour", "/bɔ̃ʒuʁ/", "Qual é o som do ou em bonjour?", ["/y/ “i” com bico", "/u/ u português"], 1, "ou = /u/, igual ao nosso u. O r final soa (CaReFuL).")
+      ...group("[u] × [ou]", [
+        L("tu", ["tu", "tout"], "t{u}", "u", "tu = [t] + [u] da tortue: diga “i” e faça bico. tout = [t] + [ou] do loup, com o t final mudo: tou(t)."),
+        L("vous", ["vu", "vous"], "v{ou}(s)", "ou", "vous = [v] + [ou], com o s mudo: “vu”. vu = [v] + [u], com bico."),
+        L("rue", ["rue", "roue"], "r{u}(e)", "u", "ru(e) tem [u] e quer dizer rua; rou(e) tem [ou] e quer dizer roda. Trocar o som muda a palavra."),
+        L("dessous", ["dessus", "dessous"], "de·ss{ou}(s)", "ou", "de·ssu(s) termina em [u] e quer dizer em cima; de·ssou(s) termina em [ou] e quer dizer embaixo."),
+        L("pour", ["pur", "pour"], "p{ou}r", "ou", "pur = [p] [u] [r], puro. pour = [p] [ou] [r], para."),
+        W("salut", "sa·l{u}(t)", "u", "Que som você ouve em salut?", [SND("u"), SND("ou")], 0, "u sozinho = [u] da tortue: “salü”. O t final é letra muda."),
+        W("bonjour", "bon·j{ou}r", "ou", "Que som você ouve em bonjour?", [SND("u"), SND("ou")], 1, "ou = [ou] do loup. O r final se pronuncia, pela regra CaReFuL.")
       ]),
-      ...group("vogais nasais", [
-        L("vin", ["vent", "vin", "vont"], "/vɛ̃/", "vent /ɑ̃/ vento · vin /ɛ̃/ vinho · vont /ɔ̃/ vão. A boca não fecha no n."),
-        L("blond", ["blanc", "blond"], "/blɔ̃/", "blanc /blɑ̃/ tem “ã” grave, boca aberta; blond /blɔ̃/ tem “õ”."),
-        L("cinq", ["cent", "cinq", "son"], "/sɛ̃k/", "cent /sɑ̃/ cem · cinq /sɛ̃k/ cinco · son /sɔ̃/ som."),
-        L("bonne", ["bon", "bonne"], "/bɔn/", "bon /bɔ̃/ é nasal; em bonne vem vogal depois do n, então: vogal oral + n. Nada de “bõne”."),
-        W("année", "/ane/", "O “an” de année é…", ["nasal", "oral + n pronunciado"], 1, "Depois do n vem vogal, então é oral + n: an /ɑ̃/ × année /ane/."),
-        W("maison", "/mɛzɔ̃/", "O “on” de maison é…", ["nasal", "oral + n pronunciado"], 0, "on no fim da palavra = nasal /ɔ̃/, sem fechar a boca."),
-        W("brésilienne", "/bʁeziljɛn/", "O final -ienne é…", ["nasal", "oral + n pronunciado"], 1, "brésilien /ɛ̃/ (nasal) × brésilienne /ɛn/ (oral + n). É assim que se forma muito feminino.")
+      ...group("[an] [in] [on]", [
+        L("vin", ["vent", "vin", "vont"], "v{in}", "in", "ven(t) tem [an] 🧒 · vin tem [in] 🐰 · von(t) tem [on] 🍬. A boca não fecha no n."),
+        L("blond", ["blanc", "blond"], "bl{on}(d)", "on", "blan(c) tem [an], com a boca aberta; blon(d) tem [on], com os lábios redondos. As consoantes finais são mudas."),
+        L("cinq", ["cent", "cinq", "son"], "c{in}q", "in", "cen(t) = [s] [an], cem · cinq = [s] [in] [k], cinco · son = [s] [on], som."),
+        L("bonne", ["bon", "bonne"], "b{o}nn(e)", "o", "bon tem [on]. Em bonne vem vogal depois do n, então não há som nasal: [o] da pomme + [n]. Nada de “bõne”."),
+        W("année", "{a}·nné(e)", null, "O “an” de année é…", ["o som nasal [an] 🧒", "[a] + [n], sem nasal"], 1, "Depois do n vem vogal, então a vogal fica oral: an tem [an], mas a·nnée se lê “a-nê”."),
+        W("maison", "mai·s{on}", "on", "O “on” de maison é…", ["o som nasal [on] 🍬", "[o] + [n], sem nasal"], 0, "on no fim da palavra = [on] do bonbon, sem fechar a boca."),
+        W("brésilienne", "bré·si·li{e}nn(e)", "è", "O final de brésilienne é…", ["o som nasal [in] 🐰", "[è] + [n], sem nasal"], 1, "bré·si·lien termina em [in]; bré·si·lienne termina em [è] + [n]. É assim que se forma muito feminino.")
       ]),
-      ...group("letras finais mudas", [
-        Q("Em qual palavra a consoante final é pronunciada?", ["avec", "petit", "trois", "beaucoup"], 0, "CaReFuL: C, R, F e L finais costumam soar. avec /avɛk/; petit, trois e beaucoup têm final mudo.", "avec"),
-        Q("Qual palavra tem a consoante final MUDA?", ["neuf", "hôtel", "Paris", "bonjour"], 2, "Paris /paʁi/: o s é mudo. neuf, hôtel e bonjour seguem o CaReFuL.", "Paris"),
-        Q("Como se pronuncia “ils parlent”?", ["/il paʁl/ “il parrl”", "/il paʁlɑ̃/ “il parlã”", "/ilz paʁlɛnt/ “ilz parlent”"], 0, "A terminação verbal -ent é muda: ils parlent soa igual a il parle.", "ils parlent"),
-        Q("E o r de “parler”?", ["soa forte, /ʁ/", "é mudo: /paʁle/ “parrlê”", "vira “i”"], 1, "Exceção ao CaReFuL: o -er do infinitivo soa /e/ e o r fica mudo.", "parler")
+      ...group("letras mudas", [
+        Q("Em qual palavra a consoante final se pronuncia?", ["avec", "petit", "trois", "beaucoup"], 0, "CaReFuL: c, r, f e l finais costumam soar: a·ve{c}. Já pe·ti(t), troi(s) e beau·cou(p) têm letra muda.", "avec", "a·ve{c}"),
+        Q("Qual palavra tem a consoante final MUDA?", ["neuf", "hôtel", "Paris", "bonjour"], 2, "Pa·ri(s): o s é letra muda. neu{f}, (h)ô·te{l} e bon·jou{r} seguem o CaReFuL.", "Paris", "Pa·ri(s)"),
+        Q("Como se lê “ils parlent”?", ["il(s) parl(ent): “il parl”", "“il parlã”", "“ilz parlent”"], 0, "A terminação -ent dos verbos é muda: ils parlent soa igual a il parle.", "ils parlent", "il(s) parl(ent)"),
+        Q("E o r de “parler”?", ["soa forte, como [r] 🐀", "é mudo: par·l{e}(r) soa [é]", "vira “i”"], 1, "Exceção ao CaReFuL: o -er do infinitivo soa [é] 👶 bébé e o r fica mudo.", "parler", "par·l{e}(r)", "é")
       ]),
-      ...group("alfabeto e r", [
-        Q("Como se diz a letra G em francês?", ["“jê” /ʒe/", "“gê”", "“ji” /ʒi/"], 0, "G = “jê” e J = “ji”: o contrário do que o brasileiro espera. GIL = jê-i-él."),
-        Q("E a letra J?", ["“jota”", "“ji” /ʒi/", "“jê” /ʒe/"], 1, "J = /ʒi/ “ji”. Treine soletrando: JEU = ji-â-ü."),
-        Q("A letra H se chama…", ["“agá”", "“ach” /aʃ/", "“rá”"], 1, "H = “ach”. Dentro da palavra ele é sempre mudo: hôtel = “ôtél”."),
-        Q("A letra U soa como…", ["o u de “tudo”", "“ü”: “i” com bico /y/", "“iú”"], 1, "U = /y/: língua na posição do “i” e lábios em bico."),
-        Q("Onde nasce o r de “Paris”?", ["na ponta da língua, como em “caro”", "no fundo da boca, como o rr carioca suave", "ele não se pronuncia"], 1, "O r /ʁ/ é de garganta em todas as posições, até entre vogais: /paʁi/.", "Paris")
+      ...group("alfabeto, [r] e [oi]", [
+        Q("Como se diz a letra G em francês?", ["“jê”, como em girafe", "“gê”", "“ji”"], 0, "G = “jê” e J = “ji”: o contrário do que o brasileiro espera. GIL = jê-i-él.", "G"),
+        Q("E a letra J?", ["“jota”", "“ji”", "“jê”"], 1, "J = “ji”. Treine soletrando: JEU = ji-â-ü.", "J"),
+        Q("A letra H se chama…", ["“agá”", "“ach”", "“rá”"], 1, "H = “ach”. Dentro da palavra ele é sempre letra muda: (h)ô·tel = “ôtél”.", "H"),
+        Q("A letra U soa como…", ["o u de “tudo”", "“ü”, o som [u] 🐢 da tortue", "“iú”"], 1, "U soa [u]: língua na posição do “i” e lábios em bico.", "U"),
+        Q("Como se faz o [r] de “Paris”?", ["com a ponta da língua, como em “caro”", "no fundo da garganta, como o rr carioca suave", "ele não se pronuncia"], 1, "[r] 🐀 rat: no fundo da garganta em todas as posições, até entre vogais.", "Paris", "Pa·{r}i(s)", "r"),
+        W("trois", "tr{oi}(s)", "oi", "Como se lê o “oi” de trois?", [SND("oi") + ": “uá”", "“ói”", "“oi”, como em português"], 0, "oi = [oi] do roi: “uá”. O s final é mudo: “truá”.")
       ]),
       ...group("cumprimentos", [
-        Q("Você chega a um jantar às 20h. Você diz…", ["Bonne nuit !", "Bonsoir !", "Bonjour !"], 1, "Bonsoir ao chegar à noite. Bonne nuit é só na hora de dormir.", "Bonsoir !"),
-        Q("Você entra numa padaria em Paris às 8h.", ["Salut !", "Bonjour, madame.", "Coucou !"], 1, "O bonjour é obrigatório ao entrar, e com desconhecidos o registro é formal.", "Bonjour, madame."),
-        Q("Você não entendeu o que o atendente disse.", ["Quoi ?", "Pardon ? Vous pouvez répéter ?", "Bonne journée !"], 1, "“Quoi ?” soa quase rude. Peça com pardon e vous.", "Pardon ? Vous pouvez répéter, s'il vous plaît ?"),
-        Q("Para perguntar como vai uma senhora desconhecida:", ["Ça va, toi ?", "Comment allez-vous ?", "Tu vas bien ?"], 1, "Com adultos desconhecidos, use vous. Repare na liaison: Comment‿allez-vous /kɔmɑ̃talevu/.", "Comment allez-vous ?")
+        Q("Você chega a um jantar às 20h. Você diz…", ["Bonne nuit !", "Bonsoir !", "Bonjour !"], 1, "Bonsoir ao chegar à noite. Bonne nuit é só na hora de dormir.", "Bonsoir !", "Bon·soi{r}"),
+        Q("Você entra numa padaria em Paris às 8h.", ["Salut !", "Bonjour, madame.", "Coucou !"], 1, "O bonjour é obrigatório ao entrar, e com desconhecidos o registro é formal.", "Bonjour, madame.", "Bon·jour, ma·dam(e)"),
+        Q("Você não entendeu o que o atendente disse.", ["Quoi ?", "Pardon ? Vous pouvez répéter ?", "Bonne journée !"], 1, "“Quoi ?” soa quase rude. Peça com pardon e vous.", "Pardon ? Vous pouvez répéter, s'il vous plaît ?", "Par·don ? Vou(s) pou·vez ré·pé·ter ?"),
+        Q("Para perguntar como vai uma senhora desconhecida:", ["Ça va, toi ?", "Comment allez-vous ?", "Tu vas bien ?"], 1, "Com adultos desconhecidos, use vous. O t de comment se liga: “komã-talê-vu”.", "Comment allez-vous ?", "Co·mmen{t}‿a·llez-vou(s)")
       ])
     ]
   },
   a2: {
     num: "Aula 02", name: "Vogais orais", color: "c-mint",
-    topics: "é × è · eu × œu · o × ó · e caduc",
+    topics: "[é] × [è] · [eu] × [œ] · [ô] × [o] · [e]",
     items: [
-      ...group("é /e/ × è ê /ɛ/", [
-        L("été", ["été", "était"], "/ete/", "été /ete/ tem dois é fechados; était /etɛ/ termina em ai aberto."),
-        L("près", ["pré", "près"], "/pʁɛ/", "pré /pʁe/ = prado (fechado) · près /pʁɛ/ = perto (aberto)."),
-        L("fait", ["fée", "fait"], "/fɛ/", "fée /fe/ = fada · fait /fɛ/ = feito."),
-        L("parlait", ["parler", "parlait"], "/paʁlɛ/", "parler /paʁle/ = falar · parlait /paʁlɛ/ = falava."),
-        W("café", "/kafe/", "O é de café soa como…", ["ê fechado, de “você”", "é aberto, de “pé”"], 0, "A inversão! No francês, é = nosso ê. Café = “kafê”."),
-        W("mère", "/mɛʁ/", "O è de mère soa como…", ["ê fechado", "é aberto, de “pé”"], 1, "No francês, è = nosso é. mère = “mérr”."),
-        W("fête", "/fɛt/", "O ê de fête soa como…", ["ê fechado, como no português", "é aberto"], 1, "O circunflexo francês não fecha a vogal: fête /fɛt/ = “fét”."),
-        W("parlez", "/paʁle/", "O final -ez soa como…", ["ê fechado /e/", "é aberto /ɛ/", "“ez”, com z"], 0, "-er e -ez finais = /e/ fechado, com a consoante muda."),
-        Q("Qual frase tem o som ABERTO /ɛ/?", ["Paul et Marie", "Paul est là"], 1, "et = /e/ fechado; est = /ɛ/ aberto. Primos na escrita, opostos na fala.", "Paul est là.")
+      ...group("[é] × [è]", [
+        L("été", ["été", "était"], "{é}·t{é}", "é", "é·té tem dois [é] do bébé. é·tai(t) termina em ai = [è] da chèvre.", "Qual palavra termina com o som [é] 👶 bébé?"),
+        L("près", ["pré", "près"], "pr{è}(s)", "è", "pré termina em [é], prado. près termina em [è], perto, e o s é mudo."),
+        L("fait", ["fée", "fait"], "f{ai}(t)", "è", "fé(e) = [f] [é], fada. fai(t) = [f] [è], feito."),
+        L("parlait", ["parler", "parlait"], "par·l{ai}(t)", "è", "par·le(r) termina em [é], falar. par·lai(t) termina em [è], falava."),
+        W("café", "ca·f{é}", "é", "O é de café é o som…", E_SOUNDS, 0, "A inversão! é com acento agudo = [é] fechado, o nosso “ê”: “kafê”."),
+        W("mère", "m{è}r(e)", "è", "O è de mère é o som…", E_SOUNDS, 1, "è com acento grave = [è] da chèvre, o nosso “é”: “mérr”."),
+        W("fête", "f{ê}t(e)", "è", "O ê de fête é o som…", E_SOUNDS, 1, "O circunflexo francês não fecha a vogal: ê = [è]. “fét”."),
+        W("parlez", "par·l{ez}", "é", "O final -ez soa…", [SND("é"), SND("è"), "“ez”, com z"], 0, "-er e -ez no fim = [é], com a consoante muda."),
+        Q("Qual frase tem o som [è] 🐐 chèvre?", ["Paul et Marie", "Paul est là"], 1, "e(t) = [é]; {e}(st) = [è]. Primos na escrita, opostos na fala.", "Paul est là.", "Paul {e}(st) là", "è")
       ]),
-      ...group("eu /ø/ × œu /œ/", [
-        L("peur", ["peu", "peur"], "/pœʁ/", "peu /pø/ é “ê” com bico; peur /pœʁ/ é “é” com bico, porque há r depois."),
-        L("jeune", ["jeune", "jeûne"], "/ʒœn/", "jeune /ʒœn/ = jovem (aberto) · jeûne /ʒøn/ = jejum (fechado, com circunflexo)."),
-        W("deux", "/dø/", "Como se faz o eu de deux?", ["“ê” + lábios em bico", "“êu”, deslizando para u", "“ó” aberto"], 0, "/ø/ é um som só: diga “ê” e arredonde os lábios. Nunca “dêw”."),
-        W("sœur", "/sœʁ/", "O œu de sœur é…", ["/ø/ fechado", "/œ/ aberto, “é” com bico"], 1, "Com consoante pronunciada depois (o r), fica aberto: “sörr”."),
-        W("bleu", "/blø/", "O eu de bleu é…", ["/ø/ fechado", "/œ/ aberto"], 0, "Fim de sílaba, sem consoante depois: /ø/ fechado, “blö”."),
-        W("heure", "/œʁ/", "O eu de heure é…", ["/ø/ fechado", "/œ/ aberto"], 1, "r pronunciado depois, então /œ/. E o h é mudo: “örr”."),
-        Q("J'ai deux sœurs. Qual é a pronúncia?", ["/ʒe dø sœʁ/ “jê dö sörr”", "/ʒe deu soɛʁ/ “jê dêu soérr”", "/ʒe dɔ sɔʁ/ “jê dó sórr”"], 0, "/ø/ em deux, /œ/ em sœurs, e o s final de sœurs é mudo.", "J'ai deux sœurs.")
+      ...group("[eu] × [œ]", [
+        L("peur", ["peu", "peur"], "p{eu}r", "œ", "peu tem [eu] do feu 🔥. peur tem [œ] da fleur 🌸, porque o r soa depois."),
+        L("jeune", ["jeune", "jeûne"], "j{eu}n(e)", "œ", "jeune tem [œ] aberto e quer dizer jovem; jeûne tem [eu] fechado, com circunflexo, e quer dizer jejum."),
+        W("deux", "d{eu}(x)", "eu", "Como se faz o [eu] de deux?", ["diga “ê” e faça bico", "“êu”, deslizando para u", "“ó” aberto"], 0, "[eu] do feu é um som só: “ê” com bico. Nunca “dêw”. O x final é mudo."),
+        W("sœur", "s{œu}r", "œ", "O œu de sœur é o som…", OPEN_CLOSED_EU, 1, "A consoante r soa depois, então fica aberto: [œ] da fleur, “sörr”."),
+        W("bleu", "bl{eu}", "eu", "O eu de bleu é o som…", OPEN_CLOSED_EU, 0, "Fim de sílaba, sem consoante depois: [eu] do feu, “blö”."),
+        W("heure", "(h){eu}r(e)", "œ", "O eu de heure é o som…", OPEN_CLOSED_EU, 1, "O r soa depois: [œ] da fleur. O h e o e final são mudos: “örr”."),
+        Q("J'ai deux sœurs. Como se lê?", ["“jê dö sörr”", "“jê dêu soérr”", "“jê dó sórr”"], 0, "deu(x) tem [eu] 🔥 e sœur(s) tem [œ] 🌸. O x e o s finais são mudos.", "J'ai deux sœurs.", "J'ai d{eu}(x) s{œu}r(s)")
       ]),
-      ...group("o /o/ × o /ɔ/", [
-        L("mot", ["mot", "mort"], "/mo/", "mot /mo/ = palavra (t mudo, ô fechado) · mort /mɔʁ/ = morte (r soa, ó aberto)."),
-        L("pomme", ["paume", "pomme"], "/pɔm/", "paume /pom/ = palma (au = ô) · pomme /pɔm/ = maçã (o + consoante = ó)."),
-        L("beau", ["beau", "bol"], "/bo/", "beau /bo/ = belo · bol /bɔl/ = tigela."),
-        L("sotte", ["saute", "sotte"], "/sɔt/", "saute /sot/ (au = ô) · sotte /sɔt/ (o + consoante = ó)."),
-        W("eau", "/o/", "eau soa como…", ["ô fechado", "ó aberto", "“e-a-u”"], 0, "au e eau = sempre /o/ fechado. Água = “ô”."),
-        W("porte", "/pɔʁt/", "O o de porte é…", ["ô fechado", "ó aberto"], 1, "o + consoante pronunciada = /ɔ/ aberto: “pórrt”."),
-        W("hôtel", "/otɛl/", "O ô de hôtel é…", ["ô fechado", "ó aberto"], 0, "ô com circunflexo = /o/ fechado: “ôtél”."),
-        W("homme", "/ɔm/", "O o de homme é…", ["ô fechado", "ó aberto"], 1, "o + consoante pronunciada (m) = ó aberto: “óm”.")
+      ...group("[ô] × [o]", [
+        L("mot", ["mot", "mort"], "m{o}(t)", "ô", "mo(t) tem [ô] do vélo e o t mudo: palavra. mort tem [o] da pomme e o r soa: morte."),
+        L("pomme", ["paume", "pomme"], "p{o}mm(e)", "o", "paume: au = [ô] fechado, palma. pomme: o + consoante = [o] aberto, maçã."),
+        L("beau", ["beau", "bol"], "b{eau}", "ô", "beau tem [ô] do vélo: belo. bol tem [o] da pomme: tigela."),
+        L("sotte", ["saute", "sotte"], "s{o}tt(e)", "o", "saute: au = [ô]. sotte: o + consoante = [o]."),
+        W("eau", "{eau}", "ô", "eau soa…", [...OPEN_CLOSED_O, "“e-a-u”"], 0, "eau é um grafema só e soa sempre [ô]: água = “ô”."),
+        W("porte", "p{o}r·t(e)", "o", "O o de porte é o som…", OPEN_CLOSED_O, 1, "o + consoante que soa = [o] aberto: “pórrt”."),
+        W("hôtel", "(h){ô}·tel", "ô", "O ô de hôtel é o som…", OPEN_CLOSED_O, 0, "ô com circunflexo = [ô] fechado. O h é mudo: “ôtél”."),
+        W("homme", "(h){o}mm(e)", "o", "O o de homme é o som…", OPEN_CLOSED_O, 1, "o + consoante que soa = [o] aberto: “óm”.")
       ]),
-      ...group("e caduc /ə/", [
-        W("samedi", "/samdi/", "Como se diz samedi?", ["/samdi/ “samdi”", "/samedi/ “samêdi”", "/samɛdi/ “samédi”"], 0, "O e caduc já caiu em samedi no francês atual: sam'di."),
-        Q("Qual palavra tem e caduc /ə/?", ["le", "été", "très", "fête"], 0, "Só o e sem acento em sílaba átona pode ser /ə/: le = “lâ”. é, è e ê são vogais plenas.", "le"),
-        Q("beau se pronuncia…", ["“bô”", "“beâu”", "“bó”"], 0, "Não invente um /ə/ e não abra a vogal: au/eau = ô fechado.", "beau")
+      ...group("[e] 🐴 cheval", [
+        W("samedi", "sam(e)·di", "e", "Como se diz samedi?", ["“sam-di”", "“sa-mê-di”", "“sa-mé-di”"], 0, "O [e] do cheval cai em samedi no francês de hoje: sam'di."),
+        Q("Qual palavra tem o som [e] 🐴 cheval?", ["le", "été", "très", "fête"], 0, "Só o e sem acento em sílaba átona pode ser [e]: le = “lâ”. é, è e ê têm som cheio.", "le", "l{e}", "e"),
+        Q("beau se lê…", ["“bô”", "“beâu”", "“bó”"], 0, "eau é um grafema só, com som [ô]: não se lê e + a + u e não abre.", "beau", "b{eau}", "ô")
       ])
     ]
   },
   a3: {
     num: "Aula 03", name: "Ligações", color: "c-sky",
-    topics: "elisão · h mudo × aspiré · enchaînement · liaison",
+    topics: "elisão · h mudo × aspirado · enchaînement · liaison",
     items: [
       ...group("elisão", [
-        Q("le + ami =", ["le ami", "l'ami", "la ami"], 1, "Elisão: le, la, je, me, te, se, de, ne, que, ce perdem a vogal diante de vogal ou h mudo.", "l'ami"),
-        Q("je + aime le café =", ["je aime le café", "j'aime le café", "jaime le café"], 1, "A elisão é obrigatória na escrita e na fala: j'aime /ʒɛm/.", "J'aime le café."),
-        Q("si + il vient =", ["si il vient", "s'il vient"], 1, "si só vira s' diante de il e ils.", "s'il vient"),
-        Q("si + elle vient =", ["s'elle vient", "si elle vient"], 1, "Pegadinha: si NÃO elide antes de elle. Só antes de il e ils.", "si elle vient"),
-        Q("le + héros =", ["l'héros", "le héros"], 1, "héros tem h aspiré: sem elisão e sem liaison.", "le héros"),
-        Q("la + heure =", ["la heure", "l'heure"], 1, "heure tem h mudo: l'heure, deux‿heures.", "l'heure")
+        Q("le + ami =", ["le ami", "l'ami", "la ami"], 1, "Elisão: le, la, je, me, te, se, de, ne, que, ce perdem a vogal antes de vogal ou h mudo.", "l'ami", "l'a·mi"),
+        Q("je + aime le café =", ["je aime le café", "j'aime le café", "jaime le café"], 1, "A elisão é obrigatória na escrita e na fala: j'ai·m(e) = “jém”.", "J'aime le café.", "J'aim(e) le ca·fé"),
+        Q("si + il vient =", ["si il vient", "s'il vient"], 1, "si só vira s' antes de il e ils.", "s'il vient", "s'il vien(t)"),
+        Q("si + elle vient =", ["s'elle vient", "si elle vient"], 1, "Pegadinha: si NÃO perde a vogal antes de elle. Só antes de il e ils.", "si elle vient", "si ell(e) vien(t)"),
+        Q("le + héros =", ["l'héros", "le héros"], 1, "héros tem h aspirado: sem elisão e sem ligação.", "le héros", "le (h)é·ro(s)"),
+        Q("la + heure =", ["la heure", "l'heure"], 1, "heure tem h mudo: l'heure, deux‿heures.", "l'heure", "l'(h)eur(e)")
       ]),
       ...group("liaison", [
-        L("les héros", ["les héros", "les zéros"], "/le eʁo/", "h aspiré: les ‖ héros, sem liaison. Se você ligar, vira les zéros (os zeros)!"),
-        L("ils ont", ["ils ont", "ils sont"], "/il.zɔ̃/", "Liaison em /z/: ils‿ont = eles têm · ils sont /il.sɔ̃/ = eles são."),
-        L("vous avez", ["vous avez", "vous savez"], "/vu.za.ve/", "vous‿avez com /z/ = vocês têm · vous savez com /s/ = vocês sabem."),
-        L("une amie", ["un ami", "une amie"], "/y.na.mi/", "un‿ami /œ̃.na.mi/ mantém a nasal e liga o n · une‿amie /y.na.mi/."),
-        Q("Em “les amis”, o s de les soa como…", ["/z/", "/s/", "é mudo"], 0, "s, x e z de liaison soam /z/: les‿amis /le.za.mi/.", "les amis"),
-        Q("Em “un grand homme”, o d de grand soa como…", ["/d/", "/t/", "é mudo"], 1, "O d de liaison vira /t/: grand‿homme /gʁɑ̃.tɔm/.", "un grand homme"),
-        Q("Em “neuf heures”, o f soa como…", ["/f/", "/v/", "é mudo"], 1, "neuf vira /v/ só em neuf‿ans e neuf‿heures: /nœ.vœʁ/.", "neuf heures"),
-        Q("Qual liaison é OBRIGATÓRIA?", ["les‿amis", "et‿un ami", "les‿héros"], 0, "Determinante + nome liga sempre. Depois de et e antes de h aspiré, a liaison é proibida.", "les amis"),
-        Q("Qual ligação é PROIBIDA?", ["vous‿êtes", "et ‖ un ami", "deux‿heures"], 1, "Nunca se liga depois de et. Pronome + verbo e número + nome ligam sempre.", "et un ami")
+        L("les héros", ["les héros", "les zéros"], "le(s) (h)é·ro(s)", null, "h aspirado: nada de ligação, e o s de les fica mudo. Se você ligar, vira les zéros, os zeros!", "Qual destas se lê SEM o som [z] 🦓?"),
+        L("ils ont", ["ils ont", "ils sont"], "il{s}‿on(t)", "z", "ils‿ont: o s se liga com o som [z] 🦓, eles têm. ils sont: som [s] de serpent, eles são."),
+        L("vous avez", ["vous avez", "vous savez"], "vou{s}‿a·vez", "z", "vous‿avez: [z] 🦓, vocês têm. vous savez: [s], vocês sabem."),
+        L("une amie", ["un ami", "une amie"], "u{n}(e)‿a·mi(e)", "u", "un‿ami: [in] nasal + n ligado. une‿amie: [u] da tortue + n ligado."),
+        Q("Em “les amis”, o s de les soa…", [SND("z"), "[s] 🐍 serpent", "fica mudo"], 0, "s e x de ligação soam [z]: “lê-za-mi”.", "les amis", "le{s}‿a·mi(s)", "z"),
+        Q("Em “un grand homme”, o d de grand soa…", ["[d]", "[t]", "fica mudo"], 1, "O d de ligação soa [t]: “ã grã-tóm”.", "un grand homme", "un gran{d}‿(h)omm(e)"),
+        Q("Em “neuf heures”, o f soa…", ["[f]", "[v]", "fica mudo"], 1, "neuf soa [v] só em neuf ans e neuf heures: “nö-vörr”.", "neuf heures", "neu{f}‿(h)eur(es)"),
+        Q("Qual ligação é OBRIGATÓRIA?", ["les‿amis", "et‿un ami", "les‿héros"], 0, "Determinante + nome liga sempre. Depois de et e antes de h aspirado, a ligação é proibida.", "les amis", "le{s}‿a·mi(s)"),
+        Q("Qual ligação é PROIBIDA?", ["vous‿êtes", "et ‖ un ami", "deux‿heures"], 1, "Nunca se liga depois de et. Pronome + verbo e número + nome ligam sempre.", "et un ami", "e(t) un a·mi")
       ]),
       ...group("enchaînement", [
-        Q("“avec elle” /a.vɛ.kɛl/ é exemplo de…", ["enchaînement", "liaison"], 0, "O c de avec sempre soa; ele só se encadeia na vogal seguinte. Isso é enchaînement.", "avec elle"),
-        Q("“les enfants” /le.zɑ̃.fɑ̃/ é exemplo de…", ["enchaînement", "liaison"], 1, "O s de les é mudo sozinho e reaparece como /z/ antes de vogal: liaison.", "les enfants"),
-        Q("Como se diz “Il est deux heures”?", ["/i.lɛ dø.zœʁ/", "/il ɛ dø œʁ/", "/i.lɛ døs.œʁ/"], 0, "Enchaînement em il‿est e liaison /z/ em deux‿heures.", "Il est deux heures."),
-        Q("Em “Elle habite avec elle”, você deve…", ["encadear tudo sem pausa", "fazer uma pausa entre as palavras", "inserir um “i”: “avéki éli”"], 0, "O francês fala em grupos rítmicos: /ɛ.la.bi.ta.vɛ.kɛl/. Não acrescente vogal depois da consoante final.", "Elle habite avec elle.")
+        Q("“avec elle” é exemplo de…", ["enchaînement", "liaison"], 0, "O c de avec sempre soa; ele só passa para a vogal seguinte: “a-vé-kél”. Isso é enchaînement.", "avec elle", "a·ve{c}‿ell(e)"),
+        Q("“les enfants” é exemplo de…", ["enchaînement", "liaison"], 1, "O s de les é mudo sozinho e aparece como [z] antes de vogal: liaison.", "les enfants", "le{s}‿en·fan(ts)"),
+        Q("Como se diz “Il est deux heures”?", ["“i-lé-dö-zörr”", "“il é dö örr”, com pausas", "“i-lé-dös-örr”"], 0, "il‿est encadeia o l; deux‿heures liga com [z].", "Il est deux heures.", "I{l}‿es(t) deu{x}‿(h)eur(es)"),
+        Q("Em “Elle habite avec elle”, você deve…", ["encadear tudo sem pausa", "fazer uma pausa entre as palavras", "pôr um “i” no fim: “avéki éli”"], 0, "O francês fala em grupos rítmicos: “é-la-bi-ta-vé-kél”. Não acrescente vogal depois da consoante final.", "Elle habite avec elle.", "Ell(e)‿(h)a·bit(e)‿a·vec‿ell(e)")
       ])
     ]
   }
@@ -877,8 +936,37 @@ function toast(text) {
 }
 function voiceNoteHTML() {
   if (Voice.ok) return '<p class="voice-note ok" id="voiceNote">Voz francesa pronta: <b>' + esc(Voice.v.name) + '</b>. Use fones para ouvir melhor.</p>';
-  return '<p class="voice-note" id="voiceNote">Seu navegador não tem voz francesa instalada. As perguntas de escuta vão mostrar a transcrição AFI. Para ouvir, use Chrome ou Edge, ou instale a voz “Français” no sistema.</p>';
+  return '<p class="voice-note" id="voiceNote">Seu navegador não tem voz francesa instalada. As perguntas de escuta vão mostrar o som com a palavra-referência, como [ou] 🐺 loup. Para ouvir, use Chrome ou Edge, ou instale a voz “Français” no sistema.</p>';
 }
+
+// ---------- Transcrição méthode phonique ----------
+// arcs = true desenha cada sílaba com arco e cor alternada; false é a versão em linha (dicas e opções).
+function phon(s, arcs) {
+  let out = "", syl = "", n = 0;
+  const flush = () => { if (syl) { out += '<span class="syl ' + (n++ % 2 ? "b" : "a") + '">' + syl + "</span>"; syl = ""; } };
+  for (const ch of String(s)) {
+    if (ch === "(") syl += '<span class="mute">';
+    else if (ch === "{") syl += '<span class="tgt">';
+    else if (ch === ")" || ch === "}") syl += "</span>";
+    else if (ch === "·") { if (arcs) flush(); else syl += '<span class="sep">·</span>'; }
+    else if (ch === "‿") { if (arcs) { flush(); out += '<span class="lia">‿</span>'; } else syl += '<span class="lia">‿</span>'; }
+    else if (ch === " " && arcs) { flush(); out += '<span class="gap"></span>'; }
+    else syl += esc(ch);
+  }
+  if (arcs) flush(); else out += syl;
+  return out;
+}
+const phonBlock = (s) => '<div class="phon" aria-label="Leitura em sílabas">' + phon(s, true) + "</div>";
+function ficheHTML(k) {
+  const s = SONS[k]; if (!s) return "";
+  return '<div class="fiche"><span class="emo" aria-hidden="true">' + s.emo + '</span><div class="fiche-body">' +
+    '<div class="fiche-t"><b class="snd">' + esc(s.label) + '</b> comme dans <b>' + esc(s.ex) + '</b>' +
+    (Voice.ok ? ' <button class="mini-btn" data-say-word="' + esc(s.ex) + '">ouvir ' + esc(s.ex) + '</button>' : "") + '</div>' +
+    '<div class="graph">' + s.graph.map((g) => "<span>" + esc(g) + "</span>").join("") + '</div>' +
+    '<p class="bouche"><b>Boca:</b> ' + phon(s.bouche) + '</p></div></div>';
+}
+function bindSayWord(root) { root.querySelectorAll("[data-say-word]").forEach((b) => b.addEventListener("click", () => Voice.say(b.dataset.sayWord))); }
+const LEGEND = '<p class="legend"><span class="syl a">sí</span><span class="syl b">la</span><span class="syl a">bas</span> em arcos · letras <span class="mute">mudas</span> em cinza · <span class="tgt">som</span> estudado · <span class="lia">‿</span> ligação</p>';
 
 // ---------- Telas ----------
 function renderHome() {
@@ -891,13 +979,38 @@ function renderHome() {
       '<span class="best">' + (b ? "Recorde: " + b.toLocaleString("pt-BR") + " pts" : ROUND_LEN[k] + " perguntas") + '</span></button>';
   }).join("");
   panel.innerHTML = '<section class="card">' +
-    '<span class="eyebrow">Francês para brasileiros · Pré-A1 e A1</span>' +
+    '<span class="eyebrow">Francês para brasileiros · Pré-A1 e A1 · méthode phonique</span>' +
     '<h1 class="title">Grand Prix <span>des Sons</span></h1>' +
-    '<p class="lead">Coucou ! Eu sou a Mimi, o macaron de boina. Ouça, escolha e ganhe pontos do júri treinando os sons das Aulas 01 a 03.</p>' +
+    '<p class="lead">Coucou ! Eu sou a Mimi, o macaron de boina. Aqui cada som tem nome, imagem e gesto: [ou] 🐺 loup, [in] 🐰 lapin, [é] 👶 bébé. Ouça, escolha e ganhe pontos do júri.</p>' +
     '<div class="rounds">' + cards + '</div>' +
+    '<button class="cta soft wall-btn" id="wallBtn">Mur des sons: os 15 sons e seus gestos</button>' +
+    LEGEND +
     '<ul class="howto"><li>100 pontos por acerto</li><li>bônus de rapidez</li><li>combo de até x2</li><li>5 seguidas: mudança de tom!</li></ul>' +
     voiceNoteHTML() + '</section>';
   panel.querySelectorAll("[data-round]").forEach((b) => b.addEventListener("click", () => startRound(b.dataset.round)));
+  $("#wallBtn").addEventListener("click", renderWall);
+}
+
+function renderWall() {
+  Music.start();
+  const tiles = Object.entries(SONS).map(([k, s]) =>
+    '<button class="tile" data-son="' + esc(k) + '"><span class="emo" aria-hidden="true">' + s.emo + '</span>' +
+    '<b class="snd">' + esc(s.label) + '</b><span class="ex">' + esc(s.ex) + '</span></button>').join("");
+  panel.innerHTML = '<section class="card">' +
+    '<span class="eyebrow">Méthode phonique</span><h2 class="title">Mur des sons</h2>' +
+    '<p class="muted">Toque num som para ver como se escreve, como a boca se mexe e ouvir a palavra-referência.</p>' +
+    '<div id="wallDetail">' + ficheHTML("u") + '</div>' +
+    '<div class="wall">' + tiles + '</div>' +
+    '<div class="actions"><button class="cta" id="backBtn">Voltar ao concurso</button></div></section>';
+  bindSayWord($("#wallDetail"));
+  panel.querySelectorAll("[data-son]").forEach((b) => b.addEventListener("click", () => {
+    const d = $("#wallDetail"); d.innerHTML = ficheHTML(b.dataset.son); bindSayWord(d);
+    panel.querySelectorAll(".tile").forEach((t) => t.classList.toggle("on", t === b));
+    Voice.say(SONS[b.dataset.son].ex);
+    d.scrollIntoView({ block: "nearest", behavior: REDUCED ? "auto" : "smooth" });
+  }));
+  panel.querySelector(".tile").classList.add("on");
+  $("#backBtn").addEventListener("click", renderHome);
 }
 
 function startRound(key) {
@@ -916,10 +1029,11 @@ function renderQuestion() {
   }).join("");
   let prompt = "";
   if (it.type === "listen") {
+    const clue = it.clue || (it.son ? "Qual palavra tem o som " + SND(it.son) + "?" : "Qual palavra é esta?");
     prompt = Voice.ok
       ? '<div class="listen-row"><button class="big-listen" id="listenBtn" aria-label="Ouvir a palavra">' + SPEAKER + 'Ouvir</button>' +
         '<button class="mini-btn" id="slowBtn">devagar</button></div><p class="q-text">Qual palavra você ouviu?</p>'
-      : '<p class="q-text">Qual palavra se pronuncia <span class="ipa">' + esc(it.ipa) + '</span>?</p>';
+      : '<p class="q-text">' + esc(clue) + '</p>';
   } else if (it.type === "word") {
     prompt = '<div class="word-card">' + esc(it.word) + (Voice.ok ? '<button class="say-btn" id="sayBtn" aria-label="Ouvir">' + SPEAKER + '</button>' : "") + '</div>' +
       '<p class="q-text">' + esc(it.q) + '</p>';
@@ -927,12 +1041,12 @@ function renderQuestion() {
     prompt = '<p class="q-text">' + esc(it.q) + '</p>';
   }
   const n = G.shownOpts.length, longest = Math.max(...G.shownOpts.map((o) => o.length));
-  const cols = longest > 16 ? "" : n === 3 ? (longest <= 9 ? " three" : "") : " two";
+  const cols = longest > 22 ? "" : n === 3 ? (longest <= 9 ? " three" : "") : " two";
   panel.innerHTML = '<section class="card">' +
     '<div class="q-top"><span class="chip">' + esc(ROUNDS[G.key].num) + ' · ' + esc(it.tag) + '</span><div class="dots" aria-label="Pergunta ' + (G.i + 1) + ' de ' + G.queue.length + '">' + dots + '</div></div>' +
     '<div class="prompt">' + prompt + '</div>' +
     '<div class="opts' + cols + '">' + G.shownOpts.map((o, j) =>
-      '<button class="opt" data-i="' + j + '"><span class="k">' + (j + 1) + '</span><span class="t">' + esc(o) + '</span></button>').join("") + '</div>' +
+      '<button class="opt" data-i="' + j + '"><span class="k">' + (j + 1) + '</span><span class="t">' + phon(o) + '</span></button>').join("") + '</div>' +
     '<div id="fbSlot"></div></section>';
   panel.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => answer(+b.dataset.i)));
   const lb = $("#listenBtn");
@@ -970,15 +1084,17 @@ function answer(j) {
   }
   G.results[G.i] = { ok, it };
   hud();
-  const ipa = it.ipa ? ' <span class="ipa">' + esc(it.ipa) + '</span>' : "";
   const sayText = it.say || "";
   $("#fbSlot").innerHTML = '<div class="feedback ' + (ok ? "ok" : "bad") + '">' +
     '<div class="fb-head"><span class="fb-title">' + (ok ? "Acertou!" : "Quase!") + '</span>' +
     (ok ? '<span class="fb-pts">+' + pts + ' pts' + (speed ? " · rapidez +" + speed : "") + (mult() > 1 ? " · combo" : "") + '</span>' : '<span class="fb-pts">combo zerado</span>') + '</div>' +
-    '<div class="fb-answer">Resposta: ' + esc(it.answer) + ipa +
-    (Voice.ok && sayText ? '<button class="say-btn" id="fbSay" aria-label="Ouvir a resposta">' + SPEAKER + '</button>' : "") + '</div>' +
-    '<p class="fb-tip">' + esc(it.tip) + '</p></div>' +
+    '<div class="fb-answer">Resposta: ' + phon(it.answer) + '</div>' +
+    (it.ph ? '<div class="fb-read"><span class="fb-lbl">Leitura</span>' + phonBlock(it.ph) +
+      (Voice.ok && sayText ? '<button class="say-btn" id="fbSay" aria-label="Ouvir a resposta">' + SPEAKER + '</button>' : "") + '</div>' : "") +
+    '<p class="fb-tip">' + phon(it.tip) + '</p>' +
+    (it.son ? ficheHTML(it.son) : "") + '</div>' +
     '<div class="actions"><button class="cta" id="nextBtn">' + (G.i + 1 < G.queue.length ? "Próxima" : "Ver o placar do júri") + '</button></div>';
+  bindSayWord($("#fbSlot"));
   const fs = $("#fbSay"); if (fs) fs.addEventListener("click", () => Voice.say(sayText));
   if (!ok && Voice.ok && sayText) setTimeout(() => Voice.say(sayText), 500);
   $("#nextBtn").addEventListener("click", next);
@@ -997,7 +1113,7 @@ function renderResults() {
   const jury = acc >= 0.9 ? [12, "Douze points !", "O júri está encantado. Sua pronúncia brilha no palco!"]
     : acc >= 0.75 ? [10, "Dix points !", "Linda apresentação. Revise os itens abaixo e volte para os 12 pontos."]
     : acc >= 0.6 ? [8, "Huit points", "Bom caminho! Repita os pares em voz alta e tente de novo."]
-    : acc >= 0.4 ? [5, "Cinq points", "O público gostou. Ouça de novo cada som e grave sua voz."]
+    : acc >= 0.4 ? [5, "Cinq points", "O público gostou. Volte ao Mur des sons, faça o gesto de cada som e grave sua voz."]
     : [0, "Nul point…", "Pas grave ! Até no Eurovision isso acontece. Releia a aula e tente outra vez."];
   const k = G.key, isBest = G.score > (best[k] || 0);
   if (isBest) { best[k] = G.score; store.set("gpds-best", best); }
@@ -1006,7 +1122,9 @@ function renderResults() {
   const missed = G.results.filter((r) => !r.ok);
   const review = missed.length ? '<h3 class="eyebrow">Para revisar</h3><ul class="review">' + missed.map((r, i) =>
     '<li>' + (Voice.ok && r.it.say ? '<button class="say-btn" data-say="' + i + '" aria-label="Ouvir">' + SPEAKER + '</button>' : "") +
-    '<div><p><b>' + esc(r.it.word || r.it.q || r.it.opts.join(" × ")) + '</b> → ' + esc(r.it.answer) + (r.it.ipa ? ' <span class="ipa">' + esc(r.it.ipa) + '</span>' : "") + '</p><p class="muted">' + esc(r.it.tip) + '</p></div></li>').join("") + '</ul>'
+    '<div><p><b>' + esc(r.it.word || r.it.q || r.it.opts.join(" × ")) + '</b> → ' + phon(r.it.answer) +
+    (r.it.ph ? ' · <span class="inline-ph">' + phon(r.it.ph) + '</span>' : "") +
+    (r.it.son ? ' · ' + esc(SND(r.it.son)) : "") + '</p><p class="muted">' + phon(r.it.tip) + '</p></div></li>').join("") + '</ul>'
     : '<p class="lead">Nenhum erro nesta manche. Parfait !</p>';
   panel.innerHTML = '<section class="card">' +
     '<span class="eyebrow">' + esc(ROUNDS[k].num) + ' · ' + esc(ROUNDS[k].name) + ' · resultado</span>' +
