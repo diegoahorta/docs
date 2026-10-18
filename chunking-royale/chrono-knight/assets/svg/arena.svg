@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1440"/><stop offset="1" stop-color="#22307A"/></linearGradient>
+    <radialGradient id="halo" cx="80%" cy="20%" r="45%"><stop offset="0" stop-color="#E85A9B" stop-opacity=".45"/><stop offset="1" stop-color="#E85A9B" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo2" cx="10%" cy="90%" r="50%"><stop offset="0" stop-color="#2FD3E8" stop-opacity=".35"/><stop offset="1" stop-color="#2FD3E8" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#halo)"/>
+  <rect width="1600" height="900" fill="url(#halo2)"/>
+  <g fill="#FFFFFF" opacity=".7">
+    <circle cx="120" cy="90" r="2"/><circle cx="380" cy="160" r="1.5"/><circle cx="700" cy="70" r="2"/><circle cx="980" cy="140" r="1.5"/>
+    <circle cx="1450" cy="320" r="2"/><circle cx="560" cy="300" r="1.5"/><circle cx="260" cy="420" r="1.5"/><circle cx="1500" cy="640" r="2"/>
+  </g>
+  <g transform="translate(1280 190)" opacity=".9">
+    <circle r="120" fill="none" stroke="#E0A92E" stroke-width="14"/>
+    <circle r="96" fill="#0F1E4A" stroke="#4FE3FF" stroke-width="4" opacity=".8"/>
+    <path d="M0 0 L0 -70" stroke="#FFD25A" stroke-width="10" stroke-linecap="round"/>
+    <path d="M0 0 L50 26" stroke="#4FE3FF" stroke-width="10" stroke-linecap="round"/>
+    <circle r="12" fill="#FFD25A"/>
+  </g>
+  <g opacity=".85">
+    <rect x="90" y="620" width="120" height="56" rx="12" fill="#C8476B" transform="rotate(-10 150 648)"/>
+    <rect x="260" y="700" width="96" height="56" rx="12" fill="#1E2A5E" stroke="#4FE3FF" stroke-width="3" transform="rotate(8 308 728)"/>
+    <rect x="1180" y="640" width="110" height="56" rx="12" fill="#D4A83A" transform="rotate(12 1235 668)"/>
+    <rect x="1360" y="740" width="110" height="56" rx="12" fill="#2E8B8B" transform="rotate(-6 1415 768)"/>
+    <rect x="980" y="770" width="120" height="56" rx="12" fill="#E8735A" transform="rotate(4 1040 798)"/>
+  </g>
+</svg>

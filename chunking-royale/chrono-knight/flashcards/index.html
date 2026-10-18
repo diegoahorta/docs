@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chrono Knight · Flashcards</title>
+<style>
+  :root{
+    --navy:#0B1440; --navy2:#22307A; --gold:#E0A92E; --cyan:#4FE3FF; --magenta:#E85A9B;
+    --adv:#C8476B; --s:#1E2A5E; --aux:#D4A83A; --v:#2E8B8B; --o:#E8735A;
+    --ok:#2FBF71; --bad:#E5484D; --text:#F2F5FF; --muted:#AEB8E6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:linear-gradient(180deg,var(--navy),var(--navy2));
+    color:var(--text); font-family:"Segoe UI",Roboto,Arial,sans-serif;
+    display:flex; flex-direction:column; min-height:100vh; overflow-x:hidden;
+  }
+  header{display:flex;align-items:center;gap:12px;padding:10px 16px;
+    background:rgba(5,10,40,.55);border-bottom:2px solid rgba(224,169,46,.5)}
+  header img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 0 8px var(--cyan))}
+  header h1{margin:0;font-size:clamp(15px,2.4vw,22px);line-height:1.2}
+  header h1 span{color:var(--gold)}
+  header .sub{font-size:12px;color:var(--muted)}
+  header .cost{margin-left:auto;background:linear-gradient(180deg,#C46BFF,#7B2FD0);
+    padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px;white-space:nowrap;
+    box-shadow:0 0 12px rgba(196,107,255,.6)}
+  .filters{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px 0;justify-content:center}
+  .filters button{border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--text);
+    padding:6px 12px;border-radius:999px;font-size:13px;cursor:pointer}
+  .filters button.on{background:var(--gold);color:#1a1300;border-color:var(--gold);font-weight:700}
+  #stage{position:relative;flex:1;min-height:360px}
+  #stage canvas{position:absolute;inset:0;display:block;cursor:pointer;touch-action:manipulation}
+  #hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);pointer-events:none}
+  .hud{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px;padding:6px 16px}
+  .elixir{display:flex;align-items:center;gap:8px;font-size:13px}
+  .bar{display:flex;gap:3px}
+  .bar i{width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+  .bar i.full{background:linear-gradient(180deg,#E9A6FF,#9B3FE0);box-shadow:0 0 6px #C46BFF}
+  .score{font-size:13px;color:var(--muted)} .score b{color:var(--text)}
+  .progress{width:min(520px,90vw);height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}
+  .progress div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width .3s}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:8px 16px 16px}
+  .controls button{border:0;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;
+    color:#fff;background:var(--s);border-bottom:4px solid rgba(0,0,0,.35)}
+  .controls button:active{transform:translateY(2px);border-bottom-width:2px}
+  #flip{background:var(--gold);color:#1a1300}
+  #ok{background:var(--ok)} #bad{background:var(--bad)}
+  #shuffle{background:var(--v)} #speak{background:var(--magenta)} #reset{background:#444b6e}
+  @media (max-width:520px){
+    header .sub{display:none}
+    .controls button{padding:9px 10px;font-size:13px}
+    .bar i{width:12px;height:12px}
+  }
+</style>
+<script src="../assets/three.min.js"></script>
+</head>
+<body>
+<header>
+  <img src="../assets/chrono-knight.png" alt="Chrono Knight">
+  <div>
+    <h1>Chrono Knight · <span>Future Continuous × Future Perfect</span></h1>
+    <div class="sub">Chunking Royale · Flashcards ODU · Professor Diego Horta</div>
+  </div>
+  <div class="cost">💧 Custo: 3 elixir</div>
+</header>
+
+<nav class="filters" id="filters"></nav>
+
+<main id="stage"><div id="hint">Clique na carta ou aperte ESPAÇO para virar · ← → para navegar</div></main>
+
+<section class="hud">
+  <div class="elixir">Elixir <div class="bar" id="bar"></div></div>
+  <div class="score">Carta <b id="pos">1/1</b> · ✓ <b id="okc">0</b> · ✗ <b id="badc">0</b></div>
+  <div class="progress"><div id="prog"></div></div>
+</section>
+
+<section class="controls">
+  <button id="prev" aria-label="Anterior">◀</button>
+  <button id="flip">↻ Virar</button>
+  <button id="next" aria-label="Próxima">▶</button>
+  <button id="bad">✗ Errei</button>
+  <button id="ok">✓ Acertei</button>
+  <button id="shuffle">🔀 Embaralhar</button>
+  <button id="speak">🔊 Ouvir</button>
+  <button id="reset">⟲ Zerar</button>
+</section>
+
+<script src="flashcards.js"></script>
+</body>
+</html>

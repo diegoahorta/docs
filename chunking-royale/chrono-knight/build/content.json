@@ -1,0 +1,258 @@
+{
+ "monte": [
+  {
+   "pt": "Semana que vem, a esta hora, estarei deitado numa praia na Bahia.",
+   "blocks": [
+    [
+     "ADV",
+     "this time next week"
+    ],
+    [
+     "S",
+     "I"
+    ],
+    [
+     "AUX",
+     "will be"
+    ],
+    [
+     "V",
+     "lying"
+    ],
+    [
+     "ADV",
+     "on a beach in Bahia"
+    ]
+   ],
+   "answer": "This time next week I will be lying on a beach in Bahia.",
+   "also": "I will be lying on a beach in Bahia this time next week.",
+   "trap": "\"will have\" (AUX)",
+   "why": "Ação em andamento num ponto do futuro → will be + -ing. Truque ODU: AT / THIS TIME → continuous (fotografia)."
+  },
+  {
+   "pt": "Até o fim do ano, ela já terá economizado dinheiro suficiente para a viagem.",
+   "blocks": [
+    [
+     "ADV",
+     "by the end of the year"
+    ],
+    [
+     "S",
+     "she"
+    ],
+    [
+     "AUX",
+     "will have"
+    ],
+    [
+     "V",
+     "saved"
+    ],
+    [
+     "O",
+     "enough money for the trip"
+    ]
+   ],
+   "answer": "By the end of the year she will have saved enough money for the trip.",
+   "also": "She will have saved enough money for the trip by the end of the year.",
+   "trap": "\"will be\" (AUX)",
+   "why": "Ação concluída antes de um momento futuro → will have + particípio. BY = prazo final."
+  },
+  {
+   "pt": "Você vai estar usando o seu notebook hoje à tarde? (pergunta educada)",
+   "blocks": [
+    [
+     "AUX",
+     "will"
+    ],
+    [
+     "S",
+     "you"
+    ],
+    [
+     "AUX",
+     "be"
+    ],
+    [
+     "V",
+     "using"
+    ],
+    [
+     "O",
+     "your laptop"
+    ],
+    [
+     "ADV",
+     "this afternoon"
+    ]
+   ],
+   "answer": "Will you be using your laptop this afternoon?",
+   "also": "",
+   "trap": "\"have\" (AUX)",
+   "why": "\"Will you be using...?\" pergunta sobre planos de forma educada, sem soar como pedido direto."
+  },
+  {
+   "pt": "Ele não terá chegado quando a festa começar.",
+   "blocks": [
+    [
+     "S",
+     "he"
+    ],
+    [
+     "AUX",
+     "won't have"
+    ],
+    [
+     "V",
+     "arrived"
+    ],
+    [
+     "ADV",
+     "by the time the party starts"
+    ]
+   ],
+   "answer": "He won't have arrived by the time the party starts.",
+   "also": "By the time the party starts he won't have arrived.",
+   "trap": "\"won't be\" (AUX)",
+   "why": "Negativa do Future Perfect: won't have + particípio. \"By the time\" pede o perfect."
+  }
+ ],
+ "lacuna": [
+  {
+   "q": "By the time you arrive, the film ______ (start).",
+   "opts": [
+    "will be starting",
+    "will start",
+    "has been starting",
+    "will have started"
+   ],
+   "ok": 3,
+   "why": "BY THE TIME → prazo final → Future Perfect: a ação já estará concluída."
+  },
+  {
+   "q": "Don't call me at 8 — we ______ dinner then.",
+   "opts": [
+    "had had",
+    "are going to have had",
+    "will be having",
+    "will have had"
+   ],
+   "ok": 2,
+   "why": "No momento exato (at 8) a ação estará EM ANDAMENTO → Future Continuous."
+  },
+  {
+   "q": "At 10 p.m. the guests ______, but by 11 they ______ the whole cake.",
+   "opts": [
+    "are dancing / have eaten",
+    "will be dancing / will have eaten",
+    "will have danced / will be eating",
+    "will dance / will eat"
+   ],
+   "ok": 1,
+   "why": "AT 10 → fotografia (continuous). BY 11 → já concluído (perfect)."
+  },
+  {
+   "q": "By midnight we ______ everything, so the house will be spotless.",
+   "opts": [
+    "will have cleaned",
+    "will be cleaning",
+    "will clean",
+    "are cleaning"
+   ],
+   "ok": 0,
+   "why": "Com BY + ideia de conclusão, use o Future Perfect."
+  }
+ ],
+ "corrija": [
+  {
+   "wrong": "At 9 tomorrow I will working.",
+   "opts": [
+    "At 9 tomorrow I will be working.",
+    "At 9 tomorrow I will have working.",
+    "At 9 tomorrow I am will working."
+   ],
+   "ok": 0,
+   "why": "O BE não pode sumir: will + be + -ing."
+  },
+  {
+   "wrong": "By June we will have finish the course.",
+   "opts": [
+    "By June we will be finish the course.",
+    "By June we will finished the course.",
+    "By June we will have finished the course."
+   ],
+   "ok": 2,
+   "why": "Future Perfect = will have + PARTICÍPIO (finished)."
+  },
+  {
+   "wrong": "By 2030 they will be built the new bridge.",
+   "opts": [
+    "By 2030 they will being built the new bridge.",
+    "By 2030 they will have built the new bridge.",
+    "By 2030 they will have build the new bridge."
+   ],
+   "ok": 1,
+   "why": "BY 2030 = conclusão → will have + built."
+  },
+  {
+   "wrong": "Will you have be working tomorrow?",
+   "opts": [
+    "Will you be working tomorrow?",
+    "Will you have working tomorrow?",
+    "Will you be have working tomorrow?"
+   ],
+   "ok": 0,
+   "why": "Não misture os dois tempos: escolha be + -ing OU have + particípio."
+  }
+ ],
+ "extra": [
+  {
+   "q": "This time tomorrow I ______ (fly) to Lisbon.",
+   "ok": "will be flying",
+   "why": "THIS TIME tomorrow → fotografia → continuous.",
+   "full": "This time tomorrow I will be flying to Lisbon."
+  },
+  {
+   "q": "By Friday she ______ (finish) the report.",
+   "ok": "will have finished",
+   "why": "BY Friday → prazo → perfect.",
+   "full": "By Friday she will have finished the report."
+  },
+  {
+   "q": "Don't worry, I ______ (not / sleep) when you get home.",
+   "ok": "won't be sleeping",
+   "why": "Negativa do continuous: won't be + -ing.",
+   "full": "Don't worry, I won't be sleeping when you get home."
+  },
+  {
+   "q": "______ they ______ (arrive) by 6?",
+   "ok": "Will … have arrived",
+   "why": "Pergunta do perfect: Will + S + have + particípio.",
+   "full": "Will they have arrived by 6?"
+  },
+  {
+   "q": "In ten years, robots ______ (do) most of our housework.",
+   "ok": "will be doing",
+   "why": "Situação em andamento num período futuro.",
+   "full": "In ten years, robots will be doing most of our housework."
+  },
+  {
+   "q": "By the time you read this, I ______ (leave).",
+   "ok": "will have left",
+   "why": "By the time → perfect. leave → left.",
+   "full": "By the time you read this, I will have left."
+  },
+  {
+   "q": "At noon we ______ (have) lunch with the director.",
+   "ok": "will be having",
+   "why": "AT noon → ação em andamento.",
+   "full": "At noon we will be having lunch with the director."
+  },
+  {
+   "q": "By next month, he ______ (work) here for ten years.",
+   "ok": "will have worked",
+   "why": "Duração até um ponto do futuro → perfect (for ten years).",
+   "full": "By next month, he will have worked here for ten years."
+  }
+ ]
+}
