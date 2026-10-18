@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grand Prix des Sons</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Baloo+2:wght@500;600;700;800&family=Noto+Sans:wght@500;600&display=swap">
+<style>
+/* Layout: palco 3D em tela cheia (mascote + coração do concurso); cartão de jogo à direita no desktop e embaixo no celular. */
+:root {
+  --pink: #ffb8d2;
+  --pink-deep: #e9689a;
+  --lilac: #d4c2ff;
+  --mint: #b3ecd6;
+  --sky: #c2e2ff;
+  --butter: #fff1a8;
+  --peach: #ffd6b5;
+  --ink: #57426b;
+  --ink-soft: #8b7a9e;
+  --paper: #fffafd;
+  --paper-glass: rgba(255, 250, 253, 0.86);
+  --line: #f1dcea;
+  --ok: #3fb98b;
+  --ok-bg: #defaee;
+  --bad: #e45f8c;
+  --bad-bg: #ffe3ec;
+  --bg: #fde3f0;
+  --font-display: "Mochiy Pop One", "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-body: "Baloo 2", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --font-ipa: "Noto Sans", "Segoe UI", "DejaVu Sans", "Lucida Sans Unicode", sans-serif;
+  color-scheme: light;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.45;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+#stage3d { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+.fallback-bg {
+  position: fixed; inset: 0;
+  background: linear-gradient(180deg, #ffd9ec 0%, #e8dcff 55%, #cfeaff 100%);
+}
+
+/* ---------- HUD ---------- */
+.hud {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  pointer-events: none;
+}
+.hud > * { pointer-events: auto; }
+.brand {
+  font-family: var(--font-display); font-size: 15px; letter-spacing: 0.02em;
+  background: var(--paper-glass); padding: 6px 14px; border-radius: 999px;
+  box-shadow: 0 3px 0 var(--line);
+}
+.brand b { color: var(--pink-deep); font-weight: 400; }
+.hud-right { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+.pill {
+  display: flex; align-items: baseline; gap: 6px;
+  background: var(--paper-glass); border-radius: 999px; padding: 5px 14px;
+  box-shadow: 0 3px 0 var(--line); font-weight: 700; font-size: 14px; color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.pill strong { font-family: var(--font-display); font-weight: 400; color: var(--ink); font-size: 17px; }
+.pill.combo strong { color: var(--pink-deep); }
+.icon-btn {
+  border: 0; cursor: pointer; font: inherit; font-weight: 800; color: var(--ink);
+  background: var(--paper-glass); border-radius: 999px; padding: 6px 14px; font-size: 14px;
+  box-shadow: 0 3px 0 var(--line);
+}
+.icon-btn[aria-pressed="false"] { color: var(--ink-soft); text-decoration: line-through; }
+
+/* ---------- Painel / cartão ---------- */
+#panel {
+  position: fixed; z-index: 4;
+  top: calc(env(safe-area-inset-top, 0px) + 70px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  right: max(24px, env(safe-area-inset-right, 0px));
+  width: min(540px, 50vw);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.card {
+  background: var(--paper-glass);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-radius: 32px; border: 3px solid #fff;
+  box-shadow: 0 8px 0 var(--line), 0 18px 40px rgba(150, 90, 140, 0.18);
+  padding: 22px 24px 24px;
+  max-height: 100%; overflow-y: auto; overscroll-behavior: contain;
+  display: flex; flex-direction: column; gap: 14px;
+  animation: pop-in 0.35s cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes pop-in { from { transform: scale(0.94) translateY(10px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+@media (max-aspect-ratio: 23/20), (max-width: 760px) {
+  #panel {
+    top: auto; width: auto; height: 61%;
+    left: max(16px, env(safe-area-inset-left, 0px));
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    justify-content: flex-end;
+  }
+  .card { padding: 18px 18px 20px; border-radius: 26px; }
+  .brand { display: none; }
+}
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+.title {
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4.2vw, 40px); line-height: 1.1;
+  color: var(--ink);
+}
+.title span { color: var(--pink-deep); }
+.eyebrow {
+  font-size: 13px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
+}
+.lead { margin: 0; color: var(--ink); }
+.muted { color: var(--ink-soft); font-size: 15px; margin: 0; }
+.ipa { font-family: var(--font-ipa); font-weight: 500; }
+
+/* ---------- Escolha de manche ---------- */
+.rounds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 420px) { .rounds { grid-template-columns: 1fr; } }
+.round {
+  border: 0; cursor: pointer; text-align: left; font: inherit; color: var(--ink);
+  border-radius: 22px; padding: 12px 14px 12px; display: flex; flex-direction: column; gap: 2px;
+  box-shadow: 0 5px 0 rgba(87, 66, 107, 0.14); transition: transform .15s, box-shadow .15s;
+  min-width: 0;
+}
+.round:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(87, 66, 107, 0.14); }
+.round:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(87, 66, 107, 0.14); }
+.round .num { font-family: var(--font-display); font-size: 13px; opacity: .75; }
+.round .rname { font-weight: 800; font-size: 19px; line-height: 1.15; }
+.round .topics { font-size: 13.5px; line-height: 1.3; color: var(--ink); opacity: .82; }
+.round .best { font-size: 12.5px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.c-pink { background: var(--pink); }
+.c-mint { background: var(--mint); }
+.c-sky { background: var(--sky); }
+.c-butter { background: var(--butter); }
+.howto { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; color: var(--ink-soft); margin: 0; padding: 0; list-style: none; }
+.howto li::before { content: "♥ "; color: var(--pink-deep); }
+.voice-note { font-size: 13.5px; border-radius: 14px; padding: 8px 12px; background: var(--butter); margin: 0; }
+.voice-note.ok { background: var(--ok-bg); }
+
+/* ---------- Pergunta ---------- */
+.q-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.chip { font-size: 13px; font-weight: 800; padding: 3px 12px; border-radius: 999px; background: var(--lilac); letter-spacing: 0.02em; }
+.dots { display: flex; gap: 5px; flex-wrap: wrap; }
+.dot { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+.dot.now { background: var(--lilac); box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--lilac); }
+.dot.ok { background: var(--ok); }
+.dot.bad { background: var(--bad); }
+.prompt { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.q-text { font-size: 21px; font-weight: 700; line-height: 1.3; margin: 0; }
+.word-card {
+  font-size: clamp(34px, 6vw, 48px); font-weight: 800; line-height: 1.1;
+  background: #fff; border-radius: 24px; padding: 10px 26px; box-shadow: 0 5px 0 var(--line);
+  display: inline-flex; align-items: center; gap: 14px;
+}
+.listen-row { display: flex; align-items: center; gap: 10px; }
+.big-listen {
+  width: 96px; height: 96px; border-radius: 50%; border: 4px solid #fff; cursor: pointer;
+  background: radial-gradient(circle at 35% 30%, #ffd2e4, var(--pink-deep));
+  color: #fff; font: inherit; font-weight: 800; font-size: 15px; line-height: 1.1;
+  box-shadow: 0 6px 0 #c65483, 0 10px 24px rgba(233, 104, 154, .35);
+  display: grid; place-items: center; transition: transform .12s;
+}
+.big-listen:active { transform: translateY(4px); box-shadow: 0 2px 0 #c65483; }
+.big-listen svg { width: 34px; height: 34px; display: block; margin: 0 auto 2px; }
+.big-listen.playing { animation: pulse 0.6s ease-in-out infinite alternate; }
+@keyframes pulse { to { transform: scale(1.07); } }
+.mini-btn {
+  border: 0; cursor: pointer; font: inherit; font-size: 14px; font-weight: 800; color: var(--ink);
+  background: var(--sky); padding: 6px 12px; border-radius: 999px; box-shadow: 0 3px 0 rgba(87,66,107,.15);
+}
+.mini-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(87,66,107,.15); }
+.say-btn {
+  border: 0; cursor: pointer; width: 44px; height: 44px; border-radius: 50%; background: var(--sky);
+  display: grid; place-items: center; flex: none; box-shadow: 0 3px 0 rgba(87,66,107,.15);
+}
+.say-btn svg { width: 22px; height: 22px; }
+.opts { display: grid; gap: 9px; }
+.opts.two { grid-template-columns: 1fr 1fr; }
+.opts.three { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 460px) { .opts.three { grid-template-columns: 1fr; } }
+.opt {
+  border: 3px solid #fff; cursor: pointer; font: inherit; color: var(--ink); text-align: left;
+  background: #fff; border-radius: 20px; padding: 10px 14px; min-height: 56px;
+  display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; line-height: 1.25;
+  box-shadow: 0 5px 0 var(--line); transition: transform .12s, box-shadow .12s, background .2s;
+  min-width: 0;
+}
+.opt .t { min-width: 0; overflow-wrap: anywhere; font-family: var(--font-body), var(--font-ipa); }
+.opt .k {
+  flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--lilac);
+  display: grid; place-items: center; font-size: 13px; font-weight: 800;
+}
+.opt:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 7px 0 var(--line); background: #fff7fb; }
+.opt:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
+.opt:disabled { cursor: default; }
+.opt.right { background: var(--ok-bg); border-color: var(--ok); box-shadow: 0 5px 0 #a6e6cb; }
+.opt.right .k { background: var(--ok); color: #fff; }
+.opt.wrong { background: var(--bad-bg); border-color: var(--bad); box-shadow: 0 5px 0 #f7b7cb; animation: shake .4s; }
+.opt.wrong .k { background: var(--bad); color: #fff; }
+.opt.dim { opacity: .55; }
+@keyframes shake { 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+.feedback {
+  border-radius: 20px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;
+  animation: pop-in .3s cubic-bezier(.2,1.4,.4,1) both;
+}
+.feedback.ok { background: var(--ok-bg); }
+.feedback.bad { background: var(--bad-bg); }
+.fb-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.fb-title { font-family: var(--font-display); font-size: 18px; }
+.feedback.ok .fb-title { color: #23946b; }
+.feedback.bad .fb-title { color: #c9406f; }
+.fb-pts { font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; }
+.fb-answer { font-weight: 700; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fb-tip { margin: 0; font-size: 15.5px; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.cta {
+  border: 0; cursor: pointer; font: inherit; font-weight: 800; font-size: 18px; color: #fff;
+  background: var(--pink-deep); padding: 11px 26px; border-radius: 999px;
+  box-shadow: 0 5px 0 #c65483; transition: transform .12s, box-shadow .12s;
+}
+.cta:active { transform: translateY(3px); box-shadow: 0 2px 0 #c65483; }
+.cta.soft { background: #fff; color: var(--ink); box-shadow: 0 5px 0 var(--line); }
+button:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 3px; }
+
+/* ---------- Resultado ---------- */
+.jury {
+  text-align: center; border-radius: 24px; padding: 14px; background: linear-gradient(135deg, var(--butter), var(--peach));
+}
+.jury .pts { font-family: var(--font-display); font-size: clamp(40px, 8vw, 60px); line-height: 1; color: var(--pink-deep); }
+.jury .lbl { font-weight: 800; font-size: 18px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { background: #fff; border-radius: 18px; padding: 8px; text-align: center; box-shadow: 0 4px 0 var(--line); }
+.stat b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 22px; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--ink-soft); font-weight: 700; }
+.review { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.review li { background: #fff; border-radius: 16px; padding: 8px 12px; display: flex; gap: 10px; align-items: flex-start; }
+.review li > div { min-width: 0; }
+.review .say-btn { width: 36px; height: 36px; }
+.review .say-btn svg { width: 18px; height: 18px; }
+.review p { margin: 0; font-size: 14.5px; }
+
+/* ---------- Pop de comemoração ---------- */
+#pop {
+  position: fixed; z-index: 6; left: 50%; top: 30%; transform: translate(-50%, -50%);
+  font-family: var(--font-display); font-size: clamp(34px, 7vw, 64px); white-space: nowrap;
+  color: #fff; pointer-events: none; opacity: 0;
+  text-shadow: 0 4px 0 var(--pink-deep), 0 0 24px rgba(233,104,154,.6);
+}
+#pop.show { animation: popword 1.2s cubic-bezier(.2,1.5,.4,1) both; }
+#pop.sad { text-shadow: 0 4px 0 #9a86c9, 0 0 20px rgba(154,134,201,.5); }
+@keyframes popword {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.4) rotate(-8deg); }
+  25% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(3deg); }
+  70% { opacity: 1; transform: translate(-50%, -55%) scale(1) rotate(0); }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(.95); }
+}
+@media (max-aspect-ratio: 23/20), (max-width: 760px) { #pop { top: 24%; } }
+@media (min-aspect-ratio: 23/20) and (min-width: 761px) { #pop { left: 30%; } }
+.toast {
+  position: fixed; z-index: 7; left: 50%; transform: translateX(-50%);
+  top: calc(env(safe-area-inset-top, 0px) + 62px);
+  background: var(--ink); color: #fff; font-weight: 800; padding: 7px 16px; border-radius: 999px; font-size: 15px;
+  animation: toast 2.4s ease both; pointer-events: none; white-space: nowrap;
+}
+@keyframes toast { 0% { opacity: 0; transform: translate(-50%, -8px); } 12%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .card, .feedback, #pop.show, .opt.wrong, .big-listen.playing { animation-duration: 0.01s; }
+}
+</style>
+</head>
+<body>
+<canvas id="stage3d" aria-hidden="true"></canvas>
+
+<header class="hud">
+  <div class="brand">Grand Prix <b>des Sons</b></div>
+  <div class="hud-right">
+    <div class="pill" title="Pontuação"><span>pontos</span><strong id="hudScore">0</strong></div>
+    <div class="pill combo" title="Multiplicador de sequência"><span>combo</span><strong id="hudCombo">x1</strong></div>
+    <button class="icon-btn" id="musicBtn" aria-pressed="true" title="Ligar ou desligar a trilha">♪ música</button>
+  </div>
+</header>
+
+<main id="panel" aria-live="polite"></main>
+<div id="pop" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* =========================================================
+   Grand Prix des Sons — jogo de pronúncia francesa (Pré-A1 / A1)
+   Conteúdo: Caderno ODU Creative, Módulo Pré-A1, Aulas 01–03
+   ========================================================= */
+
+// ---------- Utilidades ----------
+const $ = (s) => document.querySelector(s);
+const rand = (a, b) => a + Math.random() * (b - a);
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* armazenamento indisponível */ } }
+};
+const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+
+// ---------- Banco de perguntas (do caderno) ----------
+// L = ouvir e escolher · W = palavra na tela + pergunta sobre o som · Q = pergunta de múltipla escolha
+const L = (word, opts, ipa, tip) => ({ type: "listen", say: word, answer: word, opts, ipa, tip });
+const W = (word, ipa, q, opts, ans, tip) => ({ type: "word", word, say: word, ipa, q, opts, answer: opts[ans], tip });
+const Q = (q, opts, ans, tip, say, ipa) => ({ type: "quiz", q, opts, answer: opts[ans], tip, say, ipa });
+const group = (tag, items) => items.map((it) => Object.assign(it, { tag }));
+
+const ROUNDS = {
+  a1: {
+    num: "Aula 01", name: "Sons-chave", color: "c-pink",
+    topics: "u × ou · nasais · letras mudas · alfabeto · cumprimentos",
+    items: [
+      ...group("u /y/ × ou /u/", [
+        L("tu", ["tu", "tout"], "/ty/", "u francês: diga “i” e faça bico. tu /ty/ (você) × tout /tu/ (tudo)."),
+        L("vous", ["vu", "vous"], "/vu/", "ou = o nosso “u”. vous /vu/ (vocês) × vu /vy/ (visto)."),
+        L("rue", ["rue", "roue"], "/ʁy/", "rue /ʁy/ é rua; roue /ʁu/ é roda. Trocar o som muda a palavra."),
+        L("dessous", ["dessus", "dessous"], "/dəsu/", "dessus /dəsy/ = em cima · dessous /dəsu/ = embaixo."),
+        L("pour", ["pur", "pour"], "/puʁ/", "pur /pyʁ/ = puro · pour /puʁ/ = para."),
+        W("salut", "/saly/", "Qual é o som do u em salut?", ["/y/ “i” com bico", "/u/ u português"], 0, "u sozinho = /y/: “salü”. E o t final é mudo."),
+        W("bonjour", "/bɔ̃ʒuʁ/", "Qual é o som do ou em bonjour?", ["/y/ “i” com bico", "/u/ u português"], 1, "ou = /u/, igual ao nosso u. O r final soa (CaReFuL).")
+      ]),
+      ...group("vogais nasais", [
+        L("vin", ["vent", "vin", "vont"], "/vɛ̃/", "vent /ɑ̃/ vento · vin /ɛ̃/ vinho · vont /ɔ̃/ vão. A boca não fecha no n."),
+        L("blond", ["blanc", "blond"], "/blɔ̃/", "blanc /blɑ̃/ tem “ã” grave, boca aberta; blond /blɔ̃/ tem “õ”."),
+        L("cinq", ["cent", "cinq", "son"], "/sɛ̃k/", "cent /sɑ̃/ cem · cinq /sɛ̃k/ cinco · son /sɔ̃/ som."),
+        L("bonne", ["bon", "bonne"], "/bɔn/", "bon /bɔ̃/ é nasal; em bonne vem vogal depois do n, então: vogal oral + n. Nada de “bõne”."),
+        W("année", "/ane/", "O “an” de année é…", ["nasal", "oral + n pronunciado"], 1, "Depois do n vem vogal, então é oral + n: an /ɑ̃/ × année /ane/."),
+        W("maison", "/mɛzɔ̃/", "O “on” de maison é…", ["nasal", "oral + n pronunciado"], 0, "on no fim da palavra = nasal /ɔ̃/, sem fechar a boca."),
+        W("brésilienne", "/bʁeziljɛn/", "O final -ienne é…", ["nasal", "oral + n pronunciado"], 1, "brésilien /ɛ̃/ (nasal) × brésilienne /ɛn/ (oral + n). É assim que se forma muito feminino.")
+      ]),
+      ...group("letras finais mudas", [
+        Q("Em qual palavra a consoante final é pronunciada?", ["avec", "petit", "trois", "beaucoup"], 0, "CaReFuL: C, R, F e L finais costumam soar. avec /avɛk/; petit, trois e beaucoup têm final mudo.", "avec"),
+        Q("Qual palavra tem a consoante final MUDA?", ["neuf", "hôtel", "Paris", "bonjour"], 2, "Paris /paʁi/: o s é mudo. neuf, hôtel e bonjour seguem o CaReFuL.", "Paris"),
+        Q("Como se pronuncia “ils parlent”?", ["/il paʁl/ “il parrl”", "/il paʁlɑ̃/ “il parlã”", "/ilz paʁlɛnt/ “ilz parlent”"], 0, "A terminação verbal -ent é muda: ils parlent soa igual a il parle.", "ils parlent"),
+        Q("E o r de “parler”?", ["soa forte, /ʁ/", "é mudo: /paʁle/ “parrlê”", "vira “i”"], 1, "Exceção ao CaReFuL: o -er do infinitivo soa /e/ e o r fica mudo.", "parler")
+      ]),
+      ...group("alfabeto e r", [
+        Q("Como se diz a letra G em francês?", ["“jê” /ʒe/", "“gê”", "“ji” /ʒi/"], 0, "G = “jê” e J = “ji”: o contrário do que o brasileiro espera. GIL = jê-i-él."),
+        Q("E a letra J?", ["“jota”", "“ji” /ʒi/", "“jê” /ʒe/"], 1, "J = /ʒi/ “ji”. Treine soletrando: JEU = ji-â-ü."),
+        Q("A letra H se chama…", ["“agá”", "“ach” /aʃ/", "“rá”"], 1, "H = “ach”. Dentro da palavra ele é sempre mudo: hôtel = “ôtél”."),
+        Q("A letra U soa como…", ["o u de “tudo”", "“ü”: “i” com bico /y/", "“iú”"], 1, "U = /y/: língua na posição do “i” e lábios em bico."),
+        Q("Onde nasce o r de “Paris”?", ["na ponta da língua, como em “caro”", "no fundo da boca, como o rr carioca suave", "ele não se pronuncia"], 1, "O r /ʁ/ é de garganta em todas as posições, até entre vogais: /paʁi/.", "Paris")
+      ]),
+      ...group("cumprimentos", [
+        Q("Você chega a um jantar às 20h. Você diz…", ["Bonne nuit !", "Bonsoir !", "Bonjour !"], 1, "Bonsoir ao chegar à noite. Bonne nuit é só na hora de dormir.", "Bonsoir !"),
+        Q("Você entra numa padaria em Paris às 8h.", ["Salut !", "Bonjour, madame.", "Coucou !"], 1, "O bonjour é obrigatório ao entrar, e com desconhecidos o registro é formal.", "Bonjour, madame."),
+        Q("Você não entendeu o que o atendente disse.", ["Quoi ?", "Pardon ? Vous pouvez répéter ?", "Bonne journée !"], 1, "“Quoi ?” soa quase rude. Peça com pardon e vous.", "Pardon ? Vous pouvez répéter, s'il vous plaît ?"),
+        Q("Para perguntar como vai uma senhora desconhecida:", ["Ça va, toi ?", "Comment allez-vous ?", "Tu vas bien ?"], 1, "Com adultos desconhecidos, use vous. Repare na liaison: Comment‿allez-vous /kɔmɑ̃talevu/.", "Comment allez-vous ?")
+      ])
+    ]
+  },
+  a2: {
+    num: "Aula 02", name: "Vogais orais", color: "c-mint",
+    topics: "é × è · eu × œu · o × ó · e caduc",
+    items: [
+      ...group("é /e/ × è ê /ɛ/", [
+        L("été", ["été", "était"], "/ete/", "été /ete/ tem dois é fechados; était /etɛ/ termina em ai aberto."),
+        L("près", ["pré", "près"], "/pʁɛ/", "pré /pʁe/ = prado (fechado) · près /pʁɛ/ = perto (aberto)."),
+        L("fait", ["fée", "fait"], "/fɛ/", "fée /fe/ = fada · fait /fɛ/ = feito."),
+        L("parlait", ["parler", "parlait"], "/paʁlɛ/", "parler /paʁle/ = falar · parlait /paʁlɛ/ = falava."),
+        W("café", "/kafe/", "O é de café soa como…", ["ê fechado, de “você”", "é aberto, de “pé”"], 0, "A inversão! No francês, é = nosso ê. Café = “kafê”."),
+        W("mère", "/mɛʁ/", "O è de mère soa como…", ["ê fechado", "é aberto, de “pé”"], 1, "No francês, è = nosso é. mère = “mérr”."),
+        W("fête", "/fɛt/", "O ê de fête soa como…", ["ê fechado, como no português", "é aberto"], 1, "O circunflexo francês não fecha a vogal: fête /fɛt/ = “fét”."),
+        W("parlez", "/paʁle/", "O final -ez soa como…", ["ê fechado /e/", "é aberto /ɛ/", "“ez”, com z"], 0, "-er e -ez finais = /e/ fechado, com a consoante muda."),
+        Q("Qual frase tem o som ABERTO /ɛ/?", ["Paul et Marie", "Paul est là"], 1, "et = /e/ fechado; est = /ɛ/ aberto. Primos na escrita, opostos na fala.", "Paul est là.")
+      ]),
+      ...group("eu /ø/ × œu /œ/", [
+        L("peur", ["peu", "peur"], "/pœʁ/", "peu /pø/ é “ê” com bico; peur /pœʁ/ é “é” com bico, porque há r depois."),
+        L("jeune", ["jeune", "jeûne"], "/ʒœn/", "jeune /ʒœn/ = jovem (aberto) · jeûne /ʒøn/ = jejum (fechado, com circunflexo)."),
+        W("deux", "/dø/", "Como se faz o eu de deux?", ["“ê” + lábios em bico", "“êu”, deslizando para u", "“ó” aberto"], 0, "/ø/ é um som só: diga “ê” e arredonde os lábios. Nunca “dêw”."),
+        W("sœur", "/sœʁ/", "O œu de sœur é…", ["/ø/ fechado", "/œ/ aberto, “é” com bico"], 1, "Com consoante pronunciada depois (o r), fica aberto: “sörr”."),
+        W("bleu", "/blø/", "O eu de bleu é…", ["/ø/ fechado", "/œ/ aberto"], 0, "Fim de sílaba, sem consoante depois: /ø/ fechado, “blö”."),
+        W("heure", "/œʁ/", "O eu de heure é…", ["/ø/ fechado", "/œ/ aberto"], 1, "r pronunciado depois, então /œ/. E o h é mudo: “örr”."),
+        Q("J'ai deux sœurs. Qual é a pronúncia?", ["/ʒe dø sœʁ/ “jê dö sörr”", "/ʒe deu soɛʁ/ “jê dêu soérr”", "/ʒe dɔ sɔʁ/ “jê dó sórr”"], 0, "/ø/ em deux, /œ/ em sœurs, e o s final de sœurs é mudo.", "J'ai deux sœurs.")
+      ]),
+      ...group("o /o/ × o /ɔ/", [
+        L("mot", ["mot", "mort"], "/mo/", "mot /mo/ = palavra (t mudo, ô fechado) · mort /mɔʁ/ = morte (r soa, ó aberto)."),
+        L("pomme", ["paume", "pomme"], "/pɔm/", "paume /pom/ = palma (au = ô) · pomme /pɔm/ = maçã (o + consoante = ó)."),
+        L("beau", ["beau", "bol"], "/bo/", "beau /bo/ = belo · bol /bɔl/ = tigela."),
+        L("sotte", ["saute", "sotte"], "/sɔt/", "saute /sot/ (au = ô) · sotte /sɔt/ (o + consoante = ó)."),
+        W("eau", "/o/", "eau soa como…", ["ô fechado", "ó aberto", "“e-a-u”"], 0, "au e eau = sempre /o/ fechado. Água = “ô”."),
+        W("porte", "/pɔʁt/", "O o de porte é…", ["ô fechado", "ó aberto"], 1, "o + consoante pronunciada = /ɔ/ aberto: “pórrt”."),
+        W("hôtel", "/otɛl/", "O ô de hôtel é…", ["ô fechado", "ó aberto"], 0, "ô com circunflexo = /o/ fechado: “ôtél”."),
+        W("homme", "/ɔm/", "O o de homme é…", ["ô fechado", "ó aberto"], 1, "o + consoante pronunciada (m) = ó aberto: “óm”.")
+      ]),
+      ...group("e caduc /ə/", [
+        W("samedi", "/samdi/", "Como se diz samedi?", ["/samdi/ “samdi”", "/samedi/ “samêdi”", "/samɛdi/ “samédi”"], 0, "O e caduc já caiu em samedi no francês atual: sam'di."),
+        Q("Qual palavra tem e caduc /ə/?", ["le", "été", "très", "fête"], 0, "Só o e sem acento em sílaba átona pode ser /ə/: le = “lâ”. é, è e ê são vogais plenas.", "le"),
+        Q("beau se pronuncia…", ["“bô”", "“beâu”", "“bó”"], 0, "Não invente um /ə/ e não abra a vogal: au/eau = ô fechado.", "beau")
+      ])
+    ]
+  },
+  a3: {
+    num: "Aula 03", name: "Ligações", color: "c-sky",
+    topics: "elisão · h mudo × aspiré · enchaînement · liaison",
+    items: [
+      ...group("elisão", [
+        Q("le + ami =", ["le ami", "l'ami", "la ami"], 1, "Elisão: le, la, je, me, te, se, de, ne, que, ce perdem a vogal diante de vogal ou h mudo.", "l'ami"),
+        Q("je + aime le café =", ["je aime le café", "j'aime le café", "jaime le café"], 1, "A elisão é obrigatória na escrita e na fala: j'aime /ʒɛm/.", "J'aime le café."),
+        Q("si + il vient =", ["si il vient", "s'il vient"], 1, "si só vira s' diante de il e ils.", "s'il vient"),
+        Q("si + elle vient =", ["s'elle vient", "si elle vient"], 1, "Pegadinha: si NÃO elide antes de elle. Só antes de il e ils.", "si elle vient"),
+        Q("le + héros =", ["l'héros", "le héros"], 1, "héros tem h aspiré: sem elisão e sem liaison.", "le héros"),
+        Q("la + heure =", ["la heure", "l'heure"], 1, "heure tem h mudo: l'heure, deux‿heures.", "l'heure")
+      ]),
+      ...group("liaison", [
+        L("les héros", ["les héros", "les zéros"], "/le eʁo/", "h aspiré: les ‖ héros, sem liaison. Se você ligar, vira les zéros (os zeros)!"),
+        L("ils ont", ["ils ont", "ils sont"], "/il.zɔ̃/", "Liaison em /z/: ils‿ont = eles têm · ils sont /il.sɔ̃/ = eles são."),
+        L("vous avez", ["vous avez", "vous savez"], "/vu.za.ve/", "vous‿avez com /z/ = vocês têm · vous savez com /s/ = vocês sabem."),
+        L("une amie", ["un ami", "une amie"], "/y.na.mi/", "un‿ami /œ̃.na.mi/ mantém a nasal e liga o n · une‿amie /y.na.mi/."),
+        Q("Em “les amis”, o s de les soa como…", ["/z/", "/s/", "é mudo"], 0, "s, x e z de liaison soam /z/: les‿amis /le.za.mi/.", "les amis"),
+        Q("Em “un grand homme”, o d de grand soa como…", ["/d/", "/t/", "é mudo"], 1, "O d de liaison vira /t/: grand‿homme /gʁɑ̃.tɔm/.", "un grand homme"),
+        Q("Em “neuf heures”, o f soa como…", ["/f/", "/v/", "é mudo"], 1, "neuf vira /v/ só em neuf‿ans e neuf‿heures: /nœ.vœʁ/.", "neuf heures"),
+        Q("Qual liaison é OBRIGATÓRIA?", ["les‿amis", "et‿un ami", "les‿héros"], 0, "Determinante + nome liga sempre. Depois de et e antes de h aspiré, a liaison é proibida.", "les amis"),
+        Q("Qual ligação é PROIBIDA?", ["vous‿êtes", "et ‖ un ami", "deux‿heures"], 1, "Nunca se liga depois de et. Pronome + verbo e número + nome ligam sempre.", "et un ami")
+      ]),
+      ...group("enchaînement", [
+        Q("“avec elle” /a.vɛ.kɛl/ é exemplo de…", ["enchaînement", "liaison"], 0, "O c de avec sempre soa; ele só se encadeia na vogal seguinte. Isso é enchaînement.", "avec elle"),
+        Q("“les enfants” /le.zɑ̃.fɑ̃/ é exemplo de…", ["enchaînement", "liaison"], 1, "O s de les é mudo sozinho e reaparece como /z/ antes de vogal: liaison.", "les enfants"),
+        Q("Como se diz “Il est deux heures”?", ["/i.lɛ dø.zœʁ/", "/il ɛ dø œʁ/", "/i.lɛ døs.œʁ/"], 0, "Enchaînement em il‿est e liaison /z/ em deux‿heures.", "Il est deux heures."),
+        Q("Em “Elle habite avec elle”, você deve…", ["encadear tudo sem pausa", "fazer uma pausa entre as palavras", "inserir um “i”: “avéki éli”"], 0, "O francês fala em grupos rítmicos: /ɛ.la.bi.ta.vɛ.kɛl/. Não acrescente vogal depois da consoante final.", "Elle habite avec elle.")
+      ])
+    ]
+  }
+};
+ROUNDS.fin = {
+  num: "Grande Finale", name: "Todas as aulas", color: "c-butter",
+  topics: "15 perguntas misturadas das Aulas 01, 02 e 03",
+  items: [...ROUNDS.a1.items, ...ROUNDS.a2.items, ...ROUNDS.a3.items]
+};
+const ROUND_LEN = { a1: 10, a2: 10, a3: 10, fin: 15 };
+
+// ---------- Voz francesa (Web Speech API) ----------
+const Voice = {
+  v: null, ok: false, supported: "speechSynthesis" in window,
+  pick() {
+    if (!this.supported) return;
+    const fr = speechSynthesis.getVoices().filter((v) => /^fr/i.test(v.lang));
+    const frFR = fr.filter((v) => /fr[-_]FR/i.test(v.lang));
+    this.v = frFR.find((v) => /google|amélie|amelie|thomas|audrey|marie|denise|henri|eloise|vivienne/i.test(v.name)) || frFR[0] || fr[0] || null;
+    this.ok = !!this.v;
+    const note = document.getElementById("voiceNote");
+    if (note) note.outerHTML = voiceNoteHTML();
+  },
+  say(text, slow, onend) {
+    if (!this.ok || !text) { if (onend) onend(); return false; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.voice = this.v; u.lang = this.v.lang; u.rate = slow ? 0.55 : 0.85; u.pitch = 1.05;
+    u.onstart = () => Music.duck(true);
+    u.onend = u.onerror = () => { Music.duck(false); if (onend) onend(); };
+    speechSynthesis.speak(u);
+    return true;
+  }
+};
+if (Voice.supported) {
+  Voice.pick();
+  speechSynthesis.addEventListener ? speechSynthesis.addEventListener("voiceschanged", () => Voice.pick()) : (speechSynthesis.onvoiceschanged = () => Voice.pick());
+}
+
+// ---------- Trilha sonora estilo Eurovision (sintetizada) ----------
+// Lá menor, progressão Am–F–C–G a 124 BPM: bumbo em todo tempo, palmas no 2 e 4, chimbal no contratempo,
+// baixo de oitavas “disco” e uma melodia de acordeão musette (dois serrotes desafinados).
+// A cada 5 acertos seguidos, a música sobe um semitom: a famosa mudança de tom do concurso.
+const CHORDS = [
+  { root: 45, notes: [57, 60, 64] }, // Am
+  { root: 41, notes: [57, 60, 65] }, // F
+  { root: 48, notes: [55, 60, 64] }, // C
+  { root: 43, notes: [55, 59, 62] }  // G
+];
+const MELODY = [ // [passo (1/16), nota MIDI, duração em passos]
+  [[0, 69, 2], [2, 72, 2], [4, 76, 4], [8, 74, 2], [10, 72, 2], [12, 71, 2], [14, 72, 2]],
+  [[0, 72, 2], [2, 69, 2], [4, 77, 4], [8, 76, 2], [10, 74, 2], [12, 72, 4]],
+  [[0, 76, 2], [2, 79, 2], [4, 76, 2], [6, 72, 2], [8, 74, 2], [10, 76, 2], [12, 79, 4]],
+  [[0, 71, 2], [2, 74, 2], [4, 79, 2], [6, 77, 2], [8, 76, 4], [12, 74, 2], [14, 71, 2]]
+];
+const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
+
+const Music = {
+  ctx: null, on: store.get("gpds-music", true), playing: false, bpm: 124, step: 0, next: 0, t0: 0, timer: null,
+  transpose: 0, vol: 0.5,
+  init() {
+    if (this.ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    const c = this.ctx = new AC();
+    this.master = c.createGain(); this.master.gain.value = this.vol;
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 4;
+    this.master.connect(comp); comp.connect(c.destination);
+    this.music = c.createGain(); this.music.gain.value = this.on ? 1 : 0; this.music.connect(this.master);
+    this.sfx = c.createGain(); this.sfx.gain.value = 0.9; this.sfx.connect(this.master);
+    const len = c.sampleRate; const b = c.createBuffer(1, len, c.sampleRate); const d = b.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    this.noiseBuf = b;
+    return true;
+  },
+  start() {
+    if (!this.init()) return;
+    if (this.ctx.state === "suspended") this.ctx.resume();
+    if (this.playing) return;
+    this.playing = true; this.step = 0;
+    this.next = this.t0 = this.ctx.currentTime + 0.08;
+    this.timer = setInterval(() => this.tick(), 25);
+  },
+  setOn(on) {
+    this.on = on; store.set("gpds-music", on);
+    if (this.ctx) this.music.gain.setTargetAtTime(on ? 1 : 0, this.ctx.currentTime, 0.1);
+  },
+  duck(d) { if (this.ctx) this.master.gain.setTargetAtTime(d ? this.vol * 0.3 : this.vol, this.ctx.currentTime, 0.08); },
+  get spb() { return 60 / this.bpm / 4; },
+  beat() { // posição em tempos, para sincronizar o palco 3D com a música
+    if (this.playing && this.ctx) return Math.max(0, (this.ctx.currentTime - this.t0) / (60 / this.bpm));
+    return performance.now() / 1000 * this.bpm / 60;
+  },
+  tick() {
+    while (this.next < this.ctx.currentTime + 0.12) { this.play(this.step, this.next); this.next += this.spb; this.step++; }
+  },
+  play(step, t) {
+    const s = step % 16, bar = Math.floor(step / 16) % 4, tr = this.transpose, ch = CHORDS[bar];
+    if (s % 4 === 0) this.kick(t);
+    if (s === 4 || s === 12) this.clap(t);
+    if (s % 4 === 2) this.hat(t, 0.11, 0.09); else if (s % 2 === 1) this.hat(t, 0.035, 0.03);
+    if (s % 2 === 0) this.bass(t, ch.root + tr + (s % 4 === 2 ? 12 : 0));
+    if (s === 0) this.pad(t, ch.notes.map((n) => n + tr), this.spb * 16);
+    const arp = [0, 1, 2, 1];
+    this.blip(t, ch.notes[arp[s % 4]] + 12 + tr + (s % 8 >= 4 ? 12 : 0));
+    if (Math.floor(step / 64) % 2 === 0) {
+      const m = MELODY[bar].find((n) => n[0] === s);
+      if (m) this.lead(t, m[1] + tr, m[2] * this.spb);
+    }
+  },
+  env(g, t, peak, a, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); },
+  kick(t) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+    this.env(g, t, 0.9, 0.004, 0.3); o.connect(g); g.connect(this.music); o.start(t); o.stop(t + 0.35);
+  },
+  noise(t, type, freq, peak, dec, q) {
+    const c = this.ctx, n = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    n.buffer = this.noiseBuf; f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+    this.env(g, t, peak, 0.002, dec); n.connect(f); f.connect(g); g.connect(this.music);
+    n.start(t, Math.random() * 0.5); n.stop(t + dec + 0.05);
+  },
+  clap(t) { this.noise(t, "bandpass", 1700, 0.32, 0.16, 0.9); this.noise(t + 0.012, "bandpass", 1300, 0.2, 0.12, 0.9); },
+  hat(t, peak, dec) { this.noise(t, "highpass", 8000, peak, dec); },
+  bass(t, n) {
+    const c = this.ctx, o = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain();
+    o.type = "sawtooth"; o.frequency.value = mtof(n);
+    f.type = "lowpass"; f.Q.value = 6; f.frequency.setValueAtTime(1400, t); f.frequency.exponentialRampToValueAtTime(260, t + 0.16);
+    this.env(g, t, 0.2, 0.005, 0.17); o.connect(f); f.connect(g); g.connect(this.music); o.start(t); o.stop(t + 0.22);
+  },
+  pad(t, notes, dur) {
+    const c = this.ctx;
+    notes.forEach((n) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = "triangle"; o.frequency.value = mtof(n);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.03, t + 0.25);
+      g.gain.setValueAtTime(0.03, t + dur - 0.2); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(this.music); o.start(t); o.stop(t + dur + 0.05);
+    });
+  },
+  blip(t, n) {
+    const c = this.ctx, o = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain();
+    o.type = "square"; o.frequency.value = mtof(n); f.type = "lowpass"; f.frequency.value = 2600;
+    this.env(g, t, 0.022, 0.003, 0.09); o.connect(f); f.connect(g); g.connect(this.music); o.start(t); o.stop(t + 0.12);
+  },
+  lead(t, n, dur) {
+    const c = this.ctx, f = c.createBiquadFilter(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+    f.type = "lowpass"; f.frequency.value = 2300; f.Q.value = 1.5;
+    lfo.frequency.value = 5.6; lg.gain.value = 5; lfo.connect(lg);
+    [-13, 13].forEach((cents) => { // desafinação de acordeão musette
+      const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.value = mtof(n); o.detune.value = cents;
+      lg.connect(o.detune); o.connect(f); o.start(t); o.stop(t + dur + 0.1);
+    });
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.055, t + 0.02);
+    g.gain.setValueAtTime(0.05, t + Math.max(0.03, dur - 0.04)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.06);
+    f.connect(g); g.connect(this.music); lfo.start(t); lfo.stop(t + dur + 0.1);
+  },
+  tone(t, n, type, peak, dec, dest) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = mtof(n); this.env(g, t, peak, 0.005, dec);
+    o.connect(g); g.connect(dest || this.sfx); o.start(t); o.stop(t + dec + 0.05);
+  },
+  win() {
+    if (!this.init()) return; const t = this.ctx.currentTime + 0.01, tr = this.transpose;
+    [72, 76, 79, 84, 88].forEach((n, i) => this.tone(t + i * 0.065, n + tr, "triangle", 0.16, 0.3));
+    [96, 100, 103].forEach((n, i) => this.tone(t + 0.35 + i * 0.05, n + tr, "sine", 0.06, 0.25));
+  },
+  lose() {
+    if (!this.init()) return; const c = this.ctx, t = c.currentTime + 0.01;
+    const o = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain();
+    o.type = "square"; o.frequency.setValueAtTime(330, t); o.frequency.exponentialRampToValueAtTime(150, t + 0.35);
+    f.type = "lowpass"; f.frequency.value = 900; this.env(g, t, 0.12, 0.01, 0.38);
+    o.connect(f); f.connect(g); g.connect(this.sfx); o.start(t); o.stop(t + 0.45);
+  },
+  fanfare() {
+    if (!this.init()) return; const t = this.ctx.currentTime + 0.02;
+    [[69, 0], [73, 0.12], [76, 0.24], [81, 0.36], [81, 0.62]].forEach(([n, d]) => this.tone(t + d, n + this.transpose, "sawtooth", 0.07, 0.4));
+  }
+};
+
+// ---------- Palco 3D (Three.js) ----------
+const Stage = { ok: false, react: { type: null, t: 0, dur: 1 } };
+function initStage() {
+  if (!window.THREE) throw new Error("three.js indisponível");
+  const canvas = $("#stage3d");
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+
+  // fundo em degradê pastel
+  const bg = document.createElement("canvas"); bg.width = 4; bg.height = 512;
+  const bctx = bg.getContext("2d"); const grd = bctx.createLinearGradient(0, 0, 0, 512);
+  grd.addColorStop(0, "#ffd3e8"); grd.addColorStop(0.5, "#e9dcff"); grd.addColorStop(1, "#cdeaff");
+  bctx.fillStyle = grd; bctx.fillRect(0, 0, 4, 512);
+  scene.background = new THREE.CanvasTexture(bg);
+  scene.fog = new THREE.Fog(0xeadcff, 14, 34);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xffd1e6, 0.75));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.65); sun.position.set(3, 6, 5); scene.add(sun);
+
+  const grad = new THREE.DataTexture(new Uint8Array([150, 150, 150, 215, 215, 215, 255, 255, 255]), 3, 1, THREE.RGBFormat);
+  grad.minFilter = grad.magFilter = THREE.NearestFilter; grad.needsUpdate = true;
+  const toon = (c, extra) => new THREE.MeshToonMaterial(Object.assign({ color: c, gradientMap: grad }, extra || {}));
+
+  const stage = new THREE.Group(); scene.add(stage);
+
+  // plataforma do palco
+  const platform = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.9, 0.45, 56), toon(0xc9f2e1));
+  platform.position.y = -1.25; stage.add(platform);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xff9cc4 });
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(2.72, 0.07, 10, 80), ringMat);
+  ring.rotation.x = Math.PI / 2; ring.position.y = -1.02; stage.add(ring);
+  const lights = [];
+  for (let i = 0; i < 14; i++) {
+    const a = (i / 14) * Math.PI * 2;
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 8), new THREE.MeshBasicMaterial({ color: [0xffffff, 0xfff1a8, 0xbfe0ff][i % 3] }));
+    b.position.set(Math.cos(a) * 2.78, -1.25, Math.sin(a) * 2.78); stage.add(b); lights.push(b);
+  }
+
+  // coração do concurso, com as cores da França em tons pastel
+  function heartShape() {
+    const s = new THREE.Shape();
+    s.moveTo(5, 5); s.bezierCurveTo(5, 5, 4, 0, 0, 0); s.bezierCurveTo(-6, 0, -6, 7, -6, 7);
+    s.bezierCurveTo(-6, 11, -3, 15.4, 5, 19); s.bezierCurveTo(12, 15.4, 16, 11, 16, 7);
+    s.bezierCurveTo(16, 7, 16, 0, 10, 0); s.bezierCurveTo(7, 0, 5, 5, 5, 5);
+    return s;
+  }
+  const heartGeo = (depth) => {
+    const g = new THREE.ExtrudeGeometry(heartShape(), { depth, bevelEnabled: true, bevelThickness: 1.4, bevelSize: 1.1, bevelSegments: 4, curveSegments: 24 });
+    g.center(); g.rotateZ(Math.PI); return g;
+  };
+  const heart = new THREE.Group();
+  const hg = heartGeo(2); hg.scale(0.12, 0.12, 0.12);
+  heart.add(new THREE.Mesh(hg, toon(0xffa8c8)));
+  hg.computeBoundingBox();
+  const face = new THREE.ShapeGeometry(heartShape(), 24); face.center(); face.rotateZ(Math.PI); face.scale(0.105, 0.105, 1);
+  face.computeBoundingBox();
+  const fb = face.boundingBox, uv = face.attributes.uv, pos = face.attributes.position;
+  for (let i = 0; i < pos.count; i++) uv.setXY(i, (pos.getX(i) - fb.min.x) / (fb.max.x - fb.min.x), (pos.getY(i) - fb.min.y) / (fb.max.y - fb.min.y));
+  const flag = document.createElement("canvas"); flag.width = 96; flag.height = 32;
+  const fctx = flag.getContext("2d");
+  [["#a9c6ff", 0], ["#ffffff", 32], ["#ffb3bd", 64]].forEach(([col, x]) => { fctx.fillStyle = col; fctx.fillRect(x, 0, 32, 32); });
+  const faceMesh = new THREE.Mesh(face, new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(flag) }));
+  faceMesh.position.z = hg.boundingBox.max.z + 0.01; heart.add(faceMesh);
+  heart.position.set(0, 2.3, -3.2); stage.add(heart);
+
+  // Mimi, o macaron de boina
+  const mascot = new THREE.Group(); const body = new THREE.Group(); mascot.add(body); stage.add(mascot);
+  const shellMat = toon(0xffb3cf), creamMat = toon(0xfff6e6), dark = new THREE.MeshBasicMaterial({ color: 0x4a3355 });
+  const shellGeo = new THREE.SphereGeometry(1, 40, 28);
+  const bottom = new THREE.Mesh(shellGeo, shellMat); bottom.scale.set(1, 0.42, 1); bottom.position.y = -0.42; body.add(bottom);
+  const cream = new THREE.Mesh(new THREE.CylinderGeometry(0.93, 0.93, 0.3, 40), creamMat); cream.position.y = -0.02; body.add(cream);
+  const TOP_C = 0.42, TOP_B = 0.6;
+  const top = new THREE.Mesh(shellGeo, shellMat); top.scale.set(1, TOP_B, 1); top.position.y = TOP_C; body.add(top);
+  const onShell = (x, y, lift) => {
+    const yy = (y - TOP_C) / TOP_B; const z = Math.sqrt(Math.max(0, 1 - x * x - yy * yy));
+    const n = new THREE.Vector3(x, yy / TOP_B, z).normalize();
+    return { p: new THREE.Vector3(x, y, z).addScaledVector(n, lift || 0.005), n };
+  };
+  const place = (mesh, x, y, lift) => { const s = onShell(x, y, lift); mesh.position.copy(s.p); mesh.lookAt(s.p.clone().add(s.n)); body.add(mesh); return mesh; };
+  const eyes = [], happyEyes = [];
+  [-0.33, 0.33].forEach((x) => {
+    const e = new THREE.Group();
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.12, 20, 14), dark); ball.scale.z = 0.45; e.add(ball);
+    const hi = new THREE.Mesh(new THREE.CircleGeometry(0.04, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); hi.position.set(0.035, 0.04, 0.06); e.add(hi);
+    eyes.push(place(e, x, 0.62, 0.0));
+    const he = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.028, 8, 20, Math.PI), dark); he.visible = false;
+    happyEyes.push(place(he, x, 0.6, 0.01));
+  });
+  const blushMat = new THREE.MeshBasicMaterial({ color: 0xff7fae, transparent: true, opacity: 0.55 });
+  [-0.58, 0.58].forEach((x) => { const b = place(new THREE.Mesh(new THREE.CircleGeometry(0.13, 20), blushMat), x, 0.42, 0.01); b.scale.y = 0.6; });
+  const smile = place(new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.026, 8, 20, Math.PI), dark), 0, 0.38, 0.01);
+  smile.rotateZ(Math.PI);
+  const openMouth = place(new THREE.Mesh(new THREE.CircleGeometry(0.13, 20, Math.PI, Math.PI), new THREE.MeshBasicMaterial({ color: 0xc23f6e })), 0, 0.43, 0.012);
+  openMouth.visible = false;
+  const frown = place(new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.026, 8, 20, Math.PI), dark), 0, 0.3, 0.01);
+  frown.visible = false;
+  const beret = new THREE.Group();
+  const beretTop = new THREE.Mesh(new THREE.SphereGeometry(0.62, 28, 16), toon(0x8b9cf0)); beretTop.scale.set(1, 0.32, 1); beret.add(beretTop);
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.16, 10), toon(0x8b9cf0)); stem.position.y = 0.22; beret.add(stem);
+  beret.position.set(0.12, 1.04, -0.05); beret.rotation.z = -0.28; body.add(beret);
+  const shadow = new THREE.Mesh(new THREE.CircleGeometry(1, 32), new THREE.MeshBasicMaterial({ color: 0x8a6fa8, transparent: true, opacity: 0.18 }));
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = -1.015; stage.add(shadow);
+  mascot.position.y = 0.05;
+
+  // feixes de luz do palco
+  const beams = [];
+  [0xffb3d1, 0xbfe0ff, 0xfff1a8, 0xc8f5e0].forEach((col, i) => {
+    const g = new THREE.ConeGeometry(1.3, 13, 28, 1, true); g.translate(0, -6.5, 0);
+    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+    m.position.set((i - 1.5) * 3.4, 8, -4.5); scene.add(m); beams.push(m);
+  });
+
+  // estrelas, corações e bolinhas flutuando
+  function starShape(r1, r2) {
+    const s = new THREE.Shape();
+    for (let i = 0; i < 10; i++) { const r = i % 2 ? r2 : r1, a = (i / 10) * Math.PI * 2 + Math.PI / 2; i ? s.lineTo(Math.cos(a) * r, Math.sin(a) * r) : s.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
+    s.closePath(); return s;
+  }
+  const starGeo = new THREE.ExtrudeGeometry(starShape(0.32, 0.15), { depth: 0.06, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.05, bevelSegments: 3 }); starGeo.center();
+  const smallHeart = heartGeo(2); smallHeart.scale(0.025, 0.025, 0.025);
+  const ballGeo = new THREE.SphereGeometry(0.2, 18, 12);
+  const pastel = [0xffb8d2, 0xd4c2ff, 0xb3ecd6, 0xc2e2ff, 0xfff1a8, 0xffd6b5];
+  const floaters = [];
+  for (let i = 0; i < (REDUCED ? 16 : 34); i++) {
+    const geo = [starGeo, smallHeart, ballGeo][i % 3];
+    const m = new THREE.Mesh(geo, toon(pastel[i % pastel.length]));
+    m.position.set(rand(-12, 12), rand(-6, 9), rand(-14, -3));
+    m.userData = { vy: rand(0.15, 0.45), spin: rand(-1, 1), sway: rand(0, 6) };
+    m.scale.setScalar(rand(0.7, 1.4)); scene.add(m); floaters.push(m);
+  }
+  const glitterGeo = new THREE.BufferGeometry(); const gp = [];
+  for (let i = 0; i < 260; i++) gp.push(rand(-16, 16), rand(-8, 12), rand(-18, -2));
+  glitterGeo.setAttribute("position", new THREE.Float32BufferAttribute(gp, 3));
+  const glitter = new THREE.Points(glitterGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.09, transparent: true, opacity: 0.85 }));
+  scene.add(glitter);
+
+  // confetes (InstancedMesh)
+  const N = REDUCED ? 140 : 520;
+  const confetti = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.1, 0.17), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }), N);
+  confetti.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  const cCols = ["#ff8fb8", "#ffc8dd", "#a9c6ff", "#bde0fe", "#cdb4db", "#b9fbc0", "#fff3b0", "#ffd6a5", "#ffffff", "#ff6fa3"].map((c) => new THREE.Color(c));
+  const P = Array.from({ length: N }, (_, i) => ({ p: new THREE.Vector3(), v: new THREE.Vector3(), r: new THREE.Euler(), w: new THREE.Vector3(), life: 0, ph: Math.random() * 6 }));
+  const dummy = new THREE.Object3D();
+  for (let i = 0; i < N; i++) { confetti.setColorAt(i, cCols[i % cCols.length]); dummy.scale.setScalar(0); dummy.updateMatrix(); confetti.setMatrixAt(i, dummy.matrix); }
+  confetti.frustumCulled = false; scene.add(confetti);
+  let cursor = 0;
+  function burst(origin, count, spread, up) {
+    for (let k = 0; k < count; k++) {
+      const q = P[cursor]; cursor = (cursor + 1) % N;
+      q.p.copy(origin);
+      const a = Math.random() * Math.PI * 2, s = rand(0.3, 1) * spread;
+      q.v.set(Math.cos(a) * s, rand(0.6, 1.2) * up, Math.sin(a) * s * 0.6);
+      q.r.set(rand(0, 6), rand(0, 6), rand(0, 6)); q.w.set(rand(-9, 9), rand(-9, 9), rand(-9, 9));
+      q.life = rand(2.2, 3.4);
+    }
+  }
+  Stage.celebrate = (big) => {
+    const o = new THREE.Vector3(); mascot.getWorldPosition(o); o.y += 0.9;
+    burst(o, REDUCED ? 40 : (big ? 200 : 130), 4.2, 7.5);
+    if (!REDUCED) {
+      const w = Stage.halfWidth || 6;
+      burst(new THREE.Vector3(-w * 0.9, -3.5, 1), big ? 120 : 70, 1.8, 9.5);
+      burst(new THREE.Vector3(w * 0.9, -3.5, 1), big ? 120 : 70, 1.8, 9.5);
+    }
+  };
+  Stage.setReact = (type) => { Stage.react = { type, t: 0, dur: type === "happy" ? 1.1 : 0.9 }; };
+
+  function layout() {
+    const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    const wide = w / h > 1.15 && w > 760;
+    if (wide) { camera.position.set(0, 1.4, 10.5); stage.position.set(-2.9, -0.5, 0); stage.scale.setScalar(1); }
+    else { camera.position.set(0, 1.4, 12.5); stage.position.set(0, 2.55, 0); stage.scale.setScalar(w < 420 ? 0.72 : 0.85); }
+    camera.lookAt(0, 0.6, 0); camera.updateProjectionMatrix();
+    Stage.halfWidth = Math.tan(THREE.MathUtils.degToRad(22.5)) * camera.position.z * camera.aspect;
+  }
+  addEventListener("resize", layout); layout();
+
+  let last = performance.now(), blinkAt = 2;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; const time = now / 1000;
+    const beat = Music.beat(), ph = beat % 1, pulse = Math.pow(1 - ph, 3);
+    const R = Stage.react; R.t += dt; const active = R.type && R.t < R.dur, k = active ? R.t / R.dur : 1;
+
+    // mascote dançando no tempo da música
+    body.position.y = Math.abs(Math.sin(ph * Math.PI)) * 0.12;
+    body.scale.set(1 + pulse * 0.05, 1 - pulse * 0.06, 1 + pulse * 0.05);
+    mascot.position.y = 0.05; body.rotation.set(0, Math.sin(time * 0.7) * 0.28, Math.sin(time * 1.3) * 0.04);
+    if (active && R.type === "happy") {
+      mascot.position.y = 0.05 + Math.sin(k * Math.PI) * 1.3;
+      body.rotation.y = (1 - Math.pow(1 - k, 3)) * Math.PI * 2;
+    } else if (active && R.type === "sad") {
+      body.rotation.z = Math.sin(k * Math.PI * 6) * 0.16 * (1 - k);
+      body.position.y -= Math.sin(k * Math.PI) * 0.1;
+    }
+    const happy = active && R.type === "happy", sad = active && R.type === "sad";
+    eyes.forEach((e) => { e.visible = !happy; }); happyEyes.forEach((e) => { e.visible = happy; });
+    smile.visible = !happy && !sad; openMouth.visible = happy; frown.visible = sad;
+    blinkAt -= dt;
+    const blink = blinkAt < 0.12 && blinkAt > 0 ? 0.1 : 1; if (blinkAt <= 0) blinkAt = rand(2.2, 4.5);
+    eyes.forEach((e) => { e.scale.y = blink; });
+    const lift = mascot.position.y - 0.05; shadow.scale.setScalar(1 - Math.min(0.5, lift * 0.35)); shadow.material.opacity = 0.18 - Math.min(0.1, lift * 0.06);
+
+    heart.scale.setScalar(1 + pulse * 0.05); heart.rotation.y = Math.sin(time * 0.5) * 0.18;
+    ringMat.color.setHSL(0.93, 1, 0.78 + pulse * 0.12);
+    lights.forEach((b, i) => { b.visible = (Math.floor(beat * 2) + i) % 3 !== 0; });
+    beams.forEach((b, i) => { b.rotation.z = Math.sin(time * 0.6 + i * 1.7) * (REDUCED ? 0.1 : 0.45); b.rotation.x = Math.cos(time * 0.4 + i) * 0.15; b.material.opacity = 0.05 + pulse * 0.04; });
+    floaters.forEach((m) => {
+      const u = m.userData; m.position.y += u.vy * dt * (REDUCED ? 0.4 : 1); m.position.x += Math.sin(time * 0.5 + u.sway) * 0.004;
+      m.rotation.y += u.spin * dt; m.rotation.x += u.spin * 0.5 * dt;
+      if (m.position.y > 10) m.position.y = -7;
+    });
+    glitter.rotation.y = Math.sin(time * 0.05) * 0.2; glitter.material.opacity = 0.6 + Math.sin(time * 3) * 0.25;
+
+    // confetes: gravidade, resistência do ar e balanço
+    for (let i = 0; i < N; i++) {
+      const q = P[i];
+      if (q.life > 0) {
+        q.life -= dt; q.v.y -= 5.2 * dt; q.v.multiplyScalar(1 - 1.6 * dt);
+        q.v.x += Math.sin(time * 6 + q.ph) * 0.6 * dt;
+        q.p.addScaledVector(q.v, dt);
+        q.r.x += q.w.x * dt; q.r.y += q.w.y * dt; q.r.z += q.w.z * dt;
+        dummy.position.copy(q.p); dummy.rotation.copy(q.r); dummy.scale.setScalar(Math.min(1, q.life * 2));
+      } else dummy.scale.setScalar(0);
+      dummy.updateMatrix(); confetti.setMatrixAt(i, dummy.matrix);
+    }
+    confetti.instanceMatrix.needsUpdate = true;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  Stage.ok = true;
+}
+try { initStage(); } catch (e) {
+  console.warn("Palco 3D indisponível:", e);
+  $("#stage3d").replaceWith(Object.assign(document.createElement("div"), { className: "fallback-bg" }));
+}
+
+// ---------- Estado do jogo ----------
+const G = { key: null, queue: [], i: 0, score: 0, streak: 0, maxStreak: 0, correct: 0, results: [], answered: false, t0: 0, shownOpts: [] };
+const best = store.get("gpds-best", {});
+const panel = $("#panel");
+const mult = () => 1 + Math.min(2, Math.floor(G.streak / 3)) * 0.5;
+
+function hud() {
+  $("#hudScore").textContent = G.score.toLocaleString("pt-BR");
+  $("#hudCombo").textContent = "x" + String(mult()).replace(".", ",");
+}
+function pop(text, sad) {
+  const el = $("#pop"); el.textContent = text; el.className = sad ? "sad" : "";
+  void el.offsetWidth; el.classList.add("show");
+}
+function toast(text) {
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = text;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2500);
+}
+function voiceNoteHTML() {
+  if (Voice.ok) return '<p class="voice-note ok" id="voiceNote">Voz francesa pronta: <b>' + esc(Voice.v.name) + '</b>. Use fones para ouvir melhor.</p>';
+  return '<p class="voice-note" id="voiceNote">Seu navegador não tem voz francesa instalada. As perguntas de escuta vão mostrar a transcrição AFI. Para ouvir, use Chrome ou Edge, ou instale a voz “Français” no sistema.</p>';
+}
+
+// ---------- Telas ----------
+function renderHome() {
+  G.key = null; G.score = 0; G.streak = 0; hud();
+  const cards = Object.entries(ROUNDS).map(([k, r]) => {
+    const b = best[k];
+    return '<button class="round ' + r.color + '" data-round="' + k + '">' +
+      '<span class="num">' + esc(r.num) + '</span><span class="rname">' + esc(r.name) + '</span>' +
+      '<span class="topics">' + esc(r.topics) + '</span>' +
+      '<span class="best">' + (b ? "Recorde: " + b.toLocaleString("pt-BR") + " pts" : ROUND_LEN[k] + " perguntas") + '</span></button>';
+  }).join("");
+  panel.innerHTML = '<section class="card">' +
+    '<span class="eyebrow">Francês para brasileiros · Pré-A1 e A1</span>' +
+    '<h1 class="title">Grand Prix <span>des Sons</span></h1>' +
+    '<p class="lead">Coucou ! Eu sou a Mimi, o macaron de boina. Ouça, escolha e ganhe pontos do júri treinando os sons das Aulas 01 a 03.</p>' +
+    '<div class="rounds">' + cards + '</div>' +
+    '<ul class="howto"><li>100 pontos por acerto</li><li>bônus de rapidez</li><li>combo de até x2</li><li>5 seguidas: mudança de tom!</li></ul>' +
+    voiceNoteHTML() + '</section>';
+  panel.querySelectorAll("[data-round]").forEach((b) => b.addEventListener("click", () => startRound(b.dataset.round)));
+}
+
+function startRound(key) {
+  Music.start();
+  Music.transpose = 0;
+  Object.assign(G, { key, i: 0, score: 0, streak: 0, maxStreak: 0, correct: 0, results: [], answered: false });
+  G.queue = shuffle(ROUNDS[key].items).slice(0, ROUND_LEN[key]);
+  hud(); renderQuestion();
+}
+
+function renderQuestion() {
+  const it = G.queue[G.i]; G.answered = false;
+  G.shownOpts = shuffle(it.opts);
+  const dots = G.queue.map((_, j) => {
+    const r = G.results[j]; return '<span class="dot' + (j === G.i ? " now" : r == null ? "" : r.ok ? " ok" : " bad") + '"></span>';
+  }).join("");
+  let prompt = "";
+  if (it.type === "listen") {
+    prompt = Voice.ok
+      ? '<div class="listen-row"><button class="big-listen" id="listenBtn" aria-label="Ouvir a palavra">' + SPEAKER + 'Ouvir</button>' +
+        '<button class="mini-btn" id="slowBtn">devagar</button></div><p class="q-text">Qual palavra você ouviu?</p>'
+      : '<p class="q-text">Qual palavra se pronuncia <span class="ipa">' + esc(it.ipa) + '</span>?</p>';
+  } else if (it.type === "word") {
+    prompt = '<div class="word-card">' + esc(it.word) + (Voice.ok ? '<button class="say-btn" id="sayBtn" aria-label="Ouvir">' + SPEAKER + '</button>' : "") + '</div>' +
+      '<p class="q-text">' + esc(it.q) + '</p>';
+  } else {
+    prompt = '<p class="q-text">' + esc(it.q) + '</p>';
+  }
+  const n = G.shownOpts.length, longest = Math.max(...G.shownOpts.map((o) => o.length));
+  const cols = longest > 16 ? "" : n === 3 ? (longest <= 9 ? " three" : "") : " two";
+  panel.innerHTML = '<section class="card">' +
+    '<div class="q-top"><span class="chip">' + esc(ROUNDS[G.key].num) + ' · ' + esc(it.tag) + '</span><div class="dots" aria-label="Pergunta ' + (G.i + 1) + ' de ' + G.queue.length + '">' + dots + '</div></div>' +
+    '<div class="prompt">' + prompt + '</div>' +
+    '<div class="opts' + cols + '">' + G.shownOpts.map((o, j) =>
+      '<button class="opt" data-i="' + j + '"><span class="k">' + (j + 1) + '</span><span class="t">' + esc(o) + '</span></button>').join("") + '</div>' +
+    '<div id="fbSlot"></div></section>';
+  panel.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => answer(+b.dataset.i)));
+  const lb = $("#listenBtn");
+  if (lb) {
+    const play = (slow) => { lb.classList.add("playing"); Voice.say(it.say, slow, () => lb.classList.remove("playing")); };
+    lb.addEventListener("click", () => play(false));
+    $("#slowBtn").addEventListener("click", () => play(true));
+    setTimeout(() => play(false), 350);
+  }
+  const sb = $("#sayBtn"); if (sb) sb.addEventListener("click", () => Voice.say(it.say));
+  G.t0 = performance.now();
+}
+
+function answer(j) {
+  if (G.answered) return; G.answered = true;
+  const it = G.queue[G.i], choice = G.shownOpts[j], ok = choice === it.answer;
+  const secs = (performance.now() - G.t0) / 1000 - (it.type === "listen" && Voice.ok ? 1.5 : 0);
+  let pts = 0, speed = 0;
+  panel.querySelectorAll(".opt").forEach((b, k) => {
+    b.disabled = true;
+    const o = G.shownOpts[k];
+    if (o === it.answer) b.classList.add("right"); else if (k === j) b.classList.add("wrong"); else b.classList.add("dim");
+  });
+  if (ok) {
+    G.streak++; G.correct++; G.maxStreak = Math.max(G.maxStreak, G.streak);
+    speed = Math.max(0, Math.min(50, Math.round(50 * (1 - (secs - 2) / 10))));
+    pts = Math.round((100 + speed) * mult()); G.score += pts;
+    Music.win(); Stage.ok && Stage.setReact("happy"); Stage.ok && Stage.celebrate(G.streak % 5 === 0);
+    const praise = ["Très bien !", "Bravo !", "Magnifique !", "Parfait !", "Super !", "Excellent !", "Génial !"];
+    pop(G.streak >= 5 && G.streak % 5 === 0 ? "Douze points !" : praise[Math.floor(Math.random() * praise.length)]);
+    if (G.streak % 5 === 0) { Music.transpose++; Music.fanfare(); toast("Mudança de tom! " + G.streak + " acertos seguidos"); }
+  } else {
+    G.streak = 0; Music.lose(); Stage.ok && Stage.setReact("sad");
+    pop(["Presque !", "Oh là là…", "Pas grave !", "Encore !"][Math.floor(Math.random() * 4)], true);
+  }
+  G.results[G.i] = { ok, it };
+  hud();
+  const ipa = it.ipa ? ' <span class="ipa">' + esc(it.ipa) + '</span>' : "";
+  const sayText = it.say || "";
+  $("#fbSlot").innerHTML = '<div class="feedback ' + (ok ? "ok" : "bad") + '">' +
+    '<div class="fb-head"><span class="fb-title">' + (ok ? "Acertou!" : "Quase!") + '</span>' +
+    (ok ? '<span class="fb-pts">+' + pts + ' pts' + (speed ? " · rapidez +" + speed : "") + (mult() > 1 ? " · combo" : "") + '</span>' : '<span class="fb-pts">combo zerado</span>') + '</div>' +
+    '<div class="fb-answer">Resposta: ' + esc(it.answer) + ipa +
+    (Voice.ok && sayText ? '<button class="say-btn" id="fbSay" aria-label="Ouvir a resposta">' + SPEAKER + '</button>' : "") + '</div>' +
+    '<p class="fb-tip">' + esc(it.tip) + '</p></div>' +
+    '<div class="actions"><button class="cta" id="nextBtn">' + (G.i + 1 < G.queue.length ? "Próxima" : "Ver o placar do júri") + '</button></div>';
+  const fs = $("#fbSay"); if (fs) fs.addEventListener("click", () => Voice.say(sayText));
+  if (!ok && Voice.ok && sayText) setTimeout(() => Voice.say(sayText), 500);
+  $("#nextBtn").addEventListener("click", next);
+  $("#nextBtn").focus({ preventScroll: true });
+  $("#fbSlot").scrollIntoView({ block: "nearest", behavior: REDUCED ? "auto" : "smooth" });
+}
+
+function next() {
+  if (Voice.supported) speechSynthesis.cancel();
+  G.i++;
+  if (G.i < G.queue.length) renderQuestion(); else renderResults();
+}
+
+function renderResults() {
+  const total = G.queue.length, acc = G.correct / total;
+  const jury = acc >= 0.9 ? [12, "Douze points !", "O júri está encantado. Sua pronúncia brilha no palco!"]
+    : acc >= 0.75 ? [10, "Dix points !", "Linda apresentação. Revise os itens abaixo e volte para os 12 pontos."]
+    : acc >= 0.6 ? [8, "Huit points", "Bom caminho! Repita os pares em voz alta e tente de novo."]
+    : acc >= 0.4 ? [5, "Cinq points", "O público gostou. Ouça de novo cada som e grave sua voz."]
+    : [0, "Nul point…", "Pas grave ! Até no Eurovision isso acontece. Releia a aula e tente outra vez."];
+  const k = G.key, isBest = G.score > (best[k] || 0);
+  if (isBest) { best[k] = G.score; store.set("gpds-best", best); }
+  if (jury[0] >= 10 && Stage.ok) { Stage.setReact("happy"); Stage.celebrate(true); setTimeout(() => Stage.celebrate(true), 600); }
+  if (jury[0] >= 10) Music.fanfare();
+  const missed = G.results.filter((r) => !r.ok);
+  const review = missed.length ? '<h3 class="eyebrow">Para revisar</h3><ul class="review">' + missed.map((r, i) =>
+    '<li>' + (Voice.ok && r.it.say ? '<button class="say-btn" data-say="' + i + '" aria-label="Ouvir">' + SPEAKER + '</button>' : "") +
+    '<div><p><b>' + esc(r.it.word || r.it.q || r.it.opts.join(" × ")) + '</b> → ' + esc(r.it.answer) + (r.it.ipa ? ' <span class="ipa">' + esc(r.it.ipa) + '</span>' : "") + '</p><p class="muted">' + esc(r.it.tip) + '</p></div></li>').join("") + '</ul>'
+    : '<p class="lead">Nenhum erro nesta manche. Parfait !</p>';
+  panel.innerHTML = '<section class="card">' +
+    '<span class="eyebrow">' + esc(ROUNDS[k].num) + ' · ' + esc(ROUNDS[k].name) + ' · resultado</span>' +
+    '<div class="jury"><div class="lbl">O júri dá</div><div class="pts">' + jury[0] + '</div><div class="lbl">' + jury[1] + '</div></div>' +
+    '<p class="lead">' + jury[2] + '</p>' +
+    '<div class="stats"><div class="stat"><b>' + G.score.toLocaleString("pt-BR") + '</b><span>' + (isBest ? "novo recorde!" : "pontos") + '</span></div>' +
+    '<div class="stat"><b>' + G.correct + '/' + total + '</b><span>acertos</span></div>' +
+    '<div class="stat"><b>' + G.maxStreak + '</b><span>maior sequência</span></div></div>' +
+    review +
+    '<div class="actions"><button class="cta soft" id="homeBtn">Escolher manche</button><button class="cta" id="againBtn">Jogar de novo</button></div></section>';
+  panel.querySelectorAll("[data-say]").forEach((b) => b.addEventListener("click", () => Voice.say(missed[+b.dataset.say].it.say)));
+  $("#homeBtn").addEventListener("click", renderHome);
+  $("#againBtn").addEventListener("click", () => startRound(k));
+}
+
+// ---------- Controles ----------
+const musicBtn = $("#musicBtn");
+musicBtn.setAttribute("aria-pressed", String(Music.on));
+musicBtn.addEventListener("click", () => { Music.setOn(!Music.on); musicBtn.setAttribute("aria-pressed", String(Music.on)); if (Music.on) Music.start(); });
+addEventListener("keydown", (e) => {
+  if (!G.key || e.altKey || e.ctrlKey || e.metaKey) return;
+  const n = parseInt(e.key, 10);
+  if (!G.answered && n >= 1 && n <= G.shownOpts.length) { e.preventDefault(); answer(n - 1); }
+  else if (!G.answered && e.key === " " && $("#listenBtn")) { e.preventDefault(); $("#listenBtn").click(); }
+});
+
+renderHome();
+</script>
+</body>
+</html>
