@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Chrono Knight Arena · Chunking Royale</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="crowns enemy"><span class="lbl">Rival</span><span id="crownsEnemy">0</span>👑</div>
+    <div id="timer">3:00</div>
+    <div class="crowns player"><span id="crownsPlayer">0</span>👑<span class="lbl">Você</span></div>
+    <button id="btnPause" class="icon-btn" aria-label="Pausar">❚❚</button>
+  </header>
+
+  <main id="stage">
+    <canvas id="arena" aria-label="Arena do jogo"></canvas>
+  </main>
+
+  <footer id="hud">
+    <div id="handRow">
+      <div id="card" class="card">
+        <img src="../assets/chrono-knight.png" alt="">
+        <div class="card-cost">3</div>
+        <div class="card-name">Chrono Knight</div>
+      </div>
+      <div id="laneBtns">
+        <button class="lane-btn" data-lane="0">⬅ Pista esquerda</button>
+        <button class="lane-btn" data-lane="1">Pista direita ➡</button>
+      </div>
+      <button id="btnFreeze" class="freeze-btn" disabled>
+        <span class="freeze-ico">⏳</span>
+        <span>Time Freeze</span>
+        <span id="freezeCount" class="freeze-count">0</span>
+      </button>
+    </div>
+    <div id="elixirWrap">
+      <div id="elixirDrop">💧</div>
+      <div id="elixirBar"><div id="elixirFill"></div><div id="elixirTicks"></div></div>
+      <div id="elixirNum">5</div>
+    </div>
+    <div id="comboLine">Combo: <b id="comboNum">0</b> · Acertos: <b id="hitsNum">0</b> · Erros: <b id="missNum">0</b></div>
+  </footer>
+
+  <!-- Start screen -->
+  <section id="startScreen" class="overlay show">
+    <div class="panel start">
+      <img class="hero" src="../assets/chrono-knight.png" alt="Chrono Knight">
+      <p class="kicker">Chunking Royale</p>
+      <h1>Chrono Knight Arena</h1>
+      <p class="sub">Future Continuous × Future Perfect</p>
+      <ul class="rules">
+        <li><b>Como jogar:</b> toque na sua metade da arena (ou nos botões de pista) para enviar um Chrono Knight. Custa <b>3 elixir</b>.</li>
+        <li>Antes de entrar em campo, ele exige um <b>desafio de chunks</b>. Acertou → ele entra. Errou → o elixir é perdido.</li>
+        <li><span class="tag cont">AT / THIS TIME</span> → ação em andamento → <b>will be + -ing</b> (fotografia).</li>
+        <li><span class="tag perf">BY / BY THE TIME</span> → prazo final → <b>will have + particípio</b> (concluído).</li>
+        <li>3 acertos seguidos = <b>Time Boost</b> (cavaleiro mais rápido) + 1 carga de <b>Time Freeze</b> (congela os inimigos por 3 s).</li>
+        <li>Derrube torres: princesa = 1 👑 · rei = 3 👑 e vitória imediata. Partida de 3 minutos.</li>
+      </ul>
+      <button id="btnStart" class="big-btn">⚔️ Começar batalha</button>
+      <p class="credit">Material autoral ODU · Professor Diego Horta</p>
+    </div>
+  </section>
+
+  <!-- Challenge -->
+  <section id="challenge" class="overlay">
+    <div class="panel challenge">
+      <div class="ch-head">
+        <span id="chType" class="ch-type">Monte a frase</span>
+        <span class="ch-lane" id="chLane">Pista esquerda</span>
+      </div>
+      <p id="chPrompt" class="ch-prompt"></p>
+      <div id="chBody"></div>
+      <div id="chFeedback" class="ch-feedback"></div>
+      <div class="ch-actions">
+        <button id="chCheck" class="big-btn">Verificar</button>
+        <button id="chNext" class="big-btn hidden">Continuar ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pause -->
+  <section id="pauseScreen" class="overlay">
+    <div class="panel small">
+      <h2>Pausado</h2>
+      <button id="btnResume" class="big-btn">▶ Continuar</button>
+      <button id="btnQuit" class="big-btn ghost">Reiniciar</button>
+    </div>
+  </section>
+
+  <!-- End -->
+  <section id="endScreen" class="overlay">
+    <div class="panel end">
+      <h2 id="endTitle">Vitória!</h2>
+      <p id="endScore" class="end-score"></p>
+      <div class="stats">
+        <div><b id="stHits">0</b><span>acertos</span></div>
+        <div><b id="stMiss">0</b><span>erros</span></div>
+        <div><b id="stAcc">0%</b><span>precisão</span></div>
+        <div><b id="stCombo">0</b><span>maior combo</span></div>
+      </div>
+      <h3 id="missedTitle">Revise estas frases</h3>
+      <ul id="missedList"></ul>
+      <button id="btnAgain" class="big-btn">🔁 Jogar de novo</button>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
