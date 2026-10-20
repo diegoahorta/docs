@@ -36,6 +36,7 @@ export function save() {
 }
 // Com o servidor Python (tools/servidor.py) o progresso também fica salvo em arquivo.
 export async function syncFromServer() {
+  if (!location.protocol.startsWith("http")) return false;   // arquivo aberto direto do disco
   try {
     const r = await fetch("api/progresso", { cache: "no-store" });
     if (!r.ok || !(r.headers.get("content-type") || "").includes("json")) return false;

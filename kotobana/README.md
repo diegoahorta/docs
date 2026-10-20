@@ -66,6 +66,8 @@ python3 kotobana/tools/build_site.py   # dados/ -> site/js/vocab.js
 python3 kotobana/tools/servidor.py --aluno maria   # http://localhost:8000
 ```
 
+**Arquivo único:** `kotobana-dojo.html` tem o site inteiro (dados, CSS, JS e three.js embutidos). Abra com dois cliques, funciona offline. Para regenerar: `python3 kotobana/tools/build_single.py --three caminho/three.min.js` (sem `--three`, tenta baixar do cdnjs).
+
 Sem o servidor, o site também funciona aberto por qualquer servidor estático (o progresso fica só no navegador).
 
 | Área | O que o aluno faz |
