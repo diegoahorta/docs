@@ -3,6 +3,7 @@
 
 Uso:
     python3 tools/build.py                 # gera dist/mika-no-hospital.html
+    python3 tools/build.py --page flashcards.html   # gera dist/flashcards.html (só os flashcards)
     python3 tools/build.py --fragment      # sem <html>/<head>/<body> (para publicar como Artifact)
     python3 tools/build.py --serve         # abre um servidor local em http://localhost:8000
 
@@ -42,6 +43,7 @@ def fragment(html: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--page", default="index.html", help="página de origem (index.html ou flashcards.html)")
     ap.add_argument("--fragment", action="store_true")
     ap.add_argument("--serve", action="store_true")
     ap.add_argument("--port", type=int, default=8000)
@@ -55,10 +57,12 @@ def main():
             httpd.serve_forever()
         return
 
-    html = inline((ROOT / "index.html").read_text(encoding="utf-8"))
+    html = inline((ROOT / args.page).read_text(encoding="utf-8"))
     if args.fragment:
         html = fragment(html)
-    out = pathlib.Path(args.out) if args.out else ROOT / "dist" / ("artifact.html" if args.fragment else "mika-no-hospital.html")
+    stem = "mika-no-hospital" if args.page == "index.html" else pathlib.Path(args.page).stem
+    name = f"{stem}-artifact.html" if args.fragment else f"{stem}.html"
+    out = pathlib.Path(args.out) if args.out else ROOT / "dist" / name
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
     print(f"{out}  ({len(html.encode()) // 1024} KB)")

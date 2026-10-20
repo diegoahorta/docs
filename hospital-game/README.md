@@ -20,6 +20,7 @@ Jogo e flashcards em HTML5 para alunos de inglês A1, feitos a partir das aulas 
 ```bash
 python3 tools/build.py --serve        # abre http://localhost:8000
 python3 tools/build.py                # gera dist/mika-no-hospital.html (um arquivo só)
+python3 tools/build.py --page flashcards.html   # gera dist/flashcards.html (só os flashcards)
 ```
 
 ## Atualizar o vocabulário a partir das aulas (.docx)
@@ -35,6 +36,7 @@ O script lê as tabelas *English | Português | Exemplo* das aulas e gera `js/da
 | Arquivo | Função |
 | --- | --- |
 | `index.html`, `css/style.css` | página e visual em tons pastel (tema claro e escuro) |
+| `flashcards.html`, `js/flashcards.js` | página só de flashcards, com modo lista |
 | `js/app.js` | navegação, história, flashcards e mini-jogos |
 | `js/content.js` | roteiro da história e bancos de exercícios |
 | `js/characters.js` | personagens anime em SVG (Mika, Ren, Hana, Dr. Sato, Kai) |

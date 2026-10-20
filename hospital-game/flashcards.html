@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flashcards da Mika</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .fc-intro { display: flex; flex-direction: column; gap: 6px; }
+  .fc-intro h1 { font-size: clamp(28px, 5vw, 40px); }
+  .fc-intro p { margin: 0; color: var(--ink-soft); max-width: 40em; }
+  .word-list { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+  .word-list table { width: 100%; border-collapse: collapse; min-width: 620px; }
+  .word-list th { text-align: left; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .word-list td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .word-list tr:last-child td { border-bottom: 0; }
+  .card-mode { display: flex; flex-direction: column; gap: 22px; }
+</style>
+</head>
+<body>
+<canvas id="bg3d" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <span class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Flashcards da Mika</span>
+    </span>
+    <div class="hud" style="margin-left:auto">
+      <span class="stars" title="Estrelas conquistadas"><span class="star-ico" aria-hidden="true">★</span><b id="starCount">0</b></span>
+      <button id="soundBtn" class="icon-btn" aria-pressed="true" title="Som e voz">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="view">
+    <div class="fc-intro">
+      <p class="eyebrow">Inglês A1 · No hospital</p>
+      <h1>Saúde, bem-estar e sentimentos</h1>
+      <p>75 palavras das aulas: sentimentos, estado de saúde, sintomas, partes do corpo, o hospital e frases úteis. Vire o cartão, ouça a pronúncia e marque o que você já sabe.</p>
+    </div>
+
+    <div class="cards-head">
+      <div class="cat-chips" id="catChips" role="tablist" aria-label="Categorias"></div>
+      <div class="cards-tools">
+        <button class="chip-btn" id="dirBtn" aria-pressed="false">Inglês → Português</button>
+        <button class="chip-btn" id="shuffleBtn">Embaralhar</button>
+        <button class="chip-btn" id="listBtn" aria-pressed="false">Ver lista</button>
+      </div>
+    </div>
+
+    <div class="card-mode" id="cardMode">
+      <div class="card-area">
+        <button class="nav-arrow" id="prevCard" aria-label="Cartão anterior">‹</button>
+        <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Virar cartão">
+          <div class="fc-inner">
+            <div class="fc-face fc-front" id="fcFront"></div>
+            <div class="fc-face fc-back" id="fcBack"></div>
+          </div>
+        </div>
+        <button class="nav-arrow" id="nextCard" aria-label="Próximo cartão">›</button>
+      </div>
+      <p class="fc-hint">Toque no cartão (ou aperte espaço) para virar. Setas ← → trocam de cartão.</p>
+      <div class="fc-actions">
+        <button class="btn btn-soft-bad" id="againBtn">Revisar de novo</button>
+        <button class="btn btn-soft-ok" id="knowBtn">Já sei!</button>
+      </div>
+      <div class="fc-stats" id="fcStats"></div>
+    </div>
+
+    <div class="word-list" id="wordList" hidden></div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/content.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/scene3d.js"></script>
+<script src="js/flashcards.js"></script>
+</body>
+</html>
