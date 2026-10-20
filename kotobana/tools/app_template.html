@@ -1,0 +1,385 @@
+<title>Kotobana 1–6</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one study column — a header with the deck filters, the card as the page's single object, tabs for list and progress */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --fg: #18202b;
+  --muted: #5d6878;
+  --line: #d8dee7;
+  --ai: #24497a;          /* 藍 indigo, the accent */
+  --ai-soft: #e3ebf5;
+  --high: #24497a;        /* pitch: high morae */
+  --bad: #b3362b;
+  --ok: #2f7a4b;
+  --warn: #9a6a12;
+  --f-jp-display: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --f-jp: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --f-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --fg: #e6ebf2; --muted: #98a3b3; --line: #2b3442;
+    --ai: #8db2e3; --ai-soft: #1f2d42; --high: #8db2e3; --bad: #ec7d72; --ok: #6cc28d; --warn: #e0b45a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --fg: #e6ebf2; --muted: #98a3b3; --line: #2b3442;
+  --ai: #8db2e3; --ai-soft: #1f2d42; --high: #8db2e3; --bad: #ec7d72; --ok: #6cc28d; --warn: #e0b45a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--f-ui); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+h1 { font-family: var(--f-jp-display); font-weight: 700; font-size: 1.75rem; margin: 0; letter-spacing: .02em; text-wrap: balance; }
+h1 small { font-family: var(--f-ui); font-weight: 500; font-size: .9rem; color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+.tabs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.tabs button { border: 0; background: transparent; color: var(--muted); font: 500 .875rem var(--f-ui); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ai); color: var(--surface); }
+button:focus-visible, select:focus-visible, input:focus-visible, label:focus-within { outline: 2px solid var(--ai); outline-offset: 2px; }
+
+.filters { display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.row .lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); width: 84px; flex-shrink: 0; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  border-radius: 6px; padding: 3px 9px; font-size: .82rem; cursor: pointer; user-select: none; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip:has(input:checked) { background: var(--ai-soft); border-color: var(--ai); color: var(--ai); font-weight: 600; }
+select, input[type="search"] { font: inherit; font-size: .85rem; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+.summary { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* card */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 28px 24px 22px;
+  display: flex; flex-direction: column; gap: 18px; min-height: 340px; box-shadow: 0 1px 0 var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: .75rem; color: var(--muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.meta .stars { color: var(--warn); letter-spacing: .1em; }
+.meta .code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; min-width: 0; }
+.word { font-family: var(--f-jp-display); font-size: clamp(2.2rem, 8vw, 3.4rem); line-height: 1.2; overflow-wrap: anywhere; }
+.word.pt { font-family: var(--f-ui); font-size: clamp(1.5rem, 5vw, 2.1rem); font-weight: 500; }
+.answer { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; border-top: 1px dashed var(--line); padding-top: 16px; }
+.answer .pt { font-size: 1.25rem; font-weight: 500; }
+.answer .sub { font-size: .85rem; color: var(--muted); }
+.answer .note { font-family: var(--f-jp); font-size: .85rem; color: var(--muted); background: var(--bg); border-radius: 6px; padding: 6px 10px; }
+
+/* pitch accent: a line over high morae, a step down at the drop */
+.pitch { font-family: var(--f-jp); font-size: 1.35rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; }
+.pitch .variant { display: inline-flex; gap: 10px; }
+.pitch .w { display: inline-flex; }
+.pitch .m { padding-top: 4px; border-top: 2px solid transparent; }
+.pitch .m.h { border-top-color: var(--high); }
+.pitch .m.drop { border-right: 2px solid var(--high); }
+.pitch .m.rise { border-left: 2px solid var(--high); }
+.pitch .sep { color: var(--muted); font-size: .9rem; align-self: center; }
+.legend { font-size: .72rem; color: var(--muted); }
+
+.actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.actions.one { grid-template-columns: 1fr; }
+.btn { font: 600 .9rem var(--f-ui); border-radius: 8px; padding: 10px 6px; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--fg); display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.btn small { font-weight: 400; font-size: .7rem; color: var(--muted); }
+.btn.primary { background: var(--ai); border-color: var(--ai); color: var(--surface); }
+.btn.again { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.btn.easy { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); }
+.btn:hover { filter: brightness(.97); }
+.kbd { font-size: .72rem; color: var(--muted); text-align: center; }
+.empty { text-align: center; color: var(--muted); padding: 40px 0; }
+
+/* list */
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; position: sticky; top: 0; background: var(--surface); }
+td.jp { font-family: var(--f-jp); white-space: nowrap; }
+td.code { font-family: ui-monospace, Menlo, monospace; font-size: .75rem; color: var(--muted); white-space: nowrap; }
+td.st { font-size: .72rem; white-space: nowrap; }
+.pill { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: .7rem; font-weight: 600; }
+.pill.new { background: var(--bg); color: var(--muted); }
+.pill.learn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+.pill.known { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+
+/* progress */
+.books { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.book { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.book h3 { margin: 0; font-size: .95rem; display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+.book h3 span { color: var(--muted); font-weight: 400; font-size: .8rem; }
+.bar { height: 8px; border-radius: 4px; background: var(--bg); display: flex; overflow: hidden; }
+.bar i { display: block; height: 100%; }
+.bar .k { background: var(--ok); } .bar .l { background: var(--warn); }
+.lessons { display: flex; flex-wrap: wrap; gap: 3px; }
+.lessons span { width: 26px; height: 22px; border-radius: 4px; font-size: .65rem; display: grid; place-items: center; font-variant-numeric: tabular-nums; color: var(--fg); }
+.foot { font-size: .78rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.linkbtn { background: none; border: 0; color: var(--ai); font: inherit; cursor: pointer; padding: 0; text-decoration: underline; }
+@media (max-width: 480px) {
+  .row .lbl { width: 100%; }
+  .actions { grid-template-columns: repeat(2, 1fr); }
+  .card { padding: 22px 16px 18px; }
+}
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>ことばな <small>Kotobana 1–6 · <span id="total"></span> palavras</small></h1>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-estudar" aria-selected="true" data-view="estudar">Estudar</button>
+      <button role="tab" id="tab-lista" aria-selected="false" data-view="lista">Lista</button>
+      <button role="tab" id="tab-progresso" aria-selected="false" data-view="progresso">Progresso</button>
+    </div>
+  </header>
+
+  <section class="filters" aria-label="Filtros do baralho">
+    <div class="row"><span class="lbl">Livro</span><span id="f-books" class="row"></span></div>
+    <div class="row"><span class="lbl">Lição</span>
+      <select id="f-from" aria-label="Da lição"></select><span class="summary">até</span><select id="f-to" aria-label="Até a lição"></select></div>
+    <div class="row"><span class="lbl">Importância</span><span id="f-imp" class="row"></span></div>
+    <div class="row"><span class="lbl">Classe</span><span id="f-cls" class="row"></span></div>
+    <div class="row"><span class="lbl">Direção</span>
+      <label class="chip"><input type="radio" name="dir" id="dir-jp" value="jp" checked>日本語 → português</label>
+      <label class="chip"><input type="radio" name="dir" id="dir-pt" value="pt">português → 日本語</label>
+    </div>
+    <div class="summary" id="deckinfo"></div>
+  </section>
+
+  <main id="v-estudar"></main>
+  <main id="v-lista" hidden>
+    <div class="row" style="margin-bottom:10px"><input type="search" id="q" placeholder="Buscar: かな, kanji, romaji ou português" style="flex:1;min-width:0"></div>
+    <div class="tablewrap"><table><thead><tr><th>Código</th><th>Palavra</th><th>Leitura</th><th>Português</th><th>Classe</th><th>Acento</th><th>Estado</th></tr></thead><tbody id="tbody"></tbody></table></div>
+    <p class="summary" id="listinfo"></p>
+  </main>
+  <main id="v-progresso" hidden></main>
+
+  <div class="foot">
+    <span>O progresso fica salvo neste navegador.</span>
+    <button class="linkbtn" id="reset">Apagar progresso</button>
+    <span id="confirm" hidden>Apagar tudo? <button class="linkbtn" id="reset-yes">Sim, apagar</button> · <button class="linkbtn" id="reset-no">Cancelar</button></span>
+  </div>
+</div>
+
+<script>
+const COLS = ["id","no","palavra","leitura","romaji","pt","imp","cls","livro","licao","acento","acento_fonte","nota"];
+const RAW = __DATA__;
+const CLS = __CLASSES__;
+const BOOKS = {1:[1,15],2:[16,24],3:[25,33],4:[34,42],5:[43,51],6:[52,60]};
+const V = RAW.map(r => Object.fromEntries(COLS.map((c, i) => [c, r[i]])));
+const BYID = Object.fromEntries(V.map(v => [v.id, v]));
+const DAY = 86400000;
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("ktb:" + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("ktb:" + k, JSON.stringify(v)); } catch {} },
+};
+let srs = store.get("srs", {});        // id -> {iv: days, ef, due: ms, reps, lapses}
+let prefs = store.get("prefs", { books: [1], from: 1, to: 15, imp: [1,2,3], cls: Object.keys(CLS), dir: "jp" });
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+$("#total").textContent = V.length.toLocaleString("pt-BR");
+
+// ---------- filters ----------
+function chips(el, items, name, checked) {
+  el.innerHTML = items.map(([val, label]) =>
+    `<label class="chip"><input type="checkbox" name="${name}" id="${name}-${val}" value="${val}" ${checked.includes(isNaN(+val) ? val : +val) ? "checked" : ""}>${label}</label>`).join("");
+}
+chips($("#f-books"), Object.keys(BOOKS).map(b => [b, b]), "book", prefs.books);
+chips($("#f-imp"), [[3,"★★★"],[2,"★★"],[1,"★"]], "imp", prefs.imp);
+chips($("#f-cls"), Object.entries(CLS).map(([k, n]) => [k, n]), "cls", prefs.cls);
+for (const sel of [$("#f-from"), $("#f-to")])
+  sel.innerHTML = Array.from({length: 60}, (_, i) => `<option value="${i+1}">L${i+1}</option>`).join("");
+$("#f-from").value = prefs.from; $("#f-to").value = prefs.to;
+$(prefs.dir === "pt" ? "#dir-pt" : "#dir-jp").checked = true;
+
+function readFilters(changedBooks) {
+  const vals = n => [...document.querySelectorAll(`input[name=${n}]:checked`)].map(i => i.value);
+  prefs.books = vals("book").map(Number);
+  if (changedBooks && prefs.books.length) {
+    prefs.from = Math.min(...prefs.books.map(b => BOOKS[b][0]));
+    prefs.to = Math.max(...prefs.books.map(b => BOOKS[b][1]));
+    $("#f-from").value = prefs.from; $("#f-to").value = prefs.to;
+  } else { prefs.from = +$("#f-from").value; prefs.to = +$("#f-to").value; }
+  prefs.imp = vals("imp").map(Number);
+  prefs.cls = vals("cls");
+  prefs.dir = document.querySelector("input[name=dir]:checked").value;
+  store.set("prefs", prefs);
+  refresh();
+}
+document.querySelector(".filters").addEventListener("change", e => readFilters(e.target.name === "book"));
+
+function deck() {
+  const lo = Math.min(prefs.from, prefs.to), hi = Math.max(prefs.from, prefs.to);
+  return V.filter(v => prefs.books.includes(v.livro) && v.licao >= lo && v.licao <= hi
+    && prefs.imp.includes(v.imp || 1) && prefs.cls.includes(v.cls));
+}
+function state(id) {
+  const s = srs[id];
+  if (!s) return "new";
+  return s.iv >= 21 ? "known" : "learn";
+}
+
+// ---------- pitch accent rendering ----------
+const SMALL = new Set("ゃゅょぁぃぅぇぉゎャュョァィゥェォヮ");
+function moraSplit(s) {
+  const out = [];
+  for (const ch of s) {
+    if (SMALL.has(ch) && out.length) out[out.length - 1] += ch; else out.push(ch);
+  }
+  return out;
+}
+function pitchWord(tok) {
+  // tok like "かんご↓し", "はな→", "～の", "（お）すし"
+  const clean = tok.replace(/[（）()～…。、]/g, "");
+  if (!clean) return `<span class="w">${esc(tok)}</span>`;
+  const flat = clean.includes("→"), dropAt = clean.includes("↓") ? moraSplit(clean.split("↓")[0]).length : null;
+  const m = moraSplit(clean.replace(/[↓→]/g, ""));
+  if (!flat && dropAt === null) return `<span class="w">${m.map(x => `<span class="m">${esc(x)}</span>`).join("")}</span>`;
+  const n = flat ? 0 : dropAt;
+  return `<span class="w">${m.map((x, i) => {
+    const k = i + 1;
+    const high = n === 0 ? k > 1 : n === 1 ? k === 1 : (k > 1 && k <= n);
+    const cls = ["m"]; if (high) cls.push("h");
+    if (n > 0 && k === n) cls.push("drop");
+    if (high && k === 2) cls.push("rise");
+    return `<span class="${cls.join(" ")}">${esc(x)}</span>`;
+  }).join("")}</span>`;
+}
+function pitchHTML(raw, fallback) {
+  if (!raw) return `<div class="pitch">${esc(fallback)}</div>`;
+  const vars = String(raw).split(/\s*[/／]\s*/).map(v =>
+    `<span class="variant">${v.split(/[ 　]+/).filter(Boolean).map(pitchWord).join("")}</span>`);
+  return `<div class="pitch">${vars.join('<span class="sep">ou</span>')}</div>`;
+}
+
+// ---------- SRS (SM-2 simplificado) ----------
+function grade(id, q) { // q: 0 errei, 1 difícil, 2 bom, 3 fácil
+  const s = srs[id] || { iv: 0, ef: 2.5, reps: 0, lapses: 0 };
+  if (q === 0) { s.reps = 0; s.lapses++; s.iv = 0; s.ef = Math.max(1.3, s.ef - 0.2); s.due = Date.now() + 60 * 1000; }
+  else {
+    s.ef = Math.max(1.3, s.ef + [0, -0.15, 0, 0.15][q]);
+    s.iv = s.reps === 0 ? [0, 1, 1, 3][q] : s.reps === 1 ? [0, 3, 4, 7][q] : Math.round(s.iv * s.ef * [0, 0.8, 1, 1.3][q]);
+    s.reps++; s.due = Date.now() + s.iv * DAY;
+  }
+  srs[id] = s; store.set("srs", srs);
+}
+function preview(id, q) {
+  const s = srs[id] || { iv: 0, ef: 2.5, reps: 0 };
+  if (q === 0) return "1 min";
+  const ef = Math.max(1.3, s.ef + [0, -0.15, 0, 0.15][q]);
+  const iv = s.reps === 0 ? [0,1,1,3][q] : s.reps === 1 ? [0,3,4,7][q] : Math.round(s.iv * ef * [0,0.8,1,1.3][q]);
+  return iv >= 30 ? Math.round(iv / 30) + " mês" + (iv >= 60 ? "es" : "") : iv + (iv === 1 ? " dia" : " dias");
+}
+
+let current = null, shown = false, sessionDone = 0;
+function nextCard(d) {
+  const now = Date.now();
+  const due = d.filter(v => srs[v.id] && srs[v.id].due <= now).sort((a, b) => srs[a.id].due - srs[b.id].due);
+  if (due.length) return due[0];
+  // novas: importância maior primeiro, depois ordem das lições
+  const fresh = d.filter(v => !srs[v.id]).sort((a, b) => (b.imp || 0) - (a.imp || 0) || a.licao - b.licao || a.no - b.no);
+  return fresh[0] || null;
+}
+
+function renderStudy() {
+  const d = deck();
+  const now = Date.now();
+  const due = d.filter(v => srs[v.id] && srs[v.id].due <= now).length;
+  const nw = d.filter(v => !srs[v.id]).length;
+  $("#deckinfo").textContent = `${d.length} palavras no baralho · ${due} para revisar · ${nw} novas · ${sessionDone} respondidas nesta sessão`;
+  if (!current || !d.includes(current)) { current = nextCard(d); shown = false; }
+  const el = $("#v-estudar");
+  if (!current) {
+    el.innerHTML = `<div class="card"><div class="empty">${d.length ? "Nada para revisar agora. Volte mais tarde ou amplie o filtro." : "Nenhuma palavra com esses filtros."}</div></div>`;
+    return;
+  }
+  const v = current, st = state(v.id);
+  const front = prefs.dir === "jp"
+    ? `<div class="word">${esc(v.palavra)}</div>`
+    : `<div class="word pt">${esc(v.pt)}</div><div class="sub" style="color:var(--muted);font-size:.85rem">${esc(CLS[v.cls])}</div>`;
+  const back = `<div class="answer">
+      ${prefs.dir === "pt" ? `<div class="word">${esc(v.palavra)}</div>` : `<div class="pt">${esc(v.pt)}</div>`}
+      ${pitchHTML(v.acento_fonte, v.leitura)}
+      <div class="legend">linha = tom alto · degrau = queda do acento · ${esc(v.acento)}</div>
+      <div class="sub">${esc(v.romaji)} · ${esc(CLS[v.cls])}</div>
+      ${v.nota ? `<div class="note">${esc(v.nota)}</div>` : ""}
+    </div>`;
+  el.innerHTML = `<div class="card">
+    <div class="meta"><span class="code">${esc(v.id)}</span><span>Livro ${v.livro ?? "?"} · Lição ${v.licao ?? "?"}</span>
+      <span class="stars">${"★".repeat(v.imp || 0)}</span><span class="pill ${st}">${{new:"nova",learn:"aprendendo",known:"memorizada"}[st]}</span></div>
+    <div class="front">${front}</div>
+    ${shown ? back : ""}
+    ${shown
+      ? `<div class="actions">${["Errei","Difícil","Bom","Fácil"].map((t, q) =>
+          `<button class="btn ${["again","","","easy"][q]}" data-q="${q}">${t}<small>${preview(v.id, q)}</small></button>`).join("")}</div>
+         <div class="kbd">Teclas 1–4</div>`
+      : `<div class="actions one"><button class="btn primary" id="show">Mostrar resposta</button></div><div class="kbd">Espaço</div>`}
+  </div>`;
+}
+$("#v-estudar").addEventListener("click", e => {
+  if (e.target.closest("#show")) { shown = true; renderStudy(); return; }
+  const b = e.target.closest("[data-q]");
+  if (b) answer(+b.dataset.q);
+});
+function answer(q) { grade(current.id, q); sessionDone++; current = null; renderStudy(); }
+document.addEventListener("keydown", e => {
+  if ($("#v-estudar").hidden || e.target.matches("input,select,textarea")) return;
+  if (!shown && (e.key === " " || e.key === "Enter")) { e.preventDefault(); if (current) { shown = true; renderStudy(); } }
+  else if (shown && "1234".includes(e.key) && e.key) answer(+e.key - 1);
+});
+
+// ---------- list ----------
+function norm(s) { return String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+function renderList() {
+  const q = norm($("#q").value.trim());
+  const rows = (q ? V.filter(v => [v.palavra, v.leitura, v.romaji, v.pt, v.id].some(f => norm(f).includes(q))) : deck());
+  const lim = rows.slice(0, 400);
+  $("#tbody").innerHTML = lim.map(v => {
+    const st = state(v.id);
+    return `<tr><td class="code">${esc(v.id)}</td><td class="jp">${esc(v.palavra)}</td><td class="jp">${esc(v.leitura)}</td><td>${esc(v.pt)}</td><td>${esc(v.cls)}</td><td class="code">${esc(v.acento)}</td><td class="st"><span class="pill ${st}">${{new:"nova",learn:"aprendendo",known:"memorizada"}[st]}</span></td></tr>`;
+  }).join("");
+  $("#listinfo").textContent = (q ? `${rows.length} resultados em todo o glossário` : `${rows.length} palavras no baralho filtrado`) + (rows.length > 400 ? " · mostrando as 400 primeiras" : "");
+}
+$("#q").addEventListener("input", renderList);
+
+// ---------- progress ----------
+function renderProgress() {
+  const html = Object.keys(BOOKS).map(b => {
+    const words = V.filter(v => v.livro === +b);
+    const k = words.filter(v => state(v.id) === "known").length, l = words.filter(v => state(v.id) === "learn").length;
+    const [a, z] = BOOKS[b];
+    const lessons = Array.from({length: z - a + 1}, (_, i) => a + i).map(ls => {
+      const w = words.filter(v => v.licao === ls); if (!w.length) return "";
+      const seen = w.filter(v => srs[v.id]).length / w.length;
+      return `<span title="Lição ${ls}: ${Math.round(seen*100)}% estudada" style="background:color-mix(in srgb, var(--ai) ${Math.round(seen*85)+6}%, var(--bg));${seen>.55?"color:var(--surface)":""}">${ls}</span>`;
+    }).join("");
+    return `<div class="book"><h3>Livro ${b} <span>${k + l} / ${words.length}</span></h3>
+      <div class="bar"><i class="k" style="width:${k/words.length*100}%"></i><i class="l" style="width:${l/words.length*100}%"></i></div>
+      <div class="summary">${k} memorizadas · ${l} aprendendo · ${words.length - k - l} novas</div>
+      <div class="lessons">${lessons}</div></div>`;
+  }).join("");
+  $("#v-progresso").innerHTML = `<div class="books">${html}</div>
+    <p class="summary">“Memorizada” = intervalo de revisão de 21 dias ou mais. Cor das lições = parte já estudada.</p>`;
+}
+
+// ---------- views ----------
+let view = "estudar";
+function refresh() { ({ estudar: renderStudy, lista: renderList, progresso: renderProgress })[view](); if (view !== "estudar") renderStudyInfo(); }
+function renderStudyInfo() { const d = deck(); $("#deckinfo").textContent = `${d.length} palavras no baralho`; }
+function setView(v) {
+  view = v;
+  for (const t of document.querySelectorAll("[role=tab]")) t.setAttribute("aria-selected", t.dataset.view === v);
+  for (const k of ["estudar", "lista", "progresso"]) $("#v-" + k).hidden = k !== v;
+  refresh();
+}
+document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if (b) setView(b.dataset.view); });
+$("#reset").addEventListener("click", () => { $("#confirm").hidden = false; });
+$("#reset-no").addEventListener("click", () => { $("#confirm").hidden = true; });
+$("#reset-yes").addEventListener("click", () => { srs = {}; store.set("srs", srs); $("#confirm").hidden = true; current = null; refresh(); });
+const h = location.hash.slice(1); setView(["lista", "progresso"].includes(h) ? h : "estudar");
+</script>
