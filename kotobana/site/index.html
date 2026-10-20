@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kotobana Dojo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#inicio"><span class="kanji">言花</span><span>Kotobana Dojo</span></a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#aprender" data-view="aprender">Aprender</a>
+      <a href="#estudar" data-view="estudar">Estudar</a>
+      <a href="#memorizar" data-view="memorizar">Memorizar</a>
+      <a href="#jogar" data-view="jogar">Jogar</a>
+      <a href="#progresso" data-view="progresso">Progresso</a>
+    </nav>
+    <div class="xpbox" title="Nível e pontos de experiência">
+      <span class="lvl">Nv <b id="lvl">1</b></span>
+      <span class="xpbar"><i id="xpfill"></i></span>
+      <span class="streak" id="streak" title="Dias seguidos"></span>
+    </div>
+  </div>
+</header>
+
+<main id="app" class="wrap"></main>
+<div id="toasts" aria-live="polite"></div>
+
+<script src="js/vocab.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

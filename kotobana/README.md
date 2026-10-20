@@ -10,7 +10,10 @@ Análise, codificação e mapa das **2.094 palavras** do glossário oficial *Kot
 | `dados/estatisticas.json` | Contagens, inconsistências da fonte e homógrafos |
 | `MAPA.md` | Mapa completo: livro → lição → palavras (★★★ primeiro) |
 | `estudo.html` | App de flashcards com repetição espaçada e acento tonal desenhado |
+| `site/` | **Kotobana Dojo**: site completo para aprender, estudar, memorizar e jogar (HTML5 + JavaScript + three.js) |
 | `tools/build.py` | Gera tudo acima a partir da planilha (`python3 kotobana/tools/build.py`) |
+| `tools/build_site.py` | Gera `site/js/vocab.js` com as 2.094 palavras |
+| `tools/servidor.py` | Servidor local do site, com progresso do aluno salvo em `progresso/<aluno>.json` |
 
 ## Esquema de codificação
 
@@ -54,3 +57,23 @@ Cada palavra recebe um código estável: **`KB{livro}-L{lição}-{nº}`**, ex. `
 1. **App (`estudo.html`)** — abra no navegador. Filtre por livro, lição, importância e classe; escolha a direção (日本語 → português ou o inverso). Cada resposta é avaliada em Errei / Difícil / Bom / Fácil e o intervalo de revisão se ajusta (SM‑2 simplificado). A palavra conta como “memorizada” com intervalo ≥ 21 dias. A resposta mostra o acento: linha = tom alto, degrau = queda.
 2. **Anki** — Arquivo › Importar `dados/anki_kotobana.tsv`. Use as tags (`livro1`, `licao05`, `imp3`, `V1`…) para criar baralhos filtrados.
 3. **Sugestão de ritmo:** 20 palavras novas/dia, ★★★ primeiro, seguindo a ordem das lições. As 1.075 ★★★ ficam vistas em ~8 semanas.
+
+## Kotobana Dojo (site)
+
+```bash
+python3 kotobana/tools/build.py        # planilha -> dados/
+python3 kotobana/tools/build_site.py   # dados/ -> site/js/vocab.js
+python3 kotobana/tools/servidor.py --aluno maria   # http://localhost:8000
+```
+
+Sem o servidor, o site também funciona aberto por qualquer servidor estático (o progresso fica só no navegador).
+
+| Área | O que o aluno faz |
+|---|---|
+| **Aprender** | Navega livro → lição, vê cada palavra com leitura, acento tonal desenhado, romaji, classe e nota; ouve a pronúncia (voz japonesa do navegador); modo apresentação uma a uma; marca palavras como vistas |
+| **Estudar** | Flashcards com repetição espaçada (SM‑2 simplificado): revisões vencidas primeiro, depois novas (★★★ primeiro); notas Errei/Difícil/Bom/Fácil com o intervalo previsto; atalhos de teclado |
+| **Memorizar** | Quiz de 10 perguntas misturando significado, palavra, leitura, escrita em romaji (aceita Hepburn/Kunrei e vogal longa como *oo*/*ou*) e audição; erros voltam para a revisão |
+| **Jogar** | Dois jogos em three.js: **灯籠 Lanternas** (toque a lanterna com o significado certo antes que ela suba; vidas, níveis e combo) e **かるた Karuta** (jogo da memória 3D palavra ↔ significado sobre o tatame) |
+| **Progresso** | Nível e XP, sequência de dias, atividade dos últimos 28 dias, mapa das 60 lições, 10 conquistas e busca no glossário inteiro |
+
+Arquitetura: `js/core.js` concentra dados, progresso, SRS, XP, acento e voz; cada área é um módulo (`learn.js`, `study.js`, `quiz.js`, `play.js`, `progress.js`), os jogos ficam em `game-lanterns.js` e `game-karuta.js` com utilidades em `three-util.js`. O three.js (r128) vem do cdnjs.
