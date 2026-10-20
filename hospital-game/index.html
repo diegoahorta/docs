@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mika no Hospital</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="bg3d" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <button class="brand" data-go="home" aria-label="Início">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Mika no Hospital</span>
+    </button>
+    <nav class="tabs" aria-label="Seções">
+      <button data-go="home">Início</button>
+      <button data-go="story">História</button>
+      <button data-go="cards">Flashcards</button>
+      <button data-go="games">Jogos</button>
+    </nav>
+    <div class="hud">
+      <span class="stars" title="Estrelas conquistadas"><span class="star-ico" aria-hidden="true">★</span><b id="starCount">0</b></span>
+      <button id="soundBtn" class="icon-btn" aria-pressed="true" title="Som e voz">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="app">
+
+  <!-- INÍCIO -->
+  <section id="view-home" class="view">
+    <div class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Inglês A1 · Saúde, bem-estar e sentimentos</p>
+        <h1>Mika vai ao hospital</h1>
+        <p class="lead">Acompanhe a Mika da cama até a farmácia. Em cada parada você conversa com a recepção, a enfermeira e o médico, e aprende a dizer em inglês como está se sentindo.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-go="story">Começar a história</button>
+          <button class="btn" data-go="cards">Estudar flashcards</button>
+        </div>
+      </div>
+      <div class="hero-cast" id="heroCast" aria-hidden="true"></div>
+    </div>
+
+    <h2 class="section-title">Três formas de falar sobre saúde</h2>
+    <div class="structures">
+      <article class="struct">
+        <p class="struct-tag">Estado geral ou emoção</p>
+        <h3><span class="ck ck-S">I</span> <span class="ck ck-V">feel</span> <span class="ck ck-O">+ adjetivo</span></h3>
+        <p class="struct-ex">I feel dizzy. · She feels much better today.</p>
+        <p class="struct-tip">Se a palavra é um <b>adjetivo</b> (dizzy, sick, happy), use <b>FEEL</b>.</p>
+      </article>
+      <article class="struct">
+        <p class="struct-tag">Um sintoma específico</p>
+        <h3><span class="ck ck-S">I</span> <span class="ck ck-V">have</span> <span class="ck ck-O">+ a/an + sintoma</span></h3>
+        <p class="struct-ex">I have a headache. · He has a high fever.</p>
+        <p class="struct-tip">Se é um <b>substantivo</b> (a headache, a fever), use <b>HAVE</b>. Nunca esqueça o artigo.</p>
+      </article>
+      <article class="struct">
+        <p class="struct-tag">Dor numa parte do corpo</p>
+        <h3><span class="ck ck-S">My + parte</span> <span class="ck ck-V">hurts / aches</span></h3>
+        <p class="struct-ex">My stomach hurts. · My legs ache.</p>
+        <p class="struct-tip">Singular leva <b>-s</b>: My head hurt<b>s</b>. Plural não: My eyes hurt.</p>
+      </article>
+    </div>
+
+    <div class="legend" aria-label="Legenda de cores do método de chunking">
+      <span class="legend-title">Legenda de cores</span>
+      <span class="ck ck-S">S · Sujeito</span>
+      <span class="ck ck-V">V · Verbo</span>
+      <span class="ck ck-O">O · Objeto</span>
+      <span class="ck ck-AUX">AUX · Auxiliar</span>
+      <span class="ck ck-ADV">ADV · Advérbio / Tempo</span>
+    </div>
+
+    <h2 class="section-title">Continue de onde parou</h2>
+    <div class="progress-grid" id="homeProgress"></div>
+  </section>
+
+  <!-- HISTÓRIA -->
+  <section id="view-story" class="view" hidden>
+    <ol class="journey" id="journey" aria-label="Percurso da Mika"></ol>
+    <div class="stage" id="stage">
+      <div class="stage-bg" id="stageBg"></div>
+      <div class="place-tag" id="placeTag"></div>
+      <div class="actor actor-left" id="actorLeft"></div>
+      <div class="actor actor-right" id="actorRight"></div>
+    </div>
+    <div class="dialogue" id="dialogue" aria-live="polite">
+      <div class="speaker" id="speaker"></div>
+      <p class="line-en" id="lineEn"></p>
+      <p class="line-pt" id="linePt"></p>
+      <div class="choices" id="choices"></div>
+      <p class="explain" id="explain" hidden></p>
+      <div class="dialogue-bar">
+        <button class="chip-btn" id="sayBtn" title="Ouvir a frase">Ouvir</button>
+        <button class="chip-btn" id="ptBtn" aria-pressed="false">Tradução</button>
+        <span class="step-count" id="stepCount"></span>
+        <button class="btn btn-primary btn-sm" id="nextBtn">Continuar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section id="view-cards" class="view" hidden>
+    <div class="cards-head">
+      <div class="cat-chips" id="catChips" role="tablist" aria-label="Categorias"></div>
+      <div class="cards-tools">
+        <button class="chip-btn" id="dirBtn" aria-pressed="false">Inglês → Português</button>
+        <button class="chip-btn" id="shuffleBtn">Embaralhar</button>
+      </div>
+    </div>
+    <div class="card-area">
+      <button class="nav-arrow" id="prevCard" aria-label="Cartão anterior">‹</button>
+      <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Virar cartão">
+        <div class="fc-inner">
+          <div class="fc-face fc-front" id="fcFront"></div>
+          <div class="fc-face fc-back" id="fcBack"></div>
+        </div>
+      </div>
+      <button class="nav-arrow" id="nextCard" aria-label="Próximo cartão">›</button>
+    </div>
+    <p class="fc-hint">Toque no cartão (ou aperte espaço) para virar.</p>
+    <div class="fc-actions">
+      <button class="btn btn-soft-bad" id="againBtn">Revisar de novo</button>
+      <button class="btn btn-soft-ok" id="knowBtn">Já sei!</button>
+    </div>
+    <div class="fc-stats" id="fcStats"></div>
+  </section>
+
+  <!-- JOGOS -->
+  <section id="view-games" class="view" hidden>
+    <div class="games-hub" id="gamesHub"></div>
+    <div class="game-panel" id="gamePanel" hidden>
+      <div class="game-top">
+        <button class="chip-btn" id="backToHub">‹ Jogos</button>
+        <h2 id="gameTitle"></h2>
+        <div class="game-meta"><span id="gameRound"></span><span class="hearts" id="gameHearts"></span></div>
+      </div>
+      <div class="game-body" id="gameBody"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/content.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/backgrounds.js"></script>
+<script src="js/scene3d.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
