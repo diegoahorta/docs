@@ -7,279 +7,312 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@400;600;800&display=swap">
 <style>
-/* Layout: caderno de exercícios japonês (genkō yōshi) — uma faixa de abas fixa,
-   cartões de contador com cor própria, palco em canvas no estilo Flash. */
+/* Layout: estúdio de anime em tons pastel — palco 3D (Three.js) como cenário,
+   mascote 2D (CreateJS, formato do Adobe Animate) por cima, abas fixas no topo. */
 :root {
-  --bg: #F1F4F0;
+  --bg: #F8F5FF;
+  --bg-2: #FFF0F6;
   --surface: #FFFFFF;
-  --surface-2: #E6ECE6;
-  --ink: #1D2433;
-  --ink-soft: #5A6372;
-  --line: #CFD8D1;
-  --ai: #27467F;          /* índigo (藍) – acento */
-  --ai-soft: #DCE3F2;
-  --ok: #2F7F4E;
-  --ok-soft: #DAEEDF;
-  --bad: #C0364A;
-  --bad-soft: #F7DCE0;
-  --kin: #B87A00;         /* destaque de mudança de som */
-  --kin-soft: #FCEFC8;
-  --c-tsu: #7651A6;
-  --c-ko: #C64B33;
-  --c-hon: #217C88;
-  --c-dai: #3557AE;
-  --c-mai: #9A6A12;
-  --kazu: #E98A3A;
-  --kazu-belly: #FFF1DD;
+  --surface-2: #F3EEFC;
+  --ink: #3B3456;
+  --ink-soft: #776E93;
+  --line: #E6DEF5;
+  --accent: #7563D9;
+  --accent-soft: #ECE8FD;
+  --on-accent: #FFFFFF;
+  --ok: #2F8F6C;
+  --ok-soft: #DDF5EC;
+  --bad: #CC4D72;
+  --bad-soft: #FDE3EB;
+  --kin: #A8770A;
+  --kin-soft: #FFF2CC;
+  --sakura: #F6A8C6;
+  --ceu-1: #E9E4FF;
+  --ceu-2: #FFE6F0;
+  --contorno: #5B4A6B;
+  --c-tsu: #8466D4; --c-nin: #D46A4E; --c-mai: #A87B05; --c-dai: #3F86D0; --c-hon: #23967A;
+  --c-hiki: #CF5A8E; --c-hai: #A9693A; --c-ko: #D4505F; --c-satsu: #5068D0;
+  --f-pop: "Mochiy Pop One", "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
   --f-jp: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
   --f-body: "Nunito", "Segoe UI", system-ui, sans-serif;
   --f-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  --r: 14px;
+  --r: 18px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #12161F; --surface: #1B2130; --surface-2: #252C3D; --ink: #E8ECF3; --ink-soft: #A2AABA; --line: #323A4E;
-    --ai: #93AEEA; --ai-soft: #24304C; --ok: #6CC98E; --ok-soft: #1C3527; --bad: #F2808F; --bad-soft: #3D2029;
-    --kin: #F2C350; --kin-soft: #3A3018; --c-tsu: #B596E0; --c-ko: #F08A72; --c-hon: #5CC3CF; --c-dai: #8DA6EE; --c-mai: #E1B45A;
-    --kazu: #F2A15C; --kazu-belly: #3B2E22; color-scheme: dark;
+    --bg: #1C1829; --bg-2: #24192B; --surface: #262036; --surface-2: #30293F; --ink: #EFEAFB; --ink-soft: #B3A9CC; --line: #3D3552;
+    --accent: #B3A6FF; --accent-soft: #352D52; --on-accent: #1C1829; --ok: #7FD6B2; --ok-soft: #1F3A31; --bad: #FF97B2; --bad-soft: #45232F;
+    --kin: #F5CB5C; --kin-soft: #3D331C; --sakura: #E58FB2; --ceu-1: #2B2442; --ceu-2: #3A2538; --contorno: #1B1526;
+    --c-tsu: #B9A0F2; --c-nin: #F4A58C; --c-mai: #EBC456; --c-dai: #8DBDF0; --c-hon: #6FD3B5; --c-hiki: #F49BC2; --c-hai: #DDAA80; --c-ko: #F4919C; --c-satsu: #9CAEF2;
+    color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #12161F; --surface: #1B2130; --surface-2: #252C3D; --ink: #E8ECF3; --ink-soft: #A2AABA; --line: #323A4E;
-  --ai: #93AEEA; --ai-soft: #24304C; --ok: #6CC98E; --ok-soft: #1C3527; --bad: #F2808F; --bad-soft: #3D2029;
-  --kin: #F2C350; --kin-soft: #3A3018; --c-tsu: #B596E0; --c-ko: #F08A72; --c-hon: #5CC3CF; --c-dai: #8DA6EE; --c-mai: #E1B45A;
-  --kazu: #F2A15C; --kazu-belly: #3B2E22; color-scheme: dark;
+  --bg: #1C1829; --bg-2: #24192B; --surface: #262036; --surface-2: #30293F; --ink: #EFEAFB; --ink-soft: #B3A9CC; --line: #3D3552;
+  --accent: #B3A6FF; --accent-soft: #352D52; --on-accent: #1C1829; --ok: #7FD6B2; --ok-soft: #1F3A31; --bad: #FF97B2; --bad-soft: #45232F;
+  --kin: #F5CB5C; --kin-soft: #3D331C; --sakura: #E58FB2; --ceu-1: #2B2442; --ceu-2: #3A2538; --contorno: #1B1526;
+  --c-tsu: #B9A0F2; --c-nin: #F4A58C; --c-mai: #EBC456; --c-dai: #8DBDF0; --c-hon: #6FD3B5; --c-hiki: #F49BC2; --c-hai: #DDAA80; --c-ko: #F4919C; --c-satsu: #9CAEF2;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 16px/1.55 var(--f-body);
-  background-image: linear-gradient(color-mix(in srgb, var(--line) 50%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--line) 50%, transparent) 1px, transparent 1px);
-  background-size: 28px 28px; background-attachment: fixed;
+  margin: 0; color: var(--ink); font: 16px/1.55 var(--f-body);
+  background: var(--bg);
+  background-image: radial-gradient(circle at 12% 8%, var(--bg-2) 0, transparent 38%), radial-gradient(circle at 92% 30%, var(--accent-soft) 0, transparent 30%);
+  background-attachment: fixed;
 }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
 .jp { font-family: var(--f-jp); }
+.pop { font-family: var(--f-pop); font-weight: 400; }
 .emoji { font-family: var(--f-emoji); line-height: 1; }
-h1, h2, h3 { font-family: var(--f-jp); text-wrap: balance; margin: 0; line-height: 1.2; }
-h2 { font-size: 1.6rem; }
-h3 { font-size: 1.15rem; }
+h1, h2, h3 { font-family: var(--f-pop); font-weight: 400; text-wrap: balance; margin: 0; line-height: 1.25; }
+h2 { font-size: 1.55rem; }
+h3 { font-size: 1.1rem; }
 p { margin: 0; }
 button { font: inherit; color: inherit; cursor: pointer; }
-:focus-visible { outline: 3px solid var(--ai); outline-offset: 2px; }
-.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
-/* Cabeçalho */
-.topo { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
-.topo .wrap { display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; padding-block: 10px; }
+.topo { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.topo .wrap { display: flex; align-items: center; gap: 10px 20px; flex-wrap: wrap; padding-block: 10px; }
 .marca { display: flex; align-items: baseline; gap: 8px; margin-right: auto; text-decoration: none; color: inherit; }
-.marca b { font-family: var(--f-jp); font-size: 1.45rem; font-weight: 900; color: var(--ai); }
-.marca span { font-size: .85rem; color: var(--ink-soft); font-weight: 600; }
+.marca b { font-family: var(--f-pop); font-weight: 400; font-size: 1.4rem; color: var(--accent); }
+.marca span { font-size: .85rem; color: var(--ink-soft); font-weight: 700; }
 .abas { display: flex; gap: 4px; background: var(--surface-2); padding: 4px; border-radius: 999px; }
-.abas button { border: 0; background: none; padding: 7px 14px; border-radius: 999px; font-weight: 800; font-size: .92rem; color: var(--ink-soft); }
-.abas button[aria-selected="true"] { background: var(--surface); color: var(--ai); box-shadow: 0 1px 3px rgb(0 0 0 / .12); }
-.status { display: flex; gap: 8px; align-items: center; font-size: .85rem; font-weight: 700; }
-.pilula { display: inline-flex; gap: 5px; align-items: center; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.abas button { border: 0; background: none; padding: 7px 15px; border-radius: 999px; font-weight: 800; font-size: .92rem; color: var(--ink-soft); }
+.abas button[aria-selected="true"] { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 25%, transparent); }
+.status { display: flex; gap: 8px; align-items: center; font-size: .85rem; font-weight: 800; }
+.pilula { display: inline-flex; gap: 5px; align-items: center; padding: 4px 11px; border-radius: 999px; background: var(--surface-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .alternar { border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px; font-size: .8rem; font-weight: 800; color: var(--ink-soft); }
-.alternar[aria-pressed="true"] { background: var(--ai-soft); color: var(--ai); border-color: transparent; }
+.alternar[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
 
-main { padding-block: 28px 64px; }
-.vista[hidden] { display: none !important; }
+main { padding-block: 26px 64px; }
 .painel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; }
-.rotulo { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-.botao { border: 0; border-radius: 12px; padding: 11px 18px; font-weight: 800; background: var(--ai); color: var(--surface); transition: transform .12s; }
+.rotulo { font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.botao { border: 0; border-radius: 14px; padding: 11px 18px; font-weight: 800; background: var(--accent); color: var(--on-accent); box-shadow: 0 4px 0 color-mix(in srgb, var(--accent) 55%, var(--ink)); transition: transform .1s, box-shadow .1s; }
 .botao:hover { transform: translateY(-1px); }
-.botao:active { transform: translateY(1px); }
-.botao.sec { background: var(--surface-2); color: var(--ink); }
-.botao.peq { padding: 7px 12px; font-size: .88rem; border-radius: 10px; }
-.botao:disabled { opacity: .5; cursor: default; transform: none; }
+.botao:active { transform: translateY(3px); box-shadow: 0 1px 0 color-mix(in srgb, var(--accent) 55%, var(--ink)); }
+.botao.sec { background: var(--surface-2); color: var(--ink); box-shadow: 0 4px 0 var(--line); }
+.botao.peq { padding: 7px 12px; font-size: .88rem; border-radius: 11px; }
 .icone-som { width: 18px; height: 18px; vertical-align: -3px; }
 
+/* Palco: Three.js ao fundo, CreateJS por cima */
+.palco { position: relative; border-radius: 24px; overflow: hidden; background: linear-gradient(170deg, var(--ceu-1), var(--ceu-2)); border: 1px solid var(--line); isolation: isolate; }
+.palco canvas.tres { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.palco .mascote { position: absolute; left: 6px; bottom: 4px; width: 132px; height: 150px; z-index: 2; pointer-events: none; }
+.palco .balao { position: absolute; left: 132px; bottom: 96px; z-index: 3; max-width: calc(100% - 150px); background: var(--surface); border: 2px solid var(--contorno); border-radius: 20px; padding: 8px 14px; display: grid; gap: 1px; box-shadow: 0 4px 0 color-mix(in srgb, var(--contorno) 30%, transparent); transform-origin: 0 100%; }
+.palco .balao::before { content: ""; position: absolute; left: -12px; bottom: 10px; border: 7px solid transparent; border-right: 10px solid var(--contorno); }
+.palco .balao b { font-family: var(--f-pop); font-weight: 400; font-size: 1.3rem; }
+.palco .balao small { color: var(--ink-soft); font-weight: 700; font-size: .8rem; }
+.palco .balao.pop { animation: pop .35s cubic-bezier(.3,1.6,.5,1); }
+.palco-estudo .balao { top: 12px; bottom: auto; left: 12px; transform-origin: 20% 100%; }
+.palco-estudo .balao::before { left: 26px; bottom: -17px; border: 8px solid transparent; border-top: 10px solid var(--contorno); }
+.palco .dica3d { position: absolute; right: 12px; top: 10px; z-index: 3; font-size: .75rem; font-weight: 800; color: var(--ink-soft); background: color-mix(in srgb, var(--surface) 75%, transparent); padding: 3px 10px; border-radius: 99px; }
+.sem3d .tres { display: none; }
+.sem3d .fallback { display: flex !important; }
+.fallback { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; padding: 30px 30px 30px 150px; font-size: 2.6rem; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+
 /* Início */
-.heroi { display: grid; grid-template-columns: 1.05fr 1fr; gap: 28px; align-items: center; }
-.heroi h1 { font-size: clamp(2rem, 4.4vw, 3.2rem); font-weight: 900; }
-.heroi h1 em { font-style: normal; color: var(--ai); }
+.heroi { display: grid; grid-template-columns: 1fr 1.05fr; gap: 28px; align-items: center; }
 .heroi .texto { display: grid; gap: 16px; min-width: 0; }
-.heroi .lead { font-size: 1.08rem; color: var(--ink-soft); max-width: 58ch; }
-.palco-heroi { width: 100%; aspect-ratio: 5 / 4; max-width: 100%; display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+.heroi h1 { font-size: clamp(1.9rem, 4vw, 3rem); }
+.heroi h1 em { font-style: normal; color: var(--accent); background: linear-gradient(transparent 62%, var(--kin-soft) 62%); }
+.heroi .lead { font-size: 1.06rem; color: var(--ink-soft); max-width: 58ch; }
+.palco-heroi { aspect-ratio: 6 / 5; max-width: 100%; }
 .analogia { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.analogia div { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 12px; font-size: .92rem; }
+.analogia div { background: var(--surface); border: 2px dashed var(--line); border-radius: 14px; padding: 10px 12px; font-size: .92rem; }
 .analogia b { display: block; font-family: var(--f-jp); font-size: 1.05rem; }
-.trilha { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
-.passo { display: grid; gap: 8px; align-content: start; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: border-color .15s, transform .15s; }
-.passo:hover { border-color: var(--ai); transform: translateY(-2px); }
-.passo .num { font-family: var(--f-jp); font-weight: 900; font-size: 1.9rem; color: var(--ai); line-height: 1; }
+.trilha { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 30px; }
+.passo { display: grid; gap: 6px; align-content: start; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: transform .15s, border-color .15s; }
+.passo:hover { border-color: var(--accent); transform: translateY(-3px); }
+.passo .num { font-family: var(--f-pop); font-size: 1.8rem; color: var(--accent); line-height: 1; }
 .passo p { color: var(--ink-soft); font-size: .95rem; }
 .numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
-.numeros div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.numeros div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
 .numeros b { display: block; font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; }
-.numeros span { font-size: .82rem; color: var(--ink-soft); font-weight: 600; }
+.numeros span { font-size: .82rem; color: var(--ink-soft); font-weight: 700; }
 
 /* Estudar */
-.seletor { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-.chip-c { border: 2px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 14px; display: flex; gap: 8px; align-items: center; font-weight: 800; }
-.chip-c .k { font-family: var(--f-jp); font-size: 1.3rem; color: var(--cor); }
-.chip-c[aria-selected="true"] { border-color: var(--cor); background: color-mix(in srgb, var(--cor) 10%, var(--surface)); }
-.estudo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 20px; }
-.ficha { border-top: 6px solid var(--cor); display: grid; gap: 16px; align-content: start; }
+.seletor { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px; margin-bottom: 18px; }
+.chip-c { border: 2px solid var(--line); background: var(--surface); border-radius: 16px; padding: 8px 4px 6px; display: grid; justify-items: center; gap: 0; font-weight: 800; font-size: .74rem; color: var(--ink-soft); transition: transform .12s; }
+.chip-c:hover { transform: translateY(-2px); }
+.chip-c .k { font-family: var(--f-pop); font-size: 1.6rem; color: var(--cor); line-height: 1.2; }
+.chip-c[aria-selected="true"] { border-color: var(--cor); background: color-mix(in srgb, var(--cor) 12%, var(--surface)); color: var(--ink); }
+.estudo { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 20px; }
+.ficha { border-top: 8px solid var(--cor); display: grid; gap: 16px; align-content: start; }
 .ficha .cab { display: flex; gap: 16px; align-items: center; }
-.ficha .kanji-grande { font-family: var(--f-jp); font-size: 3.6rem; font-weight: 900; color: var(--cor); line-height: 1; min-width: 1.2em; text-align: center; }
-.ficha ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.ficha .kanji-grande { font-family: var(--f-pop); font-size: 3.4rem; color: var(--cor); line-height: 1; min-width: 1.2em; text-align: center; text-shadow: 3px 3px 0 color-mix(in srgb, var(--cor) 22%, transparent); }
+.ficha ul { margin: 0; padding-left: 1.1em; display: grid; gap: 5px; }
 .objetos { display: flex; gap: 8px; flex-wrap: wrap; }
-.objeto { display: inline-flex; gap: 6px; align-items: center; padding: 5px 10px; border-radius: 999px; background: var(--surface-2); font-size: .9rem; border: 2px solid transparent; }
-.objeto[aria-pressed="true"] { border-color: var(--cor); }
-.objeto .emoji { font-size: 1.3rem; }
-.dica { background: var(--kin-soft); border-radius: 12px; padding: 12px 14px; font-size: .95rem; }
+.objeto { display: inline-flex; gap: 6px; align-items: center; padding: 5px 11px; border-radius: 999px; background: var(--surface-2); font-size: .9rem; border: 2px solid transparent; }
+.objeto[aria-pressed="true"] { border-color: var(--cor); background: color-mix(in srgb, var(--cor) 10%, var(--surface)); }
+.objeto .emoji { font-size: 1.25rem; }
+.dica { background: var(--kin-soft); border-radius: 14px; padding: 12px 14px; font-size: .95rem; }
 .dica b { color: var(--kin); }
-.palco-estudo { width: 100%; height: 280px; display: block; background: var(--surface-2); border-radius: 14px; }
-.controles-palco { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 8px; }
-.leitura { position: relative; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 9px 11px; display: grid; gap: 1px; transition: transform .12s, border-color .12s; }
-.leitura:hover { transform: translateY(-2px); border-color: var(--cor); }
+.palco-estudo { height: 330px; }
+.controles { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(126px, 1fr)); gap: 8px; }
+.leitura { position: relative; text-align: left; border: 2px solid var(--line); background: var(--surface); border-radius: 14px; padding: 8px 11px; display: grid; gap: 0; transition: transform .12s, border-color .12s; }
+.leitura:hover, .leitura.ativa { transform: translateY(-2px); border-color: var(--cor); }
 .leitura .n { font-size: .74rem; color: var(--ink-soft); font-weight: 800; font-variant-numeric: tabular-nums; }
 .leitura .kana { font-family: var(--f-jp); font-size: 1.15rem; font-weight: 700; white-space: nowrap; }
 .leitura .rj { font-size: .78rem; color: var(--ink-soft); }
-.leitura.muda { background: var(--kin-soft); border-color: color-mix(in srgb, var(--kin) 45%, transparent); }
-.leitura.muda::after { content: "som muda"; position: absolute; top: 7px; right: 8px; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--kin); }
-.leitura.cuidado::after { content: "atenção"; position: absolute; top: 7px; right: 8px; font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--bad); }
+.leitura.muda { background: var(--kin-soft); }
+.leitura.muda::after, .leitura.cuidado::after { position: absolute; top: 7px; right: 8px; font-size: .6rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.leitura.muda::after { content: "som muda"; color: var(--kin); }
+.leitura.cuidado::after { content: "atenção"; color: var(--bad); }
 .leitura .kana mark { background: none; color: var(--kin); }
-.explica { min-height: 3.2em; font-size: .95rem; padding: 10px 12px; border-left: 4px solid var(--cor); background: var(--surface-2); border-radius: 0 10px 10px 0; }
+.explica { min-height: 3.2em; font-size: .95rem; padding: 10px 14px; border-left: 5px solid var(--cor); background: var(--surface-2); border-radius: 0 14px 14px 0; }
 
-.tabela-rolagem { overflow-x: auto; margin-top: 20px; }
-table.geral { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 640px; font-family: var(--f-jp); }
-table.geral th, table.geral td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
-table.geral thead th { font-size: 1rem; position: sticky; top: 0; background: var(--surface); }
-table.geral thead th span { display: block; font-family: var(--f-body); font-size: .72rem; color: var(--ink-soft); font-weight: 700; }
-table.geral tbody th { font-family: var(--f-body); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-table.geral td { font-size: 1.08rem; cursor: pointer; }
+.tabela-rolagem { overflow-x: auto; }
+table.geral { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 860px; font-family: var(--f-jp); }
+table.geral th, table.geral td { padding: 8px 8px; text-align: center; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.geral thead th { font-family: var(--f-pop); font-weight: 400; font-size: 1.15rem; color: var(--cor); background: color-mix(in srgb, var(--cor) 10%, var(--surface)); }
+table.geral thead th:first-child { background: var(--surface); }
+table.geral thead th small { display: block; font-family: var(--f-body); font-size: .68rem; color: var(--ink-soft); font-weight: 700; }
+table.geral tbody th { font-family: var(--f-body); color: var(--ink-soft); font-variant-numeric: tabular-nums; background: var(--kin-soft); }
+table.geral td { font-size: 1.02rem; cursor: pointer; }
 table.geral td:hover { background: var(--surface-2); }
-table.geral td.muda { color: var(--kin); font-weight: 700; }
-.regras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+table.geral td.muda { font-weight: 900; color: var(--kin); }
+table.geral td small { display: block; font-family: var(--f-body); color: var(--ink-soft); font-weight: 400; font-size: .72rem; }
+.obs { font-size: .9rem; color: var(--ink-soft); margin-top: 10px; font-style: italic; }
+.regras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
 .regras .painel { padding: 16px; display: grid; gap: 8px; align-content: start; }
-.regras .ex { font-family: var(--f-jp); font-size: 1.05rem; }
+.regras .ex { font-family: var(--f-jp); font-size: 1.02rem; }
 .regras .ex mark { background: var(--kin-soft); color: inherit; border-radius: 4px; padding: 0 2px; }
 
 /* Revisar */
 .revisao { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 .cartao-area { perspective: 1200px; }
-.cartao { position: relative; width: 100%; min-height: 330px; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.3,1.3,.5,1); cursor: pointer; }
+.cartao { position: relative; width: 100%; min-height: 340px; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.3,1.35,.5,1); cursor: pointer; }
 .cartao.virado { transform: rotateY(180deg); }
-.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; align-content: center; gap: 12px; padding: 24px; text-align: center; }
-.face.verso { transform: rotateY(180deg); border-top: 8px solid var(--cor, var(--ai)); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; align-content: center; gap: 12px; padding: 24px; text-align: center; }
+.face.frente { background: linear-gradient(170deg, var(--surface), var(--surface-2)); }
+.face.verso { transform: rotateY(180deg); border-top: 10px solid var(--cor, var(--accent)); }
 .face .itens { font-size: 2.1rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 4px; max-width: 330px; }
 .face .pergunta { font-size: 1.05rem; color: var(--ink-soft); }
-.face .resposta { font-family: var(--f-jp); font-size: 2.6rem; font-weight: 900; color: var(--cor); }
+.face .resposta { font-family: var(--f-pop); font-size: 2.6rem; color: var(--cor); }
 .face .sub { font-size: 1rem; color: var(--ink-soft); }
-.face .nota { font-size: .92rem; background: var(--kin-soft); padding: 8px 12px; border-radius: 10px; max-width: 46ch; }
-.notas-srs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
-.notas-srs .botao { display: grid; gap: 2px; padding: 12px; }
-.notas-srs small { font-weight: 600; opacity: .8; font-size: .75rem; }
-.n-errei { background: var(--bad); }
-.n-dificil { background: var(--kin); }
-.n-acertei { background: var(--ok); }
-.caixas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: end; height: 110px; margin-top: 10px; }
-.caixas div { background: var(--ai-soft); border-radius: 8px 8px 0 0; position: relative; min-height: 4px; transition: height .4s; }
+.face .nota { font-size: .92rem; background: var(--kin-soft); padding: 8px 12px; border-radius: 12px; max-width: 46ch; }
+.notas-srs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.notas-srs .botao { display: grid; gap: 2px; padding: 12px; color: #fff; }
+.notas-srs small { font-weight: 600; opacity: .85; font-size: .75rem; }
+.n-errei { background: #D9668A; box-shadow: 0 4px 0 #A8466A; }
+.n-dificil { background: #D9A23A; box-shadow: 0 4px 0 #A87A1E; }
+.n-acertei { background: #45A886; box-shadow: 0 4px 0 #2E7C60; }
+.caixas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: end; height: 110px; margin-top: 22px; }
+.caixas div { background: linear-gradient(var(--sakura), var(--accent-soft)); border-radius: 10px 10px 0 0; position: relative; min-height: 4px; transition: height .4s; }
 .caixas div span { position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-size: .8rem; font-weight: 800; font-variant-numeric: tabular-nums; }
-.caixas-leg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; font-size: .72rem; color: var(--ink-soft); text-align: center; font-weight: 700; }
-.dominio { display: grid; gap: 10px; margin-top: 8px; }
-.dominio .linha { display: grid; grid-template-columns: 2.2em 1fr 3em; gap: 10px; align-items: center; font-size: .9rem; }
+.caixas-leg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; font-size: .7rem; color: var(--ink-soft); text-align: center; font-weight: 700; }
+.dominio { display: grid; gap: 8px; margin-top: 8px; }
+.dominio .linha { display: grid; grid-template-columns: 1.8em 1fr 3em; gap: 10px; align-items: center; font-size: .9rem; }
 .dominio .barra { height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
 .dominio .barra i { display: block; height: 100%; background: var(--cor); border-radius: 99px; transition: width .5s; }
 .filtro { display: flex; gap: 6px; flex-wrap: wrap; }
-.filtro button { border: 2px solid var(--line); background: var(--surface); border-radius: 10px; padding: 4px 10px; font-family: var(--f-jp); font-weight: 700; color: var(--cor); }
+.filtro button { border: 2px solid var(--line); background: var(--surface); border-radius: 12px; padding: 3px 9px; font-family: var(--f-pop); color: var(--cor); }
 .filtro button[aria-pressed="true"] { border-color: var(--cor); background: color-mix(in srgb, var(--cor) 12%, var(--surface)); }
-.progresso-sessao { height: 6px; background: var(--surface-2); border-radius: 9px; overflow: hidden; margin-bottom: 12px; }
-.progresso-sessao i { display: block; height: 100%; width: 0; background: var(--ai); transition: width .3s; }
+.progresso-sessao { height: 8px; background: var(--surface-2); border-radius: 9px; overflow: hidden; margin-bottom: 12px; }
+.progresso-sessao i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--sakura), var(--accent)); transition: width .3s; }
 
 /* Jogar */
 .jogos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .jogo-card { text-align: left; display: grid; gap: 6px; align-content: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; transition: transform .15s, border-color .15s; }
-.jogo-card:hover { transform: translateY(-3px); border-color: var(--ai); }
+.jogo-card:hover { transform: translateY(-3px) rotate(-.5deg); border-color: var(--accent); }
 .jogo-card .emoji { font-size: 2rem; }
-.jogo-card h3 { font-size: 1.05rem; }
 .jogo-card p { font-size: .88rem; color: var(--ink-soft); }
-.jogo-card .recorde { font-size: .78rem; font-weight: 800; color: var(--ai); }
+.jogo-card .recorde { font-size: .78rem; font-weight: 800; color: var(--accent); }
 .arena { margin-top: 18px; display: grid; gap: 14px; }
-.hud { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.hud { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .hud .pilula { background: var(--surface); border: 1px solid var(--line); }
-.tempo { flex: 1 1 160px; height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
-.tempo i { display: block; height: 100%; background: var(--ok); width: 100%; }
-.cena { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: center; }
-.palco-mascote { width: 150px; height: 150px; display: block; }
-.fala { font-family: var(--f-jp); font-size: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px 18px; position: relative; display: grid; gap: 4px; }
+.tempo { flex: 1 1 160px; height: 12px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.tempo i { display: block; height: 100%; width: 100%; background: var(--ok); border-radius: 99px; }
+.cena { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: center; }
+.cena canvas { width: 120px; height: 136px; display: block; }
+.fala { font-family: var(--f-jp); font-size: 1.2rem; background: var(--surface); border: 2px solid var(--contorno); border-radius: 20px; padding: 12px 16px; display: grid; gap: 4px; }
 .fala small { font-family: var(--f-body); color: var(--ink-soft); font-size: .88rem; }
-.cesta { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; font-size: 2.5rem; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; min-height: 96px; }
-.cesta .emoji { animation: cair .45s cubic-bezier(.3,1.5,.6,1) backwards; }
-@keyframes cair { from { transform: translateY(-40px) scale(.6); opacity: 0; } }
+.cesta { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; font-size: 2.4rem; padding: 16px; background: linear-gradient(170deg, var(--ceu-1), var(--ceu-2)); border-radius: 20px; min-height: 92px; }
+.cesta .emoji { animation: cair .5s cubic-bezier(.3,1.6,.6,1) backwards; }
+@keyframes cair { from { transform: translateY(-46px) scale(.5, 1.4); opacity: 0; } 70% { transform: scale(1.15, .85); } }
 .opcoes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.opcao { border: 2px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px; display: grid; gap: 2px; text-align: center; transition: transform .1s, border-color .1s; }
-.opcao:hover:not(:disabled) { border-color: var(--ai); transform: translateY(-2px); }
-.opcao .kana { font-family: var(--f-jp); font-size: 1.45rem; font-weight: 700; }
+.opcao { border: 2px solid var(--line); background: var(--surface); border-radius: 16px; padding: 13px; display: grid; gap: 2px; text-align: center; box-shadow: 0 4px 0 var(--line); transition: transform .1s, border-color .1s; }
+.opcao:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-2px); }
+.opcao .kana { font-family: var(--f-jp); font-size: 1.4rem; font-weight: 700; }
 .opcao .rj { font-size: .8rem; color: var(--ink-soft); }
 .opcao.certa { border-color: var(--ok); background: var(--ok-soft); }
 .opcao.errada { border-color: var(--bad); background: var(--bad-soft); animation: tremer .35s; }
 .opcao:disabled { cursor: default; }
-.opcao .figura { font-size: 1.6rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1px 3px; }
+.opcao .figura { font-size: 1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1px 3px; }
 @keyframes tremer { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
-.retorno { min-height: 2.6em; font-size: .98rem; padding: 10px 14px; border-radius: 12px; background: var(--surface-2); }
+.retorno { min-height: 2.6em; font-size: .98rem; padding: 10px 14px; border-radius: 14px; background: var(--surface-2); }
 .retorno.ok { background: var(--ok-soft); }
 .retorno.no { background: var(--bad-soft); }
-.esteira { display: grid; place-items: center; min-height: 190px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
-.esteira .item { display: grid; place-items: center; gap: 4px; animation: entrar .35s cubic-bezier(.3,1.4,.6,1); }
-.esteira .item .emoji { font-size: 4.2rem; }
+.esteira { display: grid; place-items: center; min-height: 190px; background: linear-gradient(170deg, var(--ceu-1), var(--ceu-2)); border-radius: 20px; overflow: hidden; }
+.esteira .item { display: grid; place-items: center; gap: 4px; animation: entrar .4s cubic-bezier(.3,1.5,.6,1); }
+.esteira .item .emoji { font-size: 4rem; }
 .esteira .item .jp { font-size: 1.3rem; font-weight: 700; }
-@keyframes entrar { from { transform: translateX(120px) rotate(12deg); opacity: 0; } }
-.caixas-contador { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-.caixas-contador button { border: 2px solid var(--cor); background: color-mix(in srgb, var(--cor) 9%, var(--surface)); border-radius: 14px; padding: 12px 6px; display: grid; gap: 2px; justify-items: center; }
-.caixas-contador .k { font-family: var(--f-jp); font-size: 2rem; font-weight: 900; color: var(--cor); line-height: 1.1; }
-.caixas-contador small { font-size: .74rem; color: var(--ink-soft); font-weight: 700; }
+@keyframes entrar { from { transform: translateX(140px) rotate(14deg) scale(.7); opacity: 0; } }
+.caixas-contador { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px; }
+.caixas-contador button { border: 2px solid var(--cor); background: color-mix(in srgb, var(--cor) 10%, var(--surface)); border-radius: 14px; padding: 10px 2px; display: grid; gap: 0; justify-items: center; }
+.caixas-contador .k { font-family: var(--f-pop); font-size: 1.6rem; color: var(--cor); line-height: 1.2; }
+.caixas-contador small { font-size: .66rem; color: var(--ink-soft); font-weight: 800; }
 .memoria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; perspective: 900px; }
 .carta { position: relative; aspect-ratio: 4 / 3; border: 0; background: none; padding: 0; transform-style: preserve-3d; transition: transform .45s; }
 .carta.aberta, .carta.par { transform: rotateY(180deg); }
-.carta .lado { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 12px; display: grid; place-items: center; padding: 6px; }
-.carta .costas { background: var(--ai); color: var(--surface); font-family: var(--f-jp); font-size: 1.8rem; font-weight: 900; background-image: radial-gradient(circle at 30% 30%, rgb(255 255 255 / .18) 0 18%, transparent 19%); }
+.carta .lado { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 14px; display: grid; place-items: center; padding: 6px; }
+.carta .costas { background: linear-gradient(135deg, var(--sakura), var(--accent)); color: #fff; font-family: var(--f-pop); font-size: 1.7rem; }
 .carta .frente { transform: rotateY(180deg); background: var(--surface); border: 2px solid var(--line); }
 .carta.par .frente { border-color: var(--ok); background: var(--ok-soft); }
-.carta .frente .figura { font-size: 1.25rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2px; }
-.carta .frente .kana { font-family: var(--f-jp); font-size: 1.15rem; font-weight: 700; }
+.carta .frente .figura { font-size: 1.2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2px; }
+.carta .frente .kana { font-family: var(--f-jp); font-size: 1.1rem; font-weight: 700; }
 .fim { text-align: center; display: grid; gap: 12px; justify-items: center; padding: 28px; }
-.fim .grande { font-family: var(--f-jp); font-size: 3rem; font-weight: 900; color: var(--ai); line-height: 1; }
+.fim .grande { font-family: var(--f-pop); font-size: 3rem; color: var(--accent); line-height: 1; }
 
-#festa { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
-.aviso-voz { font-size: .82rem; color: var(--ink-soft); }
+#efeitos { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+.aviso { font-size: .82rem; color: var(--ink-soft); }
 .selo-servidor { font-size: .78rem; font-weight: 800; color: var(--ok); }
-footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; }
+.tecnologias { display: flex; flex-wrap: wrap; gap: 6px; }
+.tecnologias span { font-size: .74rem; font-weight: 800; padding: 3px 9px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+.tecnologias span.on { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; display: grid; gap: 8px; }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .heroi, .estudo, .revisao { grid-template-columns: 1fr; }
   .jogos { grid-template-columns: repeat(2, 1fr); }
-  .regras { grid-template-columns: 1fr; }
+  .regras { grid-template-columns: repeat(2, 1fr); }
+  .seletor, .caixas-contador { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 @media (max-width: 620px) {
-  .trilha, .analogia { grid-template-columns: 1fr; }
+  .trilha, .analogia, .regras { grid-template-columns: 1fr; }
   .numeros { grid-template-columns: repeat(2, 1fr); }
   .status .pilula.opc { display: none; }
   .abas { width: 100%; justify-content: space-between; }
   .abas button { padding: 7px 10px; }
-  .cena { grid-template-columns: 90px minmax(0, 1fr); }
-  .palco-mascote { width: 90px; height: 90px; }
-  .caixas-contador { grid-template-columns: repeat(3, 1fr); }
+  .cena { grid-template-columns: 84px minmax(0, 1fr); }
+  .cena canvas { width: 84px; height: 96px; }
   .memoria { grid-template-columns: repeat(3, 1fr); }
   .painel { padding: 16px; }
+  .palco .mascote { width: 96px; height: 110px; }
+  .palco .balao { left: 96px; bottom: 70px; max-width: calc(100% - 106px); }
+  .palco-estudo .balao { left: 10px; top: 10px; max-width: calc(100% - 20px); }
+  .palco-estudo { height: 290px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/createjs@1.0.1/builds/1.0.0/createjs.min.js"></script>
 </head>
 <body>
 
 <header class="topo">
   <div class="wrap">
-    <a class="marca" href="#inicio" data-ir="inicio"><b>数えよう!</b><span>Kazoeyou · contadores japoneses</span></a>
+    <a class="marca" href="#inicio" data-ir="inicio"><b>数えよう!</b><span>contadores japoneses</span></a>
     <nav class="abas" role="tablist" aria-label="Seções">
       <button role="tab" data-ir="inicio" aria-selected="true">Início</button>
       <button role="tab" data-ir="estudar" aria-selected="false">Estudar</button>
@@ -287,23 +320,22 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; }
       <button role="tab" data-ir="jogar" aria-selected="false">Jogar</button>
     </nav>
     <div class="status">
-      <span class="pilula" title="Nível e experiência"><span id="st-nivel">Nv 1</span> · <span id="st-xp">0 XP</span></span>
-      <span class="pilula opc" title="Dias seguidos estudando" id="st-seq">0 dias</span>
-      <button class="alternar" id="bt-romaji" aria-pressed="true" title="Mostrar romaji">romaji</button>
-      <button class="alternar" id="bt-som" aria-pressed="true" title="Ligar ou desligar a voz">voz</button>
+      <span class="pilula"><span id="st-nivel">Nv 1</span> · <span id="st-xp">0 XP</span></span>
+      <span class="pilula opc" id="st-seq">0 dias</span>
+      <button class="alternar" id="bt-romaji" aria-pressed="true">romaji</button>
+      <button class="alternar" id="bt-som" aria-pressed="true">voz</button>
     </div>
   </div>
 </header>
 
 <main class="wrap">
 
-  <!-- INÍCIO -->
-  <section class="vista" id="v-inicio">
+  <section id="v-inicio">
     <div class="heroi">
       <div class="texto">
-        <span class="rotulo">Japonês para falantes de português</span>
+        <span class="rotulo">Japonês para falantes de português · 9 contadores</span>
         <h1>Em japonês, você não conta só números. Você conta <em>coisas</em>.</h1>
-        <p class="lead">Cada tipo de objeto pede uma palavrinha extra, o <b>contador</b> (助数詞, josūshi). Três gravatas são <span class="jp">さんぼん</span>, três maçãs são <span class="jp">さんこ</span> e três computadores são <span class="jp">さんだい</span>. Parece estranho, mas o português faz algo parecido:</p>
+        <p class="lead">Cada tipo de coisa pede uma palavrinha extra, o <b>contador</b> (助数詞, josūshi). Três lápis são <span class="jp">さんぼん</span>, três gatos são <span class="jp">さんびき</span>, três pessoas são <span class="jp">さんにん</span>. O português faz algo parecido:</p>
         <div class="analogia">
           <div><b>um par de</b> sapatos</div>
           <div><b>uma folha de</b> papel</div>
@@ -314,66 +346,75 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; }
           <button class="botao sec" data-ir="jogar">Ir direto para os jogos</button>
         </div>
       </div>
-      <canvas class="palco-heroi" id="palco-heroi" aria-label="Kazu, o mascote, mostrando objetos que giram ao redor dele"></canvas>
+      <div class="palco palco-heroi" id="palco-heroi">
+        <canvas class="tres" aria-label="Cenário 3D com objetos girando: toque num objeto para ouvir como contá-lo"></canvas>
+        <div class="fallback" aria-hidden="true"></div>
+        <canvas class="mascote" aria-hidden="true"></canvas>
+        <div class="balao"><b class="jp">いくつ？</b><small>Toque num objeto 3D</small></div>
+        <span class="dica3d">arraste para girar</span>
+      </div>
     </div>
 
     <div class="trilha">
-      <button class="passo" data-ir="estudar"><span class="num">1</span><h3>Estudar</h3><p>Veja quando usar cada contador, ouça a pronúncia e assista à animação de contagem de 1 a 10.</p></button>
-      <button class="passo" data-ir="revisar"><span class="num">2</span><h3>Revisar</h3><p>Cartões com repetição espaçada: o que você erra volta logo; o que você sabe volta só daqui a alguns dias.</p></button>
-      <button class="passo" data-ir="jogar"><span class="num">3</span><h3>Jogar</h3><p>Mercadinho, classificação relâmpago, treino de ouvido e jogo da memória para fixar brincando.</p></button>
+      <button class="passo" data-ir="estudar"><span class="num">1</span><h3>Estudar</h3><p>Escolha um contador, veja quando usar e assista ao Kazu contar objetos 3D de 1 a 10, com voz.</p></button>
+      <button class="passo" data-ir="revisar"><span class="num">2</span><h3>Revisar</h3><p>99 cartões com repetição espaçada: o que você erra volta logo, o que você sabe volta daqui a dias.</p></button>
+      <button class="passo" data-ir="jogar"><span class="num">3</span><h3>Jogar</h3><p>Mercadinho, classificação relâmpago, treino de ouvido e memória, com combos e efeitos de anime.</p></button>
     </div>
 
     <div class="numeros">
-      <div><b id="n-dominados">0</b><span>cartões dominados de 55</span></div>
+      <div><b id="n-dominados">0</b><span>cartões dominados de 99</span></div>
       <div><b id="n-acertos">0</b><span>respostas certas</span></div>
       <div><b id="n-seq">0</b><span>dias seguidos</span></div>
       <div><b id="n-nivel">1</b><span>nível atual</span></div>
     </div>
   </section>
 
-  <!-- ESTUDAR -->
-  <section class="vista" id="v-estudar" hidden>
+  <section id="v-estudar" hidden>
     <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:14px">
-      <div><span class="rotulo">Módulo 1</span><h2>Os cinco contadores da aula</h2></div>
-      <span class="aviso-voz" id="aviso-voz"></span>
+      <div><span class="rotulo">Módulo 1</span><h2>Os nove contadores da tabela</h2></div>
+      <span class="aviso" id="aviso-voz"></span>
     </div>
-    <div class="seletor" role="tablist" id="seletor-contador"></div>
-
+    <div class="seletor" role="tablist" id="seletor"></div>
     <div class="estudo">
       <article class="painel ficha" id="ficha"></article>
-      <div class="painel" style="display:grid;gap:14px;align-content:start">
-        <canvas class="palco-estudo" id="palco-estudo" aria-label="Animação de contagem"></canvas>
-        <div class="controles-palco">
-          <span class="rotulo">Contar até</span>
-          <div id="botoes-ate" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+      <div class="painel" style="display:grid;gap:12px;align-content:start" id="painel-palco">
+        <div class="palco palco-estudo" id="palco-estudo">
+          <canvas class="tres" aria-label="Palco 3D onde os objetos caem um a um enquanto o Kazu conta"></canvas>
+          <div class="fallback" aria-hidden="true"></div>
+          <canvas class="mascote" aria-hidden="true"></canvas>
+          <div class="balao"><b class="jp">かぞえよう！</b><small>Escolha até quanto contar</small></div>
         </div>
-        <div class="grade" id="grade-leituras"></div>
+        <div class="controles"><span class="rotulo">Contar até</span><div id="botoes-ate" style="display:flex;gap:6px;flex-wrap:wrap"></div></div>
+        <div class="grade" id="grade"></div>
         <div class="explica" id="explica">Toque numa leitura para ouvir e ver a explicação.</div>
       </div>
     </div>
 
-    <div style="margin-top:32px"><span class="rotulo">Visão geral</span><h2>A tabela completa (igual à da aula)</h2></div>
-    <p style="color:var(--ink-soft);margin-top:6px">Em amarelo, as leituras em que o som muda. Repare que elas se concentram sempre nos mesmos números: 1, 3, 6, 8 e 10.</p>
-    <div class="tabela-rolagem painel" style="padding:8px 4px"><table class="geral" id="tabela-geral"></table></div>
+    <div style="margin-top:34px"><span class="rotulo">Visão geral</span><h2>A tabela completa</h2></div>
+    <p style="color:var(--ink-soft);margin:6px 0 12px">Em negrito amarelo, as leituras em que o som muda. Toque numa célula para ouvir.</p>
+    <div class="painel tabela-rolagem" style="padding:6px"><table class="geral" id="tabela"></table></div>
+    <p class="obs">Observação: 10 também aparece como じっ (じっぽん, じっさつ) em textos formais e dicionários; じゅっ é a forma mais usada na fala. 4 e 7 nos contadores preferem よん e なな; 9 prefere きゅう.</p>
 
     <div class="regras">
-      <div class="painel"><span class="rotulo">Regra 1 · a pausa っ</span><h3>1, 6, 8 e 10 “engolem” a última sílaba</h3>
-        <p>Antes de sons de K, H (e S, T, P), os números いち, ろく, はち, じゅう encolhem e viram uma pausa curta.</p>
-        <p class="ex">いち＋こ → <mark>いっ</mark>こ<br>ろく＋ほん → <mark>ろっ</mark>ぽん</p></div>
-      <div class="painel"><span class="rotulo">Regra 2 · H depois da pausa</span><h3>Depois de っ, o H vira P</h3>
-        <p>Depois da pausa, ほ ganha a bolinha (゜) e vira ぽ. É por isso que 本 tem três sons: ほん, ぼん, ぽん.</p>
-        <p class="ex">はち＋ほん → はっ<mark>ぽ</mark>ん<br>じゅう＋ほん → じっ<mark>ぽ</mark>ん</p></div>
-      <div class="painel"><span class="rotulo">Regra 3 · H depois de ん</span><h3>Depois de さん e なん, o H vira B</h3>
-        <p>O ん “amolece” o som seguinte: ほ ganha as aspinhas (゛) e vira ぼ. Vale também para 杯 (さんばい) e 匹 (さんびき).</p>
-        <p class="ex">さん＋ほん → さん<mark>ぼ</mark>ん<br>なん＋ほん → なん<mark>ぼ</mark>ん</p></div>
+      <div class="painel"><span class="rotulo">Regra 1 · a pausa っ</span><h3>1, 6, 8 e 10 encolhem</h3>
+        <p>Antes de K e H, いち, ろく, はち e じゅう perdem a última sílaba e viram uma pausa curta.</p>
+        <p class="ex">いち＋こ → <mark>いっ</mark>こ<br>ろく＋ひき → <mark>ろっ</mark>ぴき</p></div>
+      <div class="painel"><span class="rotulo">Regra 2 · H vira P ou B</span><h3>ほ, ひ, は mudam de som</h3>
+        <p>Depois da pausa っ, o H vira P (゜). Depois de さん e なん, o H vira B (゛). Vale para 本, 匹 e 杯.</p>
+        <p class="ex">はっ<mark>ぽ</mark>ん · さん<mark>び</mark>き · なん<mark>ば</mark>い</p></div>
+      <div class="painel"><span class="rotulo">Regra 3 · S e T</span><h3>Com 冊, o 6 não encolhe</h3>
+        <p>Antes de S, só 1, 8 e 10 ganham pausa. O 6 fica inteiro: ろくさつ. E o S não muda depois de さん.</p>
+        <p class="ex"><mark>いっ</mark>さつ · ろくさつ · さんさつ</p></div>
+      <div class="painel"><span class="rotulo">Regra 4 · 人 é especial</span><h3>1, 2 e 4 pessoas</h3>
+        <p>Uma e duas pessoas usam números nativos, como つ. Quatro pessoas é よにん, sem o ん do よん.</p>
+        <p class="ex"><mark>ひとり</mark> · <mark>ふたり</mark> · <mark>よ</mark>にん</p></div>
     </div>
   </section>
 
-  <!-- REVISAR -->
-  <section class="vista" id="v-revisar" hidden>
+  <section id="v-revisar" hidden>
     <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:14px">
       <div><span class="rotulo">Módulo 2</span><h2>Revisão com repetição espaçada</h2></div>
-      <div class="filtro" id="filtro-revisao" aria-label="Contadores na revisão"></div>
+      <div class="filtro" id="filtro" aria-label="Contadores na revisão"></div>
     </div>
     <div class="revisao">
       <div>
@@ -388,21 +429,19 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; }
       <aside class="painel" style="display:grid;gap:14px">
         <div><span class="rotulo">Caixas de Leitner</span>
           <div class="caixas" id="caixas"></div>
-          <div class="caixas-leg"><span>1 · hoje</span><span>2 · 1 dia</span><span>3 · 3 dias</span><span>4 · 1 sem.</span><span>5 · dominado</span></div>
-        </div>
+          <div class="caixas-leg"><span>1 · hoje</span><span>2 · 1 dia</span><span>3 · 3 dias</span><span>4 · 1 sem.</span><span>5 · dominado</span></div></div>
         <div><span class="rotulo">Domínio por contador</span><div class="dominio" id="dominio"></div></div>
-        <p style="font-size:.88rem;color:var(--ink-soft)">Cada cartão começa na caixa 1. Acertou, sobe uma caixa e espera mais para voltar. Errou, volta para a caixa 1. Tecla espaço vira o cartão.</p>
+        <p style="font-size:.88rem;color:var(--ink-soft)">Acertou, o cartão sobe uma caixa e demora mais para voltar. Errou, volta para a caixa 1. Espaço vira o cartão.</p>
       </aside>
     </div>
   </section>
 
-  <!-- JOGAR -->
-  <section class="vista" id="v-jogar" hidden>
+  <section id="v-jogar" hidden>
     <div style="margin-bottom:14px"><span class="rotulo">Módulo 3</span><h2>Jogos</h2></div>
     <div class="jogos" id="lista-jogos">
       <button class="jogo-card" data-jogo="mercado"><span class="emoji">🏪</span><h3>Mercadinho</h3><p>O cliente pede, você responde a quantidade certa antes do tempo acabar.</p><span class="recorde" data-recorde="mercado"></span></button>
-      <button class="jogo-card" data-jogo="classifica"><span class="emoji">📦</span><h3>Qual contador?</h3><p>60 segundos para mandar cada objeto para a caixa do contador certo.</p><span class="recorde" data-recorde="classifica"></span></button>
-      <button class="jogo-card" data-jogo="ouvido"><span class="emoji">👂</span><h3>Ouvido afiado</h3><p>Escute a quantidade em japonês e escolha a figura certa.</p><span class="recorde" data-recorde="ouvido"></span></button>
+      <button class="jogo-card" data-jogo="classifica"><span class="emoji">📦</span><h3>Qual contador?</h3><p>60 segundos para mandar cada coisa para o contador certo.</p><span class="recorde" data-recorde="classifica"></span></button>
+      <button class="jogo-card" data-jogo="ouvido"><span class="emoji">🎧</span><h3>Ouvido afiado</h3><p>Escute a quantidade em japonês e escolha a figura certa.</p><span class="recorde" data-recorde="ouvido"></span></button>
       <button class="jogo-card" data-jogo="memoria"><span class="emoji">🃏</span><h3>Memória</h3><p>Ache os pares: a figura e a leitura que combina com ela.</p><span class="recorde" data-recorde="memoria"></span></button>
     </div>
     <div class="arena" id="arena"></div>
@@ -411,345 +450,622 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; }
 </main>
 
 <footer class="wrap">
-  <p>Feito para estudar no próprio ritmo. Para salvar o progresso num arquivo, rode <code>python3 contadores.py servir</code> nesta pasta. <span class="selo-servidor" id="selo-servidor"></span></p>
+  <div class="tecnologias" id="tecnologias"></div>
+  <p>Para salvar o progresso num arquivo, rode <code>python3 contadores.py servir</code> na pasta do projeto. <span class="selo-servidor" id="selo-servidor"></span></p>
 </footer>
 
-<canvas id="festa" aria-hidden="true"></canvas>
+<canvas id="efeitos" aria-hidden="true"></canvas>
 
 <script>
 "use strict";
 /* =========================================================================
-   DADOS
+   1. DADOS E REGRAS DE SOM (as mesmas de contadores.py)
    ========================================================================= */
 const KANJI_NUM = ["一","二","三","四","五","六","七","八","九","十"];
 const SINO = ["いち","に","さん","よん","ご","ろく","なな","はち","きゅう","じゅう"];
+const NATIVOS = ["ひとつ","ふたつ","みっつ","よっつ","いつつ","むっつ","ななつ","やっつ","ここのつ","とお"];
+const SOK = { 1: "いっ", 6: "ろっ", 8: "はっ", 10: "じゅっ" };
+const NIN = { 1: "ひとり", 2: "ふたり", 4: "よにん" };
+const H = "はひふへほ", B = "ばびぶべぼ", P = "ぱぴぷぺぽ";
+const trocaH = (s, para) => { const i = H.indexOf(s[0]); return i < 0 ? s : para[i] + s.slice(1); };
+const NS = [1,2,3,4,5,6,7,8,9,10,"q"];
 
 const CONTADORES = [
-  { id: "tsu", k: "つ", nome: "〜つ", curto: "genérico", cor: "--c-tsu",
-    titulo: "Contador genérico (números nativos)",
-    uso: ["Coisas sem contador próprio, ou quando você não sabe qual usar.", "Objetos em geral, pedidos no restaurante, ideias, perguntas.", "Só de 1 a 10. Do 11 em diante, use 個 ou só o número."],
-    dica: "Decore como uma musiquinha: <b>hi · fu · mi · yo · itsu · mu · nana · ya · kokono · tō</b>. São os números “originais” do japonês, anteriores aos chineses.",
-    objetos: [{e:"🎒",jp:"かばん",pt:"mochila",pl:"mochilas",f:1},{e:"🍙",jp:"おにぎり",pt:"onigiri",pl:"onigiris"},{e:"🎁",jp:"プレゼント",pt:"presente",pl:"presentes"}],
-    tambem: ["ko"],
-    kana: ["ひとつ","ふたつ","みっつ","よっつ","いつつ","むっつ","ななつ","やっつ","ここのつ","とお"],
-    romaji: ["hitotsu","futatsu","mittsu","yottsu","itsutsu","muttsu","nanatsu","yattsu","kokonotsu","tō"],
-    kanji: ["一つ","二つ","三つ","四つ","五つ","六つ","七つ","八つ","九つ","十"],
-    q: { kana: "いくつ", romaji: "ikutsu", kanji: "幾つ" },
-    muda: [3,4,6,8,10], cuidado: [], alt: {},
-    notas: { 3: "Repare na pausa: mi + っ + tsu → みっつ (mittsu).", 4: "4 nativo é よ: よっつ, com pausa.", 6: "6 nativo é む: むっつ.", 8: "8 nativo é や: やっつ.", 10: "O 10 é とお, sem つ no final!", q: "Para perguntar quantos, use いくつ. Também serve para idade: おいくつですか？" } },
-  { id: "ko", k: "個", nome: "〜個", curto: "pequenos", cor: "--c-ko",
-    titulo: "Coisas pequenas e compactas",
-    uso: ["Objetos pequenos, redondos ou “em bloco”: frutas, ovos, balas, pedras.", "Muito usado no dia a dia e em lojas.", "Para coisas pequenas, 個 e つ costumam valer os dois."],
-    dica: "Pense em <b>“cápsula”</b>: se cabe na mão e tem forma de bolinha ou bloco, provavelmente é 個 (ko).",
-    objetos: [{e:"🍎",jp:"りんご",pt:"maçã",pl:"maçãs",f:1},{e:"🥚",jp:"たまご",pt:"ovo",pl:"ovos"},{e:"🍊",jp:"みかん",pt:"tangerina",pl:"tangerinas",f:1},{e:"🍬",jp:"あめ",pt:"bala",pl:"balas",f:1}],
-    tambem: ["tsu"],
-    kana: ["いっこ","にこ","さんこ","よんこ","ごこ","ろっこ","ななこ","はっこ","きゅうこ","じっこ"],
-    romaji: ["ikko","niko","sanko","yonko","goko","rokko","nanako","hakko","kyūko","jikko"],
-    kanji: ["一個","二個","三個","四個","五個","六個","七個","八個","九個","十個"],
-    q: { kana: "なんこ", romaji: "nanko", kanji: "何個" },
-    muda: [1,6,8,10], cuidado: [4,7,9], alt: { 8: ["はちこ"], 10: ["じゅっこ"] },
-    notas: { 1: "いち + こ → いっこ: o ち some e vira uma pausa (っ).", 6: "ろく + こ → ろっこ: o く vira pausa.", 8: "はち + こ → はっこ. Também se ouve はちこ.", 10: "じゅう + こ → じっこ. Hoje じゅっこ também é muito comum.", 4: "Atenção: 4 é よん, nunca し (し lembra 死, morte).", 7: "7 aqui é なな (しち existe, mas soa menos natural).", 9: "9 é きゅう, nunca く (く lembra 苦, sofrimento)." } },
-  { id: "hon", k: "本", nome: "〜本", curto: "longos", cor: "--c-hon",
-    titulo: "Coisas longas e cilíndricas",
-    uso: ["Objetos compridos: gravatas, lápis, garrafas, bananas, guarda-chuvas, árvores.", "Também filmes, gols, ligações telefônicas e trens (o “trajeto” é comprido).", "É o contador com mais mudanças de som: ほん, ぼん e ぽん."],
-    dica: "本 é o desenho de uma árvore (木) com um tracinho na raiz. Árvore = coisa <b>comprida</b>.",
-    objetos: [{e:"👔",jp:"ネクタイ",pt:"gravata",pl:"gravatas",f:1},{e:"✏️",jp:"えんぴつ",pt:"lápis",pl:"lápis"},{e:"🍌",jp:"バナナ",pt:"banana",pl:"bananas",f:1},{e:"🌂",jp:"かさ",pt:"guarda-chuva",pl:"guarda-chuvas"}],
-    tambem: [],
-    kana: ["いっぽん","にほん","さんぼん","よんほん","ごほん","ろっぽん","ななほん","はっぽん","きゅうほん","じっぽん"],
-    romaji: ["ippon","nihon","sanbon","yonhon","gohon","roppon","nanahon","happon","kyūhon","jippon"],
-    kanji: ["一本","二本","三本","四本","五本","六本","七本","八本","九本","十本"],
-    q: { kana: "なんぼん", romaji: "nanbon", kanji: "何本" },
-    muda: [1,3,6,8,10,"q"], cuidado: [4,7,9], alt: { 8: ["はちほん"], 10: ["じゅっぽん"] },
-    notas: { 1: "いち + ほん → いっぽん: pausa (っ) e o ほ vira ぽ.", 3: "さん + ほん → さんぼん: depois de ん, o ほ vira ぼ.", 6: "ろく + ほん → ろっぽん: pausa e ぽ.", 8: "はち + ほん → はっぽん: pausa e ぽ.", 10: "じゅう + ほん → じっぽん (ou じゅっぽん).", q: "なん termina em ん, então: なんぼん, como さんぼん.", 4: "4 é よん: よんほん (sem mudança).", 7: "7 é なな: ななほん.", 9: "9 é きゅう: きゅうほん." } },
-  { id: "dai", k: "台", nome: "〜台", curto: "máquinas", cor: "--c-dai",
-    titulo: "Máquinas e veículos",
-    uso: ["Aparelhos e máquinas: computadores, TVs, geladeiras, máquinas de lavar.", "Veículos: carros, bicicletas, caminhões.", "É regular: nenhum som muda. Só cuide do 4, 7 e 9."],
-    dica: "台 lembra uma <b>plataforma</b> ou bancada: aquilo que fica “montado” em cima dela é contado com だい.",
-    objetos: [{e:"💻",jp:"パソコン",pt:"computador",pl:"computadores"},{e:"🚗",jp:"くるま",pt:"carro",pl:"carros"},{e:"📺",jp:"テレビ",pt:"televisão",pl:"televisões",f:1},{e:"🚲",jp:"じてんしゃ",pt:"bicicleta",pl:"bicicletas",f:1}],
-    tambem: [],
-    kana: ["いちだい","にだい","さんだい","よんだい","ごだい","ろくだい","ななだい","はちだい","きゅうだい","じゅうだい"],
-    romaji: ["ichidai","nidai","sandai","yondai","godai","rokudai","nanadai","hachidai","kyūdai","jūdai"],
-    kanji: ["一台","二台","三台","四台","五台","六台","七台","八台","九台","十台"],
-    q: { kana: "なんだい", romaji: "nandai", kanji: "何台" },
-    muda: [], cuidado: [4,7,9], alt: {},
-    notas: { 4: "4 é よん: よんだい (nunca しだい).", 7: "7 é なな: ななだい.", 9: "9 é きゅう: きゅうだい (nunca くだい).", 1: "Sem pausa: いちだい. O D não provoca mudança.", 8: "Sem pausa: はちだい." } },
-  { id: "mai", k: "枚", nome: "〜枚", curto: "planos", cor: "--c-mai",
-    titulo: "Coisas finas e planas",
-    uso: ["Objetos finos e achatados: papel, camisas, pratos, ingressos, fotos, CDs.", "Roupas que ficam planas dobradas (camisa, camiseta, suéter).", "Também regular: só cuidado com 4, 7 e 9."],
-    dica: "Imagine uma pilha de <b>folhas</b>: se dá para empilhar achatado, é まい.",
-    objetos: [{e:"👕",jp:"シャツ",pt:"camisa",pl:"camisas",f:1},{e:"📄",jp:"かみ",pt:"papel",pl:"papéis"},{e:"🎫",jp:"チケット",pt:"ingresso",pl:"ingressos"},{e:"🍽️",jp:"おさら",pt:"prato",pl:"pratos"}],
-    tambem: [],
-    kana: ["いちまい","にまい","さんまい","よんまい","ごまい","ろくまい","ななまい","はちまい","きゅうまい","じゅうまい"],
-    romaji: ["ichimai","nimai","sanmai","yonmai","gomai","rokumai","nanamai","hachimai","kyūmai","jūmai"],
-    kanji: ["一枚","二枚","三枚","四枚","五枚","六枚","七枚","八枚","九枚","十枚"],
-    q: { kana: "なんまい", romaji: "nanmai", kanji: "何枚" },
-    muda: [], cuidado: [4,7,9], alt: {},
-    notas: { 4: "4 é よん: よんまい (nunca しまい).", 7: "7 é なな: ななまい.", 9: "9 é きゅう: きゅうまい (nunca くまい).", 1: "Sem pausa: いちまい." } },
+  { id: "tsu", k: "つ", suf: "つ", curto: "genérico", titulo: "Contador genérico (números nativos)",
+    uso: ["Coisas sem contador próprio, ou quando você não sabe qual usar.", "Pedidos no restaurante, objetos em geral, ideias.", "Só vai até 10. Depois, use 個 ou só o número."],
+    dica: "Cante: <b>hi · fu · mi · yo · itsu · mu · nana · ya · kokono · tō</b>. São os números originais do japonês.",
+    objetos: [{e:"🎁",jp:"プレゼント",pt:"presente",pl:"presentes",m:"presente"},{e:"🍙",jp:"おにぎり",pt:"onigiri",pl:"onigiris",m:"onigiri"},{e:"🎒",jp:"かばん",pt:"mochila",pl:"mochilas",f:1,m:"mochila"}],
+    tambem: ["ko"] },
+  { id: "nin", k: "人", suf: "にん", curto: "pessoas", titulo: "Pessoas",
+    uso: ["Qualquer pessoa: alunos, amigos, crianças, clientes.", "1 e 2 são irregulares: ひとり e ふたり.", "No restaurante: なんめいさまですか (forma educada, 名)."],
+    dica: "人 é o desenho de uma <b>pessoa andando</b>, com as duas pernas abertas.",
+    objetos: [{e:"🧑‍🎓",jp:"がくせい",pt:"estudante",pl:"estudantes",m:"pessoa"},{e:"👧",jp:"こども",pt:"criança",pl:"crianças",f:1,m:"crianca"},{e:"🧑",jp:"ともだち",pt:"amigo",pl:"amigos",m:"pessoa"}],
+    tambem: [] },
+  { id: "mai", k: "枚", suf: "まい", curto: "planos", titulo: "Coisas finas e planas",
+    uso: ["Papel, fotos, ingressos, pratos, selos.", "Roupas que ficam planas dobradas: camisas, camisetas.", "Regular: só cuidado com 4, 7 e 9."],
+    dica: "Imagine uma <b>pilha de folhas</b>: se dá para empilhar achatado, é まい.",
+    objetos: [{e:"📄",jp:"かみ",pt:"papel",pl:"papéis",m:"papel"},{e:"🍽️",jp:"おさら",pt:"prato",pl:"pratos",m:"prato"},{e:"👕",jp:"シャツ",pt:"camisa",pl:"camisas",f:1,m:"camisa"}],
+    tambem: [] },
+  { id: "dai", k: "台", suf: "だい", curto: "máquinas", titulo: "Máquinas e veículos",
+    uso: ["Carros, bicicletas, caminhões.", "Computadores, TVs, geladeiras, máquinas de lavar.", "Regular: só cuidado com 4, 7 e 9."],
+    dica: "台 lembra uma <b>plataforma</b>: aquilo que fica montado em cima dela se conta com だい.",
+    objetos: [{e:"🚗",jp:"くるま",pt:"carro",pl:"carros",m:"carro"},{e:"💻",jp:"パソコン",pt:"computador",pl:"computadores",m:"pc"},{e:"📺",jp:"テレビ",pt:"televisão",pl:"televisões",f:1,m:"tv"}],
+    tambem: [] },
+  { id: "hon", k: "本", suf: "ほん", curto: "longos", titulo: "Coisas longas e cilíndricas",
+    uso: ["Lápis, garrafas, guarda-chuvas, bananas, árvores.", "Também filmes, gols, ligações e trens.", "Três sons: ほん, ぼん (3, ?) e ぽん (1, 6, 8, 10)."],
+    dica: "本 é uma <b>árvore</b> (木) com um tracinho na raiz. Árvore é comprida. Mas cuidado: o livro (ほん) se conta com 冊!",
+    objetos: [{e:"✏️",jp:"えんぴつ",pt:"lápis",pl:"lápis",m:"lapis"},{e:"🍾",jp:"ボトル",pt:"garrafa",pl:"garrafas",f:1,m:"garrafa"},{e:"🌂",jp:"かさ",pt:"guarda-chuva",pl:"guarda-chuvas",m:"guarda"}],
+    tambem: [] },
+  { id: "hiki", k: "匹", suf: "ひき", curto: "animais", titulo: "Animais pequenos",
+    uso: ["Gatos, cachorros, peixes, insetos.", "Animais grandes usam 頭 (とう); pássaros, 羽 (わ).", "Mesmo padrão de 本: ひき, びき, ぴき."],
+    dica: "Se cabe no colo ou no aquário, é <b>ひき</b>. Mesmo ritmo de 本: いっぴき, さんびき, ろっぴき.",
+    objetos: [{e:"🐱",jp:"ねこ",pt:"gato",pl:"gatos",m:"gato"},{e:"🐟",jp:"さかな",pt:"peixe",pl:"peixes",m:"peixe"},{e:"🐶",jp:"いぬ",pt:"cachorro",pl:"cachorros",m:"cachorro"}],
+    tambem: [] },
+  { id: "hai", k: "杯", suf: "はい", curto: "copos", titulo: "Copos, xícaras e tigelas cheias",
+    uso: ["Bebida ou comida dentro de um recipiente: café, chá, tigela de lámen.", "Também colheradas (de açúcar, por exemplo).", "Mesmo padrão de 本: はい, ばい, ぱい."],
+    dica: "Pense na <b>quantidade que cabe</b>: “duas xícaras de café” é コーヒーを にはい.",
+    objetos: [{e:"☕",jp:"コーヒー",pt:"café",pl:"cafés",m:"xicara"},{e:"🍵",jp:"おちゃ",pt:"chá",pl:"chás",m:"cha"},{e:"🍜",jp:"ラーメン",pt:"tigela de lámen",pl:"tigelas de lámen",f:1,m:"tigela"}],
+    tambem: [] },
+  { id: "ko", k: "個", suf: "こ", curto: "pequenos", titulo: "Coisas pequenas e compactas",
+    uso: ["Frutas, ovos, balas, pedras, borrachas.", "Muito usado em lojas e no dia a dia.", "Para coisas pequenas, 個 e つ costumam valer os dois."],
+    dica: "Se cabe na mão e tem forma de <b>bolinha ou bloco</b>, provavelmente é こ.",
+    objetos: [{e:"🍎",jp:"りんご",pt:"maçã",pl:"maçãs",f:1,m:"maca"},{e:"🥚",jp:"たまご",pt:"ovo",pl:"ovos",m:"ovo"},{e:"🍊",jp:"みかん",pt:"tangerina",pl:"tangerinas",f:1,m:"laranja"}],
+    tambem: ["tsu"] },
+  { id: "satsu", k: "冊", suf: "さつ", curto: "livros", titulo: "Livros, cadernos e revistas",
+    uso: ["Qualquer coisa encadernada: livros, cadernos, revistas, mangás.", "Com S, o 6 não encolhe: ろくさつ.", "Pegadinha: livro é ほん, mas conta com 冊."],
+    dica: "冊 é o desenho antigo de <b>tiras de bambu amarradas</b>, os primeiros livros da China.",
+    objetos: [{e:"📕",jp:"ほん",pt:"livro",pl:"livros",m:"livro"},{e:"📓",jp:"ノート",pt:"caderno",pl:"cadernos",m:"caderno"},{e:"📗",jp:"ざっし",pt:"revista",pl:"revistas",f:1,m:"revista"}],
+    tambem: [] },
 ];
 const CPOR = Object.fromEntries(CONTADORES.map(c => [c.id, c]));
+CONTADORES.forEach(c => c.cor = `--c-${c.id}`);
 
+function lerKana(c, n) {
+  if (c.id === "tsu") return n === "q" ? "いくつ" : NATIVOS[n-1];
+  if (c.id === "nin" && NIN[n]) return NIN[n];
+  const s = c.suf, h = H.includes(s[0]), k = "かきくけこ".includes(s[0]), st = "さしすせそたちつてと".includes(s[0]);
+  if (n === "q") return "なん" + (h ? trocaH(s, B) : s);
+  if (SOK[n] && (h || k || (st && n !== 6))) return SOK[n] + (h ? trocaH(s, P) : s);
+  if (n === 3 && h) return "さん" + trocaH(s, B);
+  return SINO[n-1] + s;
+}
+function variantes(c, n) {
+  const l = lerKana(c, n), out = [];
+  if (n === 10 && l.startsWith("じゅっ")) out.push("じっ" + l.slice(3));
+  if ((c.id === "ko" || c.id === "hon") && n === 8) out.push("はち" + c.suf);
+  if (c.id === "nin" && n === 7) out.push("しちにん");
+  return out;
+}
+const ROMA = Object.fromEntries("あ a い i う u え e お o か ka き ki く ku け ke こ ko さ sa し shi す su せ se そ so た ta ち chi つ tsu て te と to な na に ni ぬ nu ね ne の no は ha ひ hi ふ fu へ he ほ ho ま ma み mi む mu め me も mo や ya ゆ yu よ yo ら ra り ri る ru れ re ろ ro わ wa を o ん n が ga ぎ gi ぐ gu げ ge ご go ざ za じ ji ず zu ぜ ze ぞ zo だ da ぢ ji づ zu で de ど do ば ba び bi ぶ bu べ be ぼ bo ぱ pa ぴ pi ぷ pu ぺ pe ぽ po".split(" ").reduce((a, x, i, arr) => (i % 2 ? a : a.concat([[x, arr[i+1]]])), []));
+const DIGRAFOS = { "きゅ": "kyu", "じゅ": "ju", "しゅ": "shu", "ちゅ": "chu" };
+function romaji(kana) {
+  let out = "", dobrar = false;
+  for (let i = 0; i < kana.length;) {
+    if (kana[i] === "っ") { dobrar = true; i++; continue; }
+    let sil;
+    if (DIGRAFOS[kana.slice(i, i + 2)]) { sil = DIGRAFOS[kana.slice(i, i + 2)]; i += 2; } else { sil = ROMA[kana[i]] ?? kana[i]; i++; }
+    if (dobrar) { sil = (sil.startsWith("ch") ? "t" : sil[0]) + sil; dobrar = false; }
+    out += sil;
+  }
+  return out.replace(/ou/g, "ō").replace(/oo/g, "ō").replace(/uu/g, "ū");
+}
 function leitura(c, n) {
-  if (n === "q") return { ...c.q, alt: [] };
-  return { kana: c.kana[n-1], romaji: c.romaji[n-1], kanji: c.kanji[n-1], alt: c.alt[n] || [] };
+  const kana = lerKana(c, n);
+  const kanji = c.id === "tsu" ? (n === "q" ? "幾つ" : n === 10 ? "十" : KANJI_NUM[n-1] + "つ") : (n === "q" ? "何" : KANJI_NUM[n-1]) + c.k;
+  return { kana, romaji: romaji(kana), kanji, alt: n === "q" ? [] : variantes(c, n) };
+}
+function muda(c, n) {
+  if (c.id === "tsu") return [3,4,6,8,10].includes(n);
+  return lerKana(c, n) !== (n === "q" ? "なん" + c.suf : SINO[n-1] + c.suf);
+}
+function cuidado(c, n) { return c.id !== "tsu" && !muda(c, n) && ([4,7,9].includes(n) || (c.id === "satsu" && n === 6)); }
+function nota(c, n) {
+  const l = lerKana(c, n), h = H.includes(c.suf[0]);
+  if (c.id === "tsu") return ({ 3: "Repare na pausa: みっつ (mittsu).", 4: "4 nativo é よ: よっつ.", 6: "6 nativo é む: むっつ.", 8: "8 nativo é や: やっつ.", 10: "O 10 é とお, sem つ no final!", q: "いくつ pergunta quantos. Para idade: おいくつですか？" })[n];
+  if (c.id === "nin") return ({ 1: "ひとり usa o número nativo ひと-, como ひとつ.", 2: "ふたり usa o nativo ふた-.", 4: "よにん: o 4 vira よ, sem ん.", 7: "ななにん; しちにん também é comum.", 9: "きゅうにん (くにん não se usa)." })[n];
+  if (n === "q") return h ? `なん termina em ん, então o H vira B: ${l}.` : null;
+  if (SOK[n] && l.startsWith(SOK[n])) return `${SINO[n-1]} + ${c.suf} → ${l}: a última sílaba vira pausa (っ)${h ? ` e o ${c.suf[0]} vira ${l[SOK[n].length]}` : ""}.${n === 10 ? ` Em textos formais: じっ${l.slice(3)}.` : ""}`;
+  if (n === 3 && h) return `さん + ${c.suf} → ${l}: depois de ん, o H vira B.`;
+  if (c.id === "satsu" && n === 6) return "ろくさつ: com S o 6 NÃO ganha pausa (compare com ろっこ, ろっぽん).";
+  if (n === 4) return `4 é よん: ${l} (nunca し${c.suf}).`;
+  if (n === 7) return `7 é なな: ${l}.`;
+  if (n === 9) return `9 é きゅう: ${l} (nunca く${c.suf}).`;
+  return null;
 }
 const plural = (o, n) => n === 1 ? o.pt : o.pl;
 const quantos = o => o.f ? "Quantas" : "Quantos";
 
 /* =========================================================================
-   ESTADO (localStorage + servidor Python opcional)
+   2. ESTADO (localStorage + servidor Python opcional)
    ========================================================================= */
-const CHAVE = "kazoeyou-v1";
-const ESTADO_PADRAO = () => ({ xp: 0, acertos: 0, erros: 0, dias: 0, ultimoDia: null, srs: {}, recordes: {}, romaji: true, som: true, filtro: CONTADORES.map(c => c.id), atualizado: 0 });
-let estado = ESTADO_PADRAO();
+const CHAVE = "kazoeyou-v2";
+const PADRAO = () => ({ xp: 0, acertos: 0, erros: 0, dias: 0, ultimoDia: null, srs: {}, recordes: {}, romaji: true, som: true, filtro: CONTADORES.map(c => c.id), atualizado: 0 });
+let estado = PADRAO();
 try { const s = JSON.parse(localStorage.getItem(CHAVE) || "null"); if (s) estado = { ...estado, ...s }; } catch (e) {}
-
 const API = location.protocol.startsWith("http") ? "api/progresso" : null;
 let servidorOk = false, timerSalvar = null;
 function salvar() {
   estado.atualizado = Date.now();
   try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (e) {}
-  if (servidorOk) {
-    clearTimeout(timerSalvar);
-    timerSalvar = setTimeout(() => {
-      fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(estado) }).catch(() => {});
-    }, 600);
-  }
+  if (!servidorOk) return;
+  clearTimeout(timerSalvar);
+  timerSalvar = setTimeout(() => fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(estado) }).catch(() => {}), 600);
 }
 async function conectarServidor() {
   if (!API) return;
   try {
     const r = await fetch(API, { cache: "no-store" });
     if (!r.ok || !(r.headers.get("content-type") || "").includes("json")) return;
-    const d = await r.json();
-    servidorOk = true;
-    if (d && d.atualizado && d.atualizado > (estado.atualizado || 0)) { estado = { ...ESTADO_PADRAO(), ...d }; atualizarTudo(); }
-    document.getElementById("selo-servidor").textContent = "Servidor Python conectado: progresso salvo em progresso.json.";
+    const d = await r.json(); servidorOk = true;
+    if (d && d.atualizado > (estado.atualizado || 0)) { estado = { ...PADRAO(), ...d }; atualizarTudo(); }
+    $("#selo-servidor").textContent = "Servidor Python conectado: progresso salvo em progresso.json.";
     salvar();
   } catch (e) {}
 }
-
-function hoje() { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+const diaStr = d => `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
 function marcarDia() {
-  const h = hoje();
+  const h = diaStr(new Date());
   if (estado.ultimoDia === h) return;
-  const ontem = new Date(Date.now() - 864e5);
-  const o = `${ontem.getFullYear()}-${ontem.getMonth()+1}-${ontem.getDate()}`;
-  estado.dias = estado.ultimoDia === o ? estado.dias + 1 : 1;
+  estado.dias = estado.ultimoDia === diaStr(new Date(Date.now() - 864e5)) ? estado.dias + 1 : 1;
   estado.ultimoDia = h;
 }
-function ganharXP(q, certo = true) {
-  estado.xp += q; marcarDia();
-  if (certo) estado.acertos++; else estado.erros++;
-  salvar(); atualizarStatus();
-}
-const nivel = () => Math.floor(estado.xp / 120) + 1;
+function ganharXP(q, certo = true) { estado.xp += q; marcarDia(); if (certo) estado.acertos++; else estado.erros++; salvar(); atualizarStatus(); }
+const nivel = () => Math.floor(estado.xp / 150) + 1;
 
 /* =========================================================================
-   VOZ (Web Speech API)
+   3. VOZ
    ========================================================================= */
 let vozJa = null;
 const temVoz = "speechSynthesis" in window;
 function carregarVozes() {
   if (!temVoz) return;
   vozJa = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)) || null;
-  const aviso = document.getElementById("aviso-voz");
-  if (aviso) aviso.textContent = vozJa ? "" : "Sem voz japonesa instalada: a pronúncia pode sair com sotaque do sistema.";
+  const a = document.getElementById("aviso-voz");
+  if (a) a.textContent = vozJa ? "" : "Sem voz japonesa no sistema: a pronúncia pode sair com sotaque.";
 }
 if (temVoz) { carregarVozes(); speechSynthesis.onvoiceschanged = carregarVozes; }
 function falar(txt, cancelar = true) {
   if (!temVoz || !estado.som) return;
   try {
     if (cancelar) speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(txt);
-    u.lang = "ja-JP"; if (vozJa) u.voice = vozJa; u.rate = .85;
+    const u = new SpeechSynthesisUtterance(txt); u.lang = "ja-JP"; if (vozJa) u.voice = vozJa; u.rate = .85;
     speechSynthesis.speak(u);
+    mascotes.forEach(m => m.visivel() && m.reagir("falar"));
   } catch (e) {}
 }
 const SVG_SOM = '<svg class="icone-som" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
 
 /* =========================================================================
-   MOTOR "PALCO" — uma releitura do Flash em <canvas>
-   Palco = Stage, Sprite = MovieClip, tween() = Classic Tween da linha do tempo
-   ========================================================================= */
-const REDUZ = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const Ease = {
-  linear: t => t,
-  saida: t => 1 - Math.pow(1 - t, 3),
-  volta: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
-  quica: t => { const n = 7.5625, d = 2.75; if (t < 1/d) return n*t*t; if (t < 2/d) return n*(t-=1.5/d)*t+.75; if (t < 2.5/d) return n*(t-=2.25/d)*t+.9375; return n*(t-=2.625/d)*t+.984375; },
-  suave: t => -(Math.cos(Math.PI * t) - 1) / 2,
-};
-let coresCache = {}, coresQuando = 0;
-function cor(nome) {
-  const agora = performance.now();
-  if (agora - coresQuando > 500) { coresCache = {}; coresQuando = agora; }
-  return coresCache[nome] ??= getComputedStyle(document.documentElement).getPropertyValue(nome).trim() || "#888";
-}
-const dorme = ms => new Promise(r => setTimeout(r, REDUZ ? 0 : ms));
-
-class Palco {
-  constructor(canvas, aoDesenhar) {
-    this.cv = canvas; this.ctx = canvas.getContext("2d"); this.itens = []; this.tweens = []; this.t = performance.now(); this.aoDesenhar = aoDesenhar;
-    new ResizeObserver(() => this.ajustar()).observe(canvas); this.ajustar();
-    requestAnimationFrame(t => this.quadro(t));
-  }
-  ajustar() {
-    const r = this.cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
-    this.w = r.width; this.h = r.height;
-    this.cv.width = Math.max(1, Math.round(r.width * d)); this.cv.height = Math.max(1, Math.round(r.height * d));
-    this.ctx.setTransform(d, 0, 0, d, 0, 0);
-  }
-  add(s) { this.itens.push(s); return s; }
-  remover(s) { this.itens = this.itens.filter(x => x !== s); this.tweens = this.tweens.filter(t => t.alvo !== s); }
-  tween(alvo, props, dur = 400, ease = Ease.saida, atraso = 0) {
-    return new Promise(res => {
-      if (REDUZ) { Object.assign(alvo, props); res(); return; }
-      this.tweens.push({ alvo, de: null, para: props, dur, ease, ini: this.t + atraso, res });
-    });
-  }
-  quadro(ts) {
-    if (!this.cv.isConnected) return; // palco removido da página: para a animação
-    this.t = ts;
-    for (const tw of [...this.tweens]) {
-      if (ts < tw.ini) continue;
-      if (!tw.de) { tw.de = {}; for (const k in tw.para) tw.de[k] = tw.alvo[k]; }
-      const p = Math.min(1, (ts - tw.ini) / tw.dur), e = tw.ease(p);
-      for (const k in tw.para) tw.alvo[k] = tw.de[k] + (tw.para[k] - tw.de[k]) * e;
-      if (p >= 1) { this.tweens.splice(this.tweens.indexOf(tw), 1); tw.res(); }
-    }
-    if (this.cv.offsetParent !== null || this.cv.id === "festa") {
-      const c = this.ctx; c.clearRect(0, 0, this.w, this.h);
-      this.aoDesenhar?.(c, ts, this);
-      this.itens.sort((a, b) => (a.z || 0) - (b.z || 0));
-      for (const s of this.itens) {
-        if (s.alpha <= 0) continue;
-        c.save(); c.translate(s.x, s.y); c.rotate(s.rot || 0); c.scale(s.sx ?? 1, s.sy ?? 1); c.globalAlpha = s.alpha ?? 1;
-        s.desenhar(c, ts); c.restore();
-      }
-    }
-    requestAnimationFrame(t => this.quadro(t));
-  }
-}
-function spriteEmoji(e, tam) {
-  return { x: 0, y: 0, rot: 0, sx: 1, sy: 1, alpha: 1, z: 1, e, tam,
-    desenhar(c) { c.font = `${this.tam}px ${cor("--f-emoji")}`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(this.e, 0, 0); } };
-}
-function spriteBalao(texto, sub = "") {
-  return { x: 0, y: 0, sx: 1, sy: 1, alpha: 1, z: 5, texto, sub, cauda: "esq",
-    desenhar(c) {
-      c.font = `700 22px ${cor("--f-jp")}`;
-      const w = Math.max(c.measureText(this.texto).width, (c.font = `600 13px ${cor("--f-body")}`, c.measureText(this.sub).width)) + 32;
-      const h = this.sub ? 62 : 44;
-      c.fillStyle = cor("--surface"); c.strokeStyle = cor("--line"); c.lineWidth = 1.5;
-      c.beginPath(); c.roundRect(-w/2, -h/2, w, h, 16); c.fill(); c.stroke();
-      c.beginPath();
-      if (this.cauda === "esq") { c.moveTo(-w/2 + 14, h/2 - 6); c.lineTo(-w/2 - 8, h/2 + 10); c.lineTo(-w/2 + 30, h/2 - 1); }
-      else { c.moveTo(-10, h/2 - 1); c.lineTo(0, h/2 + 12); c.lineTo(10, h/2 - 1); }
-      c.fill();
-      c.fillStyle = cor("--ink"); c.textAlign = "center"; c.textBaseline = "middle";
-      c.font = `700 22px ${cor("--f-jp")}`; c.fillText(this.texto, 0, this.sub ? -9 : 1);
-      if (this.sub) { c.fillStyle = cor("--ink-soft"); c.font = `600 13px ${cor("--f-body")}`; c.fillText(this.sub, 0, 16); }
-    } };
-}
-/* Kazu (数 = número), o mascote: um tanuki-gato desenhado só com formas vetoriais */
-function spriteKazu(tam = 1) {
-  return { x: 0, y: 0, rot: 0, sx: tam, sy: tam, alpha: 1, z: 3, humor: "normal", pulo: 0, piscaEm: 0,
-    desenhar(c, ts) {
-      const bob = REDUZ ? 0 : Math.sin(ts / 420) * 3;
-      c.translate(0, bob - this.pulo);
-      const corpo = cor("--kazu"), barriga = cor("--kazu-belly"), tinta = cor("--ink");
-      c.fillStyle = "rgba(0,0,0,.12)"; c.beginPath(); c.ellipse(0, 62 + this.pulo - bob, 42 - this.pulo * .2, 8, 0, 0, 7); c.fill();
-      c.fillStyle = corpo;
-      c.beginPath(); c.moveTo(-36, -30); c.lineTo(-30, -66); c.lineTo(-8, -44); c.fill();
-      c.beginPath(); c.moveTo(36, -30); c.lineTo(30, -66); c.lineTo(8, -44); c.fill();
-      c.beginPath(); c.ellipse(0, 4, 50, 56, 0, 0, 7); c.fill();
-      c.fillStyle = barriga; c.beginPath(); c.ellipse(0, 22, 32, 32, 0, 0, 7); c.fill();
-      c.fillStyle = tinta; c.font = `900 20px ${cor("--f-jp")}`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("数", 0, 26);
-      const piscando = !REDUZ && (ts % 3600) < 140;
-      c.strokeStyle = tinta; c.fillStyle = tinta; c.lineWidth = 3.2; c.lineCap = "round";
-      for (const lado of [-1, 1]) {
-        const ex = lado * 17, ey = -16;
-        if (this.humor === "feliz") { c.beginPath(); c.arc(ex, ey + 3, 6, Math.PI * 1.15, Math.PI * 1.85); c.stroke(); }
-        else if (piscando) { c.beginPath(); c.moveTo(ex - 5, ey); c.lineTo(ex + 5, ey); c.stroke(); }
-        else { c.beginPath(); c.arc(ex, ey, 5, 0, 7); c.fill(); c.fillStyle = barriga; c.beginPath(); c.arc(ex + 1.6, ey - 1.6, 1.6, 0, 7); c.fill(); c.fillStyle = tinta; }
-      }
-      c.fillStyle = "rgba(240,110,130,.45)"; c.beginPath(); c.arc(-28, -4, 6, 0, 7); c.arc(28, -4, 6, 0, 7); c.fill();
-      c.beginPath();
-      if (this.humor === "triste") c.arc(0, 2, 6, Math.PI * 1.2, Math.PI * 1.8);
-      else c.arc(0, -6, 7, Math.PI * .2, Math.PI * .8);
-      c.stroke();
-    } };
-}
-async function pular(palco, kazu, humor = "feliz") {
-  kazu.humor = humor;
-  if (humor === "feliz") { await palco.tween(kazu, { pulo: 22 }, 180, Ease.saida); await palco.tween(kazu, { pulo: 0 }, 420, Ease.quica); }
-  else { await palco.tween(kazu, { rot: -.12 }, 120); await palco.tween(kazu, { rot: .12 }, 160); await palco.tween(kazu, { rot: 0 }, 160); }
-  setTimeout(() => { kazu.humor = "normal"; }, 900);
-}
-
-/* Confete (camada fixa sobre a página) */
-const palcoFesta = new Palco(document.getElementById("festa"));
-let particulas = [];
-palcoFesta.aoDesenhar = (c) => {
-  if (!particulas.length) return;
-  const cores = ["--c-tsu","--c-ko","--c-hon","--c-dai","--c-mai","--kin"].map(cor);
-  particulas = particulas.filter(p => p.vida > 0);
-  for (const p of particulas) {
-    p.vy += .32; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.vida--;
-    c.save(); c.translate(p.x, p.y); c.rotate(p.r); c.globalAlpha = Math.min(1, p.vida / 30);
-    c.fillStyle = cores[p.c]; c.fillRect(-5, -3, 10, 6); c.restore();
-  }
-};
-function festa(el) {
-  if (REDUZ) return;
-  const r = el ? el.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 };
-  const x = r.left + r.width / 2, y = r.top + r.height / 2;
-  for (let i = 0; i < 46; i++) particulas.push({ x, y, vx: (Math.random() - .5) * 13, vy: -Math.random() * 11 - 3, r: Math.random() * 6, vr: (Math.random() - .5) * .4, vida: 70 + Math.random() * 30, c: i % 6 });
-}
-
-/* =========================================================================
-   UTILIDADES
+   4. UTILIDADES
    ========================================================================= */
 const $ = s => document.querySelector(s);
+const REDUZ = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const embaralhar = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const sortear = a => a[Math.floor(Math.random() * a.length)];
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
-function figura(e, n) { return n === "q" ? `<span class="emoji">${e}</span><b style="font-size:.8em;align-self:center">？</b>` : Array.from({ length: n }, () => `<span class="emoji">${e}</span>`).join(""); }
-function rj(txt) { return estado.romaji ? `<span class="rj">${esc(txt)}</span>` : ""; }
+const dorme = ms => new Promise(r => setTimeout(r, REDUZ ? 0 : ms));
+const cor = nome => getComputedStyle(document.documentElement).getPropertyValue(nome).trim() || "#999";
+function figura(e, n) { return n === "q" ? `<span class="emoji">${e}</span><b>？</b>` : Array.from({ length: n }, () => `<span class="emoji">${e}</span>`).join(""); }
+const rj = t => estado.romaji ? `<span class="rj">${esc(t)}</span>` : "";
 
-/* Opções erradas plausíveis: o erro clássico é esquecer a mudança de som */
+/* Alternativas erradas: os erros típicos de quem esquece a mudança de som */
 function formasIngenuas(c, n) {
-  if (n === "q") return ["なんほん","なんぽん","なんこ","なんだい","なんまい","いくつ","なにほん"];
-  if (c.id === "tsu") return [SINO[n-1] + "つ", ...(n === 4 ? ["しつ"] : [])];
-  const base = { ko: "こ", hon: "ほん", dai: "だい", mai: "まい" }[c.id];
-  const out = [SINO[n-1] + base];
-  if (n === 4) out.push("し" + base); if (n === 9) out.push("く" + base); if (n === 7) out.push("しち" + base);
-  if (c.id === "hon") { out.push(SINO[n-1] + "ぼん"); if ([1,6,8,10].includes(n)) out.push(SINO[n-1].slice(0, -1) + "っほん"); else out.push(SINO[n-1] + "ぽん"); }
-  if (c.id !== "hon" && c.id !== "ko" && [1,6,8,10].includes(n)) out.push(SINO[n-1].slice(0, -1) + "っ" + base);
-  return out;
+  if (n === "q") return ["なん" + c.suf, "なん" + trocaH(c.suf, P), "なに" + c.suf, ...CONTADORES.map(o => lerKana(o, "q"))];
+  if (c.id === "tsu") return [SINO[n-1] + "つ", n === 10 ? "じゅっつ" : null, n === 4 ? "しつ" : null];
+  const s = c.suf, h = H.includes(s[0]), out = [SINO[n-1] + s];
+  if (n === 4) out.push("し" + s, c.id === "nin" ? "よんにん" : null);
+  if (n === 9) out.push("く" + s);
+  if (n === 7) out.push("しち" + s);
+  if (c.id === "nin" && n <= 2) out.push(n === 1 ? "ひとにん" : "ふたにん");
+  if (h) { out.push(SINO[n-1] + trocaH(s, B), SINO[n-1] + trocaH(s, P)); if (SOK[n]) out.push(SOK[n] + s); }
+  if (c.id === "satsu" && n === 6) out.push("ろっさつ");
+  if (SOK[n] && !h && !muda(c, n)) out.push(SOK[n] + s);
+  return out.filter(Boolean);
 }
 function opcoesDe(c, n) {
   const certa = leitura(c, n);
-  const proibidas = new Set([certa.kana, ...certa.alt, ...c.tambem.map(t => leitura(CPOR[t], n).kana)]);
-  const candidatas = [...embaralhar(formasIngenuas(c, n))];
-  const vizinhos = n === "q" ? [] : embaralhar([n-1, n+1, n-2, n+2].filter(m => m >= 1 && m <= 10)).map(m => leitura(c, m).kana);
-  candidatas.push(...vizinhos, ...embaralhar(CONTADORES.filter(o => o !== c)).map(o => leitura(o, n).kana));
+  const proibidas = new Set([certa.kana, ...certa.alt, ...c.tambem.map(t => lerKana(CPOR[t], n))]);
+  const cand = [...embaralhar(formasIngenuas(c, n))];
+  if (n !== "q") cand.push(...embaralhar([n-1, n+1, n-2, n+2].filter(m => m >= 1 && m <= 10)).map(m => lerKana(c, m)));
+  cand.push(...embaralhar(CONTADORES.filter(o => o !== c)).map(o => lerKana(o, n)));
   const erradas = [];
-  for (const k of candidatas) { if (!proibidas.has(k) && !erradas.includes(k)) erradas.push(k); if (erradas.length === 3) break; }
+  for (const k of cand) { if (!proibidas.has(k) && !erradas.includes(k)) erradas.push(k); if (erradas.length === 3) break; }
   return embaralhar([certa.kana, ...erradas]);
-}
-function romajiDe(kana) {
-  for (const c of CONTADORES) { const i = c.kana.indexOf(kana); if (i >= 0) return c.romaji[i]; if (c.q.kana === kana) return c.q.romaji; }
-  const t = { "っ": "*", "きゅう": "kyū", "じゅう": "jū", "しち": "shichi", "いち": "ichi", "ろく": "roku", "はち": "hachi", "さん": "san", "よん": "yon", "なな": "nana", "なん": "nan", "なに": "nani", "ほん": "hon", "ぼん": "bon", "ぽん": "pon", "だい": "dai", "まい": "mai", "つ": "tsu", "こ": "ko", "し": "shi", "く": "ku", "に": "ni", "ご": "go", "い": "i", "ろ": "ro", "は": "ha", "じ": "ji" };
-  let s = kana, out = "";
-  while (s) { const k = Object.keys(t).sort((a, b) => b.length - a.length).find(k => s.startsWith(k)); if (!k) { out += s[0]; s = s.slice(1); continue; } out += t[k]; s = s.slice(k.length); }
-  return out.replace(/\*(.)/g, "$1$1");
 }
 
 /* =========================================================================
-   NAVEGAÇÃO
+   5. CREATEJS — o runtime que o Adobe Animate usa ao publicar em HTML5 Canvas.
+   O Kazu segue a estrutura de um símbolo do Animate: MovieClip com linha do
+   tempo, rótulos de quadro ("parado", "feliz", "triste", "falar") e scripts
+   de quadro. Um kazu.js exportado do Animate com lib.Kazu pode substituí-lo.
+   ========================================================================= */
+const temCJS = !!window.createjs;
+const lib = window.KazuLib || {};
+if (temCJS) (function (cjs) {
+  const TRACO = "#5B4A6B", PELO = "#FFCFA8", BARRIGA = "#FFF4E6", ORELHA = "#FFB3C7", OLHO = "#5B4A8B", LISTRA = "#EFA97E";
+  const forma = desenho => { const s = new cjs.Shape(); desenho(s.graphics); return s; };
+  function olhoAnime(g, x) {
+    g.s(TRACO).ss(2.5).f(OLHO).de(x - 10, -66, 20, 27);
+    g.s().lf(["rgba(255,255,255,0)", "rgba(190,170,255,.9)"], [0, 1], 0, -60, 0, -40).de(x - 7, -55, 14, 14);
+    g.f("#fff").dc(x + 3, -58, 5).dc(x - 4, -46, 2.4).dc(x + 5, -46, 1.3);
+  }
+  lib.Kazu = function () {
+    cjs.MovieClip.call(this, { labels: { parado: 0, feliz: 40, triste: 70, falar: 100 }, loop: true });
+    const boneco = this.boneco = new cjs.Container();
+    const cauda = forma(g => g.s(TRACO).ss(3).f(PELO).mt(30, 30).bt(70, 20, 78, -20, 58, -34).bt(66, -8, 52, 16, 26, 44).cp()
+      .s().f(LISTRA).mt(62, -26).lt(70, -14).lt(66, -6).lt(58, -18).cp());
+    const corpo = forma(g => g.s(TRACO).ss(3).f(PELO).de(-42, 4, 84, 66).s().f(BARRIGA).de(-26, 18, 52, 46)
+      .s(TRACO).ss(3).f(PELO).de(-40, 54, 26, 16).de(14, 54, 26, 16));
+    const orelhas = forma(g => g.s(TRACO).ss(3).f(PELO).mt(-50, -78).lt(-44, -122).lt(-14, -96).cp().mt(50, -78).lt(44, -122).lt(14, -96).cp()
+      .s().f(ORELHA).mt(-42, -86).lt(-40, -110).lt(-24, -96).cp().mt(42, -86).lt(40, -110).lt(24, -96).cp());
+    const cabeca = forma(g => g.s(TRACO).ss(3).f(PELO).de(-62, -112, 124, 104)
+      .s().f(BARRIGA).de(-30, -50, 60, 34)
+      .s(TRACO).ss(2.5).mt(-6, -36).qt(-3, -31, 0, -35).qt(3, -31, 6, -36)
+      .f(TRACO).s().de(-4, -44, 8, 5));
+    const blush = forma(g => { g.f("rgba(255,140,170,.45)").de(-52, -46, 22, 12).de(30, -46, 22, 12);
+      g.s("rgba(230,110,140,.75)").ss(1.6); for (const x of [-48, -42, -36, 34, 40, 46]) g.mt(x, -38).lt(x + 4, -46); });
+    const kanji = new cjs.Text("数", "bold 20px 'Zen Maru Gothic', sans-serif", TRACO); kanji.textAlign = "center"; kanji.y = 28;
+    const olhos = this.olhos = forma(g => { olhoAnime(g, -24); olhoAnime(g, 24); }); olhos.regY = -52; olhos.y = -52;
+    const felizes = forma(g => g.s(TRACO).ss(4, "round").mt(-34, -48).qt(-24, -64, -14, -48).mt(14, -48).qt(24, -64, 34, -48));
+    const tristes = forma(g => { g.s(TRACO).ss(3.5, "round").mt(-34, -56).qt(-24, -48, -14, -56).mt(14, -56).qt(24, -48, 34, -56)
+      .mt(-36, -70).lt(-16, -76).mt(36, -70).lt(16, -76); g.s().f("#9FD3F5").mt(-20, -50).qt(-26, -40, -20, -36).qt(-14, -40, -20, -50); });
+    const boca = forma(g => g.s(TRACO).ss(2.5).f("#F07A95").de(-7, -32, 14, 12));
+    const gota = forma(g => g.s(TRACO).ss(2).f("#BFE6FF").mt(0, 0).qt(-10, 16, 0, 20).qt(10, 16, 0, 0)); gota.x = 58; gota.y = -96;
+    const estrelas = forma(g => { g.f("#FFE27A").s(TRACO).ss(1.5); for (const [x, y, r] of [[-78, -100, 11], [80, -70, 8], [-70, -20, 7]]) g.mt(x, y - r).qt(x, y, x + r, y).qt(x, y, x, y + r).qt(x, y, x - r, y).qt(x, y, x, y - r); });
+    boneco.addChild(cauda, corpo, kanji, orelhas, cabeca, blush, olhos, felizes, tristes, boca, gota, estrelas);
+    boneco.regY = 70;
+    this.addChild(boneco);
+    const T = (o, p) => cjs.Tween.get(o).to(p, 0);
+    // Corpo: respira (parado), pula (feliz), balança (triste), fala (falar)
+    this.timeline.addTween(T(boneco, { y: 0, rotation: 0, scaleX: 1, scaleY: 1 })
+      .to({ scaleY: 1.035, scaleX: .985 }, 20, cjs.Ease.sineInOut).to({ scaleY: 1, scaleX: 1 }, 20, cjs.Ease.sineInOut)
+      .to({ scaleY: .82, scaleX: 1.14 }, 4).to({ y: -46, scaleY: 1.12, scaleX: .92 }, 7, cjs.Ease.quadOut).to({ y: 0, scaleY: 1, scaleX: 1 }, 7, cjs.Ease.quadIn)
+      .to({ scaleY: .88, scaleX: 1.08 }, 3).to({ scaleY: 1, scaleX: 1 }, 9, cjs.Ease.backOut)
+      .to({ rotation: -7 }, 6).to({ rotation: 6 }, 8).to({ rotation: -3 }, 8).to({ rotation: 0 }, 8)
+      .to({ scaleY: 1.025 }, 8).to({ scaleY: 1 }, 7).to({ scaleY: 1.025 }, 8).to({ scaleY: 1 }, 7));
+    this.timeline.addTween(T(olhos, { alpha: 1, scaleY: 1 }).wait(32).to({ scaleY: .1 }, 2).to({ scaleY: 1 }, 2).wait(4)
+      .to({ alpha: 0 }, 0).wait(60).to({ alpha: 1 }, 0).wait(14).to({ scaleY: .1 }, 2).to({ scaleY: 1 }, 2).wait(12));
+    this.timeline.addTween(T(felizes, { alpha: 0 }).wait(40).to({ alpha: 1 }, 0).wait(30).to({ alpha: 0 }, 0).wait(60));
+    this.timeline.addTween(T(tristes, { alpha: 0 }).wait(70).to({ alpha: 1 }, 0).wait(30).to({ alpha: 0 }, 0).wait(30));
+    this.timeline.addTween(T(gota, { alpha: 0, y: -100 }).wait(70).to({ alpha: 1 }, 0).to({ y: -78 }, 20, cjs.Ease.quadIn).to({ alpha: 0 }, 10).wait(30));
+    this.timeline.addTween(T(estrelas, { alpha: 0, scaleX: .2, scaleY: .2 }).wait(40).to({ alpha: 1 }, 0).to({ scaleX: 1.15, scaleY: 1.15 }, 8, cjs.Ease.backOut)
+      .to({ scaleX: .9, scaleY: .9 }, 8).to({ scaleX: 1.1, scaleY: 1.1 }, 8).to({ alpha: 0 }, 6).wait(60));
+    let tl = T(boca, { alpha: 0 }).wait(100);
+    for (let i = 0; i < 4; i++) tl = tl.to({ alpha: 1 }, 0).wait(4).to({ alpha: 0 }, 0).wait(3);
+    this.timeline.addTween(tl.wait(2));
+    // Scripts de quadro, como o Animate gera (this.frame_39 etc.)
+    this.frame_39 = this.frame_69 = this.frame_99 = this.frame_129 = function () { this.gotoAndPlay("parado"); };
+    this.timeline.addTween(cjs.Tween.get(this).wait(39).call(this.frame_39).wait(30).call(this.frame_69).wait(30).call(this.frame_99).wait(30).call(this.frame_129).wait(1));
+  };
+  lib.Kazu.prototype = Object.create(cjs.MovieClip.prototype);
+  lib.Kazu.prototype.constructor = lib.Kazu;
+  cjs.Ticker.timingMode = cjs.Ticker.RAF_SYNCHED;
+  cjs.Ticker.framerate = 30;
+})(window.createjs);
+
+class Mascote {
+  constructor(canvas) {
+    this.cv = canvas;
+    if (!temCJS) return;
+    this.stage = new createjs.Stage(canvas);
+    this.kazu = new lib.Kazu();
+    this.stage.addChild(this.kazu);
+    this.ajustar();
+    new ResizeObserver(() => this.ajustar()).observe(canvas);
+  }
+  ajustar() {
+    if (!this.stage) return;
+    const r = this.cv.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+    if (!r.width) return;
+    this.cv.width = r.width * d; this.cv.height = r.height * d;
+    const esc = Math.min(r.width / 210, r.height / 240) * d;
+    this.kazu.scaleX = this.kazu.scaleY = esc;
+    this.kazu.x = this.cv.width / 2; this.kazu.y = this.cv.height - 14 * esc;
+  }
+  visivel() { return this.cv.isConnected && this.cv.offsetParent !== null; }
+  reagir(estadoKazu) {
+    riveKazu.reagir(estadoKazu);
+    if (!this.kazu) return;
+    if (estadoKazu === "falar" && this.kazu.currentLabel !== "parado") return;
+    this.kazu.gotoAndPlay(estadoKazu);
+  }
+}
+const mascotes = [];
+function novaMascote(cv) { const m = new Mascote(cv); mascotes.push(m); return m; }
+if (temCJS) createjs.Ticker.addEventListener("tick", () => {
+  for (let i = mascotes.length - 1; i >= 0; i--) {
+    const m = mascotes[i];
+    if (!m.cv.isConnected) { mascotes.splice(i, 1); continue; }
+    if (m.stage && m.visivel()) m.stage.update();
+  }
+  fx.tick();
+});
+
+/* Camada de efeitos de anime (CreateJS): pétalas de sakura, brilhos e cut-in */
+const fx = {
+  stage: null, ativos: [],
+  iniciar() {
+    if (!temCJS) return;
+    const cv = $("#efeitos"); this.stage = new createjs.Stage(cv);
+    const ajustar = () => { const d = Math.min(devicePixelRatio || 1, 2); cv.width = innerWidth * d; cv.height = innerHeight * d; this.stage.scaleX = this.stage.scaleY = d; this.stage.update(); };
+    addEventListener("resize", ajustar); ajustar();
+  },
+  tick() {
+    if (!this.stage || (!this.ativos.length && !this.stage.numChildren)) return;
+    for (const p of this.ativos) { p.vy += .18; p.vx *= .985; p.o.x += p.vx + Math.sin(p.t / 9) * .8; p.o.y += p.vy; p.o.rotation += p.vr; p.t++; p.o.alpha = Math.min(1, (p.vida - p.t) / 25); }
+    this.ativos = this.ativos.filter(p => { if (p.t < p.vida) return true; this.stage.removeChild(p.o); return false; });
+    this.stage.update();
+  },
+  centro(el) { const r = el ? el.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 }; return [r.left + r.width / 2, r.top + r.height / 2]; },
+  sakura(el, n = 26) {
+    if (!this.stage || REDUZ) return;
+    const [x, y] = this.centro(el), tons = ["#FFC4DA", "#FFB0CC", "#FFE0EC", "#E7D6FF", "#FFF0B8"];
+    for (let i = 0; i < n; i++) {
+      const s = new createjs.Shape(), c = tons[i % tons.length], k = .7 + Math.random() * .7;
+      if (i % 4 === 3) s.graphics.f("#FFE27A").s("#E8B93A").ss(1).mt(0, -9).qt(0, 0, 9, 0).qt(0, 0, 0, 9).qt(0, 0, -9, 0).qt(0, 0, 0, -9);
+      else s.graphics.f(c).s("rgba(214,120,160,.6)").ss(1).mt(0, 9).bt(-10, 2, -7, -9, -2, -9).lt(0, -6).lt(2, -9).bt(7, -9, 10, 2, 0, 9);
+      s.x = x; s.y = y; s.scaleX = s.scaleY = k; s.rotation = Math.random() * 360;
+      this.stage.addChild(s);
+      const a = Math.random() * Math.PI * 2, v = 3 + Math.random() * 7;
+      this.ativos.push({ o: s, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 4, vr: (Math.random() - .5) * 14, t: 0, vida: 70 + Math.random() * 40 });
+    }
+  },
+  cutin(texto, sub) {
+    if (!this.stage || REDUZ) return;
+    const W = innerWidth, Hh = innerHeight, cx = W / 2, cy = Hh * .42;
+    const linhas = new createjs.Shape(), g = linhas.graphics;
+    for (let i = 0; i < 70; i++) {
+      const a = (i / 70) * Math.PI * 2 + Math.random() * .05, r1 = Math.max(W, Hh) * (.42 + Math.random() * .12), r2 = Math.max(W, Hh);
+      g.f(i % 2 ? "rgba(117,99,217,.30)" : "rgba(246,168,198,.35)").mt(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1).lt(cx + Math.cos(a - .018) * r2, cy + Math.sin(a - .018) * r2).lt(cx + Math.cos(a + .018) * r2, cy + Math.sin(a + .018) * r2).cp();
+    }
+    const faixa = new createjs.Container(), fundo = new createjs.Shape(), alt = Math.min(130, Hh * .2);
+    fundo.graphics.lf(["#E9E4FF", "#FFD6E7", "#FFF2CC"], [0, .55, 1], -W / 2, 0, W / 2, 0).mt(-W * .7, -alt / 2).lt(W * .7, -alt / 2 - 18).lt(W * .7, alt / 2 - 18).lt(-W * .7, alt / 2).cp();
+    fundo.graphics.s("#fff").ss(2); for (let i = 0; i < 12; i++) { const y = -alt / 2 + 10 + i * alt / 12; fundo.graphics.mt(-W * .7 + Math.random() * 80, y).lt(-W * .7 + 200 + Math.random() * W * .5, y); }
+    const tam = Math.min(72, W / 7);
+    const contorno = new createjs.Text(texto, `${tam}px 'Mochiy Pop One', sans-serif`, "#5B4A6B"); contorno.outline = 10;
+    const t = new createjs.Text(texto, `${tam}px 'Mochiy Pop One', sans-serif`, "#FF7FA8");
+    const s = new createjs.Text(sub || "", `800 ${Math.min(20, W / 22)}px Nunito, sans-serif`, "#5B4A6B");
+    for (const x of [contorno, t]) { x.textAlign = "center"; x.textBaseline = "middle"; x.y = -10; }
+    s.textAlign = "center"; s.y = tam * .5;
+    faixa.addChild(fundo, contorno, t, s); faixa.x = -W; faixa.y = cy; faixa.rotation = -4;
+    linhas.alpha = 0;
+    this.stage.addChild(linhas, faixa);
+    createjs.Tween.get(linhas).to({ alpha: 1 }, 120).wait(650).to({ alpha: 0 }, 250);
+    createjs.Tween.get(faixa).to({ x: cx }, 280, createjs.Ease.backOut).wait(620).to({ x: W * 2 }, 260, createjs.Ease.quadIn)
+      .call(() => { this.stage.removeChild(linhas, faixa); this.stage.update(); });
+    this.sakura(null, 30);
+  },
+};
+fx.iniciar();
+
+/* =========================================================================
+   6. RIVE (opcional) — se existir rive/kazu.riv ao lado da página, o mascote
+   do início passa a ser o arquivo do Rive (artboard "Kazu", state machine
+   "Kazu", gatilhos "feliz", "triste" e "falar"). Sem o arquivo, nada muda.
+   ========================================================================= */
+const riveKazu = {
+  inst: null, gatilhos: {},
+  async tentar() {
+    if (!API) return;
+    try {
+      const r = await fetch("rive/kazu.riv", { method: "HEAD" });
+      if (!r.ok) return;
+      await new Promise((ok, erro) => { const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.21.6/rive.js"; s.onload = ok; s.onerror = erro; document.head.append(s); });
+      window.rive.RuntimeLoader.setWasmUrl("https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.21.6/rive.wasm");
+      const cv = $("#palco-heroi .mascote"), novo = cv.cloneNode(); cv.replaceWith(novo);
+      this.inst = new window.rive.Rive({ src: "rive/kazu.riv", canvas: novo, artboard: "Kazu", stateMachines: "Kazu", autoplay: true,
+        onLoad: () => { this.inst.resizeDrawingSurfaceToCanvas(); for (const i of this.inst.stateMachineInputs("Kazu") || []) this.gatilhos[i.name] = i; marcarTec("Rive", true); } });
+    } catch (e) {}
+  },
+  reagir(nome) { const g = this.gatilhos[nome]; if (g) g.fire ? g.fire() : (g.value = true); },
+};
+
+/* =========================================================================
+   7. THREE.JS — cenário 3D com sombreamento de anime (cel shading + contorno)
+   ========================================================================= */
+const tem3D = (() => { if (!window.THREE) return false; try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch (e) { return false; } })();
+let MOD = {};
+if (tem3D) {
+  const T = THREE;
+  const grad = new T.DataTexture(new Uint8Array([90, 170, 255]), 3, 1, T.LuminanceFormat);
+  grad.minFilter = grad.magFilter = T.NearestFilter; grad.generateMipmaps = false; grad.needsUpdate = true;
+  const mats = {};
+  const M = (c) => mats[c] ??= new T.MeshToonMaterial({ color: c, gradientMap: grad });
+  const matContorno = new T.MeshBasicMaterial({ color: 0x5B4A6B, side: T.BackSide });
+  const malha = (geo, c, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) => { const m = new T.Mesh(geo, M(c)); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); return m; };
+  const grupo = (...f) => { const g = new T.Group(); f.forEach(x => g.add(x)); return g; };
+  const Bx = (w, h, d) => new T.BoxGeometry(w, h, d);
+  const Cy = (rt, rb, h, s = 20) => new T.CylinderGeometry(rt, rb, h, s);
+  const Sp = (r, s = 20) => new T.SphereGeometry(r, s, Math.round(s * .75));
+  const Tor = (r, t, arc = Math.PI * 2) => new T.TorusGeometry(r, t, 10, 24, arc);
+  const pessoa = (roupa, cabelo, menor) => {
+    const g = grupo(malha(Cy(.2, .28, .5), roupa, 0, .25), malha(Sp(.27), "#FFE1CC", 0, .72), malha(new T.SphereGeometry(.29, 20, 12, 0, Math.PI * 2, 0, Math.PI * .55), cabelo, 0, .76, -.02),
+      malha(Sp(.035, 8), "#3B3456", -.09, .72, .24), malha(Sp(.035, 8), "#3B3456", .09, .72, .24), malha(Sp(.045, 8), "#FFB3C7", -.16, .66, .2), malha(Sp(.045, 8), "#FFB3C7", .16, .66, .2));
+    if (menor) { g.add(malha(Sp(.11), cabelo, -.3, .8, 0), malha(Sp(.11), cabelo, .3, .8, 0)); g.scale.setScalar(.85); }
+    return g;
+  };
+  const bicho = (pelo, orelhaCaida) => {
+    const g = grupo(malha(Sp(.3), pelo, 0, .3, 0, 0, 0, 0), malha(Sp(.26), pelo, 0, .62, .12), malha(Sp(.03, 8), "#3B3456", -.09, .66, .36), malha(Sp(.03, 8), "#3B3456", .09, .66, .36), malha(Sp(.035, 8), "#FF9FB8", 0, .58, .38),
+      malha(Cy(.04, .06, .4, 8), pelo, .28, .32, -.25, -.6, 0, -.8));
+    g.children[0].scale.set(1.15, .85, 1.25);
+    if (orelhaCaida) g.add(malha(Sp(.1), "#D9A86C", -.24, .62, .1), malha(Sp(.1), "#D9A86C", .24, .62, .1));
+    else g.add(malha(new T.ConeGeometry(.09, .17, 4), pelo, -.15, .86, .1), malha(new T.ConeGeometry(.09, .17, 4), pelo, .15, .86, .1));
+    return g;
+  };
+  MOD = {
+    presente: () => grupo(malha(Bx(.62, .52, .62), "#FFB8D2", 0, .26), malha(Bx(.64, .54, .12), "#B8E6D4", 0, .26), malha(Bx(.12, .54, .64), "#B8E6D4", 0, .26), malha(Tor(.1, .035), "#B8E6D4", -.08, .58, 0, 0, 0, .6), malha(Tor(.1, .035), "#B8E6D4", .08, .58, 0, 0, 0, -.6)),
+    onigiri: () => grupo(malha(Cy(.42, .42, .28, 3), "#FFFFFF", 0, .38, 0, Math.PI / 2, 0, Math.PI / 2), malha(Bx(.3, .26, .3), "#4A5A55", 0, .2, .02)),
+    mochila: () => grupo(malha(Bx(.55, .7, .32), "#C8B8FF", 0, .35), malha(Bx(.4, .3, .1), "#E9E2FF", 0, .25, .2), malha(Tor(.13, .035, Math.PI), "#9C88E8", 0, .7, 0)),
+    pessoa: () => pessoa(sortear(["#A9D8FF", "#C8B8FF", "#B8E6D4"]), sortear(["#5B4A6B", "#8A6A52", "#3B3456"])),
+    crianca: () => pessoa("#FFC4DA", "#8A6A52", true),
+    papel: () => grupo(malha(Bx(.62, .02, .82), "#FFFFFF", 0, .01), malha(Bx(.62, .02, .82), "#F3EEFC", .04, .035, .03, 0, .15, 0)),
+    prato: () => grupo(malha(Cy(.45, .32, .07, 28), "#FFFFFF", 0, .04), malha(Tor(.4, .03), "#BFD8FF", 0, .08, 0, Math.PI / 2)),
+    camisa: () => grupo(malha(Bx(.5, .06, .6), "#A9D8FF", 0, .03), malha(Bx(.3, .06, .2), "#A9D8FF", -.32, .03, -.18, 0, -.5), malha(Bx(.3, .06, .2), "#A9D8FF", .32, .03, -.18, 0, .5), malha(Bx(.16, .065, .08), "#FFFFFF", 0, .04, -.28)),
+    carro: () => { const g = grupo(malha(Bx(.95, .28, .5), "#FFB8D2", 0, .27), malha(Bx(.5, .24, .44), "#E9F6FF", -.05, .52)); for (const [x, z] of [[-.3, .26], [.3, .26], [-.3, -.26], [.3, -.26]]) g.add(malha(Cy(.13, .13, .08), "#5B4A6B", x, .13, z, Math.PI / 2)); return g; },
+    pc: () => grupo(malha(Bx(.8, .52, .06), "#E9E2FF", 0, .55), malha(Bx(.7, .42, .02), "#A9D8FF", 0, .55, .035), malha(Cy(.04, .05, .25), "#C8B8FF", 0, .18), malha(Bx(.36, .04, .22), "#C8B8FF", 0, .03)),
+    tv: () => grupo(malha(Bx(.9, .55, .08), "#5B4A6B", 0, .45), malha(Bx(.8, .46, .02), "#FFE6A8", 0, .45, .045), malha(Cy(.03, .03, .2), "#C8B8FF", -.3, .1), malha(Cy(.03, .03, .2), "#C8B8FF", .3, .1)),
+    lapis: () => grupo(malha(Cy(.08, .08, .72, 6), "#FFE27A", 0, .08, 0, 0, 0, Math.PI / 2), malha(new T.ConeGeometry(.08, .18, 6), "#F5D5B0", .45, .08, 0, 0, 0, -Math.PI / 2), malha(Cy(.08, .08, .1, 12), "#FFB8D2", -.41, .08, 0, 0, 0, Math.PI / 2)),
+    garrafa: () => grupo(malha(Cy(.17, .17, .5), "#B8E6D4", 0, .25), malha(Cy(.07, .16, .16), "#B8E6D4", 0, .58), malha(Cy(.075, .075, .08), "#FFB8D2", 0, .7), malha(Cy(.175, .175, .16), "#FFFFFF", 0, .28)),
+    guarda: () => grupo(malha(new T.ConeGeometry(.16, .7, 8), "#C8B8FF", 0, .55, 0, Math.PI), malha(Cy(.02, .02, .25, 8), "#5B4A6B", 0, .9), malha(Tor(.07, .022, Math.PI), "#5B4A6B", .07, .19, 0, 0, 0, Math.PI)),
+    gato: () => bicho("#FFD8B0"),
+    cachorro: () => bicho("#FFF0C8", true),
+    peixe: () => { const g = grupo(malha(Sp(.25), "#A9D8FF", 0, .32), malha(new T.ConeGeometry(.17, .26, 4), "#C8B8FF", -.38, .32, 0, 0, 0, Math.PI / 2), malha(Sp(.035, 8), "#3B3456", .17, .37, .14)); g.children[0].scale.set(1.5, 1, .6); return g; },
+    xicara: () => grupo(malha(Cy(.25, .19, .34), "#FFFFFF", 0, .17), malha(Cy(.22, .22, .02), "#A8754E", 0, .33), malha(Tor(.1, .03), "#FFFFFF", .27, .18, 0), malha(Cy(.36, .36, .03, 28), "#FFE0EC", 0, .015)),
+    cha: () => grupo(malha(Cy(.2, .17, .4, 16), "#C9E8C8", 0, .2), malha(Cy(.18, .18, .02), "#9CCB7E", 0, .39)),
+    tigela: () => { const tig = malha(new T.SphereGeometry(.38, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), "#FFB8D2", 0, .38); tig.material = tig.material.clone(); tig.material.side = T.DoubleSide;
+      return grupo(tig, malha(Cy(.35, .35, .03, 24), "#FFE6A8", 0, .33), malha(Cy(.07, .07, .02, 16), "#FFFFFF", .12, .35, .05), malha(Cy(.015, .015, .8, 6), "#A8754E", -.05, .5, 0, 0, 0, 1.1), malha(Cy(.015, .015, .8, 6), "#A8754E", -.05, .55, .06, 0, 0, 1.1)); },
+    maca: () => grupo(malha(Sp(.3), "#FF9FB0", 0, .3), malha(Cy(.02, .02, .15, 6), "#8A6A52", 0, .64), malha(Sp(.08, 10), "#B8E6A0", .09, .66, 0)),
+    ovo: () => { const g = grupo(malha(Sp(.25), "#FFF6E8", 0, .32)); g.children[0].scale.set(.85, 1.15, .85); return g; },
+    laranja: () => grupo(malha(Sp(.28), "#FFC88A", 0, .28), malha(Sp(.07, 10), "#B8E6A0", .06, .56, 0)),
+    livro: () => grupo(malha(Bx(.5, .14, .7), "#FF9FB0", 0, .07), malha(Bx(.46, .1, .66), "#FFFFFF", .03, .07, 0)),
+    caderno: () => { const g = grupo(malha(Bx(.5, .08, .7), "#A9D8FF", 0, .04), malha(Bx(.46, .05, .66), "#FFFFFF", .03, .04, 0)); for (let i = 0; i < 5; i++) g.add(malha(Tor(.04, .01), "#5B4A6B", -.25, .05, -.24 + i * .12, 0, Math.PI / 2)); return g; },
+    revista: () => grupo(malha(Bx(.5, .04, .7), "#B8E6D4", 0, .02), malha(Bx(.3, .045, .2), "#FFE27A", 0, .025, -.15)),
+  };
+  // Contorno de anime: casca invertida um pouco maior que cada peça
+  MOD.contornar = (g) => {
+    const pecas = []; g.traverse(o => { if (o.isMesh && !o.userData.contorno) pecas.push(o); });
+    for (const p of pecas) {
+      p.geometry.computeBoundingSphere();
+      const r = p.geometry.boundingSphere.radius, k = Math.min(1.3, 1 + .028 / Math.max(r, .05));
+      const c = new T.Mesh(p.geometry, matContorno); c.scale.setScalar(k); c.userData.contorno = true; p.add(c);
+    }
+    return g;
+  };
+  MOD.montar = (nome) => {
+    const g = MOD.contornar(MOD[nome]());
+    const caixa = new T.Box3().setFromObject(g), tam = caixa.getSize(new T.Vector3()), k = .85 / Math.max(tam.x, tam.y, tam.z);
+    const envoltorio = new T.Group(); g.scale.multiplyScalar(k); g.position.y = -caixa.min.y * k; envoltorio.add(g); envoltorio.userData.altura = tam.y * k;
+    return envoltorio;
+  };
+  MOD.etiqueta = (txt, corFundo) => {
+    const cv = document.createElement("canvas"); cv.width = cv.height = 128;
+    const c = cv.getContext("2d"); c.fillStyle = corFundo; c.strokeStyle = "#5B4A6B"; c.lineWidth = 8;
+    c.beginPath(); c.arc(64, 64, 52, 0, 7); c.fill(); c.stroke();
+    c.fillStyle = "#3B3456"; c.font = "64px 'Mochiy Pop One', sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(txt, 64, 68);
+    const s = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), transparent: true, depthTest: false })); s.scale.setScalar(.34); s.renderOrder = 5;
+    return s;
+  };
+}
+const ease = { saida: t => 1 - Math.pow(1 - t, 3), volta: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+  quica: t => { const n = 7.5625, d = 2.75; if (t < 1/d) return n*t*t; if (t < 2/d) return n*(t-=1.5/d)*t+.75; if (t < 2.5/d) return n*(t-=2.25/d)*t+.9375; return n*(t-=2.625/d)*t+.984375; } };
+
+class Palco3D {
+  constructor(el, { heroi = false } = {}) {
+    this.el = el; this.cv = el.querySelector("canvas.tres"); this.heroi = heroi; this.anims = []; this.objs = [];
+    if (!tem3D) { el.classList.add("sem3d"); return; }
+    const T = THREE;
+    this.r = new T.WebGLRenderer({ canvas: this.cv, antialias: true, alpha: true });
+    this.r.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    this.cena = new T.Scene();
+    this.cam = new T.PerspectiveCamera(heroi ? 38 : 34, 1, .1, 60);
+    this.cena.add(new T.HemisphereLight(0xFFF4FB, 0xC8B8FF, .75));
+    const sol = new T.DirectionalLight(0xFFFFFF, .7); sol.position.set(3, 6, 4); this.cena.add(sol);
+    this.palco = new T.Group(); this.cena.add(this.palco);
+    const base = new T.Mesh(new T.CylinderGeometry(3.3, 3.5, .32, 56), new T.MeshToonMaterial({ color: 0xFFFFFF }));
+    base.position.y = -.16; this.palco.add(base); this.base = base;
+    const aro = new T.Mesh(new T.TorusGeometry(3.32, .06, 8, 64), new T.MeshBasicMaterial({ color: 0xF6A8C6 })); aro.rotation.x = Math.PI / 2; this.palco.add(aro);
+    this.sombras = new T.Group(); this.palco.add(this.sombras);
+    this.petalas = [];
+    const geoP = new T.CircleGeometry(.07, 6); geoP.scale(1, .6, 1);
+    for (let i = 0; i < (heroi ? 46 : 26); i++) {
+      const p = new T.Mesh(geoP, new T.MeshBasicMaterial({ color: sortear([0xFFC4DA, 0xFFB0CC, 0xFFE0EC, 0xE7D6FF]), side: T.DoubleSide, transparent: true, opacity: .9 }));
+      p.position.set((Math.random() - .5) * 9, Math.random() * 6, (Math.random() - .5) * 5 - 1); p.userData = { v: .004 + Math.random() * .008, f: Math.random() * 6 };
+      this.cena.add(p); this.petalas.push(p);
+    }
+    this.atualizarTema();
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => this.atualizarTema());
+    new ResizeObserver(() => this.ajustar()).observe(this.cv); this.ajustar();
+    this.visivel = true;
+    new IntersectionObserver(es => { this.visivel = es[0].isIntersecting; }).observe(el);
+    this.arrastar();
+    const loop = t => { this.quadro(t); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  }
+  atualizarTema() { if (!this.base) return; this.base.material.color.set(cor("--surface")); }
+  ajustar() {
+    if (!this.r) return;
+    const r = this.cv.getBoundingClientRect(); if (!r.width) return;
+    this.r.setSize(r.width, r.height, false); this.cam.aspect = r.width / r.height;
+    const dist = this.heroi ? 9.2 : 8.4, longe = r.width / r.height < 1.1 ? 1.35 : 1;
+    this.cam.position.set(0, (this.heroi ? 4.2 : 4.6) * longe, dist * longe); this.cam.lookAt(0, this.heroi ? .55 : .3, 0); this.cam.updateProjectionMatrix();
+  }
+  arrastar() {
+    let x0 = null, giro0 = 0;
+    this.giroAlvo = 0;
+    this.cv.addEventListener("pointerdown", e => { x0 = e.clientX; giro0 = this.giroAlvo; this.moveu = false; });
+    addEventListener("pointermove", e => { if (x0 === null) return; if (Math.abs(e.clientX - x0) > 4) this.moveu = true; this.giroAlvo = giro0 + (e.clientX - x0) / 120; });
+    addEventListener("pointerup", () => { x0 = null; });
+  }
+  animar(dur, f, atraso = 0) {
+    return new Promise(ok => { if (REDUZ) { f(1); ok(); return; } this.anims.push({ ini: performance.now() + atraso, dur, f, ok }); });
+  }
+  quadro(t) {
+    if (!this.visivel || this.el.offsetParent === null) return;
+    for (const a of [...this.anims]) { if (t < a.ini) continue; const p = Math.min(1, (t - a.ini) / a.dur); a.f(p); if (p >= 1) { this.anims.splice(this.anims.indexOf(a), 1); a.ok(); } }
+    if (!REDUZ) {
+      for (const p of this.petalas) { const u = p.userData; p.position.y -= u.v * 6; p.position.x += Math.sin(t / 900 + u.f) * .006; p.rotation.x = t / 700 + u.f; p.rotation.y = t / 900 + u.f; if (p.position.y < -.5) p.position.y = 6; }
+      if (this.heroi) this.giroAlvo += .0025;
+      this.cam.position.x += ((Math.sin(t / 4000) * .5) - this.cam.position.x) * .02;
+    }
+    this.palco.rotation.y += ((this.giroAlvo || 0) - this.palco.rotation.y) * .08;
+    if (this.heroi) this.objs.forEach((o, i) => { o.position.y = .1 + Math.sin(t / 600 + i) * .12; o.rotation.y = Math.sin(t / 1400 + i) * .5; });
+    this.r.render(this.cena, this.cam);
+  }
+  limpar() { if (!this.r) return; this.objs.forEach(o => this.palco.remove(o)); this.objs = []; this.sombras.clear(); this.anims = []; }
+  sombra(x, z) {
+    const s = new THREE.Mesh(new THREE.CircleGeometry(.36, 24), new THREE.MeshBasicMaterial({ color: 0x5B4A6B, transparent: true, opacity: .12 }));
+    s.rotation.x = -Math.PI / 2; s.position.set(x, .005, z); this.sombras.add(s); return s;
+  }
+  /* Cai um objeto por vez, com squash & stretch, e um número flutuando em cima */
+  async contar(c, obj, n, aCada) {
+    if (!this.r) { this.el.querySelector(".fallback").innerHTML = Array.from({ length: n }, () => `<span class="emoji">${obj.e}</span>`).join(""); for (let i = 1; i <= n; i++) { await aCada?.(i); } return; }
+    const g = this.geracao = (this.geracao || 0) + 1;
+    this.limpar(); this.giroAlvo = Math.round(this.palco.rotation.y / (Math.PI * 2)) * Math.PI * 2;
+    const cols = n > 5 ? 5 : n, linhas = Math.ceil(n / cols), passo = 1.08;
+    const corEt = cor(c.cor);
+    for (let i = 0; i < n; i++) {
+      if (g !== this.geracao) return;
+      const col = i % cols, lin = Math.floor(i / cols);
+      const x = (col - (cols - 1) / 2) * passo, z = (lin - (linhas - 1) / 2) * 1.25;
+      const o = MOD.montar(obj.m); o.position.set(x, 4.5, z); o.rotation.y = (Math.random() - .5) * .6;
+      const et = MOD.etiqueta(String(i + 1), corEt); et.position.y = o.userData.altura + .32; et.scale.setScalar(.01); o.add(et);
+      this.palco.add(o); this.objs.push(o);
+      const sb = this.sombra(x, z); sb.scale.setScalar(.2);
+      this.animar(560, p => { const e = ease.quica(p); o.position.y = 4.5 * (1 - e); sb.scale.setScalar(.2 + .8 * e); });
+      this.animar(260, p => { const k = Math.sin(p * Math.PI); o.scale.set(1 + k * .22, 1 - k * .26, 1 + k * .22); }, 330);
+      this.animar(320, p => et.scale.setScalar(.34 * ease.volta(p)), 400);
+      await aCada?.(i + 1);
+      await dorme(n > 6 ? 800 : 940);
+    }
+    if (g !== this.geracao) return;
+    this.objs.forEach((o, i) => this.animar(520, p => { o.position.y = Math.sin(p * Math.PI) * .45; o.rotation.y += .12; }, i * 50));
+  }
+  vitrine(itens) {
+    if (!this.r) { this.el.querySelector(".fallback").innerHTML = itens.map(i => `<span class="emoji">${i.obj.e}</span>`).join(""); return; }
+    this.limpar();
+    itens.forEach((it, i) => {
+      const a = i / itens.length * Math.PI * 2, o = MOD.montar(it.obj.m);
+      o.position.set(Math.cos(a) * 2.45, .1, Math.sin(a) * 2.45); o.userData.item = it;
+      o.traverse(m => { m.userData.dono = o; });
+      this.palco.add(o); this.objs.push(o);
+    });
+    const ray = new THREE.Raycaster(), v = new THREE.Vector2();
+    this.cv.addEventListener("click", e => {
+      if (this.moveu) return;
+      const r = this.cv.getBoundingClientRect(); v.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      ray.setFromCamera(v, this.cam);
+      const hit = ray.intersectObjects(this.objs, true)[0]; if (!hit) return;
+      const o = hit.object.userData.dono; if (!o) return;
+      this.animar(500, p => { o.scale.setScalar(1 + Math.sin(p * Math.PI) * .35); });
+      this.aoTocar?.(o.userData.item);
+    });
+  }
+}
+
+/* =========================================================================
+   8. NAVEGAÇÃO E STATUS
    ========================================================================= */
 const VISTAS = ["inicio", "estudar", "revisar", "jogar"];
+let sessao = null, jogoAtual = null;
 function ir(v) {
   if (!VISTAS.includes(v)) v = "inicio";
   for (const x of VISTAS) $("#v-" + x).hidden = x !== v;
@@ -757,223 +1073,168 @@ function ir(v) {
   if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
   if (v !== "jogar" && jogoAtual) { pararJogo(); $("#arena").innerHTML = ""; }
   if (v === "revisar" && !sessao) iniciarRevisao();
-  if (v === "estudar") requestAnimationFrame(() => palcoEstudo.ajustar());
-  window.scrollTo({ top: 0, behavior: REDUZ ? "auto" : "smooth" });
+  requestAnimationFrame(() => { palcoEstudo.ajustar(); palcoHeroi.ajustar(); mascotes.forEach(m => m.ajustar()); });
+  scrollTo({ top: 0, behavior: REDUZ ? "auto" : "smooth" });
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-ir]"); if (b) { e.preventDefault(); ir(b.dataset.ir); } });
-window.addEventListener("hashchange", () => ir(location.hash.slice(1)));
-
+addEventListener("hashchange", () => ir(location.hash.slice(1)));
 function atualizarStatus() {
-  $("#st-nivel").textContent = "Nv " + nivel();
-  $("#st-xp").textContent = estado.xp + " XP";
+  $("#st-nivel").textContent = "Nv " + nivel(); $("#st-xp").textContent = estado.xp + " XP";
   $("#st-seq").textContent = estado.dias + (estado.dias === 1 ? " dia" : " dias");
   $("#n-dominados").textContent = Object.values(estado.srs).filter(s => s.caixa >= 4).length;
-  $("#n-acertos").textContent = estado.acertos;
-  $("#n-seq").textContent = estado.dias;
-  $("#n-nivel").textContent = nivel();
-  $("#bt-romaji").setAttribute("aria-pressed", estado.romaji);
-  $("#bt-som").setAttribute("aria-pressed", estado.som);
+  $("#n-acertos").textContent = estado.acertos; $("#n-seq").textContent = estado.dias; $("#n-nivel").textContent = nivel();
+  $("#bt-romaji").setAttribute("aria-pressed", estado.romaji); $("#bt-som").setAttribute("aria-pressed", estado.som);
   document.querySelectorAll("[data-recorde]").forEach(el => { const r = estado.recordes[el.dataset.recorde]; el.textContent = r != null ? "Recorde: " + r : "Ainda sem recorde"; });
 }
 $("#bt-romaji").onclick = () => { estado.romaji = !estado.romaji; salvar(); atualizarTudo(); };
 $("#bt-som").onclick = () => { estado.som = !estado.som; if (!estado.som && temVoz) speechSynthesis.cancel(); salvar(); atualizarStatus(); };
+const TEC = { "Three.js": tem3D, "CreateJS (Adobe Animate)": temCJS, "Rive": false };
+function marcarTec(nome, on) { if (nome) TEC[nome] = on; $("#tecnologias").innerHTML = Object.entries(TEC).map(([k, v]) => `<span class="${v ? "on" : ""}">${esc(k)} · ${v ? "ativo" : k === "Rive" ? "aguardando rive/kazu.riv" : "indisponível"}</span>`).join(""); }
+
+function balao(el, kana, sub) { const b = el.querySelector(".balao"); b.innerHTML = `<b class="jp">${esc(kana)}</b><small>${esc(sub)}</small>`; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); }
 
 /* =========================================================================
-   INÍCIO — palco do herói
+   9. INÍCIO
    ========================================================================= */
-const palcoHeroi = new Palco($("#palco-heroi"));
-const kazuHeroi = palcoHeroi.add(spriteKazu(1.25));
-const orbita = CONTADORES.map((c, i) => ({ s: palcoHeroi.add(spriteEmoji(c.objetos[0].e, 38)), c, ang: i / CONTADORES.length * Math.PI * 2 }));
-const balaoHeroi = palcoHeroi.add(spriteBalao("いくつ？", "Quantos?"));
-balaoHeroi.cauda = "baixo";
-palcoHeroi.aoDesenhar = (c, ts, p) => {
-  kazuHeroi.x = p.w / 2; kazuHeroi.y = p.h * .58;
-  balaoHeroi.x = p.w / 2; balaoHeroi.y = p.h * .14;
-  const rx = Math.min(p.w * .4, 220), ry = p.h * .3;
-  for (const o of orbita) {
-    const a = o.ang + (REDUZ ? 0 : ts / 3400);
-    o.s.x = p.w / 2 + Math.cos(a) * rx; o.s.y = p.h * .58 + Math.sin(a) * ry * .6;
-    o.s.z = Math.sin(a) > 0 ? 4 : 2; o.s.sx = o.s.sy = .8 + Math.sin(a) * .2;
-  }
-  c.strokeStyle = cor("--line"); c.setLineDash([4, 6]); c.beginPath(); c.ellipse(p.w / 2, p.h * .58, rx, ry * .6, 0, 0, 7); c.stroke(); c.setLineDash([]);
+const palcoHeroi = new Palco3D($("#palco-heroi"), { heroi: true });
+const kazuHeroi = novaMascote($("#palco-heroi .mascote"));
+palcoHeroi.vitrine(CONTADORES.map(c => ({ c, obj: c.objetos[0] })));
+palcoHeroi.aoTocar = ({ c, obj }) => {
+  const n = 1 + Math.floor(Math.random() * 10), l = leitura(c, n);
+  balao($("#palco-heroi"), `${obj.jp}を${l.kana}`, `${n} ${plural(obj, n)} · ${c.k} (${c.curto}) · ${l.romaji}`);
+  falar(`${obj.jp}を${l.kana}`); kazuHeroi.reagir("feliz"); fx.sakura($("#palco-heroi .balao"), 14);
 };
-let heroiIdx = 0;
+let heroiI = 0;
 setInterval(() => {
-  if ($("#v-inicio").hidden) return;
-  heroiIdx = (heroiIdx + 1) % 15;
-  const c = CONTADORES[heroiIdx % 5], n = (heroiIdx % 3) * 3 + 2, l = leitura(c, n);
-  balaoHeroi.texto = `${c.objetos[0].jp}を${l.kana}`; balaoHeroi.sub = `${n} × ${c.objetos[0].pt} (${l.romaji})`;
-  balaoHeroi.sx = balaoHeroi.sy = .6; palcoHeroi.tween(balaoHeroi, { sx: 1, sy: 1 }, 420, Ease.volta);
-  pular(palcoHeroi, kazuHeroi);
-}, 3200);
-$("#palco-heroi").addEventListener("click", () => { pular(palcoHeroi, kazuHeroi); falar("かぞえよう！"); });
+  if ($("#v-inicio").hidden || document.hidden) return;
+  const c = CONTADORES[heroiI++ % CONTADORES.length], obj = c.objetos[0], n = 1 + (heroiI * 3) % 10, l = leitura(c, n);
+  balao($("#palco-heroi"), `${obj.jp}を${l.kana}`, `${n} ${plural(obj, n)} · ${l.romaji}`);
+  kazuHeroi.reagir("feliz");
+}, 4200);
 
 /* =========================================================================
-   ESTUDAR
+   10. ESTUDAR
    ========================================================================= */
-let cAtual = CONTADORES[0], objAtual = 0;
-const palcoEstudo = new Palco($("#palco-estudo"));
-const kazuEstudo = palcoEstudo.add(spriteKazu(.8));
-const balaoEstudo = palcoEstudo.add(spriteBalao("かぞえよう！", "Escolha até quanto contar"));
-let objetosPalco = [], geracao = 0;
-palcoEstudo.aoDesenhar = (c, ts, p) => {
-  kazuEstudo.x = 64; kazuEstudo.y = p.h - 72;
-  balaoEstudo.x = Math.min(p.w - 130, 200); balaoEstudo.y = 44;
-  c.fillStyle = cor("--line"); c.fillRect(0, p.h - 14, p.w, 2);
-};
-function posicaoObjeto(i, n, p) {
-  const area = { x: 130, w: Math.max(120, p.w - 150), y: 90, h: p.h - 110 };
-  const cols = n > 5 ? 5 : n, linhas = Math.ceil(n / cols);
-  const col = i % cols, lin = Math.floor(i / cols);
-  return { x: area.x + area.w * (col + .5) / cols, y: area.y + area.h * (lin + .5) / linhas + (linhas === 1 ? 18 : 0) };
-}
+let cAtual = CONTADORES[4], objAtual = 0;
+const palcoEstudo = new Palco3D($("#palco-estudo"));
+const kazuEstudo = novaMascote($("#palco-estudo .mascote"));
 async function animarContagem(n) {
-  const g = ++geracao;
-  objetosPalco.forEach(s => palcoEstudo.remover(s)); objetosPalco = [];
-  const obj = cAtual.objetos[objAtual], tam = n > 5 ? 40 : 52;
-  for (let i = 1; i <= n; i++) {
-    if (g !== geracao) return;
-    const alvo = posicaoObjeto(i - 1, n, palcoEstudo);
-    const s = palcoEstudo.add(spriteEmoji(obj.e, tam)); s.x = alvo.x; s.y = -30; s.rot = (Math.random() - .5);
-    objetosPalco.push(s);
-    palcoEstudo.tween(s, { y: alvo.y, rot: 0 }, 520, Ease.quica);
-    const l = leitura(cAtual, i);
-    balaoEstudo.texto = l.kana; balaoEstudo.sub = `${i} · ${l.romaji}`;
-    balaoEstudo.sx = balaoEstudo.sy = .7; palcoEstudo.tween(balaoEstudo, { sx: 1, sy: 1 }, 300, Ease.volta);
-    falar(l.kana);
-    marcarLeitura(i);
-    await dorme(n > 6 ? 820 : 950);
-  }
-  if (g !== geracao) return;
-  const l = leitura(cAtual, n);
-  balaoEstudo.texto = `${obj.jp}が${l.kana}！`; balaoEstudo.sub = `${n} ${plural(obj, n)} no total`;
-  falar(`${obj.jp}が${l.kana}`);
-  pular(palcoEstudo, kazuEstudo);
-  objetosPalco.forEach((s, i) => palcoEstudo.tween(s, { y: s.y - 16 }, 160, Ease.saida, i * 40).then(() => palcoEstudo.tween(s, { y: s.y + 16 }, 380, Ease.quica)));
-  mostrarExplicacao(n);
+  const obj = cAtual.objetos[objAtual], c = cAtual;
+  await palcoEstudo.contar(c, obj, n, i => {
+    const l = leitura(c, i); balao($("#palco-estudo"), l.kana, `${i} · ${l.romaji}`); falar(l.kana); marcarLeitura(i);
+  });
+  if (palcoEstudo.r && palcoEstudo.objs.length !== n) return;
+  const l = leitura(c, n);
+  balao($("#palco-estudo"), `${obj.jp}が${l.kana}！`, `${n} ${plural(obj, n)} no total`);
+  falar(`${obj.jp}が${l.kana}`); kazuEstudo.reagir("feliz"); mostrarExplicacao(n);
 }
-function marcarLeitura(n) {
-  document.querySelectorAll("#grade-leituras .leitura").forEach(b => b.style.borderColor = b.dataset.n == n ? `var(${cAtual.cor})` : "");
-}
-function destacarKana(c, n) {
-  const l = leitura(c, n), k = esc(l.kana);
-  if (!c.muda.includes(n)) return k;
-  return k.replace(/(っ[ぽこつ]?|ぼ|ぽ|とお)/, "<mark>$1</mark>");
+function marcarLeitura(n) { document.querySelectorAll("#grade .leitura").forEach(b => b.classList.toggle("ativa", b.dataset.n == n)); }
+function destacar(c, n) {
+  const k = esc(lerKana(c, n));
+  if (!muda(c, n)) return k;
+  if (c.id === "nin") return `<mark>${k.slice(0, n === 4 ? 1 : 3)}</mark>${k.slice(n === 4 ? 1 : 3)}`;
+  return k.replace(/(っ[ぽぴぱこさつ]?|[ぼびば]|とお)/, "<mark>$1</mark>");
 }
 function mostrarExplicacao(n) {
-  const l = leitura(cAtual, n), nota = cAtual.notas[n];
-  const qtd = n === "q" ? "Pergunta “quantos?”" : `${n} = ${KANJI_NUM[n-1]}`;
-  $("#explica").innerHTML = `<b class="jp" style="font-size:1.15rem">${esc(l.kanji)}</b> · <span class="jp">${esc(l.kana)}</span> (${esc(l.romaji)}) · ${qtd}` +
-    (l.alt.length ? ` · também: <span class="jp">${l.alt.map(esc).join(", ")}</span>` : "") +
-    `<br>${nota ? esc(nota) : "Leitura regular: número + contador, sem mudança de som."}`;
+  const l = leitura(cAtual, n), nt = nota(cAtual, n);
+  $("#explica").innerHTML = `<b class="jp" style="font-size:1.15rem">${esc(l.kanji)}</b> · <span class="jp">${esc(l.kana)}</span> (${esc(l.romaji)}) · ${n === "q" ? "pergunta “quantos?”" : `${n} = ${KANJI_NUM[n-1]}`}` +
+    (l.alt.length ? ` · também: <span class="jp">${l.alt.map(esc).join(", ")}</span>` : "") + `<br>${esc(nt || "Leitura regular: número + contador, sem mudança de som.")}`;
 }
 function renderEstudo() {
   const c = cAtual;
-  $("#seletor-contador").innerHTML = CONTADORES.map(x => `<button role="tab" class="chip-c" style="--cor:var(${x.cor})" aria-selected="${x === c}" data-c="${x.id}"><span class="k">${x.k}</span>${esc(x.curto)}</button>`).join("");
-  const fichaEl = $("#ficha"); fichaEl.style.setProperty("--cor", `var(${c.cor})`);
-  fichaEl.innerHTML = `
-    <div class="cab"><span class="kanji-grande">${c.k}</span><div><span class="rotulo">${esc(c.nome)}</span><h3>${esc(c.titulo)}</h3></div></div>
+  $("#seletor").innerHTML = CONTADORES.map(x => `<button role="tab" class="chip-c" style="--cor:var(${x.cor})" aria-selected="${x === c}" data-c="${x.id}"><span class="k">${x.k}</span>${esc(x.curto)}</button>`).join("");
+  const f = $("#ficha"); f.style.setProperty("--cor", `var(${c.cor})`);
+  $("#painel-palco").style.setProperty("--cor", `var(${c.cor})`);
+  const o0 = c.objetos[objAtual], o1 = c.objetos[(objAtual + 1) % c.objetos.length];
+  const verbo = ["nin", "hiki"].includes(c.id) ? "いますか" : "ありますか";
+  f.innerHTML = `<div class="cab"><span class="kanji-grande">${c.k}</span><div><span class="rotulo">〜${esc(c.k)} · ${esc(c.suf)}</span><h3>${esc(c.titulo)}</h3></div></div>
     <div><span class="rotulo">Use para</span><ul>${c.uso.map(u => `<li>${esc(u)}</li>`).join("")}</ul></div>
-    <div><span class="rotulo">Objetos de exemplo (toque para trocar)</span>
-      <div class="objetos" style="margin-top:6px">${c.objetos.map((o, i) => `<button class="objeto" aria-pressed="${i === objAtual}" data-obj="${i}"><span class="emoji">${o.e}</span><span class="jp">${esc(o.jp)}</span> <span style="color:var(--ink-soft)">${esc(o.pt)}</span></button>`).join("")}</div></div>
+    <div><span class="rotulo">Objetos (toque para contar)</span><div class="objetos" style="margin-top:6px">${c.objetos.map((o, i) => `<button class="objeto" aria-pressed="${i === objAtual}" data-obj="${i}"><span class="emoji">${o.e}</span><span class="jp">${esc(o.jp)}</span> <span style="color:var(--ink-soft)">${esc(o.pt)}</span></button>`).join("")}</div></div>
     <div class="dica">${c.dica}</div>
     <div><span class="rotulo">Na prática</span>
-      <p class="jp" style="font-size:1.1rem;margin-top:4px">${esc(c.objetos[0].jp)}を${esc(c.kana[2])}ください。</p>
-      <p style="color:var(--ink-soft);font-size:.92rem">${esc(c.romaji[2])}… “Três ${esc(c.objetos[0].pl)}, por favor.”</p>
-      <p class="jp" style="font-size:1.1rem;margin-top:6px">${esc(c.objetos[1].jp)}は${esc(c.q.kana)}ありますか。</p>
-      <p style="color:var(--ink-soft);font-size:.92rem">“${quantos(c.objetos[1])} ${esc(c.objetos[1].pl)} tem?”</p>
-      <button class="botao sec peq" style="margin-top:8px" id="bt-ouvir-frase">${SVG_SOM} Ouvir frases</button></div>`;
-  $("#bt-ouvir-frase").onclick = () => { falar(`${c.objetos[0].jp}を${c.kana[2]}ください。`); falar(`${c.objetos[1].jp}は${c.q.kana}ありますか。`, false); };
-  $("#grade-leituras").style.setProperty("--cor", `var(${c.cor})`);
-  $("#grade-leituras").innerHTML = [...Array.from({ length: 10 }, (_, i) => i + 1), "q"].map(n => {
-    const l = leitura(c, n), cls = c.muda.includes(n) ? "muda" : c.cuidado.includes(n) ? "cuidado" : "";
-    return `<button class="leitura ${cls}" data-n="${n}"><span class="n">${n === "q" ? "?" : n}</span><span class="kana">${destacarKana(c, n)}</span>${rj(l.romaji)}</button>`;
-  }).join("");
+      <p class="jp" style="font-size:1.1rem;margin-top:4px">${esc(o0.jp)}を${esc(lerKana(c, 3))}ください。</p>
+      <p style="color:var(--ink-soft);font-size:.92rem">${esc(romaji(lerKana(c, 3)))}… “Três ${esc(o0.pl)}, por favor.”</p>
+      <p class="jp" style="font-size:1.1rem;margin-top:6px">${esc(o1.jp)}は${esc(lerKana(c, "q"))}${verbo}。</p>
+      <p style="color:var(--ink-soft);font-size:.92rem">“${quantos(o1)} ${esc(o1.pl)} tem?”</p>
+      <button class="botao sec peq" style="margin-top:10px" id="bt-frases">${SVG_SOM} Ouvir frases</button></div>`;
+  $("#bt-frases").onclick = () => { falar(`${o0.jp}を${lerKana(c, 3)}ください。`); falar(`${o1.jp}は${lerKana(c, "q")}${verbo}。`, false); };
+  $("#grade").innerHTML = NS.map(n => `<button class="leitura ${muda(c, n) ? "muda" : cuidado(c, n) ? "cuidado" : ""}" data-n="${n}"><span class="n">${n === "q" ? "?" : n}</span><span class="kana">${destacar(c, n)}</span>${rj(romaji(lerKana(c, n)))}</button>`).join("");
   $("#botoes-ate").innerHTML = [3, 5, 8, 10].map(n => `<button class="botao sec peq" data-ate="${n}">${n}</button>`).join("");
   $("#explica").textContent = "Toque numa leitura para ouvir e ver a explicação.";
-  geracao++; objetosPalco.forEach(s => palcoEstudo.remover(s)); objetosPalco = [];
-  balaoEstudo.texto = c.q.kana + "？"; balaoEstudo.sub = `Contando com ${c.k}: escolha até quanto`;
+  balao($("#palco-estudo"), lerKana(c, "q") + "？", `Contando ${o0.pl} com ${c.k}: escolha até quanto`);
+  palcoEstudo.geracao = (palcoEstudo.geracao || 0) + 1; palcoEstudo.limpar?.();
+  if (palcoEstudo.r) { const o = MOD.montar(o0.m); palcoEstudo.palco.add(o); palcoEstudo.objs.push(o); palcoEstudo.animar(600, p => o.scale.setScalar(ease.volta(p)), 0); }
+  else $("#palco-estudo .fallback").innerHTML = `<span class="emoji">${o0.e}</span>`;
 }
-$("#seletor-contador").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (b) { cAtual = CPOR[b.dataset.c]; objAtual = 0; renderEstudo(); } });
-$("#ficha").addEventListener("click", e => { const b = e.target.closest("[data-obj]"); if (b) { objAtual = +b.dataset.obj; document.querySelectorAll("#ficha .objeto").forEach(x => x.setAttribute("aria-pressed", x === b)); animarContagem(3); } });
+$("#seletor").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (b) { cAtual = CPOR[b.dataset.c]; objAtual = 0; renderEstudo(); } });
+$("#ficha").addEventListener("click", e => { const b = e.target.closest("[data-obj]"); if (b) { objAtual = +b.dataset.obj; renderEstudo(); animarContagem(3); } });
 $("#botoes-ate").addEventListener("click", e => { const b = e.target.closest("[data-ate]"); if (b) animarContagem(+b.dataset.ate); });
-$("#grade-leituras").addEventListener("click", e => {
+$("#grade").addEventListener("click", e => {
   const b = e.target.closest("[data-n]"); if (!b) return;
   const n = b.dataset.n === "q" ? "q" : +b.dataset.n;
-  falar(leitura(cAtual, n).kana); mostrarExplicacao(n); marcarLeitura(n);
-  if (n !== "q") animarContagem(n);
-  else { geracao++; balaoEstudo.texto = cAtual.q.kana + "？"; balaoEstudo.sub = "Quantos?"; pular(palcoEstudo, kazuEstudo); }
+  falar(lerKana(cAtual, n)); mostrarExplicacao(n); marcarLeitura(n);
+  if (n !== "q") animarContagem(n); else { balao($("#palco-estudo"), lerKana(cAtual, "q") + "？", "Quantos?"); kazuEstudo.reagir("triste"); }
 });
-
 function renderTabela() {
-  const linhas = [...Array.from({ length: 10 }, (_, i) => i + 1), "q"];
-  $("#tabela-geral").innerHTML =
-    `<thead><tr><th></th>${CONTADORES.map(c => `<th style="color:var(${c.cor})">${c.k} <span class="emoji">${c.objetos[0].e}</span><span>${esc(c.curto)}</span></th>`).join("")}</tr></thead><tbody>` +
-    linhas.map(n => `<tr><th>${n === "q" ? "?" : n}</th>${CONTADORES.map(c => { const l = leitura(c, n); return `<td class="${c.muda.includes(n) ? "muda" : ""}" data-c="${c.id}" data-n="${n}" title="${esc(l.kanji)} · ${esc(l.romaji)}">${esc(l.kana)}${estado.romaji ? `<br><small style="font-family:var(--f-body);color:var(--ink-soft);font-weight:400">${esc(l.romaji)}</small>` : ""}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+  $("#tabela").innerHTML = `<thead><tr><th>Nº</th>${CONTADORES.map(c => `<th style="--cor:var(${c.cor})">${c.k}<small>${esc(c.curto)}</small></th>`).join("")}</tr></thead><tbody>` +
+    NS.map(n => `<tr><th>${n === "q" ? "?" : n}</th>${CONTADORES.map(c => { const l = leitura(c, n); return `<td class="${muda(c, n) ? "muda" : ""}" data-c="${c.id}" data-n="${n}" title="${esc(l.kanji)} · ${esc(l.romaji)}">${esc(l.kana)}${estado.romaji ? `<small>${esc(l.romaji)}</small>` : ""}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
 }
-$("#tabela-geral").addEventListener("click", e => {
-  const td = e.target.closest("td[data-c]"); if (!td) return;
-  const n = td.dataset.n === "q" ? "q" : +td.dataset.n; falar(leitura(CPOR[td.dataset.c], n).kana);
-});
+$("#tabela").addEventListener("click", e => { const td = e.target.closest("td[data-c]"); if (td) falar(lerKana(CPOR[td.dataset.c], td.dataset.n === "q" ? "q" : +td.dataset.n)); });
 
 /* =========================================================================
-   REVISAR — repetição espaçada (caixas de Leitner)
+   11. REVISAR — caixas de Leitner
    ========================================================================= */
-const INTERVALO_DIAS = [0, 0, 1, 3, 7, 16];
-const TODOS_CARTOES = CONTADORES.flatMap(c => [...Array.from({ length: 10 }, (_, i) => i + 1), "q"].map(n => ({ id: `${c.id}-${n}`, c, n })));
-let sessao = null;
+const INTERVALO = [0, 0, 1, 3, 7, 16];
+const CARTOES = CONTADORES.flatMap(c => NS.map(n => ({ id: `${c.id}-${n}`, c, n })));
 function iniciarRevisao(forcar = false) {
-  const agora = Date.now();
-  const pool = TODOS_CARTOES.filter(k => estado.filtro.includes(k.c.id));
+  const agora = Date.now(), pool = CARTOES.filter(k => estado.filtro.includes(k.c.id));
   const vencidos = pool.filter(k => estado.srs[k.id] && estado.srs[k.id].vence <= agora).sort((a, b) => estado.srs[a.id].caixa - estado.srs[b.id].caixa);
   const novos = embaralhar(pool.filter(k => !estado.srs[k.id])).sort((a, b) => (a.n === "q") - (b.n === "q"));
-  let fila = [...vencidos.slice(0, 15), ...novos.slice(0, Math.max(0, 15 - vencidos.length)).slice(0, 8)];
+  let fila = [...vencidos.slice(0, 15), ...novos.slice(0, Math.min(8, Math.max(0, 15 - vencidos.length)))];
   if (!fila.length && forcar) fila = embaralhar(pool).slice(0, 12);
   sessao = { fila: embaralhar(fila), total: fila.length, feitos: 0, repetidos: new Set(), virado: false };
   renderCartao(); renderPainelSRS();
 }
 function renderCartao() {
   const area = $("#cartao-area");
-  $("#prog-sessao").style.width = sessao.total ? (sessao.feitos / sessao.total * 100) + "%" : "100%";
+  $("#prog-sessao").style.width = sessao.total ? sessao.feitos / sessao.total * 100 + "%" : "100%";
   if (!sessao.fila.length) {
     const prox = Object.entries(estado.srs).filter(([id]) => estado.filtro.includes(id.split("-")[0])).map(([, s]) => s.vence).filter(v => v > Date.now()).sort((a, b) => a - b)[0];
     const quando = prox ? new Date(prox).toLocaleString("pt-BR", { weekday: "long", hour: "2-digit", minute: "2-digit" }) : null;
     area.innerHTML = `<div class="painel fim"><span class="grande">おつかれ！</span><h3>${sessao.total ? "Sessão concluída" : "Nada para revisar agora"}</h3>
       <p style="color:var(--ink-soft);max-width:44ch">${sessao.total ? `Você revisou ${sessao.total} cartões.` : "Todos os cartões destes contadores estão em dia."} ${quando ? `Próxima revisão: ${esc(quando)}.` : ""}</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="botao" id="bt-revisar-mais">Revisar mesmo assim</button><button class="botao sec" data-ir="jogar">Ir jogar</button></div></div>`;
-    $("#bt-revisar-mais").onclick = () => iniciarRevisao(true);
-    $("#notas-srs").hidden = true; return;
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="botao" id="bt-mais">Revisar mesmo assim</button><button class="botao sec" data-ir="jogar">Ir jogar</button></div></div>`;
+    $("#bt-mais").onclick = () => iniciarRevisao(true); $("#notas-srs").hidden = true;
+    if (sessao.total) fx.cutin("おつかれ！", "Sessão concluída");
+    return;
   }
-  const k = sessao.fila[0], c = k.c, obj = c.objetos[(k.n === "q" ? 0 : k.n) % c.objetos.length], l = leitura(c, k.n);
-  const caixa = estado.srs[k.id]?.caixa || 0;
-  const tambem = c.tambem.map(t => leitura(CPOR[t], k.n).kana).filter(Boolean);
+  const k = sessao.fila[0], c = k.c, obj = c.objetos[(k.n === "q" ? 0 : k.n) % c.objetos.length], l = leitura(c, k.n), caixa = estado.srs[k.id]?.caixa || 0;
+  const tambem = c.tambem.map(t => lerKana(CPOR[t], k.n)), nt = nota(c, k.n);
   area.innerHTML = `<div class="cartao" id="cartao" style="--cor:var(${c.cor})" tabindex="0" role="button" aria-label="Virar cartão">
-    <div class="face"><span class="rotulo">${caixa ? "Caixa " + caixa : "Cartão novo"} · ${sessao.feitos + 1} de ${sessao.total}</span>
+    <div class="face frente"><span class="rotulo">${caixa ? "Caixa " + caixa : "Cartão novo"} · ${sessao.feitos + 1} de ${sessao.total}</span>
       <div class="itens">${figura(obj.e, k.n)}</div>
-      <p class="pergunta">${k.n === "q" ? `Como perguntar <b>“quantos?”</b> para <span class="jp">${esc(obj.jp)}</span> (${esc(obj.pt)})?` : `Como se diz <b>${k.n}</b> <span class="jp">${esc(obj.jp)}</span> (${esc(obj.pt)})?`}</p>
+      <p class="pergunta">${k.n === "q" ? `Como perguntar <b>“${quantos(obj).toLowerCase()}?”</b> para <span class="jp">${esc(obj.jp)}</span> (${esc(obj.pl)})?` : `Como se diz <b>${k.n}</b> <span class="jp">${esc(obj.jp)}</span> (${esc(plural(obj, k.n))})?`}</p>
       <button class="botao sec peq" id="bt-dica" type="button">Dica: qual contador?</button>
       <span class="rotulo">Toque ou aperte espaço para virar</span></div>
-    <div class="face verso"><span class="rotulo">${esc(c.titulo)}</span>
-      <span class="resposta">${esc(l.kana)}</span>
-      <span class="sub"><span class="jp">${esc(l.kanji)}</span> · ${esc(l.romaji)}${l.alt.length ? ` · também <span class="jp">${l.alt.map(esc).join(", ")}</span>` : ""}${tambem.length ? ` · ou <span class="jp">${tambem.map(esc).join(", ")}</span> com つ/個` : ""}</span>
-      ${c.notas[k.n] ? `<p class="nota">${esc(c.notas[k.n])}</p>` : ""}
-      <button class="botao sec peq" id="bt-ouvir-cartao" type="button">${SVG_SOM} Ouvir</button></div></div>`;
+    <div class="face verso"><span class="rotulo">${esc(c.titulo)}</span><span class="resposta">${esc(l.kana)}</span>
+      <span class="sub"><span class="jp">${esc(l.kanji)}</span> · ${esc(l.romaji)}${l.alt.length ? ` · também <span class="jp">${l.alt.map(esc).join(", ")}</span>` : ""}${tambem.length ? ` · ou <span class="jp">${tambem.map(esc).join(", ")}</span>` : ""}</span>
+      ${nt ? `<p class="nota">${esc(nt)}</p>` : ""}<button class="botao sec peq" id="bt-ouvir" type="button">${SVG_SOM} Ouvir</button></div></div>`;
   const el = $("#cartao");
-  el.onclick = e => { if (e.target.closest("#bt-dica")) { e.target.closest("#bt-dica").textContent = `Use ${c.k} (${c.curto})`; return; } if (e.target.closest("#bt-ouvir-cartao")) { falar(l.kana); return; } virar(); };
+  el.onclick = e => { const d = e.target.closest("#bt-dica"); if (d) { d.textContent = `Use ${c.k} (${c.curto})`; return; } if (e.target.closest("#bt-ouvir")) { falar(l.kana); return; } virar(); };
   el.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); virar(); } };
   sessao.virado = false; $("#notas-srs").hidden = true;
 }
 function virar() {
   if (!sessao?.fila.length) return;
-  const el = $("#cartao"); sessao.virado = !sessao.virado; el.classList.toggle("virado", sessao.virado);
-  if (sessao.virado) { const k = sessao.fila[0]; falar(leitura(k.c, k.n).kana); $("#notas-srs").hidden = false; }
+  sessao.virado = !sessao.virado; $("#cartao").classList.toggle("virado", sessao.virado);
+  if (sessao.virado) { const k = sessao.fila[0]; falar(lerKana(k.c, k.n)); $("#notas-srs").hidden = false; }
 }
 function avaliar(nota) {
   if (!sessao?.virado || !sessao.fila.length) return;
   const k = sessao.fila.shift(), s = estado.srs[k.id] || { caixa: 0, vence: 0 };
   if (nota === 0) { s.caixa = 1; s.vence = Date.now(); if (!sessao.repetidos.has(k.id)) { sessao.repetidos.add(k.id); sessao.fila.push(k); sessao.total++; } }
-  else if (nota === 1) { s.caixa = Math.max(1, s.caixa); s.vence = Date.now() + Math.max(.02, INTERVALO_DIAS[s.caixa] / 2) * 864e5; }
-  else { s.caixa = Math.min(5, s.caixa + 1); s.vence = Date.now() + INTERVALO_DIAS[s.caixa] * 864e5; festa($("#cartao")); }
+  else if (nota === 1) { s.caixa = Math.max(1, s.caixa); s.vence = Date.now() + Math.max(.02, INTERVALO[s.caixa] / 2) * 864e5; }
+  else { s.caixa = Math.min(5, s.caixa + 1); s.vence = Date.now() + INTERVALO[s.caixa] * 864e5; fx.sakura($("#cartao"), 18); }
   estado.srs[k.id] = s; sessao.feitos++;
   ganharXP(nota === 2 ? 6 : nota === 1 ? 3 : 1, nota > 0);
   renderCartao(); renderPainelSRS();
@@ -982,21 +1243,20 @@ $("#notas-srs").addEventListener("click", e => { const b = e.target.closest("[da
 document.addEventListener("keydown", e => {
   if ($("#v-revisar").hidden || e.target.matches("input,textarea")) return;
   if (e.key === " ") { e.preventDefault(); virar(); }
-  if (["1","2","3"].includes(e.key)) avaliar(+e.key - 1);
+  if (["1", "2", "3"].includes(e.key)) avaliar(+e.key - 1);
 });
 function renderPainelSRS() {
-  const cont = [0,0,0,0,0];
-  TODOS_CARTOES.forEach(k => { const s = estado.srs[k.id]; if (s) cont[s.caixa - 1]++; });
+  const cont = [0, 0, 0, 0, 0];
+  CARTOES.forEach(k => { const s = estado.srs[k.id]; if (s) cont[s.caixa - 1]++; });
   const max = Math.max(5, ...cont);
   $("#caixas").innerHTML = cont.map(q => `<div style="height:${Math.max(4, q / max * 100)}%"><span>${q}</span></div>`).join("");
   $("#dominio").innerHTML = CONTADORES.map(c => {
-    const ks = TODOS_CARTOES.filter(k => k.c === c);
-    const p = Math.round(ks.reduce((a, k) => a + (estado.srs[k.id]?.caixa || 0), 0) / (ks.length * 5) * 100);
-    return `<div class="linha" style="--cor:var(${c.cor})"><b class="jp" style="color:var(${c.cor});font-size:1.2rem">${c.k}</b><div class="barra"><i style="width:${p}%"></i></div><span style="font-variant-numeric:tabular-nums;text-align:right">${p}%</span></div>`;
+    const p = Math.round(NS.reduce((a, n) => a + (estado.srs[`${c.id}-${n}`]?.caixa || 0), 0) / (NS.length * 5) * 100);
+    return `<div class="linha" style="--cor:var(${c.cor})"><b class="pop" style="color:var(${c.cor});font-size:1.1rem">${c.k}</b><div class="barra"><i style="width:${p}%"></i></div><span style="font-variant-numeric:tabular-nums;text-align:right">${p}%</span></div>`;
   }).join("");
-  $("#filtro-revisao").innerHTML = CONTADORES.map(c => `<button style="--cor:var(${c.cor})" aria-pressed="${estado.filtro.includes(c.id)}" data-f="${c.id}">${c.k}</button>`).join("");
+  $("#filtro").innerHTML = CONTADORES.map(c => `<button style="--cor:var(${c.cor})" aria-pressed="${estado.filtro.includes(c.id)}" data-f="${c.id}" title="${esc(c.curto)}">${c.k}</button>`).join("");
 }
-$("#filtro-revisao").addEventListener("click", e => {
+$("#filtro").addEventListener("click", e => {
   const b = e.target.closest("[data-f]"); if (!b) return;
   const id = b.dataset.f;
   estado.filtro = estado.filtro.includes(id) ? estado.filtro.filter(x => x !== id) : [...estado.filtro, id];
@@ -1005,72 +1265,55 @@ $("#filtro-revisao").addEventListener("click", e => {
 });
 
 /* =========================================================================
-   JOGAR
+   12. JOGAR
    ========================================================================= */
-let jogoAtual = null;
-function pararJogo() { if (jogoAtual?.parar) jogoAtual.parar(); jogoAtual = null; }
+function pararJogo() { jogoAtual?.parar?.(); jogoAtual = null; }
 function recorde(nome, valor, menorMelhor = false) {
-  const r = estado.recordes[nome];
-  const novo = r == null || (menorMelhor ? valor < r : valor > r);
+  const r = estado.recordes[nome], novo = r == null || (menorMelhor ? valor < r : valor > r);
   if (novo) estado.recordes[nome] = valor;
   salvar(); atualizarStatus(); return novo;
 }
-function telaFim(titulo, grande, texto, novoRecorde, reiniciar) {
+function telaFim(titulo, grande, texto, novo, reiniciar) {
   $("#arena").innerHTML = `<div class="painel fim"><span class="rotulo">${esc(titulo)}</span><span class="grande">${esc(grande)}</span>
-    <p style="max-width:48ch;color:var(--ink-soft)">${texto}</p>${novoRecorde ? '<p style="font-weight:800;color:var(--ok)">Novo recorde!</p>' : ""}
+    <p style="max-width:50ch;color:var(--ink-soft)">${texto}</p>${novo ? '<p style="font-weight:800;color:var(--ok)">Novo recorde!</p>' : ""}
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="botao" id="bt-denovo">Jogar de novo</button><button class="botao sec" id="bt-outros">Outros jogos</button></div></div>`;
   $("#bt-denovo").onclick = reiniciar;
   $("#bt-outros").onclick = () => { $("#arena").innerHTML = ""; $("#lista-jogos").scrollIntoView({ behavior: REDUZ ? "auto" : "smooth" }); };
-  if (novoRecorde) festa($("#arena .grande"));
+  if (novo) fx.cutin("しんきろく！", "Novo recorde");
 }
-function cenaMascote() {
-  const cv = document.createElement("canvas"); cv.className = "palco-mascote";
-  const p = new Palco(cv); const k = p.add(spriteKazu(1));
-  p.aoDesenhar = (c, ts, pp) => { const esc = Math.min(pp.w, pp.h) / 150; k.x = pp.w / 2; k.y = pp.h / 2 + 4 * esc; k.sx = k.sy = esc; };
-  return { cv, p, k };
-}
-document.getElementById("lista-jogos").addEventListener("click", e => {
+function cena(id) { const cv = document.createElement("canvas"); $(id).append(cv); return novaMascote(cv); }
+function comemorar(el, m, combo) { fx.sakura(el, 16); m.reagir("feliz"); if (combo >= 3 && combo % 3 === 0) fx.cutin(["すごい！", "やった！", "かんぺき！"][Math.floor(combo / 3 - 1) % 3], `${combo} seguidas`); }
+$("#lista-jogos").addEventListener("click", e => {
   const b = e.target.closest("[data-jogo]"); if (!b) return;
   pararJogo(); ({ mercado: jogoMercado, classifica: jogoClassifica, ouvido: jogoOuvido, memoria: jogoMemoria })[b.dataset.jogo]();
   $("#arena").scrollIntoView({ behavior: REDUZ ? "auto" : "smooth", block: "start" });
 });
 
-/* --- 1. Mercadinho ------------------------------------------------------- */
-const CLIENTES = ["🧑‍🍳","👵","🧑‍🎓","👨‍💼","👧","🧔"];
+const CLIENTES = ["🧑‍🍳", "👵", "🧑‍🎓", "👨‍💼", "👧", "🧔"];
 function jogoMercado() {
-  const j = { rodada: 0, total: 10, vidas: 3, pontos: 0, combo: 0, timer: null };
+  const j = { rodada: 0, total: 10, vidas: 3, pontos: 0, combo: 0, seguidas: 0 };
   jogoAtual = j; j.parar = () => cancelAnimationFrame(j.timer);
   $("#arena").innerHTML = `<div class="painel" style="display:grid;gap:14px">
     <div class="hud"><span class="pilula" id="m-rodada"></span><span class="pilula" id="m-vidas"></span><span class="pilula" id="m-pontos"></span><span class="pilula" id="m-combo"></span><div class="tempo"><i id="m-tempo"></i></div></div>
-    <div class="cena"><div id="m-mascote"></div><div class="fala" id="m-fala"></div></div>
-    <div class="cesta" id="m-cesta"></div>
-    <div class="opcoes" id="m-opcoes"></div>
-    <div class="retorno" id="m-retorno">Escolha a forma certa. Teclas 1 a 4 também funcionam.</div></div>`;
-  const m = cenaMascote(); $("#m-mascote").append(m.cv); j.m = m;
-  proxima();
-  function hud() {
-    $("#m-rodada").textContent = `Pedido ${Math.min(j.rodada + 1, j.total)}/${j.total}`;
-    $("#m-vidas").textContent = "Vidas " + "●".repeat(j.vidas) + "○".repeat(3 - j.vidas);
-    $("#m-pontos").textContent = j.pontos + " pts";
-    $("#m-combo").textContent = "Combo ×" + (1 + j.combo);
-  }
+    <div class="cena"><div id="m-masc"></div><div class="fala" id="m-fala"></div></div>
+    <div class="cesta" id="m-cesta"></div><div class="opcoes" id="m-opcoes"></div>
+    <div class="retorno" id="m-retorno"></div></div>`;
+  const m = cena("#m-masc");
+  const hud = () => { $("#m-rodada").textContent = `Pedido ${Math.min(j.rodada + 1, j.total)}/${j.total}`; $("#m-vidas").textContent = "Vidas " + "♥".repeat(j.vidas) + "♡".repeat(3 - j.vidas); $("#m-pontos").textContent = j.pontos + " pts"; $("#m-combo").textContent = "Combo ×" + (1 + j.combo); };
   function proxima() {
     if (jogoAtual !== j) return;
     if (j.rodada >= j.total || j.vidas <= 0) return fim();
     const c = sortear(CONTADORES), obj = sortear(c.objetos), n = 1 + Math.floor(Math.random() * 10);
-    j.q = { c, obj, n, certa: leitura(c, n) };
-    hud();
+    j.q = { c, obj, n, certa: leitura(c, n) }; hud();
     $("#m-fala").innerHTML = `<span>${sortear(CLIENTES)} 「${esc(obj.jp)}を ＿＿＿ ください！」</span><small>“${n} ${esc(plural(obj, n))}, por favor!”</small>`;
-    $("#m-cesta").innerHTML = Array.from({ length: n }, (_, i) => `<span class="emoji" style="animation-delay:${i * 60}ms">${obj.e}</span>`).join("");
-    $("#m-opcoes").innerHTML = opcoesDe(c, n).map((k, i) => `<button class="opcao" data-k="${esc(k)}"><span class="kana">${esc(k)}</span>${rj((i + 1) + " · " + romajiDe(k))}</button>`).join("");
-    if (!estado.romaji) $("#m-opcoes").querySelectorAll(".opcao").forEach((b, i) => b.insertAdjacentHTML("beforeend", `<span class="rj">tecla ${i + 1}</span>`));
-    $("#m-retorno").className = "retorno"; $("#m-retorno").textContent = "Quanto tempo você leva? Responda rápido para ganhar bônus.";
+    $("#m-cesta").innerHTML = Array.from({ length: n }, (_, i) => `<span class="emoji" style="animation-delay:${i * 70}ms">${obj.e}</span>`).join("");
+    $("#m-opcoes").innerHTML = opcoesDe(c, n).map((k, i) => `<button class="opcao" data-k="${esc(k)}"><span class="kana">${esc(k)}</span><span class="rj">${i + 1}${estado.romaji ? " · " + esc(romaji(k)) : ""}</span></button>`).join("");
+    $("#m-retorno").className = "retorno"; $("#m-retorno").textContent = "Responda rápido para ganhar bônus. Teclas 1 a 4 também funcionam.";
     j.respondida = false; j.ini = performance.now(); j.dur = 12000;
     const tick = () => {
       if (jogoAtual !== j || j.respondida) return;
-      const p = Math.max(0, 1 - (performance.now() - j.ini) / j.dur);
-      const barra = $("#m-tempo"); if (!barra) return;
-      barra.style.width = p * 100 + "%"; barra.style.background = p < .3 ? "var(--bad)" : p < .6 ? "var(--kin)" : "var(--ok)";
+      const p = Math.max(0, 1 - (performance.now() - j.ini) / j.dur), b = $("#m-tempo"); if (!b) return;
+      b.style.width = p * 100 + "%"; b.style.background = p < .3 ? "var(--bad)" : p < .6 ? "var(--kin)" : "var(--ok)";
       if (p <= 0) return responder(null);
       j.timer = requestAnimationFrame(tick);
     };
@@ -1078,104 +1321,72 @@ function jogoMercado() {
   }
   function responder(k) {
     if (j.respondida) return; j.respondida = true;
-    const { c, obj, n, certa } = j.q, ok = k === certa.kana || certa.alt.includes(k);
-    const resto = Math.max(0, 1 - (performance.now() - j.ini) / j.dur);
+    const { c, obj, n, certa } = j.q, ok = k === certa.kana || certa.alt.includes(k), resto = Math.max(0, 1 - (performance.now() - j.ini) / j.dur), nt = nota(c, n);
     $("#m-opcoes").querySelectorAll(".opcao").forEach(b => { b.disabled = true; if (b.dataset.k === certa.kana) b.classList.add("certa"); else if (b.dataset.k === k) b.classList.add("errada"); });
-    const nota = c.notas[n] ? " " + esc(c.notas[n]) : "";
     if (ok) {
-      const ganho = Math.round((10 + resto * 10) * (1 + j.combo * .5));
-      j.pontos += ganho; j.combo = Math.min(j.combo + 1, 4);
-      $("#m-retorno").className = "retorno ok"; $("#m-retorno").innerHTML = `<b>はい、どうぞ！</b> +${ganho} pts. <span class="jp">${esc(certa.kanji)}</span> = ${esc(certa.romaji)}.${nota}`;
-      festa($("#m-opcoes .certa")); pular(j.m.p, j.m.k); ganharXP(5);
+      const ganho = Math.round((10 + resto * 10) * (1 + j.combo * .5)); j.pontos += ganho; j.combo = Math.min(j.combo + 1, 4); j.seguidas++;
+      $("#m-retorno").className = "retorno ok"; $("#m-retorno").innerHTML = `<b>はい、どうぞ！</b> +${ganho} pts. <span class="jp">${esc(certa.kanji)}</span> = ${esc(certa.romaji)}.${nt ? " " + esc(nt) : ""}`;
+      comemorar($("#m-opcoes .certa"), m, j.seguidas); ganharXP(5);
     } else {
-      j.vidas--; j.combo = 0;
-      $("#m-retorno").className = "retorno no"; $("#m-retorno").innerHTML = `${k ? "Quase!" : "O tempo acabou!"} O certo é <b class="jp">${esc(certa.kana)}</b> (${esc(certa.romaji)}), Com ${esc(obj.pl)} se usa ${c.k}: ${esc(c.titulo.toLowerCase())}.${nota}`;
-      pular(j.m.p, j.m.k, "triste"); ganharXP(1, false);
+      j.vidas--; j.combo = 0; j.seguidas = 0;
+      $("#m-retorno").className = "retorno no"; $("#m-retorno").innerHTML = `${k ? "Quase!" : "O tempo acabou!"} O certo é <b class="jp">${esc(certa.kana)}</b> (${esc(certa.romaji)}). Com ${esc(obj.pl)} se usa ${c.k}: ${esc(c.titulo.toLowerCase())}.${nt ? " " + esc(nt) : ""}`;
+      m.reagir("triste"); ganharXP(1, false);
     }
     falar(certa.kana); hud(); j.rodada++;
-    setTimeout(proxima, ok ? 1500 : 3200);
+    setTimeout(proxima, ok ? 1500 : 3300);
   }
   $("#m-opcoes").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b && !b.disabled) responder(b.dataset.k); });
-  const teclas = e => { if (jogoAtual !== j) return document.removeEventListener("keydown", teclas); if ($("#v-jogar").hidden) return; const i = +e.key - 1; const bs = $("#m-opcoes")?.querySelectorAll(".opcao"); if (bs && i >= 0 && i < 4 && !bs[i].disabled) responder(bs[i].dataset.k); };
+  const teclas = e => { if (jogoAtual !== j) return document.removeEventListener("keydown", teclas); if ($("#v-jogar").hidden) return; const i = +e.key - 1, bs = $("#m-opcoes")?.querySelectorAll(".opcao"); if (bs && i >= 0 && i < 4 && !bs[i].disabled) responder(bs[i].dataset.k); };
   document.addEventListener("keydown", teclas);
-  function fim() {
-    cancelAnimationFrame(j.timer);
-    const novo = recorde("mercado", j.pontos);
-    telaFim("Mercadinho fechado", j.pontos + " pts", `Você atendeu ${j.rodada} pedidos${j.vidas <= 0 ? " e as vidas acabaram" : ""}. Dica: os erros mais comuns ficam no 1, 3, 6, 8 e 10 com 本 e 個.`, novo, jogoMercado);
-  }
+  function fim() { cancelAnimationFrame(j.timer); const novo = recorde("mercado", j.pontos); telaFim("Mercadinho fechado", j.pontos + " pts", `Você atendeu ${j.rodada} pedidos${j.vidas <= 0 ? " e as vidas acabaram" : ""}. Os erros mais comuns ficam no 1, 3, 6, 8 e 10 com 本, 匹, 杯, 個 e 冊.`, novo, jogoMercado); }
+  proxima();
 }
 
-/* --- 2. Qual contador? ---------------------------------------------------- */
 function jogoClassifica() {
   const itens = CONTADORES.flatMap(c => c.objetos.map(o => ({ ...o, c })));
-  const j = { pontos: 0, seq: 0, erros: [], fim: performance.now() + 60000, timer: null };
+  const j = { pontos: 0, seq: 0, erros: [], fim: performance.now() + 60000 };
   jogoAtual = j; j.parar = () => cancelAnimationFrame(j.timer);
   $("#arena").innerHTML = `<div class="painel" style="display:grid;gap:14px">
     <div class="hud"><span class="pilula" id="c-pontos">0 acertos</span><span class="pilula" id="c-seq">sequência 0</span><div class="tempo"><i id="c-tempo"></i></div><span class="pilula" id="c-seg">60 s</span></div>
-    <div class="esteira" id="c-esteira"></div>
+    <div class="cena"><div id="c-masc"></div><div class="esteira" id="c-esteira"></div></div>
     <div class="caixas-contador" id="c-caixas">${CONTADORES.map(c => `<button style="--cor:var(${c.cor})" data-c="${c.id}"><span class="k">${c.k}</span><small>${esc(c.curto)}</small></button>`).join("")}</div>
-    <div class="retorno" id="c-retorno">Para onde vai cada objeto? Coisas pequenas aceitam 個 e つ.</div></div>`;
+    <div class="retorno" id="c-retorno">Para onde vai cada coisa? Coisas pequenas aceitam 個 e つ.</div></div>`;
+  const m = cena("#c-masc");
   let ultimo = null;
   const novo = () => { let it; do { it = sortear(itens); } while (it === ultimo); ultimo = j.item = it; $("#c-esteira").innerHTML = `<div class="item"><span class="emoji">${it.e}</span><span class="jp">${esc(it.jp)}</span><span style="color:var(--ink-soft)">${esc(it.pt)}</span></div>`; };
   novo();
-  const tick = () => {
-    if (jogoAtual !== j) return;
-    const resta = Math.max(0, j.fim - performance.now());
-    const b = $("#c-tempo"); if (!b) return;
-    b.style.width = resta / 600 + "%"; $("#c-seg").textContent = Math.ceil(resta / 1000) + " s";
-    if (resta <= 0) return fim();
-    j.timer = requestAnimationFrame(tick);
-  };
+  const tick = () => { if (jogoAtual !== j) return; const resta = Math.max(0, j.fim - performance.now()), b = $("#c-tempo"); if (!b) return; b.style.width = resta / 600 + "%"; $("#c-seg").textContent = Math.ceil(resta / 1000) + " s"; if (resta <= 0) return fim(); j.timer = requestAnimationFrame(tick); };
   tick();
   $("#c-caixas").addEventListener("click", e => {
     const b = e.target.closest("[data-c]"); if (!b || jogoAtual !== j) return;
     const it = j.item, ok = b.dataset.c === it.c.id || it.c.tambem.includes(b.dataset.c);
-    if (ok) {
-      j.pontos++; j.seq++; ganharXP(2);
-      $("#c-retorno").className = "retorno ok";
-      $("#c-retorno").innerHTML = `Certo! <span class="jp">${esc(it.jp)}</span> → ${it.c.k}${it.c.tambem.length ? ` (também vale ${it.c.tambem.map(t => CPOR[t].k).join(", ")})` : ""}. Ex.: <span class="jp">${esc(it.c.kana[1])}</span>.`;
-      if (j.seq % 5 === 0) festa(b);
-    } else {
-      j.seq = 0; j.erros.push(it); ganharXP(0, false);
-      $("#c-retorno").className = "retorno no";
-      $("#c-retorno").innerHTML = `${esc(it.pt)} vai em <b class="jp">${it.c.k}</b>: ${esc(it.c.titulo.toLowerCase())}.`;
-      b.animate([{ transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "none" }], { duration: 250 });
-    }
+    if (ok) { j.pontos++; j.seq++; ganharXP(2); $("#c-retorno").className = "retorno ok"; $("#c-retorno").innerHTML = `Certo! <span class="jp">${esc(it.jp)}</span> → ${it.c.k}${it.c.tambem.length ? ` (também vale ${it.c.tambem.map(t => CPOR[t].k).join(", ")})` : ""}. Ex.: <span class="jp">${esc(lerKana(it.c, 2))}</span>.`; comemorar(b, m, j.seq); }
+    else { j.seq = 0; j.erros.push(it); ganharXP(0, false); m.reagir("triste"); $("#c-retorno").className = "retorno no"; $("#c-retorno").innerHTML = `${esc(it.pt)} vai em <b class="pop">${it.c.k}</b>: ${esc(it.c.titulo.toLowerCase())}.`; b.animate([{ transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "none" }], { duration: 250 }); }
     $("#c-pontos").textContent = j.pontos + " acertos"; $("#c-seq").textContent = "sequência " + j.seq;
     novo();
   });
-  function fim() {
-    const n = recorde("classifica", j.pontos);
-    const revisar = [...new Map(j.erros.map(i => [i.pt, i])).values()].slice(0, 5);
-    telaFim("Tempo esgotado", j.pontos + " acertos", revisar.length ? "Vale rever: " + revisar.map(i => `${i.e} ${esc(i.pt)} → <span class="jp">${i.c.k}</span>`).join(" · ") : "Nenhum erro. すごい！", n, jogoClassifica);
-  }
+  function fim() { const n = recorde("classifica", j.pontos), rev = [...new Map(j.erros.map(i => [i.pt, i])).values()].slice(0, 5); telaFim("Tempo esgotado", j.pontos + " acertos", rev.length ? "Vale rever: " + rev.map(i => `${i.e} ${esc(i.pt)} → <span class="pop">${i.c.k}</span>`).join(" · ") : "Nenhum erro. すごい！", n, jogoClassifica); }
 }
 
-/* --- 3. Ouvido afiado ----------------------------------------------------- */
 function jogoOuvido() {
-  const j = { rodada: 0, total: 8, acertos: 0 };
+  const j = { rodada: 0, total: 8, acertos: 0, seguidas: 0 };
   jogoAtual = j;
   $("#arena").innerHTML = `<div class="painel" style="display:grid;gap:14px">
     <div class="hud"><span class="pilula" id="o-rodada"></span><span class="pilula" id="o-acertos"></span><button class="botao peq" id="o-ouvir">${SVG_SOM} Ouvir de novo</button></div>
-    <div class="cena"><div id="o-mascote"></div><div class="fala" id="o-fala"></div></div>
-    <div class="opcoes" id="o-opcoes"></div>
-    <div class="retorno" id="o-retorno"></div></div>`;
-  const m = cenaMascote(); $("#o-mascote").append(m.cv);
-  const semVoz = !temVoz || !estado.som;
-  $("#o-ouvir").onclick = () => falar(j.q.l.kana);
-  proxima();
+    <div class="cena"><div id="o-masc"></div><div class="fala" id="o-fala"></div></div>
+    <div class="opcoes" id="o-opcoes"></div><div class="retorno" id="o-retorno"></div></div>`;
+  const m = cena("#o-masc"), semVoz = !temVoz || !estado.som;
+  $("#o-ouvir").onclick = () => falar(`${j.q.obj.jp}を${j.q.l.kana}`);
   function proxima() {
     if (jogoAtual !== j) return;
     if (j.rodada >= j.total) return fim();
     const c = sortear(CONTADORES), obj = sortear(c.objetos), n = 1 + Math.floor(Math.random() * 10);
     j.q = { c, obj, n, l: leitura(c, n) }; j.respondida = false;
     $("#o-rodada").textContent = `Rodada ${j.rodada + 1}/${j.total}`; $("#o-acertos").textContent = j.acertos + " acertos";
-    $("#o-fala").innerHTML = semVoz
-      ? `<span>${esc(obj.jp)}を${esc(j.q.l.kana)}</span><small>A voz está desligada ou indisponível: leia e escolha a figura.</small>`
-      : `<span>「${esc(obj.jp)}を……」</span><small>Escute e escolha: ${quantos(obj).toLowerCase()} ${esc(obj.pl)}?</small>`;
+    $("#o-fala").innerHTML = semVoz ? `<span>${esc(obj.jp)}を${esc(j.q.l.kana)}</span><small>A voz está desligada ou indisponível: leia e escolha a figura.</small>` : `<span>「${esc(obj.jp)}を……」</span><small>Escute: ${quantos(obj).toLowerCase()} ${esc(obj.pl)}?</small>`;
     const ns = embaralhar([n, ...embaralhar([1,2,3,4,5,6,7,8,9,10].filter(x => x !== n)).slice(0, 3)]);
     $("#o-opcoes").innerHTML = ns.map(x => `<button class="opcao" data-n="${x}"><span class="figura">${figura(obj.e, x)}</span></button>`).join("");
-    $("#o-retorno").className = "retorno"; $("#o-retorno").textContent = "Dica: preste atenção no começo da palavra, ele diz o número.";
+    $("#o-retorno").className = "retorno"; $("#o-retorno").textContent = "Dica: o começo da palavra diz o número.";
     setTimeout(() => falar(`${obj.jp}を${j.q.l.kana}`), 250);
   }
   $("#o-opcoes").addEventListener("click", e => {
@@ -1184,21 +1395,20 @@ function jogoOuvido() {
     $("#o-opcoes").querySelectorAll(".opcao").forEach(x => { x.disabled = true; if (+x.dataset.n === j.q.n) x.classList.add("certa"); else if (x === b) x.classList.add("errada"); });
     $("#o-retorno").className = "retorno " + (ok ? "ok" : "no");
     $("#o-retorno").innerHTML = `${ok ? "Isso!" : "Era " + j.q.n + "."} <b class="jp">${esc(j.q.l.kana)}</b> · ${esc(j.q.l.romaji)} · <span class="jp">${esc(j.q.l.kanji)}</span>`;
-    if (ok) { j.acertos++; festa(b); pular(m.p, m.k); ganharXP(4); } else { pular(m.p, m.k, "triste"); ganharXP(1, false); falar(j.q.l.kana); }
+    if (ok) { j.acertos++; j.seguidas++; comemorar(b, m, j.seguidas); ganharXP(4); } else { j.seguidas = 0; m.reagir("triste"); ganharXP(1, false); falar(j.q.l.kana); }
     j.rodada++; setTimeout(proxima, ok ? 1500 : 2600);
   });
-  function fim() { const n = recorde("ouvido", j.acertos); telaFim("Treino de ouvido", `${j.acertos}/${j.total}`, "Ouvir ajuda a separar sons parecidos, como さんぼん e さんぽん (só o primeiro existe).", n, jogoOuvido); }
+  function fim() { const n = recorde("ouvido", j.acertos); telaFim("Treino de ouvido", `${j.acertos}/${j.total}`, "Ouvir ajuda a separar sons parecidos, como さんびき e さんぴき (só o primeiro existe).", n, jogoOuvido); }
+  proxima();
 }
 
-/* --- 4. Memória ----------------------------------------------------------- */
 function jogoMemoria() {
-  const escolhidos = [], usados = new Set();
-  while (escolhidos.length < 6) {
-    const c = sortear(CONTADORES), n = 1 + Math.floor(Math.random() * (window.innerWidth < 620 ? 6 : 8));
-    const kana = leitura(c, n).kana; if (usados.has(kana)) continue; usados.add(kana);
-    escolhidos.push({ c, n, obj: sortear(c.objetos), kana });
+  const esc6 = [], usados = new Set();
+  while (esc6.length < 6) {
+    const c = sortear(CONTADORES), n = 1 + Math.floor(Math.random() * (innerWidth < 620 ? 6 : 8)), kana = lerKana(c, n);
+    if (usados.has(kana)) continue; usados.add(kana); esc6.push({ c, n, obj: sortear(c.objetos), kana });
   }
-  const cartas = embaralhar(escolhidos.flatMap((p, i) => [{ par: i, tipo: "fig", p }, { par: i, tipo: "kana", p }]));
+  const cartas = embaralhar(esc6.flatMap((p, i) => [{ par: i, tipo: "fig", p }, { par: i, tipo: "kana", p }]));
   const j = { abertas: [], pares: 0, jogadas: 0, ini: performance.now(), travado: false };
   jogoAtual = j;
   $("#arena").innerHTML = `<div class="painel" style="display:grid;gap:14px">
@@ -1213,29 +1423,24 @@ function jogoMemoria() {
     j.jogadas++; $("#mm-jogadas").textContent = j.jogadas + " jogadas";
     const [a, c] = j.abertas; j.abertas = [];
     if (a.k.par === c.k.par && a.k.tipo !== c.k.tipo) {
-      a.b.classList.add("par"); c.b.classList.add("par"); j.pares++; festa(c.b); ganharXP(3);
+      a.b.classList.add("par"); c.b.classList.add("par"); j.pares++; fx.sakura(c.b, 14); ganharXP(3);
       const p = a.k.p; $("#mm-pares").textContent = j.pares + "/6 pares";
-      $("#mm-retorno").className = "retorno ok"; $("#mm-retorno").innerHTML = `${p.n} ${esc(plural(p.obj, p.n))} = <b class="jp">${esc(p.kana)}</b> (${esc(leitura(p.c, p.n).romaji)})`;
+      $("#mm-retorno").className = "retorno ok"; $("#mm-retorno").innerHTML = `${p.n} ${esc(plural(p.obj, p.n))} = <b class="jp">${esc(p.kana)}</b> (${esc(romaji(p.kana))})`;
       if (j.pares === 6) setTimeout(fim, 700);
-    } else {
-      j.travado = true;
-      setTimeout(() => { a.b.classList.remove("aberta"); c.b.classList.remove("aberta"); j.travado = false; }, 950);
-    }
+    } else { j.travado = true; setTimeout(() => { a.b.classList.remove("aberta"); c.b.classList.remove("aberta"); j.travado = false; }, 950); }
   });
-  function fim() {
-    const seg = Math.round((performance.now() - j.ini) / 1000);
-    const n = recorde("memoria", j.jogadas, true);
-    telaFim("Memória completa", `${j.jogadas} jogadas`, `Em ${seg} segundos. O mínimo possível é 6 jogadas.`, n, jogoMemoria);
-  }
+  function fim() { const seg = Math.round((performance.now() - j.ini) / 1000), n = recorde("memoria", j.jogadas, true); telaFim("Memória completa", `${j.jogadas} jogadas`, `Em ${seg} segundos. O mínimo possível é 6 jogadas.`, n, jogoMemoria); }
 }
 
 /* =========================================================================
-   INÍCIO DE TUDO
+   13. INÍCIO DE TUDO
    ========================================================================= */
 function atualizarTudo() { atualizarStatus(); renderEstudo(); renderTabela(); renderPainelSRS(); if (sessao) renderCartao(); }
 atualizarTudo();
+marcarTec();
 ir(location.hash.slice(1) || "inicio");
 conectarServidor();
+riveKazu.tentar();
 </script>
 </body>
 </html>
