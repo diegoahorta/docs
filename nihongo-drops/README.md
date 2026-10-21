@@ -45,7 +45,8 @@ index.html            importmap, contêineres do HUD, das telas, do feedback e d
 src/main.js           inicialização e navegação entre o menu 3D e os jogos
 src/router.js         troca de telas com cortina GSAP; destrói a tela anterior
 src/menu3d/           cena Three.js (ilha, torii, kana flutuantes, pontos das fases)
-src/games/            catálogo dos minijogos, host do Phaser e uma pasta por jogo
+src/games/            catálogo, host do Phaser, painéis HTML comuns e uma pasta por jogo
+  kana-rain/          cena Phaser, lógica pura, gota, cenário, barra de digitação e painéis
 src/data/             kana.js, vocab.js, kanji.js e strokes.js (ordem dos traços)
 src/core/             armazenamento, configurações, SRS, progresso, conquistas, voz, áudio
 src/ui/               HUD, modais, feedback, botão 🔊, tabela de estudo, ordem dos traços, CSS
@@ -79,7 +80,7 @@ assets/               imagens (favicon), sfx/ e fonts/ reservados para uso futur
 ## Roteiro
 
 1. ✅ Base: menu 3D, progresso, SRS, tabela de estudo com ordem dos traços
-2. ⏳ Kana Rain
+2. ✅ Kana Rain: os hiragana caem e você digita o romaji. A velocidade cresce a cada 5 acertos e há 3 vidas
 3. ⏳ Memory Kana
 4. ⏳ Katakana Runner
 5. ⏳ Pares de Kana (hiragana ↔ katakana)

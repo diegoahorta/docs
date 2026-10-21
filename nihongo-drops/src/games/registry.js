@@ -10,7 +10,7 @@ export const JOGOS = Object.freeze([
     descricao: 'Hiragana caem do céu: digite o romaji antes que cheguem ao chão.',
     cor: '#8fd3ff',
     xpNecessario: 0,
-    carregar: null,
+    carregar: () => import('./kana-rain/KanaRainScene.js'),
   },
   {
     id: 'memory-kana',

@@ -9,6 +9,9 @@ const COR_DE_FUNDO = '#0f1630';
  * Inicia um jogo Phaser dentro de `conteiner`, com a cena `ClasseCena`.
  * `dados` chega em `init(dados)` da cena (ex.: callbacks para sair).
  * Devolve { jogo, pausar, continuar, destroy }.
+ *
+ * Se a cena tiver `pausarExterno()` / `continuarExterno()`, eles são usados
+ * quando um modal abre/fecha (assim a cena pode mostrar o próprio painel de pausa).
  */
 export function criarJogoPhaser(conteiner, ClasseCena, dados = {}) {
   const jogo = new Phaser.Game({
@@ -25,17 +28,31 @@ export function criarJogoPhaser(conteiner, ClasseCena, dados = {}) {
       height: conteiner.clientHeight || 600,
     },
     callbacks: {
+      // A cena usa a chave definida no próprio construtor; 'principal' é só um apelido.
       postBoot: (instancia) => instancia.scene.add('principal', ClasseCena, true, dados),
     },
   });
 
+  // O Phaser só cria a cena depois do boot, então a buscamos na hora de usar.
+  const obterCena = () => jogo.scene?.getScenes(false)[0] ?? null;
+
   return {
     jogo,
     pausar() {
-      jogo.scene.getScene('principal')?.scene.pause();
+      const cena = obterCena();
+      if (cena?.pausarExterno) {
+        cena.pausarExterno();
+      } else {
+        cena?.scene.pause();
+      }
     },
     continuar() {
-      jogo.scene.getScene('principal')?.scene.resume();
+      const cena = obterCena();
+      if (cena?.continuarExterno) {
+        cena.continuarExterno();
+      } else {
+        cena?.scene.resume();
+      }
     },
     destroy() {
       // true = remove também o <canvas> do DOM.

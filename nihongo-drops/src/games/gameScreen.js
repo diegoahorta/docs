@@ -21,7 +21,11 @@ export async function montarTelaJogo(conteiner, { jogoId, aoSair }) {
   conteiner.append(palco);
 
   const modulo = await jogo.carregar();
-  const instancia = criarJogoPhaser(palco, modulo.default, { jogo, aoSair });
+  const instancia = criarJogoPhaser(palco, modulo.default, {
+    jogo,
+    conteiner: palco,
+    aoSair,
+  });
 
   const aoModal = (evento) => (evento.detail.aberto ? instancia.pausar() : instancia.continuar());
   document.addEventListener('nd:modal', aoModal);

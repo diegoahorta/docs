@@ -900,3 +900,201 @@ button {
   animation-iteration-count: 1 !important;
   scroll-behavior: auto !important;
 }
+
+/* ---------- Minijogos (camada HTML sobre o canvas) ---------- */
+
+.tela-jogo canvas {
+  display: block;
+}
+
+.jogo-camada {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.jogo-camada > * {
+  pointer-events: auto;
+}
+
+.jogo-painel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(460px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  overflow: auto;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: calc(var(--raio) * 1.4);
+  box-shadow: var(--sombra);
+}
+
+.jogo-painel h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.jogo-painel h3 {
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.jogo-painel-jp {
+  margin: 0 0 0.75rem;
+  color: var(--cor-destaque);
+  font-weight: 700;
+}
+
+.jogo-painel-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.jogo-instrucoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+  color: var(--cor-texto-suave);
+}
+
+.jogo-kana-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.jogo-kana-lista li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.6rem;
+  padding: 0.3rem;
+  border-radius: 10px;
+  background: var(--cor-superficie);
+}
+
+.jogo-kana-lista .kana {
+  font-size: 1.5rem;
+}
+
+.jogo-kana-lista .romaji {
+  font-size: 0.75rem;
+}
+
+.jogo-resultados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+}
+
+.jogo-resultados div {
+  padding: 0.5rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.jogo-resultados dt {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.jogo-resultados dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.jogo-recorde {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--cor-destaque-2);
+}
+
+.jogo-revisao {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.jogo-revisao li {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  align-items: center;
+  gap: 0.25rem 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.jogo-revisao small {
+  grid-column: 1 / -1;
+}
+
+.revisao-romaji {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.jogo-barra-entrada {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem max(12px, env(safe-area-inset-right)) max(0.6rem, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  background: rgb(15 22 48 / 0.9);
+}
+
+.jogo-entrada {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.3rem 1rem;
+  font: inherit;
+  font-size: 1.5rem; /* 16px+ evita o zoom automático no iOS */
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+  border: 2px solid var(--cor-borda);
+  border-radius: 999px;
+}
+
+.jogo-entrada:focus-visible {
+  outline: none;
+  border-color: var(--cor-foco);
+}
+
+.jogo-entrada.invalido {
+  border-color: var(--cor-erro);
+}
+
+.jogo-botao {
+  flex: none;
+  background: var(--cor-superficie);
+}
