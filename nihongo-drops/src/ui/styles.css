@@ -786,10 +786,10 @@ button {
   pointer-events: auto;
 }
 
+/* Centralizados no ponto pelo GSAP (xPercent/yPercent), não pelo CSS. */
 .selo-acerto,
 .petala {
   position: absolute;
-  translate: -50% -50%;
   pointer-events: none;
 }
 
@@ -804,11 +804,16 @@ button {
   font-size: 1.2rem;
 }
 
+/*
+ * Elementos animados pelo GSAP são centralizados pelo layout (margin auto),
+ * e não com `translate`: o GSAP reescreve o transform ao animar.
+ */
 .cartao-erro {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   bottom: max(16px, env(safe-area-inset-bottom));
-  translate: -50% 0;
   width: min(420px, calc(100% - 32px));
   display: flex;
   flex-direction: column;
@@ -858,6 +863,16 @@ button {
   align-items: center;
   gap: 0.5rem;
   pointer-events: none;
+}
+
+/* Em telas largas, os avisos vão para o canto e não cobrem a pergunta dos jogos. */
+@media (min-width: 760px) {
+  .pilha-avisos {
+    left: auto;
+    right: 16px;
+    translate: none;
+    align-items: flex-end;
+  }
 }
 
 .aviso,
@@ -919,9 +934,9 @@ button {
 
 .jogo-painel {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
   width: min(460px, calc(100% - 32px));
   max-height: calc(100% - 32px);
   overflow: auto;
@@ -1101,9 +1116,10 @@ button {
 
 .jogo-dica {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   bottom: max(16px, env(safe-area-inset-bottom));
-  translate: -50% 0;
   width: min(560px, calc(100% - 32px));
   padding: 0.6rem 1rem;
   border-radius: var(--raio);
@@ -1130,4 +1146,53 @@ button {
 
 .jogo-niveis {
   list-style: decimal inside;
+}
+
+/* ---------- Katakana Runner ---------- */
+
+.runner-pergunta {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.5rem 0.3rem 1rem;
+  border-radius: 999px;
+  background: rgb(15 22 48 / 0.85);
+  box-shadow: var(--sombra);
+  white-space: nowrap;
+}
+
+.runner-leitura {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--cor-destaque-2);
+  line-height: 1.1;
+}
+
+.runner-controles {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.5rem max(12px, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.runner-botao {
+  width: 56px;
+  height: 56px;
+  font-size: 1.4rem;
+  border-radius: 50%;
+  background: rgb(31 43 92 / 0.9);
+}
+
+.runner-botao:hover {
+  background: var(--cor-superficie-2);
 }

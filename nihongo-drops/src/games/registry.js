@@ -28,7 +28,7 @@ export const JOGOS = Object.freeze([
     descricao: 'Corra e pule no bloco com a leitura correta do katakana.',
     cor: '#ffd166',
     xpNecessario: 200,
-    carregar: null,
+    carregar: () => import('./katakana-runner/KatakanaRunnerScene.js'),
   },
   {
     id: 'kana-pairs',

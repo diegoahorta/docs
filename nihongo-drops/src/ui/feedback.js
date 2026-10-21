@@ -35,6 +35,7 @@ function soltarPetalas(x, y) {
     petala.style.left = `${x}px`;
     petala.style.top = `${y}px`;
     camada().append(petala);
+    gsap.set(petala, { xPercent: -50, yPercent: -50 });
     const angulo = (Math.PI * 2 * i) / 6;
     gsap.to(petala, {
       x: Math.cos(angulo) * 70,
@@ -60,6 +61,7 @@ export function mostrarAcerto({ texto = '+10', x, y } = {}) {
   selo.style.left = `${posX}px`;
   selo.style.top = `${posY}px`;
   camada().append(selo);
+  gsap.set(selo, { xPercent: -50, yPercent: -50 });
 
   if (animacoesReduzidas()) {
     gsap.to(selo, { opacity: 0, delay: 0.5, duration: 0.2, onComplete: () => selo.remove() });
