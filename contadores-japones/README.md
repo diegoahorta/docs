@@ -27,6 +27,7 @@ python3 contadores.py servir      # servidor local + API /api/progresso
 python3 contadores.py verificar   # gera as leituras pelas regras de som e confere com a tabela
 python3 contadores.py quiz        # quiz no terminal
 python3 contadores.py anki        # exporta 99 cartões em CSV para o Anki
+python3 contadores.py audio       # regera a voz japonesa (audio/vozes.js)
 ```
 
 O `verificar` mostra que a tabela inteira (99 leituras) sai de poucas regras: a pausa っ em
@@ -45,6 +46,18 @@ O Adobe Animate é um programa de desenho; aqui o personagem foi escrito direto 
 de publicação dele (CreateJS), então dá para abri-lo como referência ou trocá-lo por um
 símbolo `lib.Kazu` desenhado no Animate. O Rive precisa de um arquivo `.riv` feito no editor
 do Rive, que não existe neste repositório ainda; a página já sabe carregá-lo.
+
+## Som
+
+- **Voz:** 222 falas em japonês (todas as leituras, variantes, objetos e frases) ficam gravadas em
+  `audio/vozes.js` e tocam pela Web Audio API, então soam iguais em qualquer navegador, mesmo
+  sem voz japonesa instalada no sistema. A voz do sistema só entra como reserva.
+- **Efeitos:** acerto, erro, “pop” dos objetos caindo, virar cartão, brilho dos cut-ins e fanfarra
+  de recorde, sintetizados na hora (sem arquivos). Os botões “voz” e “efeitos” no topo ligam e desligam cada um.
+- **Regerar a voz:** `pip install pyopenjtalk-plus lameenc numpy` e `python3 contadores.py audio`.
+  O gerador confere a pronúncia de cada fala e, quando o sintetizador erra uma forma escrita
+  (ele lia はちまい como “wachimai”), tenta outra (kanji, katakana) até sair certo.
+- Voz: HTS Voice “Mei” © Nagoya Institute of Technology, licença CC BY 3.0, sintetizada com Open JTalk.
 
 As bibliotecas vêm de CDN (jsDelivr), então a primeira abertura precisa de internet.
 Respeita a preferência do sistema por movimento reduzido.

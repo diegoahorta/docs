@@ -307,6 +307,7 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; displ
 </style>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/createjs@1.0.1/builds/1.0.0/createjs.min.js"></script>
+<script src="audio/vozes.js"></script>
 </head>
 <body>
 
@@ -324,6 +325,7 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; displ
       <span class="pilula opc" id="st-seq">0 dias</span>
       <button class="alternar" id="bt-romaji" aria-pressed="true">romaji</button>
       <button class="alternar" id="bt-som" aria-pressed="true">voz</button>
+      <button class="alternar" id="bt-efeitos" aria-pressed="true">efeitos</button>
     </div>
   </div>
 </header>
@@ -451,6 +453,7 @@ footer { font-size: .85rem; color: var(--ink-soft); padding-block: 0 40px; displ
 
 <footer class="wrap">
   <div class="tecnologias" id="tecnologias"></div>
+  <p>Voz japonesa: HTS Voice “Mei” © Nagoya Institute of Technology (CC BY 3.0), sintetizada com Open JTalk.</p>
   <p>Para salvar o progresso num arquivo, rode <code>python3 contadores.py servir</code> na pasta do projeto. <span class="selo-servidor" id="selo-servidor"></span></p>
 </footer>
 
@@ -579,7 +582,7 @@ const quantos = o => o.f ? "Quantas" : "Quantos";
    2. ESTADO (localStorage + servidor Python opcional)
    ========================================================================= */
 const CHAVE = "kazoeyou-v2";
-const PADRAO = () => ({ xp: 0, acertos: 0, erros: 0, dias: 0, ultimoDia: null, srs: {}, recordes: {}, romaji: true, som: true, filtro: CONTADORES.map(c => c.id), atualizado: 0 });
+const PADRAO = () => ({ xp: 0, acertos: 0, erros: 0, dias: 0, ultimoDia: null, srs: {}, recordes: {}, romaji: true, som: true, efeitos: true, filtro: CONTADORES.map(c => c.id), atualizado: 0 });
 let estado = PADRAO();
 try { const s = JSON.parse(localStorage.getItem(CHAVE) || "null"); if (s) estado = { ...estado, ...s }; } catch (e) {}
 const API = location.protocol.startsWith("http") ? "api/progresso" : null;
@@ -613,26 +616,122 @@ function ganharXP(q, certo = true) { estado.xp += q; marcarDia(); if (certo) est
 const nivel = () => Math.floor(estado.xp / 150) + 1;
 
 /* =========================================================================
-   3. VOZ
+   3. ÁUDIO
+   Voz: falas gravadas em audio/vozes.js (Open JTalk, voz "Mei"), tocadas pela
+   Web Audio API, que funciona igual em qualquer navegador. A voz do sistema
+   (Web Speech) só entra para algo que não tenha gravação.
+   Efeitos: sintetizados na hora com osciladores, sem arquivos.
    ========================================================================= */
-let vozJa = null;
+const VOZES = window.VOZES || {};
+const temGravacoes = Object.keys(VOZES).length > 0;
 const temVoz = "speechSynthesis" in window;
+let vozJa = null;
 function carregarVozes() {
   if (!temVoz) return;
   vozJa = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)) || null;
   const a = document.getElementById("aviso-voz");
-  if (a) a.textContent = vozJa ? "" : "Sem voz japonesa no sistema: a pronúncia pode sair com sotaque.";
+  if (a) a.textContent = temGravacoes || vozJa ? "" : "Sem voz japonesa disponível: as leituras aparecem escritas.";
 }
 if (temVoz) { carregarVozes(); speechSynthesis.onvoiceschanged = carregarVozes; }
-function falar(txt, cancelar = true) {
-  if (!temVoz || !estado.som) return;
+
+const audio = {
+  ctx: null, voz: null, efeitos: null, fontes: [], cache: new Map(), geracao: 0, fimFila: 0,
+  /* O navegador só libera som depois de um toque ou tecla: criamos/retomamos o contexto aí. */
+  garantir() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try { this.ctx = new AC(); } catch (e) { return null; }
+      this.voz = this.ctx.createGain(); this.voz.gain.value = 1; this.voz.connect(this.ctx.destination);
+      this.efeitos = this.ctx.createGain(); this.efeitos.gain.value = .55; this.efeitos.connect(this.ctx.destination);
+    }
+    if (this.ctx.state !== "running") this.ctx.resume().catch(() => {});
+    return this.ctx;
+  },
+  buffer(txt) {
+    if (!this.cache.has(txt)) {
+      const bin = atob(VOZES[txt]), u = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      this.cache.set(txt, new Promise(ok => this.ctx.decodeAudioData(u.buffer, ok, () => ok(null))));
+    }
+    return this.cache.get(txt);
+  },
+  pararVoz() { this.geracao++; this.fontes.forEach(f => { try { f.stop(); } catch (e) {} }); this.fontes = []; this.fimFila = 0; },
+  async tocar(partes, cancelar) {
+    const ctx = this.garantir(); if (!ctx) return false;
+    if (cancelar) this.pararVoz();
+    const g = this.geracao, bufs = await Promise.all(partes.map(p => this.buffer(p)));
+    if (bufs.some(b => !b)) return false;
+    if (g !== this.geracao) return true;
+    let t = Math.max(ctx.currentTime + .03, this.fimFila);
+    for (const b of bufs) {
+      const f = ctx.createBufferSource(); f.buffer = b; f.connect(this.voz); f.start(t);
+      f.onended = () => { this.fontes = this.fontes.filter(x => x !== f); };
+      this.fontes.push(f); t += b.duration + .02;
+    }
+    this.fimFila = t;
+    return true;
+  },
+};
+["pointerdown", "keydown", "touchend"].forEach(ev => addEventListener(ev, () => audio.garantir(), { capture: true, passive: true }));
+
+/* Reserva: voz do sistema, contornando dois bugs do Chrome — a fala some se
+   speak() vem logo depois de cancel(), e o objeto da fala é coletado antes de tocar. */
+let falaAtual = null;
+function falarSistema(txt, cancelar) {
+  if (!temVoz) return;
   try {
-    if (cancelar) speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(txt); u.lang = "ja-JP"; if (vozJa) u.voice = vozJa; u.rate = .85;
-    speechSynthesis.speak(u);
-    mascotes.forEach(m => m.visivel() && m.reagir("falar"));
+    const dizer = () => {
+      const u = new SpeechSynthesisUtterance(txt); u.lang = "ja-JP"; if (vozJa) u.voice = vozJa; u.rate = .85;
+      falaAtual = u; speechSynthesis.resume(); speechSynthesis.speak(u);
+    };
+    if (cancelar && (speechSynthesis.speaking || speechSynthesis.pending)) { speechSynthesis.cancel(); setTimeout(dizer, 90); }
+    else dizer();
   } catch (e) {}
 }
+/* falar("いっぽん") ou falar(["えんぴつを", "いっぽん"]): partes gravadas tocam emendadas. */
+function falar(partes, cancelar = true) {
+  if (!estado.som) return;
+  partes = [].concat(partes);
+  mascotes.forEach(m => m.visivel() && m.reagir("falar"));
+  const reserva = () => falarSistema(partes.join(""), cancelar);
+  if (partes.every(p => VOZES[p])) audio.tocar(partes, cancelar).then(ok => { if (!ok) reserva(); });
+  else reserva();
+}
+function calarTudo() { audio.pararVoz(); if (temVoz) try { speechSynthesis.cancel(); } catch (e) {} }
+
+const sfx = {
+  tocar(fn) {
+    if (!estado.efeitos) return;
+    const ctx = audio.garantir(); if (!ctx) return;
+    const ir = () => { try { fn(ctx, ctx.currentTime + .01); } catch (e) {} };
+    if (ctx.state === "running") ir(); else ctx.resume().then(ir).catch(() => {});
+  },
+  nota(ctx, freq, t, dur, tipo = "sine", vol = .18) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = tipo; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(audio.efeitos); o.start(t); o.stop(t + dur + .03);
+    return o;
+  },
+  ruido(ctx, t, dur, de, para, vol = .25) {
+    const b = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * dur), ctx.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const f = ctx.createBufferSource(), filtro = ctx.createBiquadFilter(), g = ctx.createGain();
+    f.buffer = b; filtro.type = "bandpass"; filtro.Q.value = 1.4;
+    filtro.frequency.setValueAtTime(de, t); filtro.frequency.exponentialRampToValueAtTime(para, t + dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    f.connect(filtro); filtro.connect(g); g.connect(audio.efeitos); f.start(t);
+  },
+  acerto() { this.tocar((c, t) => { [1046.5, 1318.5, 1568].forEach((f, i) => this.nota(c, f, t + i * .07, .32, "triangle", .16)); this.nota(c, 2093, t + .21, .45, "sine", .07); }); },
+  erro() { this.tocar((c, t) => { const o = this.nota(c, 330, t, .3, "square", .05); o.frequency.exponentialRampToValueAtTime(185, t + .28); this.nota(c, 220, t + .12, .32, "triangle", .12); }); },
+  pop(i = 1) { this.tocar((c, t) => { const o = this.nota(c, 380 + i * 40, t, .16, "sine", .22); o.frequency.exponentialRampToValueAtTime(820 + i * 55, t + .09); }); },
+  virar() { this.tocar((c, t) => this.ruido(c, t, .22, 600, 3200, .18)); },
+  clique() { this.tocar((c, t) => this.nota(c, 1250, t, .05, "sine", .08)); },
+  brilho() { this.tocar((c, t) => { this.ruido(c, t, .45, 400, 5000, .14); [1568, 1760, 2093, 2349, 2637, 3136].forEach((f, i) => this.nota(c, f, t + .05 + i * .045, .3, "sine", .09)); }); },
+  fanfarra() { this.tocar((c, t) => [[523, 0], [659, .12], [784, .24], [1047, .36], [784, .52], [1047, .64]].forEach(([f, d]) => { this.nota(c, f, t + d, .3, "triangle", .15); this.nota(c, f * 2, t + d, .2, "sine", .04); })); },
+  tique() { this.tocar((c, t) => this.nota(c, 880, t, .06, "square", .03)); },
+};
 const SVG_SOM = '<svg class="icone-som" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
 
 /* =========================================================================
@@ -651,7 +750,7 @@ const rj = t => estado.romaji ? `<span class="rj">${esc(t)}</span>` : "";
 /* Alternativas erradas: os erros típicos de quem esquece a mudança de som */
 function formasIngenuas(c, n) {
   if (n === "q") return ["なん" + c.suf, "なん" + trocaH(c.suf, P), "なに" + c.suf, ...CONTADORES.map(o => lerKana(o, "q"))];
-  if (c.id === "tsu") return [SINO[n-1] + "つ", n === 10 ? "じゅっつ" : null, n === 4 ? "しつ" : null];
+  if (c.id === "tsu") return [SINO[n-1] + "つ", n === 10 ? "じゅっつ" : null, n === 4 ? "しつ" : null].filter(Boolean);
   const s = c.suf, h = H.includes(s[0]), out = [SINO[n-1] + s];
   if (n === 4) out.push("し" + s, c.id === "nin" ? "よんにん" : null);
   if (n === 9) out.push("く" + s);
@@ -834,6 +933,9 @@ const fx = {
     createjs.Tween.get(faixa).to({ x: cx }, 280, createjs.Ease.backOut).wait(620).to({ x: W * 2 }, 260, createjs.Ease.quadIn)
       .call(() => { this.stage.removeChild(linhas, faixa); this.stage.update(); });
     this.sakura(null, 30);
+    sfx.brilho();
+    const fala = texto.replace(/[！!]/g, "");
+    if (VOZES[fala]) setTimeout(() => falar(fala, false), 700);
   },
 };
 fx.iniciar();
@@ -1033,6 +1135,7 @@ class Palco3D {
       this.animar(560, p => { const e = ease.quica(p); o.position.y = 4.5 * (1 - e); sb.scale.setScalar(.2 + .8 * e); });
       this.animar(260, p => { const k = Math.sin(p * Math.PI); o.scale.set(1 + k * .22, 1 - k * .26, 1 + k * .22); }, 330);
       this.animar(320, p => et.scale.setScalar(.34 * ease.volta(p)), 400);
+      setTimeout(() => { if (g === this.geracao) sfx.pop(i + 1); }, REDUZ ? 0 : 210);
       await aCada?.(i + 1);
       await dorme(n > 6 ? 800 : 940);
     }
@@ -1083,11 +1186,12 @@ function atualizarStatus() {
   $("#st-seq").textContent = estado.dias + (estado.dias === 1 ? " dia" : " dias");
   $("#n-dominados").textContent = Object.values(estado.srs).filter(s => s.caixa >= 4).length;
   $("#n-acertos").textContent = estado.acertos; $("#n-seq").textContent = estado.dias; $("#n-nivel").textContent = nivel();
-  $("#bt-romaji").setAttribute("aria-pressed", estado.romaji); $("#bt-som").setAttribute("aria-pressed", estado.som);
+  $("#bt-romaji").setAttribute("aria-pressed", estado.romaji); $("#bt-som").setAttribute("aria-pressed", estado.som); $("#bt-efeitos").setAttribute("aria-pressed", estado.efeitos);
   document.querySelectorAll("[data-recorde]").forEach(el => { const r = estado.recordes[el.dataset.recorde]; el.textContent = r != null ? "Recorde: " + r : "Ainda sem recorde"; });
 }
 $("#bt-romaji").onclick = () => { estado.romaji = !estado.romaji; salvar(); atualizarTudo(); };
-$("#bt-som").onclick = () => { estado.som = !estado.som; if (!estado.som && temVoz) speechSynthesis.cancel(); salvar(); atualizarStatus(); };
+$("#bt-som").onclick = () => { estado.som = !estado.som; if (estado.som) falar("かぞえよう"); else calarTudo(); salvar(); atualizarStatus(); };
+$("#bt-efeitos").onclick = () => { estado.efeitos = !estado.efeitos; salvar(); atualizarStatus(); sfx.acerto(); };
 const TEC = { "Three.js": tem3D, "CreateJS (Adobe Animate)": temCJS, "Rive": false };
 function marcarTec(nome, on) { if (nome) TEC[nome] = on; $("#tecnologias").innerHTML = Object.entries(TEC).map(([k, v]) => `<span class="${v ? "on" : ""}">${esc(k)} · ${v ? "ativo" : k === "Rive" ? "aguardando rive/kazu.riv" : "indisponível"}</span>`).join(""); }
 
@@ -1102,7 +1206,7 @@ palcoHeroi.vitrine(CONTADORES.map(c => ({ c, obj: c.objetos[0] })));
 palcoHeroi.aoTocar = ({ c, obj }) => {
   const n = 1 + Math.floor(Math.random() * 10), l = leitura(c, n);
   balao($("#palco-heroi"), `${obj.jp}を${l.kana}`, `${n} ${plural(obj, n)} · ${c.k} (${c.curto}) · ${l.romaji}`);
-  falar(`${obj.jp}を${l.kana}`); kazuHeroi.reagir("feliz"); fx.sakura($("#palco-heroi .balao"), 14);
+  falar([obj.jp + "を", l.kana]); sfx.pop(5); kazuHeroi.reagir("feliz"); fx.sakura($("#palco-heroi .balao"), 14);
 };
 let heroiI = 0;
 setInterval(() => {
@@ -1126,7 +1230,7 @@ async function animarContagem(n) {
   if (palcoEstudo.r && palcoEstudo.objs.length !== n) return;
   const l = leitura(c, n);
   balao($("#palco-estudo"), `${obj.jp}が${l.kana}！`, `${n} ${plural(obj, n)} no total`);
-  falar(`${obj.jp}が${l.kana}`); kazuEstudo.reagir("feliz"); mostrarExplicacao(n);
+  falar([obj.jp + "が", l.kana]); sfx.acerto(); kazuEstudo.reagir("feliz"); mostrarExplicacao(n);
 }
 function marcarLeitura(n) { document.querySelectorAll("#grade .leitura").forEach(b => b.classList.toggle("ativa", b.dataset.n == n)); }
 function destacar(c, n) {
@@ -1205,7 +1309,7 @@ function renderCartao() {
       <p style="color:var(--ink-soft);max-width:44ch">${sessao.total ? `Você revisou ${sessao.total} cartões.` : "Todos os cartões destes contadores estão em dia."} ${quando ? `Próxima revisão: ${esc(quando)}.` : ""}</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="botao" id="bt-mais">Revisar mesmo assim</button><button class="botao sec" data-ir="jogar">Ir jogar</button></div></div>`;
     $("#bt-mais").onclick = () => iniciarRevisao(true); $("#notas-srs").hidden = true;
-    if (sessao.total) fx.cutin("おつかれ！", "Sessão concluída");
+    if (sessao.total) { fx.cutin("おつかれ！", "Sessão concluída"); sfx.fanfarra(); }
     return;
   }
   const k = sessao.fila[0], c = k.c, obj = c.objetos[(k.n === "q" ? 0 : k.n) % c.objetos.length], l = leitura(c, k.n), caixa = estado.srs[k.id]?.caixa || 0;
@@ -1227,14 +1331,15 @@ function renderCartao() {
 function virar() {
   if (!sessao?.fila.length) return;
   sessao.virado = !sessao.virado; $("#cartao").classList.toggle("virado", sessao.virado);
+  sfx.virar();
   if (sessao.virado) { const k = sessao.fila[0]; falar(lerKana(k.c, k.n)); $("#notas-srs").hidden = false; }
 }
 function avaliar(nota) {
   if (!sessao?.virado || !sessao.fila.length) return;
   const k = sessao.fila.shift(), s = estado.srs[k.id] || { caixa: 0, vence: 0 };
-  if (nota === 0) { s.caixa = 1; s.vence = Date.now(); if (!sessao.repetidos.has(k.id)) { sessao.repetidos.add(k.id); sessao.fila.push(k); sessao.total++; } }
+  if (nota === 0) { sfx.erro(); s.caixa = 1; s.vence = Date.now(); if (!sessao.repetidos.has(k.id)) { sessao.repetidos.add(k.id); sessao.fila.push(k); sessao.total++; } }
   else if (nota === 1) { s.caixa = Math.max(1, s.caixa); s.vence = Date.now() + Math.max(.02, INTERVALO[s.caixa] / 2) * 864e5; }
-  else { s.caixa = Math.min(5, s.caixa + 1); s.vence = Date.now() + INTERVALO[s.caixa] * 864e5; fx.sakura($("#cartao"), 18); }
+  else { s.caixa = Math.min(5, s.caixa + 1); s.vence = Date.now() + INTERVALO[s.caixa] * 864e5; fx.sakura($("#cartao"), 18); sfx.acerto(); }
   estado.srs[k.id] = s; sessao.feitos++;
   ganharXP(nota === 2 ? 6 : nota === 1 ? 3 : 1, nota > 0);
   renderCartao(); renderPainelSRS();
@@ -1279,10 +1384,10 @@ function telaFim(titulo, grande, texto, novo, reiniciar) {
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="botao" id="bt-denovo">Jogar de novo</button><button class="botao sec" id="bt-outros">Outros jogos</button></div></div>`;
   $("#bt-denovo").onclick = reiniciar;
   $("#bt-outros").onclick = () => { $("#arena").innerHTML = ""; $("#lista-jogos").scrollIntoView({ behavior: REDUZ ? "auto" : "smooth" }); };
-  if (novo) fx.cutin("しんきろく！", "Novo recorde");
+  if (novo) { fx.cutin("しんきろく！", "Novo recorde"); sfx.fanfarra(); } else sfx.acerto();
 }
 function cena(id) { const cv = document.createElement("canvas"); $(id).append(cv); return novaMascote(cv); }
-function comemorar(el, m, combo) { fx.sakura(el, 16); m.reagir("feliz"); if (combo >= 3 && combo % 3 === 0) fx.cutin(["すごい！", "やった！", "かんぺき！"][Math.floor(combo / 3 - 1) % 3], `${combo} seguidas`); }
+function comemorar(el, m, combo) { sfx.acerto(); fx.sakura(el, 16); m.reagir("feliz"); if (combo >= 3 && combo % 3 === 0) fx.cutin(["すごい！", "やった！", "かんぺき！"][Math.floor(combo / 3 - 1) % 3], `${combo} seguidas`); }
 $("#lista-jogos").addEventListener("click", e => {
   const b = e.target.closest("[data-jogo]"); if (!b) return;
   pararJogo(); ({ mercado: jogoMercado, classifica: jogoClassifica, ouvido: jogoOuvido, memoria: jogoMemoria })[b.dataset.jogo]();
@@ -1330,7 +1435,7 @@ function jogoMercado() {
     } else {
       j.vidas--; j.combo = 0; j.seguidas = 0;
       $("#m-retorno").className = "retorno no"; $("#m-retorno").innerHTML = `${k ? "Quase!" : "O tempo acabou!"} O certo é <b class="jp">${esc(certa.kana)}</b> (${esc(certa.romaji)}). Com ${esc(obj.pl)} se usa ${c.k}: ${esc(c.titulo.toLowerCase())}.${nt ? " " + esc(nt) : ""}`;
-      m.reagir("triste"); ganharXP(1, false);
+      m.reagir("triste"); sfx.erro(); ganharXP(1, false);
     }
     falar(certa.kana); hud(); j.rodada++;
     setTimeout(proxima, ok ? 1500 : 3300);
@@ -1361,7 +1466,7 @@ function jogoClassifica() {
     const b = e.target.closest("[data-c]"); if (!b || jogoAtual !== j) return;
     const it = j.item, ok = b.dataset.c === it.c.id || it.c.tambem.includes(b.dataset.c);
     if (ok) { j.pontos++; j.seq++; ganharXP(2); $("#c-retorno").className = "retorno ok"; $("#c-retorno").innerHTML = `Certo! <span class="jp">${esc(it.jp)}</span> → ${it.c.k}${it.c.tambem.length ? ` (também vale ${it.c.tambem.map(t => CPOR[t].k).join(", ")})` : ""}. Ex.: <span class="jp">${esc(lerKana(it.c, 2))}</span>.`; comemorar(b, m, j.seq); }
-    else { j.seq = 0; j.erros.push(it); ganharXP(0, false); m.reagir("triste"); $("#c-retorno").className = "retorno no"; $("#c-retorno").innerHTML = `${esc(it.pt)} vai em <b class="pop">${it.c.k}</b>: ${esc(it.c.titulo.toLowerCase())}.`; b.animate([{ transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "none" }], { duration: 250 }); }
+    else { j.seq = 0; j.erros.push(it); ganharXP(0, false); m.reagir("triste"); sfx.erro(); $("#c-retorno").className = "retorno no"; $("#c-retorno").innerHTML = `${esc(it.pt)} vai em <b class="pop">${it.c.k}</b>: ${esc(it.c.titulo.toLowerCase())}.`; b.animate([{ transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "none" }], { duration: 250 }); }
     $("#c-pontos").textContent = j.pontos + " acertos"; $("#c-seq").textContent = "sequência " + j.seq;
     novo();
   });
@@ -1375,8 +1480,8 @@ function jogoOuvido() {
     <div class="hud"><span class="pilula" id="o-rodada"></span><span class="pilula" id="o-acertos"></span><button class="botao peq" id="o-ouvir">${SVG_SOM} Ouvir de novo</button></div>
     <div class="cena"><div id="o-masc"></div><div class="fala" id="o-fala"></div></div>
     <div class="opcoes" id="o-opcoes"></div><div class="retorno" id="o-retorno"></div></div>`;
-  const m = cena("#o-masc"), semVoz = !temVoz || !estado.som;
-  $("#o-ouvir").onclick = () => falar(`${j.q.obj.jp}を${j.q.l.kana}`);
+  const m = cena("#o-masc"), semVoz = !estado.som || (!temGravacoes && !vozJa);
+  $("#o-ouvir").onclick = () => falar([j.q.obj.jp + "を", j.q.l.kana]);
   function proxima() {
     if (jogoAtual !== j) return;
     if (j.rodada >= j.total) return fim();
@@ -1387,7 +1492,7 @@ function jogoOuvido() {
     const ns = embaralhar([n, ...embaralhar([1,2,3,4,5,6,7,8,9,10].filter(x => x !== n)).slice(0, 3)]);
     $("#o-opcoes").innerHTML = ns.map(x => `<button class="opcao" data-n="${x}"><span class="figura">${figura(obj.e, x)}</span></button>`).join("");
     $("#o-retorno").className = "retorno"; $("#o-retorno").textContent = "Dica: o começo da palavra diz o número.";
-    setTimeout(() => falar(`${obj.jp}を${j.q.l.kana}`), 250);
+    setTimeout(() => falar([obj.jp + "を", j.q.l.kana]), 250);
   }
   $("#o-opcoes").addEventListener("click", e => {
     const b = e.target.closest("[data-n]"); if (!b || j.respondida) return; j.respondida = true;
@@ -1395,7 +1500,7 @@ function jogoOuvido() {
     $("#o-opcoes").querySelectorAll(".opcao").forEach(x => { x.disabled = true; if (+x.dataset.n === j.q.n) x.classList.add("certa"); else if (x === b) x.classList.add("errada"); });
     $("#o-retorno").className = "retorno " + (ok ? "ok" : "no");
     $("#o-retorno").innerHTML = `${ok ? "Isso!" : "Era " + j.q.n + "."} <b class="jp">${esc(j.q.l.kana)}</b> · ${esc(j.q.l.romaji)} · <span class="jp">${esc(j.q.l.kanji)}</span>`;
-    if (ok) { j.acertos++; j.seguidas++; comemorar(b, m, j.seguidas); ganharXP(4); } else { j.seguidas = 0; m.reagir("triste"); ganharXP(1, false); falar(j.q.l.kana); }
+    if (ok) { j.acertos++; j.seguidas++; comemorar(b, m, j.seguidas); ganharXP(4); } else { j.seguidas = 0; m.reagir("triste"); sfx.erro(); ganharXP(1, false); falar(j.q.l.kana); }
     j.rodada++; setTimeout(proxima, ok ? 1500 : 2600);
   });
   function fim() { const n = recorde("ouvido", j.acertos); telaFim("Treino de ouvido", `${j.acertos}/${j.total}`, "Ouvir ajuda a separar sons parecidos, como さんびき e さんぴき (só o primeiro existe).", n, jogoOuvido); }
@@ -1417,13 +1522,13 @@ function jogoMemoria() {
     <div class="retorno" id="mm-retorno">Ache a figura e a leitura que combinam.</div></div>`;
   $("#mm-grade").addEventListener("click", e => {
     const b = e.target.closest(".carta"); if (!b || j.travado || b.classList.contains("aberta") || b.classList.contains("par")) return;
-    const k = cartas[+b.dataset.i]; b.classList.add("aberta"); j.abertas.push({ b, k });
+    const k = cartas[+b.dataset.i]; b.classList.add("aberta"); j.abertas.push({ b, k }); sfx.virar();
     if (k.tipo === "kana") falar(k.p.kana);
     if (j.abertas.length < 2) return;
     j.jogadas++; $("#mm-jogadas").textContent = j.jogadas + " jogadas";
     const [a, c] = j.abertas; j.abertas = [];
     if (a.k.par === c.k.par && a.k.tipo !== c.k.tipo) {
-      a.b.classList.add("par"); c.b.classList.add("par"); j.pares++; fx.sakura(c.b, 14); ganharXP(3);
+      a.b.classList.add("par"); c.b.classList.add("par"); j.pares++; fx.sakura(c.b, 14); sfx.acerto(); ganharXP(3);
       const p = a.k.p; $("#mm-pares").textContent = j.pares + "/6 pares";
       $("#mm-retorno").className = "retorno ok"; $("#mm-retorno").innerHTML = `${p.n} ${esc(plural(p.obj, p.n))} = <b class="jp">${esc(p.kana)}</b> (${esc(romaji(p.kana))})`;
       if (j.pares === 6) setTimeout(fim, 700);

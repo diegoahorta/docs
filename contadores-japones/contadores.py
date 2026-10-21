@@ -7,12 +7,14 @@ Este arquivo faz quatro coisas, todas só com a biblioteca padrão:
   python3 contadores.py verificar   gera as leituras pelas regras de som e confere com a tabela
   python3 contadores.py quiz        um quiz rápido no terminal
   python3 contadores.py anki        exporta os 99 cartões para importar no Anki (CSV)
+  python3 contadores.py audio       gera a voz japonesa embutida na página (audio/vozes.js)
 
 As leituras não estão "decoradas" aqui: elas são calculadas pelas mesmas
 regras fonéticas que o aluno aprende no módulo Estudar (pausa っ, ほ→ぽ/ぼ etc.).
 """
 
 import argparse
+import base64
 import csv
 import http.server
 import json
@@ -246,6 +248,98 @@ def cmd_anki(args):
     return 0
 
 
+# Falas extras usadas pela página (cut-ins de anime e frases de exemplo).
+FALAS_EXTRAS = ["かぞえよう", "すごい", "やった", "かんぺき", "しんきろく", "おつかれ", "はい、どうぞ"]
+
+
+def _katakana(texto):
+    return "".join(chr(ord(ch) + 96) if "ぁ" <= ch <= "ゖ" else ch for ch in texto)
+
+
+def frases_para_audio():
+    """Tudo o que a página fala, como (chave, formas de escrever para o sintetizador, pronúncia esperada).
+
+    O sintetizador às vezes erra kana solto (lê はちまい como "wachimai", corta o つ de さつ),
+    então cada fala tem alternativas: kanji, katakana e hiragana. A pronúncia esperada usa わ
+    para a partícula は, como ela soa.
+    """
+    itens = [(t, [t, _katakana(t)], t) for t in FALAS_EXTRAS]
+    for cid, info in CONTADORES.items():
+        verbo = "いますか" if cid in ("nin", "hiki") else "ありますか"
+        for n in list(range(1, 11)) + [None]:
+            leitura = ler(n, cid)
+            itens.append((leitura, [kanji(n, cid), _katakana(leitura), leitura], leitura))
+            for v in (variantes(n, cid) if n else []):
+                itens.append((v, [_katakana(v), v], v))
+        for obj, _ in info["objetos"]:
+            l3, lq = ler(3, cid), ler(None, cid)
+            itens += [
+                (obj + "を", [obj + "を"], obj + "を"),
+                (obj + "が", [obj + "が"], obj + "が"),
+                (f"{obj}を{l3}ください。", [f"{obj}を{kanji(3, cid)}ください。", f"{obj}を{_katakana(l3)}ください。"], f"{obj}を{l3}ください"),
+                (f"{obj}は{lq}{verbo}。", [f"{obj}は{kanji(None, cid)}{verbo}。", f"{obj}は{_katakana(lq)}{verbo}。"], f"{obj}わ{lq}{verbo}"),
+            ]
+    vistos = set()
+    return [i for i in itens if not (i[0] in vistos or vistos.add(i[0]))]
+
+
+def _som(kana):
+    """Pronúncia comparável: romaji com vogais longas juntas, sem pontuação."""
+    hira = "".join(chr(ord(ch) - 96) if "ァ" <= ch <= "ヶ" else ch for ch in kana)
+    r = romaji(hira.replace("、", "").replace("。", ""))
+    while "ー" in r:
+        i = r.index("ー")
+        r = r[:i] + (r[i - 1] if i else "") + r[i + 1:]
+    return romaji_normal(r)
+
+
+def romaji_normal(r):
+    return r.replace("ou", "ō").replace("oo", "ō").replace("uu", "ū").replace("ōō", "ō")
+
+
+def cmd_audio(args):
+    try:
+        import lameenc
+        import numpy as np
+        import pyopenjtalk
+    except ImportError:
+        print("Para gerar a voz, instale antes:\n  pip install pyopenjtalk-plus lameenc numpy")
+        return 1
+    clipes, total, falhas = {}, 0, []
+    for chave, entradas, esperado in frases_para_audio():
+        alvo = _som(esperado)
+        entrada = next((e for e in entradas if _som(pyopenjtalk.g2p(e, kana=True)) == alvo), None)
+        if entrada is None:
+            falhas.append((chave, pyopenjtalk.g2p(entradas[0], kana=True)))
+            entrada = entradas[0]
+        x, taxa = pyopenjtalk.tts(entrada, speed=args.velocidade)
+        # Corta o silêncio do começo e do fim, para as partes emendarem sem buraco.
+        forte = np.flatnonzero(np.abs(x) > np.abs(x).max() * 0.02)
+        folga = int(taxa * 0.03)
+        x = x[max(0, forte[0] - folga):forte[-1] + folga]
+        # 48 kHz -> 24 kHz com um filtro passa-baixa simples, e volume normalizado.
+        x = np.convolve(x, [0.25, 0.5, 0.25], mode="same")[::2]
+        x = (x / np.abs(x).max() * 0.85 * 32767).astype("<i2")
+        enc = lameenc.Encoder()
+        enc.set_bit_rate(40)
+        enc.set_in_sample_rate(taxa // 2)
+        enc.set_channels(1)
+        enc.set_quality(2)
+        mp3 = enc.encode(x.tobytes()) + enc.flush()
+        clipes[chave] = base64.b64encode(mp3).decode("ascii")
+        total += len(mp3)
+    destino = PASTA / "audio" / "vozes.js"
+    destino.parent.mkdir(exist_ok=True)
+    destino.write_text(
+        "/* Gerado por `python3 contadores.py audio` — não edite à mão.\n"
+        "   Voz: HTS Voice \"Mei\" (c) Nagoya Institute of Technology, CC BY 3.0, sintetizada com Open JTalk. */\n"
+        "window.VOZES = " + json.dumps(clipes, ensure_ascii=False, indent=0) + ";\n", "utf-8")
+    print(f"{destino.relative_to(PASTA)}: {len(clipes)} falas, {total / 1024:.0f} KB de MP3.")
+    for chave, ouvido in falhas:
+        print(f"  atenção: {chave} sai como {ouvido}")
+    return 1 if falhas else 0
+
+
 class _Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=str(PASTA), **kw)
@@ -310,6 +404,9 @@ def main():
     a = sub.add_parser("anki", help="exporta cartões em CSV")
     a.add_argument("--saida", default="contadores_anki.csv")
     a.set_defaults(func=cmd_anki)
+    v = sub.add_parser("audio", help="gera audio/vozes.js (precisa de pyopenjtalk-plus e lameenc)")
+    v.add_argument("--velocidade", type=float, default=0.9)
+    v.set_defaults(func=cmd_audio)
     args = p.parse_args()
     return args.func(args)
 

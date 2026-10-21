@@ -556,13 +556,19 @@ function carregarVozes() {
   if (aviso) aviso.textContent = vozJa ? "" : "Sem voz japonesa instalada: a pronúncia pode sair com sotaque do sistema.";
 }
 if (temVoz) { carregarVozes(); speechSynthesis.onvoiceschanged = carregarVozes; }
+/* Contorna dois bugs do Chrome: a fala some se speak() vem logo depois de
+   cancel(), e o objeto da fala pode ser coletado antes de tocar. */
+let falaAtual = null;
 function falar(txt, cancelar = true) {
   if (!temVoz || !estado.som) return;
   try {
-    if (cancelar) speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(txt);
-    u.lang = "ja-JP"; if (vozJa) u.voice = vozJa; u.rate = .85;
-    speechSynthesis.speak(u);
+    const dizer = () => {
+      const u = new SpeechSynthesisUtterance(txt);
+      u.lang = "ja-JP"; if (vozJa) u.voice = vozJa; u.rate = .85;
+      falaAtual = u; speechSynthesis.resume(); speechSynthesis.speak(u);
+    };
+    if (cancelar && (speechSynthesis.speaking || speechSynthesis.pending)) { speechSynthesis.cancel(); setTimeout(dizer, 90); }
+    else dizer();
   } catch (e) {}
 }
 const SVG_SOM = '<svg class="icone-som" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
