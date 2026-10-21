@@ -185,7 +185,7 @@ const MNEMONICOS_KATAKANA = {
   テ: 'Um poste de telefone: "te".',
   ト: 'Um totem com um galho: "to".',
   ナ: 'Uma cruz inclinada: "na"da de reto.',
-  ニ: 'Dois traços, como o número dois (ni) em kanji: 二.',
+  ニ: 'Dois tracinhos — e "ni" quer dizer "dois" em japonês!',
   ヌ: 'Um nunchaku cruzado: "nu".',
   ネ: 'Uma pessoa de gravata (nekutai): "ne".',
   ノ: 'Um único traço, como um "No!" bem curto.',

@@ -17,6 +17,18 @@
   --cor-erro: #ff6b6b;
   --cor-foco: #ffd166;
 
+  /*
+   * Caixas do SRS: escala ordinal de um só tom (mais claro = mais dominado),
+   * validada contra os fundos escuros (contraste ≥ 3:1, passos visíveis).
+   * Nível 0 = ainda não visto (cinza neutro).
+   */
+  --nivel-0: #5b6380;
+  --nivel-1: #3a8f6e;
+  --nivel-2: #4aa982;
+  --nivel-3: #5dc497;
+  --nivel-4: #7ddcb0;
+  --nivel-5: #b0f0d0;
+
   --fonte: 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --tam-kana-grande: clamp(3rem, 12vw, 5.5rem);
   --tam-kana-medio: clamp(1.6rem, 6vw, 2.2rem);
@@ -585,32 +597,36 @@ button {
   border-color: var(--cor-destaque);
 }
 
-/* Bolinha com a caixa do SRS (vermelho = rever, verde = dominado). */
+/* Bolinha com a caixa do SRS (cinza = não visto; verde mais claro = mais dominado). */
 .celula-kana::after {
   content: '';
   position: absolute;
   top: 6px;
   right: 6px;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: var(--cor-erro);
+  background: var(--nivel-0);
+}
+
+.celula-kana[data-caixa='1']::after {
+  background: var(--nivel-1);
 }
 
 .celula-kana[data-caixa='2']::after {
-  background: #ff9f5a;
+  background: var(--nivel-2);
 }
 
 .celula-kana[data-caixa='3']::after {
-  background: var(--cor-destaque-2);
+  background: var(--nivel-3);
 }
 
 .celula-kana[data-caixa='4']::after {
-  background: #a8e06b;
+  background: var(--nivel-4);
 }
 
 .celula-kana[data-caixa='5']::after {
-  background: var(--cor-acerto);
+  background: var(--nivel-5);
 }
 
 /* ---------- Detalhe do kana e ordem dos traços ---------- */
@@ -1291,5 +1307,209 @@ button {
     grid-template-columns: 1fr;
     flex: 1;
     align-content: start;
+  }
+}
+
+/* ---------- Painel de progresso ---------- */
+
+.progresso-numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.progresso-numero {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+  font-size: 0.85rem;
+}
+
+.progresso-numero-valor {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.progresso-numero-rotulo {
+  font-weight: 700;
+}
+
+.progresso-secao {
+  margin-bottom: 1.25rem;
+}
+
+.progresso-secao h3 {
+  font-size: 1rem;
+}
+
+/* Barra empilhada: 2px de espaço entre os segmentos e pontas arredondadas. */
+.progresso-barra {
+  display: flex;
+  gap: 2px;
+  height: 18px;
+}
+
+.progresso-segmento {
+  min-width: 6px;
+  border-radius: 4px;
+}
+
+.progresso-legenda {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.progresso-legenda li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.progresso-legenda strong {
+  color: var(--cor-texto);
+}
+
+.progresso-amostra {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.progresso-grupos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.progresso-grupo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.progresso-grupo.bloqueado .progresso-grupo-kana {
+  opacity: 0.5;
+}
+
+.progresso-grupo-nome {
+  display: flex;
+  flex-direction: column;
+  width: 3.5rem;
+  flex: none;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.progresso-grupo-nome strong {
+  font-size: 1rem;
+}
+
+.progresso-grupo-kana {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.progresso-kana {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #141a33;
+}
+
+.progresso-kana[data-nivel='0'] {
+  color: var(--cor-texto);
+}
+
+.progresso-segmento[data-nivel='0'],
+.progresso-amostra[data-nivel='0'],
+.progresso-kana[data-nivel='0'] {
+  background: var(--nivel-0);
+}
+
+.progresso-segmento[data-nivel='1'],
+.progresso-amostra[data-nivel='1'],
+.progresso-kana[data-nivel='1'] {
+  background: var(--nivel-1);
+}
+
+.progresso-segmento[data-nivel='2'],
+.progresso-amostra[data-nivel='2'],
+.progresso-kana[data-nivel='2'] {
+  background: var(--nivel-2);
+}
+
+.progresso-segmento[data-nivel='3'],
+.progresso-amostra[data-nivel='3'],
+.progresso-kana[data-nivel='3'] {
+  background: var(--nivel-3);
+}
+
+.progresso-segmento[data-nivel='4'],
+.progresso-amostra[data-nivel='4'],
+.progresso-kana[data-nivel='4'] {
+  background: var(--nivel-4);
+}
+
+.progresso-segmento[data-nivel='5'],
+.progresso-amostra[data-nivel='5'],
+.progresso-kana[data-nivel='5'] {
+  background: var(--nivel-5);
+}
+
+.progresso-errados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.progresso-errados li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.progresso-errado-kana {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* No celular estreito, a marca 日本語 sai para caber o botão 📊. */
+@media (max-width: 420px) {
+  .hud-marca {
+    display: none;
+  }
+
+  .aba {
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
 }

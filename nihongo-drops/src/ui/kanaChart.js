@@ -4,7 +4,7 @@
 import { criarElemento } from '../core/utils.js';
 import { GRUPOS_BASICOS, GRUPOS_DAKUTEN, listarKana } from '../data/kana.js';
 import { palavrasComKana } from '../data/vocab.js';
-import { obterCaixa, TOTAL_CAIXAS } from '../core/srs.js';
+import { obterCaixa, obterRegistro, TOTAL_CAIXAS } from '../core/srs.js';
 import { falar } from '../core/speech.js';
 import { abrirModal } from './modal.js';
 import { criarBotaoFala } from './speakButton.js';
@@ -27,13 +27,13 @@ function criarGrade(script, grupos) {
 }
 
 function criarCelula(item) {
-  const caixa = obterCaixa(item.id);
+  const caixa = obterRegistro(item.id)?.caixa ?? 0; // 0 = ainda não visto
   return criarElemento(
     'button',
     {
       type: 'button',
       class: 'celula-kana',
-      'aria-label': `${item.kana}, ${item.romaji}, caixa ${caixa} de ${TOTAL_CAIXAS}`,
+      'aria-label': `${item.kana}, ${item.romaji}, ${caixa === 0 ? 'ainda não visto' : `caixa ${caixa} de ${TOTAL_CAIXAS}`}`,
       dataset: { caixa: String(caixa) },
       onClick: () => abrirDetalheKana(item),
     },
@@ -84,7 +84,7 @@ export function abrirTabelaKana(scriptInicial = 'hiragana') {
     conteudo: [
       criarElemento('p', {
         class: 'texto-suave',
-        text: 'Toque em um kana para ver a ordem dos traços e ouvir a pronúncia. A cor indica a caixa do SRS (1 = precisa revisar, 5 = dominado).',
+        text: 'Toque em um kana para ver a ordem dos traços e ouvir a pronúncia. A bolinha mostra a caixa do SRS: cinza = ainda não visto; verde mais claro = mais dominado.',
       }),
       abas.lista,
       conteiner,

@@ -8,6 +8,7 @@ import { montarTelaJogo } from './games/gameScreen.js';
 import { montarHud } from './ui/hud.js';
 import { abrirTabelaKana } from './ui/kanaChart.js';
 import { abrirConfiguracoes } from './ui/settingsPanel.js';
+import { abrirPainelProgresso } from './ui/progressPanel.js';
 import { abrirPainelConquistas, iniciarAvisosDeConquista } from './ui/achievementsToast.js';
 import { mostrarMensagem } from './ui/feedback.js';
 
@@ -18,6 +19,7 @@ const roteador = criarRoteador(document.getElementById('tela'), document.getElem
 const hud = montarHud(document.getElementById('hud'), {
   aoVoltar: irParaMenu,
   aoEstudar: () => abrirTabelaKana(),
+  aoVerProgresso: () => abrirPainelProgresso(),
   aoConquistas: abrirPainelConquistas,
   aoConfig: abrirConfiguracoes,
 });

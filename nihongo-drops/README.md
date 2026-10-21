@@ -53,7 +53,7 @@ src/games/            catálogo, host do Phaser, painéis HTML, carta e grade co
   word-search/        cena Phaser, lógica pura (geração da grade e conferência), lista e painéis
   katakana-runner/    cena Phaser, lógica pura (ondas e distratores parecidos), corredor,
                       blocos, cenário com parallax, controles HTML e painéis
-src/data/             kana.js, vocab.js, kanji.js e strokes.js (ordem dos traços)
+src/data/             kana.js, vocab.js e strokes.js (ordem dos traços)
 src/core/             armazenamento, configurações, SRS, progresso, conquistas, voz, áudio
 src/ui/               HUD, modais, feedback, botão 🔊, tabela de estudo, ordem dos traços, CSS
 assets/               imagens (favicon), sfx/ e fonts/ reservados para uso futuro
@@ -72,6 +72,9 @@ assets/               imagens (favicon), sfx/ e fonts/ reservados para uso futur
   resposta certa e a dica mnemônica.
 - **Progresso** em `localStorage`, sempre com try/catch: XP, nível, streak diário,
   conquistas e recordes.
+- **Painel 📊 Progresso**: por alfabeto, mostra quantos kana estão dominados (caixa 3 ou mais), vistos e a
+  revisar, além da precisão e da distribuição pelas caixas. Também mostra cada grupo (liberado ou 🔒) e os
+  kana mais errados. A cor das caixas segue uma escala de um só tom, validada para contraste.
 
 ## Acessibilidade e desempenho
 
@@ -91,6 +94,7 @@ assets/               imagens (favicon), sfx/ e fonts/ reservados para uso futur
 4. ✅ Katakana Runner: você troca de pista para alcançar o bloco com o katakana pedido; a pista é o romaji ou o hiragana
 5. ✅ Pares de Kana: ligue cada hiragana ao katakana de mesmo som contra o relógio; a cada nível há mais pares e menos tempo
 6. ✅ Caça-Palavras: palavras escondidas numa grade de kana, que vai de 5×5 a 9×9; as diagonais entram a partir do nível 3
+7. ✅ Painel de progresso (📊): mostra, para o hiragana e o katakana, dominados, vistos, a revisar, precisão, caixas do SRS, grupos e os kana mais errados
 
 ## Créditos e licenças
 

@@ -19,10 +19,10 @@ function criarBotao(icone, rotulo, aoClicar) {
 
 /**
  * Monta o HUD dentro de `raiz`.
- * Callbacks: aoVoltar, aoEstudar, aoConquistas, aoConfig.
+ * Callbacks: aoVoltar, aoEstudar, aoVerProgresso, aoConquistas, aoConfig.
  * Devolve { mostrarVoltar, destroy }.
  */
-export function montarHud(raiz, { aoVoltar, aoEstudar, aoConquistas, aoConfig }) {
+export function montarHud(raiz, { aoVoltar, aoEstudar, aoVerProgresso, aoConquistas, aoConfig }) {
   const botaoVoltar = criarBotao('←', 'Menu', aoVoltar);
   botaoVoltar.hidden = true;
 
@@ -44,6 +44,7 @@ export function montarHud(raiz, { aoVoltar, aoEstudar, aoConquistas, aoConfig })
     criarElemento('div', { class: 'hud-status' }, [nivel, barra, sequencia]),
     criarElemento('nav', { class: 'hud-direita', 'aria-label': 'Atalhos' }, [
       criarBotao('📚', 'Estudar', aoEstudar),
+      criarBotao('📊', 'Progresso', aoVerProgresso),
       criarBotao('🏆', 'Conquistas', aoConquistas),
       criarBotao('⚙️', 'Configurações', aoConfig),
     ]),
