@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR" data-romaji="on" data-movimento="completo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Nihongo Drops</title>
+    <meta
+      name="description"
+      content="Minijogos no navegador para aprender hiragana e katakana, em japonês, romaji e português."
+    />
+    <meta name="theme-color" content="#0f1630" />
+    <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
+
+    <!-- Fonte Noto Sans JP (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap"
+    />
+    <link rel="stylesheet" href="./src/ui/styles.css" />
+
+    <!-- Bibliotecas por CDN (jsDelivr) com versões exatas, sem bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+          "phaser": "https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.esm.min.js",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js"
+        }
+      }
+    </script>
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <header id="hud" class="hud"></header>
+    <main id="conteudo" class="conteudo" tabindex="-1">
+      <div id="tela" class="tela"></div>
+    </main>
+    <div id="camada-feedback" class="camada-feedback" aria-live="polite"></div>
+    <div id="modais"></div>
+    <div id="cortina" class="cortina" aria-hidden="true">
+      <span lang="ja">にほんご</span>
+    </div>
+    <noscript>
+      <p class="sem-js">O Nihongo Drops precisa de JavaScript ativado para funcionar.</p>
+    </noscript>
+  </body>
+</html>
