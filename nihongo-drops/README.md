@@ -45,9 +45,11 @@ index.html            importmap, contêineres do HUD, das telas, do feedback e d
 src/main.js           inicialização e navegação entre o menu 3D e os jogos
 src/router.js         troca de telas com cortina GSAP; destrói a tela anterior
 src/menu3d/           cena Three.js (ilha, torii, kana flutuantes, pontos das fases)
-src/games/            catálogo, host do Phaser, painéis HTML comuns e uma pasta por jogo
+src/games/            catálogo, host do Phaser, painéis HTML, carta e grade comuns,
+                      e uma pasta por jogo
   kana-rain/          cena Phaser, lógica pura, gota, cenário, barra de digitação e painéis
   memory-kana/        cena Phaser, lógica pura (níveis, pares, grade), carta e painéis
+  kana-pairs/         cena Phaser, lógica pura (níveis contra o relógio) e painéis
   katakana-runner/    cena Phaser, lógica pura (ondas e distratores parecidos), corredor,
                       blocos, cenário com parallax, controles HTML e painéis
 src/data/             kana.js, vocab.js, kanji.js e strokes.js (ordem dos traços)
@@ -86,7 +88,7 @@ assets/               imagens (favicon), sfx/ e fonts/ reservados para uso futur
 2. ✅ Kana Rain: os hiragana caem e você digita o romaji. A velocidade cresce a cada 5 acertos e há 3 vidas
 3. ✅ Memory Kana: jogo da memória em 4 níveis (kana ↔ romaji, palavra ↔ imagem e misto)
 4. ✅ Katakana Runner: você troca de pista para alcançar o bloco com o katakana pedido; a pista é o romaji ou o hiragana
-5. ⏳ Pares de Kana (hiragana ↔ katakana)
+5. ✅ Pares de Kana: ligue cada hiragana ao katakana de mesmo som contra o relógio; a cada nível há mais pares e menos tempo
 6. ⏳ Palavra Cruzada
 
 ## Créditos e licenças

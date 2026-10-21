@@ -37,7 +37,7 @@ export const JOGOS = Object.freeze([
     descricao: 'Encontre os pares: o hiragana e o katakana que têm o mesmo som (あ ↔ ア).',
     cor: '#5be49b',
     xpNecessario: 400,
-    carregar: null,
+    carregar: () => import('./kana-pairs/KanaPairsScene.js'),
   },
   {
     id: 'crossword',

@@ -1,5 +1,7 @@
-// Carta do Memory Kana: verso com 🌸, frente com kana, romaji, palavra ou emoji.
+// Carta usada pelos jogos de cartas (Memory Kana e Pares de Kana):
+// verso com 🌸, frente com kana, romaji, palavra ou emoji.
 // Vira com uma animação de "flip" (escala horizontal) feita por tweens do Phaser.
+// `dados.cor` (opcional) troca a cor da frente.
 
 import * as Phaser from 'phaser';
 
@@ -12,6 +14,7 @@ const CORES = {
   texto: '#141a33',
   legenda: '#4a4f6b',
   encontrada: 0x5be49b,
+  selecionada: 0xff8fb1,
   foco: 0xffd166,
 };
 
@@ -52,6 +55,7 @@ export function criarCarta(cena, dados, aoClicar) {
     conteiner,
     virada: false,
     encontrada: false,
+    selecionada: false,
     focada: false,
     largura: 1,
     altura: 1,
@@ -94,6 +98,12 @@ export function criarCarta(cena, dados, aoClicar) {
       carta.focada = sim;
       desenhar();
     },
+
+    /** Destaque de "escolhida, esperando o par". */
+    selecionar(sim) {
+      carta.selecionada = sim;
+      desenhar();
+    },
   };
 
   function desenharVerso(largura, altura) {
@@ -109,10 +119,11 @@ export function criarCarta(cena, dados, aoClicar) {
   }
 
   function desenharFrente(largura, altura) {
-    fundo.fillStyle(CORES.frente[dados.tipo], 1);
+    fundo.fillStyle(dados.cor ?? CORES.frente[dados.tipo], 1);
     fundo.fillRoundedRect(-largura / 2, -altura / 2, largura, altura, 12);
-    if (carta.encontrada) {
-      fundo.lineStyle(5, CORES.encontrada, 1);
+    const borda = carta.encontrada ? CORES.encontrada : carta.selecionada && CORES.selecionada;
+    if (borda) {
+      fundo.lineStyle(6, borda, 1);
       fundo.strokeRoundedRect(-largura / 2, -altura / 2, largura, altura, 12);
     }
     const temLegenda = Boolean(dados.legenda);

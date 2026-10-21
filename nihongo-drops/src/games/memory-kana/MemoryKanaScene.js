@@ -14,11 +14,11 @@ import {
   NIVEIS,
   bonusDeEstrelas,
   calcularEstrelas,
-  calcularGrade,
   montarNivel,
   pontosDoPar,
 } from './memoryLogic.js';
-import { criarCarta } from './card.js';
+import { criarCarta } from '../card.js';
+import { calcularGrade } from '../gridLayout.js';
 import { painelFim, painelInicio, painelNivelCompleto, painelPausa } from './panels.js';
 
 const ID_DO_JOGO = 'memory-kana';

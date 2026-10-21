@@ -1196,3 +1196,11 @@ button {
 .runner-botao:hover {
   background: var(--cor-superficie-2);
 }
+
+/* ---------- Pares de Kana ---------- */
+
+.pares-exemplo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--cor-destaque-2);
+}
