@@ -1098,3 +1098,36 @@ button {
   flex: none;
   background: var(--cor-superficie);
 }
+
+.jogo-dica {
+  position: absolute;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  translate: -50% 0;
+  width: min(560px, calc(100% - 32px));
+  padding: 0.6rem 1rem;
+  border-radius: var(--raio);
+  border-left: 4px solid var(--cor-destaque-2);
+  background: rgb(24 34 74 / 0.95);
+  box-shadow: var(--sombra);
+  pointer-events: none;
+}
+
+.jogo-dica p {
+  margin: 0;
+}
+
+.jogo-dica p + p {
+  margin-top: 0.3rem;
+}
+
+.jogo-estrelas {
+  margin: 0.25rem 0;
+  font-size: 2.4rem;
+  letter-spacing: 0.15em;
+  color: var(--cor-destaque-2);
+}
+
+.jogo-niveis {
+  list-style: decimal inside;
+}

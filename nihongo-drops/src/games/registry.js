@@ -19,7 +19,7 @@ export const JOGOS = Object.freeze([
     descricao: 'Jogo da memória: ligue cada kana ao romaji ou à imagem da palavra.',
     cor: '#ff8fb1',
     xpNecessario: 0,
-    carregar: null,
+    carregar: () => import('./memory-kana/MemoryKanaScene.js'),
   },
   {
     id: 'katakana-runner',
