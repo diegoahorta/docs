@@ -27,6 +27,20 @@ do `index.html`. Não há etapa de build.
 > É preciso usar um servidor HTTP: abrir o arquivo direto (`file://`) não funciona com ES Modules.
 > O primeiro carregamento precisa de internet, por causa do CDN e do Google Fonts.
 
+### Versão em um único arquivo
+
+O arquivo `dist/nihongo-drops.html` traz o jogo inteiro: código, estilos, dados e favicon.
+Para jogar, **basta abri-lo com dois cliques** no navegador, sem Live Server. Ainda é preciso
+internet, porque Three.js, Phaser, GSAP e a fonte vêm do CDN.
+
+Esse arquivo é gerado a partir de `src/`. Depois de mudar o código, gere-o de novo:
+
+```bash
+npm run build:html   # junta src/ num só módulo com o esbuild (apenas nesta etapa)
+```
+
+O projeto continua sem bundler para desenvolver: edite `src/` e teste no Live Server.
+
 ### Qualidade de código
 
 Requer Node.js 20.19 ou superior (recomendado: 22 LTS).

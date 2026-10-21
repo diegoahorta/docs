@@ -5,7 +5,7 @@ import prettier from 'eslint-config-prettier';
 
 export default [
   // Pastas que o ESLint deve ignorar.
-  { ignores: ['node_modules/', 'assets/'] },
+  { ignores: ['node_modules/', 'assets/', 'dist/'] },
 
   // Regras recomendadas pela equipe do ESLint.
   js.configs.recommended,
@@ -27,9 +27,9 @@ export default [
     },
   },
 
-  // Este próprio arquivo roda no Node.
+  // Este arquivo e os scripts de geração rodam no Node.
   {
-    files: ['eslint.config.js'],
+    files: ['eslint.config.js', 'scripts/**/*.js'],
     languageOptions: { globals: { ...globals.node } },
   },
 

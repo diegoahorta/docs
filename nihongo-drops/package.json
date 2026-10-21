@@ -8,10 +8,12 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "build:html": "node scripts/build-html.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "esbuild": "0.25.10",
     "eslint": "10.13.0",
     "eslint-config-prettier": "10.1.8",
     "globals": "17.13.0",
