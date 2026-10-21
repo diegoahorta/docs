@@ -1204,3 +1204,92 @@ button {
   font-weight: 700;
   color: var(--cor-destaque-2);
 }
+
+/* ---------- Caça-Palavras ---------- */
+
+.caca-lista {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 36%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem max(12px, env(safe-area-inset-right)) max(0.6rem, env(safe-area-inset-bottom));
+  background: rgb(24 34 74 / 0.95);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.caca-titulo {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.caca-palavras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.4rem;
+}
+
+.caca-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.caca-item.encontrada {
+  background: rgb(91 228 155 / 0.18);
+  outline: 2px solid var(--cor-acerto);
+}
+
+.caca-item.encontrada strong {
+  text-decoration: line-through;
+}
+
+.caca-emoji {
+  font-size: 1.5rem;
+}
+
+.caca-pista {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.caca-revelado {
+  font-weight: 700;
+  color: var(--cor-acerto);
+}
+
+.caca-acoes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Em telas largas a lista vira uma coluna à direita da grade. */
+@media (min-width: 760px) {
+  .caca-lista {
+    top: 0;
+    left: auto;
+    width: 280px;
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid var(--cor-borda);
+  }
+
+  .caca-palavras {
+    grid-template-columns: 1fr;
+    flex: 1;
+    align-content: start;
+  }
+}

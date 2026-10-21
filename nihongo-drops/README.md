@@ -50,6 +50,7 @@ src/games/            catálogo, host do Phaser, painéis HTML, carta e grade co
   kana-rain/          cena Phaser, lógica pura, gota, cenário, barra de digitação e painéis
   memory-kana/        cena Phaser, lógica pura (níveis, pares, grade), carta e painéis
   kana-pairs/         cena Phaser, lógica pura (níveis contra o relógio) e painéis
+  word-search/        cena Phaser, lógica pura (geração da grade e conferência), lista e painéis
   katakana-runner/    cena Phaser, lógica pura (ondas e distratores parecidos), corredor,
                       blocos, cenário com parallax, controles HTML e painéis
 src/data/             kana.js, vocab.js, kanji.js e strokes.js (ordem dos traços)
@@ -89,7 +90,7 @@ assets/               imagens (favicon), sfx/ e fonts/ reservados para uso futur
 3. ✅ Memory Kana: jogo da memória em 4 níveis (kana ↔ romaji, palavra ↔ imagem e misto)
 4. ✅ Katakana Runner: você troca de pista para alcançar o bloco com o katakana pedido; a pista é o romaji ou o hiragana
 5. ✅ Pares de Kana: ligue cada hiragana ao katakana de mesmo som contra o relógio; a cada nível há mais pares e menos tempo
-6. ⏳ Palavra Cruzada
+6. ✅ Caça-Palavras: palavras escondidas numa grade de kana, que vai de 5×5 a 9×9; as diagonais entram a partir do nível 3
 
 ## Créditos e licenças
 

@@ -11,6 +11,7 @@ import { falar } from '../../core/speech.js';
 import { limitar } from '../../core/utils.js';
 import { mostrarAcerto, mostrarErro } from '../../ui/feedback.js';
 import { criarCamadaDoJogo } from '../gamePanel.js';
+import { ouvirTeclado } from '../keyboard.js';
 import {
   CONFIG,
   montarOnda,
@@ -70,7 +71,7 @@ export default class KatakanaRunnerScene extends Phaser.Scene {
     });
 
     this.scale.on('resize', this.aoRedimensionar, this);
-    this.input.keyboard.on('keydown', this.aoTeclar, this);
+    this.pararTeclado = ouvirTeclado((evento) => this.aoTeclar(evento));
     this.input.on('pointerdown', this.aoTocar, this);
     this.events.once('shutdown', this.limpar, this);
     this.events.once('destroy', this.limpar, this);
@@ -406,7 +407,7 @@ export default class KatakanaRunnerScene extends Phaser.Scene {
     this.limpo = true;
     this.estado = 'destruida';
     this.scale.off('resize', this.aoRedimensionar, this);
-    this.input.keyboard?.off('keydown', this.aoTeclar, this);
+    this.pararTeclado?.();
     this.input.off('pointerdown', this.aoTocar, this);
     this.controles?.destroy();
     this.camada?.remove();

@@ -12,6 +12,7 @@ import { tocarErro } from '../../core/audio.js';
 import { mostrarAcerto } from '../../ui/feedback.js';
 import { criarCamadaDoJogo, mostrarDica } from '../gamePanel.js';
 import { criarCarta } from '../card.js';
+import { ouvirTeclado } from '../keyboard.js';
 import { calcularGrade } from '../gridLayout.js';
 import {
   PENALIDADE_S,
@@ -77,7 +78,7 @@ export default class KanaPairsScene extends Phaser.Scene {
     this.camada = criarCamadaDoJogo(this.dados.conteiner);
 
     this.scale.on('resize', this.organizar, this);
-    this.input.keyboard.on('keydown', this.aoTeclar, this);
+    this.pararTeclado = ouvirTeclado((evento) => this.aoTeclar(evento));
     this.events.once('shutdown', this.limpar, this);
     this.events.once('destroy', this.limpar, this);
 
@@ -487,7 +488,7 @@ export default class KanaPairsScene extends Phaser.Scene {
     this.limpo = true;
     this.estado = 'destruida';
     this.scale.off('resize', this.organizar, this);
-    this.input.keyboard?.off('keydown', this.aoTeclar, this);
+    this.pararTeclado?.();
     this.camada?.remove();
   }
 }

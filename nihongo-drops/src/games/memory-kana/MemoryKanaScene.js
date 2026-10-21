@@ -18,6 +18,7 @@ import {
   pontosDoPar,
 } from './memoryLogic.js';
 import { criarCarta } from '../card.js';
+import { ouvirTeclado } from '../keyboard.js';
 import { calcularGrade } from '../gridLayout.js';
 import { painelFim, painelInicio, painelNivelCompleto, painelPausa } from './panels.js';
 
@@ -63,7 +64,7 @@ export default class MemoryKanaScene extends Phaser.Scene {
     this.camada = criarCamadaDoJogo(this.dados.conteiner);
 
     this.scale.on('resize', this.organizarGrade, this);
-    this.input.keyboard.on('keydown', this.aoTeclar, this);
+    this.pararTeclado = ouvirTeclado((evento) => this.aoTeclar(evento));
     this.events.once('shutdown', this.limpar, this);
     this.events.once('destroy', this.limpar, this);
 
@@ -398,7 +399,7 @@ export default class MemoryKanaScene extends Phaser.Scene {
     this.limpo = true;
     this.estado = 'destruida';
     this.scale.off('resize', this.organizarGrade, this);
-    this.input.keyboard?.off('keydown', this.aoTeclar, this);
+    this.pararTeclado?.();
     this.camada?.remove();
   }
 }

@@ -40,13 +40,13 @@ export const JOGOS = Object.freeze([
     carregar: () => import('./kana-pairs/KanaPairsScene.js'),
   },
   {
-    id: 'crossword',
-    nome: 'Palavra Cruzada',
-    nomeJP: 'クロスワード',
-    descricao: 'Complete a grade com palavras em kana. A cada nível a grade cresce.',
+    id: 'word-search',
+    nome: 'Caça-Palavras',
+    nomeJP: 'ことばさがし',
+    descricao: 'Encontre as palavras escondidas na grade de kana. A cada nível a grade cresce.',
     cor: '#c3a6ff',
     xpNecessario: 700,
-    carregar: null,
+    carregar: () => import('./word-search/WordSearchScene.js'),
   },
 ]);
 

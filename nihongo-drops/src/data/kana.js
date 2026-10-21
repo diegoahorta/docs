@@ -291,3 +291,41 @@ export function gruposDeEstudo(script, incluirDakuten = false) {
 export function parCorrespondente(item) {
   return kanaPorCaractere(item.par);
 }
+
+/** Kana pequenos que se juntam ao anterior (き + ゃ = kya). */
+const PEQUENOS = { ゃ: 'ya', ゅ: 'yu', ょ: 'yo', ャ: 'ya', ュ: 'yu', ョ: 'yo' };
+
+/** Junta um kana pequeno à leitura anterior: ki+ya = kya, shi+ya = sha. */
+function juntarPequeno(leitura, pequeno) {
+  if (/(sh|ch|j)i$/.test(leitura)) {
+    return leitura.slice(0, -1) + pequeno.slice(1);
+  }
+  return leitura.endsWith('i') ? leitura.slice(0, -1) + pequeno : leitura + pequeno;
+}
+
+/**
+ * Lê um texto em kana como romaji (Hepburn simplificado), tratando
+ * っ/ッ (consoante dobrada), ー (vogal longa) e ゃゅょ.
+ * Ex.: "ねこ" → "neko", "サッカー" → "sakkaa", "きょう" → "kyou".
+ */
+export function lerEmRomaji(texto) {
+  let leitura = '';
+  let dobrar = false;
+  for (const caractere of texto) {
+    if (caractere === 'っ' || caractere === 'ッ') {
+      dobrar = true;
+    } else if (caractere === 'ー') {
+      leitura += leitura.slice(-1);
+    } else if (PEQUENOS[caractere]) {
+      leitura = juntarPequeno(leitura, PEQUENOS[caractere]);
+    } else {
+      let silaba = kanaPorCaractere(caractere)?.romaji ?? caractere;
+      if (dobrar) {
+        silaba = (silaba.startsWith('ch') ? 't' : silaba.charAt(0)) + silaba;
+        dobrar = false;
+      }
+      leitura += silaba;
+    }
+  }
+  return leitura;
+}

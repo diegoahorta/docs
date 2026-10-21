@@ -22,6 +22,8 @@ export function criarJogoPhaser(conteiner, ClasseCena, dados = {}) {
     // O áudio fica com o core/audio.js (Web Audio próprio), então o Phaser não cria outro contexto.
     audio: { noAudio: true },
     fps: { target: 60 },
+    // O teclado é escutado direto na janela (ver games/keyboard.js).
+    input: { keyboard: false },
     scale: {
       mode: Phaser.Scale.RESIZE,
       width: conteiner.clientWidth || 800,

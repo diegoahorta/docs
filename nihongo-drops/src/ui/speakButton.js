@@ -19,6 +19,10 @@ export function criarBotaoFala(texto, { rotulo = texto, classe = '' } = {}) {
     evento.stopPropagation();
     falar(texto);
     pulsar(botao, 1.25);
+    // Com mouse/toque, solta o foco para o teclado voltar ao jogo (no teclado, detail é 0).
+    if (evento.detail > 0) {
+      botao.blur();
+    }
   });
   return botao;
 }
