@@ -1,0 +1,551 @@
+{
+  "arquivos": [
+    "2bb44c41-Vocabulario_Alta_Frequencia_Ingles_Expandido.docx",
+    "73416bc1-Vocabulario_Essencial_Multilingue_2284_ODU-Creative.docx",
+    "82ce6bd2-01_Vocabulario_2284_EN-PT_Portugues_ODU-Creative.docx",
+    "83167744-04_Vocabulario_2284_EN-FR_Frances_ODU-Creative.docx",
+    "85e5b418-06_Vocabulario_2284_EN-DE_Alemao_ODU-Creative.docx",
+    "92ee0c62-Vocabulario_Alta_Frequencia_Ingles_Pedagogico.docx",
+    "cbb576c4-Vocabulario_Alta_Frequencia_Ingles_2000_Completo.docx",
+    "f94859e3-02_Vocabulario_2284_EN-ES_Espanhol_ODU-Creative.docx"
+  ],
+  "checagens": [
+    {
+      "checagem": "mestre: 2.284 linhas numeradas 1..2284",
+      "ok": true,
+      "detalhe": 2284
+    },
+    {
+      "checagem": "mestre: equivalentes não vazios",
+      "ok": true,
+      "detalhe": "25123 de 25124 células"
+    },
+    {
+      "checagem": "índice alfabético cobre todas as palavras",
+      "ok": true
+    },
+    {
+      "checagem": "volume PT: alertas iguais aos do mestre",
+      "ok": true
+    },
+    {
+      "checagem": "volume PT: 2.284 entradas idênticas ao mestre",
+      "ok": true
+    },
+    {
+      "checagem": "volume PT: marcas ⚠ == lista de alertas",
+      "ok": true
+    },
+    {
+      "checagem": "volume ES: 2.284 entradas idênticas ao mestre",
+      "ok": true
+    },
+    {
+      "checagem": "volume ES: marcas ⚠ == lista de alertas",
+      "ok": true
+    },
+    {
+      "checagem": "volume FR: 2.284 entradas idênticas ao mestre",
+      "ok": true
+    },
+    {
+      "checagem": "volume FR: marcas ⚠ == lista de alertas",
+      "ok": true
+    },
+    {
+      "checagem": "volume DE: 2.284 entradas idênticas ao mestre",
+      "ok": true
+    },
+    {
+      "checagem": "volume DE: marcas ⚠ == lista de alertas",
+      "ok": true
+    },
+    {
+      "checagem": "top100: ordem EN igual ao mestre (100 palavras)",
+      "ok": true
+    },
+    {
+      "checagem": "top300: ordem EN igual ao mestre (300 palavras)",
+      "ok": true
+    },
+    {
+      "checagem": "top2000: ordem EN igual ao mestre (2000 palavras)",
+      "ok": true
+    },
+    {
+      "checagem": "alertas PT: 'No original' confere com a tabela",
+      "ok": true
+    },
+    {
+      "checagem": "alertas ES: 'No original' confere com a tabela",
+      "ok": true
+    },
+    {
+      "checagem": "alertas FR: 'No original' confere com a tabela",
+      "ok": true
+    },
+    {
+      "checagem": "alertas DE: 'No original' confere com a tabela",
+      "ok": true
+    }
+  ],
+  "divergencias": {
+    "ptbr_entre_listas": [
+      {
+        "n": 10,
+        "en": "it",
+        "top100": "isso, ele/ela (neutro)",
+        "top300": "isso, ele/ela (neutro)",
+        "top2000": "isso, ele/ela"
+      },
+      {
+        "n": 24,
+        "en": "you",
+        "top100": "você, tu, vocês",
+        "top300": "você, tu, vocês",
+        "top2000": "você, tu"
+      },
+      {
+        "n": 32,
+        "en": "all",
+        "top100": "todo, toda, todos",
+        "top300": "todo, toda, todos",
+        "top2000": "todo, todos"
+      },
+      {
+        "n": 39,
+        "en": "can",
+        "top100": "poder, lata",
+        "top300": "poder",
+        "top2000": "poder"
+      },
+      {
+        "n": 51,
+        "en": "about",
+        "top100": "sobre, acerca",
+        "top300": "sobre, acerca",
+        "top2000": "sobre"
+      },
+      {
+        "n": 59,
+        "en": "some",
+        "top100": "algum, alguns",
+        "top300": "algum, alguns",
+        "top2000": "algum"
+      },
+      {
+        "n": 65,
+        "en": "use",
+        "top100": "usar, uso",
+        "top300": "usar",
+        "top2000": "usar"
+      },
+      {
+        "n": 71,
+        "en": "work",
+        "top100": "trabalho, trabalhar",
+        "top300": "trabalho, trabalhar",
+        "top2000": "trabalho"
+      },
+      {
+        "n": 74,
+        "en": "such",
+        "top100": "tal, tal",
+        "top300": "tal",
+        "top2000": "tal"
+      },
+      {
+        "n": 78,
+        "en": "most",
+        "top100": "a maioria, mais",
+        "top300": "a maioria, mais",
+        "top2000": "a maioria"
+      },
+      {
+        "n": 86,
+        "en": "must",
+        "top100": "deve, precisar",
+        "top300": "deve",
+        "top2000": "deve"
+      },
+      {
+        "n": 87,
+        "en": "look",
+        "top100": "olhar, parecer",
+        "top300": "olhar, parecer",
+        "top2000": "olhar"
+      },
+      {
+        "n": 90,
+        "en": "back",
+        "top100": "de volta, costas",
+        "top300": "de volta, costas",
+        "top2000": "de volta"
+      },
+      {
+        "n": 102,
+        "en": "good",
+        "top300": "bom, boa",
+        "top2000": "bom"
+      },
+      {
+        "n": 104,
+        "en": "those",
+        "top300": "aqueles, aquelas",
+        "top2000": "aqueles"
+      },
+      {
+        "n": 117,
+        "en": "old",
+        "top300": "velho, antigo",
+        "top2000": "velho"
+      },
+      {
+        "n": 129,
+        "en": "call",
+        "top300": "chamar, ligar",
+        "top2000": "chamar"
+      },
+      {
+        "n": 131,
+        "en": "under",
+        "top300": "embaixo, sob",
+        "top2000": "embaixo"
+      },
+      {
+        "n": 134,
+        "en": "move",
+        "top300": "mover, mudar",
+        "top2000": "mover"
+      },
+      {
+        "n": 140,
+        "en": "another",
+        "top300": "outro, mais um",
+        "top2000": "outro"
+      },
+      {
+        "n": 151,
+        "en": "form",
+        "top300": "forma, formar",
+        "top2000": "forma"
+      },
+      {
+        "n": 152,
+        "en": "off",
+        "top300": "desligado, fora",
+        "top2000": "desligado"
+      },
+      {
+        "n": 164,
+        "en": "end",
+        "top300": "fim, terminar",
+        "top2000": "fim"
+      },
+      {
+        "n": 171,
+        "en": "again",
+        "top300": "de novo, novamente",
+        "top2000": "de novo"
+      },
+      {
+        "n": 172,
+        "en": "hold",
+        "top300": "segurar, manter",
+        "top2000": "segurar"
+      },
+      {
+        "n": 174,
+        "en": "around",
+        "top300": "em volta, cerca de",
+        "top2000": "em volta"
+      },
+      {
+        "n": 181,
+        "en": "however",
+        "top300": "contudo, no entanto",
+        "top2000": "contudo"
+      },
+      {
+        "n": 182,
+        "en": "lead",
+        "top300": "liderar, chumbo",
+        "top2000": "liderar"
+      },
+      {
+        "n": 184,
+        "en": "set",
+        "top300": "conjunto, definir",
+        "top2000": "conjunto"
+      },
+      {
+        "n": 185,
+        "en": "order",
+        "top300": "ordem, pedir",
+        "top2000": "ordem"
+      },
+      {
+        "n": 187,
+        "en": "plan",
+        "top300": "plano, planejar",
+        "top2000": "plano"
+      },
+      {
+        "n": 188,
+        "en": "run",
+        "top300": "correr, administrar",
+        "top2000": "correr"
+      },
+      {
+        "n": 190,
+        "en": "face",
+        "top300": "rosto, enfrentar",
+        "top2000": "rosto"
+      },
+      {
+        "n": 193,
+        "en": "play",
+        "top300": "brincar, jogar, tocar",
+        "top2000": "brincar, jogar"
+      },
+      {
+        "n": 194,
+        "en": "stand",
+        "top300": "ficar de pé, suportar",
+        "top2000": "ficar de pé"
+      },
+      {
+        "n": 196,
+        "en": "early",
+        "top300": "cedo, cedo",
+        "top2000": "cedo"
+      },
+      {
+        "n": 197,
+        "en": "course",
+        "top300": "curso, claro",
+        "top2000": "curso"
+      },
+      {
+        "n": 198,
+        "en": "change",
+        "top300": "mudar, mudança",
+        "top2000": "mudar"
+      },
+      {
+        "n": 199,
+        "en": "help",
+        "top300": "ajudar, ajuda",
+        "top2000": "ajudar"
+      },
+      {
+        "n": 202,
+        "en": "put",
+        "top300": "colocar, pôr",
+        "top2000": "colocar"
+      },
+      {
+        "n": 205,
+        "en": "force",
+        "top300": "força, forçar",
+        "top2000": "força"
+      },
+      {
+        "n": 206,
+        "en": "meet",
+        "top300": "encontrar, conhecer",
+        "top2000": "encontrar"
+      },
+      {
+        "n": 223,
+        "en": "provide",
+        "top300": "fornecer, proporcionar",
+        "top2000": "fornecer"
+      },
+      {
+        "n": 226,
+        "en": "certain",
+        "top300": "certo, determinado",
+        "top2000": "certo"
+      },
+      {
+        "n": 230,
+        "en": "question",
+        "top300": "pergunta, questão",
+        "top2000": "pergunta"
+      },
+      {
+        "n": 231,
+        "en": "study",
+        "top300": "estudar, estudo",
+        "top2000": "estudar"
+      },
+      {
+        "n": 239,
+        "en": "away",
+        "top300": "longe, fora",
+        "top2000": "longe"
+      },
+      {
+        "n": 240,
+        "en": "report",
+        "top300": "relatório, reportar",
+        "top2000": "relatório"
+      },
+      {
+        "n": 242,
+        "en": "company",
+        "top300": "empresa, companhia",
+        "top2000": "empresa"
+      },
+      {
+        "n": 246,
+        "en": "start",
+        "top300": "começar, início",
+        "top2000": "começar"
+      },
+      {
+        "n": 249,
+        "en": "figure",
+        "top300": "figura, número",
+        "top2000": "figura"
+      },
+      {
+        "n": 264,
+        "en": "cost",
+        "top300": "custo, custar",
+        "top2000": "custo"
+      },
+      {
+        "n": 272,
+        "en": "complete",
+        "top300": "completo, completar",
+        "top2000": "completo"
+      },
+      {
+        "n": 274,
+        "en": "sense",
+        "top300": "sentido, sentir",
+        "top2000": "sentido"
+      },
+      {
+        "n": 280,
+        "en": "direct",
+        "top300": "direto, dirigir",
+        "top2000": "direto"
+      },
+      {
+        "n": 290,
+        "en": "rather",
+        "top300": "bastante, preferir",
+        "top2000": "bastante"
+      },
+      {
+        "n": 296,
+        "en": "reason",
+        "top300": "razão, motivo",
+        "top2000": "razão"
+      },
+      {
+        "n": 298,
+        "en": "return",
+        "top300": "retorno, voltar",
+        "top2000": "retorno"
+      },
+      {
+        "n": 300,
+        "en": "care",
+        "top300": "cuidado, importar-se",
+        "top2000": "cuidado"
+      }
+    ]
+  },
+  "estatisticas": {
+    "palavras": 2284,
+    "idiomas": 11,
+    "equivalentes_nao_vazios": 25123,
+    "celulas_vazias": {
+      "PT": [],
+      "ES": [],
+      "IT": [],
+      "FR": [],
+      "RO": [
+        1
+      ],
+      "DE": [],
+      "NL": [],
+      "SV": [],
+      "NO": [],
+      "DA": [],
+      "IS": []
+    },
+    "alertas_por_idioma": {
+      "PT": 67,
+      "ES": 18,
+      "FR": 14,
+      "DE": 13
+    },
+    "tipos_de_alerta_PT": {
+      "Ruído (artigo extra)": 4,
+      "Sentido trocado (substantivo × auxiliar)": 1,
+      "Sentido trocado (homônimo)": 5,
+      "Ruído (palavra extra)": 2,
+      "Gíria de internet": 1,
+      "Gíria / registro informal": 1,
+      "Sentido trocado": 9,
+      "Abreviação de internet": 3,
+      "Ruído (verbo extra)": 1,
+      "Tradução sem sentido": 1,
+      "Gíria / imperativo": 2,
+      "Sentido aproximado": 3,
+      "Gíria": 1,
+      "Erro de digitação / gíria": 1,
+      "Classe trocada": 2,
+      "Classe trocada (verbo → subst.)": 3,
+      "Forma conjugada": 5,
+      "Sentido trocado (confusão com 'way')": 1,
+      "Resíduo de planilha (valor lógico)": 2,
+      "Sentido parcial (só em negativas)": 1,
+      "Sentido parcial": 3,
+      "Emoticon no texto": 1,
+      "Sentido trocado (expressão 'hang on')": 1,
+      "Não traduzido": 1,
+      "Português europeu": 4,
+      "Sentido trocado (lido como 'I'll')": 1,
+      "Gíria (truncada)": 1,
+      "Sentido trocado (Polish × polish)": 1,
+      "Falso cognato": 2,
+      "Sentido trocado (passado de 'see')": 1,
+      "Registro técnico": 1,
+      "Português europeu (grafia)": 1
+    },
+    "palavras_por_faixa": {
+      "1": 100,
+      "2": 150,
+      "3": 250,
+      "4": 250,
+      "5": 250,
+      "6": 250,
+      "7": 250,
+      "8": 250,
+      "9": 250,
+      "10": 284
+    },
+    "com_pt_br_curado": 2000,
+    "frases_exemplo": 10,
+    "identicas_EN_e_alvo": {
+      "PT": 48,
+      "ES": 62,
+      "IT": 49,
+      "FR": 193,
+      "RO": 129,
+      "DE": 115,
+      "NL": 141,
+      "SV": 163,
+      "NO": 198,
+      "DA": 241,
+      "IS": 85
+    },
+    "pt_br_difere_do_pt_original": 537
+  }
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "faixa": 1,
+    "de": 1,
+    "ate": 100,
+    "perfil": "Núcleo funcional",
+    "predomina": "Artigos, pronomes, preposições, auxiliares e os verbos mais frequentes."
+  },
+  {
+    "faixa": 2,
+    "de": 101,
+    "ate": 250,
+    "perfil": "Base do dia a dia",
+    "predomina": "Verbos de alta frequência, advérbios e substantivos concretos essenciais."
+  },
+  {
+    "faixa": 3,
+    "de": 251,
+    "ate": 500,
+    "perfil": "Vocabulário corrente",
+    "predomina": "Família, corpo, tempo, cidade, trabalho e ações cotidianas."
+  },
+  {
+    "faixa": 4,
+    "de": 501,
+    "ate": 750,
+    "perfil": "Expansão I",
+    "predomina": "Sociedade, natureza, sentimentos e adjetivos de uso frequente."
+  },
+  {
+    "faixa": 5,
+    "de": 751,
+    "ate": 1000,
+    "perfil": "Expansão II",
+    "predomina": "Lazer, saúde, comunicação e verbos de processo."
+  },
+  {
+    "faixa": 6,
+    "de": 1001,
+    "ate": 1250,
+    "perfil": "Intermediário I",
+    "predomina": "Objetos, lugares, relações e vocabulário abstrato."
+  },
+  {
+    "faixa": 7,
+    "de": 1251,
+    "ate": 1500,
+    "perfil": "Intermediário II",
+    "predomina": "Descrição, emoções, natureza e ações específicas."
+  },
+  {
+    "faixa": 8,
+    "de": 1501,
+    "ate": 1750,
+    "perfil": "Intermediário III",
+    "predomina": "Vocabulário de narrativa, moral e vida doméstica."
+  },
+  {
+    "faixa": 9,
+    "de": 1751,
+    "ate": 2000,
+    "perfil": "Avançado I",
+    "predomina": "Ofícios, materiais, utensílios e nuances de sentido."
+  },
+  {
+    "faixa": 10,
+    "de": 2001,
+    "ate": 2284,
+    "perfil": "Avançado II",
+    "predomina": "Derivados (-en, -ness, -ion), vocabulário literário e doméstico."
+  }
+]

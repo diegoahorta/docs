@@ -1,0 +1,2287 @@
+#separator:tab
+#html:true
+#columns:Frente	Verso	Tags
+the	das der die<br><small>PT: o, a, os, as</small>	faixa01 n0001
+be	sein<br><small>PT: ser, estar</small>	faixa01 n0002 alerta
+of	von<br><small>PT: de</small>	faixa01 n0003
+and	und<br><small>PT: e</small>	faixa01 n0004
+a	ein<br><small>PT: um, uma</small>	faixa01 n0005
+to	bis zur<br><small>PT: para, a</small>	faixa01 n0006
+in	in<br><small>PT: em, no, na</small>	faixa01 n0007
+he	er<br><small>PT: ele</small>	faixa01 n0008
+have	verfügen über<br><small>PT: ter, haver</small>	faixa01 n0009
+it	es<br><small>PT: isso, ele/ela</small>	faixa01 n0010
+that	dass<br><small>PT: que, isso</small>	faixa01 n0011
+for	für<br><small>PT: para, por</small>	faixa01 n0012
+they	sie<br><small>PT: eles, elas</small>	faixa01 n0013
+I	ich<br><small>PT: eu</small>	faixa01 n0014 alerta
+with	mit<br><small>PT: com</small>	faixa01 n0015 alerta
+as	wie sie<br><small>PT: como</small>	faixa01 n0016
+not	nicht<br><small>PT: não</small>	faixa01 n0017
+on	auf<br><small>PT: em, sobre</small>	faixa01 n0018
+she	sie<br><small>PT: ela</small>	faixa01 n0019
+at	beim<br><small>PT: em, às</small>	faixa01 n0020
+by	indem er<br><small>PT: por, de</small>	faixa01 n0021
+this	diese<br><small>PT: este, esta, isso</small>	faixa01 n0022
+we	wir<br><small>PT: nós</small>	faixa01 n0023
+you	Sie<br><small>PT: você, tu</small>	faixa01 n0024
+do	tun<br><small>PT: fazer</small>	faixa01 n0025
+but	aber doch<br><small>PT: mas</small>	faixa01 n0026
+from	von<br><small>PT: de, desde</small>	faixa01 n0027
+or	oder<br><small>PT: ou</small>	faixa01 n0028
+which	die sich<br><small>PT: qual, que</small>	faixa01 n0029
+one	einer<br><small>PT: um, uma</small>	faixa01 n0030
+would	würde<br><small>PT: iria, gostaria</small>	faixa01 n0031
+all	alle<br><small>PT: todo, todos</small>	faixa01 n0032
+will	werden<br><small>PT: irá, vontade</small>	faixa01 n0033
+there	es noch<br><small>PT: lá, existe</small>	faixa01 n0034
+say	sagen sie mal<br><small>PT: dizer</small>	faixa01 n0035
+who	die<br><small>PT: quem</small>	faixa01 n0036
+make	machen sie<br><small>PT: fazer, criar</small>	faixa01 n0037
+when	wann den<br><small>PT: quando</small>	faixa01 n0038
+can	können<br><small>PT: poder</small>	faixa01 n0039
+more	mehr da<br><small>PT: mais</small>	faixa01 n0040
+if	wenn man<br><small>PT: se</small>	faixa01 n0041
+no	keine<br><small>PT: não, nenhum</small>	faixa01 n0042
+man	Mann<br><small>PT: homem</small>	faixa01 n0043
+out	aus / hinaus<br><small>PT: fora</small>	faixa01 n0044 alerta
+other	andere<br><small>PT: outro</small>	faixa01 n0045
+so	so<br><small>PT: então, tão</small>	faixa01 n0046
+what	was denn<br><small>PT: o que</small>	faixa01 n0047
+time	Zeit<br><small>PT: tempo</small>	faixa01 n0048
+up	nach oben<br><small>PT: para cima</small>	faixa01 n0049
+go	gehen<br><small>PT: ir</small>	faixa01 n0050
+about	etwas über<br><small>PT: sobre</small>	faixa01 n0051
+than	als<br><small>PT: do que</small>	faixa01 n0052
+into	in<br><small>PT: para dentro</small>	faixa01 n0053
+could	konnte man<br><small>PT: poderia</small>	faixa01 n0054
+state	Zustand<br><small>PT: estado</small>	faixa01 n0055
+only	nur noch<br><small>PT: apenas, só</small>	faixa01 n0056
+new	neu<br><small>PT: novo</small>	faixa01 n0057
+year	Jahr<br><small>PT: ano</small>	faixa01 n0058
+some	einige<br><small>PT: algum</small>	faixa01 n0059
+take	nehmen sie<br><small>PT: tomar, levar</small>	faixa01 n0060
+come	kommen sie<br><small>PT: vir</small>	faixa01 n0061
+these	diese<br><small>PT: estes, estas</small>	faixa01 n0062
+know	kennt<br><small>PT: saber, conhecer</small>	faixa01 n0063
+see	sehen<br><small>PT: ver</small>	faixa01 n0064
+use	nutzen sie<br><small>PT: usar</small>	faixa01 n0065
+get	sich holen<br><small>PT: obter, conseguir</small>	faixa01 n0066
+like	so halt<br><small>PT: gostar, como</small>	faixa01 n0067
+then	dann nach<br><small>PT: então</small>	faixa01 n0068
+first	als erstes<br><small>PT: primeiro</small>	faixa01 n0069
+any	jeder<br><small>PT: qualquer</small>	faixa01 n0070
+work	der arbeit<br><small>PT: trabalho</small>	faixa01 n0071
+now	jetzt schon<br><small>PT: agora</small>	faixa01 n0072
+may	der mai<br><small>PT: pode, maio</small>	faixa01 n0073
+such	eine solche<br><small>PT: tal</small>	faixa01 n0074
+give	geben sie<br><small>PT: dar</small>	faixa01 n0075
+over	zu ende<br><small>PT: sobre, acabado</small>	faixa01 n0076
+think	denkt nach<br><small>PT: pensar</small>	faixa01 n0077
+most	am meisten<br><small>PT: a maioria</small>	faixa01 n0078
+even	sogar noch<br><small>PT: mesmo, até</small>	faixa01 n0079
+find	finden<br><small>PT: encontrar</small>	faixa01 n0080
+day	Tag<br><small>PT: dia</small>	faixa01 n0081
+also	auch noch<br><small>PT: também</small>	faixa01 n0082
+after	nach der<br><small>PT: depois</small>	faixa01 n0083
+way	Weg<br><small>PT: caminho, maneira</small>	faixa01 n0084
+many	viele<br><small>PT: muitos</small>	faixa01 n0085
+must	Muss<br><small>PT: deve</small>	faixa01 n0086
+look	sehen aus<br><small>PT: olhar</small>	faixa01 n0087
+before	vor den<br><small>PT: antes</small>	faixa01 n0088
+great	echt klasse<br><small>PT: ótimo, grande</small>	faixa01 n0089
+back	der rücken<br><small>PT: de volta</small>	faixa01 n0090
+through	durch<br><small>PT: através</small>	faixa01 n0091
+long	lang<br><small>PT: longo</small>	faixa01 n0092
+where	wo woher<br><small>PT: onde</small>	faixa01 n0093
+much	noch viel<br><small>PT: muito</small>	faixa01 n0094
+should	sollte man<br><small>PT: deveria</small>	faixa01 n0095
+well	bien sur<br><small>PT: bem</small>	faixa01 n0096
+people	Menschen<br><small>PT: pessoas</small>	faixa01 n0097
+down	nach unten<br><small>PT: para baixo</small>	faixa01 n0098
+own	besitzen<br><small>PT: próprio</small>	faixa01 n0099
+just	gerade noch<br><small>PT: apenas, só</small>	faixa01 n0100
+because	weil<br><small>PT: porque</small>	faixa02 n0101
+good	gut<br><small>PT: bom</small>	faixa02 n0102 alerta
+each	jeder<br><small>PT: cada</small>	faixa02 n0103
+those	diejenigen<br><small>PT: aqueles</small>	faixa02 n0104
+feel	Gefühl<br><small>PT: sentir</small>	faixa02 n0105
+seem	scheinen<br><small>PT: parecer</small>	faixa02 n0106
+how	wie<br><small>PT: como</small>	faixa02 n0107
+high	hoch<br><small>PT: alto</small>	faixa02 n0108
+too	zu<br><small>PT: muito, também</small>	faixa02 n0109
+place	Platz<br><small>PT: lugar</small>	faixa02 n0110
+little	wenig<br><small>PT: pequeno, pouco</small>	faixa02 n0111
+world	Welt<br><small>PT: mundo</small>	faixa02 n0112
+very	sehr<br><small>PT: muito</small>	faixa02 n0113
+still	immer noch<br><small>PT: ainda</small>	faixa02 n0114
+nation	Nation<br><small>PT: nação</small>	faixa02 n0115
+hand	Hand<br><small>PT: mão</small>	faixa02 n0116
+old	alt<br><small>PT: velho</small>	faixa02 n0117
+life	Leben<br><small>PT: vida</small>	faixa02 n0118
+tell	sagen<br><small>PT: contar, dizer</small>	faixa02 n0119
+write	schreib mal<br><small>PT: escrever</small>	faixa02 n0120
+become	werden<br><small>PT: tornar-se</small>	faixa02 n0121
+here	hier<br><small>PT: aqui</small>	faixa02 n0122
+show	zeigen sich<br><small>PT: mostrar</small>	faixa02 n0123
+house	Haus<br><small>PT: casa</small>	faixa02 n0124
+both	die beide<br><small>PT: ambos</small>	faixa02 n0125
+between	zwischen den<br><small>PT: entre</small>	faixa02 n0126
+need	müssen<br><small>PT: precisar</small>	faixa02 n0127
+mean	bedeuten<br><small>PT: significar</small>	faixa02 n0128
+call	rufen sie<br><small>PT: chamar</small>	faixa02 n0129
+develop	sich entwickeln<br><small>PT: desenvolver</small>	faixa02 n0130
+under	unter<br><small>PT: embaixo</small>	faixa02 n0131
+last	letzte<br><small>PT: último</small>	faixa02 n0132
+right	Recht<br><small>PT: certo, direito</small>	faixa02 n0133
+move	sich bewegen<br><small>PT: mover</small>	faixa02 n0134
+thing	Sache<br><small>PT: coisa</small>	faixa02 n0135
+general	General<br><small>PT: geral</small>	faixa02 n0136
+school	Schule<br><small>PT: escola</small>	faixa02 n0137
+never	noch nie<br><small>PT: nunca</small>	faixa02 n0138
+same	gleich<br><small>PT: mesmo</small>	faixa02 n0139
+another	eine weitere<br><small>PT: outro</small>	faixa02 n0140
+begin	beginnen<br><small>PT: começar</small>	faixa02 n0141 alerta
+while	während<br><small>PT: enquanto</small>	faixa02 n0142
+number	Anzahl<br><small>PT: número</small>	faixa02 n0143
+part	Teil<br><small>PT: parte</small>	faixa02 n0144
+turn	dreh dich<br><small>PT: virar, vez</small>	faixa02 n0145
+real	wahrliche<br><small>PT: real</small>	faixa02 n0146
+leave	stehen lassen<br><small>PT: deixar, sair</small>	faixa02 n0147
+might	könnte<br><small>PT: poderia</small>	faixa02 n0148
+want	wollen<br><small>PT: querer</small>	faixa02 n0149
+point	Punkt<br><small>PT: ponto</small>	faixa02 n0150
+form	die form<br><small>PT: forma</small>	faixa02 n0151
+off	ab<br><small>PT: desligado</small>	faixa02 n0152
+child	Kind<br><small>PT: criança</small>	faixa02 n0153
+few	wenige<br><small>PT: poucos</small>	faixa02 n0154
+small	klein<br><small>PT: pequeno</small>	faixa02 n0155
+since	schon seit<br><small>PT: desde</small>	faixa02 n0156
+against	gegen<br><small>PT: contra</small>	faixa02 n0157
+ask	wie k<br><small>PT: perguntar</small>	faixa02 n0158
+late	spät dran<br><small>PT: tarde</small>	faixa02 n0159
+home	nach hause<br><small>PT: casa, lar</small>	faixa02 n0160
+interest	Interesse<br><small>PT: interesse</small>	faixa02 n0161
+large	groß<br><small>PT: grande</small>	faixa02 n0162
+person	Person<br><small>PT: pessoa</small>	faixa02 n0163
+end	ende<br><small>PT: fim</small>	faixa02 n0164
+open	sich öffnen<br><small>PT: aberto, abrir</small>	faixa02 n0165
+public	Öffentlichkeit<br><small>PT: público</small>	faixa02 n0166
+follow	folgen sie<br><small>PT: seguir</small>	faixa02 n0167
+during	während<br><small>PT: durante</small>	faixa02 n0168
+present	vorhanden<br><small>PT: presente</small>	faixa02 n0169
+without	ohne dass<br><small>PT: sem</small>	faixa02 n0170
+again	schon wieder<br><small>PT: de novo</small>	faixa02 n0171
+hold	halten<br><small>PT: segurar</small>	faixa02 n0172
+govern	regieren<br><small>PT: governar</small>	faixa02 n0173
+around	um herum<br><small>PT: em volta</small>	faixa02 n0174
+possible	möglich<br><small>PT: possível</small>	faixa02 n0175
+head	Kopf<br><small>PT: cabeça</small>	faixa02 n0176
+consider	zu betrachten<br><small>PT: considerar</small>	faixa02 n0177
+word	Wort<br><small>PT: palavra</small>	faixa02 n0178
+program	Programm<br><small>PT: programa</small>	faixa02 n0179
+problem	Problem<br><small>PT: problema</small>	faixa02 n0180
+however	jedoch<br><small>PT: contudo</small>	faixa02 n0181
+lead	führen<br><small>PT: liderar</small>	faixa02 n0182
+system	System<br><small>PT: sistema</small>	faixa02 n0183
+set	Satz<br><small>PT: conjunto</small>	faixa02 n0184
+order	bestellen<br><small>PT: ordem</small>	faixa02 n0185
+eye	Auge<br><small>PT: olho</small>	faixa02 n0186
+plan	Plan<br><small>PT: plano</small>	faixa02 n0187
+run	Lauf<br><small>PT: correr</small>	faixa02 n0188
+keep	halten<br><small>PT: manter</small>	faixa02 n0189
+face	Gesicht<br><small>PT: rosto</small>	faixa02 n0190
+fact	Tatsache<br><small>PT: fato</small>	faixa02 n0191
+group	Gruppe<br><small>PT: grupo</small>	faixa02 n0192
+play	spielen<br><small>PT: brincar, jogar</small>	faixa02 n0193
+stand	stehen<br><small>PT: ficar de pé</small>	faixa02 n0194
+increase	erhöhen<br><small>PT: aumentar</small>	faixa02 n0195
+early	schon früh<br><small>PT: cedo</small>	faixa02 n0196
+course	Kurs<br><small>PT: curso</small>	faixa02 n0197
+change	sich ändern<br><small>PT: mudar</small>	faixa02 n0198
+help	hilfe leisten<br><small>PT: ajudar</small>	faixa02 n0199
+line	Linie<br><small>PT: linha</small>	faixa02 n0200
+city	Stadt<br><small>PT: cidade</small>	faixa02 n0201
+put	setzen<br><small>PT: colocar</small>	faixa02 n0202
+close	zu schließen<br><small>PT: fechar, perto</small>	faixa02 n0203
+case	Fall<br><small>PT: caso</small>	faixa02 n0204
+force	Kraft<br><small>PT: força</small>	faixa02 n0205
+meet	sich treffen<br><small>PT: encontrar</small>	faixa02 n0206
+once	früher einmal<br><small>PT: uma vez</small>	faixa02 n0207
+water	Wasser<br><small>PT: água</small>	faixa02 n0208
+upon	auf<br><small>PT: sobre</small>	faixa02 n0209
+war	Krieg<br><small>PT: guerra</small>	faixa02 n0210
+build	bauen<br><small>PT: construir</small>	faixa02 n0211
+hear	hören<br><small>PT: ouvir</small>	faixa02 n0212
+light	Licht<br><small>PT: luz, leve</small>	faixa02 n0213
+unite	vereinen<br><small>PT: unir</small>	faixa02 n0214
+live	leben<br><small>PT: viver</small>	faixa02 n0215
+every	jeder<br><small>PT: cada, todo</small>	faixa02 n0216
+country	Land<br><small>PT: país</small>	faixa02 n0217
+bring	bringen sie<br><small>PT: trazer</small>	faixa02 n0218
+center	Zentrum<br><small>PT: centro</small>	faixa02 n0219
+let	lassen sie<br><small>PT: deixar</small>	faixa02 n0220
+side	Seite<br><small>PT: lado</small>	faixa02 n0221
+try	versuchen<br><small>PT: tentar</small>	faixa02 n0222
+provide	zu verfügung stellen<br><small>PT: fornecer</small>	faixa02 n0223
+continue	fortsetzen<br><small>PT: continuar</small>	faixa02 n0224
+name	Name<br><small>PT: nome</small>	faixa02 n0225
+certain	sicher<br><small>PT: certo</small>	faixa02 n0226
+power	der macht<br><small>PT: poder, energia</small>	faixa02 n0227
+pay	zahlen sie<br><small>PT: pagar</small>	faixa02 n0228
+result	Ergebnis<br><small>PT: resultado</small>	faixa02 n0229
+question	Frage<br><small>PT: pergunta</small>	faixa02 n0230
+study	Studie<br><small>PT: estudar</small>	faixa02 n0231
+woman	Frau<br><small>PT: mulher</small>	faixa02 n0232
+member	Mitglied<br><small>PT: membro</small>	faixa02 n0233
+until	bis auf<br><small>PT: até</small>	faixa02 n0234
+far	weit<br><small>PT: longe</small>	faixa02 n0235
+night	Nacht<br><small>PT: noite</small>	faixa02 n0236
+always	schon immer<br><small>PT: sempre</small>	faixa02 n0237
+service	Service<br><small>PT: serviço</small>	faixa02 n0238
+away	entfernt<br><small>PT: longe</small>	faixa02 n0239
+report	sich melden<br><small>PT: relatório</small>	faixa02 n0240
+something	etwas<br><small>PT: algo</small>	faixa02 n0241
+company	Unternehmen<br><small>PT: empresa</small>	faixa02 n0242
+week	Woche<br><small>PT: semana</small>	faixa02 n0243
+church	Kirche<br><small>PT: igreja</small>	faixa02 n0244
+toward	auf<br><small>PT: em direção a</small>	faixa02 n0245
+start	Anfang<br><small>PT: começar</small>	faixa02 n0246
+social	Sozial-<br><small>PT: social</small>	faixa02 n0247
+room	Zimmer<br><small>PT: quarto, sala</small>	faixa02 n0248
+figure	Abbildung<br><small>PT: figura</small>	faixa02 n0249
+nature	der natur<br><small>PT: natureza</small>	faixa02 n0250
+though	obwohl<br><small>PT: embora</small>	faixa03 n0251
+young	jung<br><small>PT: jovem</small>	faixa03 n0252
+less	weniger<br><small>PT: menos</small>	faixa03 n0253
+enough	genug<br><small>PT: suficiente</small>	faixa03 n0254
+almost	schon fast<br><small>PT: quase</small>	faixa03 n0255
+read	lesen sie<br><small>PT: ler</small>	faixa03 n0256
+include	enthalten<br><small>PT: incluir</small>	faixa03 n0257
+president	Präsident<br><small>PT: presidente</small>	faixa03 n0258
+nothing	nichts weiter<br><small>PT: nada</small>	faixa03 n0259
+yet	noch<br><small>PT: ainda</small>	faixa03 n0260
+better	so besser<br><small>PT: melhor</small>	faixa03 n0261
+big	groß<br><small>PT: grande</small>	faixa03 n0262
+boy	Junge<br><small>PT: menino</small>	faixa03 n0263
+cost	Kosten<br><small>PT: custo</small>	faixa03 n0264
+business	Unternehmen<br><small>PT: negócio</small>	faixa03 n0265
+value	Wert<br><small>PT: valor</small>	faixa03 n0266
+second	zum zweiten<br><small>PT: segundo</small>	faixa03 n0267
+why	warum / wieso<br><small>PT: por que</small>	faixa03 n0268 alerta
+clear	klar<br><small>PT: claro</small>	faixa03 n0269
+expect	rechnen mit<br><small>PT: esperar</small>	faixa03 n0270
+family	Familie<br><small>PT: família</small>	faixa03 n0271
+complete	komplett<br><small>PT: completo</small>	faixa03 n0272
+act	tätig werden<br><small>PT: ato, agir</small>	faixa03 n0273
+sense	Gefühl<br><small>PT: sentido</small>	faixa03 n0274
+mind	Geist<br><small>PT: mente</small>	faixa03 n0275
+experience	Erfahrung<br><small>PT: experiência</small>	faixa03 n0276
+art	die kunst<br><small>PT: arte</small>	faixa03 n0277
+next	als nächstes<br><small>PT: próximo</small>	faixa03 n0278
+near	nähe von<br><small>PT: perto</small>	faixa03 n0279
+direct	direkt<br><small>PT: direto</small>	faixa03 n0280
+car	Auto<br><small>PT: carro</small>	faixa03 n0281
+law	Gesetz<br><small>PT: lei</small>	faixa03 n0282
+industry	Industrie<br><small>PT: indústria</small>	faixa03 n0283
+important	wichtig<br><small>PT: importante</small>	faixa03 n0284
+girl	Mädchen<br><small>PT: menina</small>	faixa03 n0285
+god	Gott<br><small>PT: deus</small>	faixa03 n0286
+several	mehrere<br><small>PT: vários</small>	faixa03 n0287
+matter	Angelegenheit<br><small>PT: importar, assunto</small>	faixa03 n0288
+usual	üblich<br><small>PT: usual</small>	faixa03 n0289
+rather	ziemlich<br><small>PT: bastante</small>	faixa03 n0290
+per	pro<br><small>PT: por</small>	faixa03 n0291
+often	schon oft<br><small>PT: frequentemente</small>	faixa03 n0292
+kind	Art<br><small>PT: tipo, gentil</small>	faixa03 n0293
+among	unter<br><small>PT: entre</small>	faixa03 n0294
+white	Weiß<br><small>PT: branco</small>	faixa03 n0295
+reason	die vernunft<br><small>PT: razão</small>	faixa03 n0296
+action	Aktion<br><small>PT: ação</small>	faixa03 n0297
+return	Rückkehr<br><small>PT: retorno</small>	faixa03 n0298
+foot	Fuß<br><small>PT: pé</small>	faixa03 n0299
+care	sich kümmern<br><small>PT: cuidado</small>	faixa03 n0300
+simple	einfach<br><small>PT: simples</small>	faixa03 n0301
+within	innerhalb von<br><small>PT: dentro de</small>	faixa03 n0302
+love	zu lieben<br><small>PT: amor, amar</small>	faixa03 n0303
+human	Mensch<br><small>PT: humano</small>	faixa03 n0304
+along	entlang<br><small>PT: ao longo de</small>	faixa03 n0305
+appear	erscheinen<br><small>PT: aparecer</small>	faixa03 n0306
+doctor	herr doktor<br><small>PT: médico</small>	faixa03 n0307
+believe	glauben<br><small>PT: acreditar</small>	faixa03 n0308
+speak	sprechen<br><small>PT: falar</small>	faixa03 n0309
+active	aktiv<br><small>PT: ativo</small>	faixa03 n0310
+student	Schüler<br><small>PT: estudante</small>	faixa03 n0311
+month	Monat<br><small>PT: mês</small>	faixa03 n0312
+drive	auto fahren<br><small>PT: dirigir</small>	faixa03 n0313
+concern	Sorge<br><small>PT: preocupação</small>	faixa03 n0314
+best	Beste<br><small>PT: melhor</small>	faixa03 n0315
+door	Tür<br><small>PT: porta</small>	faixa03 n0316
+hope	hoffen<br><small>PT: esperança</small>	faixa03 n0317
+example	Beispiel<br><small>PT: exemplo</small>	faixa03 n0318
+inform	informieren über<br><small>PT: informar</small>	faixa03 n0319
+body	Körper<br><small>PT: corpo</small>	faixa03 n0320
+ever	schon mal<br><small>PT: alguma vez</small>	faixa03 n0321
+least	am wenigsten<br><small>PT: menos</small>	faixa03 n0322
+probable	wahrscheinlich<br><small>PT: provável</small>	faixa03 n0323
+understand	verstehen<br><small>PT: entender</small>	faixa03 n0324
+reach	erreichen<br><small>PT: alcançar</small>	faixa03 n0325
+effect	Wirkung<br><small>PT: efeito</small>	faixa03 n0326
+different	unterschiedlich<br><small>PT: diferente</small>	faixa03 n0327
+idea	Vorstellung<br><small>PT: ideia</small>	faixa03 n0328
+whole	ganze<br><small>PT: todo, inteiro</small>	faixa03 n0329
+control	Steuerung<br><small>PT: controle</small>	faixa03 n0330
+condition	Zustand<br><small>PT: condição</small>	faixa03 n0331
+field	Bereich<br><small>PT: campo</small>	faixa03 n0332
+pass	passieren<br><small>PT: passar</small>	faixa03 n0333
+fall	fallen<br><small>PT: cair</small>	faixa03 n0334
+note	notiz<br><small>PT: nota</small>	faixa03 n0335
+special	besondere<br><small>PT: especial</small>	faixa03 n0336
+talk	sich unterhalten<br><small>PT: conversar</small>	faixa03 n0337
+particular	besondere<br><small>PT: particular</small>	faixa03 n0338
+today	heute<br><small>PT: hoje</small>	faixa03 n0339
+measure	messen<br><small>PT: medida</small>	faixa03 n0340
+walk	spazieren gehen<br><small>PT: caminhar</small>	faixa03 n0341
+teach	lehren<br><small>PT: ensinar</small>	faixa03 n0342
+low	niedrig<br><small>PT: baixo</small>	faixa03 n0343
+hour	Stunde<br><small>PT: hora</small>	faixa03 n0344
+type	Art<br><small>PT: tipo</small>	faixa03 n0345
+carry	tragen<br><small>PT: carregar</small>	faixa03 n0346
+rate	Preis<br><small>PT: taxa</small>	faixa03 n0347
+remain	erhalten bleiben<br><small>PT: permanecer</small>	faixa03 n0348
+full	voll<br><small>PT: cheio</small>	faixa03 n0349
+street	Straße<br><small>PT: rua</small>	faixa03 n0350
+easy	leicht<br><small>PT: fácil</small>	faixa03 n0351
+although	obwohl<br><small>PT: embora</small>	faixa03 n0352
+record	Rekord<br><small>PT: registro</small>	faixa03 n0353
+sit	sitzen<br><small>PT: sentar</small>	faixa03 n0354
+determine	bestimmen<br><small>PT: determinar</small>	faixa03 n0355
+level	Höhe<br><small>PT: nível</small>	faixa03 n0356
+local	ortsnah<br><small>PT: local</small>	faixa03 n0357
+sure	sicher<br><small>PT: certo</small>	faixa03 n0358
+receive	erhalten sie<br><small>PT: receber</small>	faixa03 n0359
+thus	so<br><small>PT: assim</small>	faixa03 n0360
+moment	Moment<br><small>PT: momento</small>	faixa03 n0361
+spirit	Geist<br><small>PT: espírito</small>	faixa03 n0362
+train	Zug<br><small>PT: trem</small>	faixa03 n0363
+college	College<br><small>PT: faculdade</small>	faixa03 n0364
+religion	Religion<br><small>PT: religião</small>	faixa03 n0365
+perhaps	vielleicht<br><small>PT: talvez</small>	faixa03 n0366
+music	Musik<br><small>PT: música</small>	faixa03 n0367
+grow	größer werden<br><small>PT: crescer</small>	faixa03 n0368
+free	kostenlos<br><small>PT: livre</small>	faixa03 n0369
+cause	Ursache<br><small>PT: causa</small>	faixa03 n0370
+serve	dienen<br><small>PT: servir</small>	faixa03 n0371
+age	älter werden<br><small>PT: idade</small>	faixa03 n0372
+book	Buch<br><small>PT: livro</small>	faixa03 n0373
+board	Brett<br><small>PT: quadro</small>	faixa03 n0374
+recent	kürzlich<br><small>PT: recente</small>	faixa03 n0375
+sound	klingen<br><small>PT: som</small>	faixa03 n0376
+office	Büro<br><small>PT: escritório</small>	faixa03 n0377
+cut	Schnitt<br><small>PT: cortar</small>	faixa03 n0378
+step	Schritt<br><small>PT: passo</small>	faixa03 n0379
+class	Klasse<br><small>PT: classe</small>	faixa03 n0380
+true	wahr<br><small>PT: verdadeiro</small>	faixa03 n0381 alerta
+history	Geschichte<br><small>PT: história</small>	faixa03 n0382
+position	Position<br><small>PT: posição</small>	faixa03 n0383
+above	oben<br><small>PT: acima</small>	faixa03 n0384
+strong	stark<br><small>PT: forte</small>	faixa03 n0385
+friend	Freund<br><small>PT: amigo</small>	faixa03 n0386
+necessary	erforderlich<br><small>PT: necessário</small>	faixa03 n0387
+add	fügen sie<br><small>PT: adicionar</small>	faixa03 n0388
+court	Gericht<br><small>PT: tribunal</small>	faixa03 n0389
+deal	befassen sich<br><small>PT: acordo</small>	faixa03 n0390
+tax	Steuer<br><small>PT: imposto</small>	faixa03 n0391
+support	die unterstützung<br><small>PT: apoio</small>	faixa03 n0392
+party	Partei<br><small>PT: festa, partido</small>	faixa03 n0393
+whether	ob<br><small>PT: se</small>	faixa03 n0394
+either	entweder<br><small>PT: qualquer um</small>	faixa03 n0395
+land	Land<br><small>PT: terra</small>	faixa03 n0396
+material	Material<br><small>PT: material</small>	faixa03 n0397
+happen	passieren<br><small>PT: acontecer</small>	faixa03 n0398
+education	die erziehung<br><small>PT: educação</small>	faixa03 n0399
+death	der tot<br><small>PT: morte</small>	faixa03 n0400
+agree	stimme zu<br><small>PT: concordar</small>	faixa03 n0401
+arm	Arm<br><small>PT: braço</small>	faixa03 n0402
+mother	der mutter<br><small>PT: mãe</small>	faixa03 n0403
+across	quer durch<br><small>PT: através</small>	faixa03 n0404
+quite	ziemlich<br><small>PT: bastante</small>	faixa03 n0405
+anything	etwas<br><small>PT: qualquer coisa</small>	faixa03 n0406
+town	Stadt<br><small>PT: cidade pequena</small>	faixa03 n0407
+past	vorbei an<br><small>PT: passado</small>	faixa03 n0408
+view	Ansicht<br><small>PT: vista</small>	faixa03 n0409
+society	die gesellschaft<br><small>PT: sociedade</small>	faixa03 n0410
+manage	verwalten<br><small>PT: gerenciar</small>	faixa03 n0411
+answer	Antwort<br><small>PT: resposta</small>	faixa03 n0412
+break	Pause<br><small>PT: quebrar, pausa</small>	faixa03 n0413
+organize	organisieren<br><small>PT: organizar</small>	faixa03 n0414
+half	Hälfte<br><small>PT: metade</small>	faixa03 n0415
+fire	Feuer<br><small>PT: fogo</small>	faixa03 n0416
+lose	verlieren<br><small>PT: perder</small>	faixa03 n0417
+money	Geld<br><small>PT: dinheiro</small>	faixa03 n0418
+stop	hören auf<br><small>PT: parar</small>	faixa03 n0419
+actual	aktuell<br><small>PT: real</small>	faixa03 n0420
+already	auch schon<br><small>PT: já</small>	faixa03 n0421
+effort	Anstrengung<br><small>PT: esforço</small>	faixa03 n0422
+wait	warte ab<br><small>PT: esperar</small>	faixa03 n0423
+department	Abteilung<br><small>PT: departamento</small>	faixa03 n0424
+able	fähig<br><small>PT: capaz</small>	faixa03 n0425
+political	politisch<br><small>PT: político</small>	faixa03 n0426
+learn	etwas erfahren<br><small>PT: aprender</small>	faixa03 n0427
+voice	Stimme<br><small>PT: voz</small>	faixa03 n0428
+air	Luft<br><small>PT: ar</small>	faixa03 n0429
+together	zusammen<br><small>PT: juntos</small>	faixa03 n0430
+shall	wird<br><small>PT: deverá</small>	faixa03 n0431
+cover	Abdeckung<br><small>PT: cobrir</small>	faixa03 n0432
+common	gemeinsam<br><small>PT: comum</small>	faixa03 n0433
+subject	Gegenstand<br><small>PT: assunto</small>	faixa03 n0434
+draw	zeichnen sie<br><small>PT: desenhar</small>	faixa03 n0435
+short	kurz<br><small>PT: curto</small>	faixa03 n0436
+wife	Frau<br><small>PT: esposa</small>	faixa03 n0437
+treat	behandeln<br><small>PT: tratar</small>	faixa03 n0438
+limit	sich beschränken<br><small>PT: limite</small>	faixa03 n0439
+road	Straße<br><small>PT: estrada</small>	faixa03 n0440
+letter	Schreiben<br><small>PT: carta</small>	faixa03 n0441
+color	Farbe<br><small>PT: cor</small>	faixa03 n0442
+behind	hinter sich<br><small>PT: atrás</small>	faixa03 n0443
+produce	produzieren<br><small>PT: produzir</small>	faixa03 n0444
+send	zukommen lassen<br><small>PT: enviar</small>	faixa03 n0445
+term	Begriff<br><small>PT: termo</small>	faixa03 n0446
+total	gesamt<br><small>PT: total</small>	faixa03 n0447
+university	Universität<br><small>PT: universidade</small>	faixa03 n0448
+rise	steigen<br><small>PT: subir</small>	faixa03 n0449
+century	Jahrhundert<br><small>PT: século</small>	faixa03 n0450
+success	Erfolg<br><small>PT: sucesso</small>	faixa03 n0451
+minute	Minute<br><small>PT: minuto</small>	faixa03 n0452
+remember	erinnern sich<br><small>PT: lembrar</small>	faixa03 n0453
+purpose	Zweck<br><small>PT: propósito</small>	faixa03 n0454
+test	Test<br><small>PT: teste</small>	faixa03 n0455
+fight	Kampf<br><small>PT: lutar</small>	faixa03 n0456
+watch	achten auf<br><small>PT: assistir</small>	faixa03 n0457
+situation	Situation<br><small>PT: situação</small>	faixa03 n0458
+south	Süden<br><small>PT: sul</small>	faixa03 n0459
+ago	vor<br><small>PT: atrás</small>	faixa03 n0460
+difference	Unterschied<br><small>PT: diferença</small>	faixa03 n0461
+stage	Bühne<br><small>PT: estágio, palco</small>	faixa03 n0462
+father	Vater<br><small>PT: pai</small>	faixa03 n0463
+table	Tabelle<br><small>PT: mesa</small>	faixa03 n0464
+rest	sich ausruhen<br><small>PT: descanso</small>	faixa03 n0465
+bear	tragen<br><small>PT: suportar</small>	faixa03 n0466
+entire	vollständig<br><small>PT: inteiro</small>	faixa03 n0467
+market	Markt<br><small>PT: mercado</small>	faixa03 n0468
+prepare	vorbereiten auf<br><small>PT: preparar</small>	faixa03 n0469
+explain	begründen sie<br><small>PT: explicar</small>	faixa03 n0470
+offer	bieten an<br><small>PT: oferecer</small>	faixa03 n0471
+plant	Pflanze<br><small>PT: planta</small>	faixa03 n0472
+charge	berechnen<br><small>PT: carga</small>	faixa03 n0473
+ground	Boden<br><small>PT: chão</small>	faixa03 n0474
+west	Westen<br><small>PT: oeste</small>	faixa03 n0475
+picture	Bild<br><small>PT: imagem</small>	faixa03 n0476
+hard	schwer<br><small>PT: difícil</small>	faixa03 n0477
+front	Vorderseite<br><small>PT: frente</small>	faixa03 n0478
+lie	Lüge<br><small>PT: mentir</small>	faixa03 n0479
+modern	modern<br><small>PT: moderno</small>	faixa03 n0480
+dark	Dunkelheit<br><small>PT: escuro</small>	faixa03 n0481
+surface	Oberfläche<br><small>PT: superfície</small>	faixa03 n0482
+rule	Regel<br><small>PT: regra</small>	faixa03 n0483
+regard	Bezug<br><small>PT: considerar</small>	faixa03 n0484
+dance	Tanz<br><small>PT: dançar</small>	faixa03 n0485
+peace	Frieden<br><small>PT: paz</small>	faixa03 n0486
+observe	beobachten<br><small>PT: observar</small>	faixa03 n0487
+future	Zukunft<br><small>PT: futuro</small>	faixa03 n0488
+wall	Wand<br><small>PT: parede</small>	faixa03 n0489
+farm	Bauernhof<br><small>PT: fazenda</small>	faixa03 n0490
+claim	anspruch<br><small>PT: afirmar</small>	faixa03 n0491
+firm	Firma<br><small>PT: firme</small>	faixa03 n0492
+operation	Betrieb<br><small>PT: operação</small>	faixa03 n0493
+further	des weiteren<br><small>PT: mais adiante</small>	faixa03 n0494
+pressure	Druck<br><small>PT: pressão</small>	faixa03 n0495
+property	Immobilien<br><small>PT: propriedade</small>	faixa03 n0496
+morning	Morgen<br><small>PT: manhã</small>	faixa03 n0497
+amount	Höhe<br><small>PT: quantidade</small>	faixa03 n0498
+top	Top-<br><small>PT: topo</small>	faixa03 n0499
+outside	außerhalb<br><small>PT: fora</small>	faixa03 n0500
+piece	Stück<br><small>PT: pedaço</small>	faixa04 n0501
+sometimes	auch mal<br><small>PT: às vezes</small>	faixa04 n0502
+beauty	Schönheit<br><small>PT: beleza</small>	faixa04 n0503
+trade	handel treiben<br><small>PT: comércio</small>	faixa04 n0504
+fear	Angst<br><small>PT: medo</small>	faixa04 n0505
+demand	die nachfrage<br><small>PT: demanda</small>	faixa04 n0506
+wonder	sich fragen<br><small>PT: maravilha</small>	faixa04 n0507
+list	Liste<br><small>PT: lista</small>	faixa04 n0508
+accept	nehme an<br><small>PT: aceitar</small>	faixa04 n0509
+judge	Richter<br><small>PT: juiz</small>	faixa04 n0510
+paint	Farbe<br><small>PT: pintar</small>	faixa04 n0511
+mile	Meile<br><small>PT: milha</small>	faixa04 n0512
+soon	schon bald<br><small>PT: logo</small>	faixa04 n0513
+responsible	verantwortlich<br><small>PT: responsável</small>	faixa04 n0514
+allow	erlauben<br><small>PT: permitir</small>	faixa04 n0515
+secretary	Sekretär<br><small>PT: secretário</small>	faixa04 n0516
+heart	Herz<br><small>PT: coração</small>	faixa04 n0517
+union	Gewerkschaft<br><small>PT: união</small>	faixa04 n0518
+slow	langsam<br><small>PT: lento</small>	faixa04 n0519
+island	Insel<br><small>PT: ilha</small>	faixa04 n0520
+enter	eingeben<br><small>PT: entrar</small>	faixa04 n0521
+drink	Getränk<br><small>PT: beber</small>	faixa04 n0522
+story	Geschichte<br><small>PT: história</small>	faixa04 n0523
+experiment	Experiment<br><small>PT: experimento</small>	faixa04 n0524
+stay	Aufenthalt<br><small>PT: ficar</small>	faixa04 n0525
+paper	Papier<br><small>PT: papel</small>	faixa04 n0526
+space	Raum<br><small>PT: espaço</small>	faixa04 n0527
+apply	sich bewerben<br><small>PT: aplicar</small>	faixa04 n0528
+decide	sich entscheiden<br><small>PT: decidir</small>	faixa04 n0529
+share	Aktie<br><small>PT: compartilhar</small>	faixa04 n0530
+desire	Wunsch<br><small>PT: desejo</small>	faixa04 n0531
+spend	verbringen<br><small>PT: gastar</small>	faixa04 n0532
+sign	Zeichen<br><small>PT: sinal</small>	faixa04 n0533
+therefore	deshalb<br><small>PT: portanto</small>	faixa04 n0534
+various	verschiedene<br><small>PT: vários</small>	faixa04 n0535
+visit	besuchen sie<br><small>PT: visitar</small>	faixa04 n0536
+supply	Lieferung<br><small>PT: fornecer</small>	faixa04 n0537
+officer	Offizier<br><small>PT: oficial</small>	faixa04 n0538
+doubt	zweifeln an<br><small>PT: dúvida</small>	faixa04 n0539
+private	privat<br><small>PT: privado</small>	faixa04 n0540
+immediate	unmittelbar<br><small>PT: imediato</small>	faixa04 n0541
+wish	Wunsch<br><small>PT: desejo</small>	faixa04 n0542
+contain	enthalten<br><small>PT: conter</small>	faixa04 n0543
+feed	Futter<br><small>PT: alimentar</small>	faixa04 n0544
+raise	erhöhen<br><small>PT: levantar</small>	faixa04 n0545
+describe	beschreiben<br><small>PT: descrever</small>	faixa04 n0546
+ready	fertig gemacht<br><small>PT: pronto</small>	faixa04 n0547
+horse	Pferd<br><small>PT: cavalo</small>	faixa04 n0548
+son	Sohn<br><small>PT: filho</small>	faixa04 n0549
+exist	existieren<br><small>PT: existir</small>	faixa04 n0550
+north	nach norden<br><small>PT: norte</small>	faixa04 n0551
+suggest	schlagen vor<br><small>PT: sugerir</small>	faixa04 n0552
+station	Station<br><small>PT: estação</small>	faixa04 n0553
+effective	wirksam<br><small>PT: eficaz</small>	faixa04 n0554
+food	Lebensmittel<br><small>PT: comida</small>	faixa04 n0555
+deep	tief<br><small>PT: profundo</small>	faixa04 n0556
+wide	Breite<br><small>PT: largo</small>	faixa04 n0557
+alone	allein<br><small>PT: sozinho</small>	faixa04 n0558
+character	Zeichen<br><small>PT: personagem</small>	faixa04 n0559
+english	Englisch<br><small>PT: inglês</small>	faixa04 n0560
+happy	glücklich<br><small>PT: feliz</small>	faixa04 n0561
+critic	Kritiker<br><small>PT: crítico</small>	faixa04 n0562
+unit	Einheit<br><small>PT: unidade</small>	faixa04 n0563
+product	Produkt<br><small>PT: produto</small>	faixa04 n0564
+respect	die achtung<br><small>PT: respeito</small>	faixa04 n0565
+drop	fallen lassen<br><small>PT: cair, gota</small>	faixa04 n0566
+nor	noch<br><small>PT: nem</small>	faixa04 n0567
+fill	füllen<br><small>PT: encher</small>	faixa04 n0568
+cold	Kälte<br><small>PT: frio</small>	faixa04 n0569
+represent	vertreten<br><small>PT: representar</small>	faixa04 n0570
+sudden	plötzlich<br><small>PT: súbito</small>	faixa04 n0571
+basic	Grund-<br><small>PT: básico</small>	faixa04 n0572
+kill	töten<br><small>PT: matar</small>	faixa04 n0573
+fine	fein / gut<br><small>PT: fino, multa</small>	faixa04 n0574 alerta
+trouble	Schwierigkeiten<br><small>PT: problema</small>	faixa04 n0575
+mark	Marke<br><small>PT: marcar</small>	faixa04 n0576
+single	Single<br><small>PT: único</small>	faixa04 n0577
+press	drücken sie<br><small>PT: pressionar</small>	faixa04 n0578
+heavy	schwer<br><small>PT: pesado</small>	faixa04 n0579
+attempt	Versuch<br><small>PT: tentativa</small>	faixa04 n0580
+origin	Herkunft<br><small>PT: origem</small>	faixa04 n0581
+standard	Standard<br><small>PT: padrão</small>	faixa04 n0582
+everything	alles<br><small>PT: tudo</small>	faixa04 n0583
+committee	Ausschuss<br><small>PT: comitê</small>	faixa04 n0584
+moral	Moral<br><small>PT: moral</small>	faixa04 n0585
+black	schwarz<br><small>PT: preto</small>	faixa04 n0586
+red	rot<br><small>PT: vermelho</small>	faixa04 n0587
+bad	schlecht<br><small>PT: ruim</small>	faixa04 n0588
+earth	Erde<br><small>PT: terra</small>	faixa04 n0589
+accord	Übereinstimmung<br><small>PT: acordo</small>	faixa04 n0590
+else	sonst<br><small>PT: outro</small>	faixa04 n0591
+mere	bloß<br><small>PT: mero</small>	faixa04 n0592
+die	sterben<br><small>PT: morrer</small>	faixa04 n0593
+remark	Bemerkung<br><small>PT: observação</small>	faixa04 n0594
+basis	Grundlage<br><small>PT: base</small>	faixa04 n0595
+except	außer<br><small>PT: exceto</small>	faixa04 n0596
+equal	gleich<br><small>PT: igual</small>	faixa04 n0597
+east	Osten<br><small>PT: leste</small>	faixa04 n0598
+event	Ereignis<br><small>PT: evento</small>	faixa04 n0599
+employ	beschäftigen<br><small>PT: empregar</small>	faixa04 n0600
+defense	Verteidigung<br><small>PT: defesa</small>	faixa04 n0601
+smile	Lächeln<br><small>PT: sorriso</small>	faixa04 n0602
+river	Fluss<br><small>PT: rio</small>	faixa04 n0603
+improve	verbessern<br><small>PT: melhorar</small>	faixa04 n0604
+game	Spiel<br><small>PT: jogo</small>	faixa04 n0605
+detail	Detail<br><small>PT: detalhe</small>	faixa04 n0606
+account	Konto<br><small>PT: conta</small>	faixa04 n0607
+cent	Cent<br><small>PT: centavo</small>	faixa04 n0608
+sort	Art<br><small>PT: tipo</small>	faixa04 n0609
+reduce	reduzieren<br><small>PT: reduzir</small>	faixa04 n0610
+club	Verein<br><small>PT: clube</small>	faixa04 n0611
+buy	kaufen<br><small>PT: comprar</small>	faixa04 n0612
+attention	Aufmerksamkeit<br><small>PT: atenção</small>	faixa04 n0613
+ship	Schiff<br><small>PT: navio</small>	faixa04 n0614
+decision	Entscheidung<br><small>PT: decisão</small>	faixa04 n0615
+wear	tragen<br><small>PT: vestir</small>	faixa04 n0616
+inside	innerhalb<br><small>PT: dentro</small>	faixa04 n0617
+win	Sieg<br><small>PT: ganhar</small>	faixa04 n0618
+suppose	annehmen<br><small>PT: supor</small>	faixa04 n0619
+ride	Fahrt<br><small>PT: andar de</small>	faixa04 n0620
+operate	arbeiten<br><small>PT: operar</small>	faixa04 n0621
+realize	realisieren<br><small>PT: realizar</small>	faixa04 n0622
+sale	Verkauf<br><small>PT: venda</small>	faixa04 n0623
+choose	wähle aus<br><small>PT: escolher</small>	faixa04 n0624
+park	Park<br><small>PT: parque</small>	faixa04 n0625
+square	Platz<br><small>PT: quadrado</small>	faixa04 n0626
+vote	wählen gehen<br><small>PT: voto</small>	faixa04 n0627
+price	Preis<br><small>PT: preço</small>	faixa04 n0628
+district	Bezirk<br><small>PT: distrito</small>	faixa04 n0629
+dead	tot<br><small>PT: morto</small>	faixa04 n0630
+foreign	fremd<br><small>PT: estrangeiro</small>	faixa04 n0631
+window	Fenster<br><small>PT: janela</small>	faixa04 n0632
+beyond	über<br><small>PT: além</small>	faixa04 n0633
+direction	Richtung<br><small>PT: direção</small>	faixa04 n0634
+strike	Streik<br><small>PT: greve</small>	faixa04 n0635
+instead	stattdessen<br><small>PT: em vez de</small>	faixa04 n0636
+trial	Versuch<br><small>PT: julgamento</small>	faixa04 n0637
+practice	Praxis<br><small>PT: prática</small>	faixa04 n0638
+catch	zu fangen<br><small>PT: pegar</small>	faixa04 n0639
+opportunity	Gelegenheit<br><small>PT: oportunidade</small>	faixa04 n0640
+likely	wahrscheinlich<br><small>PT: provável</small>	faixa04 n0641
+recognize	erkennen<br><small>PT: reconhecer</small>	faixa04 n0642
+permit	Genehmigung<br><small>PT: permitir</small>	faixa04 n0643
+serious	ernst<br><small>PT: sério</small>	faixa04 n0644
+attack	Angriff<br><small>PT: ataque</small>	faixa04 n0645
+floor	Fußboden<br><small>PT: chão</small>	faixa04 n0646
+association	Verein<br><small>PT: associação</small>	faixa04 n0647
+spring	Frühling<br><small>PT: primavera</small>	faixa04 n0648
+lot	Menge<br><small>PT: lote</small>	faixa04 n0649
+stock	Lager<br><small>PT: estoque</small>	faixa04 n0650
+lack	Mangel<br><small>PT: falta</small>	faixa04 n0651
+hair	Haar<br><small>PT: cabelo</small>	faixa04 n0652
+science	Wissenschaft<br><small>PT: ciência</small>	faixa04 n0653
+relation	Beziehung<br><small>PT: relação</small>	faixa04 n0654
+profession	Beruf<br><small>PT: profissão</small>	faixa04 n0655
+pattern	Muster<br><small>PT: padrão</small>	faixa04 n0656
+quick	schnell<br><small>PT: rápido</small>	faixa04 n0657
+medical	medizinische<br><small>PT: médico</small>	faixa04 n0658
+influence	Einfluss<br><small>PT: influência</small>	faixa04 n0659
+occasion	Gelegenheit<br><small>PT: ocasião</small>	faixa04 n0660
+machine	Maschine<br><small>PT: máquina</small>	faixa04 n0661
+compare	vergleichen sie<br><small>PT: comparar</small>	faixa04 n0662
+husband	Ehemann<br><small>PT: marido</small>	faixa04 n0663
+blue	blau<br><small>PT: azul</small>	faixa04 n0664
+international	international<br><small>PT: internacional</small>	faixa04 n0665
+fair	fair<br><small>PT: justo</small>	faixa04 n0666
+especially	insbesondere<br><small>PT: especialmente</small>	faixa04 n0667
+indeed	tatsächlich<br><small>PT: de fato</small>	faixa04 n0668
+imagine	stellen sich vor<br><small>PT: imaginar</small>	faixa04 n0669
+surprise	Überraschung<br><small>PT: surpresa</small>	faixa04 n0670
+average	Durchschnitt<br><small>PT: média</small>	faixa04 n0671
+official	Beamte<br><small>PT: oficial</small>	faixa04 n0672
+temperature	Temperatur<br><small>PT: temperatura</small>	faixa04 n0673
+difficult	schwer fällt<br><small>PT: difícil</small>	faixa04 n0674
+sing	singen<br><small>PT: cantar</small>	faixa04 n0675
+hit	schlagen<br><small>PT: bater</small>	faixa04 n0676
+tree	Baum<br><small>PT: árvore</small>	faixa04 n0677
+race	Rennen<br><small>PT: corrida</small>	faixa04 n0678
+police	Polizei<br><small>PT: polícia</small>	faixa04 n0679
+touch	sich berühren<br><small>PT: tocar</small>	faixa04 n0680
+relative	relativ<br><small>PT: relativo</small>	faixa04 n0681
+throw	werfen<br><small>PT: jogar</small>	faixa04 n0682
+quality	Qualität<br><small>PT: qualidade</small>	faixa04 n0683
+former	ehemalige<br><small>PT: antigo</small>	faixa04 n0684
+pull	ziehen<br><small>PT: puxar</small>	faixa04 n0685
+chance	Zufall<br><small>PT: chance</small>	faixa04 n0686
+prove	unter beweis stellen<br><small>PT: provar</small>	faixa04 n0687
+argue	argumentieren<br><small>PT: argumentar</small>	faixa04 n0688
+settle	regeln<br><small>PT: resolver</small>	faixa04 n0689
+growth	Wachstum<br><small>PT: crescimento</small>	faixa04 n0690
+date	Datum<br><small>PT: data</small>	faixa04 n0691
+heat	Wärme<br><small>PT: calor</small>	faixa04 n0692
+save	zu speichern<br><small>PT: salvar</small>	faixa04 n0693
+performance	Leistung<br><small>PT: desempenho</small>	faixa04 n0694
+count	zählen<br><small>PT: contar</small>	faixa04 n0695
+production	Herstellung<br><small>PT: produção</small>	faixa04 n0696
+listen	hört zu<br><small>PT: ouvir</small>	faixa04 n0697
+main	der main<br><small>PT: principal</small>	faixa04 n0698
+pick	wählen<br><small>PT: escolher</small>	faixa04 n0699
+size	Größe<br><small>PT: tamanho</small>	faixa04 n0700
+cool	kühlen<br><small>PT: fresco</small>	faixa04 n0701
+army	Armee<br><small>PT: exército</small>	faixa04 n0702
+patient	Patient<br><small>PT: paciente</small>	faixa04 n0703
+combine	kombinieren<br><small>PT: combinar</small>	faixa04 n0704
+summer	Sommer<br><small>PT: verão</small>	faixa04 n0705
+hall	Halle<br><small>PT: salão</small>	faixa04 n0706
+slight	leicht<br><small>PT: leve</small>	faixa04 n0707
+command	Befehl<br><small>PT: comando</small>	faixa04 n0708
+enjoy	genießen sie<br><small>PT: aproveitar</small>	faixa04 n0709
+length	Länge<br><small>PT: comprimento</small>	faixa04 n0710
+proper	richtig<br><small>PT: adequado</small>	faixa04 n0711
+express	ausdrücken<br><small>PT: expressar</small>	faixa04 n0712
+health	die gesundheit<br><small>PT: saúde</small>	faixa04 n0713
+chief	Chef<br><small>PT: chefe</small>	faixa04 n0714
+evening	Abend<br><small>PT: noite</small>	faixa04 n0715
+store	Speicher<br><small>PT: loja</small>	faixa04 n0716
+language	Sprache<br><small>PT: língua</small>	faixa04 n0717
+degree	abgeschlossenes studium<br><small>PT: grau</small>	faixa04 n0718
+lay	legen<br><small>PT: deitar</small>	faixa04 n0719
+current	Strom<br><small>PT: atual</small>	faixa04 n0720
+gun	Gewehr<br><small>PT: arma</small>	faixa04 n0721
+dog	Hund<br><small>PT: cachorro</small>	faixa04 n0722
+hotel	Hotel<br><small>PT: hotel</small>	faixa04 n0723
+strange	seltsam<br><small>PT: estranho</small>	faixa04 n0724
+separate	sich trennen<br><small>PT: separar</small>	faixa04 n0725
+boat	Boot<br><small>PT: barco</small>	faixa04 n0726
+fail	scheitern<br><small>PT: falhar</small>	faixa04 n0727
+clean	sauber<br><small>PT: limpo</small>	faixa04 n0728
+dress	Kleid<br><small>PT: vestido</small>	faixa04 n0729
+anyone	jemand<br><small>PT: qualquer um</small>	faixa04 n0730
+gain	Gewinn<br><small>PT: ganho</small>	faixa04 n0731
+pain	Schmerz<br><small>PT: dor</small>	faixa04 n0732
+object	Objekt<br><small>PT: objeto</small>	faixa04 n0733
+knowledge	Wissen<br><small>PT: conhecimento</small>	faixa04 n0734
+depend	abhängen<br><small>PT: depender</small>	faixa04 n0735
+relate	sich beziehen<br><small>PT: relacionar</small>	faixa04 n0736
+below	unten<br><small>PT: abaixo</small>	faixa04 n0737
+dollar	Dollar<br><small>PT: dólar</small>	faixa04 n0738
+advance	vorantreiben<br><small>PT: avançar</small>	faixa04 n0739
+shape	Form<br><small>PT: forma</small>	faixa04 n0740
+arrange	vereinbaren<br><small>PT: organizar</small>	faixa04 n0741
+population	Bevölkerung<br><small>PT: população</small>	faixa04 n0742
+yes	ja<br><small>PT: sim</small>	faixa04 n0743
+sell	verkaufen<br><small>PT: vender</small>	faixa04 n0744
+mention	erwähnen<br><small>PT: mencionar</small>	faixa04 n0745
+dry	trocken<br><small>PT: seco</small>	faixa04 n0746
+check	überprüfen sie<br><small>PT: verificar</small>	faixa04 n0747
+poet	Dichter<br><small>PT: poeta</small>	faixa04 n0748
+sleep	schlafen sie<br><small>PT: dormir</small>	faixa04 n0749
+join	beitreten<br><small>PT: juntar</small>	faixa04 n0750
+hot	heiß<br><small>PT: quente</small>	faixa05 n0751
+bed	Bett<br><small>PT: cama</small>	faixa05 n0752
+electric	elektrisch<br><small>PT: elétrico</small>	faixa05 n0753
+dream	träumen<br><small>PT: sonho</small>	faixa05 n0754
+due	fällig<br><small>PT: devido</small>	faixa05 n0755
+season	Saison<br><small>PT: estação</small>	faixa05 n0756
+manner	Weise<br><small>PT: maneira</small>	faixa05 n0757
+fit	dazu passen<br><small>PT: caber</small>	faixa05 n0758
+left	links<br><small>PT: esquerda</small>	faixa05 n0759
+progress	Fortschritt<br><small>PT: progresso</small>	faixa05 n0760
+neither	auch nicht<br><small>PT: nem</small>	faixa05 n0761
+strength	Stärke<br><small>PT: força</small>	faixa05 n0762
+notice	stellen fest<br><small>PT: aviso</small>	faixa05 n0763
+finish	fertig<br><small>PT: terminar</small>	faixa05 n0764
+opinion	Meinung<br><small>PT: opinião</small>	faixa05 n0765
+bill	Rechnung<br><small>PT: conta</small>	faixa05 n0766
+western	westlich<br><small>PT: ocidental</small>	faixa05 n0767
+truth	Wahrheit<br><small>PT: verdade</small>	faixa05 n0768
+wrong	falsch<br><small>PT: errado</small>	faixa05 n0769
+travel	Reise<br><small>PT: viajar</small>	faixa05 n0770
+suit	Anzug<br><small>PT: terno</small>	faixa05 n0771
+bank	Bank<br><small>PT: banco</small>	faixa05 n0772
+exact	genau<br><small>PT: exato</small>	faixa05 n0773
+honor	Ehre<br><small>PT: honra</small>	faixa05 n0774
+brother	Bruder<br><small>PT: irmão</small>	faixa05 n0775
+quiet	ruhig<br><small>PT: quieto</small>	faixa05 n0776
+marry	heiraten<br><small>PT: casar</small>	faixa05 n0777
+corner	Ecke<br><small>PT: canto</small>	faixa05 n0778
+handle	Griff<br><small>PT: lidar</small>	faixa05 n0779
+danger	achtung<br><small>PT: perigo</small>	faixa05 n0780
+hospital	Krankenhaus<br><small>PT: hospital</small>	faixa05 n0781
+pool	Pool<br><small>PT: piscina</small>	faixa05 n0782
+promise	Versprechen<br><small>PT: promessa</small>	faixa05 n0783
+blood	Blut<br><small>PT: sangue</small>	faixa05 n0784
+shoot	schießen<br><small>PT: atirar</small>	faixa05 n0785
+scene	Szene<br><small>PT: cena</small>	faixa05 n0786
+literature	Literatur<br><small>PT: literatura</small>	faixa05 n0787
+arrive	kommen an<br><small>PT: chegar</small>	faixa05 n0788
+film	Film<br><small>PT: filme</small>	faixa05 n0789
+base	Basis<br><small>PT: base</small>	faixa05 n0790
+freedom	Freiheit<br><small>PT: liberdade</small>	faixa05 n0791
+bar	Bar<br><small>PT: bar</small>	faixa05 n0792
+maybe	kann sein<br><small>PT: talvez</small>	faixa05 n0793
+hang	hängen<br><small>PT: pendurar</small>	faixa05 n0794
+suffer	leiden unter<br><small>PT: sofrer</small>	faixa05 n0795
+manufacture	Herstellung<br><small>PT: fabricar</small>	faixa05 n0796
+frequent	häufig<br><small>PT: frequente</small>	faixa05 n0797
+rock	Rock<br><small>PT: rocha</small>	faixa05 n0798
+loss	Verlust<br><small>PT: perda</small>	faixa05 n0799
+burn	brennen<br><small>PT: queimar</small>	faixa05 n0800
+sun	Sonne<br><small>PT: sol</small>	faixa05 n0801
+audience	Publikum<br><small>PT: público</small>	faixa05 n0802
+essential	erforderlich<br><small>PT: essencial</small>	faixa05 n0803
+glass	Glas<br><small>PT: vidro</small>	faixa05 n0804
+prevent	verhindern<br><small>PT: prevenir</small>	faixa05 n0805
+poem	Gedicht<br><small>PT: poema</small>	faixa05 n0806
+poor	schlecht<br><small>PT: pobre</small>	faixa05 n0807
+inch	Zoll<br><small>PT: polegada</small>	faixa05 n0808
+song	Song<br><small>PT: canção</small>	faixa05 n0809
+skill	Geschicklichkeit<br><small>PT: habilidade</small>	faixa05 n0810
+post	Post<br><small>PT: correio</small>	faixa05 n0811
+popular	besonders beliebt<br><small>PT: popular</small>	faixa05 n0812
+radio	Radio<br><small>PT: rádio</small>	faixa05 n0813
+animal	Tier<br><small>PT: animal</small>	faixa05 n0814
+conscious	bewusst<br><small>PT: consciente</small>	faixa05 n0815
+worth	wert<br><small>PT: valor</small>	faixa05 n0816
+eat	essen sie<br><small>PT: comer</small>	faixa05 n0817
+election	Wahl<br><small>PT: eleição</small>	faixa05 n0818
+faith	Glaube<br><small>PT: fé</small>	faixa05 n0819
+wave	Welle<br><small>PT: onda</small>	faixa05 n0820
+murder	Mord<br><small>PT: assassinato</small>	faixa05 n0821
+model	Modell<br><small>PT: modelo</small>	faixa05 n0822
+forget	vergessen<br><small>PT: esquecer</small>	faixa05 n0823
+extend	erweitern<br><small>PT: estender</small>	faixa05 n0824
+edge	Rand<br><small>PT: borda</small>	faixa05 n0825
+distance	Entfernung<br><small>PT: distância</small>	faixa05 n0826
+memory	Speicher<br><small>PT: memória</small>	faixa05 n0827
+recommend	empfehlen<br><small>PT: recomendar</small>	faixa05 n0828
+division	Abteilung<br><small>PT: divisão</small>	faixa05 n0829
+staff	Personal<br><small>PT: equipe</small>	faixa05 n0830
+leg	Bein<br><small>PT: perna</small>	faixa05 n0831
+discussion	Diskussion<br><small>PT: discussão</small>	faixa05 n0832
+address	die anschrift<br><small>PT: endereço</small>	faixa05 n0833
+fly	fliegen<br><small>PT: voar</small>	faixa05 n0834
+dependent	abhängig<br><small>PT: dependente</small>	faixa05 n0835
+ball	Ball<br><small>PT: bola</small>	faixa05 n0836
+shake	schütteln<br><small>PT: sacudir</small>	faixa05 n0837
+frame	Rahmen<br><small>PT: moldura</small>	faixa05 n0838
+extreme	Extrem<br><small>PT: extremo</small>	faixa05 n0839
+engineer	Ingenieur<br><small>PT: engenheiro</small>	faixa05 n0840
+thick	dick<br><small>PT: grosso</small>	faixa05 n0841
+comfort	Komfort<br><small>PT: conforto</small>	faixa05 n0842
+latter	letztere<br><small>PT: último</small>	faixa05 n0843
+camp	Lager<br><small>PT: acampamento</small>	faixa05 n0844
+oil	Öl<br><small>PT: óleo</small>	faixa05 n0845
+discover	entdecken sie<br><small>PT: descobrir</small>	faixa05 n0846
+examine	prüfen<br><small>PT: examinar</small>	faixa05 n0847
+difficulty	Schwierigkeit<br><small>PT: dificuldade</small>	faixa05 n0848
+tooth	Zahn<br><small>PT: dente</small>	faixa05 n0849
+middle	Mitte<br><small>PT: meio</small>	faixa05 n0850
+choice	Wahl<br><small>PT: escolha</small>	faixa05 n0851
+refer	beziehen sich<br><small>PT: referir</small>	faixa05 n0852
+enemy	Feind<br><small>PT: inimigo</small>	faixa05 n0853
+practical	praktisch<br><small>PT: prático</small>	faixa05 n0854
+marriage	die ehe<br><small>PT: casamento</small>	faixa05 n0855
+bridge	Brücke<br><small>PT: ponte</small>	faixa05 n0856
+declare	erklären<br><small>PT: declarar</small>	faixa05 n0857
+lady	Dame<br><small>PT: senhora</small>	faixa05 n0858
+cross	überqueren<br><small>PT: cruz</small>	faixa05 n0859
+daily	täglich<br><small>PT: diário</small>	faixa05 n0860
+afternoon	Nachmittag<br><small>PT: tarde</small>	faixa05 n0861
+attend	besuchen<br><small>PT: comparecer</small>	faixa05 n0862
+director	Regisseur<br><small>PT: diretor</small>	faixa05 n0863
+balance	Gleichgewicht<br><small>PT: equilíbrio</small>	faixa05 n0864
+wash	Wäsche<br><small>PT: lavar</small>	faixa05 n0865
+capital	Hauptstadt<br><small>PT: capital</small>	faixa05 n0866
+speed	Geschwindigkeit<br><small>PT: velocidade</small>	faixa05 n0867
+block	Block<br><small>PT: bloco</small>	faixa05 n0868
+citizen	Bürger<br><small>PT: cidadão</small>	faixa05 n0869
+mouth	den mund<br><small>PT: boca</small>	faixa05 n0870
+hill	Hügel<br><small>PT: colina</small>	faixa05 n0871
+green	grün<br><small>PT: verde</small>	faixa05 n0872
+please	sie bitte<br><small>PT: por favor</small>	faixa05 n0873
+motor	Motor<br><small>PT: motor</small>	faixa05 n0874
+agency	Agentur<br><small>PT: agência</small>	faixa05 n0875
+encourage	ermutigen<br><small>PT: encorajar</small>	faixa05 n0876
+governor	Gouverneur<br><small>PT: governador</small>	faixa05 n0877
+worry	Sorge<br><small>PT: preocupar</small>	faixa05 n0878
+affair	Angelegenheit<br><small>PT: caso</small>	faixa05 n0879
+shoulder	Schulter<br><small>PT: ombro</small>	faixa05 n0880
+bright	hell<br><small>PT: brilhante</small>	faixa05 n0881
+mass	Masse<br><small>PT: massa</small>	faixa05 n0882
+sample	Probe<br><small>PT: amostra</small>	faixa05 n0883
+pretty	hübsch<br><small>PT: bonito</small>	faixa05 n0884
+repeat	wiederholen sie<br><small>PT: repetir</small>	faixa05 n0885
+roll	Rolle<br><small>PT: rolar</small>	faixa05 n0886
+push	drücken<br><small>PT: empurrar</small>	faixa05 n0887
+trip	Fahrt<br><small>PT: viagem</small>	faixa05 n0888
+council	Rat<br><small>PT: conselho</small>	faixa05 n0889
+clothe	kleiden<br><small>PT: vestir</small>	faixa05 n0890
+parent	Elternteil<br><small>PT: pai/mãe</small>	faixa05 n0891
+forward	nach vorne<br><small>PT: adiante</small>	faixa05 n0892
+sharp	scharf<br><small>PT: afiado</small>	faixa05 n0893
+straight	die gerade<br><small>PT: reto</small>	faixa05 n0894
+gas	Gas<br><small>PT: gás</small>	faixa05 n0895
+weight	Gewicht<br><small>PT: peso</small>	faixa05 n0896
+discuss	diskutieren über<br><small>PT: discutir</small>	faixa05 n0897
+fix	befestigen<br><small>PT: consertar</small>	faixa05 n0898
+load	Last<br><small>PT: carga</small>	faixa05 n0899
+master	Meister<br><small>PT: mestre</small>	faixa05 n0900
+whatever	was immer<br><small>PT: o que quer que</small>	faixa05 n0901
+round	Runde<br><small>PT: redondo</small>	faixa05 n0902
+rapid	schnell<br><small>PT: rápido</small>	faixa05 n0903
+laugh	Lachen<br><small>PT: rir</small>	faixa05 n0904
+finger	Finger<br><small>PT: dedo</small>	faixa05 n0905
+spot	Stelle<br><small>PT: mancha</small>	faixa05 n0906
+propose	schlage vor<br><small>PT: propor</small>	faixa05 n0907
+shop	Geschäft<br><small>PT: loja</small>	faixa05 n0908
+broad	breit<br><small>PT: largo</small>	faixa05 n0909
+replace	ersetzen<br><small>PT: substituir</small>	faixa05 n0910
+reply	antworten sie<br><small>PT: responder</small>	faixa05 n0911
+extent	Umfang<br><small>PT: extensão</small>	faixa05 n0912
+lock	Schloss<br><small>PT: trancar</small>	faixa05 n0913
+employee	Mitarbeiter<br><small>PT: empregado</small>	faixa05 n0914
+ahead	voraus<br><small>PT: à frente</small>	faixa05 n0915
+sight	Sicht<br><small>PT: visão</small>	faixa05 n0916
+spread	Verbreitung<br><small>PT: espalhar</small>	faixa05 n0917
+wind	Wind<br><small>PT: vento</small>	faixa05 n0918
+approve	genehmigen<br><small>PT: aprovar</small>	faixa05 n0919
+destroy	zerstören<br><small>PT: destruir</small>	faixa05 n0920
+none	kein(e) / keiner<br><small>PT: nenhum</small>	faixa05 n0921 alerta
+pound	Pfund<br><small>PT: libra</small>	faixa05 n0922
+fame	Berühmtheit<br><small>PT: fama</small>	faixa05 n0923
+importance	Bedeutung<br><small>PT: importância</small>	faixa05 n0924
+reflect	reflektieren<br><small>PT: refletir</small>	faixa05 n0925
+advantage	Vorteil<br><small>PT: vantagem</small>	faixa05 n0926
+match	passen zu<br><small>PT: partida</small>	faixa05 n0927
+regular	regelmäßig<br><small>PT: regular</small>	faixa05 n0928
+wage	Lohn<br><small>PT: salário</small>	faixa05 n0929
+refuse	sich weigern<br><small>PT: recusar</small>	faixa05 n0930
+existence	Existenz<br><small>PT: existência</small>	faixa05 n0931
+hardly	kaum<br><small>PT: dificilmente</small>	faixa05 n0932
+perform	ausführen<br><small>PT: realizar</small>	faixa05 n0933
+title	Titel<br><small>PT: título</small>	faixa05 n0934
+tend	neigen<br><small>PT: tender</small>	faixa05 n0935
+exercise	Übung<br><small>PT: exercício</small>	faixa05 n0936
+thin	dünn<br><small>PT: fino</small>	faixa05 n0937
+coat	Mantel<br><small>PT: casaco</small>	faixa05 n0938
+bit	Bit<br><small>PT: pedaço</small>	faixa05 n0939
+mountain	Berg<br><small>PT: montanha</small>	faixa05 n0940
+youth	Jugend<br><small>PT: juventude</small>	faixa05 n0941
+behavior	Verhalten<br><small>PT: comportamento</small>	faixa05 n0942
+newspaper	Zeitung<br><small>PT: jornal</small>	faixa05 n0943
+secret	Geheimnis<br><small>PT: segredo</small>	faixa05 n0944
+ability	Fähigkeit<br><small>PT: habilidade</small>	faixa05 n0945
+sea	Meer<br><small>PT: mar</small>	faixa05 n0946
+soft	weich<br><small>PT: macio</small>	faixa05 n0947
+justice	die gerechtigkeit<br><small>PT: justiça</small>	faixa05 n0948
+reasonable	angemessen<br><small>PT: razoável</small>	faixa05 n0949
+circle	Kreis<br><small>PT: círculo</small>	faixa05 n0950
+solid	solide<br><small>PT: sólido</small>	faixa05 n0951
+page	Seite<br><small>PT: página</small>	faixa05 n0952
+weapon	Waffe<br><small>PT: arma</small>	faixa05 n0953
+fast	schnell<br><small>PT: rápido</small>	faixa05 n0954
+representative	Vertreter<br><small>PT: representante</small>	faixa05 n0955
+search	Suche<br><small>PT: buscar</small>	faixa05 n0956
+pure	rein<br><small>PT: puro</small>	faixa05 n0957
+escape	sich entziehen<br><small>PT: escapar</small>	faixa05 n0958
+crowd	Menschenmenge<br><small>PT: multidão</small>	faixa05 n0959
+stick	Schläger<br><small>PT: bastão</small>	faixa05 n0960
+telephone	Telefon<br><small>PT: telefone</small>	faixa05 n0961
+avoid	vermeiden<br><small>PT: evitar</small>	faixa05 n0962
+garden	die garten<br><small>PT: jardim</small>	faixa05 n0963
+favor	begünstigen<br><small>PT: favor</small>	faixa05 n0964
+news	Nachrichten<br><small>PT: notícias</small>	faixa05 n0965
+unless	es sei denn<br><small>PT: a menos que</small>	faixa05 n0966
+dinner	Abendessen<br><small>PT: jantar</small>	faixa05 n0967
+someone	jemand<br><small>PT: alguém</small>	faixa05 n0968
+signal	Signal<br><small>PT: sinal</small>	faixa05 n0969
+yard	Hof<br><small>PT: quintal</small>	faixa05 n0970
+ideal	ideal<br><small>PT: ideal</small>	faixa05 n0971
+warm	warm<br><small>PT: quente</small>	faixa05 n0972
+miss	entgehen lassen<br><small>PT: sentir falta</small>	faixa05 n0973
+shelter	Unterstand<br><small>PT: abrigo</small>	faixa05 n0974
+soldier	Soldat<br><small>PT: soldado</small>	faixa05 n0975
+article	Artikel<br><small>PT: artigo</small>	faixa05 n0976
+cry	Schrei<br><small>PT: chorar</small>	faixa05 n0977
+captain	Kapitän<br><small>PT: capitão</small>	faixa05 n0978
+familiar	vertraut<br><small>PT: familiar</small>	faixa05 n0979
+seat	Sitz<br><small>PT: assento</small>	faixa05 n0980
+guest	Gast<br><small>PT: convidado</small>	faixa05 n0981
+weak	schwach<br><small>PT: fraco</small>	faixa05 n0982
+excite	begeistern<br><small>PT: excitar</small>	faixa05 n0983
+king	König<br><small>PT: rei</small>	faixa05 n0984
+everyone	jeder<br><small>PT: todos</small>	faixa05 n0985
+wine	wein<br><small>PT: vinho</small>	faixa05 n0986
+hole	Loch<br><small>PT: buraco</small>	faixa05 n0987
+duty	Pflicht<br><small>PT: dever</small>	faixa05 n0988
+beat	schlagen<br><small>PT: bater</small>	faixa05 n0989
+perfect	na super<br><small>PT: perfeito</small>	faixa05 n0990
+bottom	Boden<br><small>PT: fundo</small>	faixa05 n0991
+compose	komponieren<br><small>PT: compor</small>	faixa05 n0992
+battle	Kampf<br><small>PT: batalha</small>	faixa05 n0993
+expense	Ausgabe<br><small>PT: despesa</small>	faixa05 n0994
+cattle	das vieh<br><small>PT: gado</small>	faixa05 n0995
+flow	fließen<br><small>PT: fluxo</small>	faixa05 n0996
+kitchen	Küche<br><small>PT: cozinha</small>	faixa05 n0997
+dust	Staub<br><small>PT: poeira</small>	faixa05 n0998
+bottle	Flasche<br><small>PT: garrafa</small>	faixa05 n0999
+admit	zugeben<br><small>PT: admitir</small>	faixa05 n1000
+tear	reißen<br><small>PT: lágrima</small>	faixa06 n1001
+tire	Reifen<br><small>PT: pneu</small>	faixa06 n1002
+expression	Ausdruck<br><small>PT: expressão</small>	faixa06 n1003
+exception	Ausnahme<br><small>PT: exceção</small>	faixa06 n1004
+application	Anwendung<br><small>PT: aplicação</small>	faixa06 n1005
+belong	gehören<br><small>PT: pertencer</small>	faixa06 n1006
+rich	reich<br><small>PT: rico</small>	faixa06 n1007
+failure	Scheitern<br><small>PT: fracasso</small>	faixa06 n1008
+struggle	Kampf<br><small>PT: luta</small>	faixa06 n1009
+instrument	Instrument<br><small>PT: instrumento</small>	faixa06 n1010
+variety	Auswahl<br><small>PT: variedade</small>	faixa06 n1011
+narrow	schmal<br><small>PT: estreito</small>	faixa06 n1012
+theater	Theater<br><small>PT: teatro</small>	faixa06 n1013
+collection	Sammlung<br><small>PT: coleção</small>	faixa06 n1014
+rain	regen<br><small>PT: chuva</small>	faixa06 n1015
+review	Rezension<br><small>PT: revisão</small>	faixa06 n1016
+preserve	bewahren<br><small>PT: preservar</small>	faixa06 n1017
+leadership	Führung<br><small>PT: liderança</small>	faixa06 n1018
+clay	Ton<br><small>PT: argila</small>	faixa06 n1019
+daughter	Tochter<br><small>PT: filha</small>	faixa06 n1020
+fellow	Gefährte<br><small>PT: companheiro</small>	faixa06 n1021
+swing	Schaukel<br><small>PT: balanço</small>	faixa06 n1022
+thank	danken<br><small>PT: obrigado</small>	faixa06 n1023
+library	bibilothek<br><small>PT: biblioteca</small>	faixa06 n1024
+fat	Fett<br><small>PT: gordo</small>	faixa06 n1025
+reserve	Reserve<br><small>PT: reserva</small>	faixa06 n1026
+tour	Tour<br><small>PT: turno</small>	faixa06 n1027
+nice	schön<br><small>PT: legal</small>	faixa06 n1028
+warn	warnen<br><small>PT: avisar</small>	faixa06 n1029
+ring	Ring<br><small>PT: anel</small>	faixa06 n1030
+bitter	bitter<br><small>PT: amargo</small>	faixa06 n1031
+chair	Stuhl<br><small>PT: cadeira</small>	faixa06 n1032
+yesterday	gestern<br><small>PT: ontem</small>	faixa06 n1033
+scientific	wissenschaftlich<br><small>PT: científico</small>	faixa06 n1034
+flower	Blume<br><small>PT: flor</small>	faixa06 n1035
+wheel	Rad<br><small>PT: roda</small>	faixa06 n1036
+solution	Lösung<br><small>PT: solução</small>	faixa06 n1037
+aim	Ziel<br><small>PT: objetivo</small>	faixa06 n1038
+gather	sammeln<br><small>PT: reunir</small>	faixa06 n1039
+invite	laden ein<br><small>PT: convidar</small>	faixa06 n1040
+moreover	außerdem<br><small>PT: além disso</small>	faixa06 n1041
+fresh	frisch<br><small>PT: fresco</small>	faixa06 n1042
+forest	Wald<br><small>PT: floresta</small>	faixa06 n1043
+winter	Winter<br><small>PT: inverno</small>	faixa06 n1044
+box	Box<br><small>PT: caixa</small>	faixa06 n1045
+belief	Glaube<br><small>PT: crença</small>	faixa06 n1046
+ordinary	gewöhnlich<br><small>PT: ordinário</small>	faixa06 n1047
+impossible	nicht machbar<br><small>PT: impossível</small>	faixa06 n1048
+print	drucken<br><small>PT: imprimir</small>	faixa06 n1049
+gray	grau<br><small>PT: cinza</small>	faixa06 n1050
+taste	Geschmack<br><small>PT: gosto</small>	faixa06 n1051
+lip	Lippe<br><small>PT: lábio</small>	faixa06 n1052
+speech	Sprache<br><small>PT: discurso</small>	faixa06 n1053
+reference	Hinweis<br><small>PT: referência</small>	faixa06 n1054
+stain	Fleck<br><small>PT: mancha</small>	faixa06 n1055
+connection	Anschluss<br><small>PT: conexão</small>	faixa06 n1056
+otherwise	sonst so<br><small>PT: caso contrário</small>	faixa06 n1057
+stretch	Strecke<br><small>PT: esticar</small>	faixa06 n1058
+knife	Messer<br><small>PT: faca</small>	faixa06 n1059
+village	Dorf<br><small>PT: vila</small>	faixa06 n1060
+blow	Schlag<br><small>PT: sopro</small>	faixa06 n1061
+mistake	Fehler<br><small>PT: erro</small>	faixa06 n1062
+sweet	süß<br><small>PT: doce</small>	faixa06 n1063
+shout	Schrei<br><small>PT: gritar</small>	faixa06 n1064
+divide	sich teilen<br><small>PT: dividir</small>	faixa06 n1065
+guard	Wächter<br><small>PT: guarda</small>	faixa06 n1066
+worse	schlechter<br><small>PT: pior</small>	faixa06 n1067
+exchange	Austausch<br><small>PT: troca</small>	faixa06 n1068
+rare	selten<br><small>PT: raro</small>	faixa06 n1069
+commercial	kommerziell<br><small>PT: comercial</small>	faixa06 n1070
+request	Anforderung<br><small>PT: pedido</small>	faixa06 n1071
+appoint	bestellen<br><small>PT: nomear</small>	faixa06 n1072
+agent	Agent<br><small>PT: agente</small>	faixa06 n1073
+dependence	Abhängigkeit<br><small>PT: dependência</small>	faixa06 n1074
+bird	Vogel<br><small>PT: pássaro</small>	faixa06 n1075
+wild	wild<br><small>PT: selvagem</small>	faixa06 n1076
+motion	Bewegung<br><small>PT: movimento</small>	faixa06 n1077
+guess	rat mal<br><small>PT: adivinhar</small>	faixa06 n1078
+neighbor	Nachbar<br><small>PT: vizinho</small>	faixa06 n1079
+seed	Samen<br><small>PT: semente</small>	faixa06 n1080
+fashion	Mode<br><small>PT: moda</small>	faixa06 n1081
+loan	Darlehen<br><small>PT: empréstimo</small>	faixa06 n1082
+correct	richtig so<br><small>PT: correto</small>	faixa06 n1083
+plain	Ebene<br><small>PT: simples</small>	faixa06 n1084
+mail	Post<br><small>PT: correio</small>	faixa06 n1085
+retire	sich zurückziehen<br><small>PT: aposentar</small>	faixa06 n1086
+opposite	gegenüber<br><small>PT: oposto</small>	faixa06 n1087
+prefer	lieber mögen<br><small>PT: preferir</small>	faixa06 n1088
+safe	Safe<br><small>PT: seguro</small>	faixa06 n1089
+evil	Übel<br><small>PT: mal</small>	faixa06 n1090
+double	doppelt<br><small>PT: duplo</small>	faixa06 n1091
+wood	Holz<br><small>PT: madeira</small>	faixa06 n1092
+empty	leer<br><small>PT: vazio</small>	faixa06 n1093
+baby	Baby<br><small>PT: bebê</small>	faixa06 n1094
+advise	beraten<br><small>PT: aconselhar</small>	faixa06 n1095
+content	Inhalt<br><small>PT: conteúdo</small>	faixa06 n1096
+sport	Sport<br><small>PT: esporte</small>	faixa06 n1097
+lift	Aufzug<br><small>PT: levantar</small>	faixa06 n1098
+literary	literarisch<br><small>PT: literário</small>	faixa06 n1099
+curious	neugierig<br><small>PT: curioso</small>	faixa06 n1100
+tie	Krawatte<br><small>PT: gravata</small>	faixa06 n1101
+flat	Wohnung<br><small>PT: plano</small>	faixa06 n1102
+message	Nachricht<br><small>PT: mensagem</small>	faixa06 n1103
+neck	Hals<br><small>PT: pescoço</small>	faixa06 n1104
+hate	hassen<br><small>PT: odiar</small>	faixa06 n1105
+dirt	Schmutz<br><small>PT: sujeira</small>	faixa06 n1106
+delight	Freude<br><small>PT: deleite</small>	faixa06 n1107
+trust	Vertrauen<br><small>PT: confiança</small>	faixa06 n1108
+nobody	niemand<br><small>PT: ninguém</small>	faixa06 n1109
+valley	Tal<br><small>PT: vale</small>	faixa06 n1110
+tool	werkzeug<br><small>PT: ferramenta</small>	faixa06 n1111
+presence	Präsenz<br><small>PT: presença</small>	faixa06 n1112
+cook	koch mal<br><small>PT: cozinhar</small>	faixa06 n1113
+railroad	Eisenbahn<br><small>PT: ferrovia</small>	faixa06 n1114
+minister	Minister<br><small>PT: ministro</small>	faixa06 n1115
+coffee	kaffee<br><small>PT: café</small>	faixa06 n1116
+brush	Bürste<br><small>PT: escova</small>	faixa06 n1117
+beside	neben<br><small>PT: ao lado</small>	faixa06 n1118
+collect	holen ab<br><small>PT: coletar</small>	faixa06 n1119
+guide	Führung<br><small>PT: guia</small>	faixa06 n1120
+luck	Glück<br><small>PT: sorte</small>	faixa06 n1121
+profit	Gewinn<br><small>PT: lucro</small>	faixa06 n1122
+lord	Lord<br><small>PT: senhor</small>	faixa06 n1123
+everybody	jedermann<br><small>PT: todos</small>	faixa06 n1124
+prison	Gefängnis<br><small>PT: prisão</small>	faixa06 n1125
+cloud	Wolke<br><small>PT: nuvem</small>	faixa06 n1126
+slave	Sklave<br><small>PT: escravo</small>	faixa06 n1127
+chairman	Vorsitzende<br><small>PT: presidente</small>	faixa06 n1128
+soil	Boden<br><small>PT: solo</small>	faixa06 n1129
+distinguish	unterscheiden<br><small>PT: distinguir</small>	faixa06 n1130
+introduce	vorstellen<br><small>PT: apresentar</small>	faixa06 n1131
+urge	drängen<br><small>PT: urgir</small>	faixa06 n1132
+blind	blind<br><small>PT: cego</small>	faixa06 n1133
+arise	entstehen<br><small>PT: surgir</small>	faixa06 n1134
+upper	obere<br><small>PT: superior</small>	faixa06 n1135
+curve	Kurve<br><small>PT: curva</small>	faixa06 n1136
+membership	Mitgliedschaft<br><small>PT: associação</small>	faixa06 n1137
+key	Schlüssel<br><small>PT: chave</small>	faixa06 n1138
+entertain	unterhalten<br><small>PT: entreter</small>	faixa06 n1139
+soul	Seele<br><small>PT: alma</small>	faixa06 n1140
+neighborhood	nachbarschaft<br><small>PT: vizinhança</small>	faixa06 n1141
+friendly	freundlich<br><small>PT: amigável</small>	faixa06 n1142
+pair	Paar<br><small>PT: par</small>	faixa06 n1143
+stone	Stein<br><small>PT: pedra</small>	faixa06 n1144
+lean	mager<br><small>PT: magro</small>	faixa06 n1145
+protect	in schutz nehmen<br><small>PT: proteger</small>	faixa06 n1146
+advertise	werben<br><small>PT: anunciar</small>	faixa06 n1147
+mystery	Geheimnis<br><small>PT: mistério</small>	faixa06 n1148
+welcome	willkommen bei uns<br><small>PT: bem-vindo</small>	faixa06 n1149
+knee	Knie<br><small>PT: joelho</small>	faixa06 n1150
+jump	springen<br><small>PT: pular</small>	faixa06 n1151
+snake	Schlange<br><small>PT: cobra</small>	faixa06 n1152
+stream	Strom<br><small>PT: riacho</small>	faixa06 n1153
+avenue	Allee<br><small>PT: avenida</small>	faixa06 n1154
+brown	braun<br><small>PT: marrom</small>	faixa06 n1155
+disease	Krankheit<br><small>PT: doença</small>	faixa06 n1156
+hat	Hut<br><small>PT: chapéu</small>	faixa06 n1157
+excellent	ausgezeichnet<br><small>PT: excelente</small>	faixa06 n1158
+formal	formal<br><small>PT: formal</small>	faixa06 n1159
+snow	Schnee<br><small>PT: neve</small>	faixa06 n1160
+sheet	Blatt<br><small>PT: folha</small>	faixa06 n1161
+somehow	irgendwie schon<br><small>PT: de alguma forma</small>	faixa06 n1162
+unity	Einheit<br><small>PT: unidade</small>	faixa06 n1163
+sky	Himmel<br><small>PT: céu</small>	faixa06 n1164
+rough	rau<br><small>PT: áspero</small>	faixa06 n1165
+smooth	glatt<br><small>PT: suave</small>	faixa06 n1166
+weather	Wetter<br><small>PT: clima</small>	faixa06 n1167
+steady	fester freund<br><small>PT: estável</small>	faixa06 n1168
+threaten	bedrohen<br><small>PT: ameaçar</small>	faixa06 n1169
+depth	Tiefe<br><small>PT: profundidade</small>	faixa06 n1170
+oppose	ablehnen<br><small>PT: opor</small>	faixa06 n1171
+deliver	liefern<br><small>PT: entregar</small>	faixa06 n1172
+ancient	alt<br><small>PT: antigo</small>	faixa06 n1173
+pray	beten<br><small>PT: rezar</small>	faixa06 n1174
+adopt	übernehmen<br><small>PT: adotar</small>	faixa06 n1175
+birth	Geburt<br><small>PT: nascimento</small>	faixa06 n1176
+appearance	das auftreten<br><small>PT: aparência</small>	faixa06 n1177
+universe	Universum<br><small>PT: universo</small>	faixa06 n1178
+busy	beschäftigt<br><small>PT: ocupado</small>	faixa06 n1179
+hurry	Eile<br><small>PT: pressa</small>	faixa06 n1180
+coast	Küste<br><small>PT: costa</small>	faixa06 n1181
+forth	weiter<br><small>PT: adiante</small>	faixa06 n1182
+smell	riechen nach<br><small>PT: cheiro</small>	faixa06 n1183
+furnish	liefern<br><small>PT: fornecer</small>	faixa06 n1184
+female	weiblich<br><small>PT: fêmea</small>	faixa06 n1185
+hide	verbergen<br><small>PT: esconder</small>	faixa06 n1186
+wire	Draht<br><small>PT: fio</small>	faixa06 n1187
+proposal	Vorschlag<br><small>PT: proposta</small>	faixa06 n1188
+ought	sollen<br><small>PT: deveria</small>	faixa06 n1189
+victory	Sieg<br><small>PT: vitória</small>	faixa06 n1190
+quarter	Quartal<br><small>PT: quarto</small>	faixa06 n1191
+engine	Motor<br><small>PT: motor</small>	faixa06 n1192
+customer	Kunde<br><small>PT: cliente</small>	faixa06 n1193
+waste	Abfall<br><small>PT: desperdício</small>	faixa06 n1194
+fool	Narr<br><small>PT: tolo</small>	faixa06 n1195
+intend	beabsichtigen<br><small>PT: pretender</small>	faixa06 n1196
+intention	Absicht<br><small>PT: intenção</small>	faixa06 n1197
+desk	Schreibtisch<br><small>PT: mesa</small>	faixa06 n1198
+politics	Politik<br><small>PT: política</small>	faixa06 n1199
+passage	Durchgang<br><small>PT: passagem</small>	faixa06 n1200
+lawyer	anwalt<br><small>PT: advogado</small>	faixa06 n1201
+root	Wurzel<br><small>PT: raiz</small>	faixa06 n1202
+climb	Aufstieg<br><small>PT: subir</small>	faixa06 n1203
+metal	Metall<br><small>PT: metal</small>	faixa06 n1204
+gradual	allmählich<br><small>PT: gradual</small>	faixa06 n1205
+hunt	Jagd<br><small>PT: caçar</small>	faixa06 n1206
+protection	Schutz<br><small>PT: proteção</small>	faixa06 n1207
+satisfy	gerecht werden<br><small>PT: satisfazer</small>	faixa06 n1208
+roof	Dach<br><small>PT: telhado</small>	faixa06 n1209
+branch	Niederlassung<br><small>PT: ramo</small>	faixa06 n1210
+pleasure	Vergnügen<br><small>PT: prazer</small>	faixa06 n1211
+witness	Zeuge<br><small>PT: testemunha</small>	faixa06 n1212
+loose	lose<br><small>PT: solto</small>	faixa06 n1213
+nose	Nase<br><small>PT: nariz</small>	faixa06 n1214
+mine	meiner / meins<br><small>PT: mina</small>	faixa06 n1215 alerta
+band	Band<br><small>PT: banda</small>	faixa06 n1216
+aside	beiseite<br><small>PT: de lado</small>	faixa06 n1217
+risk	Risiko<br><small>PT: risco</small>	faixa06 n1218
+tomorrow	morgen<br><small>PT: amanhã</small>	faixa06 n1219
+remind	erinnern<br><small>PT: lembrar</small>	faixa06 n1220
+ear	Ohr<br><small>PT: orelha</small>	faixa06 n1221
+fish	Fisch<br><small>PT: peixe</small>	faixa06 n1222
+shore	Ufer<br><small>PT: costa</small>	faixa06 n1223
+operator	Betreiber<br><small>PT: operador</small>	faixa06 n1224
+civilize	zivilisieren<br><small>PT: civilizar</small>	faixa06 n1225
+being	Sein<br><small>PT: ser</small>	faixa06 n1226
+silent	still<br><small>PT: silencioso</small>	faixa06 n1227
+screen	Bildschirm<br><small>PT: tela</small>	faixa06 n1228
+bind	binden<br><small>PT: amarrar</small>	faixa06 n1229
+earn	verdienen<br><small>PT: ganhar</small>	faixa06 n1230
+pack	Packung<br><small>PT: pacote</small>	faixa06 n1231
+colony	Kolonie<br><small>PT: colônia</small>	faixa06 n1232
+besides	im übrigen<br><small>PT: além</small>	faixa06 n1233
+slip	Rutsch<br><small>PT: escorregar</small>	faixa06 n1234
+cousin	Vetter<br><small>PT: primo</small>	faixa06 n1235
+scale	Maßstab<br><small>PT: escala</small>	faixa06 n1236
+relief	Erleichterung<br><small>PT: alívio</small>	faixa06 n1237
+explore	erkunden<br><small>PT: explorar</small>	faixa06 n1238
+stem	Stiel<br><small>PT: caule</small>	faixa06 n1239
+brain	Gehirn<br><small>PT: cérebro</small>	faixa06 n1240
+musician	Musiker<br><small>PT: músico</small>	faixa06 n1241
+defend	verteidigen<br><small>PT: defender</small>	faixa06 n1242
+bend	Biegung<br><small>PT: dobrar</small>	faixa06 n1243
+somebody	jemand<br><small>PT: alguém</small>	faixa06 n1244
+shadow	Schatten<br><small>PT: sombra</small>	faixa06 n1245
+mix	mischen<br><small>PT: misturar</small>	faixa06 n1246
+smoke	Rauch<br><small>PT: fumaça</small>	faixa06 n1247
+description	Beschreibung<br><small>PT: descrição</small>	faixa06 n1248
+fruit	Frucht<br><small>PT: fruta</small>	faixa06 n1249
+guilt	Schuld<br><small>PT: culpa</small>	faixa06 n1250
+yield	ausbeute<br><small>PT: produzir</small>	faixa07 n1251
+sensitive	empfindlich<br><small>PT: sensível</small>	faixa07 n1252
+salt	Salz<br><small>PT: sal</small>	faixa07 n1253
+pale	blass<br><small>PT: pálido</small>	faixa07 n1254
+sweep	Schwung<br><small>PT: varrer</small>	faixa07 n1255
+completion	Abschluss<br><small>PT: conclusão</small>	faixa07 n1256
+throat	Rachen<br><small>PT: garganta</small>	faixa07 n1257
+agriculture	Landwirtschaft<br><small>PT: agricultura</small>	faixa07 n1258
+admire	bewundern<br><small>PT: admirar</small>	faixa07 n1259
+gentle	leicht<br><small>PT: gentil</small>	faixa07 n1260
+dozen	Dutzend<br><small>PT: dúzia</small>	faixa07 n1261
+particle	Teilchen<br><small>PT: partícula</small>	faixa07 n1262
+pleasant	angenehm<br><small>PT: agradável</small>	faixa07 n1263
+bay	Bucht<br><small>PT: baía</small>	faixa07 n1264
+cup	Tasse<br><small>PT: xícara</small>	faixa07 n1265
+competition	Wettbewerb<br><small>PT: competição</small>	faixa07 n1266
+moon	Mond<br><small>PT: lua</small>	faixa07 n1267
+terrible	schrecklich<br><small>PT: terrível</small>	faixa07 n1268
+strip	Streifen<br><small>PT: tira</small>	faixa07 n1269
+mechanic	Mechaniker<br><small>PT: mecânico</small>	faixa07 n1270
+shock	Schock<br><small>PT: choque</small>	faixa07 n1271
+conversation	Unterhaltung<br><small>PT: conversa</small>	faixa07 n1272
+angle	Winkel<br><small>PT: ângulo</small>	faixa07 n1273
+tall	hoch<br><small>PT: alto</small>	faixa07 n1274
+plenty	reichlich<br><small>PT: bastante</small>	faixa07 n1275
+star	Stern<br><small>PT: estrela</small>	faixa07 n1276
+yellow	gelb<br><small>PT: amarelo</small>	faixa07 n1277
+sick	krank<br><small>PT: doente</small>	faixa07 n1278
+thorough	gründlich<br><small>PT: completo</small>	faixa07 n1279
+absolute	absolut<br><small>PT: absoluto</small>	faixa07 n1280
+succeed	Erfolg haben<br><small>PT: ter sucesso</small>	faixa07 n1281
+surround	umgeben<br><small>PT: cercar</small>	faixa07 n1282
+proud	stolz<br><small>PT: orgulhoso</small>	faixa07 n1283
+dear	sehr geehrter<br><small>PT: caro</small>	faixa07 n1284
+card	Karte<br><small>PT: cartão</small>	faixa07 n1285
+lake	See<br><small>PT: lago</small>	faixa07 n1286
+breath	der atem<br><small>PT: respiração</small>	faixa07 n1287
+afraid	ängstlich<br><small>PT: medo</small>	faixa07 n1288
+silence	Stille<br><small>PT: silêncio</small>	faixa07 n1289
+onto	auf zu<br><small>PT: sobre</small>	faixa07 n1290
+shoe	Schuh<br><small>PT: sapato</small>	faixa07 n1291
+somewhere	irgendwo<br><small>PT: em algum lugar</small>	faixa07 n1292
+chain	Kette<br><small>PT: corrente</small>	faixa07 n1293
+slide	Dia<br><small>PT: deslizar</small>	faixa07 n1294
+copy	Kopie<br><small>PT: cópia</small>	faixa07 n1295
+machinery	Maschinen<br><small>PT: maquinário</small>	faixa07 n1296
+wake	wecken<br><small>PT: acordar</small>	faixa07 n1297
+severe	schwer<br><small>PT: severo</small>	faixa07 n1298
+pocket	Tasche<br><small>PT: bolso</small>	faixa07 n1299
+bone	Knochen<br><small>PT: osso</small>	faixa07 n1300
+honest	ehrlich<br><small>PT: honesto</small>	faixa07 n1301
+freeze	frieren<br><small>PT: congelar</small>	faixa07 n1302
+dictionary	Wörterbuch<br><small>PT: dicionário</small>	faixa07 n1303
+calm	Ruhe<br><small>PT: calmo</small>	faixa07 n1304
+swim	Schwimmen<br><small>PT: nadar</small>	faixa07 n1305
+ice	Eis<br><small>PT: gelo</small>	faixa07 n1306
+male	männlich<br><small>PT: masculino</small>	faixa07 n1307
+skin	Haut<br><small>PT: pele</small>	faixa07 n1308
+crack	Riss<br><small>PT: rachadura</small>	faixa07 n1309
+rush	Ansturm<br><small>PT: pressa</small>	faixa07 n1310
+wet	nass<br><small>PT: molhado</small>	faixa07 n1311
+meat	Fleisch<br><small>PT: carne</small>	faixa07 n1312
+commerce	Handel<br><small>PT: comércio</small>	faixa07 n1313
+joint	Joint<br><small>PT: junta</small>	faixa07 n1314
+gift	Geschenk<br><small>PT: presente</small>	faixa07 n1315
+host	Gastgeber<br><small>PT: anfitrião</small>	faixa07 n1316
+suspect	Verdächtige<br><small>PT: suspeitar</small>	faixa07 n1317
+path	Weg<br><small>PT: caminho</small>	faixa07 n1318
+uncle	Onkel<br><small>PT: tio</small>	faixa07 n1319
+afford	sich leisten<br><small>PT: permitir-se</small>	faixa07 n1320
+instant	Augenblick<br><small>PT: instante</small>	faixa07 n1321
+satisfactory	befriedigend<br><small>PT: satisfatório</small>	faixa07 n1322
+height	Höhe<br><small>PT: altura</small>	faixa07 n1323
+track	Spur<br><small>PT: trilha</small>	faixa07 n1324
+confidence	Vertrauen<br><small>PT: confiança</small>	faixa07 n1325
+grass	Gras<br><small>PT: grama</small>	faixa07 n1326
+suggestion	Vorschlag<br><small>PT: sugestão</small>	faixa07 n1327
+favorite	Favorit<br><small>PT: favorito</small>	faixa07 n1328
+breakfast	Frühstück<br><small>PT: café da manhã</small>	faixa07 n1329
+apart	ein teil<br><small>PT: aparte</small>	faixa07 n1330
+chest	Brust<br><small>PT: peito</small>	faixa07 n1331
+entrance	eingang<br><small>PT: entrada</small>	faixa07 n1332
+march	Marsch<br><small>PT: março</small>	faixa07 n1333
+sink	Waschbecken<br><small>PT: afundar</small>	faixa07 n1334
+northern	Nord-<br><small>PT: norte</small>	faixa07 n1335
+iron	bügle<br><small>PT: ferro</small>	faixa07 n1336
+alive	am leben<br><small>PT: vivo</small>	faixa07 n1337
+ill	krank<br><small>PT: doente</small>	faixa07 n1338 alerta
+bag	Tasche<br><small>PT: bolsa</small>	faixa07 n1339
+disturb	zu stören<br><small>PT: perturbar</small>	faixa07 n1340
+native	Ureinwohner<br><small>PT: nativo</small>	faixa07 n1341
+bedroom	Schlafzimmer<br><small>PT: quarto</small>	faixa07 n1342
+violent	gewalttätig<br><small>PT: violento</small>	faixa07 n1343
+beneath	unter<br><small>PT: abaixo</small>	faixa07 n1344
+pause	Pause<br><small>PT: pausa</small>	faixa07 n1345
+tough	hart im nehmen<br><small>PT: duro</small>	faixa07 n1346
+substance	Stoff<br><small>PT: substância</small>	faixa07 n1347
+threat	Bedrohung<br><small>PT: ameaça</small>	faixa07 n1348
+charm	Charme<br><small>PT: charme</small>	faixa07 n1349
+absence	Abwesenheit<br><small>PT: ausência</small>	faixa07 n1350
+factory	Fabrik<br><small>PT: fábrica</small>	faixa07 n1351
+spite	Trotz<br><small>PT: apesar</small>	faixa07 n1352
+meal	Mahlzeit<br><small>PT: refeição</small>	faixa07 n1353
+universal	universal<br><small>PT: universal</small>	faixa07 n1354
+accident	Unfall<br><small>PT: acidente</small>	faixa07 n1355
+highway	Autobahn<br><small>PT: rodovia</small>	faixa07 n1356
+sentence	Satz<br><small>PT: sentença</small>	faixa07 n1357
+liberty	Freiheit<br><small>PT: liberdade</small>	faixa07 n1358
+wise	weise<br><small>PT: sábio</small>	faixa07 n1359
+noise	Lärm<br><small>PT: ruído</small>	faixa07 n1360
+discovery	Entdeckung<br><small>PT: descoberta</small>	faixa07 n1361
+tube	Rohr<br><small>PT: tubo</small>	faixa07 n1362
+flash	Blitz<br><small>PT: flash</small>	faixa07 n1363
+twist	Twist<br><small>PT: torcer</small>	faixa07 n1364
+fence	Zaun<br><small>PT: cerca</small>	faixa07 n1365
+childhood	Kindheit<br><small>PT: infância</small>	faixa07 n1366
+joy	Freude<br><small>PT: alegria</small>	faixa07 n1367
+sister	Schwester<br><small>PT: irmã</small>	faixa07 n1368
+sad	traurig<br><small>PT: triste</small>	faixa07 n1369
+efficiency	Leistungsfähigkeit<br><small>PT: eficiência</small>	faixa07 n1370
+disappear	verschwinden<br><small>PT: desaparecer</small>	faixa07 n1371
+defeat	Niederlage<br><small>PT: derrotar</small>	faixa07 n1372
+extensive	umfangreich<br><small>PT: extenso</small>	faixa07 n1373
+rent	Miete<br><small>PT: aluguel</small>	faixa07 n1374
+comparison	Vergleich<br><small>PT: comparação</small>	faixa07 n1375
+possess	besitzen<br><small>PT: possuir</small>	faixa07 n1376
+grace	Gnade<br><small>PT: graça</small>	faixa07 n1377
+flesh	Fleisch<br><small>PT: carne</small>	faixa07 n1378
+liquid	Flüssigkeit<br><small>PT: líquido</small>	faixa07 n1379
+scientist	Wissenschaftler<br><small>PT: cientista</small>	faixa07 n1380
+ease	Leichtigkeit<br><small>PT: facilidade</small>	faixa07 n1381
+heaven	Himmel<br><small>PT: céu</small>	faixa07 n1382
+milk	milch<br><small>PT: leite</small>	faixa07 n1383
+sympathy	Sympathie<br><small>PT: simpatia</small>	faixa07 n1384
+rank	Rang<br><small>PT: classificação</small>	faixa07 n1385
+restaurant	Restaurant<br><small>PT: restaurante</small>	faixa07 n1386
+frequency	Häufigkeit<br><small>PT: frequência</small>	faixa07 n1387
+angry	wütend<br><small>PT: zangado</small>	faixa07 n1388
+shade	Schatten<br><small>PT: sombra</small>	faixa07 n1389
+accuse	beschuldigen<br><small>PT: acusar</small>	faixa07 n1390
+necessity	Notwendigkeit<br><small>PT: necessidade</small>	faixa07 n1391
+knock	klopfen<br><small>PT: bater</small>	faixa07 n1392
+loud	laut<br><small>PT: alto</small>	faixa07 n1393
+permanent	dauerhaft<br><small>PT: permanente</small>	faixa07 n1394
+row	Reihe<br><small>PT: fileira</small>	faixa07 n1395
+lovely	schön<br><small>PT: adorável</small>	faixa07 n1396
+confuse	verwirren<br><small>PT: confundir</small>	faixa07 n1397
+gold	Gold<br><small>PT: ouro</small>	faixa07 n1398
+frighten	erschrecken<br><small>PT: assustar</small>	faixa07 n1399
+solve	lösen<br><small>PT: resolver</small>	faixa07 n1400
+grave	Grab<br><small>PT: túmulo</small>	faixa07 n1401
+salary	Gehalt<br><small>PT: salário</small>	faixa07 n1402
+photograph	Foto<br><small>PT: fotografia</small>	faixa07 n1403
+advice	die beratung<br><small>PT: conselho</small>	faixa07 n1404
+abroad	im ausland<br><small>PT: exterior</small>	faixa07 n1405
+wound	Wunde<br><small>PT: ferida</small>	faixa07 n1406
+virtue	Tugend<br><small>PT: virtude</small>	faixa07 n1407
+dare	wagen<br><small>PT: ousar</small>	faixa07 n1408
+queen	Königin<br><small>PT: rainha</small>	faixa07 n1409
+extra	zusätzliche kosten<br><small>PT: extra</small>	faixa07 n1410
+attract	anziehen<br><small>PT: atrair</small>	faixa07 n1411
+numerous	zahlreich<br><small>PT: numeroso</small>	faixa07 n1412
+pink	rosa<br><small>PT: rosa</small>	faixa07 n1413
+gate	tor<br><small>PT: portão</small>	faixa07 n1414
+expensive	teuer<br><small>PT: caro</small>	faixa07 n1415
+shut	schließen<br><small>PT: fechar</small>	faixa07 n1416 alerta
+chicken	huhn<br><small>PT: frango</small>	faixa07 n1417
+forgive	vergeben<br><small>PT: perdoar</small>	faixa07 n1418
+holy	heilig<br><small>PT: sagrado</small>	faixa07 n1419
+wooden	aus holz<br><small>PT: de madeira</small>	faixa07 n1420
+prompt	Eingabeaufforderung<br><small>PT: pronto</small>	faixa07 n1421
+crime	Verbrechen<br><small>PT: crime</small>	faixa07 n1422
+sorry	Entschuldigung<br><small>PT: desculpe</small>	faixa07 n1423
+republic	Republik<br><small>PT: república</small>	faixa07 n1424
+anger	der zorn<br><small>PT: raiva</small>	faixa07 n1425
+visitor	Besucher<br><small>PT: visitante</small>	faixa07 n1426
+pile	Stapel<br><small>PT: pilha</small>	faixa07 n1427
+violence	Gewalt<br><small>PT: violência</small>	faixa07 n1428
+steel	Stahl<br><small>PT: aço</small>	faixa07 n1429
+wing	Flügel<br><small>PT: asa</small>	faixa07 n1430
+stair	Stufe<br><small>PT: escada</small>	faixa07 n1431
+partner	Partner<br><small>PT: parceiro</small>	faixa07 n1432
+delay	Verzögerung<br><small>PT: atraso</small>	faixa07 n1433
+gentleman	Gentleman<br><small>PT: cavalheiro</small>	faixa07 n1434
+pour	gießen<br><small>PT: derramar</small>	faixa07 n1435
+confusion	Verwirrung<br><small>PT: confusão</small>	faixa07 n1436
+damage	Schaden<br><small>PT: dano</small>	faixa07 n1437
+kick	Kick<br><small>PT: chute</small>	faixa07 n1438
+safety	Sicherheit<br><small>PT: segurança</small>	faixa07 n1439
+burst	platzen<br><small>PT: estourar</small>	faixa07 n1440
+network	Netzwerk<br><small>PT: rede</small>	faixa07 n1441
+resistance	Widerstand<br><small>PT: resistência</small>	faixa07 n1442
+screw	Schraube<br><small>PT: parafuso</small>	faixa07 n1443
+pride	Stolz<br><small>PT: orgulho</small>	faixa07 n1444
+till	bis<br><small>PT: até</small>	faixa07 n1445
+hire	Verleih<br><small>PT: contratar</small>	faixa07 n1446
+verb	Verb<br><small>PT: verbo</small>	faixa07 n1447
+preach	predigen<br><small>PT: pregar</small>	faixa07 n1448
+clerk	Schreiber<br><small>PT: escriturário</small>	faixa07 n1449
+everywhere	überall hin<br><small>PT: em todo lugar</small>	faixa07 n1450
+anyway	sowieso<br><small>PT: de qualquer forma</small>	faixa07 n1451
+fan	Lüfter<br><small>PT: ventilador</small>	faixa07 n1452
+connect	verbinden sie<br><small>PT: conectar</small>	faixa07 n1453
+egg	Ei<br><small>PT: ovo</small>	faixa07 n1454
+efficient	effizient<br><small>PT: eficiente</small>	faixa07 n1455
+grain	Getreide<br><small>PT: grão</small>	faixa07 n1456
+calculate	berechnen<br><small>PT: calcular</small>	faixa07 n1457
+drag	ziehen sie<br><small>PT: arrastar</small>	faixa07 n1458
+opposition	Opposition<br><small>PT: oposição</small>	faixa07 n1459
+worship	Anbetung<br><small>PT: adoração</small>	faixa07 n1460
+arrest	gefangen nehmen<br><small>PT: prender</small>	faixa07 n1461
+discipline	Disziplin<br><small>PT: disciplina</small>	faixa07 n1462
+string	Schnur<br><small>PT: corda</small>	faixa07 n1463
+harbor	Hafen<br><small>PT: porto</small>	faixa07 n1464
+camera	Kamera<br><small>PT: câmera</small>	faixa07 n1465
+mechanism	Mechanismus<br><small>PT: mecanismo</small>	faixa07 n1466
+cow	Kuh<br><small>PT: vaca</small>	faixa07 n1467
+grand	großartig<br><small>PT: grande</small>	faixa07 n1468
+funny	lustig<br><small>PT: engraçado</small>	faixa07 n1469
+insurance	Versicherung<br><small>PT: seguro</small>	faixa07 n1470
+reduction	die ermäßigung<br><small>PT: redução</small>	faixa07 n1471
+strict	streng<br><small>PT: estrito</small>	faixa07 n1472
+lesson	Lektion<br><small>PT: lição</small>	faixa07 n1473
+tight	eng anliegend<br><small>PT: apertado</small>	faixa07 n1474
+sand	Sand<br><small>PT: areia</small>	faixa07 n1475
+plate	Platte<br><small>PT: prato</small>	faixa07 n1476
+qualify	qualifizieren<br><small>PT: qualificar</small>	faixa07 n1477
+elsewhere	woanders hin<br><small>PT: em outro lugar</small>	faixa07 n1478
+mad	verrückt<br><small>PT: louco</small>	faixa07 n1479
+interference	Störung<br><small>PT: interferência</small>	faixa07 n1480
+pupil	Schüler<br><small>PT: aluno</small>	faixa07 n1481
+fold	falten<br><small>PT: dobrar</small>	faixa07 n1482
+royal	königlich<br><small>PT: real</small>	faixa07 n1483
+valuable	wertvoll<br><small>PT: valioso</small>	faixa07 n1484
+whisper	Flüstern<br><small>PT: sussurrar</small>	faixa07 n1485
+anybody	jemand<br><small>PT: qualquer um</small>	faixa07 n1486
+hurt	sich verletzen<br><small>PT: ferir</small>	faixa07 n1487
+excess	Überschuss<br><small>PT: excesso</small>	faixa07 n1488
+quantity	Menge<br><small>PT: quantidade</small>	faixa07 n1489
+fun	Spaß<br><small>PT: diversão</small>	faixa07 n1490
+mud	Schlamm<br><small>PT: lama</small>	faixa07 n1491
+extension	Erweiterung<br><small>PT: extensão</small>	faixa07 n1492
+recognition	Anerkennung<br><small>PT: reconhecimento</small>	faixa07 n1493
+kiss	Kuss<br><small>PT: beijo</small>	faixa07 n1494
+crop	Ernte<br><small>PT: colheita</small>	faixa07 n1495
+sail	Segel<br><small>PT: velejar</small>	faixa07 n1496
+attractive	attraktiv<br><small>PT: atraente</small>	faixa07 n1497
+habit	Gewohnheit<br><small>PT: hábito</small>	faixa07 n1498
+relieve	entlasten<br><small>PT: aliviar</small>	faixa07 n1499
+wisdom	Weisheit<br><small>PT: sabedoria</small>	faixa07 n1500
+persuade	überzeugen<br><small>PT: persuadir</small>	faixa08 n1501
+certainty	Sicherheit<br><small>PT: certeza</small>	faixa08 n1502
+cloth	Tuch<br><small>PT: pano</small>	faixa08 n1503
+eager	begierig<br><small>PT: ansioso</small>	faixa08 n1504
+deserve	verdienen<br><small>PT: merecer</small>	faixa08 n1505
+sympathetic	sympathisch<br><small>PT: simpático</small>	faixa08 n1506
+cure	Heilung<br><small>PT: cura</small>	faixa08 n1507
+trap	Falle<br><small>PT: armadilha</small>	faixa08 n1508
+puzzle	Puzzle<br><small>PT: quebra-cabeça</small>	faixa08 n1509
+powder	Pulver<br><small>PT: pó</small>	faixa08 n1510
+raw	roh<br><small>PT: cru</small>	faixa08 n1511
+mankind	Menschen<br><small>PT: humanidade</small>	faixa08 n1512
+glad	froh<br><small>PT: alegre</small>	faixa08 n1513
+blame	schuld daran<br><small>PT: culpar</small>	faixa08 n1514
+whenever	wann immer<br><small>PT: sempre que</small>	faixa08 n1515
+anxiety	Angst<br><small>PT: ansiedade</small>	faixa08 n1516
+bus	Bus<br><small>PT: ônibus</small>	faixa08 n1517
+tremble	zittern<br><small>PT: tremer</small>	faixa08 n1518
+sacred	heilig<br><small>PT: sagrado</small>	faixa08 n1519
+fortunate	glücklich<br><small>PT: afortunado</small>	faixa08 n1520
+glory	Ruhm<br><small>PT: glória</small>	faixa08 n1521
+golden	golden<br><small>PT: dourado</small>	faixa08 n1522
+neat	gepflegt<br><small>PT: organizado</small>	faixa08 n1523
+weekend	Wochenende<br><small>PT: fim de semana</small>	faixa08 n1524
+treasury	Schatzkammer<br><small>PT: tesouro</small>	faixa08 n1525
+overcome	überwinden<br><small>PT: superar</small>	faixa08 n1526
+cat	Katze<br><small>PT: gato</small>	faixa08 n1527
+sacrifice	Opfer<br><small>PT: sacrifício</small>	faixa08 n1528
+complain	sich beschweren<br><small>PT: reclamar</small>	faixa08 n1529
+elect	wählen<br><small>PT: eleger</small>	faixa08 n1530
+roar	Gebrüll<br><small>PT: rugido</small>	faixa08 n1531
+sake	Sake<br><small>PT: bem</small>	faixa08 n1532
+temple	Tempel<br><small>PT: templo</small>	faixa08 n1533
+self	selbst<br><small>PT: próprio</small>	faixa08 n1534
+compete	konkurrieren<br><small>PT: competir</small>	faixa08 n1535
+nurse	Krankenschwester<br><small>PT: enfermeira</small>	faixa08 n1536
+stuff	Zeug<br><small>PT: coisa</small>	faixa08 n1537
+stomach	Magen<br><small>PT: estômago</small>	faixa08 n1538
+peculiar	besondere<br><small>PT: peculiar</small>	faixa08 n1539
+repair	Reparatur<br><small>PT: reparar</small>	faixa08 n1540
+storm	Sturm<br><small>PT: tempestade</small>	faixa08 n1541
+ton	Tonne<br><small>PT: tonelada</small>	faixa08 n1542
+desert	Wüste<br><small>PT: deserto</small>	faixa08 n1543
+allowance	Freibetrag<br><small>PT: mesada</small>	faixa08 n1544
+servant	Diener<br><small>PT: servo</small>	faixa08 n1545
+hunger	der hunger<br><small>PT: fome</small>	faixa08 n1546
+conscience	Gewissen<br><small>PT: consciência</small>	faixa08 n1547
+bread	Brot<br><small>PT: pão</small>	faixa08 n1548
+crash	Absturz<br><small>PT: acidente</small>	faixa08 n1549
+tip	Spitze<br><small>PT: dica</small>	faixa08 n1550
+strengthen	stärken<br><small>PT: fortalecer</small>	faixa08 n1551
+proof	Beweis<br><small>PT: prova</small>	faixa08 n1552
+generous	großzügig<br><small>PT: generoso</small>	faixa08 n1553
+sir	mein herr<br><small>PT: senhor</small>	faixa08 n1554
+tonight	heute abend<br><small>PT: esta noite</small>	faixa08 n1555
+whip	Peitsche<br><small>PT: chicote</small>	faixa08 n1556
+tongue	Zunge<br><small>PT: língua</small>	faixa08 n1557
+mill	Mühle<br><small>PT: moinho</small>	faixa08 n1558
+merchant	Kaufmann<br><small>PT: comerciante</small>	faixa08 n1559
+coal	Kohle<br><small>PT: carvão</small>	faixa08 n1560
+ruin	Ruine<br><small>PT: ruína</small>	faixa08 n1561
+introduction	Einführung<br><small>PT: introdução</small>	faixa08 n1562
+courage	Mut<br><small>PT: coragem</small>	faixa08 n1563
+actor	Schauspieler<br><small>PT: ator</small>	faixa08 n1564
+belt	Gürtel<br><small>PT: cinto</small>	faixa08 n1565
+stir	rühren<br><small>PT: mexer</small>	faixa08 n1566
+package	Paket<br><small>PT: pacote</small>	faixa08 n1567
+punish	bestrafen<br><small>PT: punir</small>	faixa08 n1568
+reflection	Reflexion<br><small>PT: reflexão</small>	faixa08 n1569
+breathe	atmen<br><small>PT: respirar</small>	faixa08 n1570
+anywhere	irgendwo<br><small>PT: em qualquer lugar</small>	faixa08 n1571
+amuse	unterhalten<br><small>PT: divertir</small>	faixa08 n1572
+dull	matt<br><small>PT: sem graça</small>	faixa08 n1573
+fate	das schicksal<br><small>PT: destino</small>	faixa08 n1574
+net	Netto-<br><small>PT: rede</small>	faixa08 n1575
+fellowship	Gemeinschaft<br><small>PT: irmandade</small>	faixa08 n1576
+fault	Fehler<br><small>PT: falha</small>	faixa08 n1577
+furniture	Möbel<br><small>PT: móveis</small>	faixa08 n1578
+beam	Strahl<br><small>PT: feixe</small>	faixa08 n1579
+pencil	Bleistift<br><small>PT: lápis</small>	faixa08 n1580
+border	Grenze<br><small>PT: fronteira</small>	faixa08 n1581
+disappoint	enttäuschen<br><small>PT: decepcionar</small>	faixa08 n1582
+flame	Flamme<br><small>PT: chama</small>	faixa08 n1583
+joke	witze machen<br><small>PT: piada</small>	faixa08 n1584
+bless	segnen<br><small>PT: abençoar</small>	faixa08 n1585
+corn	mais<br><small>PT: milho</small>	faixa08 n1586
+shell	Schale<br><small>PT: concha</small>	faixa08 n1587
+tempt	verführen<br><small>PT: tentar</small>	faixa08 n1588
+supper	das abendbrot<br><small>PT: jantar</small>	faixa08 n1589
+destruction	Zerstörung<br><small>PT: destruição</small>	faixa08 n1590
+dive	tauchen<br><small>PT: mergulhar</small>	faixa08 n1591
+anxious	ängstlich<br><small>PT: ansioso</small>	faixa08 n1592
+shine	Glanz<br><small>PT: brilhar</small>	faixa08 n1593
+cheap	billig<br><small>PT: barato</small>	faixa08 n1594
+dish	Gericht<br><small>PT: prato</small>	faixa08 n1595
+distant	entfernt<br><small>PT: distante</small>	faixa08 n1596
+greet	sich begrüßen<br><small>PT: cumprimentar</small>	faixa08 n1597
+flood	Flut<br><small>PT: inundação</small>	faixa08 n1598
+excuse	Entschuldigung<br><small>PT: desculpa</small>	faixa08 n1599
+insect	Insekt<br><small>PT: inseto</small>	faixa08 n1600
+ocean	Ozean<br><small>PT: oceano</small>	faixa08 n1601
+ceremony	Zeremonie<br><small>PT: cerimônia</small>	faixa08 n1602
+decrease	sich verringern<br><small>PT: diminuir</small>	faixa08 n1603
+prize	Preis<br><small>PT: prêmio</small>	faixa08 n1604
+harm	Schaden<br><small>PT: dano</small>	faixa08 n1605
+insure	versichern<br><small>PT: segurar</small>	faixa08 n1606
+verse	Vers<br><small>PT: verso</small>	faixa08 n1607
+pot	Topf<br><small>PT: pote</small>	faixa08 n1608
+sincere	aufrichtig<br><small>PT: sincero</small>	faixa08 n1609
+cotton	Baumwolle<br><small>PT: algodão</small>	faixa08 n1610
+leaf	Blatt<br><small>PT: folha</small>	faixa08 n1611
+rub	reiben<br><small>PT: esfregar</small>	faixa08 n1612
+medicine	Medizin<br><small>PT: medicina</small>	faixa08 n1613
+stroke	Schlaganfall<br><small>PT: golpe</small>	faixa08 n1614
+bite	beißen<br><small>PT: morder</small>	faixa08 n1615
+lung	Lunge<br><small>PT: pulmão</small>	faixa08 n1616
+lonely	einsam<br><small>PT: solitário</small>	faixa08 n1617
+admission	die zulassung<br><small>PT: admissão</small>	faixa08 n1618
+stupid	dumm<br><small>PT: estúpido</small>	faixa08 n1619
+scratch	Kratzer<br><small>PT: arranhar</small>	faixa08 n1620
+composition	Zusammensetzung<br><small>PT: composição</small>	faixa08 n1621
+broadcast	Broadcast<br><small>PT: transmissão</small>	faixa08 n1622
+drum	Trommel<br><small>PT: tambor</small>	faixa08 n1623
+resist	widerstehen<br><small>PT: resistir</small>	faixa08 n1624
+neglect	Vernachlässigung<br><small>PT: negligenciar</small>	faixa08 n1625
+absent	abwesend<br><small>PT: ausente</small>	faixa08 n1626
+passenger	Passagier<br><small>PT: passageiro</small>	faixa08 n1627
+adventure	das abenteuer<br><small>PT: aventura</small>	faixa08 n1628
+beg	betteln<br><small>PT: implorar</small>	faixa08 n1629
+pipe	Rohr<br><small>PT: cano</small>	faixa08 n1630
+beard	Bart<br><small>PT: barba</small>	faixa08 n1631
+bold	fett gedruckt<br><small>PT: ousado</small>	faixa08 n1632
+meanwhile	mittlerweile<br><small>PT: enquanto isso</small>	faixa08 n1633
+devil	Teufel<br><small>PT: diabo</small>	faixa08 n1634
+cheer	jubeln<br><small>PT: animar</small>	faixa08 n1635
+nut	Nuss<br><small>PT: noz</small>	faixa08 n1636
+split	teilt<br><small>PT: dividir</small>	faixa08 n1637
+melt	Schmelze<br><small>PT: derreter</small>	faixa08 n1638
+swear	schwören<br><small>PT: jurar</small>	faixa08 n1639
+sugar	Zucker<br><small>PT: açúcar</small>	faixa08 n1640
+bury	begraben<br><small>PT: enterrar</small>	faixa08 n1641
+wipe	wischen<br><small>PT: limpar</small>	faixa08 n1642
+faint	in ohnmacht fallen<br><small>PT: desmaiar</small>	faixa08 n1643
+creature	Geschöpf<br><small>PT: criatura</small>	faixa08 n1644
+tail	Schwanz<br><small>PT: cauda</small>	faixa08 n1645
+wealth	der reichtum<br><small>PT: riqueza</small>	faixa08 n1646
+earnest	ernst<br><small>PT: sério</small>	faixa08 n1647
+translate	übersetzen sie<br><small>PT: traduzir</small>	faixa08 n1648
+suspicion	Verdacht<br><small>PT: suspeita</small>	faixa08 n1649
+noble	edel<br><small>PT: nobre</small>	faixa08 n1650
+inquiry	Anfrage<br><small>PT: inquérito</small>	faixa08 n1651
+journey	Fahrt<br><small>PT: jornada</small>	faixa08 n1652
+hesitate	zögern<br><small>PT: hesitar</small>	faixa08 n1653
+extraordinary	außergewöhnlich<br><small>PT: extraordinário</small>	faixa08 n1654
+borrow	leihen<br><small>PT: emprestar</small>	faixa08 n1655
+owe	schulden<br><small>PT: dever</small>	faixa08 n1656
+funeral	Beerdigung<br><small>PT: funeral</small>	faixa08 n1657
+ambition	Ehrgeiz<br><small>PT: ambição</small>	faixa08 n1658
+mixture	Mischung<br><small>PT: mistura</small>	faixa08 n1659
+slope	Hang<br><small>PT: inclinação</small>	faixa08 n1660
+criminal	Verbrecher<br><small>PT: criminoso</small>	faixa08 n1661
+seldom	selten<br><small>PT: raramente</small>	faixa08 n1662
+map	Karte<br><small>PT: mapa</small>	faixa08 n1663
+spin	Dreh<br><small>PT: girar</small>	faixa08 n1664
+praise	Lob<br><small>PT: elogiar</small>	faixa08 n1665
+spare	Ersatz<br><small>PT: sobressalente</small>	faixa08 n1666
+plow	Pflug<br><small>PT: arado</small>	faixa08 n1667
+telegraph	Telegraf<br><small>PT: telégrafo</small>	faixa08 n1668
+barrel	Fass<br><small>PT: barril</small>	faixa08 n1669
+straighten	begradigen<br><small>PT: endireitar</small>	faixa08 n1670
+scarce	selten<br><small>PT: escasso</small>	faixa08 n1671
+lunch	Mittagessen<br><small>PT: almoço</small>	faixa08 n1672
+slavery	Sklaverei<br><small>PT: escravidão</small>	faixa08 n1673
+creep	schleichen<br><small>PT: rastejar</small>	faixa08 n1674
+sweat	Schweiß<br><small>PT: suor</small>	faixa08 n1675
+gay	Homosexuell<br><small>PT: alegre</small>	faixa08 n1676
+stiff	steif<br><small>PT: rígido</small>	faixa08 n1677
+brave	mutig<br><small>PT: bravo</small>	faixa08 n1678
+seize	ergreifen<br><small>PT: apreender</small>	faixa08 n1679
+convenient	bequem<br><small>PT: conveniente</small>	faixa08 n1680
+horizon	Horizont<br><small>PT: horizonte</small>	faixa08 n1681
+moderate	mäßig<br><small>PT: moderado</small>	faixa08 n1682
+complicate	komplizieren<br><small>PT: complicar</small>	faixa08 n1683
+dig	graben<br><small>PT: cavar</small>	faixa08 n1684
+curse	Fluch<br><small>PT: maldição</small>	faixa08 n1685
+weigh	wiegen<br><small>PT: pesar</small>	faixa08 n1686
+priest	Priester<br><small>PT: padre</small>	faixa08 n1687
+excessive	übertrieben<br><small>PT: excessivo</small>	faixa08 n1688
+quarrel	Streit<br><small>PT: briga</small>	faixa08 n1689
+widow	Witwe<br><small>PT: viúva</small>	faixa08 n1690
+modest	bescheiden<br><small>PT: modesto</small>	faixa08 n1691
+dine	speisen<br><small>PT: jantar</small>	faixa08 n1692
+politician	Politiker<br><small>PT: político</small>	faixa08 n1693
+custom	Brauch<br><small>PT: costume</small>	faixa08 n1694
+educate	erziehen<br><small>PT: educar</small>	faixa08 n1695
+salesman	Verkäufer<br><small>PT: vendedor</small>	faixa08 n1696
+nail	Nagel<br><small>PT: prego</small>	faixa08 n1697
+tap	Hahn<br><small>PT: bater</small>	faixa08 n1698
+eastern	östlich<br><small>PT: oriental</small>	faixa08 n1699
+possession	Besitz<br><small>PT: posse</small>	faixa08 n1700
+satisfaction	Zufriedenheit<br><small>PT: satisfação</small>	faixa08 n1701
+behave	verhalten sich<br><small>PT: comportar-se</small>	faixa08 n1702
+mercy	Barmherzigkeit<br><small>PT: misericórdia</small>	faixa08 n1703
+scatter	streuen<br><small>PT: espalhar</small>	faixa08 n1704
+objection	Einspruch<br><small>PT: objeção</small>	faixa08 n1705
+silver	Silber<br><small>PT: prata</small>	faixa08 n1706
+tent	Zelt<br><small>PT: tenda</small>	faixa08 n1707
+saddle	Sattel<br><small>PT: sela</small>	faixa08 n1708
+wrap	wickeln<br><small>PT: embrulhar</small>	faixa08 n1709
+nest	Nest<br><small>PT: ninho</small>	faixa08 n1710
+grind	schleifen<br><small>PT: moer</small>	faixa08 n1711
+spell	buchstabieren sie<br><small>PT: soletrar</small>	faixa08 n1712
+plaster	Putz<br><small>PT: gesso</small>	faixa08 n1713
+arch	Bogen<br><small>PT: arco</small>	faixa08 n1714
+swell	Seegang<br><small>PT: inchar</small>	faixa08 n1715
+friendship	die freundschaft<br><small>PT: amizade</small>	faixa08 n1716
+bath	Bad<br><small>PT: banho</small>	faixa08 n1717
+bundle	bündeln<br><small>PT: pacote</small>	faixa08 n1718
+grateful	dankbar<br><small>PT: grato</small>	faixa08 n1719
+crown	Krone<br><small>PT: coroa</small>	faixa08 n1720
+boundary	Grenze<br><small>PT: fronteira</small>	faixa08 n1721
+nowhere	nirgendwo<br><small>PT: lugar nenhum</small>	faixa08 n1722
+asleep	schlafend<br><small>PT: adormecido</small>	faixa08 n1723
+clock	Uhr<br><small>PT: relógio</small>	faixa08 n1724
+boil	koch bunt<br><small>PT: ferver</small>	faixa08 n1725
+altogether	insgesamt<br><small>PT: totalmente</small>	faixa08 n1726
+lend	leihen<br><small>PT: emprestar</small>	faixa08 n1727
+holiday	Urlaub<br><small>PT: feriado</small>	faixa08 n1728
+precious	kostbar<br><small>PT: precioso</small>	faixa08 n1729
+wander	wandern<br><small>PT: vagar</small>	faixa08 n1730
+ugly	hässlich<br><small>PT: feio</small>	faixa08 n1731
+reputation	Ansehen<br><small>PT: reputação</small>	faixa08 n1732
+ticket	Ticket<br><small>PT: ingresso</small>	faixa08 n1733
+pretend	vorgeben<br><small>PT: fingir</small>	faixa08 n1734
+dismiss	entlassen<br><small>PT: demitir</small>	faixa08 n1735
+delicate	zart<br><small>PT: delicado</small>	faixa08 n1736
+despair	Verzweiflung<br><small>PT: desespero</small>	faixa08 n1737
+awake	wach<br><small>PT: acordado</small>	faixa08 n1738
+tea	tee<br><small>PT: chá</small>	faixa08 n1739
+false	FALSCH<br><small>PT: falso</small>	faixa08 n1740
+fortune	Vermögen<br><small>PT: fortuna</small>	faixa08 n1741
+cap	Mütze<br><small>PT: boné</small>	faixa08 n1742
+thread	Gewinde<br><small>PT: fio</small>	faixa08 n1743
+haste	Eile<br><small>PT: pressa</small>	faixa08 n1744
+bare	blank<br><small>PT: nu</small>	faixa08 n1745
+shirt	Hemd<br><small>PT: camisa</small>	faixa08 n1746
+bargain	Schnäppchen<br><small>PT: barganha</small>	faixa08 n1747
+leather	Leder<br><small>PT: couro</small>	faixa08 n1748
+rail	Schiene<br><small>PT: trilho</small>	faixa08 n1749
+butter	Butter<br><small>PT: manteiga</small>	faixa08 n1750
+dot	Punkt<br><small>PT: ponto</small>	faixa09 n1751
+inquire	sich erkundigen<br><small>PT: inquirir</small>	faixa09 n1752
+warmth	Wärme<br><small>PT: calor</small>	faixa09 n1753
+decisive	entscheidend<br><small>PT: decisivo</small>	faixa09 n1754
+vessel	Schiff<br><small>PT: navio</small>	faixa09 n1755
+pity	Mitleid<br><small>PT: pena</small>	faixa09 n1756
+steam	Dampf<br><small>PT: vapor</small>	faixa09 n1757
+pin	Stift<br><small>PT: alfinete</small>	faixa09 n1758
+bound	gebunden<br><small>PT: limite</small>	faixa09 n1759
+companion	Begleiter<br><small>PT: companheiro</small>	faixa09 n1760
+toe	Zeh<br><small>PT: dedo do pé</small>	faixa09 n1761
+reward	belohnung<br><small>PT: recompensa</small>	faixa09 n1762
+forbid	verbieten<br><small>PT: proibir</small>	faixa09 n1763
+wherever	wo auch immer<br><small>PT: onde quer que</small>	faixa09 n1764
+tower	Turm<br><small>PT: torre</small>	faixa09 n1765
+bathe	baden<br><small>PT: banhar</small>	faixa09 n1766
+lodge	Hütte<br><small>PT: alojar</small>	faixa09 n1767
+swallow	schlucken<br><small>PT: engolir</small>	faixa09 n1768
+multiply	sich vermehren<br><small>PT: multiplicar</small>	faixa09 n1769
+bow	Bogen<br><small>PT: arco</small>	faixa09 n1770
+kingdom	Reich<br><small>PT: reino</small>	faixa09 n1771
+garage	Garage<br><small>PT: garagem</small>	faixa09 n1772
+permission	die erlaubnis<br><small>PT: permissão</small>	faixa09 n1773
+pump	Pumpe<br><small>PT: bomba</small>	faixa09 n1774
+prevention	Vorbeugung<br><small>PT: prevenção</small>	faixa09 n1775
+urgent	dringend<br><small>PT: urgente</small>	faixa09 n1776
+aunt	Tante<br><small>PT: tia</small>	faixa09 n1777
+zero	Null<br><small>PT: zero</small>	faixa09 n1778
+idle	untätig<br><small>PT: ocioso</small>	faixa09 n1779
+fever	Fieber<br><small>PT: febre</small>	faixa09 n1780
+christmas	Weihnachten<br><small>PT: Natal</small>	faixa09 n1781
+regret	bedauern<br><small>PT: arrepender</small>	faixa09 n1782
+jaw	Kiefer<br><small>PT: mandíbula</small>	faixa09 n1783
+soap	Seife<br><small>PT: sabão</small>	faixa09 n1784
+pronounce	aussprechen<br><small>PT: pronunciar</small>	faixa09 n1785
+empire	Reich<br><small>PT: império</small>	faixa09 n1786
+bowl	Schüssel<br><small>PT: tigela</small>	faixa09 n1787
+outline	Umriss<br><small>PT: contorno</small>	faixa09 n1788
+organ	Orgel<br><small>PT: órgão</small>	faixa09 n1789
+imitation	Imitation<br><small>PT: imitação</small>	faixa09 n1790
+caution	Vorsicht<br><small>PT: cautela</small>	faixa09 n1791
+mineral	Mineral<br><small>PT: mineral</small>	faixa09 n1792
+disagree	nicht zustimmen<br><small>PT: discordar</small>	faixa09 n1793
+blade	Klinge<br><small>PT: lâmina</small>	faixa09 n1794
+trick	Trick<br><small>PT: truque</small>	faixa09 n1795
+treasure	Schatz<br><small>PT: tesouro</small>	faixa09 n1796
+immense	immens<br><small>PT: imenso</small>	faixa09 n1797
+convenience	Bequemlichkeit<br><small>PT: conveniência</small>	faixa09 n1798
+disapprove	missbilligen<br><small>PT: desaprovar</small>	faixa09 n1799
+destructive	destruktiv<br><small>PT: destrutivo</small>	faixa09 n1800
+fork	Gabel<br><small>PT: garfo</small>	faixa09 n1801
+noon	Mittag<br><small>PT: meio-dia</small>	faixa09 n1802
+ownership	das eigentum<br><small>PT: propriedade</small>	faixa09 n1803
+tune	Melodie<br><small>PT: melodia</small>	faixa09 n1804
+polish	Politur<br><small>PT: polir</small>	faixa09 n1805
+poison	Gift<br><small>PT: veneno</small>	faixa09 n1806
+shame	Schande<br><small>PT: vergonha</small>	faixa09 n1807
+loyalty	Loyalität<br><small>PT: lealdade</small>	faixa09 n1808
+cottage	Hütte<br><small>PT: casa de campo</small>	faixa09 n1809
+astonish	überraschen<br><small>PT: surpreender</small>	faixa09 n1810
+shave	sich rasieren<br><small>PT: barbear</small>	faixa09 n1811
+feather	Feder<br><small>PT: pena</small>	faixa09 n1812
+sauce	Sauce<br><small>PT: molho</small>	faixa09 n1813
+lid	Deckel<br><small>PT: tampa</small>	faixa09 n1814
+debt	Schuld<br><small>PT: dívida</small>	faixa09 n1815
+fade	verblassen<br><small>PT: desaparecer</small>	faixa09 n1816
+confess	sich bekennen<br><small>PT: confessar</small>	faixa09 n1817
+classification	Klassifikation<br><small>PT: classificação</small>	faixa09 n1818
+descend	absteigen<br><small>PT: descer</small>	faixa09 n1819
+cape	Umhang<br><small>PT: capa</small>	faixa09 n1820
+mild	mild<br><small>PT: suave</small>	faixa09 n1821
+clever	clever<br><small>PT: inteligente</small>	faixa09 n1822
+envelope	Hülle<br><small>PT: envelope</small>	faixa09 n1823
+invention	Erfindung<br><small>PT: invenção</small>	faixa09 n1824
+sheep	die schafe<br><small>PT: ovelha</small>	faixa09 n1825
+splendid	großartig<br><small>PT: esplêndido</small>	faixa09 n1826
+stamp	Stempel<br><small>PT: carimbo</small>	faixa09 n1827
+float	Schwimmer<br><small>PT: flutuar</small>	faixa09 n1828
+brick	Ziegel<br><small>PT: tijolo</small>	faixa09 n1829
+rice	Reis<br><small>PT: arroz</small>	faixa09 n1830
+businessman	Geschäftsmann<br><small>PT: empresário</small>	faixa09 n1831
+backward	rückwärts<br><small>PT: para trás</small>	faixa09 n1832
+qualification	Qualifikation<br><small>PT: qualificação</small>	faixa09 n1833
+artificial	künstlich<br><small>PT: artificial</small>	faixa09 n1834
+attraction	Attraktion<br><small>PT: atração</small>	faixa09 n1835
+lamp	Lampe<br><small>PT: lâmpada</small>	faixa09 n1836
+curl	curl<br><small>PT: enrolar</small>	faixa09 n1837
+shower	Dusche<br><small>PT: chuveiro</small>	faixa09 n1838
+elder	ältere<br><small>PT: mais velho</small>	faixa09 n1839
+bunch	Haufen<br><small>PT: monte</small>	faixa09 n1840
+bell	Glocke<br><small>PT: sino</small>	faixa09 n1841
+steer	steuern<br><small>PT: dirigir</small>	faixa09 n1842
+flavor	Geschmack<br><small>PT: sabor</small>	faixa09 n1843
+spit	Spieß<br><small>PT: cuspir</small>	faixa09 n1844
+rob	rauben<br><small>PT: roubar</small>	faixa09 n1845
+cream	Creme<br><small>PT: creme</small>	faixa09 n1846
+interrupt	unterbrechen<br><small>PT: interromper</small>	faixa09 n1847
+pen	Stift<br><small>PT: caneta</small>	faixa09 n1848
+weave	weben<br><small>PT: tecer</small>	faixa09 n1849
+orange	orange<br><small>PT: laranja</small>	faixa09 n1850
+rescue	Rettung<br><small>PT: resgatar</small>	faixa09 n1851
+crush	Gedränge<br><small>PT: esmagar</small>	faixa09 n1852
+humble	bescheiden<br><small>PT: humilde</small>	faixa09 n1853
+fancy	Phantasie<br><small>PT: fantasia</small>	faixa09 n1854
+decay	Zerfall<br><small>PT: decair</small>	faixa09 n1855
+polite	höflich<br><small>PT: educado</small>	faixa09 n1856
+tribe	Stamm<br><small>PT: tribo</small>	faixa09 n1857
+bleed	bluten<br><small>PT: sangrar</small>	faixa09 n1858
+coin	Münze<br><small>PT: moeda</small>	faixa09 n1859
+fond	zärtlich<br><small>PT: gostar</small>	faixa09 n1860
+autumn	Herbst<br><small>PT: outono</small>	faixa09 n1861
+classify	klassifizieren<br><small>PT: classificar</small>	faixa09 n1862
+omit	auslassen<br><small>PT: omitir</small>	faixa09 n1863
+loyal	loyal<br><small>PT: leal</small>	faixa09 n1864
+needle	Nadel<br><small>PT: agulha</small>	faixa09 n1865
+lessen	vermindern<br><small>PT: diminuir</small>	faixa09 n1866
+complaint	Beschwerde<br><small>PT: reclamação</small>	faixa09 n1867
+pad	Unterlage<br><small>PT: almofada</small>	faixa09 n1868
+steep	steil<br><small>PT: íngreme</small>	faixa09 n1869
+skirt	Rock<br><small>PT: saia</small>	faixa09 n1870
+curtain	Vorhang<br><small>PT: cortina</small>	faixa09 n1871
+calculation	Berechnung<br><small>PT: cálculo</small>	faixa09 n1872
+laughter	Gelächter<br><small>PT: riso</small>	faixa09 n1873
+solemn	ernst<br><small>PT: solene</small>	faixa09 n1874
+grease	Fett<br><small>PT: graxa</small>	faixa09 n1875
+interfere	einmischen<br><small>PT: interferir</small>	faixa09 n1876
+explode	explodieren<br><small>PT: explodir</small>	faixa09 n1877
+fasten	befestigen<br><small>PT: prender</small>	faixa09 n1878
+flag	Flagge<br><small>PT: bandeira</small>	faixa09 n1879
+resign	zurücktreten<br><small>PT: renunciar</small>	faixa09 n1880
+postpone	verschieben<br><small>PT: adiar</small>	faixa09 n1881
+patience	die geduld<br><small>PT: paciência</small>	faixa09 n1882
+boast	Prahlerei<br><small>PT: gabar-se</small>	faixa09 n1883
+rope	Seil<br><small>PT: corda</small>	faixa09 n1884
+envy	der neid<br><small>PT: inveja</small>	faixa09 n1885
+airplane	Flugzeug<br><small>PT: avião</small>	faixa09 n1886
+rid	rid<br><small>PT: livrar</small>	faixa09 n1887
+shield	schützen<br><small>PT: escudo</small>	faixa09 n1888
+veil	Schleier<br><small>PT: véu</small>	faixa09 n1889
+kneel	knien<br><small>PT: ajoelhar</small>	faixa09 n1890
+tray	Tablett<br><small>PT: bandeja</small>	faixa09 n1891
+explosive	explosiv<br><small>PT: explosivo</small>	faixa09 n1892
+brass	Messing<br><small>PT: latão</small>	faixa09 n1893
+taxi	Taxi<br><small>PT: táxi</small>	faixa09 n1894
+wax	Wachs<br><small>PT: cera</small>	faixa09 n1895
+duck	ente<br><small>PT: pato</small>	faixa09 n1896
+button	Schaltfläche<br><small>PT: botão</small>	faixa09 n1897
+invent	erfinden<br><small>PT: inventar</small>	faixa09 n1898
+remedy	Abhilfe<br><small>PT: remédio</small>	faixa09 n1899
+bush	Busch<br><small>PT: arbusto</small>	faixa09 n1900
+thunder	Donner<br><small>PT: trovão</small>	faixa09 n1901
+weaken	schwächen<br><small>PT: enfraquecer</small>	faixa09 n1902
+poverty	Armut<br><small>PT: pobreza</small>	faixa09 n1903
+scrape	Kratzen<br><small>PT: raspar</small>	faixa09 n1904
+arrow	Pfeil<br><small>PT: flecha</small>	faixa09 n1905
+tender	zärtlich<br><small>PT: macio</small>	faixa09 n1906
+cruel	grausam<br><small>PT: cruel</small>	faixa09 n1907
+soften	erweichen<br><small>PT: suavizar</small>	faixa09 n1908
+mouse	Maus<br><small>PT: rato</small>	faixa09 n1909
+hay	Heu<br><small>PT: feno</small>	faixa09 n1910
+anyhow	sowieso<br><small>PT: de qualquer forma</small>	faixa09 n1911
+alike	gleich<br><small>PT: semelhante</small>	faixa09 n1912
+circular	Rundschreiben<br><small>PT: circular</small>	faixa09 n1913
+juice	Saft<br><small>PT: suco</small>	faixa09 n1914
+shelf	Regal<br><small>PT: prateleira</small>	faixa09 n1915
+bake	backen<br><small>PT: assar</small>	faixa09 n1916
+hatred	Hass<br><small>PT: ódio</small>	faixa09 n1917
+cautious	vorsichtig<br><small>PT: cauteloso</small>	faixa09 n1918
+basket	Korb<br><small>PT: cesta</small>	faixa09 n1919
+wreck	Wrack<br><small>PT: naufrágio</small>	faixa09 n1920
+width	Breite<br><small>PT: largura</small>	faixa09 n1921
+confident	zuversichtlich<br><small>PT: confiante</small>	faixa09 n1922
+log	Log<br><small>PT: tronco</small>	faixa09 n1923
+heap	Haufen<br><small>PT: pilha</small>	faixa09 n1924
+suck	saugen<br><small>PT: sugar</small>	faixa09 n1925
+ladder	Leiter<br><small>PT: escada</small>	faixa09 n1926
+gap	Lücke<br><small>PT: lacuna</small>	faixa09 n1927
+obey	gehorchen<br><small>PT: obedecer</small>	faixa09 n1928
+hut	Hütte<br><small>PT: cabana</small>	faixa09 n1929
+axe	Axt<br><small>PT: machado</small>	faixa09 n1930
+translation	Übersetzung<br><small>PT: tradução</small>	faixa09 n1931
+collar	Kragen<br><small>PT: colarinho</small>	faixa09 n1932
+delivery	Lieferung<br><small>PT: entrega</small>	faixa09 n1933
+reproduce	reproduzieren<br><small>PT: reproduzir</small>	faixa09 n1934
+confession	Geständnis<br><small>PT: confissão</small>	faixa09 n1935
+pan	Pfanne<br><small>PT: panela</small>	faixa09 n1936
+prejudice	Vorurteil<br><small>PT: preconceito</small>	faixa09 n1937
+voyage	Fahrt<br><small>PT: viagem</small>	faixa09 n1938
+tobacco	Tabak<br><small>PT: tabaco</small>	faixa09 n1939
+simplicity	Einfachheit<br><small>PT: simplicidade</small>	faixa09 n1940
+paste	Paste<br><small>PT: pasta</small>	faixa09 n1941
+cake	Kuchen<br><small>PT: bolo</small>	faixa09 n1942
+elephant	Elefant<br><small>PT: elefante</small>	faixa09 n1943
+ribbon	Band<br><small>PT: fita</small>	faixa09 n1944
+harvest	Ernte<br><small>PT: colheita</small>	faixa09 n1945
+ashamed	beschämt<br><small>PT: envergonhado</small>	faixa09 n1946
+cave	Höhle<br><small>PT: caverna</small>	faixa09 n1947
+customary	üblich<br><small>PT: habitual</small>	faixa09 n1948
+thief	Dieb<br><small>PT: ladrão</small>	faixa09 n1949
+damp	feucht<br><small>PT: úmido</small>	faixa09 n1950
+sew	nähen<br><small>PT: costurar</small>	faixa09 n1951
+rust	Rost<br><small>PT: ferrugem</small>	faixa09 n1952
+separation	Trennung<br><small>PT: separação</small>	faixa09 n1953
+waiter	herr ober<br><small>PT: garçom</small>	faixa09 n1954
+pet	Haustier<br><small>PT: animal de estimação</small>	faixa09 n1955
+straw	Stroh<br><small>PT: palha</small>	faixa09 n1956
+upset	verärgert<br><small>PT: chateado</small>	faixa09 n1957
+towel	Handtuch<br><small>PT: toalha</small>	faixa09 n1958
+refresh	erfrischen<br><small>PT: refrescar</small>	faixa09 n1959
+essence	Wesen<br><small>PT: essência</small>	faixa09 n1960
+fur	Pelz<br><small>PT: pelo</small>	faixa09 n1961
+ambitious	ehrgeizig<br><small>PT: ambicioso</small>	faixa09 n1962
+defendant	Beklagte<br><small>PT: réu</small>	faixa09 n1963
+daylight	Tageslicht<br><small>PT: luz do dia</small>	faixa09 n1964
+dip	tauchen<br><small>PT: mergulhar</small>	faixa09 n1965
+suspicious	misstrauisch<br><small>PT: suspeito</small>	faixa09 n1966
+imaginary	imaginär<br><small>PT: imaginário</small>	faixa09 n1967
+ash	Asche<br><small>PT: cinza</small>	faixa09 n1968
+carriage	Schlitten<br><small>PT: carruagem</small>	faixa09 n1969
+educator	Erzieher<br><small>PT: educador</small>	faixa09 n1970
+saw	Säge<br><small>PT: serra</small>	faixa09 n1971
+stove	Herd<br><small>PT: fogão</small>	faixa09 n1972
+rubber	Gummi<br><small>PT: borracha</small>	faixa09 n1973
+rug	Teppich<br><small>PT: tapete</small>	faixa09 n1974
+misery	Elend<br><small>PT: miséria</small>	faixa09 n1975
+awkward	ungeschickt<br><small>PT: desajeitado</small>	faixa09 n1976
+rival	Rivale<br><small>PT: rival</small>	faixa09 n1977
+roast	Braten<br><small>PT: assar</small>	faixa09 n1978
+deed	Tat<br><small>PT: escritura</small>	faixa09 n1979
+preference	Vorliebe<br><small>PT: preferência</small>	faixa09 n1980
+explosion	Explosion<br><small>PT: explosão</small>	faixa09 n1981
+theatrical	theatralisch<br><small>PT: teatral</small>	faixa09 n1982
+cultivate	pflegen<br><small>PT: cultivar</small>	faixa09 n1983
+collector	Sammler<br><small>PT: coletor</small>	faixa09 n1984
+miserable	unglücklich<br><small>PT: miserável</small>	faixa09 n1985
+wrist	Handgelenk<br><small>PT: pulso</small>	faixa09 n1986
+rabbit	kaninchen<br><small>PT: coelho</small>	faixa09 n1987
+accustom	gewöhnen<br><small>PT: acostumar</small>	faixa09 n1988
+tide	Gezeiten<br><small>PT: maré</small>	faixa09 n1989
+insult	Beleidigung<br><small>PT: insulto</small>	faixa09 n1990
+thumb	Daumen<br><small>PT: polegar</small>	faixa09 n1991
+lump	Klumpen<br><small>PT: caroço</small>	faixa09 n1992
+annoy	ärgern<br><small>PT: irritar</small>	faixa09 n1993
+toy	Spielzeug<br><small>PT: brinquedo</small>	faixa09 n1994
+heal	heilen<br><small>PT: curar</small>	faixa09 n1995
+shallow	flach<br><small>PT: raso</small>	faixa09 n1996
+repetition	Wiederholung<br><small>PT: repetição</small>	faixa09 n1997
+soup	Suppe<br><small>PT: sopa</small>	faixa09 n1998
+whistle	Pfeife<br><small>PT: apito</small>	faixa09 n1999
+scenery	Landschaft<br><small>PT: paisagem</small>	faixa09 n2000
+apple	apfel	faixa10 n2001
+offense	Vergehen	faixa10 n2002
+cork	Kork	faixa10 n2003
+ripe	reif	faixa10 n2004
+temper	Temperament	faixa10 n2005
+sore	wund	faixa10 n2006
+pinch	kneifen	faixa10 n2007
+diamond	Diamant	faixa10 n2008
+razor	Rasiermesser	faixa10 n2009
+imaginative	einfallsreich	faixa10 n2010
+hook	Haken	faixa10 n2011
+copper	Kupfer	faixa10 n2012
+landlord	Vermieter	faixa10 n2013
+influential	einflussreich	faixa10 n2014
+rot	Fäulnis	faixa10 n2015
+hollow	hohl	faixa10 n2016
+enclose	beilegen	faixa10 n2017
+harden	verhärten	faixa10 n2018
+wicked	böse	faixa10 n2019
+stiffen	versteifen	faixa10 n2020
+silk	Seide	faixa10 n2021
+upright	aufrecht	faixa10 n2022
+selfish	egoistisch	faixa10 n2023
+stripe	Streifen	faixa10 n2024
+pig	Schwein	faixa10 n2025
+inward	innere	faixa10 n2026
+excellence	Vorzüglichkeit	faixa10 n2027
+rake	Rechen	faixa10 n2028
+purple	lila	faixa10 n2029
+hasten	beschleunigen	faixa10 n2030
+shorten	verkürzen	faixa10 n2031
+applause	Applaus	faixa10 n2032
+ache	Schmerz	faixa10 n2033
+apology	Entschuldigung	faixa10 n2034
+knot	Knoten	faixa10 n2035
+nephew	Neffe	faixa10 n2036
+cushion	Kissen	faixa10 n2037
+drown	ertrinken	faixa10 n2038
+nursery	Kindergarten	faixa10 n2039
+pint	Pint	faixa10 n2040
+fierce	wild	faixa10 n2041
+imitate	imitieren	faixa10 n2042
+aloud	laut	faixa10 n2043
+gaiety	Fröhlichkeit	faixa10 n2044
+robbery	Raubüberfall	faixa10 n2045
+tighten	anziehen	faixa10 n2046
+perfection	Perfektion	faixa10 n2047
+scorn	Verachtung	faixa10 n2048
+whoever	wer auch immer	faixa10 n2049
+trunk	Stamm	faixa10 n2050
+wool	Wolle	faixa10 n2051
+sailor	Seemann	faixa10 n2052
+competitor	Wettbewerber	faixa10 n2053
+moonlight	Mondschein	faixa10 n2054
+deer	Hirsch	faixa10 n2055
+bean	Bohne	faixa10 n2056
+everyday	täglich	faixa10 n2057
+drawer	Schublade	faixa10 n2058
+disregard	außer acht lassen	faixa10 n2059
+nowadays	heute	faixa10 n2060
+patriotic	patriotisch	faixa10 n2061
+tin	Zinn	faixa10 n2062
+penny	Penny	faixa10 n2063
+cage	Käfig	faixa10 n2064
+pardon	Verzeihung	faixa10 n2065
+lately	in letzter zeit	faixa10 n2066
+offend	beleidigen	faixa10 n2067
+coarse	grob	faixa10 n2068
+spoil	verwöhnen	faixa10 n2069
+horizontal	horizontal	faixa10 n2070
+sting	Stachel	faixa10 n2071
+ditch	Graben	faixa10 n2072
+librarian	Bibliothekar	faixa10 n2073
+meantime	inzwischen	faixa10 n2074
+cough	Husten	faixa10 n2075
+deaf	taub	faixa10 n2076
+sword	Schwert	faixa10 n2077
+messenger	Bote	faixa10 n2078
+vain	vergeblich	faixa10 n2079
+castle	schloss burg	faixa10 n2080
+elastic	elastisch	faixa10 n2081
+comb	Kamm	faixa10 n2082
+rod	Stab	faixa10 n2083
+widen	erweitern	faixa10 n2084
+sorrow	Trauer	faixa10 n2085
+inventor	Erfinder	faixa10 n2086
+cliff	Klippe	faixa10 n2087
+umbrella	Regenschirm	faixa10 n2088
+interruption	Unterbrechung	faixa10 n2089
+merry	fröhlich	faixa10 n2090
+gallon	Gallone	faixa10 n2091
+conquest	Eroberung	faixa10 n2092
+headache	Kopfschmerzen	faixa10 n2093
+tailor	Schneider	faixa10 n2094
+bucket	Eimer	faixa10 n2095
+scent	Duft	faixa10 n2096
+signature	stempel, unterschrift	faixa10 n2097
+cart	Wagen	faixa10 n2098
+darken	verdunkeln	faixa10 n2099
+sometime	einige zeit	faixa10 n2100
+applaud	applaudieren	faixa10 n2101
+underneath	unter	faixa10 n2102
+hello	hallo	faixa10 n2103
+pretense	Schein	faixa10 n2104
+descent	Abstieg	faixa10 n2105
+conquer	erobern	faixa10 n2106
+framework	Rahmen	faixa10 n2107
+confidential	vertraulich	faixa10 n2108
+adoption	Verabschiedung	faixa10 n2109
+disgust	Ekel	faixa10 n2110
+waist	Taille	faixa10 n2111
+momentary	kurz	faixa10 n2112
+receipt	Erhalt	faixa10 n2113
+pearl	Perle	faixa10 n2114
+ray	Strahl	faixa10 n2115
+lazy	faul	faixa10 n2116
+limb	Glied	faixa10 n2117
+grammatical	grammatisch	faixa10 n2118
+beast	Tier	faixa10 n2119
+monkey	Affe	faixa10 n2120
+jewel	Schmuckstück	faixa10 n2121
+persuasion	Überzeugungskraft	faixa10 n2122
+obedience	Gehorsam	faixa10 n2123
+sock	Socke	faixa10 n2124
+vowel	Vokal	faixa10 n2125
+hammer	Hammer	faixa10 n2126
+inn	gasthof	faixa10 n2127
+chimney	Schornstein	faixa10 n2128
+dissatisfaction	Unzufriedenheit	faixa10 n2129
+annoyance	Ärger	faixa10 n2130
+ornament	Ornament	faixa10 n2131
+honesty	Ehrlichkeit	faixa10 n2132
+outward	nach außen	faixa10 n2133
+sharpen	schärfen	faixa10 n2134
+handkerchief	Taschentuch	faixa10 n2135
+greed	Gier	faixa10 n2136
+heavenly	himmlisch	faixa10 n2137
+thirst	Durst	faixa10 n2138
+niece	Nichte	faixa10 n2139
+spill	verschütten	faixa10 n2140
+loaf	Laib	faixa10 n2141
+wheat	Weizen	faixa10 n2142
+worm	Wurm	faixa10 n2143
+secrecy	Geheimhaltung	faixa10 n2144
+rude	unhöflich	faixa10 n2145
+heighten	erhöhen	faixa10 n2146
+flatten	ebnen	faixa10 n2147
+loosen	lösen	faixa10 n2148
+cheese	Käse	faixa10 n2149
+rivalry	Rivalität	faixa10 n2150
+royalty	Königtum	faixa10 n2151
+discontent	Unzufriedenheit	faixa10 n2152
+complication	Komplikation	faixa10 n2153
+fright	der schreck	faixa10 n2154
+indoor	Innen-	faixa10 n2155
+flour	Mehl	faixa10 n2156
+actress	Schauspielerin	faixa10 n2157
+congratulation	Glückwunsch	faixa10 n2158
+ounce	Unze	faixa10 n2159
+fry	braten	faixa10 n2160
+everlasting	ewig	faixa10 n2161
+goat	Ziege	faixa10 n2162
+ink	Tinte	faixa10 n2163
+disappearance	Verschwinden	faixa10 n2164
+reproduction	Wiedergabe	faixa10 n2165
+thicken	verdicken	faixa10 n2166
+avoidance	Vermeidung	faixa10 n2167
+spoon	Löffel	faixa10 n2168
+strap	Gurt	faixa10 n2169
+deceive	betrügen	faixa10 n2170
+lengthen	verlängern	faixa10 n2171
+revenge	Rache	faixa10 n2172
+correction	Korrektur	faixa10 n2173
+descendant	Nachkomme	faixa10 n2174
+hesitation	Zögern	faixa10 n2175
+spade	Spaten	faixa10 n2176
+basin	Becken	faixa10 n2177
+weed	Unkraut	faixa10 n2178
+omission	Unterlassung	faixa10 n2179
+old-fashioned	altmodisch	faixa10 n2180
+bicycle	Fahrrad	faixa10 n2181
+breadth	Breite	faixa10 n2182
+photography	Fotografie	faixa10 n2183
+coward	Feigling	faixa10 n2184
+mat	Matte	faixa10 n2185
+rejoice	sich freuen	faixa10 n2186
+cheat	betrügen	faixa10 n2187
+congratulate	gratulieren	faixa10 n2188
+discomfort	Beschwerden	faixa10 n2189
+enclosure	Gehege	faixa10 n2190
+attentive	aufmerksam	faixa10 n2191
+paw	Pfote	faixa10 n2192
+overflow	Überlauf	faixa10 n2193
+dissatisfy	nicht befriedigen	faixa10 n2194
+multiplication	Vermehrung	faixa10 n2195
+whichever	welche auch immer	faixa10 n2196
+tidy	ordentlich	faixa10 n2197
+bribe	Bestechung	faixa10 n2198
+mend	flicken	faixa10 n2199
+stocking	Strumpf	faixa10 n2200
+feast	Fest	faixa10 n2201
+nuisance	Plage	faixa10 n2202
+thorn	Dorn	faixa10 n2203
+tame	zähmen	faixa10 n2204
+inclusive	inklusive	faixa10 n2205
+homemade	selbst gemacht	faixa10 n2206
+handwriting	Handschrift	faixa10 n2207
+chalk	Kreide	faixa10 n2208
+sour	sauer	faixa10 n2209
+slippery	rutschig	faixa10 n2210
+procession	Prozession	faixa10 n2211
+ripen	reifen	faixa10 n2212
+jealous	eifersüchtig auf	faixa10 n2213
+jealousy	die eifersucht	faixa10 n2214
+liar	Lügner	faixa10 n2215
+homecoming	Heimkehr	faixa10 n2216
+barber	Friseur	faixa10 n2217
+whiten	weiß machen	faixa10 n2218
+berry	Beere	faixa10 n2219
+lighten	aufhellen	faixa10 n2220
+pigeon	taube	faixa10 n2221
+hinder	behindern	faixa10 n2222
+bravery	Tapferkeit	faixa10 n2223
+baggage	gepäck	faixa10 n2224
+noun	Substantiv	faixa10 n2225
+amongst	unter	faixa10 n2226
+grammar	Grammatik	faixa10 n2227
+cultivation	Anbau	faixa10 n2228
+companionship	Gesellschaft	faixa10 n2229
+rubbish	Müll	faixa10 n2230
+modesty	Bescheidenheit	faixa10 n2231
+woolen	Woll	faixa10 n2232
+deepen	vertiefen	faixa10 n2233
+pastry	Teig	faixa10 n2234
+cupboard	Schrank	faixa10 n2235
+quart	Quart	faixa10 n2236
+canal	Kanal	faixa10 n2237
+notebook	Notizbuch	faixa10 n2238
+deceit	Betrug	faixa10 n2239
+parcel	Paket	faixa10 n2240
+brighten	aufhellen	faixa10 n2241
+moderation	Mäßigung	faixa10 n2242
+punctual	pünktlich	faixa10 n2243
+hurrah	hurra	faixa10 n2244
+lipstick	Lippenstift	faixa10 n2245
+uppermost	oberste	faixa10 n2246
+fatten	mästen	faixa10 n2247
+conqueror	Sieger	faixa10 n2248
+hindrance	Behinderung	faixa10 n2249
+cowardice	Feigheit	faixa10 n2250
+obedient	gehorsam	faixa10 n2251
+saucer	Untertasse	faixa10 n2252
+madden	verrückt machen	faixa10 n2253
+scold	schelten	faixa10 n2254
+weekday	Wochentag	faixa10 n2255
+rotten	morsch	faixa10 n2256
+disrespect	Respektlosigkeit	faixa10 n2257
+widower	Witwer	faixa10 n2258
+deafen	taub machen	faixa10 n2259
+donkey	Esel	faixa10 n2260
+businesslike	sachlich	faixa10 n2261
+motherhood	Mutterschaft	faixa10 n2262
+sadden	betrüben	faixa10 n2263
+handshake	Händedruck	faixa10 n2264
+calculator	Rechner	faixa10 n2265
+headdress	Kopfschmuck	faixa10 n2266
+scissors	Schere	faixa10 n2267
+translator	Übersetzer	faixa10 n2268
+possessor	Besitzer	faixa10 n2269
+shilling	Schilling	faixa10 n2270
+redden	röten	faixa10 n2271
+motherly	mütterlich	faixa10 n2272
+whose	deren	faixa10 n2273
+cultivator	Kultivator	faixa10 n2274
+whom	wem	faixa10 n2275
+homework	hausaufgaben	faixa10 n2276
+electrician	Elektriker	faixa10 n2277
+oar	Ruder	faixa10 n2278
+bribery	Bestechung	faixa10 n2279
+sweeten	versüßen	faixa10 n2280
+sow	Sau	faixa10 n2281
+pronunciation	Aussprache	faixa10 n2282
+beak	Schnabel	faixa10 n2283
+plural	Plural	faixa10 n2284

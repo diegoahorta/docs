@@ -1,0 +1,2287 @@
+#separator:tab
+#html:true
+#columns:Frente	Verso	Tags
+the	o, a, os, as	faixa01 n0001
+be	ser, estar	faixa01 n0002
+of	de	faixa01 n0003
+and	e	faixa01 n0004
+a	um, uma	faixa01 n0005
+to	para, a	faixa01 n0006 alerta
+in	em, no, na	faixa01 n0007
+he	ele	faixa01 n0008
+have	ter, haver	faixa01 n0009
+it	isso, ele/ela (neutro)	faixa01 n0010
+that	que, isso	faixa01 n0011 alerta
+for	para, por	faixa01 n0012
+they	eles, elas	faixa01 n0013
+I	eu	faixa01 n0014
+with	com	faixa01 n0015 alerta
+as	como	faixa01 n0016
+not	não	faixa01 n0017
+on	em, sobre	faixa01 n0018
+she	ela	faixa01 n0019
+at	em, às	faixa01 n0020
+by	por, de	faixa01 n0021
+this	este, esta, isso	faixa01 n0022
+we	nós	faixa01 n0023
+you	você, tu, vocês	faixa01 n0024
+do	fazer	faixa01 n0025
+but	mas	faixa01 n0026 alerta
+from	de, desde	faixa01 n0027
+or	ou	faixa01 n0028
+which	qual, que	faixa01 n0029
+one	um, uma	faixa01 n0030
+would	iria, gostaria	faixa01 n0031
+all	todo, toda, todos	faixa01 n0032
+will	irá, vontade	faixa01 n0033 alerta
+there	lá, existe	faixa01 n0034
+say	dizer	faixa01 n0035
+who	quem	faixa01 n0036
+make	fazer, criar	faixa01 n0037
+when	quando	faixa01 n0038
+can	poder	faixa01 n0039 alerta
+more	mais	faixa01 n0040
+if	se	faixa01 n0041 alerta
+no	não, nenhum	faixa01 n0042 alerta
+man	homem	faixa01 n0043 alerta
+out	fora	faixa01 n0044
+other	outro	faixa01 n0045
+so	então, tão	faixa01 n0046 alerta
+what	o que	faixa01 n0047 alerta
+time	tempo	faixa01 n0048
+up	para cima	faixa01 n0049
+go	ir	faixa01 n0050
+about	sobre, acerca	faixa01 n0051
+than	do que	faixa01 n0052
+into	para dentro	faixa01 n0053
+could	poderia	faixa01 n0054
+state	estado	faixa01 n0055
+only	apenas, só	faixa01 n0056 alerta
+new	novo	faixa01 n0057
+year	ano	faixa01 n0058
+some	algum, alguns	faixa01 n0059 alerta
+take	tomar, levar	faixa01 n0060
+come	vir	faixa01 n0061
+these	estes, estas	faixa01 n0062
+know	saber, conhecer	faixa01 n0063
+see	ver	faixa01 n0064
+use	usar	faixa01 n0065
+get	obter, conseguir	faixa01 n0066
+like	gostar, como	faixa01 n0067
+then	então	faixa01 n0068
+first	primeiro	faixa01 n0069
+any	qualquer	faixa01 n0070
+work	trabalho, trabalhar	faixa01 n0071
+now	agora	faixa01 n0072
+may	pode, maio	faixa01 n0073 alerta
+such	tal	faixa01 n0074
+give	dar	faixa01 n0075
+over	sobre, acabado	faixa01 n0076
+think	pensar	faixa01 n0077
+most	a maioria, mais	faixa01 n0078
+even	mesmo, até	faixa01 n0079
+find	encontrar	faixa01 n0080
+day	dia	faixa01 n0081
+also	também	faixa01 n0082
+after	depois	faixa01 n0083
+way	caminho, maneira	faixa01 n0084
+many	muitos	faixa01 n0085
+must	deve	faixa01 n0086 alerta
+look	olhar, parecer	faixa01 n0087 alerta
+before	antes	faixa01 n0088
+great	ótimo, grande	faixa01 n0089 alerta
+back	de volta, costas	faixa01 n0090
+through	através	faixa01 n0091
+long	longo	faixa01 n0092 alerta
+where	onde	faixa01 n0093
+much	muito	faixa01 n0094
+should	deveria	faixa01 n0095
+well	bem	faixa01 n0096
+people	pessoas	faixa01 n0097
+down	para baixo	faixa01 n0098
+own	próprio	faixa01 n0099
+just	apenas, só	faixa01 n0100
+because	porque	faixa02 n0101
+good	bom, boa	faixa02 n0102 alerta
+each	cada	faixa02 n0103
+those	aqueles, aquelas	faixa02 n0104
+feel	sentir	faixa02 n0105
+seem	parecer	faixa02 n0106
+how	como	faixa02 n0107 alerta
+high	alto	faixa02 n0108
+too	muito, também	faixa02 n0109
+place	lugar	faixa02 n0110
+little	pequeno, pouco	faixa02 n0111
+world	mundo	faixa02 n0112
+very	muito	faixa02 n0113
+still	ainda	faixa02 n0114
+nation	nação	faixa02 n0115
+hand	mão	faixa02 n0116
+old	velho, antigo	faixa02 n0117 alerta
+life	vida	faixa02 n0118
+tell	contar, dizer	faixa02 n0119
+write	escrever	faixa02 n0120
+become	tornar-se	faixa02 n0121
+here	aqui	faixa02 n0122
+show	mostrar	faixa02 n0123
+house	casa	faixa02 n0124
+both	ambos	faixa02 n0125
+between	entre	faixa02 n0126
+need	precisar	faixa02 n0127
+mean	significar	faixa02 n0128
+call	chamar, ligar	faixa02 n0129
+develop	desenvolver	faixa02 n0130
+under	embaixo, sob	faixa02 n0131
+last	último	faixa02 n0132
+right	certo, direito	faixa02 n0133
+move	mover, mudar	faixa02 n0134
+thing	coisa	faixa02 n0135
+general	geral	faixa02 n0136
+school	escola	faixa02 n0137
+never	nunca	faixa02 n0138
+same	mesmo	faixa02 n0139
+another	outro, mais um	faixa02 n0140
+begin	começar	faixa02 n0141 alerta
+while	enquanto	faixa02 n0142
+number	número	faixa02 n0143
+part	parte	faixa02 n0144
+turn	virar, vez	faixa02 n0145
+real	real	faixa02 n0146
+leave	deixar, sair	faixa02 n0147
+might	poderia	faixa02 n0148 alerta
+want	querer	faixa02 n0149
+point	ponto	faixa02 n0150
+form	forma, formar	faixa02 n0151
+off	desligado, fora	faixa02 n0152
+child	criança	faixa02 n0153
+few	poucos	faixa02 n0154
+small	pequeno	faixa02 n0155
+since	desde	faixa02 n0156
+against	contra	faixa02 n0157
+ask	perguntar	faixa02 n0158
+late	tarde	faixa02 n0159
+home	casa, lar	faixa02 n0160
+interest	interesse	faixa02 n0161
+large	grande	faixa02 n0162
+person	pessoa	faixa02 n0163
+end	fim, terminar	faixa02 n0164
+open	aberto, abrir	faixa02 n0165
+public	público	faixa02 n0166
+follow	seguir	faixa02 n0167
+during	durante	faixa02 n0168
+present	presente	faixa02 n0169
+without	sem	faixa02 n0170
+again	de novo, novamente	faixa02 n0171
+hold	segurar, manter	faixa02 n0172
+govern	governar	faixa02 n0173
+around	em volta, cerca de	faixa02 n0174
+possible	possível	faixa02 n0175
+head	cabeça	faixa02 n0176
+consider	considerar	faixa02 n0177
+word	palavra	faixa02 n0178
+program	programa	faixa02 n0179
+problem	problema	faixa02 n0180
+however	contudo, no entanto	faixa02 n0181
+lead	liderar, chumbo	faixa02 n0182
+system	sistema	faixa02 n0183
+set	conjunto, definir	faixa02 n0184
+order	ordem, pedir	faixa02 n0185
+eye	olho	faixa02 n0186
+plan	plano, planejar	faixa02 n0187
+run	correr, administrar	faixa02 n0188 alerta
+keep	manter	faixa02 n0189
+face	rosto, enfrentar	faixa02 n0190
+fact	fato	faixa02 n0191
+group	grupo	faixa02 n0192
+play	brincar, jogar, tocar	faixa02 n0193
+stand	ficar de pé, suportar	faixa02 n0194
+increase	aumentar	faixa02 n0195
+early	cedo, cedo	faixa02 n0196
+course	curso, claro	faixa02 n0197
+change	mudar, mudança	faixa02 n0198
+help	ajudar, ajuda	faixa02 n0199
+line	linha	faixa02 n0200
+city	cidade	faixa02 n0201
+put	colocar, pôr	faixa02 n0202
+close	fechar, perto	faixa02 n0203
+case	caso	faixa02 n0204
+force	força, forçar	faixa02 n0205
+meet	encontrar, conhecer	faixa02 n0206
+once	uma vez	faixa02 n0207
+water	água	faixa02 n0208
+upon	sobre	faixa02 n0209
+war	guerra	faixa02 n0210
+build	construir	faixa02 n0211
+hear	ouvir	faixa02 n0212
+light	luz, leve	faixa02 n0213
+unite	unir	faixa02 n0214
+live	viver	faixa02 n0215
+every	cada, todo	faixa02 n0216
+country	país	faixa02 n0217
+bring	trazer	faixa02 n0218
+center	centro	faixa02 n0219
+let	deixar	faixa02 n0220 alerta
+side	lado	faixa02 n0221
+try	tentar	faixa02 n0222
+provide	fornecer, proporcionar	faixa02 n0223
+continue	continuar	faixa02 n0224
+name	nome	faixa02 n0225
+certain	certo, determinado	faixa02 n0226
+power	poder, energia	faixa02 n0227
+pay	pagar	faixa02 n0228
+result	resultado	faixa02 n0229
+question	pergunta, questão	faixa02 n0230
+study	estudar, estudo	faixa02 n0231
+woman	mulher	faixa02 n0232
+member	membro	faixa02 n0233
+until	até	faixa02 n0234
+far	longe	faixa02 n0235
+night	noite	faixa02 n0236
+always	sempre	faixa02 n0237
+service	serviço	faixa02 n0238
+away	longe, fora	faixa02 n0239 alerta
+report	relatório, reportar	faixa02 n0240
+something	algo	faixa02 n0241
+company	empresa, companhia	faixa02 n0242
+week	semana	faixa02 n0243
+church	igreja	faixa02 n0244
+toward	em direção a	faixa02 n0245
+start	começar, início	faixa02 n0246
+social	social	faixa02 n0247
+room	quarto, sala	faixa02 n0248
+figure	figura, número	faixa02 n0249
+nature	natureza	faixa02 n0250
+though	embora	faixa03 n0251
+young	jovem	faixa03 n0252
+less	menos	faixa03 n0253
+enough	suficiente	faixa03 n0254
+almost	quase	faixa03 n0255
+read	ler	faixa03 n0256
+include	incluir	faixa03 n0257
+president	presidente	faixa03 n0258
+nothing	nada	faixa03 n0259
+yet	ainda	faixa03 n0260
+better	melhor	faixa03 n0261
+big	grande	faixa03 n0262
+boy	menino	faixa03 n0263
+cost	custo, custar	faixa03 n0264
+business	negócio	faixa03 n0265
+value	valor	faixa03 n0266
+second	segundo	faixa03 n0267
+why	por que	faixa03 n0268 alerta
+clear	claro	faixa03 n0269
+expect	esperar	faixa03 n0270
+family	família	faixa03 n0271
+complete	completo, completar	faixa03 n0272
+act	ato, agir	faixa03 n0273
+sense	sentido, sentir	faixa03 n0274
+mind	mente	faixa03 n0275
+experience	experiência	faixa03 n0276
+art	arte	faixa03 n0277
+next	próximo	faixa03 n0278
+near	perto	faixa03 n0279
+direct	direto, dirigir	faixa03 n0280
+car	carro	faixa03 n0281
+law	lei	faixa03 n0282
+industry	indústria	faixa03 n0283
+important	importante	faixa03 n0284
+girl	menina	faixa03 n0285
+god	deus	faixa03 n0286
+several	vários	faixa03 n0287
+matter	importar, assunto	faixa03 n0288
+usual	usual	faixa03 n0289
+rather	bastante, preferir	faixa03 n0290
+per	por	faixa03 n0291
+often	frequentemente	faixa03 n0292
+kind	tipo, gentil	faixa03 n0293
+among	entre	faixa03 n0294
+white	branco	faixa03 n0295
+reason	razão, motivo	faixa03 n0296
+action	ação	faixa03 n0297
+return	retorno, voltar	faixa03 n0298
+foot	pé	faixa03 n0299
+care	cuidado, importar-se	faixa03 n0300
+simple	simples	faixa03 n0301
+within	dentro de	faixa03 n0302
+love	amor, amar	faixa03 n0303 alerta
+human	humano	faixa03 n0304
+along	ao longo de	faixa03 n0305
+appear	aparecer	faixa03 n0306
+doctor	médico	faixa03 n0307
+believe	acreditar	faixa03 n0308
+speak	falar	faixa03 n0309
+active	ativo	faixa03 n0310
+student	estudante	faixa03 n0311
+month	mês	faixa03 n0312
+drive	dirigir	faixa03 n0313 alerta
+concern	preocupação	faixa03 n0314
+best	melhor	faixa03 n0315
+door	porta	faixa03 n0316
+hope	esperança	faixa03 n0317
+example	exemplo	faixa03 n0318
+inform	informar	faixa03 n0319
+body	corpo	faixa03 n0320
+ever	alguma vez	faixa03 n0321
+least	menos	faixa03 n0322
+probable	provável	faixa03 n0323
+understand	entender	faixa03 n0324
+reach	alcançar	faixa03 n0325
+effect	efeito	faixa03 n0326
+different	diferente	faixa03 n0327
+idea	ideia	faixa03 n0328
+whole	todo, inteiro	faixa03 n0329
+control	controle	faixa03 n0330
+condition	condição	faixa03 n0331
+field	campo	faixa03 n0332
+pass	passar	faixa03 n0333
+fall	cair	faixa03 n0334
+note	nota	faixa03 n0335
+special	especial	faixa03 n0336
+talk	conversar	faixa03 n0337
+particular	particular	faixa03 n0338
+today	hoje	faixa03 n0339
+measure	medida	faixa03 n0340
+walk	caminhar	faixa03 n0341
+teach	ensinar	faixa03 n0342
+low	baixo	faixa03 n0343
+hour	hora	faixa03 n0344
+type	tipo	faixa03 n0345
+carry	carregar	faixa03 n0346
+rate	taxa	faixa03 n0347
+remain	permanecer	faixa03 n0348
+full	cheio	faixa03 n0349
+street	rua	faixa03 n0350
+easy	fácil	faixa03 n0351
+although	embora	faixa03 n0352
+record	registro	faixa03 n0353
+sit	sentar	faixa03 n0354
+determine	determinar	faixa03 n0355
+level	nível	faixa03 n0356
+local	local	faixa03 n0357
+sure	certo	faixa03 n0358
+receive	receber	faixa03 n0359
+thus	assim	faixa03 n0360
+moment	momento	faixa03 n0361
+spirit	espírito	faixa03 n0362
+train	trem	faixa03 n0363
+college	faculdade	faixa03 n0364
+religion	religião	faixa03 n0365
+perhaps	talvez	faixa03 n0366
+music	música	faixa03 n0367
+grow	crescer	faixa03 n0368
+free	livre	faixa03 n0369
+cause	causa	faixa03 n0370
+serve	servir	faixa03 n0371
+age	idade	faixa03 n0372
+book	livro	faixa03 n0373
+board	quadro	faixa03 n0374
+recent	recente	faixa03 n0375
+sound	som	faixa03 n0376
+office	escritório	faixa03 n0377
+cut	cortar	faixa03 n0378
+step	passo	faixa03 n0379
+class	classe	faixa03 n0380
+true	verdadeiro	faixa03 n0381 alerta
+history	história	faixa03 n0382
+position	posição	faixa03 n0383
+above	acima	faixa03 n0384
+strong	forte	faixa03 n0385
+friend	amigo	faixa03 n0386
+necessary	necessário	faixa03 n0387
+add	adicionar	faixa03 n0388
+court	tribunal	faixa03 n0389
+deal	acordo	faixa03 n0390
+tax	imposto	faixa03 n0391
+support	apoio	faixa03 n0392
+party	festa, partido	faixa03 n0393
+whether	se	faixa03 n0394
+either	qualquer um	faixa03 n0395
+land	terra	faixa03 n0396
+material	material	faixa03 n0397
+happen	acontecer	faixa03 n0398
+education	educação	faixa03 n0399
+death	morte	faixa03 n0400
+agree	concordar	faixa03 n0401
+arm	braço	faixa03 n0402
+mother	mãe	faixa03 n0403
+across	através	faixa03 n0404
+quite	bastante	faixa03 n0405
+anything	qualquer coisa	faixa03 n0406 alerta
+town	cidade pequena	faixa03 n0407
+past	passado	faixa03 n0408
+view	vista	faixa03 n0409
+society	sociedade	faixa03 n0410
+manage	gerenciar	faixa03 n0411
+answer	resposta	faixa03 n0412
+break	quebrar, pausa	faixa03 n0413
+organize	organizar	faixa03 n0414
+half	metade	faixa03 n0415
+fire	fogo	faixa03 n0416
+lose	perder	faixa03 n0417
+money	dinheiro	faixa03 n0418
+stop	parar	faixa03 n0419
+actual	real	faixa03 n0420
+already	já	faixa03 n0421 alerta
+effort	esforço	faixa03 n0422
+wait	esperar	faixa03 n0423 alerta
+department	departamento	faixa03 n0424
+able	capaz	faixa03 n0425
+political	político	faixa03 n0426
+learn	aprender	faixa03 n0427
+voice	voz	faixa03 n0428
+air	ar	faixa03 n0429
+together	juntos	faixa03 n0430
+shall	deverá	faixa03 n0431
+cover	cobrir	faixa03 n0432
+common	comum	faixa03 n0433
+subject	assunto	faixa03 n0434
+draw	desenhar	faixa03 n0435
+short	curto	faixa03 n0436
+wife	esposa	faixa03 n0437
+treat	tratar	faixa03 n0438
+limit	limite	faixa03 n0439
+road	estrada	faixa03 n0440
+letter	carta	faixa03 n0441
+color	cor	faixa03 n0442
+behind	atrás	faixa03 n0443
+produce	produzir	faixa03 n0444
+send	enviar	faixa03 n0445
+term	termo	faixa03 n0446
+total	total	faixa03 n0447
+university	universidade	faixa03 n0448
+rise	subir	faixa03 n0449
+century	século	faixa03 n0450
+success	sucesso	faixa03 n0451
+minute	minuto	faixa03 n0452
+remember	lembrar	faixa03 n0453
+purpose	propósito	faixa03 n0454
+test	teste	faixa03 n0455
+fight	lutar	faixa03 n0456
+watch	assistir	faixa03 n0457
+situation	situação	faixa03 n0458
+south	sul	faixa03 n0459
+ago	atrás	faixa03 n0460
+difference	diferença	faixa03 n0461
+stage	estágio, palco	faixa03 n0462
+father	pai	faixa03 n0463
+table	mesa	faixa03 n0464
+rest	descanso	faixa03 n0465
+bear	suportar	faixa03 n0466
+entire	inteiro	faixa03 n0467
+market	mercado	faixa03 n0468
+prepare	preparar	faixa03 n0469
+explain	explicar	faixa03 n0470
+offer	oferecer	faixa03 n0471
+plant	planta	faixa03 n0472
+charge	carga	faixa03 n0473
+ground	chão	faixa03 n0474
+west	oeste	faixa03 n0475
+picture	imagem	faixa03 n0476
+hard	difícil	faixa03 n0477
+front	frente	faixa03 n0478
+lie	mentir	faixa03 n0479
+modern	moderno	faixa03 n0480
+dark	escuro	faixa03 n0481
+surface	superfície	faixa03 n0482
+rule	regra	faixa03 n0483
+regard	considerar	faixa03 n0484
+dance	dançar	faixa03 n0485
+peace	paz	faixa03 n0486
+observe	observar	faixa03 n0487
+future	futuro	faixa03 n0488
+wall	parede	faixa03 n0489
+farm	fazenda	faixa03 n0490
+claim	afirmar	faixa03 n0491
+firm	firme	faixa03 n0492
+operation	operação	faixa03 n0493
+further	mais adiante	faixa03 n0494
+pressure	pressão	faixa03 n0495
+property	propriedade	faixa03 n0496
+morning	manhã	faixa03 n0497 alerta
+amount	quantidade	faixa03 n0498
+top	topo	faixa03 n0499
+outside	fora	faixa03 n0500
+piece	pedaço	faixa04 n0501
+sometimes	às vezes	faixa04 n0502
+beauty	beleza	faixa04 n0503
+trade	comércio	faixa04 n0504
+fear	medo	faixa04 n0505
+demand	demanda	faixa04 n0506
+wonder	maravilha	faixa04 n0507
+list	lista	faixa04 n0508
+accept	aceitar	faixa04 n0509
+judge	juiz	faixa04 n0510
+paint	pintar	faixa04 n0511
+mile	milha	faixa04 n0512
+soon	logo	faixa04 n0513
+responsible	responsável	faixa04 n0514
+allow	permitir	faixa04 n0515
+secretary	secretário	faixa04 n0516
+heart	coração	faixa04 n0517
+union	união	faixa04 n0518
+slow	lento	faixa04 n0519
+island	ilha	faixa04 n0520
+enter	entrar	faixa04 n0521
+drink	beber	faixa04 n0522
+story	história	faixa04 n0523
+experiment	experimento	faixa04 n0524
+stay	ficar	faixa04 n0525
+paper	papel	faixa04 n0526
+space	espaço	faixa04 n0527
+apply	aplicar	faixa04 n0528
+decide	decidir	faixa04 n0529
+share	compartilhar	faixa04 n0530
+desire	desejo	faixa04 n0531
+spend	gastar	faixa04 n0532
+sign	sinal	faixa04 n0533
+therefore	portanto	faixa04 n0534
+various	vários	faixa04 n0535
+visit	visitar	faixa04 n0536
+supply	fornecer	faixa04 n0537
+officer	oficial	faixa04 n0538
+doubt	dúvida	faixa04 n0539
+private	privado	faixa04 n0540
+immediate	imediato	faixa04 n0541
+wish	desejo	faixa04 n0542
+contain	conter	faixa04 n0543
+feed	alimentar	faixa04 n0544
+raise	levantar	faixa04 n0545
+describe	descrever	faixa04 n0546
+ready	pronto	faixa04 n0547
+horse	cavalo	faixa04 n0548
+son	filho	faixa04 n0549
+exist	existir	faixa04 n0550
+north	norte	faixa04 n0551
+suggest	sugerir	faixa04 n0552
+station	estação	faixa04 n0553
+effective	eficaz	faixa04 n0554
+food	comida	faixa04 n0555
+deep	profundo	faixa04 n0556
+wide	largo	faixa04 n0557
+alone	sozinho	faixa04 n0558
+character	personagem	faixa04 n0559
+english	inglês	faixa04 n0560
+happy	feliz	faixa04 n0561
+critic	crítico	faixa04 n0562
+unit	unidade	faixa04 n0563
+product	produto	faixa04 n0564
+respect	respeito	faixa04 n0565
+drop	cair, gota	faixa04 n0566 alerta
+nor	nem	faixa04 n0567
+fill	encher	faixa04 n0568
+cold	frio	faixa04 n0569
+represent	representar	faixa04 n0570
+sudden	súbito	faixa04 n0571
+basic	básico	faixa04 n0572
+kill	matar	faixa04 n0573
+fine	fino, multa	faixa04 n0574
+trouble	problema	faixa04 n0575
+mark	marcar	faixa04 n0576
+single	único	faixa04 n0577 alerta
+press	pressionar	faixa04 n0578
+heavy	pesado	faixa04 n0579
+attempt	tentativa	faixa04 n0580
+origin	origem	faixa04 n0581
+standard	padrão	faixa04 n0582
+everything	tudo	faixa04 n0583
+committee	comitê	faixa04 n0584
+moral	moral	faixa04 n0585
+black	preto	faixa04 n0586
+red	vermelho	faixa04 n0587
+bad	ruim	faixa04 n0588
+earth	terra	faixa04 n0589
+accord	acordo	faixa04 n0590
+else	outro	faixa04 n0591
+mere	mero	faixa04 n0592
+die	morrer	faixa04 n0593
+remark	observação	faixa04 n0594
+basis	base	faixa04 n0595
+except	exceto	faixa04 n0596
+equal	igual	faixa04 n0597
+east	leste	faixa04 n0598
+event	evento	faixa04 n0599
+employ	empregar	faixa04 n0600
+defense	defesa	faixa04 n0601
+smile	sorriso	faixa04 n0602
+river	rio	faixa04 n0603
+improve	melhorar	faixa04 n0604
+game	jogo	faixa04 n0605
+detail	detalhe	faixa04 n0606
+account	conta	faixa04 n0607
+cent	centavo	faixa04 n0608
+sort	tipo	faixa04 n0609
+reduce	reduzir	faixa04 n0610
+club	clube	faixa04 n0611
+buy	comprar	faixa04 n0612
+attention	atenção	faixa04 n0613
+ship	navio	faixa04 n0614
+decision	decisão	faixa04 n0615
+wear	vestir	faixa04 n0616
+inside	dentro	faixa04 n0617
+win	ganhar	faixa04 n0618
+suppose	supor	faixa04 n0619
+ride	andar de	faixa04 n0620
+operate	operar	faixa04 n0621
+realize	realizar	faixa04 n0622
+sale	venda	faixa04 n0623
+choose	escolher	faixa04 n0624
+park	parque	faixa04 n0625
+square	quadrado	faixa04 n0626
+vote	voto	faixa04 n0627
+price	preço	faixa04 n0628
+district	distrito	faixa04 n0629
+dead	morto	faixa04 n0630
+foreign	estrangeiro	faixa04 n0631
+window	janela	faixa04 n0632
+beyond	além	faixa04 n0633
+direction	direção	faixa04 n0634
+strike	greve	faixa04 n0635
+instead	em vez de	faixa04 n0636
+trial	julgamento	faixa04 n0637
+practice	prática	faixa04 n0638
+catch	pegar	faixa04 n0639
+opportunity	oportunidade	faixa04 n0640
+likely	provável	faixa04 n0641
+recognize	reconhecer	faixa04 n0642
+permit	permitir	faixa04 n0643
+serious	sério	faixa04 n0644
+attack	ataque	faixa04 n0645
+floor	chão	faixa04 n0646
+association	associação	faixa04 n0647
+spring	primavera	faixa04 n0648
+lot	lote	faixa04 n0649
+stock	estoque	faixa04 n0650
+lack	falta	faixa04 n0651
+hair	cabelo	faixa04 n0652
+science	ciência	faixa04 n0653
+relation	relação	faixa04 n0654
+profession	profissão	faixa04 n0655
+pattern	padrão	faixa04 n0656
+quick	rápido	faixa04 n0657
+medical	médico	faixa04 n0658
+influence	influência	faixa04 n0659
+occasion	ocasião	faixa04 n0660
+machine	máquina	faixa04 n0661
+compare	comparar	faixa04 n0662
+husband	marido	faixa04 n0663
+blue	azul	faixa04 n0664
+international	internacional	faixa04 n0665
+fair	justo	faixa04 n0666
+especially	especialmente	faixa04 n0667
+indeed	de fato	faixa04 n0668
+imagine	imaginar	faixa04 n0669
+surprise	surpresa	faixa04 n0670
+average	média	faixa04 n0671
+official	oficial	faixa04 n0672
+temperature	temperatura	faixa04 n0673
+difficult	difícil	faixa04 n0674
+sing	cantar	faixa04 n0675
+hit	bater	faixa04 n0676
+tree	árvore	faixa04 n0677
+race	corrida	faixa04 n0678
+police	polícia	faixa04 n0679
+touch	tocar	faixa04 n0680
+relative	relativo	faixa04 n0681
+throw	jogar	faixa04 n0682
+quality	qualidade	faixa04 n0683
+former	antigo	faixa04 n0684
+pull	puxar	faixa04 n0685
+chance	chance	faixa04 n0686
+prove	provar	faixa04 n0687
+argue	argumentar	faixa04 n0688
+settle	resolver	faixa04 n0689
+growth	crescimento	faixa04 n0690
+date	data	faixa04 n0691
+heat	calor	faixa04 n0692
+save	salvar	faixa04 n0693
+performance	desempenho	faixa04 n0694
+count	contar	faixa04 n0695
+production	produção	faixa04 n0696
+listen	ouvir	faixa04 n0697 alerta
+main	principal	faixa04 n0698
+pick	escolher	faixa04 n0699
+size	tamanho	faixa04 n0700
+cool	fresco	faixa04 n0701
+army	exército	faixa04 n0702
+patient	paciente	faixa04 n0703
+combine	combinar	faixa04 n0704
+summer	verão	faixa04 n0705
+hall	salão	faixa04 n0706
+slight	leve	faixa04 n0707
+command	comando	faixa04 n0708
+enjoy	aproveitar	faixa04 n0709
+length	comprimento	faixa04 n0710
+proper	adequado	faixa04 n0711
+express	expressar	faixa04 n0712
+health	saúde	faixa04 n0713
+chief	chefe	faixa04 n0714
+evening	noite	faixa04 n0715
+store	loja	faixa04 n0716
+language	língua	faixa04 n0717
+degree	grau	faixa04 n0718
+lay	deitar	faixa04 n0719 alerta
+current	atual	faixa04 n0720
+gun	arma	faixa04 n0721
+dog	cachorro	faixa04 n0722
+hotel	hotel	faixa04 n0723
+strange	estranho	faixa04 n0724
+separate	separar	faixa04 n0725
+boat	barco	faixa04 n0726
+fail	falhar	faixa04 n0727
+clean	limpo	faixa04 n0728
+dress	vestido	faixa04 n0729
+anyone	qualquer um	faixa04 n0730
+gain	ganho	faixa04 n0731
+pain	dor	faixa04 n0732
+object	objeto	faixa04 n0733
+knowledge	conhecimento	faixa04 n0734
+depend	depender	faixa04 n0735
+relate	relacionar	faixa04 n0736
+below	abaixo	faixa04 n0737
+dollar	dólar	faixa04 n0738
+advance	avançar	faixa04 n0739
+shape	forma	faixa04 n0740
+arrange	organizar	faixa04 n0741
+population	população	faixa04 n0742
+yes	sim	faixa04 n0743 alerta
+sell	vender	faixa04 n0744
+mention	mencionar	faixa04 n0745
+dry	seco	faixa04 n0746
+check	verificar	faixa04 n0747
+poet	poeta	faixa04 n0748
+sleep	dormir	faixa04 n0749 alerta
+join	juntar	faixa04 n0750
+hot	quente	faixa05 n0751
+bed	cama	faixa05 n0752
+electric	elétrico	faixa05 n0753
+dream	sonho	faixa05 n0754
+due	devido	faixa05 n0755
+season	estação	faixa05 n0756
+manner	maneira	faixa05 n0757
+fit	caber	faixa05 n0758
+left	esquerda	faixa05 n0759 alerta
+progress	progresso	faixa05 n0760
+neither	nem	faixa05 n0761
+strength	força	faixa05 n0762
+notice	aviso	faixa05 n0763
+finish	terminar	faixa05 n0764
+opinion	opinião	faixa05 n0765
+bill	conta	faixa05 n0766
+western	ocidental	faixa05 n0767
+truth	verdade	faixa05 n0768
+wrong	errado	faixa05 n0769
+travel	viajar	faixa05 n0770
+suit	terno	faixa05 n0771
+bank	banco	faixa05 n0772
+exact	exato	faixa05 n0773
+honor	honra	faixa05 n0774
+brother	irmão	faixa05 n0775
+quiet	quieto	faixa05 n0776
+marry	casar	faixa05 n0777
+corner	canto	faixa05 n0778
+handle	lidar	faixa05 n0779
+danger	perigo	faixa05 n0780
+hospital	hospital	faixa05 n0781
+pool	piscina	faixa05 n0782
+promise	promessa	faixa05 n0783
+blood	sangue	faixa05 n0784
+shoot	atirar	faixa05 n0785
+scene	cena	faixa05 n0786
+literature	literatura	faixa05 n0787
+arrive	chegar	faixa05 n0788
+film	filme	faixa05 n0789
+base	base	faixa05 n0790
+freedom	liberdade	faixa05 n0791
+bar	bar	faixa05 n0792
+maybe	talvez	faixa05 n0793
+hang	pendurar	faixa05 n0794 alerta
+suffer	sofrer	faixa05 n0795
+manufacture	fabricar	faixa05 n0796
+frequent	frequente	faixa05 n0797
+rock	rocha	faixa05 n0798
+loss	perda	faixa05 n0799
+burn	queimar	faixa05 n0800
+sun	sol	faixa05 n0801
+audience	público	faixa05 n0802
+essential	essencial	faixa05 n0803
+glass	vidro	faixa05 n0804
+prevent	prevenir	faixa05 n0805
+poem	poema	faixa05 n0806
+poor	pobre	faixa05 n0807
+inch	polegada	faixa05 n0808
+song	canção	faixa05 n0809
+skill	habilidade	faixa05 n0810
+post	correio	faixa05 n0811
+popular	popular	faixa05 n0812
+radio	rádio	faixa05 n0813
+animal	animal	faixa05 n0814
+conscious	consciente	faixa05 n0815
+worth	valor	faixa05 n0816
+eat	comer	faixa05 n0817
+election	eleição	faixa05 n0818
+faith	fé	faixa05 n0819
+wave	onda	faixa05 n0820
+murder	assassinato	faixa05 n0821
+model	modelo	faixa05 n0822
+forget	esquecer	faixa05 n0823 alerta
+extend	estender	faixa05 n0824
+edge	borda	faixa05 n0825
+distance	distância	faixa05 n0826
+memory	memória	faixa05 n0827
+recommend	recomendar	faixa05 n0828
+division	divisão	faixa05 n0829
+staff	equipe	faixa05 n0830
+leg	perna	faixa05 n0831
+discussion	discussão	faixa05 n0832
+address	endereço	faixa05 n0833
+fly	voar	faixa05 n0834
+dependent	dependente	faixa05 n0835
+ball	bola	faixa05 n0836
+shake	sacudir	faixa05 n0837
+frame	moldura	faixa05 n0838
+extreme	extremo	faixa05 n0839
+engineer	engenheiro	faixa05 n0840
+thick	grosso	faixa05 n0841
+comfort	conforto	faixa05 n0842
+latter	último	faixa05 n0843
+camp	acampamento	faixa05 n0844
+oil	óleo	faixa05 n0845
+discover	descobrir	faixa05 n0846
+examine	examinar	faixa05 n0847
+difficulty	dificuldade	faixa05 n0848
+tooth	dente	faixa05 n0849
+middle	meio	faixa05 n0850
+choice	escolha	faixa05 n0851
+refer	referir	faixa05 n0852
+enemy	inimigo	faixa05 n0853
+practical	prático	faixa05 n0854
+marriage	casamento	faixa05 n0855
+bridge	ponte	faixa05 n0856
+declare	declarar	faixa05 n0857
+lady	senhora	faixa05 n0858
+cross	cruz	faixa05 n0859
+daily	diário	faixa05 n0860
+afternoon	tarde	faixa05 n0861
+attend	comparecer	faixa05 n0862
+director	diretor	faixa05 n0863
+balance	equilíbrio	faixa05 n0864
+wash	lavar	faixa05 n0865
+capital	capital	faixa05 n0866
+speed	velocidade	faixa05 n0867
+block	bloco	faixa05 n0868
+citizen	cidadão	faixa05 n0869
+mouth	boca	faixa05 n0870
+hill	colina	faixa05 n0871
+green	verde	faixa05 n0872
+please	por favor	faixa05 n0873
+motor	motor	faixa05 n0874
+agency	agência	faixa05 n0875
+encourage	encorajar	faixa05 n0876
+governor	governador	faixa05 n0877
+worry	preocupar	faixa05 n0878
+affair	caso	faixa05 n0879
+shoulder	ombro	faixa05 n0880
+bright	brilhante	faixa05 n0881
+mass	massa	faixa05 n0882
+sample	amostra	faixa05 n0883
+pretty	bonito	faixa05 n0884
+repeat	repetir	faixa05 n0885
+roll	rolar	faixa05 n0886
+push	empurrar	faixa05 n0887
+trip	viagem	faixa05 n0888
+council	conselho	faixa05 n0889
+clothe	vestir	faixa05 n0890
+parent	pai/mãe	faixa05 n0891
+forward	adiante	faixa05 n0892
+sharp	afiado	faixa05 n0893
+straight	reto	faixa05 n0894
+gas	gás	faixa05 n0895
+weight	peso	faixa05 n0896
+discuss	discutir	faixa05 n0897
+fix	consertar	faixa05 n0898
+load	carga	faixa05 n0899
+master	mestre	faixa05 n0900
+whatever	o que quer que	faixa05 n0901
+round	redondo	faixa05 n0902
+rapid	rápido	faixa05 n0903
+laugh	rir	faixa05 n0904
+finger	dedo	faixa05 n0905
+spot	mancha	faixa05 n0906
+propose	propor	faixa05 n0907
+shop	loja	faixa05 n0908
+broad	largo	faixa05 n0909
+replace	substituir	faixa05 n0910
+reply	responder	faixa05 n0911
+extent	extensão	faixa05 n0912
+lock	trancar	faixa05 n0913
+employee	empregado	faixa05 n0914
+ahead	à frente	faixa05 n0915
+sight	visão	faixa05 n0916
+spread	espalhar	faixa05 n0917
+wind	vento	faixa05 n0918
+approve	aprovar	faixa05 n0919
+destroy	destruir	faixa05 n0920
+none	nenhum	faixa05 n0921
+pound	libra	faixa05 n0922
+fame	fama	faixa05 n0923
+importance	importância	faixa05 n0924
+reflect	refletir	faixa05 n0925
+advantage	vantagem	faixa05 n0926
+match	partida	faixa05 n0927
+regular	regular	faixa05 n0928
+wage	salário	faixa05 n0929
+refuse	recusar	faixa05 n0930
+existence	existência	faixa05 n0931
+hardly	dificilmente	faixa05 n0932
+perform	realizar	faixa05 n0933
+title	título	faixa05 n0934
+tend	tender	faixa05 n0935
+exercise	exercício	faixa05 n0936
+thin	fino	faixa05 n0937
+coat	casaco	faixa05 n0938
+bit	pedaço	faixa05 n0939
+mountain	montanha	faixa05 n0940
+youth	juventude	faixa05 n0941
+behavior	comportamento	faixa05 n0942
+newspaper	jornal	faixa05 n0943
+secret	segredo	faixa05 n0944
+ability	habilidade	faixa05 n0945
+sea	mar	faixa05 n0946
+soft	macio	faixa05 n0947
+justice	justiça	faixa05 n0948
+reasonable	razoável	faixa05 n0949
+circle	círculo	faixa05 n0950
+solid	sólido	faixa05 n0951
+page	página	faixa05 n0952
+weapon	arma	faixa05 n0953
+fast	rápido	faixa05 n0954
+representative	representante	faixa05 n0955
+search	buscar	faixa05 n0956
+pure	puro	faixa05 n0957
+escape	escapar	faixa05 n0958
+crowd	multidão	faixa05 n0959
+stick	bastão	faixa05 n0960
+telephone	telefone	faixa05 n0961
+avoid	evitar	faixa05 n0962
+garden	jardim	faixa05 n0963
+favor	favor	faixa05 n0964
+news	notícias	faixa05 n0965
+unless	a menos que	faixa05 n0966
+dinner	jantar	faixa05 n0967
+someone	alguém	faixa05 n0968
+signal	sinal	faixa05 n0969
+yard	quintal	faixa05 n0970
+ideal	ideal	faixa05 n0971
+warm	quente	faixa05 n0972
+miss	sentir falta	faixa05 n0973
+shelter	abrigo	faixa05 n0974
+soldier	soldado	faixa05 n0975
+article	artigo	faixa05 n0976
+cry	chorar	faixa05 n0977
+captain	capitão	faixa05 n0978
+familiar	familiar	faixa05 n0979
+seat	assento	faixa05 n0980
+guest	convidado	faixa05 n0981
+weak	fraco	faixa05 n0982
+excite	excitar	faixa05 n0983
+king	rei	faixa05 n0984
+everyone	todos	faixa05 n0985
+wine	vinho	faixa05 n0986
+hole	buraco	faixa05 n0987
+duty	dever	faixa05 n0988
+beat	bater	faixa05 n0989
+perfect	perfeito	faixa05 n0990
+bottom	fundo	faixa05 n0991
+compose	compor	faixa05 n0992
+battle	batalha	faixa05 n0993
+expense	despesa	faixa05 n0994
+cattle	gado	faixa05 n0995
+flow	fluxo	faixa05 n0996
+kitchen	cozinha	faixa05 n0997
+dust	poeira	faixa05 n0998
+bottle	garrafa	faixa05 n0999
+admit	admitir	faixa05 n1000
+tear	lágrima	faixa06 n1001
+tire	pneu	faixa06 n1002
+expression	expressão	faixa06 n1003
+exception	exceção	faixa06 n1004
+application	aplicação	faixa06 n1005
+belong	pertencer	faixa06 n1006
+rich	rico	faixa06 n1007
+failure	fracasso	faixa06 n1008
+struggle	luta	faixa06 n1009
+instrument	instrumento	faixa06 n1010
+variety	variedade	faixa06 n1011
+narrow	estreito	faixa06 n1012
+theater	teatro	faixa06 n1013
+collection	coleção	faixa06 n1014
+rain	chuva	faixa06 n1015
+review	revisão	faixa06 n1016
+preserve	preservar	faixa06 n1017
+leadership	liderança	faixa06 n1018
+clay	argila	faixa06 n1019
+daughter	filha	faixa06 n1020
+fellow	companheiro	faixa06 n1021
+swing	balanço	faixa06 n1022
+thank	obrigado	faixa06 n1023 alerta
+library	biblioteca	faixa06 n1024
+fat	gordo	faixa06 n1025
+reserve	reserva	faixa06 n1026
+tour	turno	faixa06 n1027
+nice	legal	faixa06 n1028
+warn	avisar	faixa06 n1029
+ring	anel	faixa06 n1030
+bitter	amargo	faixa06 n1031
+chair	cadeira	faixa06 n1032
+yesterday	ontem	faixa06 n1033
+scientific	científico	faixa06 n1034
+flower	flor	faixa06 n1035
+wheel	roda	faixa06 n1036
+solution	solução	faixa06 n1037
+aim	objetivo	faixa06 n1038
+gather	reunir	faixa06 n1039
+invite	convidar	faixa06 n1040
+moreover	além disso	faixa06 n1041
+fresh	fresco	faixa06 n1042
+forest	floresta	faixa06 n1043
+winter	inverno	faixa06 n1044
+box	caixa	faixa06 n1045
+belief	crença	faixa06 n1046
+ordinary	ordinário	faixa06 n1047
+impossible	impossível	faixa06 n1048
+print	imprimir	faixa06 n1049
+gray	cinza	faixa06 n1050
+taste	gosto	faixa06 n1051
+lip	lábio	faixa06 n1052
+speech	discurso	faixa06 n1053
+reference	referência	faixa06 n1054
+stain	mancha	faixa06 n1055
+connection	conexão	faixa06 n1056
+otherwise	caso contrário	faixa06 n1057
+stretch	esticar	faixa06 n1058
+knife	faca	faixa06 n1059
+village	vila	faixa06 n1060
+blow	sopro	faixa06 n1061
+mistake	erro	faixa06 n1062
+sweet	doce	faixa06 n1063
+shout	gritar	faixa06 n1064
+divide	dividir	faixa06 n1065
+guard	guarda	faixa06 n1066
+worse	pior	faixa06 n1067
+exchange	troca	faixa06 n1068
+rare	raro	faixa06 n1069
+commercial	comercial	faixa06 n1070
+request	pedido	faixa06 n1071
+appoint	nomear	faixa06 n1072
+agent	agente	faixa06 n1073
+dependence	dependência	faixa06 n1074
+bird	pássaro	faixa06 n1075
+wild	selvagem	faixa06 n1076
+motion	movimento	faixa06 n1077
+guess	adivinhar	faixa06 n1078
+neighbor	vizinho	faixa06 n1079
+seed	semente	faixa06 n1080
+fashion	moda	faixa06 n1081
+loan	empréstimo	faixa06 n1082
+correct	correto	faixa06 n1083
+plain	simples	faixa06 n1084
+mail	correio	faixa06 n1085
+retire	aposentar	faixa06 n1086
+opposite	oposto	faixa06 n1087
+prefer	preferir	faixa06 n1088
+safe	seguro	faixa06 n1089
+evil	mal	faixa06 n1090
+double	duplo	faixa06 n1091
+wood	madeira	faixa06 n1092
+empty	vazio	faixa06 n1093
+baby	bebê	faixa06 n1094
+advise	aconselhar	faixa06 n1095
+content	conteúdo	faixa06 n1096
+sport	esporte	faixa06 n1097
+lift	levantar	faixa06 n1098
+literary	literário	faixa06 n1099
+curious	curioso	faixa06 n1100
+tie	gravata	faixa06 n1101 alerta
+flat	plano	faixa06 n1102
+message	mensagem	faixa06 n1103
+neck	pescoço	faixa06 n1104
+hate	odiar	faixa06 n1105
+dirt	sujeira	faixa06 n1106
+delight	deleite	faixa06 n1107
+trust	confiança	faixa06 n1108
+nobody	ninguém	faixa06 n1109
+valley	vale	faixa06 n1110
+tool	ferramenta	faixa06 n1111
+presence	presença	faixa06 n1112
+cook	cozinhar	faixa06 n1113
+railroad	ferrovia	faixa06 n1114
+minister	ministro	faixa06 n1115
+coffee	café	faixa06 n1116
+brush	escova	faixa06 n1117
+beside	ao lado	faixa06 n1118
+collect	coletar	faixa06 n1119
+guide	guia	faixa06 n1120
+luck	sorte	faixa06 n1121
+profit	lucro	faixa06 n1122
+lord	senhor	faixa06 n1123
+everybody	todos	faixa06 n1124
+prison	prisão	faixa06 n1125
+cloud	nuvem	faixa06 n1126
+slave	escravo	faixa06 n1127
+chairman	presidente	faixa06 n1128
+soil	solo	faixa06 n1129
+distinguish	distinguir	faixa06 n1130
+introduce	apresentar	faixa06 n1131
+urge	urgir	faixa06 n1132
+blind	cego	faixa06 n1133
+arise	surgir	faixa06 n1134
+upper	superior	faixa06 n1135
+curve	curva	faixa06 n1136
+membership	associação	faixa06 n1137
+key	chave	faixa06 n1138 alerta
+entertain	entreter	faixa06 n1139
+soul	alma	faixa06 n1140
+neighborhood	vizinhança	faixa06 n1141
+friendly	amigável	faixa06 n1142
+pair	par	faixa06 n1143
+stone	pedra	faixa06 n1144
+lean	magro	faixa06 n1145
+protect	proteger	faixa06 n1146
+advertise	anunciar	faixa06 n1147
+mystery	mistério	faixa06 n1148
+welcome	bem-vindo	faixa06 n1149
+knee	joelho	faixa06 n1150
+jump	pular	faixa06 n1151
+snake	cobra	faixa06 n1152
+stream	riacho	faixa06 n1153
+avenue	avenida	faixa06 n1154
+brown	marrom	faixa06 n1155
+disease	doença	faixa06 n1156
+hat	chapéu	faixa06 n1157
+excellent	excelente	faixa06 n1158
+formal	formal	faixa06 n1159
+snow	neve	faixa06 n1160
+sheet	folha	faixa06 n1161
+somehow	de alguma forma	faixa06 n1162
+unity	unidade	faixa06 n1163
+sky	céu	faixa06 n1164
+rough	áspero	faixa06 n1165
+smooth	suave	faixa06 n1166
+weather	clima	faixa06 n1167
+steady	estável	faixa06 n1168
+threaten	ameaçar	faixa06 n1169
+depth	profundidade	faixa06 n1170
+oppose	opor	faixa06 n1171
+deliver	entregar	faixa06 n1172
+ancient	antigo	faixa06 n1173
+pray	rezar	faixa06 n1174
+adopt	adotar	faixa06 n1175
+birth	nascimento	faixa06 n1176
+appearance	aparência	faixa06 n1177
+universe	universo	faixa06 n1178
+busy	ocupado	faixa06 n1179
+hurry	pressa	faixa06 n1180
+coast	costa	faixa06 n1181
+forth	adiante	faixa06 n1182
+smell	cheiro	faixa06 n1183
+furnish	fornecer	faixa06 n1184
+female	fêmea	faixa06 n1185
+hide	esconder	faixa06 n1186
+wire	fio	faixa06 n1187
+proposal	proposta	faixa06 n1188
+ought	deveria	faixa06 n1189
+victory	vitória	faixa06 n1190
+quarter	quarto	faixa06 n1191
+engine	motor	faixa06 n1192
+customer	cliente	faixa06 n1193
+waste	desperdício	faixa06 n1194
+fool	tolo	faixa06 n1195
+intend	pretender	faixa06 n1196
+intention	intenção	faixa06 n1197
+desk	mesa	faixa06 n1198 alerta
+politics	política	faixa06 n1199
+passage	passagem	faixa06 n1200
+lawyer	advogado	faixa06 n1201
+root	raiz	faixa06 n1202
+climb	subir	faixa06 n1203
+metal	metal	faixa06 n1204
+gradual	gradual	faixa06 n1205
+hunt	caçar	faixa06 n1206
+protection	proteção	faixa06 n1207
+satisfy	satisfazer	faixa06 n1208
+roof	telhado	faixa06 n1209
+branch	ramo	faixa06 n1210
+pleasure	prazer	faixa06 n1211
+witness	testemunha	faixa06 n1212
+loose	solto	faixa06 n1213
+nose	nariz	faixa06 n1214
+mine	mina	faixa06 n1215
+band	banda	faixa06 n1216
+aside	de lado	faixa06 n1217
+risk	risco	faixa06 n1218
+tomorrow	amanhã	faixa06 n1219
+remind	lembrar	faixa06 n1220
+ear	orelha	faixa06 n1221
+fish	peixe	faixa06 n1222
+shore	costa	faixa06 n1223
+operator	operador	faixa06 n1224
+civilize	civilizar	faixa06 n1225
+being	ser	faixa06 n1226
+silent	silencioso	faixa06 n1227
+screen	tela	faixa06 n1228
+bind	amarrar	faixa06 n1229
+earn	ganhar	faixa06 n1230
+pack	pacote	faixa06 n1231
+colony	colônia	faixa06 n1232
+besides	além	faixa06 n1233
+slip	escorregar	faixa06 n1234
+cousin	primo	faixa06 n1235
+scale	escala	faixa06 n1236
+relief	alívio	faixa06 n1237
+explore	explorar	faixa06 n1238
+stem	caule	faixa06 n1239
+brain	cérebro	faixa06 n1240
+musician	músico	faixa06 n1241
+defend	defender	faixa06 n1242
+bend	dobrar	faixa06 n1243
+somebody	alguém	faixa06 n1244
+shadow	sombra	faixa06 n1245
+mix	misturar	faixa06 n1246
+smoke	fumaça	faixa06 n1247
+description	descrição	faixa06 n1248
+fruit	fruta	faixa06 n1249
+guilt	culpa	faixa06 n1250
+yield	produzir	faixa07 n1251
+sensitive	sensível	faixa07 n1252
+salt	sal	faixa07 n1253
+pale	pálido	faixa07 n1254
+sweep	varrer	faixa07 n1255
+completion	conclusão	faixa07 n1256
+throat	garganta	faixa07 n1257
+agriculture	agricultura	faixa07 n1258
+admire	admirar	faixa07 n1259
+gentle	gentil	faixa07 n1260
+dozen	dúzia	faixa07 n1261
+particle	partícula	faixa07 n1262
+pleasant	agradável	faixa07 n1263
+bay	baía	faixa07 n1264
+cup	xícara	faixa07 n1265
+competition	competição	faixa07 n1266
+moon	lua	faixa07 n1267
+terrible	terrível	faixa07 n1268
+strip	tira	faixa07 n1269
+mechanic	mecânico	faixa07 n1270
+shock	choque	faixa07 n1271
+conversation	conversa	faixa07 n1272
+angle	ângulo	faixa07 n1273
+tall	alto	faixa07 n1274
+plenty	bastante	faixa07 n1275
+star	estrela	faixa07 n1276
+yellow	amarelo	faixa07 n1277
+sick	doente	faixa07 n1278
+thorough	completo	faixa07 n1279
+absolute	absoluto	faixa07 n1280
+succeed	ter sucesso	faixa07 n1281
+surround	cercar	faixa07 n1282
+proud	orgulhoso	faixa07 n1283
+dear	caro	faixa07 n1284
+card	cartão	faixa07 n1285
+lake	lago	faixa07 n1286
+breath	respiração	faixa07 n1287
+afraid	medo	faixa07 n1288
+silence	silêncio	faixa07 n1289
+onto	sobre	faixa07 n1290
+shoe	sapato	faixa07 n1291
+somewhere	em algum lugar	faixa07 n1292
+chain	corrente	faixa07 n1293
+slide	deslizar	faixa07 n1294
+copy	cópia	faixa07 n1295
+machinery	maquinário	faixa07 n1296
+wake	acordar	faixa07 n1297
+severe	severo	faixa07 n1298
+pocket	bolso	faixa07 n1299
+bone	osso	faixa07 n1300
+honest	honesto	faixa07 n1301
+freeze	congelar	faixa07 n1302
+dictionary	dicionário	faixa07 n1303
+calm	calmo	faixa07 n1304
+swim	nadar	faixa07 n1305 alerta
+ice	gelo	faixa07 n1306
+male	masculino	faixa07 n1307
+skin	pele	faixa07 n1308
+crack	rachadura	faixa07 n1309
+rush	pressa	faixa07 n1310
+wet	molhado	faixa07 n1311
+meat	carne	faixa07 n1312
+commerce	comércio	faixa07 n1313
+joint	junta	faixa07 n1314
+gift	presente	faixa07 n1315
+host	anfitrião	faixa07 n1316
+suspect	suspeitar	faixa07 n1317
+path	caminho	faixa07 n1318
+uncle	tio	faixa07 n1319
+afford	permitir-se	faixa07 n1320
+instant	instante	faixa07 n1321
+satisfactory	satisfatório	faixa07 n1322
+height	altura	faixa07 n1323
+track	trilha	faixa07 n1324
+confidence	confiança	faixa07 n1325
+grass	grama	faixa07 n1326
+suggestion	sugestão	faixa07 n1327
+favorite	favorito	faixa07 n1328
+breakfast	café da manhã	faixa07 n1329 alerta
+apart	aparte	faixa07 n1330
+chest	peito	faixa07 n1331
+entrance	entrada	faixa07 n1332
+march	março	faixa07 n1333
+sink	afundar	faixa07 n1334
+northern	norte	faixa07 n1335
+iron	ferro	faixa07 n1336
+alive	vivo	faixa07 n1337
+ill	doente	faixa07 n1338 alerta
+bag	bolsa	faixa07 n1339
+disturb	perturbar	faixa07 n1340
+native	nativo	faixa07 n1341
+bedroom	quarto	faixa07 n1342
+violent	violento	faixa07 n1343
+beneath	abaixo	faixa07 n1344
+pause	pausa	faixa07 n1345
+tough	duro	faixa07 n1346
+substance	substância	faixa07 n1347
+threat	ameaça	faixa07 n1348
+charm	charme	faixa07 n1349
+absence	ausência	faixa07 n1350
+factory	fábrica	faixa07 n1351
+spite	apesar	faixa07 n1352
+meal	refeição	faixa07 n1353
+universal	universal	faixa07 n1354
+accident	acidente	faixa07 n1355
+highway	rodovia	faixa07 n1356 alerta
+sentence	sentença	faixa07 n1357
+liberty	liberdade	faixa07 n1358
+wise	sábio	faixa07 n1359
+noise	ruído	faixa07 n1360
+discovery	descoberta	faixa07 n1361
+tube	tubo	faixa07 n1362
+flash	flash	faixa07 n1363
+twist	torcer	faixa07 n1364
+fence	cerca	faixa07 n1365
+childhood	infância	faixa07 n1366
+joy	alegria	faixa07 n1367
+sister	irmã	faixa07 n1368
+sad	triste	faixa07 n1369
+efficiency	eficiência	faixa07 n1370
+disappear	desaparecer	faixa07 n1371
+defeat	derrotar	faixa07 n1372
+extensive	extenso	faixa07 n1373
+rent	aluguel	faixa07 n1374
+comparison	comparação	faixa07 n1375
+possess	possuir	faixa07 n1376
+grace	graça	faixa07 n1377
+flesh	carne	faixa07 n1378
+liquid	líquido	faixa07 n1379
+scientist	cientista	faixa07 n1380
+ease	facilidade	faixa07 n1381
+heaven	céu	faixa07 n1382
+milk	leite	faixa07 n1383
+sympathy	simpatia	faixa07 n1384
+rank	classificação	faixa07 n1385
+restaurant	restaurante	faixa07 n1386
+frequency	frequência	faixa07 n1387
+angry	zangado	faixa07 n1388
+shade	sombra	faixa07 n1389
+accuse	acusar	faixa07 n1390
+necessity	necessidade	faixa07 n1391
+knock	bater	faixa07 n1392
+loud	alto	faixa07 n1393
+permanent	permanente	faixa07 n1394
+row	fileira	faixa07 n1395
+lovely	adorável	faixa07 n1396
+confuse	confundir	faixa07 n1397
+gold	ouro	faixa07 n1398
+frighten	assustar	faixa07 n1399
+solve	resolver	faixa07 n1400
+grave	túmulo	faixa07 n1401
+salary	salário	faixa07 n1402
+photograph	fotografia	faixa07 n1403
+advice	conselho	faixa07 n1404
+abroad	exterior	faixa07 n1405
+wound	ferida	faixa07 n1406
+virtue	virtude	faixa07 n1407
+dare	ousar	faixa07 n1408
+queen	rainha	faixa07 n1409
+extra	extra	faixa07 n1410
+attract	atrair	faixa07 n1411
+numerous	numeroso	faixa07 n1412
+pink	rosa	faixa07 n1413
+gate	portão	faixa07 n1414
+expensive	caro	faixa07 n1415
+shut	fechar	faixa07 n1416 alerta
+chicken	frango	faixa07 n1417
+forgive	perdoar	faixa07 n1418
+holy	sagrado	faixa07 n1419
+wooden	de madeira	faixa07 n1420
+prompt	pronto	faixa07 n1421
+crime	crime	faixa07 n1422
+sorry	desculpe	faixa07 n1423
+republic	república	faixa07 n1424
+anger	raiva	faixa07 n1425
+visitor	visitante	faixa07 n1426
+pile	pilha	faixa07 n1427
+violence	violência	faixa07 n1428
+steel	aço	faixa07 n1429
+wing	asa	faixa07 n1430
+stair	escada	faixa07 n1431
+partner	parceiro	faixa07 n1432
+delay	atraso	faixa07 n1433
+gentleman	cavalheiro	faixa07 n1434
+pour	derramar	faixa07 n1435
+confusion	confusão	faixa07 n1436
+damage	dano	faixa07 n1437
+kick	chute	faixa07 n1438
+safety	segurança	faixa07 n1439
+burst	estourar	faixa07 n1440
+network	rede	faixa07 n1441
+resistance	resistência	faixa07 n1442
+screw	parafuso	faixa07 n1443
+pride	orgulho	faixa07 n1444
+till	até	faixa07 n1445
+hire	contratar	faixa07 n1446
+verb	verbo	faixa07 n1447
+preach	pregar	faixa07 n1448
+clerk	escriturário	faixa07 n1449
+everywhere	em todo lugar	faixa07 n1450
+anyway	de qualquer forma	faixa07 n1451
+fan	ventilador	faixa07 n1452
+connect	conectar	faixa07 n1453
+egg	ovo	faixa07 n1454
+efficient	eficiente	faixa07 n1455
+grain	grão	faixa07 n1456
+calculate	calcular	faixa07 n1457
+drag	arrastar	faixa07 n1458
+opposition	oposição	faixa07 n1459
+worship	adoração	faixa07 n1460
+arrest	prender	faixa07 n1461
+discipline	disciplina	faixa07 n1462
+string	corda	faixa07 n1463
+harbor	porto	faixa07 n1464
+camera	câmera	faixa07 n1465
+mechanism	mecanismo	faixa07 n1466
+cow	vaca	faixa07 n1467
+grand	grande	faixa07 n1468
+funny	engraçado	faixa07 n1469
+insurance	seguro	faixa07 n1470
+reduction	redução	faixa07 n1471
+strict	estrito	faixa07 n1472
+lesson	lição	faixa07 n1473
+tight	apertado	faixa07 n1474
+sand	areia	faixa07 n1475
+plate	prato	faixa07 n1476
+qualify	qualificar	faixa07 n1477
+elsewhere	em outro lugar	faixa07 n1478
+mad	louco	faixa07 n1479
+interference	interferência	faixa07 n1480
+pupil	aluno	faixa07 n1481
+fold	dobrar	faixa07 n1482
+royal	real	faixa07 n1483
+valuable	valioso	faixa07 n1484
+whisper	sussurrar	faixa07 n1485
+anybody	qualquer um	faixa07 n1486
+hurt	ferir	faixa07 n1487
+excess	excesso	faixa07 n1488
+quantity	quantidade	faixa07 n1489
+fun	diversão	faixa07 n1490
+mud	lama	faixa07 n1491
+extension	extensão	faixa07 n1492
+recognition	reconhecimento	faixa07 n1493
+kiss	beijo	faixa07 n1494
+crop	colheita	faixa07 n1495
+sail	velejar	faixa07 n1496
+attractive	atraente	faixa07 n1497
+habit	hábito	faixa07 n1498
+relieve	aliviar	faixa07 n1499
+wisdom	sabedoria	faixa07 n1500
+persuade	persuadir	faixa08 n1501
+certainty	certeza	faixa08 n1502
+cloth	pano	faixa08 n1503
+eager	ansioso	faixa08 n1504
+deserve	merecer	faixa08 n1505
+sympathetic	simpático	faixa08 n1506
+cure	cura	faixa08 n1507
+trap	armadilha	faixa08 n1508
+puzzle	quebra-cabeça	faixa08 n1509
+powder	pó	faixa08 n1510
+raw	cru	faixa08 n1511
+mankind	humanidade	faixa08 n1512
+glad	alegre	faixa08 n1513
+blame	culpar	faixa08 n1514
+whenever	sempre que	faixa08 n1515
+anxiety	ansiedade	faixa08 n1516
+bus	ônibus	faixa08 n1517
+tremble	tremer	faixa08 n1518
+sacred	sagrado	faixa08 n1519
+fortunate	afortunado	faixa08 n1520
+glory	glória	faixa08 n1521
+golden	dourado	faixa08 n1522
+neat	organizado	faixa08 n1523
+weekend	fim de semana	faixa08 n1524
+treasury	tesouro	faixa08 n1525
+overcome	superar	faixa08 n1526
+cat	gato	faixa08 n1527
+sacrifice	sacrifício	faixa08 n1528
+complain	reclamar	faixa08 n1529
+elect	eleger	faixa08 n1530
+roar	rugido	faixa08 n1531
+sake	bem	faixa08 n1532
+temple	templo	faixa08 n1533
+self	próprio	faixa08 n1534
+compete	competir	faixa08 n1535
+nurse	enfermeira	faixa08 n1536
+stuff	coisa	faixa08 n1537
+stomach	estômago	faixa08 n1538
+peculiar	peculiar	faixa08 n1539
+repair	reparar	faixa08 n1540
+storm	tempestade	faixa08 n1541
+ton	tonelada	faixa08 n1542
+desert	deserto	faixa08 n1543
+allowance	mesada	faixa08 n1544
+servant	servo	faixa08 n1545
+hunger	fome	faixa08 n1546
+conscience	consciência	faixa08 n1547
+bread	pão	faixa08 n1548
+crash	acidente	faixa08 n1549
+tip	dica	faixa08 n1550
+strengthen	fortalecer	faixa08 n1551
+proof	prova	faixa08 n1552
+generous	generoso	faixa08 n1553
+sir	senhor	faixa08 n1554
+tonight	esta noite	faixa08 n1555
+whip	chicote	faixa08 n1556
+tongue	língua	faixa08 n1557
+mill	moinho	faixa08 n1558
+merchant	comerciante	faixa08 n1559
+coal	carvão	faixa08 n1560
+ruin	ruína	faixa08 n1561
+introduction	introdução	faixa08 n1562
+courage	coragem	faixa08 n1563
+actor	ator	faixa08 n1564
+belt	cinto	faixa08 n1565
+stir	mexer	faixa08 n1566
+package	pacote	faixa08 n1567
+punish	punir	faixa08 n1568
+reflection	reflexão	faixa08 n1569
+breathe	respirar	faixa08 n1570
+anywhere	em qualquer lugar	faixa08 n1571
+amuse	divertir	faixa08 n1572
+dull	sem graça	faixa08 n1573
+fate	destino	faixa08 n1574
+net	rede	faixa08 n1575
+fellowship	irmandade	faixa08 n1576
+fault	falha	faixa08 n1577
+furniture	móveis	faixa08 n1578
+beam	feixe	faixa08 n1579
+pencil	lápis	faixa08 n1580
+border	fronteira	faixa08 n1581
+disappoint	decepcionar	faixa08 n1582
+flame	chama	faixa08 n1583
+joke	piada	faixa08 n1584
+bless	abençoar	faixa08 n1585
+corn	milho	faixa08 n1586
+shell	concha	faixa08 n1587
+tempt	tentar	faixa08 n1588
+supper	jantar	faixa08 n1589
+destruction	destruição	faixa08 n1590
+dive	mergulhar	faixa08 n1591
+anxious	ansioso	faixa08 n1592
+shine	brilhar	faixa08 n1593
+cheap	barato	faixa08 n1594
+dish	prato	faixa08 n1595
+distant	distante	faixa08 n1596
+greet	cumprimentar	faixa08 n1597
+flood	inundação	faixa08 n1598
+excuse	desculpa	faixa08 n1599
+insect	inseto	faixa08 n1600
+ocean	oceano	faixa08 n1601
+ceremony	cerimônia	faixa08 n1602
+decrease	diminuir	faixa08 n1603
+prize	prêmio	faixa08 n1604
+harm	dano	faixa08 n1605
+insure	segurar	faixa08 n1606
+verse	verso	faixa08 n1607
+pot	pote	faixa08 n1608
+sincere	sincero	faixa08 n1609
+cotton	algodão	faixa08 n1610
+leaf	folha	faixa08 n1611
+rub	esfregar	faixa08 n1612
+medicine	medicina	faixa08 n1613
+stroke	golpe	faixa08 n1614
+bite	morder	faixa08 n1615
+lung	pulmão	faixa08 n1616
+lonely	solitário	faixa08 n1617
+admission	admissão	faixa08 n1618
+stupid	estúpido	faixa08 n1619
+scratch	arranhar	faixa08 n1620
+composition	composição	faixa08 n1621
+broadcast	transmissão	faixa08 n1622
+drum	tambor	faixa08 n1623
+resist	resistir	faixa08 n1624
+neglect	negligenciar	faixa08 n1625
+absent	ausente	faixa08 n1626
+passenger	passageiro	faixa08 n1627
+adventure	aventura	faixa08 n1628
+beg	implorar	faixa08 n1629
+pipe	cano	faixa08 n1630
+beard	barba	faixa08 n1631
+bold	ousado	faixa08 n1632
+meanwhile	enquanto isso	faixa08 n1633
+devil	diabo	faixa08 n1634
+cheer	animar	faixa08 n1635
+nut	noz	faixa08 n1636
+split	dividir	faixa08 n1637
+melt	derreter	faixa08 n1638
+swear	jurar	faixa08 n1639
+sugar	açúcar	faixa08 n1640
+bury	enterrar	faixa08 n1641
+wipe	limpar	faixa08 n1642
+faint	desmaiar	faixa08 n1643
+creature	criatura	faixa08 n1644
+tail	cauda	faixa08 n1645
+wealth	riqueza	faixa08 n1646
+earnest	sério	faixa08 n1647
+translate	traduzir	faixa08 n1648
+suspicion	suspeita	faixa08 n1649
+noble	nobre	faixa08 n1650
+inquiry	inquérito	faixa08 n1651
+journey	jornada	faixa08 n1652
+hesitate	hesitar	faixa08 n1653
+extraordinary	extraordinário	faixa08 n1654
+borrow	emprestar	faixa08 n1655
+owe	dever	faixa08 n1656
+funeral	funeral	faixa08 n1657
+ambition	ambição	faixa08 n1658
+mixture	mistura	faixa08 n1659
+slope	inclinação	faixa08 n1660
+criminal	criminoso	faixa08 n1661
+seldom	raramente	faixa08 n1662
+map	mapa	faixa08 n1663
+spin	girar	faixa08 n1664
+praise	elogiar	faixa08 n1665
+spare	sobressalente	faixa08 n1666
+plow	arado	faixa08 n1667
+telegraph	telégrafo	faixa08 n1668
+barrel	barril	faixa08 n1669
+straighten	endireitar	faixa08 n1670
+scarce	escasso	faixa08 n1671
+lunch	almoço	faixa08 n1672
+slavery	escravidão	faixa08 n1673 alerta
+creep	rastejar	faixa08 n1674
+sweat	suor	faixa08 n1675
+gay	alegre	faixa08 n1676
+stiff	rígido	faixa08 n1677
+brave	bravo	faixa08 n1678
+seize	apreender	faixa08 n1679
+convenient	conveniente	faixa08 n1680
+horizon	horizonte	faixa08 n1681
+moderate	moderado	faixa08 n1682
+complicate	complicar	faixa08 n1683
+dig	cavar	faixa08 n1684
+curse	maldição	faixa08 n1685
+weigh	pesar	faixa08 n1686
+priest	padre	faixa08 n1687
+excessive	excessivo	faixa08 n1688
+quarrel	briga	faixa08 n1689
+widow	viúva	faixa08 n1690
+modest	modesto	faixa08 n1691
+dine	jantar	faixa08 n1692
+politician	político	faixa08 n1693
+custom	costume	faixa08 n1694 alerta
+educate	educar	faixa08 n1695
+salesman	vendedor	faixa08 n1696
+nail	prego	faixa08 n1697
+tap	bater	faixa08 n1698
+eastern	oriental	faixa08 n1699
+possession	posse	faixa08 n1700
+satisfaction	satisfação	faixa08 n1701
+behave	comportar-se	faixa08 n1702
+mercy	misericórdia	faixa08 n1703
+scatter	espalhar	faixa08 n1704
+objection	objeção	faixa08 n1705
+silver	prata	faixa08 n1706
+tent	tenda	faixa08 n1707
+saddle	sela	faixa08 n1708
+wrap	embrulhar	faixa08 n1709
+nest	ninho	faixa08 n1710
+grind	moer	faixa08 n1711
+spell	soletrar	faixa08 n1712
+plaster	gesso	faixa08 n1713
+arch	arco	faixa08 n1714
+swell	inchar	faixa08 n1715
+friendship	amizade	faixa08 n1716
+bath	banho	faixa08 n1717
+bundle	pacote	faixa08 n1718
+grateful	grato	faixa08 n1719
+crown	coroa	faixa08 n1720
+boundary	fronteira	faixa08 n1721
+nowhere	lugar nenhum	faixa08 n1722
+asleep	adormecido	faixa08 n1723
+clock	relógio	faixa08 n1724
+boil	ferver	faixa08 n1725
+altogether	totalmente	faixa08 n1726
+lend	emprestar	faixa08 n1727
+holiday	feriado	faixa08 n1728
+precious	precioso	faixa08 n1729
+wander	vagar	faixa08 n1730
+ugly	feio	faixa08 n1731
+reputation	reputação	faixa08 n1732
+ticket	ingresso	faixa08 n1733
+pretend	fingir	faixa08 n1734
+dismiss	demitir	faixa08 n1735
+delicate	delicado	faixa08 n1736
+despair	desespero	faixa08 n1737
+awake	acordado	faixa08 n1738
+tea	chá	faixa08 n1739
+false	falso	faixa08 n1740 alerta
+fortune	fortuna	faixa08 n1741
+cap	boné	faixa08 n1742
+thread	fio	faixa08 n1743
+haste	pressa	faixa08 n1744
+bare	nu	faixa08 n1745
+shirt	camisa	faixa08 n1746
+bargain	barganha	faixa08 n1747
+leather	couro	faixa08 n1748
+rail	trilho	faixa08 n1749
+butter	manteiga	faixa08 n1750
+dot	ponto	faixa09 n1751
+inquire	inquirir	faixa09 n1752
+warmth	calor	faixa09 n1753
+decisive	decisivo	faixa09 n1754
+vessel	navio	faixa09 n1755
+pity	pena	faixa09 n1756
+steam	vapor	faixa09 n1757
+pin	alfinete	faixa09 n1758
+bound	limite	faixa09 n1759
+companion	companheiro	faixa09 n1760
+toe	dedo do pé	faixa09 n1761
+reward	recompensa	faixa09 n1762
+forbid	proibir	faixa09 n1763
+wherever	onde quer que	faixa09 n1764
+tower	torre	faixa09 n1765
+bathe	banhar	faixa09 n1766
+lodge	alojar	faixa09 n1767
+swallow	engolir	faixa09 n1768
+multiply	multiplicar	faixa09 n1769
+bow	arco	faixa09 n1770
+kingdom	reino	faixa09 n1771
+garage	garagem	faixa09 n1772
+permission	permissão	faixa09 n1773
+pump	bomba	faixa09 n1774
+prevention	prevenção	faixa09 n1775
+urgent	urgente	faixa09 n1776
+aunt	tia	faixa09 n1777
+zero	zero	faixa09 n1778
+idle	ocioso	faixa09 n1779
+fever	febre	faixa09 n1780
+christmas	Natal	faixa09 n1781
+regret	arrepender	faixa09 n1782
+jaw	mandíbula	faixa09 n1783
+soap	sabão	faixa09 n1784
+pronounce	pronunciar	faixa09 n1785
+empire	império	faixa09 n1786
+bowl	tigela	faixa09 n1787
+outline	contorno	faixa09 n1788
+organ	órgão	faixa09 n1789
+imitation	imitação	faixa09 n1790
+caution	cautela	faixa09 n1791
+mineral	mineral	faixa09 n1792
+disagree	discordar	faixa09 n1793
+blade	lâmina	faixa09 n1794
+trick	truque	faixa09 n1795
+treasure	tesouro	faixa09 n1796
+immense	imenso	faixa09 n1797
+convenience	conveniência	faixa09 n1798
+disapprove	desaprovar	faixa09 n1799
+destructive	destrutivo	faixa09 n1800
+fork	garfo	faixa09 n1801 alerta
+noon	meio-dia	faixa09 n1802
+ownership	propriedade	faixa09 n1803
+tune	melodia	faixa09 n1804
+polish	polir	faixa09 n1805 alerta
+poison	veneno	faixa09 n1806
+shame	vergonha	faixa09 n1807
+loyalty	lealdade	faixa09 n1808
+cottage	casa de campo	faixa09 n1809
+astonish	surpreender	faixa09 n1810
+shave	barbear	faixa09 n1811
+feather	pena	faixa09 n1812
+sauce	molho	faixa09 n1813
+lid	tampa	faixa09 n1814
+debt	dívida	faixa09 n1815
+fade	desaparecer	faixa09 n1816
+confess	confessar	faixa09 n1817
+classification	classificação	faixa09 n1818
+descend	descer	faixa09 n1819
+cape	capa	faixa09 n1820
+mild	suave	faixa09 n1821
+clever	inteligente	faixa09 n1822
+envelope	envelope	faixa09 n1823
+invention	invenção	faixa09 n1824
+sheep	ovelha	faixa09 n1825
+splendid	esplêndido	faixa09 n1826
+stamp	carimbo	faixa09 n1827
+float	flutuar	faixa09 n1828
+brick	tijolo	faixa09 n1829
+rice	arroz	faixa09 n1830
+businessman	empresário	faixa09 n1831
+backward	para trás	faixa09 n1832
+qualification	qualificação	faixa09 n1833
+artificial	artificial	faixa09 n1834
+attraction	atração	faixa09 n1835
+lamp	lâmpada	faixa09 n1836
+curl	enrolar	faixa09 n1837
+shower	chuveiro	faixa09 n1838
+elder	mais velho	faixa09 n1839
+bunch	monte	faixa09 n1840
+bell	sino	faixa09 n1841
+steer	dirigir	faixa09 n1842
+flavor	sabor	faixa09 n1843
+spit	cuspir	faixa09 n1844
+rob	roubar	faixa09 n1845
+cream	creme	faixa09 n1846
+interrupt	interromper	faixa09 n1847
+pen	caneta	faixa09 n1848
+weave	tecer	faixa09 n1849
+orange	laranja	faixa09 n1850
+rescue	resgatar	faixa09 n1851
+crush	esmagar	faixa09 n1852
+humble	humilde	faixa09 n1853
+fancy	fantasia	faixa09 n1854
+decay	decair	faixa09 n1855
+polite	educado	faixa09 n1856
+tribe	tribo	faixa09 n1857
+bleed	sangrar	faixa09 n1858
+coin	moeda	faixa09 n1859
+fond	gostar	faixa09 n1860
+autumn	outono	faixa09 n1861
+classify	classificar	faixa09 n1862
+omit	omitir	faixa09 n1863
+loyal	leal	faixa09 n1864
+needle	agulha	faixa09 n1865
+lessen	diminuir	faixa09 n1866
+complaint	reclamação	faixa09 n1867
+pad	almofada	faixa09 n1868
+steep	íngreme	faixa09 n1869
+skirt	saia	faixa09 n1870
+curtain	cortina	faixa09 n1871
+calculation	cálculo	faixa09 n1872
+laughter	riso	faixa09 n1873
+solemn	solene	faixa09 n1874
+grease	graxa	faixa09 n1875
+interfere	interferir	faixa09 n1876
+explode	explodir	faixa09 n1877
+fasten	prender	faixa09 n1878
+flag	bandeira	faixa09 n1879
+resign	renunciar	faixa09 n1880
+postpone	adiar	faixa09 n1881
+patience	paciência	faixa09 n1882
+boast	gabar-se	faixa09 n1883
+rope	corda	faixa09 n1884
+envy	inveja	faixa09 n1885
+airplane	avião	faixa09 n1886
+rid	livrar	faixa09 n1887
+shield	escudo	faixa09 n1888
+veil	véu	faixa09 n1889
+kneel	ajoelhar	faixa09 n1890
+tray	bandeja	faixa09 n1891
+explosive	explosivo	faixa09 n1892
+brass	latão	faixa09 n1893 alerta
+taxi	táxi	faixa09 n1894
+wax	cera	faixa09 n1895
+duck	pato	faixa09 n1896
+button	botão	faixa09 n1897
+invent	inventar	faixa09 n1898
+remedy	remédio	faixa09 n1899
+bush	arbusto	faixa09 n1900
+thunder	trovão	faixa09 n1901
+weaken	enfraquecer	faixa09 n1902
+poverty	pobreza	faixa09 n1903
+scrape	raspar	faixa09 n1904
+arrow	flecha	faixa09 n1905
+tender	macio	faixa09 n1906
+cruel	cruel	faixa09 n1907
+soften	suavizar	faixa09 n1908
+mouse	rato	faixa09 n1909
+hay	feno	faixa09 n1910
+anyhow	de qualquer forma	faixa09 n1911
+alike	semelhante	faixa09 n1912
+circular	circular	faixa09 n1913
+juice	suco	faixa09 n1914
+shelf	prateleira	faixa09 n1915
+bake	assar	faixa09 n1916
+hatred	ódio	faixa09 n1917
+cautious	cauteloso	faixa09 n1918
+basket	cesta	faixa09 n1919
+wreck	naufrágio	faixa09 n1920
+width	largura	faixa09 n1921
+confident	confiante	faixa09 n1922
+log	tronco	faixa09 n1923 alerta
+heap	pilha	faixa09 n1924
+suck	sugar	faixa09 n1925
+ladder	escada	faixa09 n1926
+gap	lacuna	faixa09 n1927
+obey	obedecer	faixa09 n1928
+hut	cabana	faixa09 n1929
+axe	machado	faixa09 n1930
+translation	tradução	faixa09 n1931
+collar	colarinho	faixa09 n1932
+delivery	entrega	faixa09 n1933
+reproduce	reproduzir	faixa09 n1934
+confession	confissão	faixa09 n1935
+pan	panela	faixa09 n1936
+prejudice	preconceito	faixa09 n1937 alerta
+voyage	viagem	faixa09 n1938
+tobacco	tabaco	faixa09 n1939
+simplicity	simplicidade	faixa09 n1940
+paste	pasta	faixa09 n1941
+cake	bolo	faixa09 n1942
+elephant	elefante	faixa09 n1943
+ribbon	fita	faixa09 n1944
+harvest	colheita	faixa09 n1945
+ashamed	envergonhado	faixa09 n1946
+cave	caverna	faixa09 n1947
+customary	habitual	faixa09 n1948
+thief	ladrão	faixa09 n1949
+damp	úmido	faixa09 n1950
+sew	costurar	faixa09 n1951
+rust	ferrugem	faixa09 n1952
+separation	separação	faixa09 n1953
+waiter	garçom	faixa09 n1954
+pet	animal de estimação	faixa09 n1955
+straw	palha	faixa09 n1956
+upset	chateado	faixa09 n1957
+towel	toalha	faixa09 n1958
+refresh	refrescar	faixa09 n1959
+essence	essência	faixa09 n1960
+fur	pelo	faixa09 n1961
+ambitious	ambicioso	faixa09 n1962
+defendant	réu	faixa09 n1963
+daylight	luz do dia	faixa09 n1964
+dip	mergulhar	faixa09 n1965
+suspicious	suspeito	faixa09 n1966
+imaginary	imaginário	faixa09 n1967
+ash	cinza	faixa09 n1968
+carriage	carruagem	faixa09 n1969
+educator	educador	faixa09 n1970
+saw	serra	faixa09 n1971 alerta
+stove	fogão	faixa09 n1972
+rubber	borracha	faixa09 n1973
+rug	tapete	faixa09 n1974
+misery	miséria	faixa09 n1975
+awkward	desajeitado	faixa09 n1976
+rival	rival	faixa09 n1977
+roast	assar	faixa09 n1978
+deed	escritura	faixa09 n1979
+preference	preferência	faixa09 n1980
+explosion	explosão	faixa09 n1981
+theatrical	teatral	faixa09 n1982
+cultivate	cultivar	faixa09 n1983
+collector	coletor	faixa09 n1984
+miserable	miserável	faixa09 n1985
+wrist	pulso	faixa09 n1986
+rabbit	coelho	faixa09 n1987
+accustom	acostumar	faixa09 n1988
+tide	maré	faixa09 n1989
+insult	insulto	faixa09 n1990
+thumb	polegar	faixa09 n1991
+lump	caroço	faixa09 n1992
+annoy	irritar	faixa09 n1993
+toy	brinquedo	faixa09 n1994
+heal	curar	faixa09 n1995
+shallow	raso	faixa09 n1996
+repetition	repetição	faixa09 n1997
+soup	sopa	faixa09 n1998
+whistle	apito	faixa09 n1999
+scenery	paisagem	faixa09 n2000
+apple	maçã	faixa10 n2001
+offense	ofensa	faixa10 n2002
+cork	cortiça	faixa10 n2003
+ripe	maduro	faixa10 n2004
+temper	temperamento	faixa10 n2005
+sore	dolorido	faixa10 n2006
+pinch	beliscar	faixa10 n2007
+diamond	diamante	faixa10 n2008
+razor	navalha	faixa10 n2009
+imaginative	imaginativo	faixa10 n2010
+hook	gancho	faixa10 n2011
+copper	cobre	faixa10 n2012
+landlord	senhorio	faixa10 n2013
+influential	influente	faixa10 n2014
+rot	podridão	faixa10 n2015
+hollow	oco	faixa10 n2016
+enclose	anexar	faixa10 n2017
+harden	endurecer	faixa10 n2018
+wicked	perverso	faixa10 n2019
+stiffen	enrijecer	faixa10 n2020
+silk	seda	faixa10 n2021
+upright	vertical	faixa10 n2022
+selfish	egoísta	faixa10 n2023
+stripe	listra	faixa10 n2024
+pig	porco	faixa10 n2025
+inward	interior	faixa10 n2026
+excellence	excelência	faixa10 n2027
+rake	ancinho	faixa10 n2028
+purple	roxo	faixa10 n2029
+hasten	apressar	faixa10 n2030
+shorten	encurtar	faixa10 n2031
+applause	aplauso	faixa10 n2032
+ache	dor	faixa10 n2033
+apology	desculpa	faixa10 n2034
+knot	nó	faixa10 n2035
+nephew	sobrinho	faixa10 n2036
+cushion	almofada	faixa10 n2037 alerta
+drown	afogar	faixa10 n2038
+nursery	berçário	faixa10 n2039
+pint	quartilho	faixa10 n2040
+fierce	feroz	faixa10 n2041
+imitate	imitar	faixa10 n2042
+aloud	alto	faixa10 n2043
+gaiety	alegria	faixa10 n2044
+robbery	roubo	faixa10 n2045
+tighten	apertar	faixa10 n2046
+perfection	perfeição	faixa10 n2047
+scorn	desprezo	faixa10 n2048
+whoever	quem quer que	faixa10 n2049
+trunk	tronco	faixa10 n2050
+wool	lã	faixa10 n2051
+sailor	marinheiro	faixa10 n2052
+competitor	concorrente	faixa10 n2053
+moonlight	luz da lua	faixa10 n2054
+deer	cervo	faixa10 n2055
+bean	feijão	faixa10 n2056
+everyday	todo dia	faixa10 n2057
+drawer	gaveta	faixa10 n2058
+disregard	desprezo	faixa10 n2059
+nowadays	hoje em dia	faixa10 n2060
+patriotic	patriótico	faixa10 n2061
+tin	estanho	faixa10 n2062
+penny	centavo	faixa10 n2063
+cage	gaiola	faixa10 n2064
+pardon	perdão	faixa10 n2065
+lately	ultimamente	faixa10 n2066
+offend	ofender	faixa10 n2067
+coarse	grosseiro	faixa10 n2068
+spoil	estragar	faixa10 n2069
+horizontal	horizontal	faixa10 n2070
+sting	ferrão	faixa10 n2071
+ditch	vala	faixa10 n2072
+librarian	bibliotecário	faixa10 n2073
+meantime	entretanto	faixa10 n2074
+cough	tosse	faixa10 n2075
+deaf	surdo	faixa10 n2076
+sword	espada	faixa10 n2077
+messenger	mensageiro	faixa10 n2078
+vain	vaidoso	faixa10 n2079
+castle	castelo	faixa10 n2080
+elastic	elástico	faixa10 n2081
+comb	pente	faixa10 n2082
+rod	haste	faixa10 n2083
+widen	ampliar	faixa10 n2084
+sorrow	tristeza	faixa10 n2085
+inventor	inventor	faixa10 n2086
+cliff	penhasco	faixa10 n2087
+umbrella	guarda chuva	faixa10 n2088
+interruption	interrupção	faixa10 n2089
+merry	alegre	faixa10 n2090
+gallon	galão	faixa10 n2091
+conquest	conquista	faixa10 n2092
+headache	dor de cabeça	faixa10 n2093
+tailor	alfaiate	faixa10 n2094
+bucket	balde	faixa10 n2095
+scent	perfume	faixa10 n2096
+signature	assinatura	faixa10 n2097
+cart	carrinho	faixa10 n2098
+darken	escurecer	faixa10 n2099
+sometime	alguma vez	faixa10 n2100
+applaud	aplaudir	faixa10 n2101
+underneath	embaixo	faixa10 n2102
+hello	Olá	faixa10 n2103
+pretense	fingimento	faixa10 n2104
+descent	descida	faixa10 n2105
+conquer	conquistar	faixa10 n2106
+framework	quadro	faixa10 n2107
+confidential	confidencial	faixa10 n2108
+adoption	adoção	faixa10 n2109
+disgust	desgosto	faixa10 n2110
+waist	cintura	faixa10 n2111
+momentary	momentâneo	faixa10 n2112
+receipt	recibo	faixa10 n2113
+pearl	pérola	faixa10 n2114
+ray	raio	faixa10 n2115
+lazy	preguiçoso	faixa10 n2116
+limb	membro	faixa10 n2117
+grammatical	gramatical	faixa10 n2118
+beast	besta	faixa10 n2119
+monkey	macaco	faixa10 n2120
+jewel	jóia	faixa10 n2121
+persuasion	persuasão	faixa10 n2122
+obedience	obediência	faixa10 n2123
+sock	meia	faixa10 n2124 alerta
+vowel	vogal	faixa10 n2125
+hammer	martelo	faixa10 n2126
+inn	pousada / estalagem	faixa10 n2127 alerta
+chimney	chaminé	faixa10 n2128
+dissatisfaction	descontentamento	faixa10 n2129
+annoyance	aborrecimento	faixa10 n2130
+ornament	ornamento	faixa10 n2131
+honesty	honestidade	faixa10 n2132
+outward	para fora	faixa10 n2133
+sharpen	afiar	faixa10 n2134
+handkerchief	lenço	faixa10 n2135
+greed	ganância	faixa10 n2136
+heavenly	celestial	faixa10 n2137
+thirst	sede	faixa10 n2138
+niece	sobrinha	faixa10 n2139
+spill	derramar	faixa10 n2140
+loaf	pão	faixa10 n2141
+wheat	trigo	faixa10 n2142
+worm	verme	faixa10 n2143
+secrecy	sigilo	faixa10 n2144
+rude	mal educada	faixa10 n2145
+heighten	aumentar	faixa10 n2146
+flatten	achatar	faixa10 n2147
+loosen	afrouxar	faixa10 n2148
+cheese	queijo	faixa10 n2149
+rivalry	rivalidade	faixa10 n2150
+royalty	realeza	faixa10 n2151
+discontent	descontentamento	faixa10 n2152
+complication	complicação	faixa10 n2153
+fright	susto	faixa10 n2154
+indoor	interior	faixa10 n2155
+flour	farinha	faixa10 n2156
+actress	atriz	faixa10 n2157
+congratulation	congratulação	faixa10 n2158
+ounce	onça	faixa10 n2159
+fry	fritar	faixa10 n2160
+everlasting	eterno	faixa10 n2161
+goat	cabra	faixa10 n2162
+ink	tinta	faixa10 n2163
+disappearance	desaparecimento	faixa10 n2164
+reproduction	reprodução	faixa10 n2165
+thicken	engrossar	faixa10 n2166
+avoidance	evitação / esquiva	faixa10 n2167 alerta
+spoon	colher	faixa10 n2168
+strap	cinta	faixa10 n2169
+deceive	enganar	faixa10 n2170
+lengthen	alongar	faixa10 n2171
+revenge	vingança	faixa10 n2172
+correction	correção	faixa10 n2173
+descendant	descendente	faixa10 n2174
+hesitation	hesitação	faixa10 n2175
+spade	pá	faixa10 n2176
+basin	bacia	faixa10 n2177
+weed	erva daninha	faixa10 n2178
+omission	omissão	faixa10 n2179
+old-fashioned	antiquado	faixa10 n2180
+bicycle	bicicleta	faixa10 n2181
+breadth	largura	faixa10 n2182
+photography	fotografia	faixa10 n2183
+coward	covarde	faixa10 n2184
+mat	esteira	faixa10 n2185
+rejoice	alegrar	faixa10 n2186
+cheat	enganação	faixa10 n2187
+congratulate	parabenizar	faixa10 n2188
+discomfort	desconforto	faixa10 n2189
+enclosure	recinto	faixa10 n2190
+attentive	atencioso	faixa10 n2191
+paw	pata	faixa10 n2192
+overflow	transbordamento	faixa10 n2193
+dissatisfy	descontentar	faixa10 n2194
+multiplication	multiplicação	faixa10 n2195
+whichever	seja qual for	faixa10 n2196
+tidy	arrumado	faixa10 n2197
+bribe	suborno	faixa10 n2198
+mend	remendar	faixa10 n2199
+stocking	meia	faixa10 n2200
+feast	festa	faixa10 n2201
+nuisance	incômodo / estorvo	faixa10 n2202 alerta
+thorn	espinho	faixa10 n2203
+tame	domar	faixa10 n2204
+inclusive	inclusivo	faixa10 n2205
+homemade	caseiro	faixa10 n2206
+handwriting	caligrafia	faixa10 n2207
+chalk	giz	faixa10 n2208
+sour	azedo	faixa10 n2209
+slippery	escorregadio	faixa10 n2210
+procession	procissão	faixa10 n2211
+ripen	amadurecer	faixa10 n2212
+jealous	com ciumes	faixa10 n2213
+jealousy	ciúme	faixa10 n2214
+liar	mentiroso	faixa10 n2215
+homecoming	regresso a casa	faixa10 n2216
+barber	barbeiro	faixa10 n2217
+whiten	branquear	faixa10 n2218
+berry	baga	faixa10 n2219
+lighten	iluminar	faixa10 n2220
+pigeon	pombo	faixa10 n2221
+hinder	entravar	faixa10 n2222
+bravery	bravura	faixa10 n2223
+baggage	bagagem	faixa10 n2224
+noun	substantivo	faixa10 n2225
+amongst	entre	faixa10 n2226
+grammar	gramática	faixa10 n2227
+cultivation	cultivo	faixa10 n2228
+companionship	companhia	faixa10 n2229
+rubbish	lixo	faixa10 n2230
+modesty	modéstia	faixa10 n2231
+woolen	de lã	faixa10 n2232
+deepen	aprofundar	faixa10 n2233
+pastry	pastelaria	faixa10 n2234
+cupboard	armário	faixa10 n2235
+quart	quarto	faixa10 n2236
+canal	canal	faixa10 n2237
+notebook	caderno de anotações	faixa10 n2238
+deceit	engano	faixa10 n2239
+parcel	pacote / encomenda	faixa10 n2240 alerta
+brighten	clarear	faixa10 n2241
+moderation	moderação	faixa10 n2242
+punctual	pontual	faixa10 n2243
+hurrah	hurra	faixa10 n2244
+lipstick	batom	faixa10 n2245
+uppermost	mais alto	faixa10 n2246
+fatten	engordar	faixa10 n2247
+conqueror	conquistador	faixa10 n2248
+hindrance	impedimento	faixa10 n2249
+cowardice	covardia	faixa10 n2250
+obedient	obediente	faixa10 n2251
+saucer	pires	faixa10 n2252
+madden	enlouquecer	faixa10 n2253
+scold	repreender	faixa10 n2254
+weekday	dia da semana	faixa10 n2255
+rotten	podre	faixa10 n2256
+disrespect	desrespeito	faixa10 n2257
+widower	viúvo	faixa10 n2258
+deafen	ensurdecer	faixa10 n2259
+donkey	burro	faixa10 n2260
+businesslike	metódico	faixa10 n2261
+motherhood	maternidade	faixa10 n2262
+sadden	entristecer	faixa10 n2263
+handshake	aperto de mão	faixa10 n2264
+calculator	calculadora	faixa10 n2265
+headdress	cocar	faixa10 n2266
+scissors	tesoura	faixa10 n2267
+translator	tradutor	faixa10 n2268
+possessor	possuidor	faixa10 n2269
+shilling	xelim	faixa10 n2270
+redden	avermelhar	faixa10 n2271
+motherly	maternal	faixa10 n2272
+whose	de quem	faixa10 n2273
+cultivator	cultivador	faixa10 n2274
+whom	quem	faixa10 n2275
+homework	dever de casa	faixa10 n2276
+electrician	eletricista	faixa10 n2277
+oar	remo	faixa10 n2278
+bribery	suborno	faixa10 n2279
+sweeten	adoçar	faixa10 n2280
+sow	semear	faixa10 n2281
+pronunciation	pronúncia	faixa10 n2282
+beak	bico	faixa10 n2283
+plural	plural	faixa10 n2284

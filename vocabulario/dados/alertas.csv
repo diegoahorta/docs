@@ -1,0 +1,113 @@
+idioma,n,en,original,sugestao,tipo
+PT,6,to,para o,para / a,Ruído (artigo extra)
+PT,11,that,que a,que / aquele,Ruído (artigo extra)
+PT,15,with,com os,com,Ruído (artigo extra)
+PT,26,but,mas a,mas,Ruído (artigo extra)
+PT,33,will,vontade,(futuro) vai / -rá,Sentido trocado (substantivo × auxiliar)
+PT,39,can,lata,poder / conseguir,Sentido trocado (homônimo)
+PT,41,if,se for,se,Ruído (palavra extra)
+PT,42,no,nao kk,não / nenhum,Gíria de internet
+PT,43,man,cara,homem,Gíria / registro informal
+PT,46,so,ou seja,então / tão,Sentido trocado
+PT,47,what,de q,o que,Abreviação de internet
+PT,56,only,é apenas,só / apenas,Ruído (verbo extra)
+PT,59,some,tão eu,algum / alguns,Tradução sem sentido
+PT,73,may,mes de maio,poder (possibilidade),Sentido trocado (homônimo)
+PT,86,must,mosto,dever / ter de,Sentido trocado (homônimo)
+PT,87,look,olha ai,olhar,Gíria / imperativo
+PT,89,great,q ótimo,ótimo / grande,Abreviação de internet
+PT,92,long,grandes,longo / comprido,Sentido aproximado
+PT,102,good,de boa,bom,Gíria
+PT,107,how,como asim,como,Erro de digitação / gíria
+PT,117,old,de idade,velho / antigo,Classe trocada
+PT,141,begin,início,começar,Classe trocada (verbo → subst.)
+PT,148,might,poderio,poderia / talvez,Sentido trocado (homônimo)
+PT,188,run,corrida,correr,Classe trocada (verbo → subst.)
+PT,220,let,deixei,deixar,Forma conjugada
+PT,239,away,um jeito,longe / embora,Sentido trocado (confusão com 'way')
+PT,268,why,p que,por quê,Abreviação de internet
+PT,303,love,ame,amor / amar,Forma conjugada
+PT,313,drive,distância,dirigir,Sentido trocado
+PT,381,true,VERDADEIRO,verdadeiro,Resíduo de planilha (valor lógico)
+PT,406,anything,nada,qualquer coisa / algo,Sentido parcial (só em negativas)
+PT,421,already,mais já,já,Ruído (palavra extra)
+PT,423,wait,espere ai,esperar,Gíria / imperativo
+PT,497,morning,dia,manhã,Sentido trocado
+PT,566,drop,solta,gota / deixar cair,Sentido trocado
+PT,577,single,solteira,único / solteiro,Sentido parcial
+PT,697,listen,ouço,escutar,Forma conjugada
+PT,719,lay,leigo,pôr / deitar (algo),Sentido trocado (homônimo)
+PT,743,yes,sim: d,sim,Emoticon no texto
+PT,749,sleep,dorme,dormir / sono,Forma conjugada
+PT,759,left,foi embora,esquerda / partiu,Sentido parcial
+PT,794,hang,aguentar,pendurar,Sentido trocado (expressão 'hang on')
+PT,823,forget,esqueço,esquecer,Forma conjugada
+PT,1023,thank,graças a,agradecer,Classe trocada
+PT,1101,tie,tie,gravata / amarrar / empate,Não traduzido
+PT,1138,key,chaveta,chave,Sentido trocado
+PT,1198,desk,secretária,escrivaninha / mesa,Português europeu
+PT,1305,swim,natação,nadar,Classe trocada (verbo → subst.)
+PT,1329,breakfast,pequeno almoço,café da manhã,Português europeu
+PT,1338,ill,eu vou,doente,Sentido trocado (lido como 'I'll')
+PT,1356,highway,auto estrada,rodovia,Português europeu
+PT,1416,shut,cala a,fechar,Gíria (truncada)
+PT,1673,slavery,trabalho escravo,escravidão,Sentido aproximado
+PT,1694,custom,personalizado,costume,Sentido trocado
+PT,1740,false,FALSE,falso,Resíduo de planilha (valor lógico)
+PT,1801,fork,forquilha,garfo,Sentido parcial
+PT,1805,polish,polonês,polir / lustrar,Sentido trocado (Polish × polish)
+PT,1893,brass,bronze,latão,Sentido trocado
+PT,1923,log,logar,tronco / registro,Sentido trocado
+PT,1937,prejudice,prejuízo,preconceito,Falso cognato
+PT,1971,saw,viu,serra / serrar,Sentido trocado (passado de 'see')
+PT,2037,cushion,coxim,almofada,Registro técnico
+PT,2124,sock,peúga,meia,Português europeu
+PT,2127,inn,hotel,pousada / estalagem,Sentido aproximado
+PT,2167,avoidance,anulação,evitação / esquiva,Sentido trocado
+PT,2202,nuisance,incómodo,incômodo / estorvo,Português europeu (grafia)
+PT,2240,parcel,parcela,pacote / encomenda,Falso cognato
+ES,11,that,que la,que / ese,Ruído (artigo extra)
+ES,33,will,voluntad,(futuro) -rá / ir a,Sentido trocado (substantivo × auxiliar)
+ES,39,can,lata,poder,Sentido trocado (homônimo)
+ES,46,so,de forma,así / tan / entonces,Sentido trocado
+ES,73,may,mayo,poder (posibilidad),Sentido trocado (homônimo)
+ES,148,might,fuerza,podría / quizás,Sentido trocado (homônimo)
+ES,239,away,una manera,lejos / fuera,Sentido trocado (confusão com 'way')
+ES,268,why,x que,por qué,Abreviação de internet
+ES,381,true,TRUE,verdadero,Resíduo de planilha
+ES,574,fine,multa,bien / fino,Sentido parcial
+ES,602,smile,tu sonrie,sonrisa / sonreír,Ruído / forma conjugada
+ES,701,cool,buena onda,fresco / genial,Gíria
+ES,794,hang,caída,colgar,Sentido trocado
+ES,823,forget,para obtener,olvidar,Sentido trocado (lido como 'for get')
+ES,973,miss,la señorita,extrañar / perder,Sentido parcial
+ES,1305,swim,natación,nadar,Classe trocada (verbo → subst.)
+ES,2240,parcel,parcela,paquete,Falso cognato
+ES,2281,sow,cerda,sembrar,Sentido parcial (homônimo)
+FR,6,to,de se,à / de,Ruído
+FR,33,will,volonté,(futur) -ra / aller,Sentido trocado (substantivo × auxiliar)
+FR,73,may,mois de mai,pouvoir,Sentido trocado (homônimo)
+FR,86,must,moût,devoir,Sentido trocado (homônimo)
+FR,89,great,trop bien,grand / génial,Gíria
+FR,148,might,puissance,pourrait / peut-être,Sentido trocado (homônimo)
+FR,220,let,a laissé,laisser,Forma conjugada
+FR,239,away,un moyen,loin / absent,Sentido trocado (confusão com 'way')
+FR,1305,swim,baignade,nager,Classe trocada (verbo → subst.)
+FR,1801,fork,fourche,fourchette,Sentido parcial
+FR,1937,prejudice,préjudice,préjugé,Falso cognato
+FR,1971,saw,a vu,scie / scier,Sentido trocado (passado de 'see')
+FR,2240,parcel,parcelle,colis,Falso cognato
+FR,2281,sow,truie,semer,Sentido parcial (homônimo)
+DE,2,be,seien sie,sein,Forma conjugada
+DE,14,I,ICH A,ich,Ruído
+DE,15,with,die mit,mit,Ruído (artigo extra)
+DE,44,out,out,aus / hinaus,Não traduzido
+DE,102,good,gut aus,gut,Ruído
+DE,141,begin,start,beginnen,Sentido aproximado
+DE,268,why,wieso den,warum / wieso,Ruído (erro de grafia)
+DE,381,true,TRUE,wahr,Resíduo de planilha
+DE,574,fine,geht es,fein / gut,Tradução sem sentido
+DE,921,none,die sonne geht auf,kein(e) / keiner,Tradução sem relação
+DE,1215,mine,Bergwerk,meiner / meins,Sentido parcial (homônimo)
+DE,1338,ill,schlecht,krank,Sentido aproximado
+DE,1416,shut,halt die,schließen,Gíria truncada
