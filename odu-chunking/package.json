@@ -1,6 +1,6 @@
 {
   "name": "odu-blocos",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Inglês, francês, alemão e espanhol ao mesmo tempo com o método de Chunking da ODU Creative.",
   "type": "module",

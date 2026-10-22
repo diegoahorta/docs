@@ -68,13 +68,15 @@ public class MainActivity extends Activity {
         boolean night = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
                 == Configuration.UI_MODE_NIGHT_YES;
         root.setBackgroundColor(night ? Color.parseColor("#161C27") : Color.WHITE);
-        styleSystemBars(night);
 
         web = new WebView(this);
         root.addView(web, new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         applyInsets(root);
         setContentView(root);
+        // Só depois do setContentView: antes disso a DecorView não existe e
+        // getInsetsController() derruba o app no Android 11+.
+        styleSystemBars(night);
 
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -139,6 +141,7 @@ public class MainActivity extends Activity {
         w.setStatusBarColor(bar);
         w.setNavigationBarColor(bar);
         if (Build.VERSION.SDK_INT >= 30) {
+            w.getDecorView();
             WindowInsetsController c = w.getInsetsController();
             if (c != null) {
                 int light = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
