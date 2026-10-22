@@ -3,6 +3,7 @@ import { LANGS } from '../config.js';
 import { LESSONS, lessonById, sentenceById, sentenceText } from '../core/blocks.js';
 import { store } from '../core/store.js';
 import { reducedMotion } from '../core/theme.js';
+import { pronunciaPanel } from '../core/pronuncia.js';
 import { animateIn, blockName, chipLine, h, legend, linkHighlights, quad, sayButton } from '../core/ui.js';
 
 const CODES = LANGS.map((l) => l.code);
@@ -317,11 +318,22 @@ export function mount(root, arg) {
     h(
       'section.section',
       {},
-      head('Assimilar', 'Frases em blocos', 'Clique em um bloco para ouvir só ele; o alto-falante lê a frase inteira.'),
+      head(
+        'Assimilar',
+        'Frases em blocos',
+        'Clique em um bloco para ouvir só ele; o alto-falante lê a frase inteira. Grave sua voz e compare com o modelo.',
+      ),
       h(
         'div',
         { style: { display: 'grid', gap: '0.85rem' } },
-        lesson.frases.map((f) => quad(f)),
+        lesson.frases.map((f) =>
+          h(
+            'div.frase',
+            {},
+            quad(f),
+            h('details.pron-toggle', {}, h('summary', {}, 'Gravar minha pronúncia'), pronunciaPanel(f)),
+          ),
+        ),
       ),
     ),
     scaffold.el,

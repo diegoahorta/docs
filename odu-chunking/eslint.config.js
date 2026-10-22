@@ -3,7 +3,7 @@ import globals from 'globals';
 import prettier from 'eslint-config-prettier';
 
 export default [
-  { ignores: ['node_modules/', 'src/data/lexico.js'] },
+  { ignores: ['node_modules/', 'vendor/', 'www/', 'android/', 'src/data/lexico.js', 'src/data/audio-manifest.js'] },
   js.configs.recommended,
   {
     files: ['src/**/*.js'],

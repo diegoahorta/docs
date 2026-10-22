@@ -5,6 +5,7 @@ import { dueQueue, grade, previewInterval, srsSummary } from '../core/srs.js';
 import { store } from '../core/store.js';
 import { speak } from '../core/speech.js';
 import { reducedMotion } from '../core/theme.js';
+import { pronunciaPanel } from '../core/pronuncia.js';
 import { h, quad, select } from '../core/ui.js';
 
 const RATINGS = [
@@ -24,7 +25,7 @@ export function mount(root, arg) {
 
   const counter = h('span.eyebrow');
   const stage = h('div.card-stage');
-  const controls = h('div');
+  const controls = h('div.controls-stack');
 
   const modeSeg = h(
     'div.seg',
@@ -145,6 +146,12 @@ export function mount(root, arg) {
       if (reducedMotion()) gsap.set(fc, { rotateY: 180 });
       else gsap.to(fc, { rotateY: 180, duration: 0.6, ease: 'power3.inOut' });
       controls.replaceChildren(
+        h(
+          'details.pron-toggle',
+          {},
+          h('summary', {}, 'Gravar e comparar minha pronúncia'),
+          pronunciaPanel(card, { lang: mode === 'audio' ? audioLang : 'en' }),
+        ),
         h(
           'div.grades',
           { role: 'group', 'aria-label': 'Como foi?' },

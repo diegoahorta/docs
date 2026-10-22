@@ -1,33 +1,65 @@
+import { isNative, native } from './native.js';
+
 /**
- * Progresso salvo no navegador. Toda leitura/escrita é protegida: em janela
- * anônima ou com armazenamento bloqueado o app funciona sem persistir.
+ * Progresso do aluno. No navegador fica no localStorage; no APK é gravado
+ * também nas SharedPreferences do Android, que sobrevivem a limpezas de
+ * cache do WebView. Toda leitura/escrita é protegida: sem armazenamento o
+ * app continua funcionando, só não persiste.
  */
 const KEY = 'odu-blocos:v1';
+const VERSION = 1;
 
-const empty = () => ({ srs: {}, mastery: {}, visited: {}, game: { best: 0, played: 0 } });
+const empty = () => ({ v: VERSION, updatedAt: 0, srs: {}, mastery: {}, visited: {}, game: { best: 0, played: 0 } });
 
-let state = load();
-const listeners = new Set();
+const merge = (data) => ({ ...empty(), ...data, game: { ...empty().game, ...(data?.game ?? {}) } });
 
-function load() {
+function readLocal() {
   try {
     const raw = localStorage.getItem(KEY);
-    return raw ? { ...empty(), ...JSON.parse(raw) } : empty();
+    return raw ? merge(JSON.parse(raw)) : null;
   } catch {
-    return empty();
+    return null;
+  }
+}
+
+let state = readLocal() ?? empty();
+const listeners = new Set();
+
+function readNative() {
+  try {
+    const value = native.getItem(KEY);
+    return value ? merge(JSON.parse(value)) : null;
+  } catch {
+    return null;
   }
 }
 
 function save() {
+  state.updatedAt = Date.now();
+  const raw = JSON.stringify(state);
   try {
-    localStorage.setItem(KEY, JSON.stringify(state));
+    localStorage.setItem(KEY, raw);
   } catch {
     /* armazenamento indisponível */
+  }
+  if (isNative()) {
+    try {
+      native.setItem(KEY, raw);
+    } catch {
+      /* ponte indisponível */
+    }
   }
   listeners.forEach((fn) => fn(state));
 }
 
 export const store = {
+  /** No APK, carrega a cópia nativa se ela for mais recente que a do WebView. */
+  async init() {
+    if (!isNative()) return;
+    const saved = readNative();
+    if (saved && saved.updatedAt >= state.updatedAt) state = saved;
+    else if (state.updatedAt) save();
+  },
   get: () => state,
   update(fn) {
     fn(state);
@@ -39,6 +71,14 @@ export const store = {
   },
   reset() {
     state = empty();
+    save();
+  },
+  /** Substitui o progresso por um backup importado. Lança erro se o arquivo não for um backup. */
+  restore(data) {
+    if (!data || typeof data !== 'object' || typeof data.srs !== 'object' || typeof data.mastery !== 'object') {
+      throw new Error('Arquivo não é um backup do ODU Blocos.');
+    }
+    state = merge(data);
     save();
   },
 };

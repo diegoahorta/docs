@@ -1,0 +1,42 @@
+// Mesmo app do scripts/build-apk.mjs, sem dependências além do SDK do Android.
+// Antes de compilar, rode "npm run build:www" na pasta odu-chunking.
+plugins {
+    id 'com.android.application' version '8.13.0'
+}
+
+def pkg = new groovy.json.JsonSlurper().parse(file('../package.json'))
+def (major, minor, patch) = pkg.version.tokenize('.').collect { it as int }
+
+android {
+    namespace 'com.oducreative.blocos'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.oducreative.blocos'
+        minSdk 24
+        targetSdk 35
+        versionCode major * 10000 + minor * 100 + patch
+        versionName pkg.version
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs = ['build/gradle-assets']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+tasks.register('copyWww', Copy) {
+    from '../www'
+    into 'build/gradle-assets/www'
+}
+preBuild.dependsOn 'copyWww'

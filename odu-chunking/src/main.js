@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { reducedMotion } from './core/theme.js';
 import { stopSpeech } from './core/speech.js';
+import { store } from './core/store.js';
 
 // Cada tela é carregada sob demanda: Phaser e Three.js só baixam quando usados.
 const ROUTES = {
@@ -50,7 +51,7 @@ async function render() {
 }
 
 window.addEventListener('hashchange', render);
-render();
+store.init().finally(render);
 
 // Alternância de tema: sistema → claro → escuro.
 const THEMES = ['sistema', 'claro', 'escuro'];

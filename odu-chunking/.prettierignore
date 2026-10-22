@@ -1,3 +1,8 @@
 node_modules
 src/data/lexico.js
+src/data/audio-manifest.js
 package-lock.json
+vendor
+www
+android
+audio/roteiro.csv

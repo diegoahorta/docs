@@ -987,6 +987,63 @@ input[type='search'] {
   border-radius: 14px;
 }
 
+.voice-pill {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  color: var(--muted);
+}
+
+.voice-pill[data-ok='true'] {
+  border-color: var(--good);
+  color: var(--good);
+}
+
+/* ---------- Pronúncia ---------- */
+
+.frase {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.pron-toggle summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--muted);
+  font-size: var(--step--1);
+  padding: 0.25rem 0;
+}
+
+.pron-toggle[open] summary {
+  color: var(--ink);
+}
+
+.pronuncia {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.85rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.btn.rec.on {
+  background: var(--bad);
+  border-color: var(--bad);
+  color: var(--on-block);
+}
+
+.rec-status {
+  font-size: var(--step--1);
+}
+
+.controls-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
 /* ---------- Construir ---------- */
 
 .game-shell {
@@ -1156,7 +1213,7 @@ input[type='search'] {
 
 footer {
   border-top: 1px solid var(--line);
-  padding-block: 1.25rem;
+  padding-block: 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
   color: var(--muted);
   font-size: var(--step--1);
 }

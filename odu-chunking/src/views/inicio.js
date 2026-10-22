@@ -3,6 +3,10 @@ import { LESSONS, lessonById, sentenceText } from '../core/blocks.js';
 import { store, masteryOf } from '../core/store.js';
 import { srsSummary } from '../core/srs.js';
 import { h, legend } from '../core/ui.js';
+import { exportProgress, importProgress } from '../core/backup.js';
+import { isNative } from '../core/native.js';
+import { openVoiceInstall, voiceStatus } from '../core/speech.js';
+import { AUDIO_FILES } from '../data/audio-manifest.js';
 
 const ORDER = LANGS.map((l) => l.code);
 
@@ -24,6 +28,93 @@ function lessonCard(lesson) {
     h('h3', {}, lesson.titulo),
     h('p.muted', {}, lesson.tema),
     h('div.bars', { 'aria-label': 'Domínio por idioma' }, bars),
+  );
+}
+
+function devicePanel() {
+  const msg = h('p.muted', { role: 'status', 'aria-live': 'polite' });
+  const voices = h('div.row');
+  const fileIn = h('input', {
+    type: 'file',
+    accept: 'application/json,.json',
+    hidden: true,
+    onchange: async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        await importProgress(file);
+        msg.textContent = 'Progresso restaurado.';
+        setTimeout(() => location.reload(), 600);
+      } catch (err) {
+        msg.textContent = err.message;
+      }
+      e.target.value = '';
+    },
+  });
+
+  voiceStatus().then((st) => {
+    const packed = Object.keys(AUDIO_FILES).length;
+    const items = [
+      ...LANGS.map((l) =>
+        h('span.voice-pill', { 'data-ok': String(st[l.code]) }, `${l.label} ${st[l.code] ? 'com voz' : 'sem voz'}`),
+      ),
+      packed ? h('span.voice-pill', { 'data-ok': 'true' }, `${packed} gravações nativas`) : null,
+      isNative() && LANGS.some((l) => !st[l.code])
+        ? h('button.btn.ghost', { type: 'button', onclick: () => openVoiceInstall() }, 'Instalar vozes')
+        : null,
+    ];
+    voices.replaceChildren(...items.filter(Boolean));
+  });
+
+  return h(
+    'section.grid-2',
+    { 'aria-label': 'Progresso e áudio' },
+    h(
+      'div.panel',
+      {},
+      h('span.eyebrow', {}, 'Progresso salvo neste aparelho'),
+      h(
+        'p',
+        {},
+        isNative()
+          ? 'Tudo fica salvo no celular, sem internet. Faça um backup para levar o progresso para outro aparelho.'
+          : 'Tudo fica salvo neste navegador. Faça um backup para levar o progresso para outro aparelho.',
+      ),
+      h(
+        'div.row',
+        {},
+        h(
+          'button.btn',
+          {
+            type: 'button',
+            onclick: async () => {
+              try {
+                msg.textContent = await exportProgress();
+              } catch (err) {
+                msg.textContent = `Não foi possível exportar: ${err.message}`;
+              }
+            },
+          },
+          'Exportar backup',
+        ),
+        h('button.btn.ghost', { type: 'button', onclick: () => fileIn.click() }, 'Importar backup'),
+        fileIn,
+      ),
+      msg,
+    ),
+    h(
+      'div.panel',
+      {},
+      h('span.eyebrow', {}, 'Áudio offline'),
+      h(
+        'p',
+        {},
+        isNative()
+          ? 'O app usa as vozes do Android, que funcionam sem internet depois de instaladas. Suas gravações ficam no aparelho.'
+          : 'O app usa as vozes do navegador. Suas gravações ficam neste navegador.',
+      ),
+      voices,
+    ),
   );
 }
 
@@ -72,6 +163,7 @@ export async function mount(root) {
       h('div.stat', {}, h('b', {}, String(sum.dominadas)), h('span', {}, 'frases dominadas (caixa 4+)')),
       h('div.stat', {}, h('b', {}, String(game.best)), h('span', {}, 'recorde no Construir')),
     ),
+    devicePanel(),
     h(
       'section.section',
       {},
