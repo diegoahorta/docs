@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ODU Blocos</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <meta
+      name="description"
+      content="Inglês, francês, alemão e espanhol ao mesmo tempo, com o método de Chunking da ODU Creative."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=JetBrains+Mono:wght@500&display=swap"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js",
+          "phaser": "https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.esm.min.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="brand" href="#inicio" aria-label="ODU Blocos, início">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>ODU Blocos</span>
+        </a>
+        <nav class="nav" aria-label="Seções">
+          <a href="#inicio">Início</a>
+          <a href="#aulas">Aulas</a>
+          <a href="#memorizar">Memorizar</a>
+          <a href="#construir">Construir</a>
+          <a href="#mapa">Mapa 3D</a>
+          <a href="#lexico">Léxico</a>
+        </nav>
+        <button class="icon-btn" id="theme-toggle" type="button" title="Alternar tema">Tema: sistema</button>
+      </div>
+    </header>
+
+    <main class="wrap" id="view" tabindex="-1"></main>
+
+    <footer>
+      <div class="wrap">
+        <span>ODU Creative · Construa a frase em blocos · Build sentences in chunks</span>
+        <span>EN · FR · DE · ES com apoio em PT-BR</span>
+      </div>
+    </footer>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
