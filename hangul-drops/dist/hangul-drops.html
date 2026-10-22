@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Arquivo gerado por scripts/build-html.js. Não edite: altere src/ e rode npm run build:html. -->
+<!-- Arquivo gerado por scripts/build-html.js. Não edite: altere src/ e gere de novo. -->
 <html lang="pt-BR" data-romanizacao="on" data-movimento="completo">
   <head>
     <meta charset="utf-8" />
@@ -2436,17 +2436,23 @@ var init_progress = __esm({
 });
 
 // src/core/speech.js
-function falaDisponivel() {
+function sinteseDaWeb() {
   return typeof window !== "undefined" && "speechSynthesis" in window;
 }
+function falaDisponivel() {
+  return Boolean(ponteNativa) || sinteseDaWeb();
+}
 function escolherVoz() {
-  if (!falaDisponivel()) {
+  if (!sinteseDaWeb()) {
     return;
   }
   const vozes = window.speechSynthesis.getVoices();
   vozCoreana = vozes.find((voz) => voz.lang === "ko-KR") ?? vozes.find((voz) => voz.lang?.toLowerCase().startsWith("ko")) ?? null;
 }
 function temVozCoreana() {
+  if (ponteNativa) {
+    return ponteNativa.temVoz();
+  }
   if (!vozCoreana) {
     escolherVoz();
   }
@@ -2457,6 +2463,10 @@ function falar(texto) {
     return false;
   }
   try {
+    if (ponteNativa) {
+      ponteNativa.falar(texto, obterConfig().velocidadeFala);
+      return true;
+    }
     const sintese = window.speechSynthesis;
     sintese.cancel();
     const fala = new SpeechSynthesisUtterance(texto);
@@ -2472,13 +2482,14 @@ function falar(texto) {
     return false;
   }
 }
-var vozCoreana;
+var vozCoreana, ponteNativa;
 var init_speech = __esm({
   "src/core/speech.js"() {
     "use strict";
     init_settings();
     vozCoreana = null;
-    if (falaDisponivel()) {
+    ponteNativa = typeof window !== "undefined" ? window.FalaNativa : void 0;
+    if (sinteseDaWeb()) {
       escolherVoz();
       window.speechSynthesis.addEventListener?.("voiceschanged", escolherVoz);
     }
@@ -6674,7 +6685,7 @@ init_settings();
 // src/router.js
 init_motion();
 function criarRoteador(conteiner, cortina) {
-  let telaAtual = null;
+  let telaAtual2 = null;
   let trocando = false;
   const cobrir = () => gsap.to(cortina, { opacity: 1, duration: duracao(0.3) }).then();
   const descobrir = () => gsap.to(cortina, { opacity: 0, duration: duracao(0.45) }).then();
@@ -6686,10 +6697,10 @@ function criarRoteador(conteiner, cortina) {
     cortina.classList.add("ativa");
     try {
       await cobrir();
-      telaAtual?.destroy();
-      telaAtual = null;
+      telaAtual2?.destroy();
+      telaAtual2 = null;
       conteiner.replaceChildren();
-      telaAtual = await montarTela(conteiner, params);
+      telaAtual2 = await montarTela(conteiner, params);
     } finally {
       await descobrir();
       cortina.classList.remove("ativa");
@@ -8514,11 +8525,14 @@ var hud = montarHud(document.getElementById("hud"), {
   aoConfig: abrirConfiguracoes
 });
 iniciarAvisosDeConquista();
+var telaAtual = "menu";
 function irParaMenu() {
+  telaAtual = "menu";
   hud.mostrarVoltar(false);
   return roteador.irPara(montarTelaMenu, { aoEscolherJogo: irParaJogo });
 }
 async function irParaJogo(jogoId) {
+  telaAtual = "jogo";
   hud.mostrarVoltar(true);
   try {
     await roteador.irPara(montarTelaJogo, { jogoId, aoSair: irParaMenu });
@@ -8528,6 +8542,17 @@ async function irParaJogo(jogoId) {
     irParaMenu();
   }
 }
+window.voltarApp = () => {
+  if (document.querySelector(".modal-fundo")) {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    return true;
+  }
+  if (telaAtual === "jogo") {
+    irParaMenu();
+    return true;
+  }
+  return false;
+};
 irParaMenu();
 
 </script>

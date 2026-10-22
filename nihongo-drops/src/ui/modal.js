@@ -9,6 +9,21 @@ const SELETOR_FOCAVEL =
 
 let contador = 0;
 let abertos = 0;
+const pilha = []; // função fechar de cada modal aberto; o último é o de cima
+
+/**
+ * Esc fecha sempre o modal de cima, mesmo que o foco ainda esteja voltando de
+ * outro modal que acabou de fechar (Esc, Esc rápido fecha os dois).
+ * Escutado na captura do documento, antes dos jogos.
+ */
+function aoTeclarNoDocumento(evento) {
+  if (evento.key === 'Escape' && pilha.length > 0) {
+    evento.preventDefault();
+    evento.stopPropagation();
+    pilha[pilha.length - 1]();
+  }
+}
+document.addEventListener('keydown', aoTeclarNoDocumento, true);
 
 /** Avisa o resto do app (ex.: a tela do jogo) que há um modal aberto. */
 function avisarEstado() {
@@ -68,6 +83,7 @@ export function abrirModal({ titulo, conteudo, classe = '', aoFechar } = {}) {
       return;
     }
     fechado = true;
+    pilha.splice(pilha.indexOf(fechar), 1);
     await sair(fundo, { y: 0 });
     fundo.remove();
     abertos -= 1;
@@ -85,15 +101,13 @@ export function abrirModal({ titulo, conteudo, classe = '', aoFechar } = {}) {
     }
   });
   fundo.addEventListener('keydown', (evento) => {
-    if (evento.key === 'Escape') {
-      evento.stopPropagation();
-      fechar();
-    } else if (evento.key === 'Tab') {
+    if (evento.key === 'Tab') {
       prenderFoco(evento, caixa);
     }
   });
 
   camada.append(fundo);
+  pilha.push(fechar);
   abertos += 1;
   avisarEstado();
   entrar(caixa, { y: 30 });

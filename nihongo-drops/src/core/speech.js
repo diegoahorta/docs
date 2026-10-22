@@ -1,17 +1,25 @@
 // Pronúncia com a Web Speech API (speechSynthesis), sempre em ja-JP.
+// No app Android, a WebView não tem speechSynthesis: o app oferece uma ponte
+// (window.FalaNativa) para o TextToSpeech do próprio Android.
 
 import { obterConfig } from './settings.js';
 
 let vozJaponesa = null;
+const ponteNativa = typeof window !== 'undefined' ? window.FalaNativa : undefined;
 
-/** O navegador tem síntese de voz? */
-export function falaDisponivel() {
+/** O navegador tem a síntese de voz da web? */
+function sinteseDaWeb() {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
+}
+
+/** Há alguma forma de falar (ponte do app Android ou síntese da web)? */
+export function falaDisponivel() {
+  return Boolean(ponteNativa) || sinteseDaWeb();
 }
 
 /** Procura uma voz japonesa instalada no sistema. */
 function escolherVoz() {
-  if (!falaDisponivel()) {
+  if (!sinteseDaWeb()) {
     return;
   }
   const vozes = window.speechSynthesis.getVoices();
@@ -23,6 +31,9 @@ function escolherVoz() {
 
 /** Existe uma voz japonesa? (Algumas máquinas precisam instalar o pacote de voz.) */
 export function temVozJaponesa() {
+  if (ponteNativa) {
+    return ponteNativa.temVoz();
+  }
   if (!vozJaponesa) {
     escolherVoz();
   }
@@ -35,6 +46,10 @@ export function falar(texto) {
     return false;
   }
   try {
+    if (ponteNativa) {
+      ponteNativa.falar(texto, obterConfig().velocidadeFala);
+      return true;
+    }
     const sintese = window.speechSynthesis;
     sintese.cancel();
     const fala = new SpeechSynthesisUtterance(texto);
@@ -52,7 +67,7 @@ export function falar(texto) {
 }
 
 // As vozes costumam carregar de forma assíncrona.
-if (falaDisponivel()) {
+if (sinteseDaWeb()) {
   escolherVoz();
   window.speechSynthesis.addEventListener?.('voiceschanged', escolherVoz);
 }

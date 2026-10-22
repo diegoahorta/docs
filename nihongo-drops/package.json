@@ -17,7 +17,10 @@
     "eslint": "10.13.0",
     "eslint-config-prettier": "10.1.8",
     "globals": "17.13.0",
-    "prettier": "3.6.2"
+    "gsap": "3.13.0",
+    "phaser": "3.90.0",
+    "prettier": "3.6.2",
+    "three": "0.180.0"
   },
   "engines": {
     "node": ">=20.19"

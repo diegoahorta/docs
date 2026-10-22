@@ -26,12 +26,16 @@ const hud = montarHud(document.getElementById('hud'), {
 
 iniciarAvisosDeConquista();
 
+let telaAtual = 'menu';
+
 function irParaMenu() {
+  telaAtual = 'menu';
   hud.mostrarVoltar(false);
   return roteador.irPara(montarTelaMenu, { aoEscolherJogo: irParaJogo });
 }
 
 async function irParaJogo(jogoId) {
+  telaAtual = 'jogo';
   hud.mostrarVoltar(true);
   try {
     await roteador.irPara(montarTelaJogo, { jogoId, aoSair: irParaMenu });
@@ -41,5 +45,21 @@ async function irParaJogo(jogoId) {
     irParaMenu();
   }
 }
+
+/**
+ * Botão "voltar" do app Android: fecha o modal de cima; num jogo, volta ao
+ * menu. Devolve false no menu sem modal (aí o app fecha).
+ */
+window.voltarApp = () => {
+  if (document.querySelector('.modal-fundo')) {
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    return true;
+  }
+  if (telaAtual === 'jogo') {
+    irParaMenu();
+    return true;
+  }
+  return false;
+};
 
 irParaMenu();

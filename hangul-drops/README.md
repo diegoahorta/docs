@@ -64,6 +64,12 @@ causa das bibliotecas e da fonte). Depois de mudar o código, gere-o de novo:
 npm run build:html   # junta src/ num só módulo com o esbuild (apenas nesta etapa)
 ```
 
+### App Android (APK)
+
+O APK fica em `android/dist/hangul-drops.apk`, na raiz do repositório. Ele funciona offline, usa a voz
+nativa do Android e liga o botão "voltar" ao jogo. Veja como instalar e gerar de novo em
+[`android/README.md`](../android/README.md).
+
 ### Qualidade de código
 
 Requer Node.js 20.19 ou superior (recomendado: 22 LTS).

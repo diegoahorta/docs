@@ -41,6 +41,12 @@ npm run build:html   # junta src/ num só módulo com o esbuild (apenas nesta et
 
 O projeto continua sem bundler para desenvolver: edite `src/` e teste no Live Server.
 
+### App Android (APK)
+
+O APK fica em `android/dist/nihongo-drops.apk`, na raiz do repositório. Ele funciona offline, usa a voz
+nativa do Android e liga o botão "voltar" ao jogo. Veja como instalar e gerar de novo em
+[`android/README.md`](../android/README.md).
+
 ### Qualidade de código
 
 Requer Node.js 20.19 ou superior (recomendado: 22 LTS).
