@@ -16,7 +16,7 @@ Também funciona com a extensão **Live Server** do VS Code: abra a pasta `odu-c
 
 ### App Android (APK offline)
 
-O APK pronto está em [`releases/ODU-Blocos-1.0.0.apk`](releases/ODU-Blocos-1.0.0.apk).
+O APK pronto está em [`releases/ODU-Blocos-1.0.1.apk`](releases/ODU-Blocos-1.0.1.apk).
 
 1. Copie o arquivo para o celular.
 2. Toque nele e permita "instalar apps desconhecidos" para o app de arquivos.
@@ -37,6 +37,15 @@ Quem preferir o Android Studio pode abrir a pasta `android/`. Ela tem `build.gra
 - A versão do app vem do campo `version` do `package.json`. Aumente esse número a cada APK novo.
 - O APK é assinado com `android/odu-blocos-debug.p12` (senha `odublocos`). Use sempre a mesma chave, senão o Android não instala a atualização por cima.
 - Para a Play Store, crie uma chave própria e passe `ODU_KEYSTORE`, `ODU_KEYSTORE_PASS` e `ODU_KEY_ALIAS` ao script.
+
+**Teste do app Android.** `android/src/test/.../LaunchTest.java` abre o `MainActivity` com o framework real do Android (Robolectric), no Android 7, 11 e 15 (claro e escuro). O teste verifica:
+
+- se o app abre e carrega a página;
+- o servidor de assets (HTML, módulos JS, Phaser, fontes, 404);
+- a ponte `OduNative`;
+- o botão voltar e a recriação da tela.
+
+No Android Studio, rode com `./gradlew test`.
 
 **O que o app faz offline**
 
