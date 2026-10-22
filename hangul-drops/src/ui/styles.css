@@ -1,0 +1,1537 @@
+/* ==========================================================
+   Nihongo Drops — estilos globais
+   Tema noturno com bom contraste (WCAG AA) e hangul em fonte grande.
+   ========================================================== */
+
+:root {
+  --cor-fundo: #0f1630;
+  --cor-fundo-2: #18224a;
+  --cor-superficie: #1f2b5c;
+  --cor-superficie-2: #2a3a78;
+  --cor-borda: #3d4c8f;
+  --cor-texto: #f4f6ff;
+  --cor-texto-suave: #c3cbef;
+  --cor-destaque: #ff8fb1;
+  --cor-destaque-2: #ffd166;
+  --cor-acerto: #5be49b;
+  --cor-erro: #ff6b6b;
+  --cor-foco: #ffd166;
+
+  /*
+   * Caixas do SRS: escala ordinal de um só tom (mais claro = mais dominado),
+   * validada contra os fundos escuros (contraste ≥ 3:1, passos visíveis).
+   * Nível 0 = ainda não visto (cinza neutro).
+   */
+  --nivel-0: #5b6380;
+  --nivel-1: #3a8f6e;
+  --nivel-2: #4aa982;
+  --nivel-3: #5dc497;
+  --nivel-4: #7ddcb0;
+  --nivel-5: #b0f0d0;
+
+  --fonte: 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --tam-hangul-grande: clamp(3rem, 12vw, 5.5rem);
+  --tam-hangul-medio: clamp(1.6rem, 6vw, 2.2rem);
+  --altura-hud: 60px;
+  --raio: 14px;
+  --sombra: 0 12px 32px rgb(0 0 0 / 0.4);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte);
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+a {
+  color: var(--cor-destaque-2);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.pular-conteudo {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--cor-destaque-2);
+  color: #1a1a1a;
+  padding: 0.5rem 1rem;
+  border-radius: var(--raio);
+}
+
+.pular-conteudo:focus {
+  top: 1rem;
+}
+
+.texto-suave {
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Hangul e romanização ---------- */
+
+.hangul {
+  font-family: var(--fonte);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.hangul-grande {
+  font-size: var(--tam-hangul-grande);
+}
+
+.hangul-medio {
+  font-size: var(--tam-hangul-medio);
+  font-weight: 700;
+}
+
+.romanizacao {
+  color: var(--cor-texto-suave);
+  letter-spacing: 0.02em;
+}
+
+/* O jogador pode esconder o romanizacao nas configurações. */
+[data-romanizacao='off'] .romanizacao {
+  display: none;
+}
+
+/* ---------- Botões ---------- */
+
+.botao,
+.botao-hud,
+.botao-icone,
+.botao-fala,
+.botao-fase {
+  cursor: pointer;
+  border: 0;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.botao {
+  background: var(--cor-destaque);
+  color: #1b1030;
+  font-weight: 700;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+}
+
+.botao:hover {
+  filter: brightness(1.08);
+}
+
+.botao-secundario {
+  background: var(--cor-superficie-2);
+  color: var(--cor-texto);
+}
+
+.botao-perigo {
+  background: transparent;
+  color: var(--cor-erro);
+  border: 2px solid var(--cor-erro);
+}
+
+.botao-icone {
+  min-width: 44px;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+
+.botao-icone:hover {
+  background: var(--cor-superficie-2);
+}
+
+.botao-fala {
+  min-width: 44px;
+  border-radius: 50%;
+  background: var(--cor-superficie-2);
+  font-size: 1.15rem;
+}
+
+.botao-fala:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: fixed;
+  inset: 0 0 auto;
+  height: var(--altura-hud);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+  background: linear-gradient(rgb(15 22 48 / 0.95), rgb(15 22 48 / 0.7));
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  backdrop-filter: blur(6px);
+}
+
+.hud-esquerda,
+.hud-status,
+.hud-direita {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hud-status {
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.hud-marca {
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+
+.hud-marca-texto {
+  font-weight: 700;
+  color: var(--cor-destaque);
+}
+
+.hud-nivel {
+  font-weight: 900;
+  color: var(--cor-destaque-2);
+  white-space: nowrap;
+}
+
+.hud-xp {
+  position: relative;
+  width: min(220px, 28vw);
+  height: 12px;
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  overflow: hidden;
+}
+
+.hud-xp-preenchimento {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(90deg, var(--cor-destaque), var(--cor-destaque-2));
+  border-radius: inherit;
+}
+
+.hud-sequencia {
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.botao-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: var(--cor-superficie);
+}
+
+.botao-hud:hover {
+  background: var(--cor-superficie-2);
+}
+
+/* ---------- Área principal ---------- */
+
+.conteudo {
+  position: fixed;
+  inset: var(--altura-hud) 0 0;
+  outline: none;
+}
+
+.tela {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cortina {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 40%, var(--cor-fundo-2), var(--cor-fundo));
+  opacity: 0;
+  pointer-events: none;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--cor-destaque);
+}
+
+.cortina.ativa {
+  pointer-events: auto;
+}
+
+/* ---------- Menu ---------- */
+
+.tela-menu,
+.tela-jogo,
+.menu-palco {
+  position: absolute;
+  inset: 0;
+}
+
+.menu-palco {
+  background: radial-gradient(circle at 50% 30%, var(--cor-fundo-2), var(--cor-fundo));
+}
+
+.menu-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.menu-sobreposicao {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.menu-cabecalho h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 900;
+  text-shadow: 0 4px 18px rgb(0 0 0 / 0.6);
+  outline: none;
+}
+
+.menu-subtitulo-ko {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--cor-destaque);
+  font-weight: 700;
+}
+
+.menu-subtitulo {
+  margin: 0;
+  color: var(--cor-texto-suave);
+}
+
+.lista-fases {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.6rem;
+  pointer-events: auto;
+}
+
+.botao-fase {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  text-align: left;
+  border-radius: var(--raio);
+  background: rgb(31 43 92 / 0.88);
+  border: 2px solid transparent;
+  box-shadow: var(--sombra);
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.botao-fase:hover,
+.botao-fase.destacada {
+  border-color: var(--cor-fase);
+  transform: translateY(-2px);
+}
+
+.botao-fase.bloqueada {
+  opacity: 0.7;
+}
+
+.botao-fase-numero {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--cor-fase);
+  color: #141a33;
+  font-weight: 900;
+}
+
+.botao-fase-textos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.botao-fase-jp,
+.botao-fase-status {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.sem-3d .menu-sobreposicao {
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+/* ---------- Modais ---------- */
+
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(5 8 20 / 0.7);
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: min(88dvh, 900px);
+  display: flex;
+  flex-direction: column;
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: calc(var(--raio) * 1.4);
+  box-shadow: var(--sombra);
+}
+
+.modal-largo {
+  width: min(720px, 100%);
+}
+
+.modal-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.5rem 1.25rem;
+}
+
+.modal-cabecalho h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.modal-corpo {
+  overflow: auto;
+  padding: 0 1.25rem 1.25rem;
+}
+
+/* ---------- Configurações ---------- */
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  border: 0;
+}
+
+.campo legend,
+.campo > strong {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.campo-interruptor {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.campo-interruptor span {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-interruptor small {
+  color: var(--cor-texto-suave);
+}
+
+.campo input[type='checkbox'],
+.campo input[type='radio'] {
+  width: 1.3rem;
+  height: 1.3rem;
+  accent-color: var(--cor-destaque);
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+.campo input[type='range'] {
+  accent-color: var(--cor-destaque);
+  width: 100%;
+}
+
+.grupo-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+
+.opcao {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.creditos {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Tabela de hangul ---------- */
+
+.abas {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.aba {
+  flex: 1;
+  min-height: 44px;
+  cursor: pointer;
+  border: 2px solid var(--cor-borda);
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 700;
+}
+
+.aba[aria-selected='true'] {
+  background: var(--cor-destaque);
+  border-color: var(--cor-destaque);
+  color: #1b1030;
+}
+
+.tabela-hangul {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Letras: quantas couberem por linha. */
+.tabela-jamo {
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+}
+
+/* Sílabas: a primeira coluna é a consoante; as outras, as 6 vogais. */
+.tabela-silabas {
+  grid-template-columns: 2rem repeat(6, minmax(0, 1fr));
+}
+
+.tabela-cabecalho {
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--cor-destaque);
+}
+
+.celula-hangul {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 64px;
+  padding: 0.4rem 0;
+  border: 2px solid transparent;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+  cursor: pointer;
+}
+
+.celula-hangul .hangul {
+  font-size: var(--tam-hangul-medio);
+}
+
+.celula-hangul .romanizacao {
+  font-size: 0.8rem;
+}
+
+.celula-hangul:hover {
+  border-color: var(--cor-destaque);
+}
+
+/* Bolinha com a caixa do SRS (cinza = não visto; verde mais claro = mais dominado). */
+.celula-hangul::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--nivel-0);
+}
+
+.celula-hangul[data-caixa='1']::after {
+  background: var(--nivel-1);
+}
+
+.celula-hangul[data-caixa='2']::after {
+  background: var(--nivel-2);
+}
+
+.celula-hangul[data-caixa='3']::after {
+  background: var(--nivel-3);
+}
+
+.celula-hangul[data-caixa='4']::after {
+  background: var(--nivel-4);
+}
+
+.celula-hangul[data-caixa='5']::after {
+  background: var(--nivel-5);
+}
+
+/* ---------- Detalhe do hangul e ordem dos traços ---------- */
+
+.detalhe-hangul {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.detalhe-tracos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.detalhe-leitura {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detalhe-romanizacao {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.dica {
+  background: var(--cor-superficie);
+  border-left: 4px solid var(--cor-destaque-2);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+}
+
+.exemplos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.exemplos li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tracos {
+  max-width: 100%;
+  height: auto;
+  background: #fffaf0;
+  border-radius: var(--raio);
+}
+
+.tracos path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracos-grade line {
+  stroke: #e3c9c9;
+  stroke-width: 0.6;
+  stroke-dasharray: 2 2;
+}
+
+.tracos-fantasma path {
+  stroke: #d8d2e6;
+  stroke-width: 4;
+}
+
+.tracos-ativos path {
+  stroke: #1b1030;
+  stroke-width: 4;
+}
+
+.tracos-numeros text {
+  font-size: 7px;
+  font-weight: 700;
+  fill: #d64545;
+}
+
+@media (max-width: 560px) {
+  .detalhe-hangul {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .hud-marca-texto,
+  .botao-hud-texto {
+    display: none;
+  }
+
+  .botao-hud {
+    padding: 0;
+    width: 44px;
+    justify-content: center;
+  }
+
+  .hud-xp {
+    width: 18vw;
+  }
+
+  /* No celular, as fases viram uma faixa horizontal para não cobrir a ilha. */
+  .lista-fases {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.4rem;
+  }
+
+  .lista-fases li {
+    flex: 0 0 68%;
+    scroll-snap-align: start;
+  }
+}
+
+/* ---------- Conquistas ---------- */
+
+.lista-conquistas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.conquista {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.conquista span:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+.conquista small {
+  color: var(--cor-texto-suave);
+}
+
+.conquista-icone {
+  font-size: 1.8rem;
+  width: 2.5rem;
+  text-align: center;
+}
+
+.conquista-bloqueada .conquista-icone {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+/* ---------- Feedback (acerto, erro, avisos) ---------- */
+
+.camada-feedback {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+}
+
+.camada-feedback > * {
+  pointer-events: auto;
+}
+
+/* Centralizados no ponto pelo GSAP (xPercent/yPercent), não pelo CSS. */
+.selo-acerto,
+.petala {
+  position: absolute;
+  pointer-events: none;
+}
+
+.selo-acerto {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--cor-acerto);
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.6);
+}
+
+.petala {
+  font-size: 1.2rem;
+}
+
+/*
+ * Elementos animados pelo GSAP são centralizados pelo layout (margin auto),
+ * e não com `translate`: o GSAP reescreve o transform ao animar.
+ */
+.cartao-erro {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(420px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  background: var(--cor-fundo-2);
+  border: 2px solid var(--cor-erro);
+  border-radius: calc(var(--raio) * 1.4);
+  box-shadow: var(--sombra);
+}
+
+.cartao-erro p {
+  margin: 0;
+}
+
+.cartao-erro-titulo {
+  color: var(--cor-erro);
+  font-weight: 700;
+}
+
+.cartao-erro-resposta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cartao-erro-romanizacao {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.cartao-erro-dica {
+  color: var(--cor-texto-suave);
+}
+
+.pilha-avisos {
+  position: absolute;
+  top: calc(var(--altura-hud) + 12px);
+  left: 50%;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+/* Em telas largas, os avisos vão para o canto e não cobrem a pergunta dos jogos. */
+@media (min-width: 760px) {
+  .pilha-avisos {
+    left: auto;
+    right: 16px;
+    translate: none;
+    align-items: flex-end;
+  }
+}
+
+.aviso,
+.toast-conquista {
+  padding: 0.7rem 1.1rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie-2);
+  box-shadow: var(--sombra);
+  font-weight: 700;
+}
+
+.toast-conquista {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 2px solid var(--cor-destaque-2);
+}
+
+.toast-conquista > span:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.toast-icone {
+  font-size: 2rem;
+}
+
+.sem-js {
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ---------- Animações reduzidas ---------- */
+
+[data-movimento='reduzido'] *,
+[data-movimento='reduzido'] *::before,
+[data-movimento='reduzido'] *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+}
+
+/* ---------- Minijogos (camada HTML sobre o canvas) ---------- */
+
+.tela-jogo canvas {
+  display: block;
+}
+
+.jogo-camada {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.jogo-camada > * {
+  pointer-events: auto;
+}
+
+.jogo-painel {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  width: min(460px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  overflow: auto;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  background: var(--cor-fundo-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: calc(var(--raio) * 1.4);
+  box-shadow: var(--sombra);
+}
+
+.jogo-painel h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.jogo-painel h3 {
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.jogo-painel-nativo {
+  margin: 0 0 0.75rem;
+  color: var(--cor-destaque);
+  font-weight: 700;
+}
+
+.jogo-painel-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.jogo-instrucoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+  color: var(--cor-texto-suave);
+}
+
+.jogo-hangul-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.jogo-hangul-lista li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.6rem;
+  padding: 0.3rem;
+  border-radius: 10px;
+  background: var(--cor-superficie);
+}
+
+.jogo-hangul-lista .hangul {
+  font-size: 1.5rem;
+}
+
+.jogo-hangul-lista .romanizacao {
+  font-size: 0.75rem;
+}
+
+.jogo-resultados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+}
+
+.jogo-resultados div {
+  padding: 0.5rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.jogo-resultados dt {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.jogo-resultados dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.jogo-recorde {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--cor-destaque-2);
+}
+
+.jogo-revisao {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.jogo-revisao li {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  align-items: center;
+  gap: 0.25rem 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.jogo-revisao small {
+  grid-column: 1 / -1;
+}
+
+.revisao-romanizacao {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.jogo-barra-entrada {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem max(12px, env(safe-area-inset-right)) max(0.6rem, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  background: rgb(15 22 48 / 0.9);
+}
+
+.jogo-entrada {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.3rem 1rem;
+  font: inherit;
+  font-size: 1.5rem; /* 16px+ evita o zoom automático no iOS */
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+  border: 2px solid var(--cor-borda);
+  border-radius: 999px;
+}
+
+.jogo-entrada:focus-visible {
+  outline: none;
+  border-color: var(--cor-foco);
+}
+
+.jogo-entrada.invalido {
+  border-color: var(--cor-erro);
+}
+
+.jogo-botao {
+  flex: none;
+  background: var(--cor-superficie);
+}
+
+.jogo-dica {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(560px, calc(100% - 32px));
+  padding: 0.6rem 1rem;
+  border-radius: var(--raio);
+  border-left: 4px solid var(--cor-destaque-2);
+  background: rgb(24 34 74 / 0.95);
+  box-shadow: var(--sombra);
+  pointer-events: none;
+}
+
+.jogo-dica p {
+  margin: 0;
+}
+
+.jogo-dica p + p {
+  margin-top: 0.3rem;
+}
+
+.jogo-estrelas {
+  margin: 0.25rem 0;
+  font-size: 2.4rem;
+  letter-spacing: 0.15em;
+  color: var(--cor-destaque-2);
+}
+
+.jogo-niveis {
+  list-style: decimal inside;
+}
+
+/* ---------- Katahangul Runner ---------- */
+
+.runner-pergunta {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.5rem 0.3rem 1rem;
+  border-radius: 999px;
+  background: rgb(15 22 48 / 0.85);
+  box-shadow: var(--sombra);
+  white-space: nowrap;
+}
+
+.runner-leitura {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--cor-destaque-2);
+  line-height: 1.1;
+}
+
+.runner-controles {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.5rem max(12px, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.runner-botao {
+  width: 56px;
+  height: 56px;
+  font-size: 1.4rem;
+  border-radius: 50%;
+  background: rgb(31 43 92 / 0.9);
+}
+
+.runner-botao:hover {
+  background: var(--cor-superficie-2);
+}
+
+/* ---------- Monte a Sílaba ---------- */
+
+.pares-exemplo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--cor-destaque-2);
+}
+
+/* ---------- Caça-Palavras ---------- */
+
+.caca-lista {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 36%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem max(12px, env(safe-area-inset-right)) max(0.6rem, env(safe-area-inset-bottom));
+  background: rgb(24 34 74 / 0.95);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.caca-titulo {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.caca-palavras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.4rem;
+}
+
+.caca-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.caca-item.encontrada {
+  background: rgb(91 228 155 / 0.18);
+  outline: 2px solid var(--cor-acerto);
+}
+
+.caca-item.encontrada strong {
+  text-decoration: line-through;
+}
+
+.caca-emoji {
+  font-size: 1.5rem;
+}
+
+.caca-pista {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.caca-revelado {
+  font-weight: 700;
+  color: var(--cor-acerto);
+}
+
+.caca-acoes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Em telas largas a lista vira uma coluna à direita da grade. */
+@media (min-width: 760px) {
+  .caca-lista {
+    top: 0;
+    left: auto;
+    width: 280px;
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid var(--cor-borda);
+  }
+
+  .caca-palavras {
+    grid-template-columns: 1fr;
+    flex: 1;
+    align-content: start;
+  }
+}
+
+/* ---------- Painel de progresso ---------- */
+
+.progresso-numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.progresso-numero {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+  font-size: 0.85rem;
+}
+
+.progresso-numero-valor {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.progresso-numero-rotulo {
+  font-weight: 700;
+}
+
+.progresso-secao {
+  margin-bottom: 1.25rem;
+}
+
+.progresso-secao h3 {
+  font-size: 1rem;
+}
+
+/* Barra empilhada: 2px de espaço entre os segmentos e pontas arredondadas. */
+.progresso-barra {
+  display: flex;
+  gap: 2px;
+  height: 18px;
+}
+
+.progresso-segmento {
+  min-width: 6px;
+  border-radius: 4px;
+}
+
+.progresso-legenda {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.progresso-legenda li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.progresso-legenda strong {
+  color: var(--cor-texto);
+}
+
+.progresso-amostra {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.progresso-grupos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.progresso-grupo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.progresso-grupo.bloqueado .progresso-grupo-hangul {
+  opacity: 0.5;
+}
+
+.progresso-grupo-nome {
+  display: flex;
+  flex-direction: column;
+  width: 6.5rem;
+  flex: none;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.progresso-grupo-nome strong {
+  font-size: 1rem;
+}
+
+.progresso-grupo-hangul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.progresso-hangul {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #141a33;
+}
+
+.progresso-hangul[data-nivel='0'] {
+  color: var(--cor-texto);
+}
+
+.progresso-segmento[data-nivel='0'],
+.progresso-amostra[data-nivel='0'],
+.progresso-hangul[data-nivel='0'] {
+  background: var(--nivel-0);
+}
+
+.progresso-segmento[data-nivel='1'],
+.progresso-amostra[data-nivel='1'],
+.progresso-hangul[data-nivel='1'] {
+  background: var(--nivel-1);
+}
+
+.progresso-segmento[data-nivel='2'],
+.progresso-amostra[data-nivel='2'],
+.progresso-hangul[data-nivel='2'] {
+  background: var(--nivel-2);
+}
+
+.progresso-segmento[data-nivel='3'],
+.progresso-amostra[data-nivel='3'],
+.progresso-hangul[data-nivel='3'] {
+  background: var(--nivel-3);
+}
+
+.progresso-segmento[data-nivel='4'],
+.progresso-amostra[data-nivel='4'],
+.progresso-hangul[data-nivel='4'] {
+  background: var(--nivel-4);
+}
+
+.progresso-segmento[data-nivel='5'],
+.progresso-amostra[data-nivel='5'],
+.progresso-hangul[data-nivel='5'] {
+  background: var(--nivel-5);
+}
+
+.progresso-errados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.progresso-errados li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+
+.progresso-errado-hangul {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* No celular estreito, a marca 한글 sai para caber o botão 📊. */
+@media (max-width: 420px) {
+  .hud-marca {
+    display: none;
+  }
+
+  .aba {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+/* No Monte a Sílaba a pergunta fica abaixo da barra do relógio. */
+.pergunta-abaixo-do-relogio {
+  top: 64px;
+}
