@@ -1,0 +1,36 @@
+{
+  "name": "pongo-direction-quest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PONGO: 方向の冒険 — RPG educacional 2D para aprender direções e localização em japonês (JLPT N5/N4). ODU Creative — Learn. Play. Connect.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fontsource/dotgothic16": "^5.2.6",
+    "gsap": "^3.13.0",
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.4.0",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "vite": "^6.4.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
