@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:single": "vite build --mode single && node -e \"require('fs').copyFileSync('dist-single/index.html','pongo-quest.html')\""
   },
   "dependencies": {
     "@fontsource/dotgothic16": "^5.2.6",
@@ -28,6 +29,7 @@
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
     "vite": "^6.4.0",
+    "vite-plugin-singlefile": "^2.3.4",
     "vitest": "^3.2.4"
   },
   "engines": {

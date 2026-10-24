@@ -1,0 +1,3 @@
+/* Build de arquivo único: a fonte vem do Google Fonts quando há internet;
+   sem conexão, o jogo usa a fonte japonesa do sistema. */
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');

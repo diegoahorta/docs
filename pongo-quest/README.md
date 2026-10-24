@@ -24,6 +24,16 @@ npm run preview   # serve o build
 npm test          # testes (Vitest)
 ```
 
+### Arquivo HTML único
+
+```bash
+npm run build:single   # gera pongo-quest.html (≈1,8 MB) com todo o jogo embutido
+```
+
+`pongo-quest.html` abre com duplo clique, direto do disco, sem servidor — dá para enviar por
+e-mail ou colocar num pendrive. Com internet, usa a fonte DotGothic16 (Google Fonts); sem
+conexão, cai para a fonte japonesa do sistema. O progresso é salvo no navegador.
+
 ### VS Code + Live Server
 
 O projeto abre direto no VS Code (extensões recomendadas em `.vscode/extensions.json`:
