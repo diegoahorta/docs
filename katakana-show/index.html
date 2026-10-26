@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR" data-movimento="completo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Katakana Show</title>
+    <meta
+      name="description"
+      content="Quiz estilo programa de TV para revisar o katakana e aprender vocabulário em japonês, com guia fonético em romaji."
+    />
+    <meta name="theme-color" content="#2a0a5e" />
+    <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
+
+    <!-- Fontes: Baloo 2 (títulos e botões) e Noto Sans JP (katakana), pelo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+JP:wght@500;700;900&display=swap"
+    />
+    <link rel="stylesheet" href="./src/ui/styles.css" />
+
+    <!-- Bibliotecas por CDN (jsDelivr) com versões exatas, sem bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js"
+        }
+      }
+    </script>
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <div class="palco-fundo" aria-hidden="true">
+      <span class="holofote holofote-1"></span>
+      <span class="holofote holofote-2"></span>
+      <span class="holofote holofote-3"></span>
+    </div>
+    <header class="barra-topo">
+      <button type="button" class="logo-mini" id="botao-logo" aria-label="Voltar ao início">
+        <span lang="ja">カ</span> Katakana Show
+      </button>
+      <nav class="barra-topo-acoes" aria-label="Ferramentas">
+        <button type="button" class="botao-topo botao-guia" id="botao-guia">
+          📖 <span class="rotulo-topo">Guia de romaji</span>
+        </button>
+        <button type="button" class="botao-topo" id="botao-album">
+          📒 <span class="rotulo-topo">Álbum</span>
+        </button>
+        <button type="button" class="botao-topo" id="botao-config" aria-label="Configurações">
+          ⚙️
+        </button>
+      </nav>
+    </header>
+    <main id="conteudo" class="conteudo" tabindex="-1"></main>
+    <canvas id="confete" class="confete" aria-hidden="true"></canvas>
+    <div id="modais"></div>
+    <noscript>
+      <p class="sem-js">O Katakana Show precisa de JavaScript ativado para funcionar.</p>
+    </noscript>
+  </body>
+</html>

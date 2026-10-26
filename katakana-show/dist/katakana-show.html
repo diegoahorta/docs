@@ -1,0 +1,4942 @@
+<!doctype html>
+<!-- Arquivo gerado por scripts/build-html.js. Não edite: altere src/ e gere de novo. -->
+<html lang="pt-BR" data-movimento="completo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Katakana Show</title>
+    <meta
+      name="description"
+      content="Quiz estilo programa de TV para revisar o katakana e aprender vocabulário em japonês, com guia fonético em romaji."
+    />
+    <meta name="theme-color" content="#2a0a5e" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmYzZDhiIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzdiMmZmNyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9InVybCgjZykiLz4KICA8cGF0aCBkPSJNMTUgMjIgSDQ3IFE0NSA0MCAzMCA1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZlMTRkIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zMCAxMyBRMzEgMzMgMTggNDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZTE0ZCIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+Cg==" />
+
+    <!-- Fontes: Baloo 2 (títulos e botões) e Noto Sans JP (katakana), pelo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+JP:wght@500;700;900&display=swap"
+    />
+    <style>
+/* Katakana Show — visual de programa de auditório: palco roxo, holofotes,
+   cores vibrantes e botões grandes. Contraste AA em todos os textos. */
+
+:root {
+  --fundo-1: #2a0a5e;
+  --fundo-2: #12063a;
+  --fundo-3: #4a0f6e;
+  --cartao: rgba(255, 255, 255, 0.1);
+  --cartao-borda: rgba(255, 255, 255, 0.22);
+  --cartao-solido: #33106f;
+  --texto: #ffffff;
+  --texto-suave: #ddd0ff;
+  --rosa: #ff3d8b;
+  --azul: #2ec4ff;
+  --amarelo: #ffd23f;
+  --verde: #3ddc84;
+  --laranja: #ff8c32;
+  --roxo: #b388ff;
+  --vermelho: #ff5470;
+  /* Alternativas: cores com contraste AA para o texto (branco ou roxo-escuro) */
+  --resposta-0: #d81b60;
+  --resposta-1: #1565c0;
+  --resposta-2: #ffc21a;
+  --resposta-3: #1b7f3a;
+  --texto-escuro: #24074f;
+  --raio: 20px;
+  --sombra: 0 10px 30px rgba(8, 0, 30, 0.45);
+  --fonte: 'Baloo 2', system-ui, 'Segoe UI', sans-serif;
+  --fonte-jp: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--fonte);
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--texto);
+  background: linear-gradient(135deg, var(--fundo-1), var(--fundo-2) 45%, var(--fundo-3));
+  background-size: 300% 300%;
+  animation: fundo-vivo 18s ease-in-out infinite alternate;
+  overflow-x: hidden;
+}
+
+[lang='ja'] {
+  font-family: var(--fonte-jp);
+}
+
+@keyframes fundo-vivo {
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+/* ---------- Holofotes do palco (decorativos) ---------- */
+
+.palco-fundo {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.holofote {
+  position: absolute;
+  top: -20vh;
+  width: 40vmax;
+  height: 130vh;
+  opacity: 0.22;
+  filter: blur(24px);
+  transform-origin: 50% 0;
+  animation: holofote 9s ease-in-out infinite alternate;
+}
+
+.holofote-1 {
+  left: -8vmax;
+  background: linear-gradient(to bottom, var(--rosa), transparent 75%);
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  --giro: 18deg;
+}
+
+.holofote-2 {
+  left: 30%;
+  background: linear-gradient(to bottom, var(--amarelo), transparent 70%);
+  clip-path: polygon(45% 0, 55% 0, 85% 100%, 15% 100%);
+  animation-duration: 11s;
+  --giro: -10deg;
+}
+
+.holofote-3 {
+  right: -8vmax;
+  background: linear-gradient(to bottom, var(--azul), transparent 75%);
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  animation-duration: 13s;
+  --giro: -18deg;
+}
+
+@keyframes holofote {
+  from {
+    transform: rotate(var(--giro));
+  }
+  to {
+    transform: rotate(calc(var(--giro) * -1));
+  }
+}
+
+[data-movimento='reduzido'] body,
+[data-movimento='reduzido'] .holofote {
+  animation: none;
+}
+
+/* ---------- Acessibilidade ---------- */
+
+.pular-conteudo {
+  position: absolute;
+  left: 8px;
+  top: -60px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--amarelo);
+  color: var(--texto-escuro);
+  font-weight: 800;
+}
+
+.pular-conteudo:focus {
+  top: 8px;
+}
+
+:focus-visible {
+  outline: 4px solid var(--amarelo);
+  outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.texto-suave {
+  color: var(--texto-suave);
+}
+
+.sem-js {
+  padding: 24px;
+  text-align: center;
+}
+
+/* ---------- Botões ---------- */
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 10px 24px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff6aa6, var(--rosa));
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-shadow: 0 1px 2px rgba(80, 0, 40, 0.55);
+  box-shadow:
+    0 6px 0 #b0105a,
+    var(--sombra);
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s,
+    filter 0.15s;
+}
+
+.botao:hover {
+  filter: brightness(1.08);
+}
+
+.botao:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #b0105a,
+    var(--sombra);
+}
+
+.botao-secundario {
+  background: linear-gradient(180deg, #5ad2ff, #1c9fd6);
+  text-shadow: 0 1px 2px rgba(0, 40, 80, 0.6);
+  box-shadow:
+    0 6px 0 #0b6c96,
+    var(--sombra);
+}
+
+.botao-secundario:active {
+  box-shadow: 0 2px 0 #0b6c96;
+}
+
+.botao-gigante {
+  min-height: 64px;
+  padding: 12px 36px;
+  font-size: 1.45rem;
+  background: linear-gradient(180deg, #ffe680, var(--amarelo));
+  color: var(--texto-escuro);
+  text-shadow: none;
+  box-shadow:
+    0 7px 0 #c99a00,
+    var(--sombra);
+}
+
+.botao-gigante:active {
+  box-shadow: 0 2px 0 #c99a00;
+}
+
+.botao-perigo {
+  background: transparent;
+  border: 2px solid var(--vermelho);
+  color: #ffd0d8;
+  box-shadow: none;
+  text-shadow: none;
+  font-size: 1rem;
+}
+
+.botao-icone {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--cartao-borda);
+  border-radius: 50%;
+  background: var(--cartao);
+  font-size: 1.15rem;
+}
+
+.botao-falar {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: var(--azul);
+  font-size: 1.2rem;
+  box-shadow: 0 3px 0 #0b6c96;
+  vertical-align: middle;
+}
+
+.botao-falar:disabled {
+  opacity: 0.4;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.etiqueta {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.85rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.etiqueta-nova {
+  background: var(--amarelo);
+  color: var(--texto-escuro);
+}
+
+/* ---------- Barra do topo ---------- */
+
+.barra-topo {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+  background: rgba(18, 6, 58, 0.78);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  font-weight: 800;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.logo-mini [lang='ja'] {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--rosa), #7b2ff7);
+  color: var(--amarelo);
+  font-weight: 900;
+}
+
+.barra-topo-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.botao-topo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 6px 14px;
+  border: 2px solid var(--cartao-borda);
+  border-radius: 999px;
+  background: var(--cartao);
+  font-weight: 700;
+}
+
+.botao-guia {
+  background: linear-gradient(180deg, #4fe39a, #1fae62);
+  border-color: transparent;
+  color: var(--texto-escuro);
+  box-shadow: 0 4px 0 #13803f;
+}
+
+/* ---------- Conteúdo ---------- */
+
+.conteudo {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  padding: 16px 16px 48px;
+  outline: none;
+}
+
+.titulo-secao {
+  margin: 18px 0 10px;
+  font-size: 1.3rem;
+}
+
+/* ---------- Tela inicial ---------- */
+
+.tela-inicio {
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12px 0 4px;
+  line-height: 1;
+}
+
+.logo-jp {
+  display: flex;
+  gap: 4px;
+  font-size: clamp(3.4rem, 15vw, 6.5rem);
+  font-weight: 900;
+}
+
+.logo-jp span {
+  display: inline-block;
+  text-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 0 26px currentColor;
+}
+
+.logo-jp span:nth-child(1) {
+  color: var(--rosa);
+}
+.logo-jp span:nth-child(2) {
+  color: var(--amarelo);
+}
+.logo-jp span:nth-child(3) {
+  color: var(--azul);
+}
+.logo-jp span:nth-child(4) {
+  color: var(--verde);
+}
+
+.logo-show {
+  margin-top: 6px;
+  padding: 2px 22px 0;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--rosa), #7b2ff7);
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: var(--sombra);
+  transform: rotate(-2deg);
+}
+
+.chamada {
+  max-width: 560px;
+  margin: 18px auto 8px;
+  font-size: 1.15rem;
+}
+
+.cartao-escolhas {
+  margin: 16px auto;
+  padding: 8px 18px 26px;
+  border: 2px solid var(--cartao-borda);
+  border-radius: 28px;
+  background: var(--cartao);
+  box-shadow: var(--sombra);
+}
+
+.grupo-escolha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.escolha {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 12px;
+  border: 3px solid transparent;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.12s,
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.escolha:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.escolha[aria-checked='true'] {
+  border-color: var(--cor-escolha, var(--amarelo));
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--cor-escolha, var(--amarelo)) 55%, transparent);
+}
+
+.escolha[aria-checked='true']::after {
+  content: '✔';
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--cor-escolha, var(--amarelo));
+  color: var(--texto-escuro);
+  font-weight: 800;
+}
+
+.escolha strong {
+  font-size: 1.25rem;
+}
+
+.escolha-emoji {
+  font-size: 2rem;
+}
+
+.escolha-descricao {
+  font-size: 0.92rem;
+  color: var(--texto-suave);
+}
+
+.escolha-estrelas {
+  color: var(--amarelo);
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+}
+
+.escolha-recorde {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.escolha-pequena {
+  flex-direction: row;
+  justify-content: center;
+  padding: 10px;
+  font-weight: 700;
+}
+
+.linha-equipes {
+  margin-top: 12px;
+}
+
+.linha-equipes p {
+  margin: 8px 0 0;
+}
+
+.cartao-escolhas .botao-gigante {
+  margin-top: 24px;
+}
+
+.dicas-rapidas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.dicas-rapidas li {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.18);
+  font-size: 0.98rem;
+}
+
+/* ---------- Tela do jogo ---------- */
+
+.hud-jogo {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    'progresso combo pausa'
+    'placar placar placar';
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.hud-progresso {
+  grid-area: progresso;
+}
+
+.hud-contador {
+  margin: 0;
+  font-weight: 800;
+}
+
+.hud-pontinhos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hud-pontinhos li {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hud-pontinhos .ponto-atual {
+  background: var(--amarelo);
+  box-shadow: 0 0 10px var(--amarelo);
+}
+
+.hud-pontinhos .ponto-certo {
+  background: var(--verde);
+}
+
+.hud-pontinhos .ponto-errado {
+  background: var(--vermelho);
+}
+
+.hud-combo {
+  grid-area: combo;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+}
+
+.combo-fogo {
+  font-size: 1.3rem;
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+.combo-mult {
+  font-size: 1.4rem;
+}
+
+.combo-seq {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.combo-2 {
+  background: linear-gradient(90deg, #ff8c32, #ff3d8b);
+}
+.combo-3 {
+  background: linear-gradient(90deg, #ff3d8b, #9b2ff7);
+}
+.combo-4 {
+  background: linear-gradient(90deg, #9b2ff7, #2ec4ff);
+  box-shadow: 0 0 22px #9b2ff7;
+}
+
+.combo-2 .combo-fogo,
+.combo-3 .combo-fogo,
+.combo-4 .combo-fogo {
+  filter: none;
+  opacity: 1;
+}
+
+.combo-2 .combo-seq,
+.combo-3 .combo-seq,
+.combo-4 .combo-seq {
+  color: #fff;
+}
+
+.botao-pausa {
+  grid-area: pausa;
+}
+
+.placar {
+  grid-area: placar;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.placar-equipe {
+  display: flex;
+  flex: 1 1 140px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.placar-pontos {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.placar-solo .placar-equipe {
+  justify-content: center;
+  gap: 14px;
+}
+
+.placar-solo .placar-pontos {
+  font-size: 1.9rem;
+  color: var(--amarelo);
+}
+
+.placar-ativo {
+  border-color: var(--cor-equipe);
+  background: color-mix(in srgb, var(--cor-equipe) 25%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--cor-equipe) 60%, transparent);
+}
+
+.cor-amarelo {
+  --cor-equipe: var(--amarelo);
+}
+.cor-rosa {
+  --cor-equipe: var(--rosa);
+}
+.cor-azul {
+  --cor-equipe: var(--azul);
+}
+.cor-verde {
+  --cor-equipe: var(--verde);
+}
+
+/* Cronômetro */
+.relogio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.relogio-trilho {
+  flex: 1;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.relogio-barra {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--verde), #9cf06c);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.relogio[data-nivel='medio'] .relogio-barra {
+  background: linear-gradient(90deg, var(--amarelo), var(--laranja));
+}
+
+.relogio[data-nivel='baixo'] .relogio-barra {
+  background: linear-gradient(90deg, var(--vermelho), var(--rosa));
+}
+
+.relogio-segundos {
+  min-width: 3ch;
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.relogio[data-nivel='baixo'] .relogio-segundos {
+  color: #ffb3c0;
+}
+
+/* Palco da pergunta */
+.palco-pergunta {
+  position: relative;
+  margin: 14px 0;
+  padding: 16px 16px 20px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 120%, rgba(255, 210, 63, 0.25), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.05));
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+
+.vez-da-equipe {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 2px 18px;
+  border-radius: 999px;
+  background: var(--cor-equipe);
+  color: var(--texto-escuro);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.pergunta-tipo {
+  margin: 0;
+  color: var(--texto-suave);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pergunta-titulo {
+  margin: 0 0 4px;
+  font-size: clamp(1.5rem, 5vw, 2.1rem);
+  outline: none;
+}
+
+.destaque {
+  display: grid;
+  place-items: center;
+  min-height: clamp(130px, 28vw, 200px);
+}
+
+.destaque-kana {
+  font-size: clamp(5.5rem, 24vw, 9.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  text-shadow:
+    0 0 18px var(--rosa),
+    0 0 42px rgba(255, 61, 139, 0.6),
+    0 6px 0 rgba(0, 0, 0, 0.25);
+}
+
+.destaque-palavra {
+  font-size: clamp(3rem, 13vw, 6rem);
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 16px var(--azul),
+    0 0 38px rgba(46, 196, 255, 0.55),
+    0 5px 0 rgba(0, 0, 0, 0.25);
+}
+
+.destaque-romaji-bloco,
+.destaque-significado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.destaque-romaji {
+  font-size: clamp(3.5rem, 15vw, 6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--amarelo);
+  text-shadow: 0 0 24px rgba(255, 210, 63, 0.6);
+}
+
+.destaque-soa {
+  padding: 2px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  font-weight: 700;
+}
+
+.destaque-emoji {
+  font-size: clamp(4rem, 18vw, 6.5rem);
+  line-height: 1.1;
+}
+
+.destaque-pt {
+  font-size: clamp(1.6rem, 6vw, 2.3rem);
+  font-weight: 800;
+  color: var(--amarelo);
+}
+
+.destaque-audio {
+  width: 140px;
+  height: 140px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #7fdcff, var(--azul) 55%, #1478b0);
+  font-size: 4rem;
+  box-shadow:
+    0 8px 0 #0b5a85,
+    0 0 40px rgba(46, 196, 255, 0.6);
+}
+
+.aviso-guia {
+  margin: 6px auto 0;
+  padding: 4px 14px;
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(61, 220, 132, 0.2);
+  border: 2px solid var(--verde);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.anuncio-combo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40%;
+  margin-inline: auto;
+  width: fit-content;
+  padding: 6px 22px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, var(--laranja), var(--rosa));
+  font-size: clamp(1.8rem, 7vw, 2.8rem);
+  font-weight: 800;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 0 40px rgba(255, 61, 139, 0.7);
+}
+
+/* Alternativas (4 cores + 4 formas, para quem não distingue cores) */
+.respostas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.resposta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 84px;
+  padding: 10px 44px;
+  border: 0;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  line-height: 1.2;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.1s,
+    filter 0.15s,
+    opacity 0.2s;
+}
+
+.resposta:hover:not(:disabled) {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.resposta:active:not(:disabled) {
+  transform: translateY(3px);
+}
+
+.resposta-0 {
+  background: var(--resposta-0);
+  box-shadow: 0 6px 0 #8c0f3e;
+}
+.resposta-1 {
+  background: var(--resposta-1);
+  box-shadow: 0 6px 0 #0b3d7a;
+}
+.resposta-2 {
+  background: var(--resposta-2);
+  color: var(--texto-escuro);
+  text-shadow: none;
+  box-shadow: 0 6px 0 #b88700;
+}
+.resposta-3 {
+  background: var(--resposta-3);
+  box-shadow: 0 6px 0 #0d4d22;
+}
+
+.resposta-forma {
+  position: absolute;
+  left: 14px;
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+.resposta-tecla {
+  position: absolute;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 0.9rem;
+}
+
+.resposta-kana .resposta-texto {
+  font-size: clamp(1.8rem, 7vw, 2.6rem);
+  font-weight: 900;
+}
+
+.resposta-romaji .resposta-texto {
+  font-size: clamp(1.5rem, 5.5vw, 2rem);
+  letter-spacing: 0.03em;
+}
+
+.resposta-emoji {
+  font-size: 1.8rem;
+}
+
+.resposta-eliminada {
+  opacity: 0.18;
+  filter: grayscale(1);
+}
+
+.resposta-apagada {
+  opacity: 0.35;
+}
+
+.resposta-correta {
+  outline: 5px solid var(--verde);
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 34px var(--verde);
+}
+
+.resposta-correta::after {
+  content: '✔';
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--verde);
+  color: var(--texto-escuro);
+  font-size: 1.2rem;
+  text-shadow: none;
+}
+
+.resposta-marcada-errada {
+  outline: 5px solid var(--vermelho);
+  outline-offset: 3px;
+}
+
+.resposta-marcada-errada::after {
+  content: '✖';
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--vermelho);
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+/* Ajudas */
+.ajudas {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.ajuda {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 6px 16px;
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 800;
+}
+
+.ajuda:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.ajuda:disabled {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+.com-feedback .ajudas {
+  display: none;
+}
+
+/* Cartão de feedback */
+.feedback {
+  margin-top: 18px;
+  padding: 16px 18px 20px;
+  border-radius: 24px;
+  border: 3px solid;
+  background: var(--cartao-solido);
+  box-shadow: var(--sombra);
+}
+
+.feedback-certo {
+  border-color: var(--verde);
+  background: linear-gradient(180deg, #1d5a4a, var(--cartao-solido) 60%);
+}
+
+.feedback-errado {
+  border-color: var(--vermelho);
+  background: linear-gradient(180deg, #5c1838, var(--cartao-solido) 60%);
+}
+
+.feedback-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.feedback-titulo {
+  font-size: 1.7rem;
+}
+
+.feedback-pontos {
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--amarelo);
+  color: var(--texto-escuro);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.feedback-erro {
+  margin: 6px 0 0;
+  font-weight: 700;
+  color: #ffd0d8;
+}
+
+.explicacao {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.explicacao-kana,
+.explicacao-emoji {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 3.6rem;
+  font-weight: 900;
+}
+
+.explicacao-texto {
+  min-width: 0;
+}
+
+.explicacao-texto p {
+  margin: 6px 0;
+}
+
+.explicacao-romaji {
+  font-size: 1.15rem;
+}
+
+.explicacao-romaji strong {
+  font-size: 1.5rem;
+  color: var(--amarelo);
+}
+
+.explicacao-romaji .botao-falar {
+  margin-left: 8px;
+}
+
+.explicacao-palavra {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.explicacao-palavra-kana {
+  font-size: 2.2rem;
+  font-weight: 900;
+}
+
+.nova-figurinha {
+  display: inline-block;
+  padding: 2px 14px;
+  border-radius: 999px;
+  background: var(--amarelo);
+  color: var(--texto-escuro);
+  font-weight: 800;
+}
+
+.botao-proxima {
+  display: flex;
+  margin: 14px 0 0 auto;
+}
+
+/* Sílabas com romaji (guia fonético em cada palavra) */
+.silabas {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  vertical-align: middle;
+}
+
+.silaba {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.4em;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  line-height: 1.15;
+}
+
+.silaba-kana {
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.silaba-romaji {
+  font-family: var(--fonte);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--amarelo);
+}
+
+.silaba-especial {
+  background: rgba(46, 196, 255, 0.22);
+}
+
+.silaba-especial .silaba-romaji {
+  color: var(--azul);
+}
+
+/* ---------- Resultado ---------- */
+
+.tela-resultado {
+  text-align: center;
+}
+
+.titulo-resultado {
+  margin: 12px 0;
+  font-size: clamp(1.7rem, 6vw, 2.5rem);
+  outline: none;
+}
+
+.resultado-solo {
+  padding: 18px;
+  border-radius: 28px;
+  background: var(--cartao);
+  border: 2px solid var(--cartao-borda);
+  box-shadow: var(--sombra);
+}
+
+.resultado-estrelas {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  font-size: clamp(3.5rem, 14vw, 5rem);
+  line-height: 1;
+}
+
+.estrela-cheia {
+  display: inline-block;
+  color: var(--amarelo);
+  text-shadow: 0 0 24px rgba(255, 210, 63, 0.8);
+}
+
+.estrela-vazia {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.resultado-rotulo {
+  margin: 8px 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--texto-suave);
+}
+
+.resultado-pontos {
+  display: block;
+  font-size: clamp(3.5rem, 15vw, 5.5rem);
+  line-height: 1;
+  color: var(--amarelo);
+  font-variant-numeric: tabular-nums;
+}
+
+.novo-recorde {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 4px 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--rosa), var(--laranja));
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.resultado-numeros {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resultado-numeros li {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.resultado-numeros strong {
+  font-size: 1.6rem;
+}
+
+.resultado-frase {
+  margin: 14px 0 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.podio {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.podio-lugar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'medalha nome pontos'
+    'medalha extra pontos';
+  align-items: center;
+  gap: 0 14px;
+  padding: 12px 18px;
+  border-radius: 20px;
+  border: 3px solid var(--cor-equipe);
+  background: color-mix(in srgb, var(--cor-equipe) 18%, transparent);
+  text-align: left;
+}
+
+.podio-lugar:first-child {
+  transform: scale(1.03);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--cor-equipe) 60%, transparent);
+}
+
+.podio-medalha {
+  grid-area: medalha;
+  font-size: 2.4rem;
+}
+
+.podio-lugar strong {
+  grid-area: nome;
+  font-size: 1.3rem;
+}
+
+.podio-lugar .texto-suave {
+  grid-area: extra;
+}
+
+.podio-pontos {
+  grid-area: pontos;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.resultado-secao {
+  margin-top: 22px;
+  text-align: left;
+}
+
+.resultado-secao h2 {
+  font-size: 1.4rem;
+}
+
+.lista-palavras {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cartao-palavra {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 8px;
+  border-radius: 18px;
+  background: var(--cartao);
+  border: 2px solid var(--cartao-borda);
+  text-align: center;
+}
+
+.cartao-palavra .etiqueta {
+  margin: 0;
+}
+
+.cartao-palavra-emoji {
+  font-size: 2.2rem;
+}
+
+.cartao-palavra-kana {
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.cartao-palavra-romaji {
+  color: var(--amarelo);
+  font-weight: 700;
+}
+
+.lista-revisao {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-revisao li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.22);
+  border-left: 6px solid var(--vermelho);
+}
+
+.revisao-kana {
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.lista-revisao .botao-falar {
+  margin-left: auto;
+}
+
+/* ---------- Modais ---------- */
+
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 0, 30, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow: hidden;
+  border-radius: 26px;
+  border: 3px solid var(--cartao-borda);
+  background: linear-gradient(180deg, #3d1784, #24095a);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.modal-guia,
+.modal-album {
+  width: min(760px, 100%);
+}
+
+.modal-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px 10px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-cabecalho h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.modal-corpo {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 14px 20px 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modal-pausa .modal-corpo {
+  text-align: center;
+}
+
+/* Configurações */
+.campo {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.campo label {
+  font-weight: 700;
+}
+
+.campo select {
+  min-height: 46px;
+  padding: 6px 12px;
+  border: 2px solid var(--cartao-borda);
+  border-radius: 14px;
+  background: var(--cartao-solido);
+  color: var(--texto);
+  font: inherit;
+}
+
+.campo input[type='range'] {
+  width: 100%;
+  min-height: 32px;
+  accent-color: var(--rosa);
+}
+
+/* ---------- Guia de romaji ---------- */
+
+.modal-guia .modal-corpo {
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+.guia-abas {
+  display: flex;
+  flex: none;
+  gap: 6px;
+  padding-bottom: 10px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.guia-aba {
+  flex: none;
+  min-height: 42px;
+  padding: 4px 14px;
+  border: 2px solid var(--cartao-borda);
+  border-radius: 999px;
+  background: var(--cartao);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.guia-aba[aria-selected='true'] {
+  border-color: var(--amarelo);
+  background: var(--amarelo);
+  color: var(--texto-escuro);
+}
+
+.guia-painel {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  outline: none;
+}
+
+.guia-intro {
+  margin: 0 0 10px;
+}
+
+.guia-tabela {
+  display: grid;
+  grid-template-columns: 2.2em repeat(5, 1fr);
+  gap: 5px;
+}
+
+.guia-tabela-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.guia-cabecalho {
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--amarelo);
+}
+
+.guia-celula {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 4px 2px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  line-height: 1.1;
+  transition:
+    background 0.12s,
+    transform 0.12s;
+}
+
+.guia-celula:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.guia-celula-kana {
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.guia-celula-romaji {
+  font-weight: 700;
+  color: var(--amarelo);
+}
+
+.guia-celula-vazia {
+  min-height: 58px;
+}
+
+.guia-detalhe {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: #4c1d9b;
+  border: 2px solid var(--roxo);
+}
+
+.guia-detalhe p {
+  margin: 2px 0;
+}
+
+.guia-detalhe-kana {
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+.guia-detalhe-texto {
+  flex: 1;
+  min-width: 0;
+}
+
+.guia-detalhe-romaji strong {
+  font-size: 1.4rem;
+  color: var(--amarelo);
+}
+
+.guia-cartoes {
+  display: grid;
+  gap: 10px;
+}
+
+.guia-cartao {
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 6px solid var(--azul);
+}
+
+.guia-cartao:nth-child(3n + 1) {
+  border-left-color: var(--rosa);
+}
+.guia-cartao:nth-child(3n + 2) {
+  border-left-color: var(--amarelo);
+}
+
+.guia-cartao p {
+  margin: 4px 0;
+}
+
+.guia-cartao-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.2rem;
+}
+
+.guia-soa {
+  color: var(--amarelo);
+}
+
+.guia-seta {
+  color: var(--texto-suave);
+}
+
+.guia-sinal {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--rosa);
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.guia-exemplo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- Álbum ---------- */
+
+.album-resumo p {
+  margin: 4px 0;
+}
+
+.album-resumo strong {
+  font-size: 1.4rem;
+  color: var(--amarelo);
+}
+
+.album-dica {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.barra-progresso {
+  height: 16px;
+  margin: 6px 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.barra-progresso span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--rosa), var(--amarelo));
+}
+
+.album-secao h3 {
+  margin: 18px 0 8px;
+}
+
+.album-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.figurinha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 10px 6px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+  border: 2px solid var(--amarelo);
+  text-align: center;
+}
+
+.figurinha-vazia {
+  justify-content: center;
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.figurinha-emoji {
+  font-size: 2rem;
+}
+
+.figurinha-kana {
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.figurinha-romaji {
+  color: var(--amarelo);
+  font-weight: 700;
+}
+
+.figurinha-pt {
+  font-size: 0.9rem;
+}
+
+.figurinha .botao-falar {
+  width: 36px;
+  height: 36px;
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+/* ---------- Confete ---------- */
+
+.confete {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ---------- Telas pequenas ---------- */
+
+@media (max-width: 560px) {
+  .rotulo-topo {
+    display: none;
+  }
+
+  .logo-mini {
+    font-size: 1rem;
+  }
+
+  .respostas {
+    gap: 10px;
+  }
+
+  .resposta {
+    min-height: 76px;
+    padding: 10px 30px;
+  }
+
+  .resposta-forma {
+    left: 9px;
+    font-size: 0.95rem;
+  }
+
+  .resposta-tecla {
+    display: none;
+  }
+
+  .explicacao-kana,
+  .explicacao-emoji {
+    width: 72px;
+    height: 72px;
+    font-size: 2.6rem;
+  }
+
+  .guia-celula-kana {
+    font-size: 1.3rem;
+  }
+
+  .guia-celula {
+    min-height: 50px;
+  }
+
+  .guia-detalhe-kana {
+    font-size: 2.2rem;
+  }
+
+  .ajuda {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo-mini {
+    font-size: 0;
+    gap: 0;
+  }
+
+  .logo-mini [lang='ja'] {
+    font-size: 1.1rem;
+  }
+
+  .ajudas {
+    gap: 6px;
+  }
+}
+
+</style>
+
+    <!-- Bibliotecas por CDN (jsDelivr) com versões exatas, sem bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js"
+        }
+      }
+    </script>
+    <script type="module">
+// src/core/storage.js
+var PREFIXO = "katakana-show:";
+var memoria = /* @__PURE__ */ new Map();
+function lerJSON(chave, padrao) {
+  try {
+    const bruto = localStorage.getItem(PREFIXO + chave);
+    if (bruto !== null) {
+      return JSON.parse(bruto);
+    }
+  } catch (erro) {
+    console.warn(`Não foi possível ler "${chave}" do armazenamento.`, erro);
+  }
+  return memoria.has(chave) ? memoria.get(chave) : padrao;
+}
+function salvarJSON(chave, valor) {
+  memoria.set(chave, valor);
+  try {
+    localStorage.setItem(PREFIXO + chave, JSON.stringify(valor));
+    return true;
+  } catch (erro) {
+    console.warn(`Não foi possível salvar "${chave}" no armazenamento.`, erro);
+    return false;
+  }
+}
+function apagarTudo() {
+  memoria.clear();
+  try {
+    const chaves = [];
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const chave = localStorage.key(i);
+      if (chave?.startsWith(PREFIXO)) {
+        chaves.push(chave);
+      }
+    }
+    chaves.forEach((chave) => localStorage.removeItem(chave));
+  } catch (erro) {
+    console.warn("Não foi possível apagar os dados salvos.", erro);
+  }
+}
+
+// src/core/utils.js
+function embaralhar(lista) {
+  const copia = [...lista];
+  for (let i = copia.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
+function sortear(lista) {
+  return lista[Math.floor(Math.random() * lista.length)];
+}
+function criarEmissor() {
+  const ouvintes = /* @__PURE__ */ new Map();
+  return {
+    on(evento, callback) {
+      if (!ouvintes.has(evento)) {
+        ouvintes.set(evento, /* @__PURE__ */ new Set());
+      }
+      ouvintes.get(evento).add(callback);
+      return () => ouvintes.get(evento)?.delete(callback);
+    },
+    emit(evento, dados) {
+      ouvintes.get(evento)?.forEach((callback) => {
+        try {
+          callback(dados);
+        } catch (erro) {
+          console.error(erro);
+        }
+      });
+    }
+  };
+}
+function esperar(ms) {
+  return new Promise((resolver) => setTimeout(resolver, ms));
+}
+function criarElemento(tag, atributos = {}, filhos = []) {
+  const elemento = document.createElement(tag);
+  for (const [chave, valor] of Object.entries(atributos)) {
+    aplicarAtributo(elemento, chave, valor);
+  }
+  for (const filho of [].concat(filhos)) {
+    if (filho !== null && filho !== void 0 && filho !== false) {
+      elemento.append(filho instanceof Node ? filho : String(filho));
+    }
+  }
+  return elemento;
+}
+function aplicarAtributo(elemento, chave, valor) {
+  if (valor === void 0 || valor === null || valor === false) {
+    return;
+  }
+  if (chave === "class") {
+    elemento.className = valor;
+  } else if (chave === "text") {
+    elemento.textContent = valor;
+  } else if (chave === "dataset") {
+    Object.assign(elemento.dataset, valor);
+  } else if (/^on[A-Z]/.test(chave) && typeof valor === "function") {
+    elemento.addEventListener(chave.slice(2).toLowerCase(), valor);
+  } else {
+    elemento.setAttribute(chave, valor === true ? "" : String(valor));
+  }
+}
+async function aguardarFontes(limiteMs = 2500) {
+  if (!document.fonts?.load) {
+    return;
+  }
+  const carregamento = Promise.all([
+    document.fonts.load('900 48px "Noto Sans JP"', "アカサ"),
+    document.fonts.load('800 32px "Baloo 2"', "Katakana")
+  ]).catch(() => null);
+  await Promise.race([carregamento, esperar(limiteMs)]);
+}
+
+// src/core/settings.js
+var CHAVE = "config";
+var OPCOES_DE_TEMPO = Object.freeze([
+  { valor: 10, nome: "⚡ Turbo (10 s)" },
+  { valor: 15, nome: "🎯 Normal (15 s)" },
+  { valor: 25, nome: "🐢 Calmo (25 s)" },
+  { valor: 0, nome: "♾️ Sem cronômetro" }
+]);
+var PADRAO = Object.freeze({
+  movimento: "sistema",
+  // 'sistema' | 'reduzido' | 'completo'
+  volumeEfeitos: 0.6,
+  velocidadeFala: 0.85,
+  tempoPorPergunta: 15,
+  falarAoMostrar: true
+  // fala a palavra em voz alta ao aparecer a resposta
+});
+var emissor = criarEmissor();
+var consultaMovimento = window.matchMedia?.("(prefers-reduced-motion: reduce)") ?? null;
+var config = carregar();
+function carregar() {
+  const salvo = lerJSON(CHAVE, {});
+  const valido = { ...PADRAO };
+  if (salvo && typeof salvo === "object") {
+    for (const chave of Object.keys(PADRAO)) {
+      if (typeof salvo[chave] === typeof PADRAO[chave]) {
+        valido[chave] = salvo[chave];
+      }
+    }
+  }
+  return valido;
+}
+function obterConfig() {
+  return { ...config };
+}
+function alterarConfig(chave, valor) {
+  if (!(chave in PADRAO) || typeof valor !== typeof PADRAO[chave]) {
+    return;
+  }
+  config = { ...config, [chave]: valor };
+  salvarJSON(CHAVE, config);
+  aplicarNoDocumento();
+  emissor.emit("mudou", obterConfig());
+}
+function aoMudarConfig(callback) {
+  return emissor.on("mudou", callback);
+}
+function animacoesReduzidas() {
+  if (config.movimento === "reduzido") {
+    return true;
+  }
+  if (config.movimento === "completo") {
+    return false;
+  }
+  return Boolean(consultaMovimento?.matches);
+}
+function aplicarNoDocumento() {
+  document.documentElement.dataset.movimento = animacoesReduzidas() ? "reduzido" : "completo";
+}
+consultaMovimento?.addEventListener?.("change", () => {
+  aplicarNoDocumento();
+  emissor.emit("mudou", obterConfig());
+});
+
+// src/core/audio.js
+var contexto = null;
+function obterContexto() {
+  if (!contexto) {
+    const ClasseAudio = window.AudioContext ?? window.webkitAudioContext;
+    if (!ClasseAudio) {
+      return null;
+    }
+    contexto = new ClasseAudio();
+  }
+  if (contexto.state === "suspended") {
+    contexto.resume().catch(() => {
+    });
+  }
+  return contexto;
+}
+function tocarNotas(frequencias, { tipo = "sine", duracao = 0.12, intensidade = 0.25 } = {}) {
+  const volume = obterConfig().volumeEfeitos;
+  if (volume <= 0) {
+    return;
+  }
+  const ctx = obterContexto();
+  if (!ctx) {
+    return;
+  }
+  frequencias.forEach((frequencia, indice) => {
+    const inicio = ctx.currentTime + indice * duracao;
+    const oscilador = ctx.createOscillator();
+    const ganho = ctx.createGain();
+    oscilador.type = tipo;
+    oscilador.frequency.value = frequencia;
+    ganho.gain.setValueAtTime(1e-4, inicio);
+    ganho.gain.exponentialRampToValueAtTime(intensidade * volume, inicio + 0.01);
+    ganho.gain.exponentialRampToValueAtTime(1e-4, inicio + duracao);
+    oscilador.connect(ganho).connect(ctx.destination);
+    oscilador.start(inicio);
+    oscilador.stop(inicio + duracao + 0.02);
+  });
+}
+function tocarAcerto() {
+  tocarNotas([880, 1320], { tipo: "triangle", duracao: 0.09 });
+}
+function tocarErro() {
+  tocarNotas([233, 175], { tipo: "square", duracao: 0.14, intensidade: 0.12 });
+}
+function tocarClique() {
+  tocarNotas([660], { tipo: "sine", duracao: 0.05, intensidade: 0.15 });
+}
+function tocarAbertura() {
+  tocarNotas([523, 659, 784, 1047], { tipo: "triangle", duracao: 0.11 });
+}
+function tocarTique() {
+  tocarNotas([1200], { tipo: "square", duracao: 0.04, intensidade: 0.06 });
+}
+function tocarCombo(multiplicador2) {
+  const base = 523 * 2 ** ((multiplicador2 - 2) / 4);
+  tocarNotas([base, base * 1.25, base * 1.5, base * 2], { tipo: "triangle", duracao: 0.07 });
+}
+function tocarTempoEsgotado() {
+  tocarNotas([392, 330, 262], { tipo: "sawtooth", duracao: 0.13, intensidade: 0.1 });
+}
+function tocarFanfarra() {
+  tocarNotas([523, 523, 659, 784, 659, 784, 1047], { tipo: "triangle", duracao: 0.12 });
+}
+
+// src/data/katakana.js
+var LINHAS = [
+  { grupo: "a", kana: "アイウエオ", romaji: ["a", "i", "u", "e", "o"] },
+  { grupo: "ka", kana: "カキクケコ", romaji: ["ka", "ki", "ku", "ke", "ko"] },
+  { grupo: "sa", kana: "サシスセソ", romaji: ["sa", "shi", "su", "se", "so"] },
+  { grupo: "ta", kana: "タチツテト", romaji: ["ta", "chi", "tsu", "te", "to"] },
+  { grupo: "na", kana: "ナニヌネノ", romaji: ["na", "ni", "nu", "ne", "no"] },
+  { grupo: "ha", kana: "ハヒフヘホ", romaji: ["ha", "hi", "fu", "he", "ho"] },
+  { grupo: "ma", kana: "マミムメモ", romaji: ["ma", "mi", "mu", "me", "mo"] },
+  { grupo: "ya", kana: "ヤユヨ", romaji: ["ya", "yu", "yo"], colunas: [0, 2, 4] },
+  { grupo: "ra", kana: "ラリルレロ", romaji: ["ra", "ri", "ru", "re", "ro"] },
+  { grupo: "wa", kana: "ワヲ", romaji: ["wa", "wo"], colunas: [0, 4] },
+  { grupo: "n", kana: "ン", romaji: ["n"], colunas: [0] },
+  { grupo: "ga", kana: "ガギグゲゴ", romaji: ["ga", "gi", "gu", "ge", "go"], dakuten: true },
+  { grupo: "za", kana: "ザジズゼゾ", romaji: ["za", "ji", "zu", "ze", "zo"], dakuten: true },
+  { grupo: "da", kana: "ダヂヅデド", romaji: ["da", "ji", "zu", "de", "do"], dakuten: true },
+  { grupo: "ba", kana: "バビブベボ", romaji: ["ba", "bi", "bu", "be", "bo"], dakuten: true },
+  { grupo: "pa", kana: "パピプペポ", romaji: ["pa", "pi", "pu", "pe", "po"], dakuten: true }
+];
+var COMBINACOES = [
+  ["キャ", "kya"],
+  ["キュ", "kyu"],
+  ["キョ", "kyo"],
+  ["シャ", "sha"],
+  ["シュ", "shu"],
+  ["ショ", "sho"],
+  ["チャ", "cha"],
+  ["チュ", "chu"],
+  ["チョ", "cho"],
+  ["ニャ", "nya"],
+  ["ニュ", "nyu"],
+  ["ニョ", "nyo"],
+  ["ヒャ", "hya"],
+  ["ヒュ", "hyu"],
+  ["ヒョ", "hyo"],
+  ["ミャ", "mya"],
+  ["ミュ", "myu"],
+  ["ミョ", "myo"],
+  ["リャ", "rya"],
+  ["リュ", "ryu"],
+  ["リョ", "ryo"],
+  ["ギャ", "gya"],
+  ["ギュ", "gyu"],
+  ["ギョ", "gyo"],
+  ["ジャ", "ja"],
+  ["ジュ", "ju"],
+  ["ジョ", "jo"],
+  ["ビャ", "bya"],
+  ["ビュ", "byu"],
+  ["ビョ", "byo"],
+  ["ピャ", "pya"],
+  ["ピュ", "pyu"],
+  ["ピョ", "pyo"]
+];
+var MNEMONICOS = {
+  ア: 'Um machado (axe) de lado: "a".',
+  イ: 'Uma pessoa encostada na parede, inclinada: "i".',
+  ウ: 'Uma pessoa de chapéu dizendo "uuu".',
+  エ: 'Uma viga de construção em forma de "I" deitado: "e"difício.',
+  オ: 'Uma pessoa de braços abertos gritando "Oh!".',
+  カ: 'Um braço forte fazendo "ka"ratê.',
+  キ: "Uma chave (key) com dois dentes.",
+  ク: 'O bico aberto de um cuco: "ku".',
+  ケ: 'Uma letra "K" torta: "ke".',
+  コ: 'O canto de uma caixa: "co".',
+  サ: 'Uma mesa de sala com duas pernas: "sa".',
+  シ: 'Rosto sorrindo; os tracinhos ficam à esquerda, como olhos de lado: "shi".',
+  ス: 'Uma pessoa subindo correndo uma ladeira: "su".',
+  セ: 'Uma pessoa sentada (sentar = "se") numa cadeira.',
+  ソ: 'Uma agulha costurando de cima para baixo: "so".',
+  タ: 'Um taco dobrado com recheio: "ta".',
+  チ: 'Um chip com perninhas: "chi".',
+  ツ: "Tsunami vindo do céu: os tracinhos ficam em cima, caindo.",
+  テ: 'Um poste de telefone: "te".',
+  ト: 'Um totem com um galho: "to".',
+  ナ: 'Uma cruz inclinada: "na"da de reto.',
+  ニ: 'Dois tracinhos — e "ni" quer dizer "dois" em japonês!',
+  ヌ: 'Um nunchaku cruzado: "nu".',
+  ネ: 'Uma pessoa de gravata (nekutai): "ne".',
+  ノ: 'Um único traço, como um "No!" bem curto.',
+  ハ: 'Duas pernas abertas dando risada: "Ha!".',
+  ヒ: 'Uma colher deitada: "hi".',
+  フ: 'Um funil visto de lado: "fu".',
+  ヘ: 'Um morrinho no caminho: "Hê, que subida!".',
+  ホ: 'Uma cruz com dois pezinhos, como placa de hospital: "ho".',
+  マ: 'Um martelo de lado: "ma".',
+  ミ: 'Três minhocas em fila: "mi".',
+  ム: 'Um braço dobrado mostrando o músculo: "mu".',
+  メ: 'Um X marcando o lugar: "me" aqui!',
+  モ: 'Um anzol com mais (more) iscas: "mo".',
+  ヤ: 'Um iaque (yak) com o chifre para cima: "ya".',
+  ユ: 'Um "U" quadrado deitado: "yu".',
+  ヨ: 'Um "E" ao contrário dizendo "yo!".',
+  ラ: 'Uma tampa em cima de um フ: "ra".',
+  リ: 'Dois juncos crescendo à beira do rio: "ri".',
+  ル: 'Duas raízes (roots) saindo da terra: "ru".',
+  レ: 'Um sinal de "certo" ✓ de revisado: "re".',
+  ロ: 'Uma caixa quadrada, como um robô: "ro".',
+  ワ: 'Um copo d’água (water) virado: "wa".',
+  ヲ: 'Parece um ラ com um traço a mais: "wo" (pronuncia-se "o").',
+  ン: "Um tracinho e uma linha subindo — diferente do ソ, que desce."
+};
+var PARECIDOS = [
+  "シツ",
+  "ソンノ",
+  "クケタ",
+  "ウワフ",
+  "コユロ",
+  "ヌスメナ",
+  "マムア",
+  "チテ",
+  "ルレ",
+  "ヨエ",
+  "セサヒ",
+  "ヤカ",
+  "ニミ",
+  "オホ",
+  "ラヲ",
+  "イト",
+  "キモ"
+];
+var VOGAIS = "aiueo";
+function criarMnemonico(kana, romaji, linha) {
+  if (MNEMONICOS[kana]) {
+    return MNEMONICOS[kana];
+  }
+  const base = kana.normalize("NFD").charAt(0);
+  const sinal = linha.grupo === "pa" ? "maru ゜ (bolinha)" : "tenten ゛ (dois risquinhos)";
+  return `É o ${base} com ${sinal}: o som muda para "${romaji}".`;
+}
+function criarItem(linha, indice) {
+  const kana = linha.kana.charAt(indice);
+  const romaji = linha.romaji[indice];
+  const coluna = linha.colunas ? linha.colunas[indice] : VOGAIS.indexOf(romaji.slice(-1));
+  return Object.freeze({
+    id: `k:${kana}`,
+    kana,
+    romaji,
+    grupo: linha.grupo,
+    coluna: Math.max(0, coluna),
+    tipo: linha.dakuten ? "dakuten" : "basico",
+    mnemonico: criarMnemonico(kana, romaji, linha)
+  });
+}
+var KATAKANA = Object.freeze(
+  LINHAS.flatMap((linha) => linha.romaji.map((_, indice) => criarItem(linha, indice)))
+);
+var KATAKANA_COMBINADOS = Object.freeze(
+  COMBINACOES.map(
+    ([kana, romaji]) => Object.freeze({
+      id: `k:${kana}`,
+      kana,
+      romaji,
+      grupo: "yoon",
+      coluna: "auo".indexOf(romaji.slice(-1)),
+      tipo: "combinado",
+      mnemonico: `${kana.charAt(0)} (${romaji.slice(0, -1)}i) + ${kana.charAt(1)} pequeno = "${romaji}" — numa sílaba só, sem o "i".`
+    })
+  )
+);
+var LINHAS_DA_TABELA = Object.freeze(
+  LINHAS.map((linha) => ({
+    grupo: linha.grupo,
+    dakuten: Boolean(linha.dakuten),
+    itens: KATAKANA.filter((item) => item.grupo === linha.grupo)
+  }))
+);
+var POR_CARACTERE = new Map(
+  [...KATAKANA, ...KATAKANA_COMBINADOS].map((item) => [item.kana, item])
+);
+function katakanaPorCaractere(caractere) {
+  return POR_CARACTERE.get(caractere) ?? null;
+}
+function listarKatakana(tipos) {
+  return KATAKANA.filter((item) => tipos.includes(item.tipo));
+}
+function parecidosCom(kana) {
+  const grupo = PARECIDOS.find((letras) => letras.includes(kana)) ?? "";
+  return [...grupo].filter((letra) => letra !== kana);
+}
+var PEQUENOS = /* @__PURE__ */ new Set(["ャ", "ュ", "ョ"]);
+function separarSilabas(palavra) {
+  const caracteres = [...palavra];
+  const silabas = [];
+  for (let i = 0; i < caracteres.length; i += 1) {
+    const atual = caracteres[i];
+    const proximo = caracteres[i + 1];
+    if (proximo && PEQUENOS.has(proximo) && POR_CARACTERE.has(atual + proximo)) {
+      silabas.push({ kana: atual + proximo, romaji: POR_CARACTERE.get(atual + proximo).romaji });
+      i += 1;
+    } else if (atual === "ー") {
+      const anterior = silabas.at(-1)?.romaji ?? "";
+      silabas.push({ kana: "ー", romaji: anterior.slice(-1), especial: "longa" });
+    } else if (atual === "ッ") {
+      silabas.push({ kana: "ッ", romaji: "", especial: "dobra" });
+    } else {
+      silabas.push({ kana: atual, romaji: POR_CARACTERE.get(atual)?.romaji ?? atual });
+    }
+  }
+  silabas.forEach((silaba, indice) => {
+    if (silaba.especial === "dobra") {
+      const seguinte = silabas[indice + 1]?.romaji ?? "";
+      silaba.romaji = seguinte.startsWith("ch") ? "t" : seguinte.charAt(0);
+    }
+  });
+  return silabas;
+}
+function lerEmRomaji(palavra) {
+  return separarSilabas(palavra).map((silaba) => silaba.romaji).join("");
+}
+function nivelDaPalavra(palavra) {
+  if (/[ッャュョ]/.test(palavra)) {
+    return 3;
+  }
+  return [...palavra].some((letra) => POR_CARACTERE.get(letra)?.tipo === "dakuten") ? 2 : 1;
+}
+
+// src/data/fonetica.js
+var SONS_DIFERENTES = Object.freeze([
+  {
+    romaji: "shi",
+    soa: "xi",
+    explicacao: 'Como o "xi" de "xícara".',
+    exemplo: "シャツ"
+  },
+  {
+    romaji: "chi",
+    soa: "tchi",
+    explicacao: 'Como o "ti" de "tia" no jeito carioca: "tchi".',
+    exemplo: "チーズ"
+  },
+  {
+    romaji: "tsu",
+    soa: "tsu",
+    explicacao: 'O "t" e o "s" grudados, como em "tsunami".',
+    exemplo: "ドーナツ"
+  },
+  {
+    romaji: "fu",
+    soa: "fu (soprado)",
+    explicacao: 'Entre o "f" e o "h": sopre de leve, sem encostar os dentes no lábio.',
+    exemplo: "ゴルフ"
+  },
+  {
+    romaji: "r",
+    soa: 'r de "caro"',
+    explicacao: 'Sempre o "r" fraquinho de "caro" ou "arara", nunca o de "rato".',
+    exemplo: "ラーメン"
+  },
+  {
+    romaji: "h",
+    soa: 'h de "hello"',
+    explicacao: 'Um sopro leve, como o "h" do inglês "hello" (parecido com o "r" de "rato").',
+    exemplo: "ホテル"
+  },
+  {
+    romaji: "ji / j",
+    soa: "dji",
+    explicacao: '"ji" soa "dji", como o "di" de "dia" em muitos sotaques do Brasil.',
+    exemplo: "オレンジ"
+  },
+  {
+    romaji: "te / de / to",
+    soa: "tê / dê / tô",
+    explicacao: 'Nunca vira "tchê" ou "djê": テ é "tê" e デ é "dê".',
+    exemplo: "テレビ"
+  },
+  {
+    romaji: "s",
+    soa: "ss",
+    explicacao: 'Sempre "ss" de "massa", mesmo entre vogais: バス é "bassu", não "bazu".',
+    exemplo: "バス"
+  },
+  {
+    romaji: "g",
+    soa: 'g de "gato"',
+    explicacao: 'Sempre forte: "gi" soa "gui" e "ge" soa "gue".',
+    exemplo: "ギター"
+  },
+  {
+    romaji: "y",
+    soa: "i rápido",
+    explicacao: '"ya, yu, yo" soam "ia, iu, io", numa sílaba só.',
+    exemplo: "ヨーヨー"
+  },
+  {
+    romaji: "n (ン)",
+    soa: "n nasal",
+    explicacao: 'Um "n" sozinho, nasal, como no fim de "bom". Antes de b, p ou m soa "m".',
+    exemplo: "パン"
+  },
+  {
+    romaji: "u",
+    soa: "u leve",
+    explicacao: 'Lábios sem arredondar. No fim da palavra, às vezes quase some: スキー ≈ "s’kii".',
+    exemplo: "スキー"
+  },
+  {
+    romaji: "e / o",
+    soa: "ê / ô",
+    explicacao: 'As vogais são sempre fechadas e curtas: "e" = "ê", "o" = "ô".',
+    exemplo: "メロン"
+  }
+]);
+var SINAIS = Object.freeze([
+  {
+    sinal: "ー",
+    nome: "Traço de vogal longa",
+    explicacao: "Estica a vogal anterior pelo dobro do tempo. No romaji, a vogal aparece dobrada.",
+    exemplo: "ケーキ",
+    leitura: "ke-e-ki → keeki"
+  },
+  {
+    sinal: "ッ",
+    nome: "Tsu pequeno",
+    explicacao: "Não tem som próprio: faz uma pausa curtinha e dobra a consoante seguinte, como se a voz travasse.",
+    exemplo: "サッカー",
+    leitura: "sa-(pausa)-kaa → sakkaa"
+  },
+  {
+    sinal: "ャ ュ ョ",
+    nome: "Ya, yu, yo pequenos",
+    explicacao: 'Juntam-se ao kana de antes numa sílaba só, que perde o "i": キ + ャ = kya.',
+    exemplo: "シャツ",
+    leitura: "sha-tsu → shatsu"
+  },
+  {
+    sinal: "゛",
+    nome: "Tenten (dois risquinhos)",
+    explicacao: 'Deixa o som "mais forte": k→g, s→z, t→d, h→b. カ ka → ガ ga.',
+    exemplo: "ゲーム",
+    leitura: "ge-e-mu → geemu"
+  },
+  {
+    sinal: "゜",
+    nome: "Maru (bolinha)",
+    explicacao: 'Só aparece na linha do h e transforma o som em "p": ハ ha → パ pa.',
+    exemplo: "ピザ",
+    leitura: "pi-za → piza"
+  }
+]);
+function comoSoa(romaji) {
+  const especiais = {
+    shi: "xi",
+    chi: "tchi",
+    tsu: "ts",
+    fu: "fu soprado",
+    ji: "dji",
+    ja: "dja",
+    ju: "dju",
+    jo: "djo",
+    sha: "xa",
+    shu: "xu",
+    sho: "xô",
+    cha: "tcha",
+    chu: "tchu",
+    cho: "tchô",
+    wo: "ô",
+    n: "n nasal",
+    gi: "gui",
+    ge: "guê",
+    te: "tê",
+    de: "dê",
+    ya: "ia",
+    yu: "iu",
+    yo: "iô"
+  };
+  if (especiais[romaji]) {
+    return especiais[romaji];
+  }
+  if (romaji.startsWith("r")) {
+    return `${romaji} (r de "caro")`;
+  }
+  if (romaji.startsWith("s")) {
+    return `${romaji.replace("s", "ss")}`;
+  }
+  return romaji.replace(/e$/, "ê").replace(/o$/, "ô");
+}
+
+// src/core/speech.js
+var vozJaponesa = null;
+var ponteNativa = typeof window !== "undefined" ? window.FalaNativa : void 0;
+function sinteseDaWeb() {
+  return typeof window !== "undefined" && "speechSynthesis" in window;
+}
+function falaDisponivel() {
+  return Boolean(ponteNativa) || sinteseDaWeb();
+}
+function escolherVoz() {
+  if (!sinteseDaWeb()) {
+    return;
+  }
+  const vozes = window.speechSynthesis.getVoices();
+  vozJaponesa = vozes.find((voz) => voz.lang === "ja-JP") ?? vozes.find((voz) => voz.lang?.toLowerCase().startsWith("ja")) ?? null;
+}
+function temVozJaponesa() {
+  if (ponteNativa) {
+    return ponteNativa.temVoz();
+  }
+  if (!vozJaponesa) {
+    escolherVoz();
+  }
+  return vozJaponesa !== null;
+}
+function falar(texto) {
+  if (!falaDisponivel() || !texto) {
+    return false;
+  }
+  try {
+    if (ponteNativa) {
+      ponteNativa.falar(texto, obterConfig().velocidadeFala);
+      return true;
+    }
+    const sintese = window.speechSynthesis;
+    sintese.cancel();
+    const fala = new SpeechSynthesisUtterance(texto);
+    fala.lang = "ja-JP";
+    if (temVozJaponesa()) {
+      fala.voice = vozJaponesa;
+    }
+    fala.rate = obterConfig().velocidadeFala;
+    sintese.speak(fala);
+    return true;
+  } catch (erro) {
+    console.warn("Não foi possível usar a síntese de voz.", erro);
+    return false;
+  }
+}
+if (sinteseDaWeb()) {
+  escolherVoz();
+  window.speechSynthesis.addEventListener?.("voiceschanged", escolherVoz);
+}
+
+// src/ui/motion.js
+import { gsap } from "gsap";
+function entrar(alvo, { y = 24, duracao = 0.45, atraso = 0, intervalo = 0.06 } = {}) {
+  if (animacoesReduzidas()) {
+    return gsap.fromTo(alvo, { opacity: 0 }, { opacity: 1, duration: 0.15 });
+  }
+  return gsap.fromTo(
+    alvo,
+    { opacity: 0, y },
+    {
+      opacity: 1,
+      y: 0,
+      duration: duracao,
+      delay: atraso,
+      stagger: intervalo,
+      ease: "back.out(1.6)"
+    }
+  );
+}
+function sair(alvo, { y = -12, duracao = 0.3 } = {}) {
+  const vars = animacoesReduzidas() ? { opacity: 0, duration: 0.12 } : { opacity: 0, y, duration: duracao, ease: "power2.in" };
+  return new Promise((resolver) => {
+    gsap.to(alvo, { ...vars, onComplete: resolver });
+  });
+}
+function pulsar(alvo, escala = 1.18) {
+  if (animacoesReduzidas()) {
+    return null;
+  }
+  return gsap.fromTo(
+    alvo,
+    { scale: 1 },
+    { scale: escala, duration: 0.14, yoyo: true, repeat: 1, ease: "power1.out" }
+  );
+}
+function tremer(alvo) {
+  if (animacoesReduzidas()) {
+    return null;
+  }
+  return gsap.fromTo(
+    alvo,
+    { x: 0 },
+    { x: 8, duration: 0.06, yoyo: true, repeat: 5, ease: "sine.inOut", clearProps: "x" }
+  );
+}
+
+// src/ui/modal.js
+var SELETOR_FOCAVEL = 'button:not([disabled]), [href], input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+var contador = 0;
+var abertos = 0;
+var pilha = [];
+function aoTeclarNoDocumento(evento) {
+  if (evento.key === "Escape" && pilha.length > 0) {
+    evento.preventDefault();
+    evento.stopPropagation();
+    pilha[pilha.length - 1]();
+  }
+}
+document.addEventListener("keydown", aoTeclarNoDocumento, true);
+function avisarEstado() {
+  document.dispatchEvent(new CustomEvent("ks:modal", { detail: { aberto: abertos > 0 } }));
+}
+function prenderFoco(evento, caixa) {
+  const focaveis = [...caixa.querySelectorAll(SELETOR_FOCAVEL)];
+  if (focaveis.length === 0) {
+    return;
+  }
+  const primeiro = focaveis[0];
+  const ultimo = focaveis[focaveis.length - 1];
+  if (evento.shiftKey && document.activeElement === primeiro) {
+    evento.preventDefault();
+    ultimo.focus();
+  } else if (!evento.shiftKey && document.activeElement === ultimo) {
+    evento.preventDefault();
+    primeiro.focus();
+  }
+}
+function abrirModal({ titulo, conteudo: conteudo2, classe = "", aoFechar } = {}) {
+  contador += 1;
+  const idTitulo = `modal-titulo-${contador}`;
+  const anterior = document.activeElement;
+  const camada = document.getElementById("modais") ?? document.body;
+  const botaoFechar = criarElemento("button", {
+    class: "botao-icone",
+    type: "button",
+    "aria-label": "Fechar",
+    text: "✕"
+  });
+  const corpo = criarElemento("div", { class: "modal-corpo" }, conteudo2);
+  const caixa = criarElemento(
+    "div",
+    { class: `modal ${classe}`, role: "dialog", "aria-modal": "true", "aria-labelledby": idTitulo },
+    [
+      criarElemento("header", { class: "modal-cabecalho" }, [
+        criarElemento("h2", { id: idTitulo, text: titulo }),
+        botaoFechar
+      ]),
+      corpo
+    ]
+  );
+  const fundo = criarElemento("div", { class: "modal-fundo" }, caixa);
+  let fechado = false;
+  async function fechar() {
+    if (fechado) {
+      return;
+    }
+    fechado = true;
+    pilha.splice(pilha.indexOf(fechar), 1);
+    await sair(fundo, { y: 0 });
+    fundo.remove();
+    abertos -= 1;
+    avisarEstado();
+    aoFechar?.();
+    if (anterior instanceof HTMLElement && document.contains(anterior)) {
+      anterior.focus();
+    }
+  }
+  botaoFechar.addEventListener("click", fechar);
+  fundo.addEventListener("pointerdown", (evento) => {
+    if (evento.target === fundo) {
+      fechar();
+    }
+  });
+  fundo.addEventListener("keydown", (evento) => {
+    if (evento.key === "Tab") {
+      prenderFoco(evento, caixa);
+    }
+  });
+  camada.append(fundo);
+  pilha.push(fechar);
+  abertos += 1;
+  avisarEstado();
+  entrar(caixa, { y: 30 });
+  botaoFechar.focus();
+  return { corpo, fechar };
+}
+
+// src/ui/falar.js
+function botaoFalar(texto, { rotulo = `Ouvir ${texto}`, classe = "" } = {}) {
+  const botao = criarElemento("button", {
+    type: "button",
+    class: `botao-falar ${classe}`,
+    "aria-label": rotulo,
+    title: "Ouvir a pronúncia",
+    text: "🔊",
+    onClick: (evento) => {
+      evento.stopPropagation();
+      falar(texto);
+      pulsar(botao, 1.25);
+    }
+  });
+  if (!falaDisponivel()) {
+    botao.disabled = true;
+    botao.title = "Este navegador não tem síntese de voz";
+  }
+  return botao;
+}
+
+// src/ui/guia.js
+var ABAS = [
+  { id: "basicos", rotulo: "アイウ Básicos" },
+  { id: "sinais-dakuten", rotulo: "ガ ゛゜" },
+  { id: "combinacoes", rotulo: "キャ Combinações" },
+  { id: "como-falar", rotulo: "🗣️ Como falar" },
+  { id: "sinais", rotulo: "ー ッ Sinais" }
+];
+var CABECALHO_VOGAIS = ["a", "i", "u", "e", "o"];
+var abaLembrada = "basicos";
+function criarDetalhe() {
+  const painel = criarElemento("div", { class: "guia-detalhe", "aria-live": "polite" }, [
+    criarElemento("p", {
+      class: "texto-suave",
+      text: "👆 Toque num katakana para ouvir e ver como se fala."
+    })
+  ]);
+  return {
+    painel,
+    mostrar(item) {
+      painel.replaceChildren(
+        criarElemento("span", { class: "guia-detalhe-kana", lang: "ja", text: item.kana }),
+        criarElemento("div", { class: "guia-detalhe-texto" }, [
+          criarElemento("p", { class: "guia-detalhe-romaji" }, [
+            criarElemento("strong", { text: item.romaji }),
+            ` — soa "${comoSoa(item.romaji)}"`
+          ]),
+          criarElemento("p", { text: `💡 ${item.mnemonico}` })
+        ]),
+        botaoFalar(item.kana)
+      );
+      entrar(painel.children, { y: 8, intervalo: 0.03 });
+    }
+  };
+}
+function celula(item, detalhe) {
+  if (!item) {
+    return criarElemento("span", { class: "guia-celula guia-celula-vazia", "aria-hidden": "true" });
+  }
+  return criarElemento(
+    "button",
+    {
+      type: "button",
+      class: "guia-celula",
+      "aria-label": `${item.kana}: ${item.romaji}`,
+      onClick: () => {
+        falar(item.kana);
+        detalhe.mostrar(item);
+      }
+    },
+    [
+      criarElemento("span", { class: "guia-celula-kana", lang: "ja", text: item.kana }),
+      criarElemento("span", { class: "guia-celula-romaji", text: item.romaji })
+    ]
+  );
+}
+function tabelaDeLinhas(linhas, detalhe) {
+  const grade = criarElemento("div", { class: "guia-tabela", role: "group" });
+  grade.append(
+    criarElemento("span", { class: "guia-cabecalho", "aria-hidden": "true" }),
+    ...CABECALHO_VOGAIS.map(
+      (vogal) => criarElemento("span", { class: "guia-cabecalho", "aria-hidden": "true", text: vogal })
+    )
+  );
+  for (const linha of linhas) {
+    grade.append(
+      criarElemento("span", {
+        class: "guia-cabecalho guia-cabecalho-linha",
+        "aria-hidden": "true",
+        text: linha.grupo === "a" ? "—" : linha.grupo.replace(/a$/, "")
+      })
+    );
+    for (let coluna = 0; coluna < 5; coluna += 1) {
+      grade.append(
+        celula(
+          linha.itens.find((item) => item.coluna === coluna),
+          detalhe
+        )
+      );
+    }
+  }
+  return grade;
+}
+function tabelaDeCombinacoes(detalhe) {
+  const grade = criarElemento("div", { class: "guia-tabela guia-tabela-3" });
+  ["ya", "yu", "yo"].forEach(
+    (rotulo) => grade.append(criarElemento("span", { class: "guia-cabecalho", text: rotulo }))
+  );
+  KATAKANA_COMBINADOS.forEach((item) => grade.append(celula(item, detalhe)));
+  return grade;
+}
+function silabasDaPalavra(palavra) {
+  return criarElemento(
+    "span",
+    { class: "silabas", lang: "ja" },
+    separarSilabas(palavra).map(
+      (silaba) => criarElemento("span", { class: `silaba ${silaba.especial ? "silaba-especial" : ""}` }, [
+        criarElemento("span", { class: "silaba-kana", text: silaba.kana }),
+        criarElemento("span", {
+          class: "silaba-romaji",
+          lang: "pt-BR",
+          // ー e ッ não têm som próprio: mostram o que acrescentam (+o, +k).
+          text: silaba.especial ? `+${silaba.romaji}` : silaba.romaji
+        })
+      ])
+    )
+  );
+}
+function abaComoFalar() {
+  return criarElemento("div", { class: "guia-cartoes" }, [
+    criarElemento("p", {
+      class: "guia-intro",
+      text: "O romaji usa o nosso alfabeto, mas algumas letras soam diferente do português. Fique de olho nestas:"
+    }),
+    ...SONS_DIFERENTES.map(
+      (som) => criarElemento("article", { class: "guia-cartao" }, [
+        criarElemento("p", { class: "guia-cartao-titulo" }, [
+          criarElemento("strong", { text: som.romaji }),
+          criarElemento("span", { class: "guia-seta", text: " → soa " }),
+          criarElemento("strong", { class: "guia-soa", text: `"${som.soa}"` })
+        ]),
+        criarElemento("p", { text: som.explicacao }),
+        criarElemento("p", { class: "guia-exemplo" }, [
+          "Ex.: ",
+          silabasDaPalavra(som.exemplo),
+          botaoFalar(som.exemplo)
+        ])
+      ])
+    )
+  ]);
+}
+function abaSinais() {
+  return criarElemento("div", { class: "guia-cartoes" }, [
+    ...SINAIS.map(
+      (sinal) => criarElemento("article", { class: "guia-cartao" }, [
+        criarElemento("p", { class: "guia-cartao-titulo" }, [
+          criarElemento("span", { class: "guia-sinal", lang: "ja", text: sinal.sinal }),
+          criarElemento("strong", { text: sinal.nome })
+        ]),
+        criarElemento("p", { text: sinal.explicacao }),
+        criarElemento("p", { class: "guia-exemplo" }, [
+          "Ex.: ",
+          silabasDaPalavra(sinal.exemplo),
+          botaoFalar(sinal.exemplo)
+        ]),
+        criarElemento("p", { class: "texto-suave", text: sinal.leitura })
+      ])
+    )
+  ]);
+}
+function conteudoDaAba(id, detalhe) {
+  switch (id) {
+    case "sinais-dakuten":
+      return [
+        criarElemento("p", {
+          class: "guia-intro",
+          text: "Os dois risquinhos ゛ (tenten) e a bolinha ゜ (maru) mudam o som: カ ka → ガ ga, ハ ha → パ pa."
+        }),
+        tabelaDeLinhas(
+          LINHAS_DA_TABELA.filter((linha) => linha.dakuten),
+          detalhe
+        ),
+        detalhe.painel
+      ];
+    case "combinacoes":
+      return [
+        criarElemento("p", {
+          class: "guia-intro",
+          text: 'Um kana terminado em "i" + ャ ュ ョ pequenos viram UMA sílaba só: キ + ャ = kya.'
+        }),
+        tabelaDeCombinacoes(detalhe),
+        detalhe.painel
+      ];
+    case "como-falar":
+      return [abaComoFalar()];
+    case "sinais":
+      return [abaSinais()];
+    default:
+      return [
+        tabelaDeLinhas(
+          LINHAS_DA_TABELA.filter((linha) => !linha.dakuten),
+          detalhe
+        ),
+        detalhe.painel
+      ];
+  }
+}
+function abrirGuia() {
+  document.dispatchEvent(new CustomEvent("ks:guia"));
+  const detalhe = criarDetalhe();
+  const painelAbas = criarElemento("div", {
+    class: "guia-painel",
+    role: "tabpanel",
+    tabindex: "0"
+  });
+  const botoes = ABAS.map(
+    (aba) => criarElemento("button", {
+      type: "button",
+      role: "tab",
+      class: "guia-aba",
+      id: `guia-aba-${aba.id}`,
+      dataset: { aba: aba.id },
+      text: aba.rotulo,
+      onClick: () => selecionar(aba.id, true)
+    })
+  );
+  const lista = criarElemento("div", { class: "guia-abas", role: "tablist" }, botoes);
+  function selecionar(id, focar = false) {
+    abaLembrada = id;
+    botoes.forEach((botao) => {
+      const ativo = botao.dataset.aba === id;
+      botao.setAttribute("aria-selected", String(ativo));
+      botao.tabIndex = ativo ? 0 : -1;
+      if (ativo && focar) {
+        botao.focus();
+      }
+    });
+    painelAbas.setAttribute("aria-labelledby", `guia-aba-${id}`);
+    painelAbas.replaceChildren(...conteudoDaAba(id, detalhe));
+    painelAbas.scrollTop = 0;
+  }
+  lista.addEventListener("keydown", (evento) => {
+    const atual = ABAS.findIndex((aba) => aba.id === abaLembrada);
+    const passo = { ArrowRight: 1, ArrowLeft: -1 }[evento.key];
+    if (passo) {
+      evento.preventDefault();
+      selecionar(ABAS[(atual + passo + ABAS.length) % ABAS.length].id, true);
+    }
+  });
+  selecionar(abaLembrada);
+  return abrirModal({
+    titulo: "📖 Guia de romaji",
+    classe: "modal-guia",
+    conteudo: [lista, painelAbas]
+  });
+}
+
+// src/data/palavras.js
+var CATEGORIAS = Object.freeze({
+  comida: { nome: "Comida", emoji: "🍔" },
+  esportes: { nome: "Esportes", emoji: "⚽" },
+  tecnologia: { nome: "Tecnologia", emoji: "📱" },
+  arte: { nome: "Música e arte", emoji: "🎸" },
+  escola: { nome: "Escola e casa", emoji: "🎒" },
+  roupas: { nome: "Roupas", emoji: "👕" },
+  lugares: { nome: "Lugares", emoji: "🏙️" },
+  transporte: { nome: "Transporte", emoji: "🚌" },
+  animais: { nome: "Animais", emoji: "🦁" }
+});
+var PALAVRAS = [
+  // Comida
+  [
+    "パン",
+    "pão",
+    "🍞",
+    "comida",
+    'Veio do português "pão", trazido pelos portugueses no século XVI!'
+  ],
+  ["ケーキ", "bolo", "🎂", "comida", 'Do inglês "cake".'],
+  ["コーヒー", "café", "☕", "comida", 'Do holandês "koffie".'],
+  ["ピザ", "pizza", "🍕", "comida"],
+  ["バナナ", "banana", "🍌", "comida"],
+  ["トマト", "tomate", "🍅", "comida"],
+  ["メロン", "melão", "🍈", "comida"],
+  ["レモン", "limão", "🍋", "comida"],
+  ["アイス", "sorvete", "🍦", "comida", 'Do inglês "ice (cream)".'],
+  ["ラーメン", "lámen", "🍜", "comida"],
+  ["ハンバーガー", "hambúrguer", "🍔", "comida"],
+  ["ジュース", "suco", "🧃", "comida", 'Do inglês "juice".'],
+  ["チョコレート", "chocolate", "🍫", "comida"],
+  ["クッキー", "biscoito", "🍪", "comida", 'Do inglês "cookie".'],
+  ["サラダ", "salada", "🥗", "comida"],
+  ["ドーナツ", "rosquinha (donut)", "🍩", "comida"],
+  ["ポテト", "batata frita", "🍟", "comida", 'Do inglês "potato".'],
+  ["カステラ", "pão de ló", "🍰", "comida", 'Vem do português "pão de Castela"!'],
+  ["ミルク", "leite", "🥛", "comida", 'Do inglês "milk".'],
+  ["オレンジ", "laranja", "🍊", "comida"],
+  ["チーズ", "queijo", "🧀", "comida", 'Do inglês "cheese".'],
+  ["ホットドッグ", "cachorro-quente", "🌭", "comida", 'Do inglês "hot dog".'],
+  // Esportes
+  ["サッカー", "futebol", "⚽", "esportes", 'Do inglês "soccer".'],
+  ["テニス", "tênis", "🎾", "esportes"],
+  ["バスケ", "basquete", "🏀", "esportes", "Abreviação de バスケットボール (basketball)."],
+  ["バレー", "vôlei", "🏐", "esportes", "Abreviação de バレーボール (volleyball)."],
+  ["ゴルフ", "golfe", "⛳", "esportes"],
+  ["スキー", "esqui", "⛷️", "esportes"],
+  ["ボクシング", "boxe", "🥊", "esportes"],
+  ["ダンス", "dança", "💃", "esportes"],
+  // Tecnologia
+  ["スマホ", "celular", "📱", "tecnologia", 'Abreviação de "smartphone" (スマートフォン).'],
+  ["パソコン", "computador", "💻", "tecnologia", 'Abreviação de "personal computer".'],
+  ["テレビ", "televisão", "📺", "tecnologia"],
+  ["カメラ", "câmera", "📷", "tecnologia"],
+  ["ゲーム", "videogame", "🎮", "tecnologia", 'Do inglês "game".'],
+  ["ロボット", "robô", "🤖", "tecnologia"],
+  ["メール", "e-mail", "📧", "tecnologia", 'Do inglês "mail".'],
+  ["インターネット", "internet", "🌐", "tecnologia"],
+  // Música e arte
+  ["ピアノ", "piano", "🎹", "arte"],
+  ["ギター", "violão / guitarra", "🎸", "arte"],
+  ["ドラム", "bateria", "🥁", "arte", 'Do inglês "drum".'],
+  ["アニメ", "anime (desenho animado)", "🎞️", "arte", "Abreviação de アニメーション (animation)."],
+  [
+    "マンガ",
+    "mangá (quadrinhos)",
+    "📚",
+    "arte",
+    "É japonesa, mas costuma ser escrita em katakana."
+  ],
+  ["カラオケ", "karaokê", "🎤", "arte", 'Japonês "kara" (vazio) + "oke" (de orquestra).'],
+  // Escola e casa
+  ["ペン", "caneta", "🖊️", "escola"],
+  ["ノート", "caderno", "📓", "escola", 'Do inglês "notebook".'],
+  ["テスト", "prova", "📝", "escola", 'Do inglês "test".'],
+  ["コップ", "copo", "🥤", "escola", 'Do holandês "kop" (parecido com o nosso "copo").'],
+  ["ベッド", "cama", "🛏️", "escola", 'Do inglês "bed".'],
+  ["テーブル", "mesa", "🪑", "escola", 'Do inglês "table".'],
+  // Roupas
+  ["シャツ", "camisa", "👕", "roupas", 'Do inglês "shirt".'],
+  ["スカート", "saia", "👗", "roupas"],
+  ["コート", "casaco", "🧥", "roupas"],
+  ["マフラー", "cachecol", "🧣", "roupas"],
+  ["ボタン", "botão", "🔘", "roupas", 'Veio do português "botão"!'],
+  ["キャップ", "boné", "🧢", "roupas", 'Do inglês "cap".'],
+  // Lugares
+  ["ホテル", "hotel", "🏨", "lugares"],
+  ["トイレ", "banheiro", "🚻", "lugares", 'Do inglês "toilet".'],
+  ["レストラン", "restaurante", "🍽️", "lugares"],
+  ["コンビニ", "loja de conveniência", "🏪", "lugares", 'Abreviação de "convenience store".'],
+  ["ビル", "prédio", "🏢", "lugares", 'Do inglês "building".'],
+  ["スーパー", "supermercado", "🛒", "lugares"],
+  ["プール", "piscina", "🏊", "lugares", 'Do inglês "pool".'],
+  ["ブラジル", "Brasil", "🇧🇷", "lugares"],
+  // Transporte
+  ["バス", "ônibus", "🚌", "transporte", 'Do inglês "bus".'],
+  ["タクシー", "táxi", "🚕", "transporte"],
+  ["ヘリコプター", "helicóptero", "🚁", "transporte"],
+  ["ボート", "barco", "🚤", "transporte", 'Do inglês "boat".'],
+  ["バイク", "moto", "🏍️", "transporte", 'Do inglês "bike".'],
+  ["ロケット", "foguete", "🚀", "transporte", 'Do inglês "rocket".'],
+  // Animais
+  ["ライオン", "leão", "🦁", "animais", 'Do inglês "lion".'],
+  ["パンダ", "panda", "🐼", "animais"],
+  ["コアラ", "coala", "🐨", "animais"],
+  ["ペンギン", "pinguim", "🐧", "animais"],
+  ["ゴリラ", "gorila", "🦍", "animais"],
+  ["キリン", "girafa", "🦒", "animais", "É japonesa, mas costuma ser escrita em katakana."],
+  ["カンガルー", "canguru", "🦘", "animais"],
+  ["イルカ", "golfinho", "🐬", "animais", "É japonesa, mas costuma ser escrita em katakana."]
+];
+var PALAVRAS_KATAKANA = Object.freeze(
+  PALAVRAS.map(
+    ([kana, pt, emoji, categoria, curiosidade]) => Object.freeze({
+      id: `p:${kana}`,
+      kana,
+      romaji: lerEmRomaji(kana),
+      pt,
+      emoji,
+      categoria,
+      curiosidade: curiosidade ?? null,
+      nivel: nivelDaPalavra(kana)
+    })
+  )
+);
+function palavrasAteNivel(nivel) {
+  return PALAVRAS_KATAKANA.filter((palavra) => palavra.nivel <= nivel);
+}
+
+// src/core/placar.js
+var CHAVE_RECORDES = "recordes";
+var CHAVE_ALBUM = "album";
+var CHAVE_ESTATISTICAS = "estatisticas";
+function lerObjeto(chave) {
+  const valor = lerJSON(chave, {});
+  return valor && typeof valor === "object" && !Array.isArray(valor) ? valor : {};
+}
+function recordeDa(temporada) {
+  const salvo = lerObjeto(CHAVE_RECORDES)[temporada];
+  return {
+    pontos: Number(salvo?.pontos) || 0,
+    estrelas: Number(salvo?.estrelas) || 0
+  };
+}
+function salvarResultado(temporada, pontos, estrelas2) {
+  const recordes = lerObjeto(CHAVE_RECORDES);
+  const anterior = recordeDa(temporada);
+  const novoRecorde = pontos > anterior.pontos;
+  recordes[temporada] = {
+    pontos: Math.max(pontos, anterior.pontos),
+    estrelas: Math.max(estrelas2, anterior.estrelas)
+  };
+  salvarJSON(CHAVE_RECORDES, recordes);
+  return novoRecorde;
+}
+function palavrasDoAlbum() {
+  const lista = lerJSON(CHAVE_ALBUM, []);
+  return new Set(Array.isArray(lista) ? lista.filter((id) => typeof id === "string") : []);
+}
+function colarNoAlbum(idDaPalavra) {
+  const album = palavrasDoAlbum();
+  if (album.has(idDaPalavra)) {
+    return false;
+  }
+  album.add(idDaPalavra);
+  salvarJSON(CHAVE_ALBUM, [...album]);
+  return true;
+}
+function estatisticaDe(id) {
+  const salvo = lerObjeto(CHAVE_ESTATISTICAS)[id];
+  return { acertos: Number(salvo?.acertos) || 0, erros: Number(salvo?.erros) || 0 };
+}
+function registrarResposta(id, acertou) {
+  const estatisticas = lerObjeto(CHAVE_ESTATISTICAS);
+  const atual = estatisticaDe(id);
+  estatisticas[id] = acertou ? { ...atual, acertos: atual.acertos + 1 } : { ...atual, erros: atual.erros + 1 };
+  salvarJSON(CHAVE_ESTATISTICAS, estatisticas);
+}
+function pesoDeRevisao(id) {
+  const { acertos, erros } = estatisticaDe(id);
+  if (acertos + erros === 0) {
+    return 3;
+  }
+  return Math.max(0.5, Math.min(8, 2 + erros * 2 - acertos * 0.5));
+}
+
+// src/ui/album.js
+function figurinha(palavra, conquistada) {
+  if (!conquistada) {
+    return criarElemento("li", { class: "figurinha figurinha-vazia" }, [
+      criarElemento("span", { class: "figurinha-emoji", "aria-hidden": "true", text: "❔" }),
+      criarElemento("span", { class: "texto-suave", text: "Ainda não" })
+    ]);
+  }
+  return criarElemento("li", { class: "figurinha" }, [
+    criarElemento("span", { class: "figurinha-emoji", "aria-hidden": "true", text: palavra.emoji }),
+    criarElemento("span", { class: "figurinha-kana", lang: "ja", text: palavra.kana }),
+    criarElemento("span", { class: "figurinha-romaji", text: palavra.romaji }),
+    criarElemento("span", { class: "figurinha-pt", text: palavra.pt }),
+    botaoFalar(palavra.kana, { rotulo: `Ouvir ${palavra.pt}` })
+  ]);
+}
+function abrirAlbum() {
+  const album = palavrasDoAlbum();
+  const total = PALAVRAS_KATAKANA.length;
+  const conquistadas = PALAVRAS_KATAKANA.filter((palavra) => album.has(palavra.id)).length;
+  const porcentagem = Math.round(conquistadas / total * 100);
+  const secoes = Object.entries(CATEGORIAS).map(([id, categoria]) => {
+    const palavras = PALAVRAS_KATAKANA.filter((palavra) => palavra.categoria === id);
+    const tem = palavras.filter((palavra) => album.has(palavra.id)).length;
+    return criarElemento("section", { class: "album-secao" }, [
+      criarElemento("h3", {
+        text: `${categoria.emoji} ${categoria.nome} — ${tem}/${palavras.length}`
+      }),
+      criarElemento(
+        "ul",
+        { class: "album-grade" },
+        palavras.map((palavra) => figurinha(palavra, album.has(palavra.id)))
+      )
+    ]);
+  });
+  const exemplo = PALAVRAS_KATAKANA.find((palavra) => album.has(palavra.id));
+  return abrirModal({
+    titulo: "📒 Álbum de palavras",
+    classe: "modal-album",
+    conteudo: [
+      criarElemento("div", { class: "album-resumo" }, [
+        criarElemento("p", {}, [
+          criarElemento("strong", { text: `${conquistadas} de ${total}` }),
+          " figurinhas"
+        ]),
+        criarElemento(
+          "div",
+          {
+            class: "barra-progresso",
+            role: "progressbar",
+            "aria-valuemin": "0",
+            "aria-valuemax": "100",
+            "aria-valuenow": String(porcentagem),
+            "aria-label": "Álbum completo"
+          },
+          criarElemento("span", { style: `width: ${porcentagem}%` })
+        ),
+        criarElemento("p", {
+          class: "texto-suave",
+          text: "Acerte uma pergunta sobre uma palavra no quiz para colar a figurinha dela aqui."
+        }),
+        exemplo ? criarElemento("p", { class: "album-dica" }, [
+          "Leia por sílabas: ",
+          silabasDaPalavra(exemplo.kana)
+        ]) : null
+      ]),
+      ...secoes
+    ]
+  });
+}
+
+// src/ui/config.js
+function campoSelecao(rotulo, chave, opcoes) {
+  const id = `config-${chave}`;
+  const atual = obterConfig()[chave];
+  const selecao = criarElemento(
+    "select",
+    {
+      id,
+      onChange: () => {
+        const opcao = opcoes[selecao.selectedIndex];
+        alterarConfig(chave, opcao.valor);
+      }
+    },
+    opcoes.map(
+      (opcao) => criarElemento("option", { text: opcao.nome, selected: opcao.valor === atual })
+    )
+  );
+  return criarElemento("div", { class: "campo" }, [
+    criarElemento("label", { for: id, text: rotulo }),
+    selecao
+  ]);
+}
+function campoDeslizante(rotulo, chave, { minimo, maximo, passo, aoSoltar }) {
+  const id = `config-${chave}`;
+  const controle = criarElemento("input", {
+    id,
+    type: "range",
+    min: minimo,
+    max: maximo,
+    step: passo,
+    value: obterConfig()[chave],
+    onInput: () => alterarConfig(chave, Number(controle.value)),
+    onChange: () => aoSoltar?.()
+  });
+  return criarElemento("div", { class: "campo" }, [
+    criarElemento("label", { for: id, text: rotulo }),
+    controle
+  ]);
+}
+function avisoDeVoz() {
+  if (!falaDisponivel()) {
+    return "⚠️ Este navegador não tem síntese de voz. Use o Chrome, o Edge ou o Safari.";
+  }
+  if (!temVozJaponesa()) {
+    return "⚠️ Não encontramos uma voz em japonês. No Windows: Configurações → Hora e idioma → Fala → Adicionar vozes → Japonês. No Android: Configurações → Idiomas → Saída de texto para fala.";
+  }
+  return "✅ Voz em japonês encontrada.";
+}
+function abrirConfig({ aoApagar } = {}) {
+  const botaoApagar = criarElemento("button", {
+    type: "button",
+    class: "botao botao-perigo",
+    text: "🗑️ Apagar recordes e álbum",
+    onClick: () => {
+      if (botaoApagar.dataset.confirmar === "sim") {
+        apagarTudo();
+        modal.fechar();
+        aoApagar?.();
+        return;
+      }
+      botaoApagar.dataset.confirmar = "sim";
+      botaoApagar.textContent = "Tem certeza? Clique de novo para apagar";
+    }
+  });
+  const modal = abrirModal({
+    titulo: "⚙️ Configurações",
+    classe: "modal-config",
+    conteudo: [
+      campoSelecao("⏱️ Tempo por pergunta", "tempoPorPergunta", OPCOES_DE_TEMPO),
+      campoDeslizante("🔔 Volume dos efeitos", "volumeEfeitos", {
+        minimo: 0,
+        maximo: 1,
+        passo: 0.1
+      }),
+      campoDeslizante("🗣️ Velocidade da voz", "velocidadeFala", {
+        minimo: 0.5,
+        maximo: 1.2,
+        passo: 0.05,
+        aoSoltar: () => falar("カタカナ")
+      }),
+      campoSelecao("🔊 Falar a palavra ao mostrar a resposta", "falarAoMostrar", [
+        { valor: true, nome: "Sim" },
+        { valor: false, nome: "Não" }
+      ]),
+      campoSelecao("✨ Animações", "movimento", [
+        { valor: "sistema", nome: "Seguir o sistema" },
+        { valor: "completo", nome: "Completas" },
+        { valor: "reduzido", nome: "Reduzidas" }
+      ]),
+      criarElemento("p", { class: "texto-suave", text: avisoDeVoz() }),
+      botaoApagar
+    ]
+  });
+  return modal;
+}
+
+// src/ui/confete.js
+var CORES = ["#ff3d8b", "#ffd23f", "#2ec4ff", "#3ddc84", "#ff8c32", "#b388ff"];
+var GRAVIDADE = 0.25;
+var MAXIMO = 400;
+var canvas = null;
+var contexto2 = null;
+var particulas = [];
+var quadro = 0;
+function prepararCanvas() {
+  canvas ??= document.getElementById("confete");
+  if (!canvas) {
+    return false;
+  }
+  contexto2 ??= canvas.getContext("2d");
+  const escala = Math.min(window.devicePixelRatio || 1, 2);
+  const largura = Math.round(window.innerWidth * escala);
+  const altura = Math.round(window.innerHeight * escala);
+  if (canvas.width !== largura || canvas.height !== altura) {
+    canvas.width = largura;
+    canvas.height = altura;
+  }
+  contexto2.setTransform(escala, 0, 0, escala, 0, 0);
+  return true;
+}
+function criarParticula(x, y, velocidade, angulo) {
+  return {
+    x,
+    y,
+    vx: Math.cos(angulo) * velocidade,
+    vy: Math.sin(angulo) * velocidade,
+    giro: Math.random() * Math.PI,
+    velocidadeGiro: (Math.random() - 0.5) * 0.4,
+    largura: 6 + Math.random() * 6,
+    altura: 8 + Math.random() * 8,
+    cor: CORES[Math.floor(Math.random() * CORES.length)],
+    vida: 1
+  };
+}
+function desenhar() {
+  const largura = window.innerWidth;
+  const altura = window.innerHeight;
+  contexto2.clearRect(0, 0, largura, altura);
+  particulas = particulas.filter((p) => p.y < altura + 30 && p.vida > 0);
+  for (const p of particulas) {
+    p.vy += GRAVIDADE;
+    p.vx *= 0.985;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.giro += p.velocidadeGiro;
+    p.vida -= 4e-3;
+    contexto2.save();
+    contexto2.globalAlpha = Math.max(0, Math.min(1, p.vida * 1.5));
+    contexto2.translate(p.x, p.y);
+    contexto2.rotate(p.giro);
+    contexto2.fillStyle = p.cor;
+    contexto2.fillRect(-p.largura / 2, -p.altura / 2, p.largura, p.altura * Math.cos(p.giro));
+    contexto2.restore();
+  }
+  quadro = particulas.length > 0 ? requestAnimationFrame(desenhar) : 0;
+  if (!quadro) {
+    contexto2.clearRect(0, 0, largura, altura);
+  }
+}
+function adicionar(novas) {
+  if (animacoesReduzidas() || !prepararCanvas()) {
+    return;
+  }
+  particulas = [...particulas, ...novas].slice(-MAXIMO);
+  if (!quadro) {
+    quadro = requestAnimationFrame(desenhar);
+  }
+}
+function explodirConfete(x, y, quantidade = 60) {
+  adicionar(
+    Array.from(
+      { length: quantidade },
+      () => criarParticula(x, y, 6 + Math.random() * 9, -Math.PI / 2 + (Math.random() - 0.5) * 2.4)
+    )
+  );
+}
+function chuvaDeConfete(quantidade = 160) {
+  adicionar(
+    Array.from({ length: quantidade }, () => {
+      const particula = criarParticula(
+        Math.random() * window.innerWidth,
+        -20 - Math.random() * window.innerHeight * 0.6,
+        2 + Math.random() * 3,
+        Math.PI / 2 + (Math.random() - 0.5)
+      );
+      particula.vida = 1.6;
+      return particula;
+    })
+  );
+}
+function limparConfete() {
+  particulas = [];
+  if (quadro) {
+    cancelAnimationFrame(quadro);
+    quadro = 0;
+  }
+  if (contexto2) {
+    contexto2.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+// src/quiz/temporadas.js
+var TEMPORADAS = Object.freeze([
+  {
+    id: "estreia",
+    nome: "Estreia",
+    emoji: "🌟",
+    descricao: "Katakana básicos (ア a ン) e palavras curtas.",
+    tiposDeKana: ["basico"],
+    nivelDasPalavras: 1,
+    combinados: false,
+    cor: "var(--rosa)"
+  },
+  {
+    id: "ao-vivo",
+    nome: "Ao Vivo",
+    emoji: "🎬",
+    descricao: "Entram os sinais ゛ e ゜: ガ, ザ, ダ, バ, パ…",
+    tiposDeKana: ["basico", "dakuten"],
+    nivelDasPalavras: 2,
+    combinados: false,
+    cor: "var(--azul)"
+  },
+  {
+    id: "grande-final",
+    nome: "Grande Final",
+    emoji: "🏆",
+    descricao: "Tudo, mais ッ, ー e as combinações キャ, シュ, チョ…",
+    tiposDeKana: ["basico", "dakuten"],
+    nivelDasPalavras: 3,
+    combinados: true,
+    cor: "var(--amarelo)"
+  }
+]);
+function buscarTemporada(id) {
+  return TEMPORADAS.find((temporada) => temporada.id === id) ?? TEMPORADAS[0];
+}
+
+// src/telas/inicio.js
+var EQUIPES = Object.freeze([
+  { nome: "Raio", emoji: "⚡", cor: "amarelo" },
+  { nome: "Dragão", emoji: "🐉", cor: "rosa" },
+  { nome: "Onda", emoji: "🌊", cor: "azul" },
+  { nome: "Ninja", emoji: "🥷", cor: "verde" }
+]);
+var PERGUNTAS_SOLO = 12;
+var PERGUNTAS_POR_EQUIPE = 5;
+var escolhaLembrada = { modo: "solo", equipes: 2, temporada: "estreia" };
+function estrelasTexto(quantidade) {
+  return "★".repeat(quantidade) + "☆".repeat(3 - quantidade);
+}
+function grupoDeEscolha(rotulo, opcoes, valorAtual, aoEscolher, classe = "") {
+  const botoes = opcoes.map(
+    (opcao) => criarElemento(
+      "button",
+      {
+        type: "button",
+        role: "radio",
+        class: `escolha ${classe}`,
+        dataset: { valor: String(opcao.valor) },
+        style: opcao.cor ? `--cor-escolha: ${opcao.cor}` : null,
+        onClick: () => marcar(opcao.valor, true)
+      },
+      opcao.conteudo
+    )
+  );
+  const grupo = criarElemento(
+    "div",
+    { class: "grupo-escolha", role: "radiogroup", "aria-label": rotulo },
+    botoes
+  );
+  function marcar(valor, peloJogador = false) {
+    botoes.forEach((botao) => {
+      const marcado = botao.dataset.valor === String(valor);
+      botao.setAttribute("aria-checked", String(marcado));
+      botao.tabIndex = marcado ? 0 : -1;
+      if (marcado && peloJogador) {
+        botao.focus();
+      }
+    });
+    if (peloJogador) {
+      tocarClique();
+      aoEscolher(valor);
+    }
+  }
+  grupo.addEventListener("keydown", (evento) => {
+    const passo = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[evento.key];
+    if (!passo) {
+      return;
+    }
+    evento.preventDefault();
+    const atual = botoes.findIndex((botao) => botao.getAttribute("aria-checked") === "true");
+    const proximo = opcoes[(atual + passo + opcoes.length) % opcoes.length];
+    marcar(proximo.valor, true);
+  });
+  marcar(valorAtual);
+  return grupo;
+}
+function mostrarInicio(conteiner, { aoComecar }) {
+  const escolha = { ...escolhaLembrada };
+  const album = palavrasDoAlbum();
+  const conquistadas = PALAVRAS_KATAKANA.filter((palavra) => album.has(palavra.id)).length;
+  const logo = criarElemento("h1", { class: "logo", id: "titulo-inicio" }, [
+    criarElemento("span", { class: "logo-jp", lang: "ja", "aria-hidden": "true" }, [
+      ..."カタカナ".split("").map((letra) => criarElemento("span", { text: letra }))
+    ]),
+    criarElemento("span", { class: "logo-show", text: "Katakana Show" })
+  ]);
+  const seletorEquipes = grupoDeEscolha(
+    "Número de equipes",
+    [2, 3, 4].map((numero) => ({ valor: numero, conteudo: `${numero} equipes` })),
+    escolha.equipes,
+    (valor) => {
+      escolha.equipes = valor;
+    },
+    "escolha-pequena"
+  );
+  const linhaEquipes = criarElemento("div", { class: "linha-equipes" }, [
+    seletorEquipes,
+    criarElemento("p", {
+      class: "texto-suave",
+      text: `As equipes se revezam: ${PERGUNTAS_POR_EQUIPE} perguntas para cada uma. Ideal para o projetor da sala!`
+    })
+  ]);
+  linhaEquipes.hidden = escolha.modo !== "equipes";
+  const seletorModo = grupoDeEscolha(
+    "Modo de jogo",
+    [
+      {
+        valor: "solo",
+        conteudo: [
+          criarElemento("span", { class: "escolha-emoji", text: "🙋" }),
+          criarElemento("strong", { text: "Solo" }),
+          criarElemento("span", { text: `${PERGUNTAS_SOLO} perguntas` })
+        ]
+      },
+      {
+        valor: "equipes",
+        conteudo: [
+          criarElemento("span", { class: "escolha-emoji", text: "👥" }),
+          criarElemento("strong", { text: "Equipes" }),
+          criarElemento("span", { text: "Disputa na turma" })
+        ]
+      }
+    ],
+    escolha.modo,
+    (valor) => {
+      escolha.modo = valor;
+      linhaEquipes.hidden = valor !== "equipes";
+    },
+    "escolha-modo"
+  );
+  const seletorTemporada = grupoDeEscolha(
+    "Temporada",
+    TEMPORADAS.map((temporada) => {
+      const recorde = recordeDa(temporada.id);
+      return {
+        valor: temporada.id,
+        cor: temporada.cor,
+        conteudo: [
+          criarElemento("span", { class: "escolha-emoji", text: temporada.emoji }),
+          criarElemento("strong", { text: temporada.nome }),
+          criarElemento("span", { class: "escolha-descricao", text: temporada.descricao }),
+          criarElemento("span", {
+            class: "escolha-estrelas",
+            "aria-label": `${recorde.estrelas} de 3 estrelas`,
+            text: estrelasTexto(recorde.estrelas)
+          }),
+          recorde.pontos > 0 ? criarElemento("span", { class: "escolha-recorde", text: `🏆 ${recorde.pontos}` }) : null
+        ]
+      };
+    }),
+    escolha.temporada,
+    (valor) => {
+      escolha.temporada = valor;
+    },
+    "escolha-temporada"
+  );
+  const botaoComecar = criarElemento("button", {
+    type: "button",
+    class: "botao botao-gigante",
+    text: "🎬 Começar o show!",
+    onClick: () => {
+      escolhaLembrada = { ...escolha };
+      const equipes = escolha.modo === "equipes" ? EQUIPES.slice(0, escolha.equipes) : [{ nome: "Você", emoji: "🙋", cor: "rosa" }];
+      aoComecar({
+        temporadaId: escolha.temporada,
+        equipes,
+        perguntas: escolha.modo === "equipes" ? PERGUNTAS_POR_EQUIPE * equipes.length : PERGUNTAS_SOLO
+      });
+    }
+  });
+  const tela = criarElemento(
+    "section",
+    { class: "tela-inicio", "aria-labelledby": "titulo-inicio" },
+    [
+      logo,
+      criarElemento("p", {
+        class: "chamada",
+        text: "O quiz que revisa o katakana e ensina palavras novas! Leia, ouça e responda rápido para fazer combos."
+      }),
+      criarElemento("div", { class: "cartao-escolhas" }, [
+        criarElemento("h2", { class: "titulo-secao", text: "1. Quem vai jogar?" }),
+        seletorModo,
+        linhaEquipes,
+        criarElemento("h2", { class: "titulo-secao", text: "2. Escolha a temporada" }),
+        seletorTemporada,
+        botaoComecar
+      ]),
+      criarElemento("ul", { class: "dicas-rapidas" }, [
+        criarElemento("li", { text: "⌨️ Teclas 1 a 4 respondem; Enter vai para a próxima." }),
+        criarElemento("li", { text: "🔥 3 acertos seguidos = combo x2, depois x3 e x4!" }),
+        criarElemento("li", {
+          text: "📖 O Guia de romaji pode ser aberto a qualquer hora (na pergunta, vale metade dos pontos)."
+        }),
+        criarElemento("li", {
+          text: `📒 Álbum: ${conquistadas} de ${PALAVRAS_KATAKANA.length} palavras conquistadas.`
+        })
+      ])
+    ]
+  );
+  conteiner.replaceChildren(tela);
+  const animacoes = [];
+  if (!animacoesReduzidas()) {
+    animacoes.push(
+      gsap.from(logo.querySelectorAll(".logo-jp span"), {
+        y: -60,
+        opacity: 0,
+        rotation: () => gsap.utils.random(-25, 25),
+        duration: 0.7,
+        stagger: 0.08,
+        ease: "bounce.out"
+      }),
+      gsap.to(logo.querySelectorAll(".logo-jp span"), {
+        y: -8,
+        duration: 0.9,
+        ease: "sine.inOut",
+        stagger: { each: 0.15, repeat: -1, yoyo: true },
+        delay: 1.2
+      })
+    );
+  }
+  animacoes.push(entrar(tela.querySelectorAll(".chamada, .cartao-escolhas, .dicas-rapidas")));
+  return () => animacoes.forEach((animacao) => animacao?.kill());
+}
+
+// src/quiz/perguntas.js
+var ALTERNATIVAS = 4;
+var FORA_DAS_PERGUNTAS = /* @__PURE__ */ new Set(["ヂ", "ヅ", "ヲ"]);
+var TIPOS_DE_KANA = ["kana-romaji", "romaji-kana"];
+var TIPOS_DE_PALAVRA = ["palavra-significado", "palavra-romaji", "significado-palavra"];
+function sortearPonderado(lista, peso, jaUsados) {
+  const candidatos = lista.filter((item) => !jaUsados.has(item.id));
+  const fonte = candidatos.length > 0 ? candidatos : lista;
+  const pesos = fonte.map((item) => peso(item.id));
+  let sorteio = Math.random() * pesos.reduce((soma, valor) => soma + valor, 0);
+  for (let i = 0; i < fonte.length; i += 1) {
+    sorteio -= pesos[i];
+    if (sorteio <= 0) {
+      return fonte[i];
+    }
+  }
+  return fonte.at(-1);
+}
+function completarAlternativas(correta, pegadinhas, reserva) {
+  const usados = /* @__PURE__ */ new Set([correta]);
+  const erradas = [];
+  for (const opcao of [...embaralhar(pegadinhas), ...embaralhar(reserva)]) {
+    if (erradas.length === ALTERNATIVAS - 1) {
+      break;
+    }
+    if (opcao && !usados.has(opcao)) {
+      usados.add(opcao);
+      erradas.push(opcao);
+    }
+  }
+  return erradas;
+}
+function montar(base, corretaOpcao, erradas) {
+  const opcoes = embaralhar([{ ...corretaOpcao, certa: true }, ...erradas]);
+  return { ...base, opcoes, correta: opcoes.findIndex((opcao) => opcao.certa) };
+}
+function mutarPalavra(palavra) {
+  const letras = [...palavra];
+  const posicoes = embaralhar(letras.map((_, indice) => indice));
+  for (const indice of posicoes) {
+    const letra = letras[indice];
+    const semSinal = letra.normalize("NFD").charAt(0);
+    const trocas = [...parecidosCom(letra)];
+    if (semSinal !== letra) {
+      trocas.push(semSinal);
+    } else if (katakanaPorCaractere(`${letra}゙`.normalize("NFC"))) {
+      trocas.push(`${letra}゙`.normalize("NFC"));
+    }
+    const validas = trocas.filter(
+      (troca) => katakanaPorCaractere(troca) && !FORA_DAS_PERGUNTAS.has(troca)
+    );
+    const proximaPequena = /[ャュョ]/.test(letras[indice + 1] ?? "");
+    if (validas.length > 0 && !proximaPequena) {
+      const copia = [...letras];
+      copia[indice] = sortear(validas);
+      return copia.join("");
+    }
+  }
+  return null;
+}
+function mutacoes(palavra, quantidade, palavrasReais) {
+  const resultado = /* @__PURE__ */ new Set();
+  for (let tentativa = 0; tentativa < 20 && resultado.size < quantidade; tentativa += 1) {
+    const mutada = mutarPalavra(palavra);
+    if (mutada && mutada !== palavra && !palavrasReais.has(mutada)) {
+      resultado.add(mutada);
+    }
+  }
+  return [...resultado];
+}
+function vizinhosDe(kana) {
+  const semSinal = kana.normalize("NFD").charAt(0);
+  const comSinais = [`${semSinal}゙`, `${semSinal}゚`].map(
+    (letra) => letra.normalize("NFC")
+  );
+  return [...parecidosCom(kana), semSinal, ...comSinais].filter(
+    (letra) => letra !== kana && katakanaPorCaractere(letra) && !FORA_DAS_PERGUNTAS.has(letra)
+  );
+}
+function perguntaKanaRomaji(item, pool) {
+  const pegadinhas = vizinhosDe(item.kana).map((letra) => katakanaPorCaractere(letra).romaji);
+  const erradas = completarAlternativas(
+    item.romaji,
+    pegadinhas,
+    pool.map((kana) => kana.romaji)
+  );
+  return montar(
+    {
+      tipo: "kana-romaji",
+      titulo: "Como se lê?",
+      destaque: { kana: item.kana },
+      item,
+      idsRevisao: [item.id]
+    },
+    { rotulo: item.romaji, romaji: true },
+    erradas.map((romaji) => ({ rotulo: romaji, romaji: true }))
+  );
+}
+function perguntaRomajiKana(item, pool) {
+  const erradas = completarAlternativas(
+    item.kana,
+    vizinhosDe(item.kana),
+    pool.filter((kana) => kana.romaji !== item.romaji).map((kana) => kana.kana)
+  );
+  return montar(
+    {
+      tipo: "romaji-kana",
+      titulo: "Qual é o katakana?",
+      destaque: { romaji: item.romaji },
+      item,
+      idsRevisao: [item.id]
+    },
+    { rotulo: item.kana, kana: true },
+    erradas.map((kana) => ({ rotulo: kana, kana: true }))
+  );
+}
+function perguntaPalavraSignificado(palavra, palavras) {
+  const mesmaCategoria = palavras.filter((outra) => outra.categoria === palavra.categoria);
+  const porSignificado = new Map(palavras.map((outra) => [outra.pt, outra]));
+  const erradas = completarAlternativas(
+    palavra.pt,
+    mesmaCategoria.map((outra) => outra.pt),
+    palavras.map((outra) => outra.pt)
+  );
+  return montar(
+    {
+      tipo: "palavra-significado",
+      titulo: "O que significa?",
+      destaque: { kana: palavra.kana, palavra: true },
+      palavra,
+      idsRevisao: [palavra.id]
+    },
+    { rotulo: palavra.pt, emoji: palavra.emoji },
+    erradas.map((pt) => ({ rotulo: pt, emoji: porSignificado.get(pt).emoji }))
+  );
+}
+function perguntaPalavraRomaji(palavra, palavras, reais) {
+  const quaseCertas = mutacoes(palavra.kana, 3, reais).map(lerEmRomaji);
+  const parecidas = palavras.filter((outra) => Math.abs(outra.kana.length - palavra.kana.length) <= 1).map((outra) => outra.romaji);
+  const erradas = completarAlternativas(palavra.romaji, quaseCertas.slice(0, 2), [
+    ...quaseCertas,
+    ...parecidas
+  ]);
+  return montar(
+    {
+      tipo: "palavra-romaji",
+      titulo: "Como se lê esta palavra?",
+      destaque: { kana: palavra.kana, palavra: true },
+      palavra,
+      idsRevisao: [palavra.id]
+    },
+    { rotulo: palavra.romaji, romaji: true },
+    erradas.map((romaji) => ({ rotulo: romaji, romaji: true }))
+  );
+}
+function perguntaSignificadoPalavra(palavra, palavras, reais) {
+  const erradas = completarAlternativas(
+    palavra.kana,
+    mutacoes(palavra.kana, 2, reais),
+    palavras.map((outra) => outra.kana)
+  );
+  return montar(
+    {
+      tipo: "significado-palavra",
+      titulo: "Como se escreve em katakana?",
+      destaque: { emoji: palavra.emoji, pt: palavra.pt },
+      palavra,
+      idsRevisao: [palavra.id]
+    },
+    { rotulo: palavra.kana, kana: true },
+    erradas.map((kana) => ({ rotulo: kana, kana: true }))
+  );
+}
+function perguntaOuvirPalavra(palavra, palavras, reais) {
+  const pergunta = perguntaSignificadoPalavra(palavra, palavras, reais);
+  return {
+    ...pergunta,
+    tipo: "ouvir-palavra",
+    titulo: "Ouça e escolha a palavra!",
+    destaque: { audio: palavra.kana }
+  };
+}
+function criarRodada(temporada, quantidade, { peso = () => 1, comVoz = false } = {}) {
+  const kanas = listarKatakana(temporada.tiposDeKana).filter(
+    (item) => !FORA_DAS_PERGUNTAS.has(item.kana)
+  );
+  const combinados = temporada.combinados ? KATAKANA_COMBINADOS : [];
+  const palavras = palavrasAteNivel(temporada.nivelDasPalavras);
+  const reais = new Set(palavras.map((palavra) => palavra.kana));
+  const pesoDaPalavra = (id) => {
+    const palavra = palavras.find((outra) => outra.id === id);
+    return peso(id) * (palavra?.nivel === temporada.nivelDasPalavras ? 1.5 : 1);
+  };
+  const usados = /* @__PURE__ */ new Set();
+  const tiposDePalavra = comVoz ? [...TIPOS_DE_PALAVRA, "ouvir-palavra"] : TIPOS_DE_PALAVRA;
+  const ordemKana = embaralhar(TIPOS_DE_KANA);
+  const ordemPalavra = embaralhar(tiposDePalavra);
+  const perguntas = [];
+  for (let i = 0; i < quantidade; i += 1) {
+    if (i % 2 === 0) {
+      const usarCombinado = combinados.length > 0 && Math.random() < 0.3;
+      const pool = usarCombinado ? combinados : kanas;
+      const item = sortearPonderado(pool, peso, usados);
+      usados.add(item.id);
+      const tipo = usarCombinado ? "kana-romaji" : ordemKana[i / 2 % ordemKana.length];
+      perguntas.push(
+        tipo === "kana-romaji" ? perguntaKanaRomaji(item, pool) : perguntaRomajiKana(item, pool)
+      );
+    } else {
+      const palavra = sortearPonderado(palavras, pesoDaPalavra, usados);
+      usados.add(palavra.id);
+      const tipo = ordemPalavra[Math.floor(i / 2) % ordemPalavra.length];
+      const criar = {
+        "palavra-significado": perguntaPalavraSignificado,
+        "palavra-romaji": perguntaPalavraRomaji,
+        "significado-palavra": perguntaSignificadoPalavra,
+        "ouvir-palavra": perguntaOuvirPalavra
+      }[tipo];
+      perguntas.push(criar(palavra, palavras, reais));
+    }
+  }
+  return perguntas;
+}
+
+// src/quiz/pontuacao.js
+var PONTOS_BASE = 100;
+var BONUS_MAXIMO_DE_TEMPO = 50;
+var BONUS_SEM_TEMPO = 25;
+function multiplicador(combo) {
+  if (combo >= 10) {
+    return 4;
+  }
+  if (combo >= 6) {
+    return 3;
+  }
+  if (combo >= 3) {
+    return 2;
+  }
+  return 1;
+}
+function pontosDoAcerto({ fracaoRestante, combo, consultouGuia }) {
+  const bonus = fracaoRestante === null ? BONUS_SEM_TEMPO : Math.round(BONUS_MAXIMO_DE_TEMPO * Math.max(0, Math.min(1, fracaoRestante)));
+  const pontos = (PONTOS_BASE + bonus) * multiplicador(combo);
+  return consultouGuia ? Math.round(pontos / 2) : pontos;
+}
+function estrelas(acertos, total) {
+  const taxa = total > 0 ? acertos / total : 0;
+  if (taxa >= 0.9) {
+    return 3;
+  }
+  if (taxa >= 0.75) {
+    return 2;
+  }
+  return taxa >= 0.5 ? 1 : 0;
+}
+function fraseFinal(numeroDeEstrelas) {
+  return [
+    "Bora treinar mais um pouco? Abra o 📖 Guia e tente de novo!",
+    "Bom começo! O katakana já está ficando familiar.",
+    "Mandou bem! Mais uma rodada e você vira lenda!",
+    "ESPETACULAR! Você é a estrela do Katakana Show! 🌟"
+  ][numeroDeEstrelas];
+}
+
+// src/telas/feedback.js
+function diferencas(certa, marcada) {
+  const a = [...certa];
+  const b = [...marcada];
+  if (a.length !== b.length) {
+    return [];
+  }
+  return a.map((letra, indice) => ({ certo: letra, marcado: b[indice] })).filter((par) => par.certo !== par.marcado);
+}
+function kanaComLeitura(kana) {
+  const item = katakanaPorCaractere(kana);
+  return item ? `${kana} (${item.romaji})` : kana;
+}
+function explicarErro(pergunta, escolhida) {
+  if (!escolhida) {
+    return null;
+  }
+  if (pergunta.tipo === "romaji-kana") {
+    return `Você marcou ${kanaComLeitura(escolhida.rotulo)}. O certo é ${kanaComLeitura(pergunta.item.kana)}.`;
+  }
+  if (pergunta.tipo === "kana-romaji") {
+    return `Você marcou "${escolhida.rotulo}", mas ${pergunta.item.kana} se lê "${pergunta.item.romaji}".`;
+  }
+  const outra = PALAVRAS_KATAKANA.find(
+    (palavra) => palavra !== pergunta.palavra && [palavra.kana, palavra.pt, palavra.romaji].includes(escolhida.rotulo)
+  );
+  if (pergunta.palavra && outra) {
+    return `Você marcou ${outra.emoji} ${outra.kana} (${outra.romaji}) = ${outra.pt}. É outra palavra!`;
+  }
+  if (pergunta.palavra && escolhida.kana) {
+    const trocas = diferencas(pergunta.palavra.kana, escolhida.rotulo);
+    if (trocas.length > 0 && trocas.length <= 2) {
+      const lista = trocas.map((par) => `${kanaComLeitura(par.marcado)} × ${kanaComLeitura(par.certo)}`).join(", ");
+      return `Quase! Repare na diferença: ${lista}.`;
+    }
+  }
+  if (pergunta.tipo === "palavra-romaji") {
+    return `Você marcou "${escolhida.rotulo}". Leia sílaba por sílaba com o guia abaixo.`;
+  }
+  return null;
+}
+function explicacaoDeKana(item) {
+  return criarElemento("div", { class: "explicacao" }, [
+    criarElemento("span", { class: "explicacao-kana", lang: "ja", text: item.kana }),
+    criarElemento("div", { class: "explicacao-texto" }, [
+      criarElemento("p", { class: "explicacao-romaji" }, [
+        criarElemento("strong", { text: item.romaji }),
+        ` — soa "${comoSoa(item.romaji)}"`,
+        botaoFalar(item.kana)
+      ]),
+      criarElemento("p", { text: `💡 ${item.mnemonico}` })
+    ])
+  ]);
+}
+function explicacaoDePalavra(palavra, novaFigurinha) {
+  const categoria = CATEGORIAS[palavra.categoria];
+  return criarElemento("div", { class: "explicacao" }, [
+    criarElemento("span", {
+      class: "explicacao-emoji",
+      "aria-hidden": "true",
+      text: palavra.emoji
+    }),
+    criarElemento("div", { class: "explicacao-texto" }, [
+      criarElemento("p", { class: "explicacao-palavra" }, [
+        criarElemento("span", { lang: "ja", class: "explicacao-palavra-kana", text: palavra.kana }),
+        botaoFalar(palavra.kana)
+      ]),
+      silabasDaPalavra(palavra.kana),
+      criarElemento("p", { class: "explicacao-romaji" }, [
+        criarElemento("strong", { text: palavra.romaji }),
+        ` = ${palavra.pt}`,
+        criarElemento("span", {
+          class: "etiqueta",
+          text: `${categoria.emoji} ${categoria.nome}`
+        })
+      ]),
+      palavra.curiosidade ? criarElemento("p", { text: `🌎 ${palavra.curiosidade}` }) : null,
+      novaFigurinha ? criarElemento("p", { class: "nova-figurinha", text: "✨ Nova figurinha no seu álbum!" }) : null
+    ])
+  ]);
+}
+function criarFeedback(pergunta, dados) {
+  const { acertou, escolhida, pontos, tempoEsgotado, novaFigurinha, consultouGuia, ultima } = dados;
+  const erro = acertou ? null : explicarErro(pergunta, escolhida);
+  const titulo = acertou ? "✅ CERTO!" : tempoEsgotado ? "⏰ Tempo esgotado!" : "❌ Ops, não foi!";
+  const botao = criarElemento("button", {
+    type: "button",
+    class: "botao botao-proxima",
+    text: ultima ? "🏁 Ver o resultado" : "Próxima ▶",
+    onClick: dados.aoContinuar
+  });
+  const cartao = criarElemento(
+    "div",
+    {
+      class: `feedback ${acertou ? "feedback-certo" : "feedback-errado"}`,
+      role: "status"
+    },
+    [
+      criarElemento("div", { class: "feedback-cabecalho" }, [
+        criarElemento("strong", { class: "feedback-titulo", text: titulo }),
+        acertou ? criarElemento("span", { class: "feedback-pontos", text: `+${pontos}` }) : null,
+        acertou && consultouGuia ? criarElemento("span", { class: "etiqueta", text: "📖 ½ ponto (guia)" }) : null
+      ]),
+      erro ? criarElemento("p", { class: "feedback-erro", text: erro }) : null,
+      pergunta.palavra ? explicacaoDePalavra(pergunta.palavra, novaFigurinha) : explicacaoDeKana(pergunta.item),
+      botao
+    ]
+  );
+  return { cartao, botao };
+}
+
+// src/telas/jogo.js
+var FORMAS = ["▲", "◆", "●", "■"];
+var TECLAS = { 1: 0, 2: 1, 3: 2, 4: 3, a: 0, b: 1, c: 2, d: 3 };
+var BONUS_DE_TEMPO_MS = 1e4;
+var AJUDAS = [
+  { id: "meio", icone: "✂️", rotulo: "50:50", descricao: "Elimina duas alternativas erradas" },
+  { id: "tempo", icone: "⏱️", rotulo: "+10 s", descricao: "Ganha mais 10 segundos" },
+  { id: "ouvir", icone: "🔊", rotulo: "Ouvir", descricao: "Ouve a pronúncia da resposta" }
+];
+function mostrarJogo(conteiner, { temporadaId, equipes, perguntas: total, aoTerminar, aoSair }) {
+  const temporada = buscarTemporada(temporadaId);
+  const comVoz = falaDisponivel() && temVozJaponesa();
+  const perguntas = criarRodada(temporada, total, { peso: pesoDeRevisao, comVoz });
+  const modoEquipes = equipes.length > 1;
+  const times = equipes.map((equipe) => ({
+    ...equipe,
+    pontos: 0,
+    combo: 0,
+    maiorCombo: 0,
+    acertos: 0,
+    respondidas: 0,
+    ajudas: { meio: true, tempo: true, ouvir: true }
+  }));
+  const historico = [];
+  const palavrasNovas = /* @__PURE__ */ new Set();
+  let indice = 0;
+  let estado = "pergunta";
+  let consultouGuia = false;
+  let modalAberto = false;
+  let modalDePausa = null;
+  let atrasoDeInicio = 0;
+  const relogio = { duracaoMs: 0, restanteMs: 0, ultimo: 0, quadro: 0, ultimoSegundo: null };
+  const comTempo = () => obterConfig().tempoPorPergunta > 0;
+  const elementosDoPlacar = times.map(
+    (time) => criarElemento("li", { class: `placar-equipe cor-${time.cor}` }, [
+      criarElemento("span", { class: "placar-nome", text: `${time.emoji} ${time.nome}` }),
+      criarElemento("strong", { class: "placar-pontos", text: "0" })
+    ])
+  );
+  const contador2 = criarElemento("p", { class: "hud-contador" });
+  const pontinhos = criarElemento(
+    "ol",
+    { class: "hud-pontinhos", "aria-hidden": "true" },
+    perguntas.map(() => criarElemento("li"))
+  );
+  const combo = criarElemento("div", { class: "hud-combo", "aria-live": "polite" });
+  const botaoPausa = criarElemento("button", {
+    type: "button",
+    class: "botao-icone botao-pausa",
+    "aria-label": "Pausar",
+    text: "⏸",
+    onClick: () => pausar()
+  });
+  const barraTempo = criarElemento("span", { class: "relogio-barra" });
+  const segundos = criarElemento("span", { class: "relogio-segundos", "aria-hidden": "true" });
+  const relogioEl = criarElemento("div", { class: "relogio" }, [
+    criarElemento("span", { class: "relogio-trilho" }, barraTempo),
+    segundos
+  ]);
+  const vezDaEquipe = criarElemento("p", { class: "vez-da-equipe", "aria-live": "polite" });
+  const tipoEl = criarElemento("p", { class: "pergunta-tipo" });
+  const tituloEl = criarElemento("h2", { class: "pergunta-titulo", tabindex: "-1" });
+  const destaqueEl = criarElemento("div", { class: "destaque" });
+  const avisoGuia = criarElemento("p", {
+    class: "aviso-guia",
+    text: "📖 Guia consultado: esta pergunta vale metade dos pontos."
+  });
+  const respostasEl = criarElemento("div", { class: "respostas" });
+  const ajudasEl = criarElemento("div", { class: "ajudas", role: "group", "aria-label": "Ajudas" });
+  const areaFeedback = criarElemento("div", { class: "area-feedback" });
+  const anuncioCombo = criarElemento("div", { class: "anuncio-combo", "aria-hidden": "true" });
+  const tela = criarElemento(
+    "section",
+    { class: "tela-jogo", "aria-label": `Rodada ${temporada.nome}` },
+    [
+      criarElemento("div", { class: "hud-jogo" }, [
+        criarElemento("div", { class: "hud-progresso" }, [contador2, pontinhos]),
+        criarElemento(
+          "ul",
+          {
+            class: `placar ${modoEquipes ? "placar-equipes" : "placar-solo"}`,
+            "aria-label": "Placar"
+          },
+          elementosDoPlacar
+        ),
+        combo,
+        botaoPausa
+      ]),
+      relogioEl,
+      criarElemento("div", { class: "palco-pergunta" }, [
+        vezDaEquipe,
+        tipoEl,
+        tituloEl,
+        destaqueEl,
+        avisoGuia,
+        anuncioCombo
+      ]),
+      respostasEl,
+      ajudasEl,
+      areaFeedback
+    ]
+  );
+  conteiner.replaceChildren(tela);
+  const timeDaVez = () => times[indice % times.length];
+  function atualizarPlacar(animar = null) {
+    times.forEach((time, posicao) => {
+      const item = elementosDoPlacar[posicao];
+      item.classList.toggle(
+        "placar-ativo",
+        modoEquipes && time === timeDaVez() && estado !== "fim"
+      );
+      const alvo = item.querySelector(".placar-pontos");
+      if (animar === time && !animacoesReduzidas()) {
+        const valor = { n: Number(alvo.textContent) || 0 };
+        gsap.to(valor, {
+          n: time.pontos,
+          duration: 0.6,
+          ease: "power2.out",
+          onUpdate: () => {
+            alvo.textContent = String(Math.round(valor.n));
+          }
+        });
+        pulsar(item, 1.12);
+      } else {
+        alvo.textContent = String(time.pontos);
+      }
+    });
+  }
+  function atualizarCombo() {
+    const time = timeDaVez();
+    const mult = multiplicador(time.combo);
+    combo.className = `hud-combo combo-${mult}`;
+    combo.replaceChildren(
+      criarElemento("span", { class: "combo-fogo", "aria-hidden": "true", text: "🔥" }),
+      criarElemento("span", { class: "combo-mult", text: `x${mult}` }),
+      criarElemento("span", {
+        class: "combo-seq",
+        text: time.combo > 0 ? `${time.combo} seguidos` : "combo"
+      })
+    );
+  }
+  function atualizarProgresso() {
+    contador2.textContent = `Pergunta ${indice + 1} de ${perguntas.length}`;
+    [...pontinhos.children].forEach((ponto, posicao) => {
+      const registro = historico[posicao];
+      ponto.className = registro ? registro.acertou ? "ponto-certo" : "ponto-errado" : posicao === indice ? "ponto-atual" : "";
+    });
+  }
+  function desenharRelogio() {
+    const fracao = relogio.duracaoMs > 0 ? relogio.restanteMs / relogio.duracaoMs : 1;
+    barraTempo.style.transform = `scaleX(${Math.max(0, Math.min(1, fracao))})`;
+    relogioEl.dataset.nivel = fracao > 0.5 ? "alto" : fracao > 0.25 ? "medio" : "baixo";
+    const restante = Math.ceil(relogio.restanteMs / 1e3);
+    segundos.textContent = `${restante}s`;
+    if (restante !== relogio.ultimoSegundo) {
+      if (restante <= 3 && restante > 0 && relogio.ultimoSegundo !== null) {
+        tocarTique();
+      }
+      relogio.ultimoSegundo = restante;
+    }
+  }
+  function passoDoRelogio(agora) {
+    relogio.quadro = 0;
+    if (estado !== "pergunta") {
+      return;
+    }
+    relogio.restanteMs -= agora - relogio.ultimo;
+    relogio.ultimo = agora;
+    desenharRelogio();
+    if (relogio.restanteMs <= 0) {
+      responder(null);
+      return;
+    }
+    relogio.quadro = requestAnimationFrame(passoDoRelogio);
+  }
+  function rodarRelogio() {
+    if (!comTempo() || estado !== "pergunta" || modalAberto || document.hidden || relogio.quadro) {
+      return;
+    }
+    relogio.ultimo = performance.now();
+    relogio.quadro = requestAnimationFrame(passoDoRelogio);
+  }
+  function pararRelogio() {
+    if (relogio.quadro) {
+      cancelAnimationFrame(relogio.quadro);
+      relogio.quadro = 0;
+    }
+  }
+  function rotuloDoTipo(pergunta) {
+    return pergunta.palavra ? "🗣️ Vocabulário" : "🔤 Leitura de katakana";
+  }
+  function desenharDestaque(pergunta) {
+    const { destaque } = pergunta;
+    if (destaque.audio) {
+      return criarElemento("button", {
+        type: "button",
+        class: "destaque-audio",
+        "aria-label": "Ouvir a palavra de novo",
+        text: "🔊",
+        onClick: () => falar(destaque.audio)
+      });
+    }
+    if (destaque.emoji) {
+      return criarElemento("div", { class: "destaque-significado" }, [
+        criarElemento("span", {
+          class: "destaque-emoji",
+          "aria-hidden": "true",
+          text: destaque.emoji
+        }),
+        criarElemento("span", { class: "destaque-pt", text: destaque.pt })
+      ]);
+    }
+    if (destaque.romaji) {
+      return criarElemento("div", { class: "destaque-romaji-bloco" }, [
+        criarElemento("span", { class: "destaque-romaji", text: `"${destaque.romaji}"` }),
+        criarElemento("span", {
+          class: "destaque-soa",
+          text: `🗣️ soa "${comoSoa(destaque.romaji)}"`
+        })
+      ]);
+    }
+    return criarElemento("span", {
+      class: `destaque-kana ${destaque.palavra ? "destaque-palavra" : ""}`,
+      lang: "ja",
+      text: destaque.kana
+    });
+  }
+  function desenharRespostas(pergunta) {
+    respostasEl.replaceChildren(
+      ...pergunta.opcoes.map(
+        (opcao, posicao) => criarElemento(
+          "button",
+          {
+            type: "button",
+            class: `resposta resposta-${posicao} ${opcao.kana ? "resposta-kana" : ""} ${opcao.romaji ? "resposta-romaji" : ""}`,
+            "aria-keyshortcuts": String(posicao + 1),
+            onClick: () => responder(posicao)
+          },
+          [
+            criarElemento("span", {
+              class: "resposta-forma",
+              "aria-hidden": "true",
+              text: FORMAS[posicao]
+            }),
+            opcao.emoji ? criarElemento("span", {
+              class: "resposta-emoji",
+              "aria-hidden": "true",
+              text: opcao.emoji
+            }) : null,
+            criarElemento("span", {
+              class: "resposta-texto",
+              lang: opcao.kana ? "ja" : null,
+              text: opcao.rotulo
+            }),
+            criarElemento("span", {
+              class: "resposta-tecla",
+              "aria-hidden": "true",
+              text: posicao + 1
+            })
+          ]
+        )
+      )
+    );
+  }
+  function desenharAjudas() {
+    const time = timeDaVez();
+    const pergunta = perguntas[indice];
+    ajudasEl.replaceChildren(
+      ...AJUDAS.map((ajuda) => {
+        const indisponivel = ajuda.id === "tempo" && !comTempo() || ajuda.id === "ouvir" && (!comVoz || pergunta.tipo === "ouvir-palavra");
+        const botao = criarElemento(
+          "button",
+          {
+            type: "button",
+            class: "ajuda",
+            title: ajuda.descricao,
+            "aria-label": `${ajuda.rotulo}: ${ajuda.descricao}`,
+            onClick: () => usarAjuda(ajuda.id, botao)
+          },
+          [
+            criarElemento("span", { "aria-hidden": "true", text: ajuda.icone }),
+            criarElemento("span", { text: ajuda.rotulo })
+          ]
+        );
+        botao.disabled = indisponivel || !time.ajudas[ajuda.id];
+        return botao;
+      })
+    );
+  }
+  function mostrarPergunta() {
+    const pergunta = perguntas[indice];
+    estado = "pergunta";
+    consultouGuia = false;
+    avisoGuia.hidden = true;
+    areaFeedback.replaceChildren();
+    tela.classList.remove("com-feedback");
+    const time = timeDaVez();
+    vezDaEquipe.hidden = !modoEquipes;
+    vezDaEquipe.className = `vez-da-equipe cor-${time.cor}`;
+    vezDaEquipe.textContent = `Vez da equipe ${time.emoji} ${time.nome}!`;
+    tipoEl.textContent = rotuloDoTipo(pergunta);
+    tituloEl.textContent = pergunta.titulo;
+    destaqueEl.replaceChildren(desenharDestaque(pergunta));
+    desenharRespostas(pergunta);
+    desenharAjudas();
+    atualizarProgresso();
+    atualizarPlacar();
+    atualizarCombo();
+    relogioEl.hidden = !comTempo();
+    relogio.duracaoMs = obterConfig().tempoPorPergunta * 1e3;
+    relogio.restanteMs = relogio.duracaoMs;
+    relogio.ultimoSegundo = null;
+    desenharRelogio();
+    entrar([destaqueEl, ...respostasEl.children], { y: 30, intervalo: 0.05 });
+    if (modoEquipes && !animacoesReduzidas()) {
+      gsap.fromTo(
+        vezDaEquipe,
+        { scale: 0.6, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" }
+      );
+    }
+    if (pergunta.destaque.audio) {
+      falar(pergunta.destaque.audio);
+    }
+    tituloEl.focus({ preventScroll: true });
+    atrasoDeInicio = window.setTimeout(rodarRelogio, animacoesReduzidas() ? 0 : 400);
+  }
+  function usarAjuda(id, botao) {
+    const time = timeDaVez();
+    if (estado !== "pergunta" || !time.ajudas[id]) {
+      return;
+    }
+    const pergunta = perguntas[indice];
+    time.ajudas[id] = false;
+    botao.disabled = true;
+    tocarClique();
+    if (id === "meio") {
+      const botoes = [...respostasEl.children];
+      const erradas = botoes.filter((_, posicao) => posicao !== pergunta.correta);
+      erradas.sort(() => Math.random() - 0.5).slice(0, 2).forEach((errada) => {
+        errada.disabled = true;
+        errada.classList.add("resposta-eliminada");
+      });
+    } else if (id === "tempo") {
+      relogio.restanteMs += BONUS_DE_TEMPO_MS;
+      relogio.duracaoMs = Math.max(relogio.duracaoMs, relogio.restanteMs);
+      desenharRelogio();
+      pulsar(relogioEl, 1.06);
+    } else if (id === "ouvir") {
+      falar(pergunta.palavra?.kana ?? pergunta.item.kana);
+    }
+  }
+  function anunciarCombo(mult) {
+    anuncioCombo.textContent = `COMBO x${mult}! 🔥`;
+    tocarCombo(mult);
+    if (animacoesReduzidas()) {
+      return;
+    }
+    gsap.fromTo(
+      anuncioCombo,
+      { scale: 0.3, opacity: 0, rotation: -12 },
+      {
+        scale: 1,
+        opacity: 1,
+        rotation: 0,
+        duration: 0.45,
+        ease: "back.out(2.5)",
+        onComplete: () => gsap.to(anuncioCombo, { opacity: 0, duration: 0.4, delay: 0.7 })
+      }
+    );
+  }
+  function responder(posicao) {
+    if (estado !== "pergunta") {
+      return;
+    }
+    estado = "resposta";
+    window.clearTimeout(atrasoDeInicio);
+    pararRelogio();
+    const pergunta = perguntas[indice];
+    const time = timeDaVez();
+    const acertou = posicao === pergunta.correta;
+    const botoes = [...respostasEl.children];
+    const fracaoRestante = comTempo() ? Math.max(0, relogio.restanteMs) / relogio.duracaoMs : null;
+    time.respondidas += 1;
+    let pontos = 0;
+    let novaFigurinha = false;
+    const multAntes = multiplicador(time.combo);
+    if (acertou) {
+      time.combo += 1;
+      time.maiorCombo = Math.max(time.maiorCombo, time.combo);
+      time.acertos += 1;
+      pontos = pontosDoAcerto({ fracaoRestante, combo: time.combo, consultouGuia });
+      time.pontos += pontos;
+      if (pergunta.palavra) {
+        novaFigurinha = colarNoAlbum(pergunta.palavra.id);
+        if (novaFigurinha) {
+          palavrasNovas.add(pergunta.palavra.id);
+        }
+      }
+    } else {
+      time.combo = 0;
+    }
+    pergunta.idsRevisao.forEach((id) => registrarResposta(id, acertou));
+    historico.push({
+      pergunta,
+      acertou,
+      escolhida: posicao === null ? null : pergunta.opcoes[posicao],
+      equipe: time
+    });
+    botoes.forEach((botao2, i) => {
+      botao2.disabled = true;
+      botao2.classList.toggle("resposta-correta", i === pergunta.correta);
+      botao2.classList.toggle("resposta-marcada-errada", i === posicao && !acertou);
+      botao2.classList.toggle("resposta-apagada", i !== pergunta.correta && i !== posicao);
+    });
+    [...ajudasEl.children].forEach((botao2) => {
+      botao2.disabled = true;
+    });
+    const botaoCerto = botoes[pergunta.correta];
+    if (acertou) {
+      tocarAcerto();
+      const caixa = botaoCerto.getBoundingClientRect();
+      explodirConfete(caixa.left + caixa.width / 2, caixa.top + caixa.height / 2);
+      pulsar(botaoCerto, 1.08);
+      const multDepois = multiplicador(time.combo);
+      if (multDepois > multAntes) {
+        anunciarCombo(multDepois);
+      }
+    } else if (posicao === null) {
+      tocarTempoEsgotado();
+      tremer(relogioEl);
+    } else {
+      tocarErro();
+      tremer(botoes[posicao]);
+    }
+    atualizarPlacar(acertou ? time : null);
+    atualizarCombo();
+    atualizarProgresso();
+    const ultima = indice === perguntas.length - 1;
+    const { cartao, botao } = criarFeedback(pergunta, {
+      acertou,
+      escolhida: posicao === null ? null : pergunta.opcoes[posicao],
+      pontos,
+      tempoEsgotado: posicao === null,
+      novaFigurinha,
+      consultouGuia,
+      ultima,
+      aoContinuar: avancar
+    });
+    areaFeedback.replaceChildren(cartao);
+    tela.classList.add("com-feedback");
+    entrar(cartao, { y: 40 });
+    if (obterConfig().falarAoMostrar) {
+      falar(pergunta.palavra?.kana ?? pergunta.item.kana);
+    }
+    botao.focus({ preventScroll: true });
+    cartao.scrollIntoView?.({
+      block: "nearest",
+      behavior: animacoesReduzidas() ? "auto" : "smooth"
+    });
+  }
+  function avancar() {
+    if (estado !== "resposta") {
+      return;
+    }
+    tocarClique();
+    if (indice === perguntas.length - 1) {
+      estado = "fim";
+      aoTerminar({ temporada, times, historico, palavrasNovas: [...palavrasNovas] });
+      return;
+    }
+    indice += 1;
+    mostrarPergunta();
+  }
+  function pausar() {
+    if (estado === "fim" || modalDePausa) {
+      return;
+    }
+    modalDePausa = abrirModal({
+      titulo: "⏸ Show pausado",
+      classe: "modal-pausa",
+      aoFechar: () => {
+        modalDePausa = null;
+      },
+      conteudo: [
+        criarElemento("p", { text: "O cronômetro está parado. Respire fundo! 😄" }),
+        criarElemento("div", { class: "acoes" }, [
+          criarElemento("button", {
+            type: "button",
+            class: "botao",
+            text: "▶ Continuar",
+            onClick: () => modalDePausa?.fechar()
+          }),
+          criarElemento("button", {
+            type: "button",
+            class: "botao botao-secundario",
+            text: "🚪 Sair do show",
+            onClick: () => {
+              modalDePausa?.fechar();
+              aoSair();
+            }
+          })
+        ])
+      ]
+    });
+  }
+  function aoModal(evento) {
+    modalAberto = evento.detail.aberto;
+    if (modalAberto) {
+      pararRelogio();
+    } else {
+      rodarRelogio();
+    }
+  }
+  function aoGuia() {
+    if (estado === "pergunta" && !consultouGuia) {
+      consultouGuia = true;
+      avisoGuia.hidden = false;
+    }
+  }
+  function aoVisibilidade() {
+    if (document.hidden) {
+      pararRelogio();
+    } else {
+      rodarRelogio();
+    }
+  }
+  function aoTeclar(evento) {
+    if (modalAberto || evento.ctrlKey || evento.metaKey || evento.altKey) {
+      return;
+    }
+    if (evento.key === "Escape") {
+      evento.preventDefault();
+      pausar();
+      return;
+    }
+    const posicao = TECLAS[evento.key.toLowerCase()];
+    if (posicao !== void 0 && estado === "pergunta") {
+      const botao = respostasEl.children[posicao];
+      if (botao && !botao.disabled) {
+        evento.preventDefault();
+        responder(posicao);
+      }
+    }
+  }
+  document.addEventListener("ks:modal", aoModal);
+  document.addEventListener("ks:guia", aoGuia);
+  document.addEventListener("visibilitychange", aoVisibilidade);
+  window.addEventListener("keydown", aoTeclar);
+  mostrarPergunta();
+  return () => {
+    estado = "fim";
+    pararRelogio();
+    window.clearTimeout(atrasoDeInicio);
+    document.removeEventListener("ks:modal", aoModal);
+    document.removeEventListener("ks:guia", aoGuia);
+    document.removeEventListener("visibilitychange", aoVisibilidade);
+    window.removeEventListener("keydown", aoTeclar);
+    gsap.killTweensOf(tela.querySelectorAll("*"));
+    modalDePausa?.fechar();
+  };
+}
+
+// src/telas/resultado.js
+var MEDALHAS = ["🥇", "🥈", "🥉", "🏅"];
+function contarAte(elemento, valor, animacoes) {
+  if (animacoesReduzidas()) {
+    elemento.textContent = String(valor);
+    return;
+  }
+  const estado = { n: 0 };
+  animacoes.push(
+    gsap.to(estado, {
+      n: valor,
+      duration: 1.4,
+      ease: "power2.out",
+      onUpdate: () => {
+        elemento.textContent = String(Math.round(estado.n));
+      }
+    })
+  );
+}
+function blocoSolo(time, total, novoRecorde, numeroDeEstrelas, animacoes) {
+  const pontos = criarElemento("strong", { class: "resultado-pontos", text: "0" });
+  contarAte(pontos, time.pontos, animacoes);
+  const estrelasEl = criarElemento(
+    "p",
+    { class: "resultado-estrelas", "aria-label": `${numeroDeEstrelas} de 3 estrelas` },
+    [0, 1, 2].map(
+      (i) => criarElemento("span", {
+        class: i < numeroDeEstrelas ? "estrela-cheia" : "estrela-vazia",
+        text: i < numeroDeEstrelas ? "★" : "☆"
+      })
+    )
+  );
+  if (!animacoesReduzidas()) {
+    animacoes.push(
+      gsap.from(estrelasEl.children, {
+        scale: 0,
+        rotation: -180,
+        duration: 0.6,
+        stagger: 0.25,
+        delay: 0.6,
+        ease: "back.out(2)"
+      })
+    );
+  }
+  return criarElemento("div", { class: "resultado-solo" }, [
+    estrelasEl,
+    criarElemento("p", { class: "resultado-rotulo", text: "pontos" }),
+    pontos,
+    novoRecorde ? criarElemento("p", { class: "novo-recorde", text: "🏆 NOVO RECORDE!" }) : null,
+    criarElemento("ul", { class: "resultado-numeros" }, [
+      criarElemento("li", {}, [
+        criarElemento("strong", { text: `${time.acertos}/${total}` }),
+        "acertos"
+      ]),
+      criarElemento("li", {}, [
+        criarElemento("strong", { text: `🔥 ${time.maiorCombo}` }),
+        "maior combo"
+      ])
+    ]),
+    criarElemento("p", { class: "resultado-frase", text: fraseFinal(numeroDeEstrelas) })
+  ]);
+}
+function blocoEquipes(times) {
+  const ranking = [...times].sort((a, b) => b.pontos - a.pontos);
+  const empate = ranking.length > 1 && ranking[0].pontos === ranking[1].pontos;
+  return criarElemento("div", { class: "resultado-equipes" }, [
+    criarElemento("p", {
+      class: "resultado-frase",
+      text: empate ? "🤝 Empate no topo! Que disputa!" : `🎉 A equipe ${ranking[0].emoji} ${ranking[0].nome} venceu o show!`
+    }),
+    criarElemento(
+      "ol",
+      { class: "podio" },
+      ranking.map(
+        (time, posicao) => criarElemento("li", { class: `podio-lugar cor-${time.cor}` }, [
+          criarElemento("span", {
+            class: "podio-medalha",
+            "aria-hidden": "true",
+            text: MEDALHAS[posicao]
+          }),
+          criarElemento("strong", { text: `${time.emoji} ${time.nome}` }),
+          criarElemento("span", { class: "podio-pontos", text: `${time.pontos} pts` }),
+          criarElemento("span", {
+            class: "texto-suave",
+            text: `${time.acertos}/${time.respondidas} acertos · 🔥 ${time.maiorCombo}`
+          })
+        ])
+      )
+    )
+  ]);
+}
+function blocoPalavras(historico, palavrasNovas) {
+  const vistas = /* @__PURE__ */ new Map();
+  historico.forEach(({ pergunta }) => {
+    if (pergunta.palavra) {
+      vistas.set(pergunta.palavra.id, pergunta.palavra);
+    }
+  });
+  if (vistas.size === 0) {
+    return null;
+  }
+  return criarElemento("section", { class: "resultado-secao" }, [
+    criarElemento("h2", { text: "🗣️ Palavras desta rodada" }),
+    criarElemento(
+      "ul",
+      { class: "lista-palavras" },
+      [...vistas.values()].map(
+        (palavra) => criarElemento("li", { class: "cartao-palavra" }, [
+          criarElemento("span", {
+            class: "cartao-palavra-emoji",
+            "aria-hidden": "true",
+            text: palavra.emoji
+          }),
+          criarElemento("span", { class: "cartao-palavra-kana", lang: "ja", text: palavra.kana }),
+          criarElemento("span", { class: "cartao-palavra-romaji", text: palavra.romaji }),
+          criarElemento("span", { text: palavra.pt }),
+          palavrasNovas.includes(palavra.id) ? criarElemento("span", { class: "etiqueta etiqueta-nova", text: "✨ nova" }) : null,
+          botaoFalar(palavra.kana, { rotulo: `Ouvir ${palavra.pt}` })
+        ])
+      )
+    )
+  ]);
+}
+function blocoRevisao(historico) {
+  const erros = historico.filter((registro) => !registro.acertou);
+  if (erros.length === 0) {
+    return criarElemento("section", { class: "resultado-secao" }, [
+      criarElemento("h2", { text: "🎯 Revisão" }),
+      criarElemento("p", { text: "Nenhum erro! Gabaritou! 🤩" })
+    ]);
+  }
+  return criarElemento("section", { class: "resultado-secao" }, [
+    criarElemento("h2", { text: `🔁 Para revisar (${erros.length})` }),
+    criarElemento(
+      "ul",
+      { class: "lista-revisao" },
+      erros.map(({ pergunta, escolhida }) => {
+        const alvo = pergunta.palavra ?? pergunta.item;
+        return criarElemento("li", {}, [
+          criarElemento("span", { class: "revisao-kana", lang: "ja", text: alvo.kana }),
+          pergunta.palavra ? silabasDaPalavra(alvo.kana) : criarElemento("strong", { text: alvo.romaji }),
+          pergunta.palavra ? criarElemento("span", { text: `${alvo.emoji} ${alvo.pt}` }) : null,
+          criarElemento("span", {
+            class: "texto-suave",
+            text: escolhida ? `você marcou: ${escolhida.rotulo}` : "tempo esgotado"
+          }),
+          botaoFalar(alvo.kana)
+        ]);
+      })
+    )
+  ]);
+}
+function mostrarResultado(conteiner, resultado, { aoJogarDeNovo, aoInicio }) {
+  const { temporada, times, historico, palavrasNovas } = resultado;
+  const animacoes = [];
+  const solo = times.length === 1;
+  const total = historico.length;
+  const numeroDeEstrelas = solo ? estrelas(times[0].acertos, total) : 0;
+  const novoRecorde = solo ? salvarResultado(temporada.id, times[0].pontos, numeroDeEstrelas) : false;
+  const tela = criarElemento(
+    "section",
+    { class: "tela-resultado", "aria-labelledby": "titulo-resultado" },
+    [
+      criarElemento("h1", {
+        id: "titulo-resultado",
+        class: "titulo-resultado",
+        tabindex: "-1",
+        text: `${temporada.emoji} Fim da temporada ${temporada.nome}!`
+      }),
+      solo ? blocoSolo(times[0], total, novoRecorde, numeroDeEstrelas, animacoes) : blocoEquipes(times),
+      criarElemento("div", { class: "acoes" }, [
+        criarElemento("button", {
+          type: "button",
+          class: "botao botao-gigante",
+          text: "🔁 Jogar de novo",
+          onClick: aoJogarDeNovo
+        }),
+        criarElemento("button", {
+          type: "button",
+          class: "botao botao-secundario",
+          text: "🏠 Início",
+          onClick: aoInicio
+        })
+      ]),
+      blocoPalavras(historico, palavrasNovas),
+      blocoRevisao(historico)
+    ]
+  );
+  conteiner.replaceChildren(tela);
+  animacoes.push(entrar(tela.children, { intervalo: 0.1 }));
+  tela.querySelector("#titulo-resultado").focus({ preventScroll: true });
+  if (!solo || numeroDeEstrelas > 0) {
+    tocarFanfarra();
+    chuvaDeConfete();
+  }
+  return () => animacoes.forEach((animacao) => animacao?.kill());
+}
+
+// src/main.js
+var conteudo = document.getElementById("conteudo");
+var limparTelaAtual = null;
+var telaAtual = "";
+function trocarTela(nome, montar2) {
+  limparTelaAtual?.();
+  limparConfete();
+  telaAtual = nome;
+  document.body.dataset.tela = nome;
+  window.scrollTo({ top: 0 });
+  limparTelaAtual = montar2(conteudo);
+}
+function irParaInicio() {
+  trocarTela(
+    "inicio",
+    (conteiner) => mostrarInicio(conteiner, {
+      aoComecar: (opcoes) => {
+        tocarAbertura();
+        irParaJogo(opcoes);
+      }
+    })
+  );
+}
+function irParaJogo(opcoes) {
+  trocarTela(
+    "jogo",
+    (conteiner) => mostrarJogo(conteiner, {
+      ...opcoes,
+      aoTerminar: (resultado) => irParaResultado(resultado, opcoes),
+      aoSair: irParaInicio
+    })
+  );
+}
+function irParaResultado(resultado, opcoes) {
+  trocarTela(
+    "resultado",
+    (conteiner) => mostrarResultado(conteiner, resultado, {
+      aoJogarDeNovo: () => irParaJogo(opcoes),
+      aoInicio: irParaInicio
+    })
+  );
+}
+window.voltarApp = () => {
+  const fecharModal = document.querySelector(".modal-fundo .botao-icone");
+  if (fecharModal) {
+    fecharModal.click();
+    return true;
+  }
+  if (telaAtual === "jogo") {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    return true;
+  }
+  if (telaAtual === "resultado") {
+    irParaInicio();
+    return true;
+  }
+  return false;
+};
+async function iniciar() {
+  aplicarNoDocumento();
+  aoMudarConfig(aplicarNoDocumento);
+  document.getElementById("botao-guia").addEventListener("click", () => abrirGuia());
+  document.getElementById("botao-album").addEventListener("click", () => abrirAlbum());
+  document.getElementById("botao-config").addEventListener(
+    "click",
+    () => abrirConfig({ aoApagar: () => telaAtual === "inicio" && irParaInicio() })
+  );
+  document.getElementById("botao-logo").addEventListener("click", () => {
+    if (telaAtual === "jogo") {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    } else {
+      irParaInicio();
+    }
+  });
+  await aguardarFontes();
+  irParaInicio();
+}
+iniciar();
+
+</script>
+  </head>
+  <body>
+    <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <div class="palco-fundo" aria-hidden="true">
+      <span class="holofote holofote-1"></span>
+      <span class="holofote holofote-2"></span>
+      <span class="holofote holofote-3"></span>
+    </div>
+    <header class="barra-topo">
+      <button type="button" class="logo-mini" id="botao-logo" aria-label="Voltar ao início">
+        <span lang="ja">カ</span> Katakana Show
+      </button>
+      <nav class="barra-topo-acoes" aria-label="Ferramentas">
+        <button type="button" class="botao-topo botao-guia" id="botao-guia">
+          📖 <span class="rotulo-topo">Guia de romaji</span>
+        </button>
+        <button type="button" class="botao-topo" id="botao-album">
+          📒 <span class="rotulo-topo">Álbum</span>
+        </button>
+        <button type="button" class="botao-topo" id="botao-config" aria-label="Configurações">
+          ⚙️
+        </button>
+      </nav>
+    </header>
+    <main id="conteudo" class="conteudo" tabindex="-1"></main>
+    <canvas id="confete" class="confete" aria-hidden="true"></canvas>
+    <div id="modais"></div>
+    <noscript>
+      <p class="sem-js">O Katakana Show precisa de JavaScript ativado para funcionar.</p>
+    </noscript>
+  </body>
+</html>
