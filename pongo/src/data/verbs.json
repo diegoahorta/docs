@@ -1,0 +1,520 @@
+{
+  "verbs": [
+    {
+      "id": "aruku",
+      "kanji": "歩く",
+      "kana": "あるく",
+      "group": 1,
+      "module": 1,
+      "mvp": true,
+      "meaning": "andar, caminhar",
+      "action": "walk",
+      "icon": "🚶",
+      "example": {
+        "text": "ポンゴ[は]{公園|こうえん}[を]{歩|ある}いています。",
+        "pt": "Pongo está andando pelo parque."
+      },
+      "note": "Com verbos de movimento, を marca o caminho percorrido."
+    },
+    {
+      "id": "hashiru",
+      "kanji": "走る",
+      "kana": "はしる",
+      "group": 1,
+      "exception": true,
+      "module": 1,
+      "mvp": true,
+      "meaning": "correr",
+      "action": "run",
+      "icon": "🏃",
+      "example": {
+        "text": "ポンゴ[は]{公園|こうえん}[で]{走|はし}っています。",
+        "pt": "Pongo está correndo no parque."
+      },
+      "teiru": "progress",
+      "note": "Exceção! Termina em -iru, mas é Grupo I: 走ります, 走って."
+    },
+    {
+      "id": "tobu",
+      "kanji": "跳ぶ",
+      "kana": "とぶ",
+      "group": 1,
+      "module": 1,
+      "mvp": true,
+      "meaning": "pular, saltar",
+      "action": "jump",
+      "icon": "🦘",
+      "example": { "text": "ポンゴ[は]たかく{跳|と}びます。", "pt": "Pongo pula alto." },
+      "note": "跳ぶ = saltar com as pernas. 飛ぶ (mesma leitura) = voar."
+    },
+    {
+      "id": "iku",
+      "kanji": "行く",
+      "kana": "いく",
+      "group": 1,
+      "module": 1,
+      "meaning": "ir",
+      "action": null,
+      "icon": "➡️",
+      "example": {
+        "text": "ポンゴ[は]{公園|こうえん}[に]{行|い}きます。",
+        "pt": "Pongo vai ao parque."
+      },
+      "note": "Exceção na forma て: 行って (e não 行いて)."
+    },
+    {
+      "id": "kuru",
+      "kanji": "来る",
+      "kana": "くる",
+      "group": 3,
+      "module": 1,
+      "meaning": "vir",
+      "action": null,
+      "icon": "⬅️",
+      "example": { "text": "タロウ[が]{来|き}ました。", "pt": "O Taro veio (chegou)." },
+      "teiru": "result",
+      "note": "Irregular: 来ます (きます), 来ない (こない), 来て (きて)."
+    },
+    {
+      "id": "kaeru",
+      "kanji": "帰る",
+      "kana": "かえる",
+      "group": 1,
+      "exception": true,
+      "module": 1,
+      "meaning": "voltar para casa",
+      "action": null,
+      "icon": "🏠",
+      "example": {
+        "text": "ポンゴ[は]{家|いえ}[に]{帰|かえ}ります。",
+        "pt": "Pongo volta para casa."
+      },
+      "note": "Exceção! Parece Grupo II, mas é Grupo I: 帰ります."
+    },
+    {
+      "id": "hairu",
+      "kanji": "入る",
+      "kana": "はいる",
+      "group": 1,
+      "exception": true,
+      "module": 1,
+      "mvp": true,
+      "meaning": "entrar",
+      "action": "enter",
+      "icon": "🚪",
+      "example": {
+        "text": "ポンゴ[は]ポータル[に]{入|はい}ります。",
+        "pt": "Pongo entra no portal."
+      },
+      "teiru": "result",
+      "note": "Exceção do Grupo I. O lugar onde se entra é marcado por に."
+    },
+    {
+      "id": "deru",
+      "kanji": "出る",
+      "kana": "でる",
+      "group": 2,
+      "module": 1,
+      "meaning": "sair",
+      "action": null,
+      "icon": "🏃‍♂️",
+      "example": {
+        "text": "ポンゴ[は]{家|いえ}[を]{出|で}ます。",
+        "pt": "Pongo sai de casa."
+      },
+      "note": "O lugar de onde se sai é marcado por を."
+    },
+    {
+      "id": "taberu",
+      "kanji": "食べる",
+      "kana": "たべる",
+      "group": 2,
+      "module": 2,
+      "mvp": true,
+      "meaning": "comer",
+      "action": "eat",
+      "icon": "🍙",
+      "example": {
+        "text": "ポンゴ[は]おにぎり[を]{食|た}べています。",
+        "pt": "Pongo está comendo um onigiri."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "nomu",
+      "kanji": "飲む",
+      "kana": "のむ",
+      "group": 1,
+      "module": 2,
+      "mvp": true,
+      "meaning": "beber",
+      "action": "drink",
+      "icon": "💧",
+      "example": {
+        "text": "ポンゴ[は]{水|みず}[を]{飲|の}んでいます。",
+        "pt": "Pongo está bebendo água."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "miru",
+      "kanji": "見る",
+      "kana": "みる",
+      "group": 2,
+      "module": 2,
+      "meaning": "ver, olhar",
+      "action": null,
+      "icon": "👀",
+      "example": {
+        "text": "ポンゴ[は]{空|そら}[を]{見|み}ています。",
+        "pt": "Pongo está olhando o céu."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "kiku",
+      "kanji": "聞く",
+      "kana": "きく",
+      "group": 1,
+      "module": 2,
+      "meaning": "ouvir, perguntar",
+      "action": null,
+      "icon": "👂",
+      "example": {
+        "text": "ポンゴ[は]{音楽|おんがく}[を]{聞|き}きます。",
+        "pt": "Pongo ouve música."
+      }
+    },
+    {
+      "id": "yomu",
+      "kanji": "読む",
+      "kana": "よむ",
+      "group": 1,
+      "module": 2,
+      "mvp": true,
+      "meaning": "ler",
+      "action": "read",
+      "icon": "📖",
+      "example": {
+        "text": "ポンゴ[は]{本|ほん}[を]{読|よ}んでいます。",
+        "pt": "Pongo está lendo um livro."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "kaku",
+      "kanji": "書く",
+      "kana": "かく",
+      "group": 1,
+      "module": 2,
+      "meaning": "escrever",
+      "action": "write",
+      "icon": "✏️",
+      "example": {
+        "text": "ポンゴ[は]{文|ぶん}[を]{書|か}いています。",
+        "pt": "Pongo está escrevendo uma frase."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "neru",
+      "kanji": "寝る",
+      "kana": "ねる",
+      "group": 2,
+      "module": 2,
+      "meaning": "dormir, deitar-se",
+      "action": "sleep",
+      "icon": "😴",
+      "example": {
+        "text": "ポンゴ[は]ベンチ[で]{寝|ね}ています。",
+        "pt": "Pongo está dormindo no banco."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "okiru",
+      "kanji": "起きる",
+      "kana": "おきる",
+      "group": 2,
+      "module": 2,
+      "meaning": "acordar, levantar-se",
+      "action": "wake",
+      "icon": "⏰",
+      "example": {
+        "text": "ポンゴ[は]{七時|しちじ}[に]{起|お}きます。",
+        "pt": "Pongo acorda às sete."
+      },
+      "teiru": "result"
+    },
+    {
+      "id": "hanasu",
+      "kanji": "話す",
+      "kana": "はなす",
+      "group": 1,
+      "module": 3,
+      "mvp": true,
+      "meaning": "falar, conversar",
+      "action": "talk",
+      "icon": "💬",
+      "example": {
+        "text": "ポンゴ[は]モモ[と]{話|はな}しています。",
+        "pt": "Pongo está conversando com a Momo."
+      },
+      "teiru": "progress",
+      "note": "と marca com quem se faz a ação."
+    },
+    {
+      "id": "kau",
+      "kanji": "買う",
+      "kana": "かう",
+      "group": 1,
+      "module": 3,
+      "meaning": "comprar",
+      "action": null,
+      "icon": "🛒",
+      "example": {
+        "text": "ポンゴ[は]パン[を]{買|か}います。",
+        "pt": "Pongo compra pão."
+      },
+      "note": "Forma ない: 買わない — う vira わ!"
+    },
+    {
+      "id": "tsukau",
+      "kanji": "使う",
+      "kana": "つかう",
+      "group": 1,
+      "module": 3,
+      "meaning": "usar",
+      "action": null,
+      "icon": "🖊️",
+      "example": {
+        "text": "ポンゴ[は]ペン[を]{使|つか}います。",
+        "pt": "Pongo usa uma caneta."
+      }
+    },
+    {
+      "id": "akeru",
+      "kanji": "開ける",
+      "kana": "あける",
+      "group": 2,
+      "module": 3,
+      "meaning": "abrir (algo)",
+      "action": null,
+      "icon": "📂",
+      "example": {
+        "text": "ポンゴ[は]ドア[を]{開|あ}けます。",
+        "pt": "Pongo abre a porta."
+      }
+    },
+    {
+      "id": "shimeru",
+      "kanji": "閉める",
+      "kana": "しめる",
+      "group": 2,
+      "module": 3,
+      "meaning": "fechar (algo)",
+      "action": null,
+      "icon": "📁",
+      "example": {
+        "text": "ポンゴ[は]{窓|まど}[を]{閉|し}めます。",
+        "pt": "Pongo fecha a janela."
+      }
+    },
+    {
+      "id": "motsu",
+      "kanji": "持つ",
+      "kana": "もつ",
+      "group": 1,
+      "module": 3,
+      "meaning": "segurar, carregar, ter",
+      "action": null,
+      "icon": "🎒",
+      "example": {
+        "text": "ポンゴ[は]{本|ほん}[を]{持|も}っています。",
+        "pt": "Pongo está com um livro (segurando)."
+      },
+      "teiru": "result"
+    },
+    {
+      "id": "oku",
+      "kanji": "置く",
+      "kana": "おく",
+      "group": 1,
+      "module": 3,
+      "meaning": "colocar, pôr",
+      "action": null,
+      "icon": "📥",
+      "example": {
+        "text": "ポンゴ[は]ボール[を]ベンチ[に]{置|お}きます。",
+        "pt": "Pongo coloca a bola no banco."
+      }
+    },
+    {
+      "id": "toru",
+      "kanji": "取る",
+      "kana": "とる",
+      "group": 1,
+      "module": 3,
+      "meaning": "pegar",
+      "action": null,
+      "icon": "🤲",
+      "example": {
+        "text": "ポンゴ[は]ボール[を]{取|と}ります。",
+        "pt": "Pongo pega a bola."
+      }
+    },
+    {
+      "id": "suwaru",
+      "kanji": "座る",
+      "kana": "すわる",
+      "group": 1,
+      "module": 0,
+      "mvp": true,
+      "meaning": "sentar-se",
+      "action": "sit",
+      "icon": "🪑",
+      "example": {
+        "text": "ポンゴ[は]ベンチ[に]{座|すわ}っています。",
+        "pt": "Pongo está sentado no banco."
+      },
+      "teiru": "result",
+      "note": "Onde se senta é marcado por に (o destino do movimento), não で."
+    },
+    {
+      "id": "tatsu",
+      "kanji": "立つ",
+      "kana": "たつ",
+      "group": 1,
+      "module": 0,
+      "meaning": "ficar de pé, levantar-se",
+      "action": "stand",
+      "icon": "🧍",
+      "example": { "text": "ポンゴ[は]{立|た}っています。", "pt": "Pongo está de pé." },
+      "teiru": "result"
+    },
+    {
+      "id": "oyogu",
+      "kanji": "泳ぐ",
+      "kana": "およぐ",
+      "group": 1,
+      "module": 0,
+      "mvp": true,
+      "meaning": "nadar",
+      "action": "swim",
+      "icon": "🏊",
+      "example": {
+        "text": "ポンゴ[は]{池|いけ}[で]{泳|およ}いでいます。",
+        "pt": "Pongo está nadando no lago."
+      },
+      "teiru": "progress",
+      "note": "Termina em ぐ: forma て com いで (泳いで)."
+    },
+    {
+      "id": "ochiru",
+      "kanji": "落ちる",
+      "kana": "おちる",
+      "group": 2,
+      "module": 0,
+      "meaning": "cair",
+      "action": "fall",
+      "icon": "⬇️",
+      "example": {
+        "text": "ポンゴ[は]{川|かわ}[に]{落|お}ちました。",
+        "pt": "Pongo caiu no rio."
+      },
+      "teiru": "result"
+    },
+    {
+      "id": "matsu",
+      "kanji": "待つ",
+      "kana": "まつ",
+      "group": 1,
+      "module": 0,
+      "meaning": "esperar",
+      "action": "idle",
+      "icon": "⏳",
+      "example": {
+        "text": "ポンゴ[は]{友|とも}だち[を]{待|ま}っています。",
+        "pt": "Pongo está esperando um amigo."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "yorokobu",
+      "kanji": "喜ぶ",
+      "kana": "よろこぶ",
+      "group": 1,
+      "module": 0,
+      "meaning": "alegrar-se, comemorar",
+      "action": "celebrate",
+      "icon": "🎉",
+      "example": {
+        "text": "ポンゴ[は]とても{喜|よろこ}んでいます。",
+        "pt": "Pongo está muito feliz."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "asobu",
+      "kanji": "遊ぶ",
+      "kana": "あそぶ",
+      "group": 1,
+      "module": 0,
+      "meaning": "brincar",
+      "action": "play",
+      "icon": "🎠",
+      "example": {
+        "text": "ポンゴ[は]ブランコ[で]{遊|あそ}んでいます。",
+        "pt": "Pongo está brincando no balanço."
+      },
+      "teiru": "progress"
+    },
+    {
+      "id": "noru",
+      "kanji": "乗る",
+      "kana": "のる",
+      "group": 1,
+      "module": 0,
+      "meaning": "subir em, andar de (veículo)",
+      "action": "ride",
+      "icon": "🚲",
+      "example": {
+        "text": "ポンゴ[は]{自転車|じてんしゃ}[に]{乗|の}ります。",
+        "pt": "Pongo anda de bicicleta."
+      },
+      "note": "O veículo/brinquedo em que se sobe é marcado por に."
+    },
+    {
+      "id": "keru",
+      "kanji": "蹴る",
+      "kana": "ける",
+      "group": 1,
+      "exception": true,
+      "module": 0,
+      "meaning": "chutar",
+      "action": "kick",
+      "icon": "⚽",
+      "example": {
+        "text": "ポンゴ[は]ボール[を]{蹴|け}ります。",
+        "pt": "Pongo chuta a bola."
+      },
+      "note": "Exceção! Termina em -eru, mas é Grupo I: 蹴ります."
+    },
+    {
+      "id": "suberu",
+      "kanji": "滑る",
+      "kana": "すべる",
+      "group": 1,
+      "exception": true,
+      "module": 0,
+      "meaning": "escorregar, deslizar",
+      "action": "slide",
+      "icon": "🛝",
+      "example": {
+        "text": "ポンゴ[は]すべり{台|だい}[を]{滑|すべ}ります。",
+        "pt": "Pongo desce o escorregador."
+      },
+      "note": "Exceção! Termina em -eru, mas é Grupo I: 滑ります."
+    }
+  ]
+}

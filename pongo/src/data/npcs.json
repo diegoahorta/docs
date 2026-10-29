@@ -1,0 +1,126 @@
+{
+  "intro": [
+    { "jp": "ここは{動詞|どうし}の{町|まち}。", "pt": "Esta é a Cidade dos Verbos." },
+    {
+      "jp": "{沈黙|ちんもく}{先生|せんせい}[が]{言葉|ことば}[を]{止|と}めました…",
+      "pt": "O Professor Silêncio parou as palavras…"
+    },
+    {
+      "jp": "ポンゴ、アクションの{結晶|けっしょう}[を]{集|あつ}めて！",
+      "pt": "Pongo, recupere os Cristais das Ações!"
+    }
+  ],
+  "npcs": {
+    "taro": {
+      "name": "タロウ",
+      "namePt": "Taro",
+      "species": "Shiba atleta",
+      "greet": [
+        { "jp": "こんにちは！ぼく[は]タロウ。", "pt": "Olá! Eu sou o Taro." },
+        { "jp": "{走|はし}る[の]が{大好|だいす}き！", "pt": "Eu adoro correr!" }
+      ],
+      "notRunning": [
+        {
+          "jp": "もっと{速|はや}く！{走|はし}って！",
+          "pt": "Mais rápido! Corra! (Segure Shift e venha correndo até mim.)"
+        }
+      ],
+      "runDone": [
+        {
+          "jp": "{速|はや}い！ポンゴ[は]{走|はし}りました！",
+          "pt": "Rápido! O Pongo correu!"
+        },
+        { "jp": "ヴァーブ・ランナー[を]しよう！", "pt": "Vamos jogar o Verb Runner?" }
+      ],
+      "after": [{ "jp": "また{走|はし}ろう[ね]！", "pt": "Vamos correr de novo, tá?" }]
+    },
+    "momo": {
+      "name": "モモ",
+      "namePt": "Momo",
+      "species": "Poodle gourmet",
+      "greet": [
+        {
+          "jp": "わあ、ポンゴ！ピクニック[へ]ようこそ！",
+          "pt": "Uau, Pongo! Bem-vindo ao piquenique!"
+        },
+        { "jp": "おにぎり[を]どうぞ。{食|た}べて！", "pt": "Pegue um onigiri. Coma!" }
+      ],
+      "ask": [
+        {
+          "jp": "ポンゴ、{何|なに}[を]していますか。",
+          "pt": "Pongo, o que você está fazendo?"
+        }
+      ],
+      "after": [
+        {
+          "jp": "おいしいね！また{話|はな}しましょう。",
+          "pt": "Que gostoso! Vamos conversar de novo."
+        }
+      ]
+    },
+    "kumi": {
+      "name": "クミ{先生|せんせい}",
+      "namePt": "Professora Kumi",
+      "species": "Professora de gramática",
+      "greet": [
+        {
+          "jp": "こんにちは、ポンゴ。わたし[は]クミです。",
+          "pt": "Olá, Pongo. Eu sou a Kumi."
+        },
+        {
+          "jp": "{橋|はし}[が]ありません。{文|ぶん}[で]{橋|はし}[を]{作|つく}りましょう！",
+          "pt": "Não há ponte. Vamos construir uma ponte com uma frase!"
+        }
+      ],
+      "bridgeDone": [
+        {
+          "jp": "すばらしい！ノート[に]{書|か}いてください。",
+          "pt": "Maravilhoso! Escreva no seu caderno."
+        }
+      ],
+      "transformer": [
+        {
+          "jp": "{動詞|どうし}[を]{変|か}えてみましょう。",
+          "pt": "Vamos transformar alguns verbos? (Verb Transformer)"
+        }
+      ],
+      "after": [
+        { "jp": "{毎日|まいにち}{少|すこ}しずつ！", "pt": "Um pouquinho todo dia!" }
+      ]
+    },
+    "silence": {
+      "name": "{沈黙|ちんもく}{先生|せんせい}",
+      "namePt": "Professor Silêncio",
+      "species": "Guardião do portal",
+      "block": [
+        { "jp": "しーっ！{静|しず}かに…", "pt": "Shhh! Silêncio…" },
+        {
+          "jp": "{言葉|ことば}[は]うるさい。ポータル[は]{開|あ}きません。",
+          "pt": "Palavras são barulhentas. O portal não vai abrir."
+        }
+      ],
+      "needCrystals": [
+        {
+          "jp": "{結晶|けっしょう}[が]{足|た}りません…",
+          "pt": "Faltam cristais… (Você precisa de 9 cristais.)"
+        }
+      ],
+      "challenge": [
+        {
+          "jp": "では、{見|み}せてください。",
+          "pt": "Então me mostre o que aprendeu. (Desafio final, sem luta!)"
+        }
+      ],
+      "defeated": [
+        {
+          "jp": "…{言葉|ことば}[は]きれいですね。",
+          "pt": "…As palavras são bonitas, não é?"
+        },
+        {
+          "jp": "ポータル[に]{入|はい}ってください。",
+          "pt": "Por favor, entre no portal."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "bridge": {
+    "id": "bridge",
+    "prompt": "Pongo está correndo no parque.",
+    "chunks": [
+      { "id": "t", "text": "ポンゴ[は]", "role": "topic" },
+      { "id": "l", "text": "{公園|こうえん}[で]", "role": "location" },
+      { "id": "v", "text": "{走|はし}っています", "role": "verb", "verb": "hashiru" }
+    ],
+    "distractors": [
+      {
+        "id": "x1",
+        "text": "{公園|こうえん}[に]",
+        "role": "location",
+        "tag": "particle-ni-de",
+        "why": "に marca destino ou o lugar onde algo existe (公園に行きます / 公園にいます). Para o lugar onde uma AÇÃO acontece, usamos で."
+      },
+      {
+        "id": "x2",
+        "text": "{走|はし}ります",
+        "role": "verb",
+        "tag": "masu-vs-teimasu",
+        "why": "走ります é presente/futuro polido: \"corre\" ou \"vai correr\". Para \"está correndo\" agora, usamos ～ています."
+      }
+    ],
+    "accept": [
+      ["t", "l", "v"],
+      ["l", "t", "v"]
+    ],
+    "note": "は marca o tópico (Pongo), で marca onde a ação acontece (no parque) e ～ています mostra a ação em andamento.",
+    "altNote": "Correto! Começar pelo local também é possível. A ordem com o tópico primeiro (ポンゴは…) é a mais neutra."
+  },
+  "picnic": {
+    "id": "picnic",
+    "question": "{何|なに}[を]していますか。",
+    "questionPt": "O que você está fazendo?",
+    "prompt": "Responda: \"Estou comendo onigiri no parque.\"",
+    "chunks": [
+      { "id": "l", "text": "{公園|こうえん}[で]", "role": "location" },
+      { "id": "o", "text": "おにぎり[を]", "role": "object" },
+      { "id": "v", "text": "{食|た}べています", "role": "verb", "verb": "taberu" }
+    ],
+    "distractors": [
+      {
+        "id": "x1",
+        "text": "おにぎり[で]",
+        "role": "object",
+        "tag": "particle-wo-de",
+        "why": "で marca lugar ou instrumento. O que recebe a ação (o que se come) é marcado por を: おにぎりを."
+      },
+      {
+        "id": "x2",
+        "text": "{飲|の}んでいます",
+        "role": "verb",
+        "tag": "wrong-verb",
+        "why": "飲んでいます = \"está bebendo\". Onigiri se come: 食べています."
+      }
+    ],
+    "accept": [
+      ["l", "o", "v"],
+      ["o", "l", "v"]
+    ],
+    "note": "Quando o sujeito é óbvio (eu), o japonês costuma omiti-lo. を marca o objeto: おにぎりを食べています.",
+    "altNote": "Correto! A ordem 'local + objeto' é a mais natural, mas esta também funciona."
+  },
+  "boss": {
+    "id": "boss",
+    "prompt": "Pongo bebe água.",
+    "chunks": [
+      { "id": "t", "text": "ポンゴ[は]", "role": "topic" },
+      { "id": "o", "text": "{水|みず}[を]", "role": "object" },
+      { "id": "v", "text": "{飲|の}みます", "role": "verb", "verb": "nomu" }
+    ],
+    "distractors": [
+      {
+        "id": "x1",
+        "text": "{水|みず}[で]",
+        "role": "object",
+        "tag": "particle-wo-de",
+        "why": "で marca lugar ou meio. A água é o objeto da ação: 水を."
+      },
+      {
+        "id": "x2",
+        "text": "{飲|の}みません",
+        "role": "verb",
+        "tag": "polarity",
+        "why": "飲みません é negativo: \"não bebe\". A frase pede a forma afirmativa 飲みます."
+      }
+    ],
+    "accept": [["t", "o", "v"]],
+    "note": "Tópico (は) + objeto (を) + verbo no final: a estrutura básica do japonês."
+  },
+  "bench": {
+    "id": "bench",
+    "prompt": "Pongo está sentado no banco.",
+    "chunks": [
+      { "id": "t", "text": "ポンゴ[は]", "role": "topic" },
+      { "id": "l", "text": "ベンチ[に]", "role": "location" },
+      { "id": "v", "text": "{座|すわ}っています", "role": "verb", "verb": "suwaru" }
+    ],
+    "distractors": [
+      {
+        "id": "x1",
+        "text": "ベンチ[で]",
+        "role": "location",
+        "tag": "particle-ni-de",
+        "why": "Com 座る, o lugar em que você se senta é o destino do movimento: ベンチに座る."
+      }
+    ],
+    "accept": [
+      ["t", "l", "v"],
+      ["l", "t", "v"]
+    ],
+    "note": "Aqui ～ています indica o estado resultante: Pongo sentou e continua sentado."
+  }
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Prévia de sprites — Pongo</title>
+    <style>
+      body {
+        margin: 0;
+        background: #e9f6ff;
+        font-family: sans-serif;
+      }
+      h2 {
+        margin: 12px;
+        font-size: 14px;
+        color: #355;
+      }
+      canvas {
+        display: block;
+        margin: 0 12px 12px;
+        max-width: calc(100% - 24px);
+        background: repeating-conic-gradient(#f4f4f4 0 25%, #fff 0 50%) 0 0/24px 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      // Ferramenta de desenvolvimento: abre em http://localhost:5173/tools/sprites.html
+      import { buildCharacters } from '../src/art/sheets.js'
+      import { buildScenery } from '../src/art/scenery.js'
+      const sheets = buildCharacters()
+      for (const [id, s] of Object.entries(sheets)) {
+        const h = document.createElement('h2')
+        h.textContent = `${id} — ${s.anims.map((a) => a.key).join(', ')}`
+        document.body.append(h, s.canvas)
+      }
+      for (const [id, c] of Object.entries(buildScenery())) {
+        const h = document.createElement('h2')
+        h.textContent = `${id} (${c.width}×${c.height})`
+        document.body.append(h, c)
+      }
+    </script>
+  </body>
+</html>

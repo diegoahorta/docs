@@ -1,0 +1,79 @@
+{
+  "park": {
+    "id": "park",
+    "title": "A Aventura no Parque",
+    "jp": "{公園|こうえん}の{冒険|ぼうけん}",
+    "missions": [
+      {
+        "id": "m1",
+        "title": "Caminhe até a gangorra",
+        "jp": "シーソーまで{歩|ある}こう",
+        "verb": "aruku",
+        "hint": "Use A/D ou as setas para andar até a gangorra."
+      },
+      {
+        "id": "m2",
+        "title": "Pule sobre as três plataformas",
+        "jp": "{三|みっ}つの{台|だい}に{跳|と}ぼう",
+        "verb": "tobu",
+        "hint": "Espaço para pular. Pise nas três plataformas com patinhas."
+      },
+      {
+        "id": "m3",
+        "title": "Corra até o Taro",
+        "jp": "タロウまで{走|はし}ろう",
+        "verb": "hashiru",
+        "hint": "Segure Shift para correr e chegue correndo até o Taro."
+      },
+      {
+        "id": "m4",
+        "title": "Sente-se no banco",
+        "jp": "ベンチに{座|すわ}ろう",
+        "verb": "suwaru",
+        "hint": "Aperte E perto do banco."
+      },
+      {
+        "id": "m5",
+        "title": "Beba água",
+        "jp": "{水|みず}を{飲|の}もう",
+        "verb": "nomu",
+        "hint": "Use o bebedouro (E)."
+      },
+      {
+        "id": "m6",
+        "title": "Leia um livro",
+        "jp": "{本|ほん}を{読|よ}もう",
+        "verb": "yomu",
+        "hint": "A caixinha de livros fica perto do banco."
+      },
+      {
+        "id": "m7",
+        "title": "Coma no piquenique",
+        "jp": "ピクニックで{食|た}べよう",
+        "verb": "taberu",
+        "hint": "Vá até a mesa de piquenique e aperte E."
+      },
+      {
+        "id": "m8",
+        "title": "Converse com a Momo",
+        "jp": "モモと{話|はな}そう",
+        "verb": "hanasu",
+        "hint": "Depois de comer, responda à pergunta da Momo."
+      },
+      {
+        "id": "m9",
+        "title": "Monte a frase da ponte",
+        "jp": "{文|ぶん}を{作|つく}ろう",
+        "verb": "kaku",
+        "hint": "A professora Kumi ajuda a construir a ponte com uma frase."
+      },
+      {
+        "id": "m10",
+        "title": "Desbloqueie o portal",
+        "jp": "ポータルに{入|はい}ろう",
+        "verb": "hairu",
+        "hint": "Com 9 cristais, ajude o Professor Silêncio e entre no portal."
+      }
+    ]
+  }
+}

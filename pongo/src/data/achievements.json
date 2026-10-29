@@ -1,0 +1,58 @@
+{
+  "achievements": [
+    {
+      "id": "first_verb",
+      "icon": "🌱",
+      "title": "Primeira palavra",
+      "desc": "Descubra seu primeiro verbo."
+    },
+    {
+      "id": "five_verbs",
+      "icon": "🌿",
+      "title": "Vocabulário em flor",
+      "desc": "Descubra 5 verbos."
+    },
+    {
+      "id": "ten_verbs",
+      "icon": "🌳",
+      "title": "Árvore de verbos",
+      "desc": "Descubra 10 verbos."
+    },
+    {
+      "id": "first_sentence",
+      "icon": "🧩",
+      "title": "Primeira frase",
+      "desc": "Monte sua primeira frase em japonês."
+    },
+    {
+      "id": "transformer",
+      "icon": "🔁",
+      "title": "Mestre das formas",
+      "desc": "Acerte todas as perguntas do Verb Transformer de primeira."
+    },
+    {
+      "id": "runner",
+      "icon": "⚡",
+      "title": "Pés ligeiros",
+      "desc": "Complete o Verb Runner."
+    },
+    {
+      "id": "swimmer",
+      "icon": "🏊",
+      "title": "Nadador",
+      "desc": "Nade no lago do parque."
+    },
+    {
+      "id": "explorer",
+      "icon": "🧭",
+      "title": "Explorador",
+      "desc": "Brinque na gangorra, no balanço, no escorregador, com a bola e com a bicicleta."
+    },
+    {
+      "id": "park_clear",
+      "icon": "🏆",
+      "title": "Herói do parque",
+      "desc": "Conclua A Aventura no Parque."
+    }
+  ]
+}

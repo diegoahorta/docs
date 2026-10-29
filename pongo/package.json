@@ -1,0 +1,28 @@
+{
+  "name": "pongo-japanese-verb-adventure",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "PONGO — 日本語アクション！ Japanese Verb Adventure · ODU Creative / ODU Kizuna",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "check": "npm run lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "vite": "^7.3.7"
+  }
+}

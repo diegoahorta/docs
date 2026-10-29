@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "id": "book",
+      "icon": "📕",
+      "text": "{本|ほん}",
+      "pt": "livro",
+      "use": "ポンゴ[は]{本|ほん}[を]{持|も}っています。",
+      "usePt": "Pongo está com um livro."
+    },
+    {
+      "id": "onigiri",
+      "icon": "🍙",
+      "text": "おにぎり",
+      "pt": "bolinho de arroz",
+      "use": "おにぎり[を]{食|た}べます。",
+      "usePt": "Como um onigiri."
+    },
+    {
+      "id": "notebook",
+      "icon": "📒",
+      "text": "ノート",
+      "pt": "caderno",
+      "use": "ノート[に]{書|か}きます。",
+      "usePt": "Escrevo no caderno."
+    },
+    {
+      "id": "ball",
+      "icon": "⚽",
+      "text": "ボール",
+      "pt": "bola",
+      "use": "ボール[を]{蹴|け}ります。",
+      "usePt": "Chuto a bola."
+    },
+    {
+      "id": "bottle",
+      "icon": "🧴",
+      "text": "{水筒|すいとう}",
+      "pt": "garrafinha de água",
+      "use": "{水|みず}[を]{飲|の}みます。",
+      "usePt": "Bebo água."
+    }
+  ]
+}

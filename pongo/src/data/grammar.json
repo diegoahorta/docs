@@ -1,0 +1,115 @@
+{
+  "topics": [
+    {
+      "id": "groups",
+      "title": "Os três grupos de verbos",
+      "jp": "{動詞|どうし}のグループ",
+      "body": [
+        "<b>Grupo I (godan / う-verbos)</b>: a última sílaba muda de linha. Ex.: 飲む → 飲みます, 飲まない, 飲んで.",
+        "<b>Grupo II (ichidan / る-verbos)</b>: terminam em -iru/-eru; basta tirar る. Ex.: 食べる → 食べます, 食べない, 食べて.",
+        "<b>Grupo III (irregulares)</b>: する e 来る (くる). Memorize: します/来ます(きます), しない/来ない(こない), して/来て(きて).",
+        "<b>Exceções importantes</b>: 走る, 帰る, 入る, 蹴る e 滑る parecem Grupo II, mas são Grupo I!"
+      ],
+      "examples": [
+        "{走|はし}る → {走|はし}ります",
+        "{食|た}べる → {食|た}べます",
+        "{来|く}る → {来|き}ます"
+      ]
+    },
+    {
+      "id": "masu",
+      "title": "Forma ます (polida)",
+      "jp": "ます{形|けい}",
+      "body": [
+        "Usada para falar de forma educada. Indica presente habitual ou futuro.",
+        "Grupo I: última sílaba → linha -i + ます (読む → 読みます).",
+        "Grupo II: tire る + ます (見る → 見ます).",
+        "Família ます: ます (afirmativo), ません (negativo), ました (passado), ませんでした (passado negativo)."
+      ],
+      "examples": [
+        "{読|よ}みます",
+        "{読|よ}みません",
+        "{読|よ}みました",
+        "{読|よ}みませんでした"
+      ]
+    },
+    {
+      "id": "te",
+      "title": "Forma て",
+      "jp": "て{形|けい}",
+      "body": [
+        "Liga ações, faz pedidos (～てください) e forma ～ています.",
+        "Grupo I: う・つ・る → って | む・ぶ・ぬ → んで | く → いて | ぐ → いで | す → して.",
+        "Exceção: 行く → 行って.",
+        "Grupo II: tire る + て (食べる → 食べて). Irregulares: して, 来て(きて)."
+      ],
+      "examples": [
+        "{飲|の}む → {飲|の}んで",
+        "{書|か}く → {書|か}いて",
+        "{泳|およ}ぐ → {泳|およ}いで",
+        "{話|はな}す → {話|はな}して"
+      ]
+    },
+    {
+      "id": "teiru",
+      "title": "～ています: três usos",
+      "jp": "～ています",
+      "body": [
+        "<b>Ação em andamento</b> com verbos de atividade: 走っています = está correndo.",
+        "<b>Estado resultante</b> com verbos de mudança: 座っています = está sentado (sentou e continua assim); 来ています = veio e está aqui.",
+        "<b>Hábito</b>: 毎日走っています = corro todos os dias.",
+        "Por isso ～ています NÃO significa sempre 'estar fazendo agora': o sentido depende do verbo e do contexto."
+      ],
+      "examples": ["ポンゴ[は]{走|はし}っています。", "ポンゴ[は]{座|すわ}っています。"]
+    },
+    {
+      "id": "nai",
+      "title": "Forma ない (negativo informal)",
+      "jp": "ない{形|けい}",
+      "body": [
+        "Grupo I: última sílaba → linha -a + ない (飲む → 飲まない).",
+        "Cuidado: う vira わ (買う → 買わない).",
+        "Grupo II: tire る + ない (寝る → 寝ない). Irregulares: しない, 来ない(こない)."
+      ],
+      "examples": ["{飲|の}まない", "{買|か}わない", "{寝|ね}ない"]
+    },
+    {
+      "id": "tai",
+      "title": "Forma たい (querer)",
+      "jp": "たい{形|けい}",
+      "body": [
+        "Radical da forma ます + たい = 'quero fazer'.",
+        "Fala do desejo de quem fala (ou pergunta o desejo do ouvinte).",
+        "Conjuga-se como adjetivo: 食べたくない (não quero comer)."
+      ],
+      "examples": ["{食|た}べたい", "{泳|およ}ぎたい", "{読|よ}みたい"]
+    },
+    {
+      "id": "particles",
+      "title": "Partículas は・で・を・に",
+      "jp": "{助詞|じょし}",
+      "body": [
+        "<span class=\"jp-particle\">は</span> (lê-se <i>wa</i>): marca o tópico — do que estamos falando.",
+        "<span class=\"jp-particle\">で</span>: lugar onde a ação acontece (公園で走る) ou meio/instrumento.",
+        "<span class=\"jp-particle\">を</span> (lê-se <i>o</i>): objeto da ação (水を飲む) ou caminho percorrido (公園を歩く).",
+        "<span class=\"jp-particle\">に</span>: destino (公園に行く), lugar de existência (公園にいる) ou superfície onde se senta/sobe (ベンチに座る)."
+      ],
+      "examples": [
+        "ポンゴ[は]{公園|こうえん}[で]{走|はし}ります。",
+        "{水|みず}[を]{飲|の}みます。",
+        "ベンチ[に]{座|すわ}ります。"
+      ]
+    },
+    {
+      "id": "order",
+      "title": "Ordem da frase (SOV)",
+      "jp": "{語順|ごじゅん}",
+      "body": [
+        "O verbo fica sempre no final.",
+        "Ordem neutra: Tópico + (Tempo) + (Lugar) + (Objeto) + Verbo.",
+        "As partículas dizem a função de cada parte, por isso a ordem do meio é flexível."
+      ],
+      "examples": ["ポンゴ[は] / {公園|こうえん}[で] / {走|はし}っています。"]
+    }
+  ]
+}
