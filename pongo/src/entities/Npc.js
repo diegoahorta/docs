@@ -1,5 +1,5 @@
 // NPC canino: sprite animado, plaquinha com o nome e indicador "!" quando há algo novo.
-import { ART_SCALE, CHAR_FRAME } from '../art/register.js'
+import { charInfo } from '../art/register.js'
 import { plain } from '../lang/ruby.js'
 import { NPCS } from '../core/content.js'
 import { FONT } from '../art/canvas.js'
@@ -12,8 +12,8 @@ export class Npc {
     this.y = groundY
     this.sprite = scene.add
       .sprite(x, groundY, id, 'idle_0')
-      .setOrigin(0.5, CHAR_FRAME.footY / CHAR_FRAME.h)
-      .setScale(1 / ART_SCALE)
+      .setOrigin(0.5, charInfo(id).originY)
+      .setScale(charInfo(id).scale)
       .setFlipX(flip)
       .setDepth(15)
     this.sprite.play(`${id}-idle`)

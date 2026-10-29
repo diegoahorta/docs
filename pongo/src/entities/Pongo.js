@@ -1,13 +1,12 @@
 // Pongo: corpo físico (zona invisível) + sprite visual sincronizado.
 // Separar os dois permite squash & stretch sem afetar as colisões.
 import * as Phaser from 'phaser'
-import { ART_SCALE, CHAR_FRAME } from '../art/register.js'
+import { charInfo } from '../art/register.js'
 import { GRAVITY } from '../core/constants.js'
 import { learn } from '../systems/actionSystem.js'
 import { sfx } from '../core/audio.js'
 import { setting } from '../core/store.js'
 
-const BASE = 1 / ART_SCALE
 const W = 54
 const H = 64
 
@@ -19,10 +18,13 @@ export class Pongo {
     this.body = this.zone.body
     this.body.setCollideWorldBounds(true)
     this.body.setMaxVelocity(700, 1200)
+    const info = charInfo('pongo')
+    this.base = info.scale
+    this.ownShadow = info.hasShadow
     this.sprite = scene.add
       .sprite(x, groundY, 'pongo', 'idle_0')
-      .setOrigin(0.5, CHAR_FRAME.footY / CHAR_FRAME.h)
-      .setScale(BASE)
+      .setOrigin(0.5, info.originY)
+      .setScale(this.base)
       .setDepth(20)
     this.shadow = scene.add.ellipse(x, groundY, 50, 10, 0x5f7f6a, 0.22).setDepth(19)
     this.facing = 1
@@ -85,11 +87,11 @@ export class Pongo {
   squash(sx, sy, dur = 160) {
     if (setting('reducedMotion')) return
     this.scene.tweens.killTweensOf(this.sprite)
-    this.sprite.setScale(BASE * sx, BASE * sy)
+    this.sprite.setScale(this.base * sx, this.base * sy)
     this.scene.tweens.add({
       targets: this.sprite,
-      scaleX: BASE,
-      scaleY: BASE,
+      scaleX: this.base,
+      scaleY: this.base,
       duration: dur,
       ease: 'Back.Out'
     })
@@ -103,7 +105,9 @@ export class Pongo {
     } else {
       this.sprite.setPosition(b.center.x, b.bottom + (this.state === 'swim' ? 22 : 0))
     }
-    this.shadow.setVisible(!this.inWater && !this.attached)
+    this.shadow.setVisible(
+      !this.inWater && !this.attached && (!this.ownShadow || !this.onGround)
+    )
     this.shadow.setPosition(b.center.x, this.groundUnder ?? b.bottom)
     const h = Math.max(0, (this.groundUnder ?? b.bottom) - b.bottom)
     this.shadow.setScale(Math.max(0.3, 1 - h / 300))

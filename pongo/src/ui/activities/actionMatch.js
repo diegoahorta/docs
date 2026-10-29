@@ -9,18 +9,8 @@ import { speak } from '../../core/tts.js'
 import { jpHTML } from '../dom.js'
 import { feedback, progressDots, verbLabel } from './common.js'
 
-const POOL = [
-  'run',
-  'jump',
-  'drink',
-  'eat',
-  'read',
-  'sleep',
-  'swim',
-  'sit',
-  'walk',
-  'write'
-]
+// (nadar fica de fora: sem a água, a animação se confundiria com correr)
+const POOL = ['run', 'jump', 'drink', 'eat', 'read', 'sleep', 'sit', 'walk', 'write']
 
 /** Imagem animada a partir dos quadros do spritesheet. Retorna { el, stop }. */
 export function animatedSprite(sheet, anim, cls = 'anim-sprite') {

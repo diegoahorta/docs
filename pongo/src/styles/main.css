@@ -1111,6 +1111,8 @@ ruby rt {
 }
 .seq-slot {
   white-space: nowrap;
+  word-break: keep-all;
+  flex: none;
   padding: 0 12px;
   min-width: 96px;
   min-height: 56px;

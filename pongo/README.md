@@ -160,13 +160,14 @@ pongo/
 ├── package.json · vite.config.js · eslint.config.js · .prettierrc.json
 ├── public/
 │   ├── favicon.svg
-│   └── assets/manifest.json   # (opcional) spritesheet oficial do Pongo
 ├── tools/sprites.html         # prévia de todos os sprites (dev)
 ├── tests/                     # testes de gramática, romaji, furigana e frases
 └── src/
     ├── main.js                # inicialização, navegação entre cenas/telas
     ├── art/                   # arte procedural em Canvas 2D (sem arquivos de imagem)
-    │   ├── dog.js             #   Pongo + NPCs caninos + poses das animações
+    │   ├── imported.js        #   arte oficial: quadros ilustrados → animações
+    │   ├── props.js           #   objetos sobre os quadros (onigiri, livro…)
+    │   ├── dog.js             #   versão procedural (reserva) dos personagens
     │   ├── silence.js         #   Professor Silêncio
     │   ├── scenery.js         #   cenário, brinquedos, partículas
     │   ├── sheets.js          #   montagem dos spritesheets (2× para telas retina)
@@ -201,35 +202,35 @@ pongo/
 - **Phaser** cuida do mundo do jogo (física, câmera, cenas). A **interface é DOM** animada com **GSAP**:
   isso dá `<ruby>` nativo para furigana, acessibilidade e arrastar e soltar confiável no toque.
 - **Os dados ficam separados da lógica**: para adicionar verbos, frases ou missões, basta editar os JSON.
-- **Nenhum asset é obrigatório**: toda a arte é gerada em canvas, então não existe "imagem não encontrada".
+- **Nenhum asset é obrigatório**: os sprites ilustrados são importados pelo Vite e, se faltarem, o jogo
+  usa a versão procedural; o cenário é todo gerado em canvas.
 - **Limpeza ao trocar de cena**: listeners do barramento, tweens, timers e controles são removidos no
   evento `shutdown` de cada cena.
 - **As regras de língua são puras** (`src/lang`) e testadas com `node --test`.
 
-### Usar o sprite oficial do Pongo (ODU Creative)
+### Arte oficial dos personagens (ODU Creative)
 
-O Pongo procedural é um placeholder original. Para usar a arte oficial, coloque o spritesheet em
-`public/assets/pongo/` e edite `public/assets/manifest.json`:
+Os personagens usam os **spritesheets ilustrados** guardados em `art-source/`:
 
-```json
-{
-  "pongo": {
-    "image": "assets/pongo/pongo_sheet.png",
-    "frameWidth": 352,
-    "frameHeight": 352,
-    "animations": {
-      "idle": [0, 5, 6, -1],
-      "walk": [6, 13, 12, -1],
-      "run": [14, 21, 16, -1],
-      "jump": [22, 23, 10, 0]
-    }
-  }
-}
+- `pongo-sheet.png`: Pongo (idle, walk, run, jump, sit, talk, sleep, interact, hurt, attack, emotes)
+- `cast-sheet.png`: Professor Silêncio, Taro, Momo e Kumi (idle, talk/happy, walk/fly)
+
+O script `tools/sprites/extract_sprites.py` recorta cada quadro (canal alfa para o Pongo; contornos +
+GrabCut para o elenco, cujo fundo tem um halo colorido), remove fundo e rótulos, alinha os pés numa
+mesma linha de base e gera `src/assets/sprites/<personagem>.webp` + `.json`:
+
+```bash
+pip install numpy scipy pillow opencv-python-headless
+python3 tools/sprites/extract_sprites.py
 ```
 
-Cada animação é `[primeiroQuadro, últimoQuadro, fps, repeat]`. Os quadros devem ter os pés a 94% da altura
-(`footY = 166/176`), com o personagem olhando para a direita. Animações ausentes caem para `idle`.
-Se o arquivo não existir, o jogo continua com a arte procedural.
+O mapeamento quadro → animação do jogo fica em `src/art/imported.js`. As ações sem quadro próprio
+(comer, beber, ler, escrever) reaproveitam poses do Pongo e desenham o objeto por cima (onigiri, água,
+livro e caderno, em `src/art/props.js`). Se alguma imagem não carregar, o jogo usa automaticamente a
+versão procedural daquele personagem (`src/art/dog.js`, `src/art/silence.js`).
+
+Para trocar a arte, substitua as imagens em `art-source/` (mantendo o layout) ou ajuste as caixas em
+`CAST` e as faixas em `extract_pongo()` no script.
 
 ### Adicionar um verbo
 
@@ -251,4 +252,4 @@ Three.js fica reservado para cenas especiais em 2.5D nas fases futuras; não é 
 
 ---
 
-© ODU Creative / ODU Kizuna. Personagens e arte do MVP são originais e gerados por código.
+© ODU Creative / ODU Kizuna. Personagens ilustrados: arte oficial ODU Creative; cenário gerado por código.

@@ -2,7 +2,7 @@
 import * as Phaser from 'phaser'
 import { GAME_W, GROUND_Y } from '../core/constants.js'
 import { buildParallax } from './parallax.js'
-import { ART_SCALE, CHAR_FRAME } from '../art/register.js'
+import { charInfo } from '../art/register.js'
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -21,34 +21,32 @@ export class TitleScene extends Phaser.Scene {
       .setOrigin(0)
       .setScrollFactor(0)
       .setDepth(2)
-    const oy = CHAR_FRAME.footY / CHAR_FRAME.h
-    const s = 1 / ART_SCALE
     this.pongo = this.add
       .sprite(GAME_W * 0.5, GROUND_Y, 'pongo', 'run_0')
-      .setOrigin(0.5, oy)
-      .setScale(s * 1.25)
+      .setOrigin(0.5, charInfo('pongo').originY)
+      .setScale(charInfo('pongo').scale * 1.25)
       .setScrollFactor(0)
       .setDepth(10)
     this.pongo.play('pongo-run')
     this.taro = this.add
       .sprite(GAME_W * 0.3, GROUND_Y, 'taro', 'happy_0')
-      .setOrigin(0.5, oy)
-      .setScale(s)
+      .setOrigin(0.5, charInfo('taro').originY)
+      .setScale(charInfo('taro').scale)
       .setScrollFactor(0)
       .setDepth(9)
     this.taro.play('taro-happy')
     this.momo = this.add
       .sprite(GAME_W * 0.72, GROUND_Y, 'momo', 'idle_0')
-      .setOrigin(0.5, oy)
-      .setScale(s)
+      .setOrigin(0.5, charInfo('momo').originY)
+      .setScale(charInfo('momo').scale)
       .setScrollFactor(0)
       .setDepth(9)
       .setFlipX(true)
     this.momo.play('momo-idle')
     this.kumi = this.add
       .sprite(GAME_W * 0.86, GROUND_Y, 'kumi', 'idle_0')
-      .setOrigin(0.5, oy)
-      .setScale(s)
+      .setOrigin(0.5, charInfo('kumi').originY)
+      .setScale(charInfo('kumi').scale)
       .setScrollFactor(0)
       .setDepth(9)
       .setFlipX(true)

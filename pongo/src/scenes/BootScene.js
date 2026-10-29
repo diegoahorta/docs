@@ -1,6 +1,7 @@
-// Gera toda a arte procedural e, se configurado, carrega o spritesheet oficial do Pongo.
+// Carrega a arte oficial (sprites ilustrados) e gera cenário e reservas procedurais.
 import * as Phaser from 'phaser'
 import { registerArt } from '../art/register.js'
+import { loadImported } from '../art/imported.js'
 import { bus } from '../core/events.js'
 
 export class BootScene extends Phaser.Scene {
@@ -8,32 +9,15 @@ export class BootScene extends Phaser.Scene {
     super('Boot')
   }
 
-  preload() {
-    // A versão em arquivo único (file://) não carrega arquivos externos.
-    if (import.meta.env.MODE === 'single') return
-    this.load.json('manifest', 'assets/manifest.json')
-    this.load.on('loaderror', (file) =>
-      console.warn(`[boot] asset opcional ausente: ${file.key}`)
-    )
-  }
-
   create() {
-    const manifest = this.cache.json.get('manifest') ?? {}
-    const official = manifest.pongo
-    if (official?.image && official.animations) {
-      this.load.image('pongo-official', official.image)
-      this.load.once('complete', () =>
-        this.finish(this.textures.exists('pongo-official') ? official : null)
-      )
-      this.load.start()
-    } else {
-      this.finish(null)
-    }
-  }
-
-  finish(override) {
-    registerArt(this, override)
-    bus.emit('boot:ready')
-    this.scene.start('Title')
+    loadImported().then((images) => {
+      for (const [id, img] of Object.entries(images)) {
+        if (!img)
+          console.warn(`[boot] sprite "${id}" indisponível; usando a arte procedural`)
+      }
+      registerArt(this, images)
+      bus.emit('boot:ready')
+      this.scene.start('Title')
+    })
   }
 }

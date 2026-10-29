@@ -22,6 +22,7 @@ import { verbTransformer } from '../ui/activities/verbTransformer.js'
 import { actionBoss } from '../ui/activities/actionBoss.js'
 import { openVictory } from '../ui/screens/victory.js'
 import { FONT } from '../art/canvas.js'
+import { charInfo } from '../art/register.js'
 
 const LEVEL = 'park'
 const POND = [4780, 5180]
@@ -461,8 +462,8 @@ export class ParkScene extends Phaser.Scene {
     this.barrierSolid = this.solid(6230, GROUND_Y - 400, 80, 400)
     this.silence = this.add
       .sprite(6140, GROUND_Y - 30, 'silence', 'float_0')
-      .setOrigin(0.5, 166 / 176)
-      .setScale(0.55)
+      .setOrigin(0.5, charInfo('silence').originY)
+      .setScale(charInfo('silence').imported ? 1.1 : 0.55)
       .setDepth(14)
     this.silence.play('silence-float')
     this.tweens.add({
