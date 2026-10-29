@@ -35,6 +35,16 @@ Para jogar no celular na mesma rede Wi-Fi, abra o endereço **Network** que o Vi
 | `npm run format`  | Formata o código com Prettier                    |
 | `npm run check`   | Lint + testes + build (use antes de publicar)    |
 
+### Versão em um único arquivo HTML
+
+```bash
+npm run build:html   # gera dist-single/pongo.html
+```
+
+O `pongo.html` (≈1,4 MB) traz todo o jogo embutido: HTML, CSS, JavaScript, Phaser, GSAP e a arte
+procedural. Abre com **duplo clique**, sem servidor e sem internet (só a fonte arredondada vem do
+Google Fonts; offline, o jogo usa a fonte do sistema). Uma cópia pronta está em `pongo/pongo.html`.
+
 ### Usando o Live Server
 
 O build usa caminhos relativos (`base: './'`), então funciona em qualquer servidor estático:

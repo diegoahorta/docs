@@ -9,6 +9,8 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    // A versão em arquivo único (file://) não carrega arquivos externos.
+    if (import.meta.env.MODE === 'single') return
     this.load.json('manifest', 'assets/manifest.json')
     this.load.on('loaderror', (file) =>
       console.warn(`[boot] asset opcional ausente: ${file.key}`)
