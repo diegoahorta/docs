@@ -31,7 +31,14 @@ jobs:
           java-version: "17"
       - uses: gradle/actions/setup-gradle@v4
       - name: Assemble debug APK
-        run: ./gradlew --stacktrace assembleDebug
+        run: |
+          set -o pipefail
+          ./gradlew --continue assembleDebug 2>&1 | tee build.log
+      - name: Compile error summary
+        if: failure()
+        run: |
+          echo "==== ERROR SUMMARY ===="
+          grep -E "^e: |error:|What went wrong|> " build.log | grep -v "^> Task" | head -150 || true
       - name: Unit tests
         run: ./gradlew testDebugUnitTest
       - name: Release build (R8, unsigned) and App Bundle
