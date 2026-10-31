@@ -23,3 +23,8 @@
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 -dontwarn java.beans.**
+# Gerador de JSON Schema (dependência transitiva do SDK, não usada pelo app) referencia APIs
+# de reflexão ausentes no Android.
+-dontwarn com.github.victools.**
+-dontwarn java.lang.reflect.AnnotatedType
+-dontwarn java.lang.reflect.AnnotatedParameterizedType

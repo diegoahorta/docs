@@ -41,13 +41,13 @@ jobs:
           grep -E "^e: |error:|What went wrong|> " build.log | grep -v "^> Task" | head -150 || true
       - name: Unit tests
         run: ./gradlew testDebugUnitTest
-      - name: Release build (R8, unsigned) and App Bundle
-        run: ./gradlew assembleRelease bundleRelease
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: odu-reader/app/build/outputs/apk/debug/app-debug.apk
+      - name: Release build (R8, unsigned) and App Bundle
+        run: ./gradlew assembleRelease bundleRelease
       - name: Upload release outputs (unsigned)
         uses: actions/upload-artifact@v4
         with:
