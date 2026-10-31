@@ -2,7 +2,7 @@ package com.oducreative.reader.features.studytools
 
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.errors.AnthropicServiceException
-import com.anthropic.errors.AuthenticationException
+import com.anthropic.errors.UnauthorizedException
 import com.anthropic.errors.RateLimitException
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.MessageCreateParams
@@ -64,8 +64,10 @@ class AiAssistant {
                     .joinToString("\n")
                     .trim()
                     .ifEmpty { error("Resposta vazia do serviço de IA.") }
-            } catch (e: AuthenticationException) {
+            } catch (e: UnauthorizedException) {
                 throw IllegalStateException("Chave de API inválida. Verifique-a nas configurações.", e)
+            } catch (e: com.anthropic.errors.AnthropicIoException) {
+                throw IllegalStateException("Falha de conexão com o serviço de IA. Verifique a internet.", e)
             } catch (e: RateLimitException) {
                 throw IllegalStateException("Limite de uso atingido. Tente novamente em instantes.", e)
             } catch (e: AnthropicServiceException) {
