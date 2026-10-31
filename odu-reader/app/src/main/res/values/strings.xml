@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ODU Reader</string>
+    <string name="tagline">Read. Learn. Explore.</string>
+    <string name="nav_library">Biblioteca</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_annotations">Anotações</string>
+    <string name="nav_study">Estudo</string>
+    <string name="nav_dashboard">Painel</string>
+    <string name="nav_settings">Configurações</string>
+    <string name="action_import">Importar</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_remove">Remover</string>
+    <string name="action_rename">Renomear</string>
+    <string name="action_back">Voltar</string>
+    <string name="action_close">Fechar</string>
+    <string name="action_ok">OK</string>
+    <string name="library_empty_title">Sua biblioteca está vazia</string>
+    <string name="library_empty_message">Importe arquivos PDF ou EPUB do seu aparelho para começar a ler — tudo funciona offline.</string>
+    <string name="search_hint">Pesquisar títulos e autores</string>
+    <string name="tts_play">Ouvir</string>
+    <string name="tts_pause">Pausar</string>
+    <string name="tts_resume">Continuar</string>
+    <string name="tts_stop">Parar</string>
+    <string name="tts_next">Próximo trecho</string>
+    <string name="bookmark_add">Adicionar marcador</string>
+    <string name="reader_contents">Sumário</string>
+    <string name="reader_bookmarks">Marcadores</string>
+    <string name="reader_notes">Notas</string>
+    <string name="reader_settings">Aparência</string>
+</resources>

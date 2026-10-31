@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="odu_primary">#5B3FD9</color>
+    <color name="odu_accent">#F2A93B</color>
+    <color name="odu_background">#FBF8FF</color>
+    <color name="odu_splash_background">#1B1340</color>
+    <color name="ic_launcher_background">#1B1340</color>
+</resources>

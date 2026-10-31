@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.OduReader" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/odu_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.OduReader.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/odu_splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">600</item>
+        <item name="postSplashScreenTheme">@style/Theme.OduReader</item>
+    </style>
+</resources>
