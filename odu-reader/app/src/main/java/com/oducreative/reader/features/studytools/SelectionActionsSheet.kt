@@ -30,7 +30,7 @@ import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.Extension
-import androidx.compose.material.icons.outlined.MenuBook
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material.icons.outlined.Translate
@@ -135,7 +135,7 @@ fun SelectionActionsSheet(
                         AssistChip(onClick = { mode = Mode.NOTE }, label = { Text("Nota") }, leadingIcon = { Icon(Icons.Outlined.EditNote, null) })
                         AssistChip(onClick = { copy(context, selection.text); onDismiss() }, label = { Text("Copiar") }, leadingIcon = { Icon(Icons.Outlined.ContentCopy, null) })
                         AssistChip(onClick = { vm.speak(selection); onDismiss() }, label = { Text("Ouvir") }, leadingIcon = { Icon(Icons.AutoMirrored.Outlined.VolumeUp, null) })
-                        AssistChip(onClick = { vm.lookup(selection.text.trim().split(Regex("\\s+")).first()); mode = Mode.RESULT }, label = { Text("Dicionário") }, leadingIcon = { Icon(Icons.Outlined.MenuBook, null) })
+                        AssistChip(onClick = { vm.lookup(selection.text.trim().split(Regex("\\s+")).first()); mode = Mode.RESULT }, label = { Text("Dicionário") }, leadingIcon = { Icon(Icons.AutoMirrored.Outlined.MenuBook, null) })
                         AssistChip(onClick = { vm.translate(selection.text, selection.language); mode = Mode.RESULT }, label = { Text("Traduzir") }, leadingIcon = { Icon(Icons.Outlined.Translate, null) })
                         AssistChip(onClick = { mode = Mode.FLASHCARD }, label = { Text("Flashcard") }, leadingIcon = { Icon(Icons.Outlined.Style, null) })
                         AssistChip(onClick = { mode = Mode.CHUNK }, label = { Text("Chunking") }, leadingIcon = { Icon(Icons.Outlined.Extension, null) })

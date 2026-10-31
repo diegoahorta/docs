@@ -47,7 +47,7 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.TextSnippet
+import androidx.compose.material.icons.automirrored.outlined.TextSnippet
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -237,7 +237,7 @@ fun PdfReaderScreen(bookId: Long, onBack: () -> Unit) {
                                 IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, "Mais opções") }
                                 DropdownMenu(menu, { menu = false }) {
                                     DropdownMenuItem(text = { Text("Ouvir a partir desta página") }, leadingIcon = { Icon(Icons.AutoMirrored.Outlined.VolumeUp, null) }, onClick = { vm.startTts(); menu = false })
-                                    DropdownMenuItem(text = { Text("Texto da página (selecionar)") }, leadingIcon = { Icon(Icons.Outlined.TextSnippet, null) }, onClick = { vm.loadPageText(state.currentPage); menu = false })
+                                    DropdownMenuItem(text = { Text("Texto da página (selecionar)") }, leadingIcon = { Icon(Icons.AutoMirrored.Outlined.TextSnippet, null) }, onClick = { vm.loadPageText(state.currentPage); menu = false })
                                     if (settings.ocrEnabled) {
                                         DropdownMenuItem(text = { Text("Reconhecer texto (OCR)") }, leadingIcon = { Icon(Icons.Outlined.DocumentScanner, null) }, onClick = { vm.runOcr(state.currentPage); menu = false })
                                     }
