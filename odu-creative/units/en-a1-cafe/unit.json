@@ -3113,6 +3113,189 @@
       "text": "Can I have an orange juice, please?",
       "speaker": "Narrator",
       "src": "audio/lines/9c4a86460b.mp3"
+    },
+    "c417f24d06": {
+      "text": "I'd like a hot chocolate, please.",
+      "speaker": "Ana",
+      "src": "audio/lines/c417f24d06.mp3"
+    },
+    "88c43d0fca": {
+      "text": "a hot chocolate",
+      "speaker": "Narrator",
+      "src": "audio/lines/88c43d0fca.mp3"
+    },
+    "28ec9c41d1": {
+      "text": "Can I have an orange juice, please?",
+      "speaker": "Ana",
+      "src": "audio/lines/28ec9c41d1.mp3"
+    },
+    "b33487dd5f": {
+      "text": "an orange juice",
+      "speaker": "Narrator",
+      "src": "audio/lines/b33487dd5f.mp3"
+    },
+    "352b0cb0ce": {
+      "text": "I'd like an apple juice, please.",
+      "speaker": "Ana",
+      "src": "audio/lines/352b0cb0ce.mp3"
+    },
+    "03016a6567": {
+      "text": "an apple juice",
+      "speaker": "Narrator",
+      "src": "audio/lines/03016a6567.mp3"
+    },
+    "2cf1fa6546": {
+      "text": "Can I have a milkshake, please?",
+      "speaker": "Ana",
+      "src": "audio/lines/2cf1fa6546.mp3"
+    },
+    "5838b0ef10": {
+      "text": "a milkshake",
+      "speaker": "Narrator",
+      "src": "audio/lines/5838b0ef10.mp3"
+    },
+    "34b0f8fe02": {
+      "text": "Can I have a bottle of water, please?",
+      "speaker": "Ana",
+      "src": "audio/lines/34b0f8fe02.mp3"
+    },
+    "ee3c55d0cb": {
+      "text": "a bottle of water",
+      "speaker": "Narrator",
+      "src": "audio/lines/ee3c55d0cb.mp3"
+    },
+    "05ceb6cfd8": {
+      "text": "I'd like a cheese sandwich, please.",
+      "speaker": "Ana",
+      "src": "audio/lines/05ceb6cfd8.mp3"
+    },
+    "2aa6af8709": {
+      "text": "a cheese sandwich",
+      "speaker": "Narrator",
+      "src": "audio/lines/2aa6af8709.mp3"
+    },
+    "324582d5a0": {
+      "text": "Can I have an egg sandwich, please?",
+      "speaker": "Ana",
+      "src": "audio/lines/324582d5a0.mp3"
+    },
+    "01a6696cc6": {
+      "text": "an egg sandwich",
+      "speaker": "Narrator",
+      "src": "audio/lines/01a6696cc6.mp3"
+    },
+    "fcca9003af": {
+      "text": "I'd like a muffin, please.",
+      "speaker": "Ana",
+      "src": "audio/lines/fcca9003af.mp3"
+    },
+    "51a6877971": {
+      "text": "a muffin",
+      "speaker": "Narrator",
+      "src": "audio/lines/51a6877971.mp3"
+    },
+    "367bb0dfe9": {
+      "text": "Can I have a cookie, please?",
+      "speaker": "Ana",
+      "src": "audio/lines/367bb0dfe9.mp3"
+    },
+    "8ae65ab920": {
+      "text": "a cookie",
+      "speaker": "Narrator",
+      "src": "audio/lines/8ae65ab920.mp3"
+    },
+    "e399db3204": {
+      "text": "I'd like an apple pie, please.",
+      "speaker": "Ana",
+      "src": "audio/lines/e399db3204.mp3"
+    },
+    "a615f05519": {
+      "text": "an apple pie",
+      "speaker": "Narrator",
+      "src": "audio/lines/a615f05519.mp3"
     }
+  },
+  "flashcards": {
+    "title": "Flashcards 3D",
+    "model": "3d/cafe-flashcards.glb",
+    "modelSource": "tools/blender/build_cafe_models.py",
+    "studyRound": 8,
+    "rushOrders": 10,
+    "cards": [
+      {
+        "vocab": "v1",
+        "model": "item-hot-chocolate",
+        "order": "I'd like a hot chocolate, please."
+      },
+      {
+        "vocab": "v2",
+        "model": "item-orange-juice",
+        "order": "Can I have an orange juice, please?"
+      },
+      {
+        "vocab": "v3",
+        "model": "item-apple-juice",
+        "order": "I'd like an apple juice, please."
+      },
+      {
+        "vocab": "v4",
+        "model": "item-milkshake",
+        "order": "Can I have a milkshake, please?"
+      },
+      {
+        "vocab": "v5",
+        "model": "item-water",
+        "order": "Can I have a bottle of water, please?"
+      },
+      {
+        "vocab": "v6",
+        "model": "item-cheese-sandwich",
+        "order": "I'd like a cheese sandwich, please."
+      },
+      {
+        "vocab": "v7",
+        "model": "item-egg-sandwich",
+        "order": "Can I have an egg sandwich, please?"
+      },
+      {
+        "vocab": "v8",
+        "model": "item-muffin",
+        "order": "I'd like a muffin, please."
+      },
+      {
+        "vocab": "v9",
+        "model": "item-cookie",
+        "order": "Can I have a cookie, please?"
+      },
+      {
+        "vocab": "v10",
+        "model": "item-apple-pie",
+        "order": "I'd like an apple pie, please."
+      },
+      {
+        "vocab": "v11",
+        "model": "item-sizes"
+      },
+      {
+        "vocab": "v12",
+        "model": "item-here-or-go"
+      },
+      {
+        "vocab": "v13",
+        "model": "item-price-tag"
+      },
+      {
+        "vocab": "v14",
+        "model": "item-here-you-are"
+      },
+      {
+        "vocab": "v15",
+        "model": "item-change"
+      },
+      {
+        "vocab": "v16",
+        "model": "item-anything-else"
+      }
+    ]
   }
 }

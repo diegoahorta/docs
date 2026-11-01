@@ -44,6 +44,7 @@ Abra `index.html?unit=<id>` para carregar diretamente.
 | `game` | `missions[].steps[]`: `npc`, `npcPt`, `choices[]` (`text`, `ok`, `fb`), `match` (para escrita/fala), `pay`, `ticketDone`, `end`. |
 | `speaking` | `repeatSegments`, `shadowTrack`, `substitution`, `respond[]`, `create`. |
 | `writing`, `assessment`, `references[]` | Produção escrita, referência de prova, bibliografia. |
+| `flashcards` | Jogo 3D: `model` (GLB da unidade), `studyRound`, `rushOrders`, `cards[]` (`vocab`, `model` = nome do objeto no GLB, `order` = pedido falado no Café Rush). |
 | `lines` | Gerado por `build-audio`: mapa de frases isoladas → MP3. |
 
 ### Tipos de questão

@@ -17,6 +17,7 @@ lê o cardápio, entende a atendente e consegue pedir o que quer.
 | 4 · **Practice Zone** | `js/modules/practice.js`, `js/components/question.js` | Etapas A (reconhecimento), B (compreensão com áudio), C (manipulação: lacunas, blocos, transformação, associação), D (produção livre com critérios verificáveis) e Avaliação inspirada no Cambridge A1 Movers. Cada resposta: acerto/erro, explicação, justificativa do distrator, correção comentada, tentar de novo e link de revisão. |
 | 5 · **Speaking Studio** | `js/modules/speaking.js` | Listen, Repeat, Shadow, Substitute, Respond, Create; role-play com papéis alternados; tempo de resposta configurável; gravação (MediaRecorder) com medidor de volume (Web Audio API) e reprodução; transcrição automática como auxílio; **modo sem microfone**. Não há nota de pronúncia. |
 | 6 · **Gamificação** | `js/core/gamify.js`, `js/modules/progress.js` | XP (erro nunca tira ponto), 11 medalhas, sequência de dias, barras de progresso, animações discretas de acerto/erro. |
+| **Flashcards 3D** (jogo) | `js/modules/flashcards.js`, `js/three/`, `tools/blender/` | Jogo 3D para pré-adolescentes com modelos feitos no **Blender** e exibidos com **Three.js**: **Estudar** (cartas que viram, com o objeto 3D, áudio, direção EN→PT ou PT→EN, gesto de arrastar e caixas de Leitner por carta), **Memória 3D** (palavra com a/an ↔ objeto 3D) e **Café Rush** (o cliente pede em áudio, o aluno serve o item no balcão e completa a/an; pontos, combo e tempo, sem punição). Cada ação 3D tem botão HTML e atalho de teclado; sem WebGL, o modo Estudar funciona em 2D. |
 | 7 · **Revisão espaçada** | `js/core/srs.js`, `js/modules/review.js` | Registro por competência; status *Ainda não dominado / Em desenvolvimento / Consolidado*; intervalos ajustáveis; desafio de revisão com itens em **novos contextos**. |
 | 8 · **Document Generator** | `js/core/docx-builder.js`, `js/modules/docs.js`, `tools/build-docx.mjs` | Apostila DOCX com as 17 seções exigidas, versão do **aluno** e do **professor** (gabarito comentado, distratores, orientações). Gerada no navegador ou na linha de comando (esta inclui QR codes). |
 | 9 · **Painel do professor** | `js/modules/teacher.js` | Unidade ativa, metadados (idioma, nível, idade…), capa, duplicar/exportar/importar unidades, importar áudio e transcrições (VTT/SRT/JSON), **ferramenta de marcação de tempos**, editores JSON validados de padrões, gramática e atividades com pré-visualização, critérios de avaliação, importação de progresso dos alunos e relatório CSV. |
@@ -57,6 +58,8 @@ npm install
 ```bash
 npm run build:html
 ```
+
+**Só o jogo de flashcards:** `dist/odu-flashcards.html` (≈5 MB) abre direto no jogo 3D, sem menu lateral.
 
 ### Opção 2 — servidor local (desenvolvimento)
 
@@ -101,6 +104,24 @@ npm run build:audio
 ```bash
 npm run build:docx -- --audio-base https://seu-site.com/odu-creative/units/en-a1-cafe/
 ```
+
+### Modelos 3D (Blender)
+
+Os modelos do jogo (carta, 16 objetos do vocabulário, cliente e cafeteria) são gerados **por código**
+em `tools/blender/build_cafe_models.py` — dá para alterar cores, formas e tamanhos e gerar de novo:
+
+```bash
+sudo apt-get install blender python3-numpy
+```
+
+```bash
+npm run build:models
+```
+
+Saída: `units/en-a1-cafe/3d/cafe-flashcards.glb` (glTF binário). Para conferir os modelos,
+abra http://localhost:8080/tools/blender/preview.html (`?view=scene` mostra o cenário).
+Para usar modelos feitos à mão no Blender, exporte em glTF mantendo os nomes `Card`,
+`item-<nome>` e `Customer`, e os materiais `CardFront`/`CardBack` da carta.
 
 Sem `--audio-base`, a apostila indica onde ouvir na plataforma em vez de links/QR codes.
 As apostilas prontas ficam em `units/en-a1-cafe/docs/`.

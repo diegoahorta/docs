@@ -263,3 +263,39 @@ details.card[open] > summary { margin-bottom: 12px; }
   .app-header, .side-nav, .bottom-nav, .toast-region { display: none; }
   .main { padding: 0; }
 }
+
+/* ---------- Flashcards 3D ---------- */
+.fc-mode { text-align: left; font: inherit; cursor: pointer; border: 1px solid var(--line); }
+.fc-mode:hover { border-color: var(--brand); }
+.fc-play { padding: 12px; }
+.fc-hud { margin-bottom: 8px; }
+.fc-pill { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: .85rem; font-weight: 700; }
+.fc-canvas { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); background: #ffe9c7; min-height: 300px; }
+.fc-canvas canvas { display: block; width: 100%; touch-action: pan-y; }
+.fc-overlay { position: absolute; inset: 0; pointer-events: none; }
+.fc-overlay .notice { pointer-events: auto; margin: 12px; }
+.fc-loading { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; font-weight: 700; color: #5a3a24; }
+.fc-bubble { position: absolute; transform: translate(-50%, -100%); max-width: min(320px, 80%); background: #fff; color: #1d1a2b; border: 3px solid var(--brand); border-radius: 18px; padding: 8px 12px; font-size: 1rem; box-shadow: 0 6px 18px rgb(0 0 0 / .15); }
+.fc-bubble::after { content: ""; position: absolute; left: 50%; bottom: -12px; border: 9px solid transparent; border-top-color: var(--brand); transform: translateX(-50%); }
+.fc-controls { margin-top: 12px; display: grid; gap: 10px; }
+.fc-main-actions .btn { flex: 1 1 130px; }
+.fc-again { border-color: var(--accent); }
+.fc-know { border-color: var(--mint); }
+.fc-again:not(:disabled) { background: var(--accent-soft); }
+.fc-know:not(:disabled) { background: var(--mint-soft); }
+.fc-serve .btn { flex: 1; font-size: 1.05rem; }
+.fc-aan { padding: 10px 14px; border-radius: 14px; background: var(--brand-soft); }
+.fc-aan .btn { min-width: 80px; font-size: 1.2rem; }
+.fc-gap { display: inline-block; min-width: 3ch; border-bottom: 3px solid var(--brand); text-align: center; font-weight: 800; }
+.fc-result { text-align: center; display: grid; gap: 6px; justify-items: center; }
+.fc-mem-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.fc-mem-btn[aria-pressed="true"] { background: var(--brand-soft); border-color: var(--brand); }
+.fc-boxes { display: flex; gap: 10px; align-items: flex-end; }
+.fc-box { flex: 1; display: grid; justify-items: center; gap: 2px; }
+.fc-box-bar { width: 100%; max-width: 60px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, var(--brand), var(--accent)); }
+.fc-card2d { min-height: 220px; width: 100%; font: inherit; font-size: 1.6rem; font-weight: 800; border-radius: 20px; border: 2px solid var(--brand); background: var(--surface); color: var(--ink); cursor: pointer; padding: 20px; }
+
+/* Modo "somente jogo" (arquivo dist/odu-flashcards.html) */
+body.game-only .side-nav, body.game-only .bottom-nav { display: none; }
+body.game-only .layout { display: block; }
+body.game-only .main { padding-bottom: 32px; }

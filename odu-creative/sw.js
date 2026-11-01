@@ -4,7 +4,7 @@
  * - unit.json: network-first (edições publicadas aparecem logo), com fallback ao cache.
  * - Áudios: cache-first ao serem ouvidos pela primeira vez (respostas 206 parciais não são guardadas).
  */
-const CACHE = 'odu-v1';
+const CACHE = 'odu-v2';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'assets/icon.svg', 'css/tokens.css', 'css/app.css', 'vendor/gsap.min.js',
   'js/main.js', 'js/core/dom.js', 'js/core/store.js', 'js/core/srs.js', 'js/core/evaluate.js', 'js/core/audio-sync.js',
@@ -12,6 +12,8 @@ const SHELL = [
   'js/components/question.js', 'js/components/player.js',
   'js/modules/home.js', 'js/modules/quest.js', 'js/modules/listening.js', 'js/modules/discover.js', 'js/modules/grammar.js',
   'js/modules/practice.js', 'js/modules/speaking.js', 'js/modules/review.js', 'js/modules/progress.js', 'js/modules/docs.js', 'js/modules/teacher.js',
+  'js/modules/flashcards.js', 'js/three/cafe3d.js', 'js/three/card-art.js',
+  'vendor/three/three.module.min.js', 'vendor/three/addons/loaders/GLTFLoader.js', 'vendor/three/addons/utils/BufferGeometryUtils.js',
   'units/index.json', 'units/en-a1-cafe/unit.json',
 ];
 

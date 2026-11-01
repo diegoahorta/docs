@@ -10,6 +10,7 @@ const FLOW = [
   { stage: 'OUTPUT', path: 'practice', icon: '🧩', title: 'Practice Zone', text: 'Reconhecer → compreender → manipular → produzir + avaliação.', module: 'practice' },
   { stage: 'OUTPUT', path: 'speaking', icon: '🎤', title: 'Speaking Studio', text: 'Listen, Repeat, Shadow, Substitute, Respond, Create.', module: 'speaking' },
   { stage: 'FEEDBACK', path: 'progress', icon: '🏅', title: 'Progresso', text: 'Pontos, medalhas e domínio por competência.' },
+  { stage: 'REVIEW', path: 'flashcards', icon: '🃏', title: 'Flashcards 3D', text: 'Jogo 3D: estude cartas, jogue a memória e atenda clientes no Café Rush.', module: 'flashcards' },
   { stage: 'REVIEW', path: 'review', icon: '🔁', title: 'Revisão espaçada', text: 'Desafios em novos contextos no momento certo.', module: 'review' },
 ];
 

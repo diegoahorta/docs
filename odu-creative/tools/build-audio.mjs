@@ -149,6 +149,11 @@ if (!flags.has('--tracks-only')) {
   for (const r of unit.speaking.respond) add(r.model, 'Leo');
   for (const g of unit.grammar) for (const ex of g.examples) add(ex.en, 'Narrator');
   for (const s of unit.discover?.sentences || []) add(chunksToText(s.chunks), 'Narrator');
+  for (const c of unit.flashcards?.cards || []) {
+    if (c.order) add(c.order, 'Ana');
+    const v = unit.vocabulary.find((x) => x.id === c.vocab);
+    if (v?.article) add(`${v.article} ${v.term}`, 'Narrator'); // ex.: "an orange juice" (cartas de palavra)
+  }
   unit.lines = lines;
   console.log(`✔ ${Object.keys(lines).length} falas isoladas em audio/lines/`);
 }

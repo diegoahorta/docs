@@ -5,16 +5,21 @@
  *
  * Embute: CSS, JavaScript (módulos unidos com esbuild), GSAP, biblioteca docx,
  * as unidades de units/index.json, seus áudios (MP3 em base64) e as apostilas DOCX prontas.
- * Uso: node tools/build-standalone.mjs [saida.html]
+ * Uso: node tools/build-standalone.mjs [saida.html] [--game flashcards]
+ *   --game <rota>  gera um arquivo "somente jogo": abre direto na rota, sem menu lateral.
  */
 import { build } from 'esbuild';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, extname, relative, resolve } from 'node:path';
 
 const root = resolve(new URL('..', import.meta.url).pathname);
-const out = resolve(process.argv[2] || join(root, 'dist', 'odu-creative.html'));
+const argv = process.argv.slice(2);
+const gi = argv.indexOf('--game');
+const game = gi >= 0 ? argv[gi + 1] : null;
+const positional = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--game');
+const out = resolve(positional[0] || join(root, 'dist', game ? `odu-${game}.html` : 'odu-creative.html'));
 const read = (p) => readFileSync(join(root, p), 'utf8');
-const MIME = { '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const MIME = { '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.svg': 'image/svg+xml', '.png': 'image/png', '.glb': 'model/gltf-binary' };
 const dataUrl = (abs) => `data:${MIME[extname(abs)]};base64,${readFileSync(abs).toString('base64')}`;
 /** Impede que "</script>" dentro do conteúdo feche a tag antes da hora. */
 const safe = (s) => s.replace(/<\/(script)/gi, '<\\/$1').replace(/<!--/g, '<\\!--');
@@ -29,10 +34,16 @@ const units = {};
 const assets = {};
 for (const { id } of index) {
   units[id] = JSON.parse(read(`units/${id}/unit.json`));
-  for (const sub of ['audio', 'docs']) {
+  for (const sub of ['audio', 'docs', '3d']) {
     const dir = join(root, 'units', id, sub);
     if (!existsSync(dir)) continue;
-    for (const f of walk(dir)) if (MIME[extname(f)]) assets[relative(root, f).split('\\').join('/')] = dataUrl(f);
+    for (const f of walk(dir)) {
+      if (!MIME[extname(f)]) continue;
+      const rel = relative(root, f).split('\\').join('/');
+      // arquivo "somente jogo": só modelos 3D e falas curtas (sem faixas longas nem apostilas)
+      if (game && !(sub === '3d' || rel.includes('/audio/lines/'))) continue;
+      assets[rel] = dataUrl(f);
+    }
   }
 }
 
@@ -56,7 +67,8 @@ html = html
   .replace(/\s*<script type="module" src="js\/main\.js"><\/script>/, '')
   .replace(/\s*<script>\s*if \(location\.protocol === 'file:'\)[\s\S]*?<\/script>/, '');
 
-const embed = { index, units, assets, builtAt: new Date().toISOString() };
+const embed = { index, units, assets, builtAt: new Date().toISOString(), ...(game ? { start: game, gameOnly: true } : {}) };
+if (game) html = html.replace(/<title>[^<]*<\/title>/, `<title>ODU CREATIVE — ${game === 'flashcards' ? 'Flashcards 3D' : game}</title>`);
 const tail = [
   `<script>window.__ODU_EMBED__=${safe(JSON.stringify(embed))};</script>`,
   `<script>${safe(read('vendor/docx.iife.js'))}\n;window.docx=docx;</script>`,

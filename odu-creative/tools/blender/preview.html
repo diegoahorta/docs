@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ODU — visualizador dos modelos 3D</title>
+<style>body{margin:0;background:#f6f5fb;font-family:system-ui,sans-serif}canvas{display:block}#info{position:fixed;left:12px;top:8px;color:#1d1a2b}</style>
+<script type="importmap">{ "imports": { "three": "../../vendor/three/three.module.min.js", "three/addons/": "../../vendor/three/addons/" } }</script>
+</head>
+<body>
+<div id="info">Modelos gerados pelo Blender (tools/blender/build_cafe_models.py) — <span id="count"></span></div>
+<script type="module">
+/* Ferramenta de conferência: mostra a carta, os 16 itens, o cliente e o cenário lado a lado. */
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const view = new URLSearchParams(location.search).get('view') || 'items';
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight); renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+document.body.append(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#f6f5fb');
+scene.add(new THREE.HemisphereLight('#ffffff', '#b9a8ff', 1.6));
+const sun = new THREE.DirectionalLight('#ffffff', 2.2); sun.position.set(3, 5, 4); scene.add(sun);
+const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 100);
+const gltf = await new GLTFLoader().loadAsync('../../units/en-a1-cafe/3d/cafe-flashcards.glb');
+const byName = (n) => gltf.scene.getObjectByName(n);
+if (view === 'scene') {
+  scene.add(gltf.scene);
+  gltf.scene.children.filter((o) => o.name.startsWith('item-') || o.name === 'Card').forEach((o) => (o.visible = false));
+  camera.position.set(0, 1.75, 3.4); camera.lookAt(0, 1.2, 0);
+} else {
+  const items = gltf.scene.children.filter((o) => o.name.startsWith('item-'));
+  items.push(byName('Card'));
+  items.forEach((o, i) => {
+    const c = o.clone(); c.position.set((i % 6) * 0.9 - 2.25, -Math.floor(i / 6) * 0.95 + 0.9, 0); c.rotation.set(0.35, -0.5, 0);
+    if (o.name === 'Card') c.position.y += 0.35;
+    scene.add(c);
+  });
+  camera.position.set(0, 0.25, 4.6); camera.lookAt(0, 0.25, 0);
+  document.getElementById('count').textContent = `${items.length - 1} itens + carta`;
+}
+renderer.render(scene, camera);
+window.__ready = true;
+</script>
+</body>
+</html>

@@ -23,6 +23,7 @@ export const ROUTES = [
   { path: 'speaking', stage: 'OUTPUT', icon: '🎤', label: 'Speaking Studio', load: () => import('./modules/speaking.js'), module: 'speaking' },
   { path: 'progress', stage: 'FEEDBACK', icon: '🏅', label: 'Progresso e medalhas', load: () => import('./modules/progress.js') },
   { path: 'review', stage: 'REVIEW', icon: '🔁', label: 'Revisão espaçada', load: () => import('./modules/review.js'), module: 'review' },
+  { path: 'flashcards', stage: 'REVIEW', icon: '🃏', label: 'Flashcards 3D', load: () => import('./modules/flashcards.js'), module: 'flashcards' },
   { path: 'docs', stage: 'MATERIAIS', icon: '📄', label: 'Apostila (DOCX)', load: () => import('./modules/docs.js') },
   { path: 'teacher', stage: 'MATERIAIS', icon: '👩‍🏫', label: 'Painel do professor', load: () => import('./modules/teacher.js') },
 ];
@@ -92,6 +93,10 @@ const ctx = {
     stopAll();
   },
   go(hash) { location.hash = hash; },
+  /** Registra uma limpeza para quando o usuário sair da tela atual (ex.: liberar WebGL). */
+  leaveFns: [],
+  onLeave(fn) { ctx.leaveFns.push(fn); },
+  runLeave() { const fns = ctx.leaveFns.splice(0); for (const fn of fns) { try { fn(); } catch (e) { console.warn(e); } } },
   async reloadUnit(id) {
     ctx.disposePlayers();
     ctx.unit = await loadUnit(id);
@@ -105,10 +110,13 @@ const ctx = {
 globalThis.oduCtx = ctx; // útil para depuração no console
 
 /* ---------------- Navigation ---------------- */
+const EMBED = globalThis.__ODU_EMBED__ || {};
 function currentPath() {
   const raw = location.hash.replace(/^#\/?/, '');
   const [path, query] = raw.split('?');
-  return { path: path || 'home', params: new URLSearchParams(query || '') };
+  // Arquivo "somente jogo": a rota inicial (e o "Início") levam direto ao jogo
+  const fallback = EMBED.start || 'home';
+  return { path: !path || (EMBED.gameOnly && path === 'home') ? fallback : path, params: new URLSearchParams(query || '') };
 }
 
 function renderNav() {
@@ -136,6 +144,7 @@ async function route() {
   const token = ++renderToken;
   const { path, params } = currentPath();
   const r = ROUTES.find((x) => x.path === path) || ROUTES[0];
+  ctx.runLeave();
   ctx.disposePlayers();
   const main = $('#main');
   try {
@@ -159,6 +168,7 @@ async function route() {
 /* ---------------- Boot ---------------- */
 async function boot() {
   applySettings();
+  if (EMBED.gameOnly) document.body.classList.add('game-only');
   matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => applySettings());
   setupSettingsDialog();
   const params = new URLSearchParams(location.search);
