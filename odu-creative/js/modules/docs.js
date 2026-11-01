@@ -1,6 +1,7 @@
 /** MÓDULO 8 — Geração da apostila DOCX no navegador (versões aluno e professor). */
 import { h, download, toast } from '../core/dom.js';
 import { buildApostila } from '../core/docx-builder.js';
+import { assetUrl } from '../core/unit-loader.js';
 
 let docxPromise = null;
 /** Carrega vendor/docx.iife.js sob demanda (≈800 KB), só quando o usuário gera um documento. */
@@ -25,7 +26,7 @@ export async function generate(unit, version, audioBaseUrl) {
 
 export function render(ctx) {
   const { unit } = ctx;
-  const guess = location.protocol.startsWith('http') && !/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)
+  const guess = !globalThis.__ODU_EMBED__ && location.protocol.startsWith('http') && !/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)
     ? new URL(unit._base, location.href).href : '';
   const base = h('input', { type: 'url', id: 'audio-base', value: unit.audioBaseUrl || guess, placeholder: 'https://seu-site.com/odu-creative/units/en-a1-cafe/' });
   const status = h('p', { class: 'small', 'aria-live': 'polite' });
@@ -39,8 +40,8 @@ export function render(ctx) {
   } }, label);
 
   const prebuilt = unit._edited ? null : h('p', { class: 'small' }, 'Versões pré-geradas desta unidade (sem links de áudio): ',
-    h('a', { href: `${unit._base}docs/${unit.id}-aluno.docx`, download: true }, 'aluno'), ' · ',
-    h('a', { href: `${unit._base}docs/${unit.id}-professor.docx`, download: true }, 'professor'), '.');
+    h('a', { href: assetUrl(`${unit._base}docs/${unit.id}-aluno.docx`), download: `${unit.id}-aluno.docx` }, 'aluno'), ' · ',
+    h('a', { href: assetUrl(`${unit._base}docs/${unit.id}-professor.docx`), download: `${unit.id}-professor.docx` }, 'professor'), '.');
 
   return h('div', {},
     h('header', { class: 'page-head' }, h('div', { class: 'eyebrow' }, 'Módulo 8 · Materiais'), h('h1', {}, 'Apostila ODU CREATIVE (DOCX)'),

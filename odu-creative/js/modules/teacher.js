@@ -7,7 +7,7 @@
  */
 import { h, clear, tabs, download, toast } from '../core/dom.js';
 import * as store from '../core/store.js';
-import { listUnits, fetchOriginalUnit, allSkills, skillName } from '../core/unit-loader.js';
+import { listUnits, allSkills, skillName, assetUrl } from '../core/unit-loader.js';
 import { validateQuestion } from '../core/evaluate.js';
 import { parseVTT, toVTT, validateTimings } from '../core/audio-sync.js';
 import { putMedia, getMedia, deleteMedia } from '../core/idb.js';
@@ -146,7 +146,7 @@ export async function render(ctx) {
       };
       const startTap = async () => {
         const blob = await getMedia(key);
-        tapAudio.src = blob ? URL.createObjectURL(blob) : draft._baseFrom ? `units/${draft._baseFrom}/${track.audio}` : track.audio;
+        tapAudio.src = blob ? URL.createObjectURL(blob) : assetUrl(draft._baseFrom ? `units/${draft._baseFrom}/${track.audio}` : track.audio);
         tapIdx = 0; phase = 'start';
         tapOut.textContent = `Dê play e toque em “Marcar” (ou tecla M) no INÍCIO de “${track.segments[0].text}”.`;
         tapAudio.focus();

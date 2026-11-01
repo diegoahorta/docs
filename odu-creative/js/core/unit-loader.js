@@ -9,9 +9,21 @@ import { SyncPlayer, TtsSyncPlayer } from './audio-sync.js';
 
 export const REGISTRY_URL = 'units/index.json';
 
+/**
+ * Versão em arquivo único (dist/odu-creative.html): unidades e mídias vêm embutidas em
+ * window.__ODU_EMBED__ = { index, units: {id: unit}, assets: {caminho: dataURL} }.
+ */
+const EMBED = globalThis.__ODU_EMBED__ || null;
+export const isEmbedded = () => !!EMBED;
+
+/** Resolve o caminho de um arquivo da unidade (áudio, docx) para URL utilizável. */
+export function assetUrl(path) {
+  return EMBED?.assets?.[path] || path;
+}
+
 export async function listUnits() {
   let builtIn = [];
-  try { builtIn = await (await fetch(REGISTRY_URL)).json(); } catch { builtIn = []; }
+  try { builtIn = EMBED ? EMBED.index : await (await fetch(REGISTRY_URL)).json(); } catch { builtIn = []; }
   const custom = getCustomUnitIds().map((id) => {
     const u = getUnitOverride(id);
     return u ? { id, title: u.title, language: u.language?.name, level: u.level, custom: true } : null;
@@ -20,6 +32,10 @@ export async function listUnits() {
 }
 
 export async function fetchOriginalUnit(id) {
+  if (EMBED) {
+    if (!EMBED.units[id]) throw new Error(`Unidade "${id}" não encontrada.`);
+    return JSON.parse(JSON.stringify(EMBED.units[id]));
+  }
   const res = await fetch(`units/${id}/unit.json`, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Unidade "${id}" não encontrada.`);
   return res.json();
@@ -68,7 +84,7 @@ export function skillName(unit, id) {
 export async function createTrackPlayer(unit, track, { forceTts = false } = {}) {
   if (!forceTts) {
     const blob = await getMedia(`${unit.id}/${track.id}`);
-    const src = blob ? URL.createObjectURL(blob) : track.audio ? unit._base + track.audio : null;
+    const src = blob ? URL.createObjectURL(blob) : track.audio ? assetUrl(unit._base + track.audio) : null;
     if (src) {
       const ok = await canLoad(src);
       if (ok) return { player: new SyncPlayer({ src, segments: track.segments }), source: blob ? 'imported' : 'file' };

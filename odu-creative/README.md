@@ -40,6 +40,26 @@ teclado, ARIA/leitores de tela, layout mobile-first e PWA (funciona offline apó
 
 ## Como executar
 
+### Opção 1 — arquivo único (mais simples)
+
+Abra **`dist/odu-creative.html`** com duplo clique. É a plataforma inteira em um só arquivo HTML
+(≈3,2 MB): código, estilos, unidade, áudios e apostilas embutidos. Funciona sem servidor e sem internet
+(exceto o reconhecimento de fala do Chrome, que depende do serviço do navegador). Pode ser enviado
+por e-mail, pendrive ou colocado num LMS como recurso. Nessa versão, o progresso fica salvo no
+navegador, associado ao local de onde o arquivo foi aberto.
+
+Depois de editar conteúdo ou código, gere o arquivo de novo:
+
+```bash
+npm install
+```
+
+```bash
+npm run build:html
+```
+
+### Opção 2 — servidor local (desenvolvimento)
+
 Requisitos: Node.js 18+ (só para o servidor local, testes e geração de arquivos).
 
 ```bash

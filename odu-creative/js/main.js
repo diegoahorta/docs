@@ -174,7 +174,7 @@ async function boot() {
   if (!store.storageAvailable) announce('Armazenamento local indisponível: o progresso não será salvo.');
   window.addEventListener('hashchange', route);
   route();
-  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  if ('serviceWorker' in navigator && location.protocol !== 'file:' && !globalThis.__ODU_EMBED__) {
     navigator.serviceWorker.register('sw.js').catch((e) => console.info('SW não registrado:', e.message));
   }
 }

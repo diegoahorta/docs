@@ -8,6 +8,7 @@
  *   A gravação fica só na memória do navegador; nada é enviado a servidores.
  */
 import { normalize } from './evaluate.js';
+import { assetUrl } from './unit-loader.js';
 
 let currentAudio = null;
 
@@ -46,7 +47,7 @@ export function playLine(unit, text, { rate = 1 } = {}) {
   const line = findLine(unit, text);
   if (line && unit._base !== undefined) {
     return new Promise((resolve) => {
-      const a = new Audio(unit._base + line.src);
+      const a = new Audio(assetUrl(unit._base + line.src));
       a.playbackRate = rate;
       currentAudio = a;
       a.onended = () => resolve();
