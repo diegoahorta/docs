@@ -1,6 +1,8 @@
 /** Página inicial: identificação da unidade, objetivos e o caminho INPUT → REVIEW. */
 import { h, progressBar } from '../core/dom.js';
 import { dueSkills } from '../core/srs.js';
+import { listUnits } from '../core/unit-loader.js';
+import { setActiveUnitId } from '../core/store.js';
 
 const FLOW = [
   { stage: 'INPUT', path: 'quest', icon: '☕', title: 'Café Quest', text: 'Jogo: vá até a cafeteria, leia o cardápio e faça seu pedido em inglês.', module: 'quest' },
@@ -14,17 +16,23 @@ const FLOW = [
   { stage: 'REVIEW', path: 'review', icon: '🔁', title: 'Revisão espaçada', text: 'Desafios em novos contextos no momento certo.', module: 'review' },
 ];
 
-export function render(ctx) {
+export async function render(ctx) {
+  const units = await listUnits().catch(() => []);
   const { unit, progress } = ctx;
   const due = dueSkills(progress.srs).length;
   const modDone = FLOW.filter((f) => f.module).reduce((a, f) => a + (progress.modules[f.module] || 0), 0) / FLOW.filter((f) => f.module).length;
   const cover = unit.coverImage ? h('img', { src: unit.coverImage, alt: '', style: { maxHeight: '140px', borderRadius: '16px', float: 'right', marginLeft: '12px' } }) : null;
 
+  const picker = units.length > 1 ? h('label', { class: 'unit-picker' }, 'Unidade: ',
+    h('select', { onChange: (e) => { setActiveUnitId(e.target.value); location.hash = '#/'; location.reload(); } },
+      units.map((u) => h('option', { value: u.id, selected: u.id === unit.id }, `${u.language} ${u.level} — ${u.title}`)))) : null;
+
   return h('div', {},
+    picker,
     h('section', { class: 'hero', 'aria-labelledby': 'unit-title' },
       cover,
       h('div', { class: 'eyebrow', style: { color: '#ffe3a3' } }, `${unit.brand} · Unidade ${unit.unitNumber || 1}`),
-      h('h1', { id: 'unit-title' }, unit.title),
+      h('h1', { id: 'unit-title', lang: unit.language.bcp47 }, unit.titleNative ? [unit.titleNative, h('br'), h('span', { style: { fontSize: '.6em' }, lang: 'pt-BR' }, unit.title)] : unit.title),
       h('p', {}, unit.subtitle),
       h('div', { class: 'meta' }, h('span', {}, unit.language.name), h('span', {}, `Nível ${unit.level}`), h('span', {}, `${unit.age} anos`), h('span', {}, unit.skills.join(' · '))),
       h('div', { class: 'row' },

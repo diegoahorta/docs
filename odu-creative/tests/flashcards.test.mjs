@@ -18,7 +18,7 @@ function readGlbJson(file) {
   return JSON.parse(buf.toString('utf8', 20, 20 + len));
 }
 
-const glb = readGlbJson(dir + fc.model);
+const glb = readGlbJson(new URL('../' + fc.model, import.meta.url).pathname);
 const nodeNames = new Set(glb.nodes.map((n) => n.name));
 
 test('GLB contém carta, itens de todas as cartas, cliente e cenário', () => {

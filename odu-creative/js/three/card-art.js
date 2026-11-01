@@ -152,7 +152,7 @@ export function brandBack() {
 }
 
 /** Carta de palavra (memória): artigo + palavra, sem imagem. */
-export function wordCard({ word, article, category }) {
+export function wordCard({ word, article, sub, category }) {
   const [c, ctx] = canvas();
   const k = cat(category);
   base(ctx);
@@ -163,6 +163,7 @@ export function wordCard({ word, article, category }) {
   ctx.font = `800 28px ${FONT}`;
   ctx.textAlign = 'center';
   ctx.fillText('WORD', W / 2, 90);
+  if (sub) fitText(ctx, sub, { y: H / 2 - 92, size: 34, min: 20, weight: 600, color: k.color, maxLines: 1 }); // leitura em kana
   fitText(ctx, article ? `${article} ${word}` : word, { y: H / 2, size: 74, maxLines: 3 });
   // ícone de alto-falante: a palavra é falada ao virar
   ctx.fillStyle = k.color;

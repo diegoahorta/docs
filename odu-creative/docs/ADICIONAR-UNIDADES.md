@@ -68,10 +68,15 @@ Nomes legíveis de skills que não são ids de gramática: adicione `"skillNames
 
 O motor é agnóstico de idioma; alguns cuidados por língua:
 
-- **Japonês**: use `labels` com os subtítulos em japonês. Para furigana, escreva o texto com `<ruby>`
-  no campo `text` **e** forneça `kana`/`romaji` por segmento; o recurso de exibir/ocultar romaji
-  precisa ser ligado no `player.js` (campo previsto, ainda não renderizado nesta versão).
-  Questões no estilo JLPT: use `examPart` (ex.: `"JLPT N5 — 文法"`) com conteúdo original.
+- **Japonês** (exemplo completo: `units/ja-n4-34`): `"language": { "code": "ja", "bcp47": "ja-JP" }`.
+  Escreva o furigana com a marcação `{漢字|かんじ}` em qualquer texto — ex.: `{先生|せんせい}が {言|い}った とおりに`.
+  A partir dela o motor gera o `<ruby>` (furigana), a leitura em kana, o **romaji** (Hepburn) e, no DOCX,
+  a leitura entre parênteses. O aluno liga/desliga furigana e romaji nas configurações ou nos botões
+  ふりがな / Rōmaji. Separe os bunsetsu com espaço (分かち書き), como nos livros para estudantes;
+  a correção ignora espaços e pontuação e aceita a resposta **em kanji ou só em kana**.
+  Questões de leitura de kanji estilo JLPT: use `"noFurigana": true` e `examPart` (ex.: `"文字・語彙 — 漢字読み"`).
+  Moeda: `"menu": { "currencySuffix": "円", "decimals": 0 }`. Vozes: `"engine": "openjtalk"` com `fm`
+  (tom, em semitons) e `r` (velocidade). O `tests/unit-content.test.mjs` acusa kanji sem furigana.
 - **Coreano**: registre o nível de formalidade em `grammar[].table` (해요체 / 합니다체 / 반말).
 - **Mandarim**: inclua `pinyin` com marcas de tom em `vocabulary[].pron` e nos exemplos.
 - **Francês/inglês**: use `pron` (IPA) e `pronunciation` para ligações e sons difíceis.

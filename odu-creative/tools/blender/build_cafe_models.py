@@ -9,7 +9,7 @@ Gera um único arquivo glTF binário com:
   - env-*                cenário da cafeteria (piso, parede, balcão, quadro, luminárias, plantas)
 
 Uso:
-  blender -b --factory-startup -P tools/blender/build_cafe_models.py -- units/en-a1-cafe/3d/cafe-flashcards.glb
+  blender -b --factory-startup -P tools/blender/build_cafe_models.py -- assets/3d/cafe-flashcards.glb
 
 Todas as formas são primitivas do Blender combinadas por código — sem arquivos externos,
 para que qualquer pessoa possa regenerar ou alterar os modelos.

@@ -299,3 +299,24 @@ details.card[open] > summary { margin-bottom: 12px; }
 body.game-only .side-nav, body.game-only .bottom-nav { display: none; }
 body.game-only .layout { display: block; }
 body.game-only .main { padding-bottom: 32px; }
+
+/* ---------- Japonês: furigana e romaji ---------- */
+:lang(ja) { font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "Noto Sans CJK JP", var(--font); line-break: strict; }
+.ja ruby { ruby-position: over; }
+.ja rt { font-size: .55em; font-weight: 500; color: var(--ink-2); letter-spacing: 0; }
+:root[data-furigana="off"] .ja rt, :root[data-furigana="off"] .ja rp { display: none; }
+.ja .romaji { display: none; font-size: .78em; font-weight: 500; color: var(--muted); font-family: var(--font); letter-spacing: .01em; }
+:root[data-romaji="on"] .ja .romaji { display: block; }
+.ja { line-height: 1.9; }
+.ja-ctrl { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.chunk .romaji { display: none !important; }
+.romaji-only .ja-text { display: none; }
+.romaji-only { display: block; font-size: .9rem; }
+.highlight .chunk[data-role="topic"] { border-color: var(--c-subject); background: color-mix(in srgb, var(--c-subject) 14%, transparent); }
+.highlight .chunk[data-role="particle"] { border-color: var(--c-article); background: color-mix(in srgb, var(--c-article) 18%, transparent); font-weight: 800; }
+.highlight .chunk[data-role="complement"] { border-color: var(--c-object); background: color-mix(in srgb, var(--c-object) 14%, transparent); }
+.highlight .chunk[data-role="ending"] { border-color: var(--c-polite); background: color-mix(in srgb, var(--c-polite) 22%, transparent); font-weight: 800; }
+.highlight .chunk[data-role="form"] { border-color: var(--c-verb); background: color-mix(in srgb, var(--c-verb) 18%, transparent); font-weight: 800; }
+.ex-tl { font-size: 1.1rem; font-weight: 650; }
+.unit-picker { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; font-weight: 700; } .unit-picker select { width: auto; max-width: 100%; }
+.ticket.memo { background: #fff6d8; border-color: #e0b84f; margin-bottom: 0; } .ticket.memo .ja { font-family: inherit; font-size: 1rem; }

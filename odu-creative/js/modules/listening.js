@@ -7,6 +7,7 @@ import { createPlayerUI } from '../components/player.js';
 import { renderQuestion } from '../components/question.js';
 import { playLine } from '../core/speech.js';
 import { award, addXP, XP } from '../core/gamify.js';
+import { tl, plainText, jaControls } from '../core/text.js';
 
 const STAGES = [
   { key: 's1', title: '1. Escuta global', sub: 'Sem transcrição' },
@@ -23,7 +24,8 @@ export function render(ctx, params) {
   const head = h('header', { class: 'page-head' },
     h('div', { class: 'eyebrow' }, 'Módulo 1 · Input'),
     h('h1', {}, 'Listening'),
-    h('p', {}, 'Escute em etapas: primeiro a ideia geral, depois os detalhes, então o texto sincronizado e, por fim, repita os trechos.'));
+    h('p', {}, 'Escute em etapas: primeiro a ideia geral, depois os detalhes, então o texto sincronizado e, por fim, repita os trechos.'),
+    jaControls(ctx));
   const trackTabs = h('div', { class: 'tabs', role: 'tablist', 'aria-label': 'Faixas' });
   const body = h('div', {});
   root.append(head, trackTabs, body);
@@ -33,7 +35,7 @@ export function render(ctx, params) {
     clear(trackTabs).append(...unit.tracks.map((t, i) => h('button', {
       class: 'btn small', role: 'tab', 'aria-selected': String(i === trackIdx),
       onClick: () => { trackIdx = i; stageIdx = firstOpen(unit.tracks[i]); drawTabs(); draw(); },
-    }, `${i + 1}. ${t.title}`)));
+    }, `${i + 1}. `, tl(unit, t.title, { noRomaji: true }))));
   }
   function firstOpen(track) {
     const s = st(track.id);
@@ -54,8 +56,8 @@ export function render(ctx, params) {
         h('div', {}, h('h3', {}, '📍 Situação'), h('p', {}, track.situation)),
         h('div', {}, h('h3', {}, '🎯 Objetivo de compreensão'), h('p', {}, track.goal))),
       h('h3', {}, '🧰 Vocabulário de apoio'),
-      h('div', { class: 'vocab-chips' }, vocabFor(track).map((v) => h('button', { class: 'chip', onClick: () => playLine(unit, v.term.split(' / ')[0]) },
-        '🔊 ', h('span', { lang: unit.language.bcp47 }, v.term), h('small', {}, v.pt)))));
+      h('div', { class: 'vocab-chips' }, vocabFor(track).map((v) => h('button', { class: 'chip', onClick: () => playLine(unit, v.audioText || v.term.split(' / ')[0]) },
+        '🔊 ', tl(unit, v.term, { noRomaji: true }), h('small', {}, v.pt)))));
     body.append(stepper, situation);
     const stage = h('div', {});
     body.append(stage);
@@ -125,7 +127,7 @@ export function render(ctx, params) {
           await player.playRange(i);
           if (!running) break;
           const wait = Math.max(1500, (s.end - s.start) * 1300 + 600);
-          status.replaceChildren(h('strong', {}, '🎙 Sua vez! '), h('span', { lang: unit.language.bcp47 }, s.text));
+          status.replaceChildren(h('strong', {}, '🎙 Sua vez! '), tl(unit, s.text));
           await pause(wait);
           if (loopOne) i--;
         }
@@ -147,8 +149,9 @@ export function render(ctx, params) {
   ];
 
   function vocabFor(track) {
-    const text = track.segments.map((s) => s.text.toLowerCase()).join(' ');
-    return unit.vocabulary.filter((v) => v.term.toLowerCase().split(' / ').some((t) => text.includes(t.replace(/[?.]$/, '').toLowerCase())));
+    const text = track.segments.map((s) => plainText(unit, s.text).toLowerCase()).join(' ');
+    // vocabulário que aparece na faixa (ou marcado explicitamente com "tracks")
+    return unit.vocabulary.filter((v) => v.tracks?.includes(track.id) || plainText(unit, v.term).toLowerCase().split(' / ').some((t) => text.includes(t.replace(/[?.]$/, '').toLowerCase())));
   }
 
   stageIdx = firstOpen(unit.tracks[trackIdx]);

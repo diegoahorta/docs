@@ -69,3 +69,24 @@ test('validateQuestion aponta problemas de estrutura', () => {
   assert.equal(validateQuestion({ id: 'x', prompt: 'p', skills: ['s'], type: 'mcq', options: ['a', 'b'], answer: 0 }).length, 0);
   assert.ok(validateQuestion({ id: 'x', prompt: 'p', skills: ['s'], type: 'gap', text: '___ e ___', answers: [['a']] }).length > 0);
 });
+
+test('japonês: aceita kanji ou kana, ignora espaços e pontuação', () => {
+  const acc = ['{砂糖|さとう}は {入|い}れないで ください。'];
+  assert.ok(checkText('砂糖は入れないでください', acc));
+  assert.ok(checkText('さとうは いれないで ください', acc));
+  assert.ok(!checkText('砂糖は入れてください', acc));
+  assert.deepEqual(checkGaps(['あと'], [['あと']]).perGap, [true]);
+  assert.ok(checkGaps(['{後|あと}'.replace(/\{.*\}/, 'あと')], [['{後|あと}']]).correct);
+});
+
+test('japonês: matchUtterance e critérios de produção', () => {
+  assert.ok(matchUtterance('ミルクは入れないでください', { all: ['ミルク'], any: ['{入|い}れないで'] }));
+  assert.ok(matchUtterance('みるくは いれないで', { all: ['ミルク'.replace('ミルク', 'みるく')], any: ['{入|い}れないで'] }));
+  const r = checkCriteria('ケーキを 食べた あとで、コーヒーを ください。', [{ label: 'あとで', pattern: '(た|だ)あとで' }]);
+  assert.ok(r.correct);
+});
+
+test('japonês: wordDiff compara caracteres', () => {
+  const d = wordDiff('{砂糖|さとう}を {入|い}れないで', '砂糖を入れて');
+  assert.equal(d.filter((x) => x.hit).length, 5);
+});

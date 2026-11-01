@@ -3217,7 +3217,7 @@
   },
   "flashcards": {
     "title": "Flashcards 3D",
-    "model": "3d/cafe-flashcards.glb",
+    "model": "assets/3d/cafe-flashcards.glb",
     "modelSource": "tools/blender/build_cafe_models.py",
     "studyRound": 8,
     "rushOrders": 10,

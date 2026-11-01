@@ -6,11 +6,11 @@
   "type": "module",
   "scripts": {
     "serve": "node tools/serve.mjs",
-    "build:audio": "node tools/build-audio.mjs units/en-a1-cafe",
-    "build:docx": "node tools/build-docx.mjs units/en-a1-cafe",
+    "build:audio": "node tools/build-audio.mjs units/en-a1-cafe && node tools/build-audio.mjs units/ja-n4-34",
+    "build:docx": "node tools/build-docx.mjs units/en-a1-cafe && node tools/build-docx.mjs units/ja-n4-34",
     "vendor": "node tools/vendor.mjs",
-    "build:html": "node tools/build-standalone.mjs && node tools/build-standalone.mjs --game flashcards",
-    "build:models": "blender -b --factory-startup -P tools/blender/build_cafe_models.py -- units/en-a1-cafe/3d/cafe-flashcards.glb",
+    "build:html": "node tools/build-standalone.mjs && node tools/build-standalone.mjs --game flashcards && node tools/build-standalone.mjs dist/odu-japones-n4.html --unit ja-n4-34",
+    "build:models": "blender -b --factory-startup -P tools/blender/build_cafe_models.py -- assets/3d/cafe-flashcards.glb",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {

@@ -169,7 +169,7 @@ export class TtsSyncPlayer extends Emitter {
   speakOne(i, token) {
     return new Promise((resolve) => {
       const s = this.segments[i];
-      const u = new SpeechSynthesisUtterance(s.text.replace(/Café/g, 'Cafe'));
+      const u = new SpeechSynthesisUtterance(s.text.replace(/\{([^|{}]+)\|[^|{}]+\}/g, '$1').replace(/Café/g, 'Cafe'));
       u.lang = this.lang;
       u.rate = this.rate;
       const v = this.pickVoice(s.speaker);

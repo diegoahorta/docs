@@ -9,6 +9,7 @@
  */
 import { normalize } from './evaluate.js';
 import { assetUrl } from './unit-loader.js';
+import { plain } from './jp.js';
 
 let currentAudio = null;
 
@@ -24,7 +25,7 @@ export function ttsAvailable() {
 export function speak(text, { lang = 'en-US', rate = 1 } = {}) {
   return new Promise((resolve, reject) => {
     if (!ttsAvailable()) return reject(new Error('Síntese de voz indisponível neste navegador.'));
-    const u = new SpeechSynthesisUtterance(text.replace(/Café/g, 'Cafe'));
+    const u = new SpeechSynthesisUtterance(plain(text).replace(/Café/g, 'Cafe'));
     u.lang = lang;
     u.rate = rate;
     const v = speechSynthesis.getVoices().find((x) => x.lang?.startsWith(lang.slice(0, 2)));

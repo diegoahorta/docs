@@ -1,0 +1,3764 @@
+{
+  "id": "ja-n4-34",
+  "schemaVersion": 1,
+  "brand": "ODU CREATIVE",
+  "language": {
+    "code": "ja",
+    "bcp47": "ja-JP",
+    "name": "Japonês"
+  },
+  "explanationLanguage": "pt-BR",
+  "level": "N4",
+  "age": "13 a 17",
+  "skills": [
+    "Listening",
+    "Speaking",
+    "Reading",
+    "Writing"
+  ],
+  "communicativeGoal": "Compreensão escrita e auditiva: entender instruções e pedidos que dizem COMO, QUANDO e SEM O QUÊ fazer algo (〜とおりに, 〜あとで, 〜て／〜ないで).",
+  "unitNumber": 34,
+  "title": "Na cafeteria: do jeito que eu fiz",
+  "titleNative": "カフェ・さくらで",
+  "subtitle": "〜とおりに · 〜あとで · 〜て／〜ないで em pedidos, receitas e instruções",
+  "sourceNote": "Objetivos alinhados à lição 34 de 『みんなの日本語 初級Ⅱ』 (material de referência do professor). Textos, diálogos e exercícios desta unidade são originais da ODU CREATIVE; o livro não é reproduzido.",
+  "audioBaseUrl": "",
+  "labels": {
+    "discover": "DISCOVER THE PATTERN | 文法のルールを見つけよう",
+    "rule": "THE RULE | ルール"
+  },
+  "objectives": [
+    "Entender um pedido em cafeteria com instruções (sem açúcar, depois da sobremesa, para comer na loja) — ideia geral e detalhes.",
+    "Seguir uma explicação passo a passo (receita de matcha latte) e reconhecer a ordem das ações.",
+    "Usar 〜とおりに para fazer algo conforme alguém fez/disse ou conforme um modelo ({説明書|せつめいしょ}の とおりに).",
+    "Usar 〜あとで (V-た / Nの) para dizer que uma ação acontece depois de outra.",
+    "Usar V-て e V-ないで para dizer em que estado se faz algo, sem fazer algo ou em vez de fazer algo.",
+    "Entender e dizer preços em ienes ({百|ひゃく}・{千|せん} e mudanças de som: さんびゃく, はっぴゃく).",
+    "Ler um bilhete curto e fazer um pedido exatamente como está escrito."
+  ],
+  "config": {
+    "passThreshold": 0.7,
+    "consolidateAfter": 3,
+    "srsIntervalsDays": [
+      1,
+      2,
+      4,
+      7,
+      14
+    ],
+    "responseTimeSeconds": 15
+  },
+  "assessment": {
+    "reference": "JLPT — Exame de Proficiência em Língua Japonesa, nível N4",
+    "note": "Questões originais inspiradas nos formatos das seções do N4: 文字・語彙 (leitura e escrita de kanji), 文法 (escolha da forma e ordenação com ★), 読解 (texto curto) e 聴解 (compreensão de pontos e resposta imediata). Nenhuma questão oficial é reproduzida."
+  },
+  "skillNames": {
+    "vocab-cafe": "Vocabulário da cafeteria",
+    "reading-memo": "Leitura de bilhetes e cardápios",
+    "kanji": "Leitura e escrita de kanji"
+  },
+  "voices": {
+    "はるか": {
+      "engine": "openjtalk",
+      "fm": 5.5,
+      "r": 0.95,
+      "browserHint": "female"
+    },
+    "ルーカス": {
+      "engine": "openjtalk",
+      "fm": 1,
+      "r": 0.95,
+      "browserHint": "male"
+    },
+    "あおい": {
+      "engine": "openjtalk",
+      "fm": 7,
+      "r": 0.95,
+      "browserHint": "female"
+    },
+    "Narrator": {
+      "engine": "openjtalk",
+      "fm": 0,
+      "r": 0.9,
+      "browserHint": "male"
+    }
+  },
+  "vocabulary": [
+    {
+      "id": "j1",
+      "term": "{抹茶|まっちゃ}ラテ",
+      "pt": "matcha latte (chá verde com leite)",
+      "example": "{抹茶|まっちゃ}ラテを ください。",
+      "category": "drinks"
+    },
+    {
+      "id": "j2",
+      "term": "ココア",
+      "pt": "chocolate quente",
+      "example": "ココアを {一|ひと}つ ください。",
+      "category": "drinks"
+    },
+    {
+      "id": "j3",
+      "term": "オレンジジュース",
+      "pt": "suco de laranja",
+      "example": "オレンジジュースに {氷|こおり}を {入|い}れて ください。",
+      "category": "drinks"
+    },
+    {
+      "id": "j4",
+      "term": "りんごジュース",
+      "pt": "suco de maçã",
+      "example": "りんごジュースは あとで おねがいします。",
+      "category": "drinks"
+    },
+    {
+      "id": "j5",
+      "term": "ミルクシェイク",
+      "pt": "milk-shake",
+      "example": "ミルクシェイクを {持|も}って {帰|かえ}ります。",
+      "category": "drinks"
+    },
+    {
+      "id": "j6",
+      "term": "お{水|みず}",
+      "pt": "água (nos cafés do Japão costuma ser grátis)",
+      "example": "すみません、お{水|みず}を ください。",
+      "category": "drinks"
+    },
+    {
+      "id": "j7",
+      "term": "チーズサンド",
+      "pt": "sanduíche de queijo",
+      "example": "チーズサンドを {温|あたた}めて ください。",
+      "category": "food"
+    },
+    {
+      "id": "j8",
+      "term": "たまごサンド",
+      "pt": "sanduíche de ovo",
+      "example": "たまごサンドは {温|あたた}めないで ください。",
+      "category": "food"
+    },
+    {
+      "id": "j9",
+      "term": "マフィン",
+      "pt": "muffin (bolinho)",
+      "example": "コーヒーを {飲|の}んだ あとで、マフィンを {食|た}べます。",
+      "category": "food"
+    },
+    {
+      "id": "j10",
+      "term": "クッキー",
+      "pt": "biscoito / cookie",
+      "example": "クッキーを {二|ふた}つ ください。",
+      "category": "food"
+    },
+    {
+      "id": "j11",
+      "term": "アップルパイ",
+      "pt": "torta de maçã",
+      "example": "{写真|しゃしん}の とおりに、アップルパイに アイスを のせます。",
+      "category": "food"
+    },
+    {
+      "id": "j12",
+      "term": "チーズケーキ",
+      "pt": "cheesecake",
+      "example": "チーズケーキを {食|た}べた あとで、ラテを {飲|の}みます。",
+      "category": "food"
+    },
+    {
+      "id": "j13",
+      "term": "{砂糖|さとう}",
+      "pt": "açúcar",
+      "example": "{砂糖|さとう}を {入|い}れないで {飲|の}みます。",
+      "category": "chunks",
+      "tracks": [
+        "t1",
+        "t2"
+      ]
+    },
+    {
+      "id": "j14",
+      "term": "ミルク",
+      "pt": "leite",
+      "example": "{温|あたた}かい ミルクを {入|い}れます。",
+      "category": "chunks",
+      "tracks": [
+        "t2"
+      ]
+    },
+    {
+      "id": "j15",
+      "term": "{氷|こおり}",
+      "pt": "gelo",
+      "example": "{氷|こおり}は {入|い}れないで ください。",
+      "category": "chunks"
+    },
+    {
+      "id": "j16",
+      "term": "サイズ（S・M・L）",
+      "pt": "tamanho (pequeno, médio, grande)",
+      "example": "サイズは Mで おねがいします。",
+      "category": "sizes",
+      "tracks": [
+        "t1"
+      ],
+      "audioText": "サイズ"
+    },
+    {
+      "id": "j17",
+      "term": "{店内|てんない}／{持|も}ち{帰|かえ}り",
+      "pt": "comer na loja / para viagem",
+      "example": "{店内|てんない}で {食|た}べますか。",
+      "category": "chunks",
+      "tracks": [
+        "t1"
+      ],
+      "audioText": "{店内|てんない}、{持|も}ち{帰|かえ}り"
+    },
+    {
+      "id": "j18",
+      "term": "いくらですか",
+      "pt": "Quanto custa?",
+      "example": "この ケーキは いくらですか。",
+      "category": "chunks"
+    },
+    {
+      "id": "j19",
+      "term": "おつり",
+      "pt": "troco",
+      "example": "{百円|ひゃくえん}の おつりです。",
+      "category": "chunks",
+      "tracks": [
+        "t1"
+      ]
+    },
+    {
+      "id": "j20",
+      "term": "ほかに {何|なに}か",
+      "pt": "Mais alguma coisa?",
+      "example": "ほかに {何|なに}か ありますか。",
+      "category": "chunks"
+    },
+    {
+      "id": "j21",
+      "term": "これで おねがいします",
+      "pt": "Com isto, por favor (ao entregar o dinheiro)",
+      "example": "{千円|せんえん}で おねがいします。",
+      "category": "chunks"
+    },
+    {
+      "id": "j22",
+      "term": "{入|い}れます",
+      "pt": "colocar (dentro)",
+      "example": "カップに {抹茶|まっちゃ}を {入|い}れます。",
+      "category": "verbs",
+      "tracks": [
+        "t1",
+        "t2"
+      ]
+    },
+    {
+      "id": "j23",
+      "term": "まぜます",
+      "pt": "misturar",
+      "example": "お{湯|ゆ}を {入|い}れた あとで、よく まぜます。",
+      "category": "verbs",
+      "tracks": [
+        "t2"
+      ]
+    },
+    {
+      "id": "j24",
+      "term": "{温|あたた}めます",
+      "pt": "esquentar",
+      "example": "パイは {温|あたた}めないで ください。",
+      "category": "verbs"
+    },
+    {
+      "id": "j25",
+      "term": "{説明書|せつめいしょ}",
+      "pt": "manual de instruções",
+      "example": "{説明書|せつめいしょ}の とおりに {組|く}み{立|た}てます。",
+      "category": "chunks"
+    },
+    {
+      "id": "j26",
+      "term": "{組|く}み{立|た}てます",
+      "pt": "montar",
+      "example": "{本棚|ほんだな}を {自分|じぶん}で {組|く}み{立|た}てました。",
+      "category": "verbs"
+    },
+    {
+      "id": "j27",
+      "term": "ご{注文|ちゅうもん}",
+      "pt": "pedido (formal)",
+      "example": "ご{注文|ちゅうもん}は {何|なん}に しますか。",
+      "category": "chunks",
+      "tracks": [
+        "t1"
+      ]
+    },
+    {
+      "id": "j28",
+      "term": "かしこまりました",
+      "pt": "Entendido / Pois não (atendente)",
+      "example": "はい、かしこまりました。",
+      "category": "chunks",
+      "tracks": [
+        "t1"
+      ]
+    },
+    {
+      "id": "j29",
+      "term": "{苦|にが}い",
+      "pt": "amargo",
+      "example": "{抹茶|まっちゃ}は {少|すこ}し {苦|にが}いです。",
+      "category": "chunks",
+      "tracks": [
+        "t2"
+      ]
+    },
+    {
+      "id": "j30",
+      "term": "お{湯|ゆ}",
+      "pt": "água quente",
+      "example": "お{湯|ゆ}を {少|すこ}し {入|い}れます。",
+      "category": "chunks",
+      "tracks": [
+        "t2"
+      ]
+    }
+  ],
+  "menu": {
+    "name": "カフェ・さくら",
+    "currency": "",
+    "currencySuffix": "円",
+    "decimals": 0,
+    "sections": [
+      {
+        "title": "のみもの · Bebidas",
+        "items": [
+          {
+            "id": "matcha-latte",
+            "name": "{抹茶|まっちゃ}ラテ",
+            "sizes": {
+              "S": 400,
+              "M": 480,
+              "L": 560
+            }
+          },
+          {
+            "id": "cocoa",
+            "name": "ココア",
+            "price": 450
+          },
+          {
+            "id": "orange-juice",
+            "name": "オレンジジュース",
+            "price": 380
+          },
+          {
+            "id": "apple-juice",
+            "name": "りんごジュース",
+            "price": 380
+          },
+          {
+            "id": "milkshake",
+            "name": "ミルクシェイク",
+            "price": 520
+          }
+        ]
+      },
+      {
+        "title": "たべもの · Comidas",
+        "items": [
+          {
+            "id": "cheese-sandwich",
+            "name": "チーズサンド",
+            "price": 450
+          },
+          {
+            "id": "egg-sandwich",
+            "name": "たまごサンド",
+            "price": 450
+          },
+          {
+            "id": "muffin",
+            "name": "マフィン",
+            "price": 300
+          },
+          {
+            "id": "cookie",
+            "name": "クッキー",
+            "price": 200
+          },
+          {
+            "id": "apple-pie",
+            "name": "アップルパイ",
+            "price": 420
+          },
+          {
+            "id": "cheesecake",
+            "name": "チーズケーキ",
+            "price": 420
+          }
+        ]
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "id": "t1",
+      "title": "ルーカスさんの {注文|ちゅうもん} — O pedido do Lucas",
+      "situation": "Lucas, 15 anos, é intercambista brasileiro em Tóquio. Depois da aula, ele entra na カフェ・さくら. A atendente はるか está no balcão.",
+      "goal": "Descobrir O QUE Lucas pede, COMO ele quer a bebida, QUANDO ela deve chegar, ONDE ele vai comer e QUANTO paga.",
+      "audio": "audio/t1.mp3",
+      "segments": [
+        {
+          "id": "t1s1",
+          "speaker": "はるか",
+          "text": "いらっしゃいませ。ご{注文|ちゅうもん}は {何|なん}に しますか。",
+          "pt": "Bem-vindo. O que vai pedir?",
+          "start": 0.4,
+          "end": 3.365
+        },
+        {
+          "id": "t1s2",
+          "speaker": "ルーカス",
+          "text": "{抹茶|まっちゃ}ラテを ください。{砂糖|さとう}は {入|い}れないで ください。",
+          "pt": "Um matcha latte, por favor. Sem açúcar, por favor.",
+          "start": 3.965,
+          "end": 7.294
+        },
+        {
+          "id": "t1s3",
+          "speaker": "はるか",
+          "text": "はい、{砂糖|さとう}なしですね。サイズは S、M、Lが ありますが…。",
+          "pt": "Certo, sem açúcar. Temos os tamanhos P, M e G…",
+          "start": 7.894,
+          "end": 13.079
+        },
+        {
+          "id": "t1s4",
+          "speaker": "ルーカス",
+          "text": "Mで おねがいします。それから、チーズケーキも ください。",
+          "pt": "Médio, por favor. E também um cheesecake.",
+          "start": 13.679,
+          "end": 17.719
+        },
+        {
+          "id": "t1s5",
+          "speaker": "はるか",
+          "text": "ラテは いつ {持|も}って いきましょうか。",
+          "pt": "Quando levo o latte para você?",
+          "start": 18.319,
+          "end": 19.967
+        },
+        {
+          "id": "t1s6",
+          "speaker": "ルーカス",
+          "text": "ケーキを {食|た}べた あとで、{持|も}って きて ください。",
+          "pt": "Traga depois que eu comer o bolo, por favor.",
+          "start": 20.567,
+          "end": 23.495
+        },
+        {
+          "id": "t1s7",
+          "speaker": "はるか",
+          "text": "かしこまりました。{店内|てんない}で {食|た}べますか。",
+          "pt": "Pois não. Vai comer aqui na loja?",
+          "start": 24.095,
+          "end": 26.818
+        },
+        {
+          "id": "t1s8",
+          "speaker": "ルーカス",
+          "text": "はい、ここで {食|た}べます。",
+          "pt": "Sim, vou comer aqui.",
+          "start": 27.418,
+          "end": 29.204
+        },
+        {
+          "id": "t1s9",
+          "speaker": "はるか",
+          "text": "ぜんぶで {九百円|きゅうひゃくえん}です。",
+          "pt": "Ao todo são 900 ienes.",
+          "start": 29.804,
+          "end": 31.377
+        },
+        {
+          "id": "t1s10",
+          "speaker": "ルーカス",
+          "text": "{千円|せんえん}で おねがいします。",
+          "pt": "Aqui, mil ienes.",
+          "start": 31.977,
+          "end": 33.368
+        },
+        {
+          "id": "t1s11",
+          "speaker": "はるか",
+          "text": "{百円|ひゃくえん}の おつりです。ありがとうございました。",
+          "pt": "Seu troco de 100 ienes. Muito obrigada.",
+          "start": 33.968,
+          "end": 36.839
+        }
+      ],
+      "gist": [
+        "l1g1",
+        "l1g2"
+      ],
+      "detail": [
+        "l1d1",
+        "l1d2",
+        "l1d3",
+        "l1d4"
+      ],
+      "duration": 37.512,
+      "audioSource": "synthetic-openjtalk"
+    },
+    {
+      "id": "t2",
+      "title": "{抹茶|まっちゃ}ラテ{教室|きょうしつ} — Oficina de matcha latte",
+      "situation": "No sábado, a カフェ・さくら faz uma oficina. はるか ensina o Lucas a preparar um matcha latte.",
+      "goal": "Entender a ORDEM dos passos da receita e o que NÃO se coloca hoje.",
+      "audio": "audio/t2.mp3",
+      "segments": [
+        {
+          "id": "t2s1",
+          "speaker": "はるか",
+          "text": "{今日|きょう}は {抹茶|まっちゃ}ラテの {作|つく}り{方|かた}を {教|おし}えます。わたしが やった とおりに、やって みて ください。",
+          "pt": "Hoje vou ensinar a fazer matcha latte. Tente fazer do jeito que eu fizer.",
+          "start": 0.4,
+          "end": 6.394
+        },
+        {
+          "id": "t2s2",
+          "speaker": "ルーカス",
+          "text": "はい、よろしく おねがいします。",
+          "pt": "Certo, conto com você.",
+          "start": 6.994,
+          "end": 9.069
+        },
+        {
+          "id": "t2s3",
+          "speaker": "はるか",
+          "text": "まず、カップに {抹茶|まっちゃ}を {入|い}れます。それから、お{湯|ゆ}を {少|すこ}し {入|い}れて、よく まぜます。",
+          "pt": "Primeiro, coloque o matcha na xícara. Depois, coloque um pouco de água quente e misture bem.",
+          "start": 9.669,
+          "end": 16.073
+        },
+        {
+          "id": "t2s4",
+          "speaker": "ルーカス",
+          "text": "お{湯|ゆ}を {入|い}れた あとで、まぜるんですね。",
+          "pt": "Então é depois de colocar a água quente que se mistura, né?",
+          "start": 16.673,
+          "end": 19.043
+        },
+        {
+          "id": "t2s5",
+          "speaker": "はるか",
+          "text": "ええ。よく まぜた あとで、{温|あたた}かい ミルクを {入|い}れます。",
+          "pt": "Isso. Depois de misturar bem, coloque o leite quente.",
+          "start": 19.643,
+          "end": 23.557
+        },
+        {
+          "id": "t2s6",
+          "speaker": "ルーカス",
+          "text": "{砂糖|さとう}は どう しますか。",
+          "pt": "E o açúcar?",
+          "start": 24.157,
+          "end": 25.363
+        },
+        {
+          "id": "t2s7",
+          "speaker": "はるか",
+          "text": "{今日|きょう}は {入|い}れないで {作|つく}りましょう。{抹茶|まっちゃ}の {味|あじ}が よく わかりますよ。",
+          "pt": "Hoje vamos fazer sem colocar. Assim dá para sentir bem o sabor do matcha.",
+          "start": 25.963,
+          "end": 30.064
+        },
+        {
+          "id": "t2s8",
+          "speaker": "ルーカス",
+          "text": "できました。これで いいですか。",
+          "pt": "Pronto. Está bom assim?",
+          "start": 30.664,
+          "end": 32.642
+        },
+        {
+          "id": "t2s9",
+          "speaker": "はるか",
+          "text": "はい、{説明|せつめい}した とおりに できましたね。どうぞ、{飲|の}んで みて ください。",
+          "pt": "Sim, você fez exatamente como eu expliquei. Pode provar.",
+          "start": 33.242,
+          "end": 38.372
+        },
+        {
+          "id": "t2s10",
+          "speaker": "ルーカス",
+          "text": "ちょっと {苦|にが}いけど、おいしい！ {家|うち}でも {作|つく}って みます。",
+          "pt": "Um pouco amargo, mas gostoso! Vou tentar fazer em casa também.",
+          "start": 38.972,
+          "end": 42.882
+        }
+      ],
+      "gist": [
+        "l2g1"
+      ],
+      "detail": [
+        "l2d1",
+        "l2d2",
+        "l2d3"
+      ],
+      "duration": 43.546,
+      "audioSource": "synthetic-openjtalk"
+    }
+  ],
+  "discover": {
+    "intro": "Observe frases ditas na カフェ・さくら e em outras situações. Não procure a regra ainda: veja o que vem ANTES de とおりに, あとで e ないで, e qual ação acontece primeiro.",
+    "chunkLegend": [
+      {
+        "role": "topic",
+        "label": "QUEM",
+        "pt": "quem fez / disse"
+      },
+      {
+        "role": "complement",
+        "label": "COMPLEMENTO",
+        "pt": "objeto, lugar, substantivo"
+      },
+      {
+        "role": "form",
+        "label": "FORMA",
+        "pt": "verbo na forma た, ない ou て"
+      },
+      {
+        "role": "ending",
+        "label": "CONECTOR",
+        "pt": "とおりに / あとで / ないで"
+      },
+      {
+        "role": "verb",
+        "label": "AÇÃO PRINCIPAL",
+        "pt": "o que se faz"
+      }
+    ],
+    "sentences": [
+      {
+        "chunks": [
+          [
+            "わたしが ",
+            "topic"
+          ],
+          [
+            "{言|い}った ",
+            "form"
+          ],
+          [
+            "とおりに、",
+            "ending"
+          ],
+          [
+            "{書|か}いて ください。",
+            "verb"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "{説明書|せつめいしょ}の ",
+            "complement"
+          ],
+          [
+            "とおりに、",
+            "ending"
+          ],
+          [
+            "{組|く}み{立|た}てます。",
+            "verb"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "ケーキを ",
+            "complement"
+          ],
+          [
+            "{食|た}べた ",
+            "form"
+          ],
+          [
+            "あとで、",
+            "ending"
+          ],
+          [
+            "ラテを {飲|の}みます。",
+            "verb"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "{宿題|しゅくだい}の ",
+            "complement"
+          ],
+          [
+            "あとで、",
+            "ending"
+          ],
+          [
+            "ゲームを します。",
+            "verb"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "{砂糖|さとう}を ",
+            "complement"
+          ],
+          [
+            "{入|い}れ",
+            "form"
+          ],
+          [
+            "ないで ",
+            "ending"
+          ],
+          [
+            "{飲|の}みます。",
+            "verb"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "バスに ",
+            "complement"
+          ],
+          [
+            "{乗|の}ら",
+            "form"
+          ],
+          [
+            "ないで、",
+            "ending"
+          ],
+          [
+            "{歩|ある}いて {帰|かえ}ります。",
+            "verb"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "{帽子|ぼうし}を ",
+            "complement"
+          ],
+          [
+            "かぶって ",
+            "form"
+          ],
+          [
+            "{出|で}かけます。",
+            "verb"
+          ]
+        ]
+      }
+    ],
+    "questions": [
+      {
+        "id": "dq1",
+        "prompt": "Nas frases 1 e 2, o que vem ANTES de とおりに?",
+        "options": [
+          "Verbo na forma た ({言|い}った) ou substantivo + の ({説明書|せつめいしょ}の)",
+          "Verbo na forma ます ({言|い}います)",
+          "Um adjetivo"
+        ],
+        "answer": 0,
+        "feedback": "Isso! V-た + とおりに / N の + とおりに."
+      },
+      {
+        "id": "dq2",
+        "prompt": "Nas frases 3 e 4, qual ação acontece PRIMEIRO?",
+        "options": [
+          "A que vem antes de あとで",
+          "A que vem depois de あとで",
+          "As duas ao mesmo tempo"
+        ],
+        "answer": 0,
+        "feedback": "Exato: primeiro a ケーキ / o {宿題|しゅくだい}, depois a ação principal."
+      },
+      {
+        "id": "dq3",
+        "prompt": "Antes de あとで, o verbo está em qual forma? (frase 3)",
+        "options": [
+          "Forma た ({食|た}べた)",
+          "Forma de dicionário ({食|た}べる)",
+          "Forma て ({食|た}べて)"
+        ],
+        "answer": 0,
+        "feedback": "Sim! Mesmo falando do futuro, usa-se a forma た: {食|た}べた あとで."
+      },
+      {
+        "id": "dq4",
+        "prompt": "Nas frases 5 e 6, o que ないで indica?",
+        "options": [
+          "Que a ação principal é feita SEM fazer (ou EM VEZ DE fazer) a outra",
+          "Uma proibição (não faça!)",
+          "Uma ação no passado"
+        ],
+        "answer": 0,
+        "feedback": "Isso: bebe SEM colocar açúcar; volta a pé EM VEZ DE pegar o ônibus."
+      },
+      {
+        "id": "dq5",
+        "prompt": "Na frase 7, o que a forma て ({帽子|ぼうし}を かぶって) mostra?",
+        "options": [
+          "Como / em que estado a pessoa faz a ação principal",
+          "Um pedido",
+          "Uma ação que vem depois"
+        ],
+        "answer": 0,
+        "feedback": "Muito bem: sai de chapéu (com o chapéu posto)."
+      }
+    ],
+    "hypothesisPrompt": "Com suas palavras (em português): o que significam とおりに, あとで e ないで? Que forma do verbo (ou que partícula) vem antes de cada um?",
+    "hypothesisPlaceholder": "Ex.: Acho que とおりに significa… e antes dele vem…  あとで mostra que…  ないで é usado quando…",
+    "hypothesisKeywords": [
+      {
+        "label": "Relacionou とおりに a “do jeito que / conforme”",
+        "any": [
+          "jeito",
+          "conforme",
+          "como",
+          "igual",
+          "mesmo modo",
+          "segundo"
+        ]
+      },
+      {
+        "label": "Percebeu a forma た (passado) antes de とおりに / あとで",
+        "any": [
+          "forma た",
+          "た形",
+          "forma ta",
+          "passado",
+          "った"
+        ]
+      },
+      {
+        "label": "Percebeu の depois de substantivo",
+        "any": [
+          "の",
+          "substantivo",
+          "nome"
+        ]
+      },
+      {
+        "label": "Relacionou ないで a “sem fazer / em vez de”",
+        "any": [
+          "sem",
+          "em vez",
+          "no lugar",
+          "não fazer",
+          "nao fazer"
+        ]
+      }
+    ],
+    "reorderHint": "Lembre: complemento → verbo na forma certa (た / ない / て) → conector (とおりに / あとで / ないで) → ação principal.",
+    "pattern": [
+      "V-た / N の",
+      "とおりに",
+      "AÇÃO"
+    ],
+    "patternQuestion": [
+      "V-た / N の",
+      "あとで",
+      "AÇÃO SEGUINTE"
+    ],
+    "patternsExtra": [
+      [
+        "V-て / V-ないで",
+        "AÇÃO PRINCIPAL"
+      ]
+    ],
+    "ruleSteps": [
+      "〜とおりに = “do jeito que / conforme”. Use V-た (ou V-る) + とおりに, ou substantivo + の + とおりに: わたしが {言|い}った とおりに、{説明書|せつめいしょ}の とおりに.",
+      "〜あとで = “depois de”. Use V-た + あとで ou substantivo + の + あとで. A ação antes de あとで acontece PRIMEIRO — e o verbo fica na forma た mesmo falando do futuro: {食|た}べた あとで {飲|の}みます.",
+      "V1-て V2 mostra COMO / em que estado se faz V2: {帽子|ぼうし}を かぶって {出|で}かけます (sai de chapéu).",
+      "V1-ないで V2 = fazer V2 SEM fazer V1, ou EM VEZ DE fazer V1: {砂糖|さとう}を {入|い}れないで {飲|の}みます (bebe sem açúcar); バスに {乗|の}らないで {歩|ある}きます (anda em vez de pegar o ônibus).",
+      "Atenção: ないで ≠ なくて. 〜なくて dá causa/motivo (“como não…”). Para “sem fazer”, use sempre ないで."
+    ],
+    "reorder": [
+      {
+        "tiles": [
+          "{先生|せんせい}が ",
+          "{言|い}った ",
+          "とおりに、",
+          "{書|か}きます。"
+        ],
+        "answer": "{先生|せんせい}が {言|い}った とおりに、{書|か}きます。"
+      },
+      {
+        "tiles": [
+          "{宿題|しゅくだい}を ",
+          "した ",
+          "あとで、",
+          "テレビを {見|み}ます。"
+        ],
+        "answer": "{宿題|しゅくだい}を した あとで、テレビを {見|み}ます。"
+      },
+      {
+        "tiles": [
+          "ミルクを ",
+          "{入|い}れないで ",
+          "コーヒーを ",
+          "{飲|の}みます。"
+        ],
+        "answer": "ミルクを {入|い}れないで コーヒーを {飲|の}みます。"
+      }
+    ]
+  },
+  "grammar": [
+    {
+      "id": "g-toori",
+      "name": "〜とおりに (do jeito que / conforme)",
+      "function": "Dizer que uma ação é feita da mesma forma que um modelo: o que alguém fez, disse, mostrou, ou o que está escrito.",
+      "form": "V-た／V-る ＋ とおりに ・ N ＋ の ＋ とおりに",
+      "explanation": "とおり significa “o modo, a maneira”. 〜とおりに indica que você faz algo exatamente como foi feito, dito ou mostrado. Com V-た, o modelo já existe (alguém JÁ fez ou JÁ disse): わたしが やった とおりに. Com V-る, você segue algo que ainda vai ouvir/ver: これから {言|い}う とおりに. Com substantivos, use の: {説明書|せつめいしょ}の とおりに, {地図|ちず}の とおりに, レシピの とおりに.",
+      "table": {
+        "headers": [
+          "Antes de とおりに",
+          "Estrutura",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Verbo forma た",
+            "V-た ＋ とおりに",
+            "{先生|せんせい}が {言|い}った とおりに {書|か}きます。"
+          ],
+          [
+            "Verbo forma る",
+            "V-る ＋ とおりに",
+            "わたしが {言|い}う とおりに、やって ください。"
+          ],
+          [
+            "Substantivo",
+            "N ＋ の ＋ とおりに",
+            "{説明書|せつめいしょ}の とおりに {組|く}み{立|た}てます。"
+          ],
+          [
+            "Negativa (resposta)",
+            "〜とおりに できませんでした",
+            "レシピの とおりに できませんでした。"
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "text": "わたしが やった とおりに、やって みて ください。",
+          "pt": "Tente fazer do jeito que eu fiz.",
+          "type": "affirmative"
+        },
+        {
+          "text": "{地図|ちず}の とおりに {行|い}きましたが、{店|みせ}が ありませんでした。",
+          "pt": "Fui conforme o mapa, mas a loja não estava lá.",
+          "type": "negative"
+        },
+        {
+          "text": "{説明書|せつめいしょ}の とおりに {組|く}み{立|た}てましたか。",
+          "pt": "Você montou conforme o manual?",
+          "type": "interrogative"
+        }
+      ],
+      "comparison": {
+        "title": "〜とおりに × 〜ように",
+        "text": "Nesta lição, use 〜とおりに quando há um MODELO concreto para copiar (o que alguém fez, disse, um manual, uma foto). Expressões com 〜ように (“para que…”) têm outra função e serão estudadas mais tarde."
+      },
+      "commonErrors": [
+        {
+          "wrong": "{説明書|せつめいしょ} とおりに",
+          "right": "{説明書|せつめいしょ}の とおりに",
+          "why": "Depois de substantivo, use の (a forma junta {説明書|せつめいしょ}どおり existe, mas é mais avançada)."
+        },
+        {
+          "wrong": "{先生|せんせい}が {言|い}いました とおりに",
+          "right": "{先生|せんせい}が {言|い}った とおりに",
+          "why": "Antes de とおりに, use a forma simples (た), não a forma ます."
+        }
+      ],
+      "usage": "Muito comum em instruções: aulas, receitas, montagem de móveis, mapas e jogos (“faça como eu!”).",
+      "pronunciation": "とおり tem vogal longa: to-o-ri (três tempos). Escreve-se とおり, não とうり.",
+      "check": {
+        "prompt": "Complete: レシピ（　）とおりに {作|つく}りました。",
+        "options": [
+          "の",
+          "を",
+          "が"
+        ],
+        "answer": 0,
+        "explanation": "Substantivo + の + とおりに: レシピの とおりに."
+      }
+    },
+    {
+      "id": "g-atode",
+      "name": "〜あとで (depois de)",
+      "function": "Dizer a ordem de duas ações: depois de A, faz-se B.",
+      "form": "V-た ＋ あとで ・ N ＋ の ＋ あとで",
+      "explanation": "あと significa “depois”. Com verbos, use SEMPRE a forma た antes de あとで, mesmo que as ações sejam no futuro: ケーキを {食|た}べた あとで、ラテを {飲|の}みます. Com substantivos que indicam um evento, use の: {授業|じゅぎょう}の あとで, {食事|しょくじ}の あとで. Compare com 〜てから (lição 16): 〜てから destaca a sequência imediata; 〜あとで destaca que B vem depois de A terminar.",
+      "table": {
+        "headers": [
+          "Antes de あとで",
+          "Estrutura",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Verbo forma た",
+            "V-た ＋ あとで",
+            "お{湯|ゆ}を {入|い}れた あとで、まぜます。"
+          ],
+          [
+            "Substantivo",
+            "N ＋ の ＋ あとで",
+            "{宿題|しゅくだい}の あとで、ゲームを します。"
+          ],
+          [
+            "Sem ação principal",
+            "あとで (sozinho) = mais tarde",
+            "あとで {電話|でんわ}します。"
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "text": "ケーキを {食|た}べた あとで、{持|も}って きて ください。",
+          "pt": "Traga depois que eu comer o bolo, por favor.",
+          "type": "affirmative"
+        },
+        {
+          "text": "{部活|ぶかつ}の あとで、カフェに {行|い}きませんか。",
+          "pt": "Que tal irmos ao café depois do clube?",
+          "type": "interrogative"
+        },
+        {
+          "text": "{食|た}べた あとで、すぐ {寝|ね}ないで ください。",
+          "pt": "Não vá dormir logo depois de comer.",
+          "type": "negative"
+        }
+      ],
+      "comparison": {
+        "title": "〜あとで × 〜まえに",
+        "text": "V-た ＋ あとで = depois de fazer. V-る ＋ まえに = antes de fazer. Atenção à forma do verbo: {食|た}べた あとで / {食|た}べる まえに."
+      },
+      "commonErrors": [
+        {
+          "wrong": "{食|た}べる あとで",
+          "right": "{食|た}べた あとで",
+          "why": "Antes de あとで o verbo fica sempre na forma た."
+        },
+        {
+          "wrong": "{仕事|しごと} あとで",
+          "right": "{仕事|しごと}の あとで",
+          "why": "Substantivo + の + あとで."
+        }
+      ],
+      "usage": "Usado para combinar horários e dar instruções de ordem (receitas, pedidos: “traga depois”).",
+      "pronunciation": "あとで: a-to-de, sem vogal longa. Não confunda com あとう.",
+      "check": {
+        "prompt": "Escolha: シャワーを（　）あとで、{寝|ね}ます。",
+        "options": [
+          "{浴|あ}びた",
+          "{浴|あ}びる",
+          "{浴|あ}びて"
+        ],
+        "answer": 0,
+        "explanation": "V-た + あとで: {浴|あ}びた あとで."
+      }
+    },
+    {
+      "id": "g-te-naide",
+      "name": "V1-て／V1-ないで ＋ V2",
+      "function": "Dizer COMO se faz algo (em que estado), SEM fazer algo, ou EM VEZ DE fazer algo.",
+      "form": "V1-て ＋ V2 ・ V1-ない ＋ で ＋ V2",
+      "explanation": "Com V1-て, a primeira ação mostra o estado em que a segunda é feita: {帽子|ぼうし}を かぶって {出|で}かけます (sai de chapéu). Com V1-ないで há dois usos: (1) fazer V2 SEM fazer V1 — {砂糖|さとう}を {入|い}れないで {飲|の}みます; (2) fazer V2 EM VEZ DE V1 — バスに {乗|の}らないで、{歩|ある}いて {帰|かえ}ります. Forme ないで a partir da forma ない: {入|い}れない → {入|い}れないで, {乗|の}らない → {乗|の}らないで, しない → しないで.",
+      "table": {
+        "headers": [
+          "Uso",
+          "Estrutura",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Estado (com)",
+            "V1-て ＋ V2",
+            "ミルクを {入|い}れて {飲|の}みます。"
+          ],
+          [
+            "Sem fazer",
+            "V1-ないで ＋ V2",
+            "ミルクを {入|い}れないで {飲|の}みます。"
+          ],
+          [
+            "Em vez de",
+            "V1-ないで、V2",
+            "バスに {乗|の}らないで、{歩|ある}いて {帰|かえ}ります。"
+          ],
+          [
+            "Pedido negativo (lição 17)",
+            "V-ないで ください",
+            "{氷|こおり}は {入|い}れないで ください。"
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "text": "{今日|きょう}は {砂糖|さとう}を {入|い}れないで {作|つく}りましょう。",
+          "pt": "Hoje vamos fazer sem colocar açúcar.",
+          "type": "negative"
+        },
+        {
+          "text": "{音楽|おんがく}を {聞|き}いて {勉強|べんきょう}します。",
+          "pt": "Estudo ouvindo música.",
+          "type": "affirmative"
+        },
+        {
+          "text": "{朝|あさ}ごはんを {食|た}べないで {学校|がっこう}へ {行|い}きましたか。",
+          "pt": "Você foi para a escola sem tomar café da manhã?",
+          "type": "interrogative"
+        }
+      ],
+      "comparison": {
+        "title": "〜ないで × 〜なくて",
+        "text": "〜ないで liga duas ações: “sem fazer / em vez de”. 〜なくて dá um MOTIVO ou sentimento: {子|こ}どもが {帰|かえ}って こなくて、{心配|しんぱい}です (como meu filho não voltou, estou preocupado). Para pedidos e instruções, use ないで."
+      },
+      "commonErrors": [
+        {
+          "wrong": "{砂糖|さとう}を {入|い}れなくて ください",
+          "right": "{砂糖|さとう}を {入|い}れないで ください",
+          "why": "Para pedir “não faça”, a forma é 〜ないで ください."
+        },
+        {
+          "wrong": "{乗|の}りないで",
+          "right": "{乗|の}らないで",
+          "why": "Verbos do grupo 1 mudam a vogal para あ na forma ない: {乗|の}る → {乗|の}らない."
+        }
+      ],
+      "usage": "Na cafeteria é essencial: {氷|こおり}を {入|い}れないで, {温|あたた}めないで, ふくろに {入|い}れないで ください.",
+      "pronunciation": "Em ないで, o い é curto e o で é fraco na fala rápida: “nai-de”.",
+      "check": {
+        "prompt": "Você NÃO quer gelo: {氷|こおり}は（　）ください。",
+        "options": [
+          "{入|い}れないで",
+          "{入|い}れなくて",
+          "{入|い}れて"
+        ],
+        "answer": 0,
+        "explanation": "Pedido negativo: V-ないで ください."
+      }
+    },
+    {
+      "id": "g-price",
+      "name": "Preços: 〜{円|えん}です／ぜんぶで",
+      "function": "Entender e dizer preços em ienes.",
+      "form": "ぜんぶで ＋ número ＋ {円|えん}です ・ 〜で おねがいします",
+      "explanation": "{円|えん} é a moeda japonesa. Atenção às mudanças de som com {百|ひゃく}: 300 = さんびゃく, 600 = ろっぴゃく, 800 = はっぴゃく. Com {千|せん}: 3000 = さんぜん, 8000 = はっせん. Ao pagar, diga o valor que entrega + で おねがいします: {千円|せんえん}で おねがいします. O troco é おつり.",
+      "table": {
+        "headers": [
+          "Número",
+          "Leitura",
+          "Atenção"
+        ],
+        "rows": [
+          [
+            "300{円|えん}",
+            "さんびゃくえん",
+            "ひゃく → びゃく"
+          ],
+          [
+            "600{円|えん}",
+            "ろっぴゃくえん",
+            "ろく → ろっ, ひゃく → ぴゃく"
+          ],
+          [
+            "800{円|えん}",
+            "はっぴゃくえん",
+            "はち → はっ, ひゃく → ぴゃく"
+          ],
+          [
+            "900{円|えん}",
+            "きゅうひゃくえん",
+            "sem mudança"
+          ],
+          [
+            "1000{円|えん}",
+            "せんえん",
+            "1000 = せん (não いっせん)"
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "text": "ぜんぶで {九百円|きゅうひゃくえん}です。",
+          "pt": "Ao todo são 900 ienes.",
+          "type": "affirmative"
+        },
+        {
+          "text": "この クッキーは {高|たか}くないです。{二百円|にひゃくえん}です。",
+          "pt": "Este cookie não é caro. Custa 200 ienes.",
+          "type": "negative"
+        },
+        {
+          "text": "チーズケーキは いくらですか。",
+          "pt": "Quanto custa o cheesecake?",
+          "type": "interrogative"
+        }
+      ],
+      "comparison": {
+        "title": "いくら × いくつ",
+        "text": "いくら pergunta PREÇO (quanto custa). いくつ pergunta QUANTIDADE (quantos)."
+      },
+      "commonErrors": [
+        {
+          "wrong": "さんひゃくえん",
+          "right": "さんびゃくえん",
+          "why": "Depois de さん, ひゃく vira びゃく."
+        },
+        {
+          "wrong": "はちひゃくえん",
+          "right": "はっぴゃくえん",
+          "why": "はち + ひゃく → はっぴゃく."
+        }
+      ],
+      "usage": "No balcão, a atendente diz o total (ぜんぶで…です) e, ao devolver o troco, 〜の おつりです.",
+      "pronunciation": "Em はっぴゃく, a pequena っ é uma pausa de um tempo antes do p.",
+      "check": {
+        "prompt": "Como se lê 800{円|えん}?",
+        "options": [
+          "はっぴゃくえん",
+          "はちひゃくえん",
+          "はっひゃくえん"
+        ],
+        "answer": 0,
+        "explanation": "800 = はっぴゃく."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "l1g1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-gist"
+      ],
+      "prompt": "Onde o Lucas está?",
+      "options": [
+        "Em uma cafeteria",
+        "Em uma livraria",
+        "Na escola"
+      ],
+      "answer": 0,
+      "explanation": "A atendente diz いらっしゃいませ e pergunta o pedido (ご{注文|ちゅうもん}).",
+      "review": "g-price"
+    },
+    {
+      "id": "l1g2",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-gist"
+      ],
+      "prompt": "De forma geral, o que acontece no diálogo?",
+      "options": [
+        "Lucas faz um pedido com instruções e paga",
+        "Lucas aprende uma receita",
+        "Lucas reclama do preço"
+      ],
+      "answer": 0,
+      "explanation": "Ele pede, diz como e quando quer a bebida, e paga.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "l1d1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "vocab-cafe"
+      ],
+      "prompt": "O que o Lucas pede para beber?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s2"
+        ]
+      },
+      "options": [
+        "{抹茶|まっちゃ}ラテ",
+        "ココア",
+        "オレンジジュース"
+      ],
+      "answer": 0,
+      "explanation": "{抹茶|まっちゃ}ラテを ください。",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "l1d2",
+      "stage": "listening",
+      "type": "tf",
+      "skills": [
+        "listening-detail",
+        "g-te-naide"
+      ],
+      "prompt": "O Lucas quer açúcar na bebida.",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s2"
+        ]
+      },
+      "answer": false,
+      "explanation": "{砂糖|さとう}は {入|い}れないで ください = sem açúcar, por favor.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "l1d3",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "g-atode"
+      ],
+      "prompt": "Quando a bebida deve chegar?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s5",
+          "t1s6"
+        ]
+      },
+      "options": [
+        "Depois de ele comer o bolo",
+        "Junto com o bolo",
+        "Antes do bolo"
+      ],
+      "answer": 0,
+      "explanation": "ケーキを {食|た}べた あとで、{持|も}って きて ください。",
+      "distractors": {
+        "1": "Para “junto”, ele diria いっしょに.",
+        "2": "“Antes” seria {食|た}べる まえに."
+      },
+      "review": "g-atode"
+    },
+    {
+      "id": "l1d4",
+      "stage": "listening",
+      "type": "gap",
+      "skills": [
+        "listening-numbers",
+        "g-price"
+      ],
+      "prompt": "Ouça e escreva o total em números.",
+      "text": "___{円|えん}",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s9"
+        ]
+      },
+      "answers": [
+        [
+          "900",
+          "{九百|きゅうひゃく}"
+        ]
+      ],
+      "explanation": "{九百円|きゅうひゃくえん} = 900{円|えん} (480 + 420).",
+      "review": "g-price"
+    },
+    {
+      "id": "l2g1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-gist"
+      ],
+      "prompt": "Sobre o que é a conversa?",
+      "options": [
+        "Como preparar um matcha latte",
+        "Como pedir comida para viagem",
+        "Como pagar com cartão"
+      ],
+      "answer": 0,
+      "explanation": "{抹茶|まっちゃ}ラテの {作|つく}り{方|かた}を {教|おし}えます。",
+      "review": "g-toori"
+    },
+    {
+      "id": "l2d1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "vocab-cafe"
+      ],
+      "prompt": "O que se coloca PRIMEIRO na xícara?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s3"
+        ]
+      },
+      "options": [
+        "{抹茶|まっちゃ}",
+        "ミルク",
+        "{砂糖|さとう}"
+      ],
+      "answer": 0,
+      "explanation": "まず、カップに {抹茶|まっちゃ}を {入|い}れます。",
+      "review": "g-atode"
+    },
+    {
+      "id": "l2d2",
+      "stage": "listening",
+      "type": "tf",
+      "skills": [
+        "listening-detail",
+        "g-te-naide"
+      ],
+      "prompt": "Hoje eles vão colocar açúcar no matcha latte.",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s7"
+        ]
+      },
+      "answer": false,
+      "explanation": "{入|い}れないで {作|つく}りましょう = vamos fazer sem colocar.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "l2d3",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "g-atode"
+      ],
+      "prompt": "O que se faz DEPOIS de misturar bem?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s5"
+        ]
+      },
+      "options": [
+        "Colocar leite quente",
+        "Colocar açúcar",
+        "Beber"
+      ],
+      "answer": 0,
+      "explanation": "よく まぜた あとで、{温|あたた}かい ミルクを {入|い}れます。",
+      "review": "g-atode"
+    },
+    {
+      "id": "pa1",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "O que significa 〜とおりに?",
+      "options": [
+        "do jeito que / conforme",
+        "depois de",
+        "sem fazer"
+      ],
+      "answer": 0,
+      "explanation": "わたしが やった とおりに = do jeito que eu fiz.",
+      "review": "g-toori"
+    },
+    {
+      "id": "pa2",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Escolha a forma correta:",
+      "options": [
+        "{食|た}べた あとで",
+        "{食|た}べる あとで",
+        "{食|た}べて あとで"
+      ],
+      "answer": 0,
+      "explanation": "Antes de あとで o verbo fica na forma た.",
+      "distractors": {
+        "1": "A forma de dicionário combina com まえに (antes de), não com あとで.",
+        "2": "A forma て não se liga a あとで."
+      },
+      "review": "g-atode"
+    },
+    {
+      "id": "pa3",
+      "stage": "A",
+      "type": "tf",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "「{砂糖|さとう}を {入|い}れないで {飲|の}みます」 significa beber COM açúcar.",
+      "answer": false,
+      "explanation": "ないで = sem fazer. Bebe SEM colocar açúcar.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "pa4",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "Tradução de 「{説明書|せつめいしょ}の とおりに {作|つく}ります。」",
+      "options": [
+        "Faço conforme o manual.",
+        "Faço depois de ler o manual.",
+        "Faço sem o manual."
+      ],
+      "answer": 0,
+      "explanation": "N の とおりに = conforme N.",
+      "review": "g-toori"
+    },
+    {
+      "id": "pa5",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "Que estrutura aparece em 「{帽子|ぼうし}を かぶって {出|で}かけます」?",
+      "options": [
+        "V-て mostrando em que estado se faz a ação",
+        "Pedido (〜て ください)",
+        "Ação depois de outra (〜あとで)"
+      ],
+      "answer": 0,
+      "explanation": "Sai de chapéu: かぶって descreve o estado.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "pa6",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-atode",
+        "g-toori"
+      ],
+      "prompt": "Antes de あとで e とおりに, um substantivo precisa de:",
+      "options": [
+        "の ({授業|じゅぎょう}の あとで)",
+        "な",
+        "を"
+      ],
+      "answer": 0,
+      "explanation": "N の あとで / N の とおりに.",
+      "review": "g-atode"
+    },
+    {
+      "id": "pb1",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-detail"
+      ],
+      "prompt": "Ouça. O que a atendente pergunta?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s1"
+        ]
+      },
+      "options": [
+        "O que ele vai pedir",
+        "Se ele quer açúcar",
+        "Quanto ele vai pagar"
+      ],
+      "answer": 0,
+      "explanation": "ご{注文|ちゅうもん}は {何|なん}に しますか = o que vai pedir?",
+      "review": "g-price"
+    },
+    {
+      "id": "pb2",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "vocab-cafe"
+      ],
+      "prompt": "Ouça. Qual é a melhor resposta?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s3"
+        ]
+      },
+      "options": [
+        "Mで おねがいします。",
+        "はい、{砂糖|さとう}です。",
+        "{九百円|きゅうひゃくえん}です。"
+      ],
+      "answer": 0,
+      "explanation": "Ela oferece tamanhos (S、M、L): responda com o tamanho.",
+      "review": "g-price"
+    },
+    {
+      "id": "pb3",
+      "stage": "B",
+      "type": "tf",
+      "skills": [
+        "listening-detail",
+        "g-toori"
+      ],
+      "prompt": "Ouça. A atendente quer que o Lucas faça do mesmo jeito que ela.",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s1"
+        ]
+      },
+      "answer": true,
+      "explanation": "わたしが やった とおりに、やって みて ください。",
+      "review": "g-toori"
+    },
+    {
+      "id": "pb4",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "g-atode"
+      ],
+      "prompt": "Ouça. O que se faz depois de colocar a água quente?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s3",
+          "t2s4"
+        ]
+      },
+      "options": [
+        "Misturar bem",
+        "Colocar leite",
+        "Beber"
+      ],
+      "answer": 0,
+      "explanation": "お{湯|ゆ}を {入|い}れた あとで、まぜる.",
+      "review": "g-atode"
+    },
+    {
+      "id": "pb5",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-numbers",
+        "g-price"
+      ],
+      "prompt": "Ouça. Quanto é o troco?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s11"
+        ]
+      },
+      "options": [
+        "100{円|えん}",
+        "1000{円|えん}",
+        "900{円|えん}"
+      ],
+      "answer": 0,
+      "explanation": "{百円|ひゃくえん}の おつりです (1000 − 900).",
+      "review": "g-price"
+    },
+    {
+      "id": "pc1",
+      "stage": "C",
+      "type": "gap",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Complete com a forma correta de みがきます.",
+      "text": "{歯|は}を ___ あとで、{寝|ね}ます。",
+      "answers": [
+        [
+          "{磨|みが}いた"
+        ]
+      ],
+      "explanation": "V-た + あとで: みがいた あとで.",
+      "review": "g-atode"
+    },
+    {
+      "id": "pc2",
+      "stage": "C",
+      "type": "gap",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "Complete com a partícula.",
+      "text": "{説明書|せつめいしょ}___ とおりに、{組|く}み{立|た}てて ください。",
+      "answers": [
+        [
+          "の"
+        ]
+      ],
+      "explanation": "N の とおりに.",
+      "review": "g-toori"
+    },
+    {
+      "id": "pc3",
+      "stage": "C",
+      "type": "gap",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "Complete: beber café SEM colocar leite ({入|い}れます).",
+      "text": "コーヒーに ミルクを ___ {飲|の}みます。",
+      "answers": [
+        [
+          "{入|い}れないで"
+        ]
+      ],
+      "explanation": "V-ないで + V2 = fazer sem.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "pc4",
+      "stage": "C",
+      "type": "order",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "Organize os blocos.",
+      "tiles": [
+        "とおりに、",
+        "わたしが ",
+        "ください。",
+        "やった ",
+        "やって みて "
+      ],
+      "answers": [
+        "わたしが やった とおりに、やって みて ください。"
+      ],
+      "explanation": "Quem + V-た + とおりに + ação.",
+      "review": "g-toori"
+    },
+    {
+      "id": "pc5",
+      "stage": "C",
+      "type": "order",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Organize os blocos.",
+      "tiles": [
+        "{行|い}きます。",
+        "{映画|えいが}の ",
+        "{食|た}べに ",
+        "あとで、",
+        "ごはんを "
+      ],
+      "answers": [
+        "{映画|えいが}の あとで、ごはんを {食|た}べに {行|い}きます。"
+      ],
+      "explanation": "N の あとで + ação.",
+      "review": "g-atode"
+    },
+    {
+      "id": "pc6",
+      "stage": "C",
+      "type": "transform",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Junte as duas frases com あとで.",
+      "source": "シャワーを {浴|あ}びます。それから、{寝|ね}ます。",
+      "answers": [
+        "シャワーを {浴|あ}びた あとで、{寝|ね}ます。"
+      ],
+      "explanation": "V1-た あとで、V2.",
+      "review": "g-atode"
+    },
+    {
+      "id": "pc7",
+      "stage": "C",
+      "type": "transform",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "Junte com ないで (em vez de pegar o ônibus, voltar a pé).",
+      "source": "バスに {乗|の}りません。{歩|ある}いて {帰|かえ}ります。",
+      "answers": [
+        "バスに {乗|の}らないで、{歩|ある}いて {帰|かえ}ります。"
+      ],
+      "explanation": "{乗|の}る → {乗|の}らない → {乗|の}らないで.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "pc8",
+      "stage": "C",
+      "type": "match",
+      "skills": [
+        "vocab-cafe",
+        "g-te-naide"
+      ],
+      "prompt": "Associe a pergunta da atendente à resposta adequada.",
+      "pairs": [
+        [
+          "{砂糖|さとう}は {入|い}れますか。",
+          "いいえ、{入|い}れないで ください。"
+        ],
+        [
+          "いつ {持|も}って きましょうか。",
+          "{食|た}べた あとで おねがいします。"
+        ],
+        [
+          "どうやって {作|つく}りますか。",
+          "わたしが やった とおりに {作|つく}って ください。"
+        ],
+        [
+          "{店内|てんない}で {食|た}べますか。",
+          "はい、ここで {食|た}べます。"
+        ]
+      ],
+      "explanation": "Cada pergunta tem uma resposta típica.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "pd1",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "A atendente pergunta: 「ミルクを {入|い}れますか。」 Responda que você NÃO quer leite.",
+      "placeholder": "いいえ、…",
+      "criteria": [
+        {
+          "label": "Usou 〜ないで",
+          "pattern": "ないで"
+        },
+        {
+          "label": "Usou o verbo {入|い}れる ({入|い}れないで / いれないで)",
+          "pattern": "(入|い)れないで"
+        },
+        {
+          "label": "Pediu com ください / おねがいします",
+          "pattern": "(ください|下さい|おねがいします|お願いします)"
+        }
+      ],
+      "model": "いいえ、ミルクは {入|い}れないで ください。",
+      "explanation": "V-ないで ください = por favor, não faça.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "pd2",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Peça para a atendente trazer o café DEPOIS que você comer o bolo (ケーキ).",
+      "criteria": [
+        {
+          "label": "Usou a forma た + あとで",
+          "pattern": "(た|だ)あとで"
+        },
+        {
+          "label": "Mencionou o bolo (ケーキ)",
+          "pattern": "ケーキ"
+        },
+        {
+          "label": "Pediu com ください / おねがいします",
+          "pattern": "(ください|下さい|おねがいします|お願いします)"
+        }
+      ],
+      "model": "ケーキを {食|た}べた あとで、コーヒーを {持|も}って きて ください。",
+      "explanation": "V-た あとで + pedido.",
+      "review": "g-atode"
+    },
+    {
+      "id": "pd3",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "Seu amigo vai montar uma estante. Diga para ele montar conforme o manual ({説明書|せつめいしょ}).",
+      "criteria": [
+        {
+          "label": "Usou {説明書|せつめいしょ}の とおりに",
+          "pattern": "(説明書|せつめいしょ)のとおりに"
+        },
+        {
+          "label": "Usou um verbo na forma て + ください",
+          "pattern": "(て|で)(ください|下さい)"
+        }
+      ],
+      "model": "{説明書|せつめいしょ}の とおりに、{組|く}み{立|た}てて ください。",
+      "explanation": "N の とおりに + V-て ください.",
+      "review": "g-toori"
+    },
+    {
+      "id": "pd4",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-te-naide",
+        "g-atode",
+        "g-toori"
+      ],
+      "multiline": true,
+      "placeholder": "店員：いらっしゃいませ。\nわたし：…",
+      "prompt": "Escreva um mini diálogo (4 a 6 linhas) na カフェ・さくら: faça um pedido, diga como quer (〜ないで ou 〜て) e quando quer receber algo (〜あとで).",
+      "criteria": [
+        {
+          "label": "Tem um pedido (ください / おねがいします)",
+          "pattern": "(ください|下さい|おねがいします|お願いします)"
+        },
+        {
+          "label": "Usou 〜ないで",
+          "pattern": "ないで"
+        },
+        {
+          "label": "Usou 〜あとで",
+          "pattern": "あとで"
+        },
+        {
+          "label": "Tem pelo menos 3 linhas",
+          "check": "lines3"
+        }
+      ],
+      "model": "{店員|てんいん}：いらっしゃいませ。ご{注文|ちゅうもん}は？\nわたし：ココアと マフィンを ください。\n{店員|てんいん}：{砂糖|さとう}は {入|い}れますか。\nわたし：いいえ、{入|い}れないで ください。ココアは マフィンを {食|た}べた あとで おねがいします。\n{店員|てんいん}：かしこまりました。",
+      "explanation": "Um diálogo completo tem pedido, instrução (ないで) e ordem (あとで).",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "ex1",
+      "stage": "exam",
+      "type": "mcq",
+      "noFurigana": true,
+      "skills": [
+        "kanji"
+      ],
+      "examPart": "文字・語彙 — 漢字読み (leitura)",
+      "prompt": "「説明書」の 読み方は どれですか。\nこの 説明書を よく 読んで ください。",
+      "options": [
+        "せつめいしょ",
+        "せいめいしょ",
+        "せつめしょ",
+        "せつめいじょ"
+      ],
+      "answer": 0,
+      "explanation": "説明 (せつめい) + 書 (しょ) = せつめいしょ.",
+      "distractors": {
+        "1": "せい é outra leitura; 説 se lê せつ.",
+        "2": "Falta o い de せつめい.",
+        "3": "書 aqui se lê しょ, sem sonorização."
+      },
+      "review": "g-toori"
+    },
+    {
+      "id": "ex2",
+      "stage": "exam",
+      "type": "mcq",
+      "noFurigana": true,
+      "skills": [
+        "kanji"
+      ],
+      "examPart": "文字・語彙 — 漢字読み (leitura)",
+      "prompt": "「階段」の 読み方は どれですか。\nエレベーターを 使わないで、階段で 行きます。",
+      "options": [
+        "かいだん",
+        "かいたん",
+        "がいだん",
+        "かいどう"
+      ],
+      "answer": 0,
+      "explanation": "階 (かい) + 段 (だん).",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "ex3",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "kanji"
+      ],
+      "examPart": "文字・語彙 — 表記 (escrita)",
+      "prompt": "「みがきます」を 漢字で 書くと どれですか。\nねる まえに、はを みがきます。",
+      "options": [
+        "磨きます",
+        "研きます",
+        "摩きます",
+        "麿きます"
+      ],
+      "answer": 0,
+      "explanation": "{歯|は}を {磨|みが}きます. Os outros kanji são parecidos, mas não se usam aqui.",
+      "review": "g-atode"
+    },
+    {
+      "id": "ex4",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-atode"
+      ],
+      "examPart": "文法 — 文法形式の判断 (forma)",
+      "prompt": "（　）に {何|なに}を {入|い}れますか。\nごはんを {食|た}べた（　）、{歯|は}を みがきます。",
+      "options": [
+        "あとで",
+        "まえに",
+        "とおりに",
+        "ないで"
+      ],
+      "answer": 0,
+      "explanation": "V-た + あとで (depois de comer).",
+      "distractors": {
+        "1": "まえに pede a forma de dicionário ({食|た}べる まえに).",
+        "2": "とおりに = do jeito que; não faz sentido aqui.",
+        "3": "ないで pede a forma ない ({食|た}べないで)."
+      },
+      "review": "g-atode"
+    },
+    {
+      "id": "ex5",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-toori"
+      ],
+      "examPart": "文法 — 文法形式の判断 (forma)",
+      "prompt": "（　）に {何|なに}を {入|い}れますか。\n{先生|せんせい}が {言|い}った（　）、{書|か}いて ください。",
+      "options": [
+        "とおりに",
+        "あとで",
+        "ながら",
+        "まえに"
+      ],
+      "answer": 0,
+      "explanation": "Fazer conforme o professor disse: {言|い}った とおりに.",
+      "review": "g-toori"
+    },
+    {
+      "id": "ex6",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-te-naide"
+      ],
+      "examPart": "文法 — 文法形式の判断 (forma)",
+      "prompt": "（　）に {何|なに}を {入|い}れますか。\n{今日|きょう}は {雨|あめ}が {降|ふ}って いないので、{傘|かさ}を（　）{出|で}かけます。",
+      "options": [
+        "{持|も}たないで",
+        "{持|も}たなくて",
+        "{持|も}って",
+        "{持|も}つ"
+      ],
+      "answer": 0,
+      "explanation": "Sai SEM levar o guarda-chuva: {持|も}たないで.",
+      "distractors": {
+        "1": "〜なくて indica motivo, não “sem fazer”.",
+        "2": "Como não está chovendo, ele não leva o guarda-chuva.",
+        "3": "A forma de dicionário não liga as duas ações."
+      },
+      "review": "g-te-naide"
+    },
+    {
+      "id": "ex7",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-atode"
+      ],
+      "examPart": "文法 — 文の組み立て (★)",
+      "prompt": "★に {入|はい}る ものは どれですか。\nきょうは ＿＿ ＿＿ ★ ＿＿ カフェに {行|い}きます。\n（じゅぎょうが ／ {終|お}わった ／ あとで ／ ともだちと）",
+      "options": [
+        "じゅぎょうが",
+        "{終|お}わった",
+        "あとで",
+        "ともだちと"
+      ],
+      "answer": 2,
+      "explanation": "じゅぎょうが {終|お}わった あとで ともだちと → ★ é o 3º: あとで.",
+      "review": "g-atode"
+    },
+    {
+      "id": "ex8",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "reading-memo",
+        "g-atode"
+      ],
+      "examPart": "読解 — 内容理解 (texto curto)",
+      "prompt": "Leia o bilhete e responda.\nあおいさんへ\nケーキを {買|か}って おきました。れいぞうこに {入|い}れて あります。{晩|ばん}ごはんを {食|た}べた あとで、{食|た}べて ください。　{母|はは}より\n\nあおいさんは いつ ケーキを {食|た}べますか。",
+      "options": [
+        "{晩|ばん}ごはんの あとで",
+        "{晩|ばん}ごはんの まえに",
+        "{今|いま} すぐ",
+        "あしたの {朝|あさ}"
+      ],
+      "answer": 0,
+      "explanation": "{晩|ばん}ごはんを {食|た}べた あとで = depois do jantar.",
+      "review": "g-atode"
+    },
+    {
+      "id": "ex9",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "g-atode"
+      ],
+      "examPart": "聴解 — ポイント理解 (ponto-chave)",
+      "prompt": "Ouça. ルーカスさんは いつ ラテを {飲|の}みますか。",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s5",
+          "t1s6"
+        ]
+      },
+      "options": [
+        "ケーキを {食|た}べた あとで",
+        "ケーキと いっしょに",
+        "ケーキを {食|た}べる まえに"
+      ],
+      "answer": 0,
+      "explanation": "ケーキを {食|た}べた あとで、{持|も}って きて ください。",
+      "review": "g-atode"
+    },
+    {
+      "id": "ex10",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "listening-detail"
+      ],
+      "examPart": "聴解 — 即時応答 (resposta imediata)",
+      "prompt": "Ouça e escolha a resposta adequada.",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s7"
+        ]
+      },
+      "options": [
+        "はい、ここで {食|た}べます。",
+        "はい、{食|た}べました。",
+        "いいえ、{食|た}べないで ください。"
+      ],
+      "answer": 0,
+      "explanation": "Pergunta se vai comer na loja: はい、ここで {食|た}べます。",
+      "review": "g-te-naide"
+    }
+  ],
+  "reviewItems": [
+    {
+      "id": "rv1",
+      "context": "Na biblioteca",
+      "type": "mcq",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Biblioteca: 「{本|ほん}を {読|よ}んだ（　）、{返|かえ}して ください。」",
+      "options": [
+        "あとで",
+        "とおりに",
+        "ないで"
+      ],
+      "answer": 0,
+      "explanation": "Devolva depois de ler: {読|よ}んだ あとで.",
+      "review": "g-atode"
+    },
+    {
+      "id": "rv2",
+      "context": "No trem",
+      "type": "mcq",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "Trem: 「でんしゃの {中|なか}で {電話|でんわ}を（　）ください。」",
+      "options": [
+        "しないで",
+        "しなくて",
+        "して"
+      ],
+      "answer": 0,
+      "explanation": "Pedido negativo: しないで ください.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "rv3",
+      "context": "Aula de culinária",
+      "type": "gap",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "Culinária: complete com a partícula.",
+      "text": "レシピ___ とおりに {作|つく}りましょう。",
+      "answers": [
+        [
+          "の"
+        ]
+      ],
+      "explanation": "N の とおりに.",
+      "review": "g-toori"
+    },
+    {
+      "id": "rv4",
+      "context": "No parque",
+      "type": "transform",
+      "skills": [
+        "g-te-naide"
+      ],
+      "prompt": "Parque: junte com a forma て (ir de bicicleta).",
+      "source": "じてんしゃに {乗|の}ります。こうえんへ {行|い}きます。",
+      "answers": [
+        "じてんしゃに {乗|の}って こうえんへ {行|い}きます。"
+      ],
+      "explanation": "V1-て V2: {乗|の}って {行|い}きます.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "rv5",
+      "context": "Na escola",
+      "type": "order",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Escola: organize os blocos.",
+      "tiles": [
+        "{部活|ぶかつ}に ",
+        "あとで、",
+        "{授業|じゅぎょう}の ",
+        "{行|い}きます。"
+      ],
+      "answers": [
+        "{授業|じゅぎょう}の あとで、{部活|ぶかつ}に {行|い}きます。"
+      ],
+      "explanation": "N の あとで + ação.",
+      "review": "g-atode"
+    },
+    {
+      "id": "rv6",
+      "context": "Na loja de conveniência",
+      "type": "mcq",
+      "skills": [
+        "g-te-naide",
+        "vocab-cafe"
+      ],
+      "prompt": "Konbini: 「ふくろに {入|い}れないで ください」 significa:",
+      "options": [
+        "Não precisa colocar na sacola.",
+        "Coloque na sacola, por favor.",
+        "Quanto custa a sacola?"
+      ],
+      "answer": 0,
+      "explanation": "ないで ください = por favor, não faça.",
+      "review": "g-te-naide"
+    },
+    {
+      "id": "rv7",
+      "context": "Num jogo online",
+      "type": "mcq",
+      "skills": [
+        "g-toori"
+      ],
+      "prompt": "Jogo: seu amigo diz 「わたしが {言|い}う とおりに {動|うご}いて！」 O que ele quer?",
+      "options": [
+        "Que você se mova exatamente como ele disser",
+        "Que você se mova depois dele",
+        "Que você não se mova"
+      ],
+      "answer": 0,
+      "explanation": "V-る とおりに: siga o que ele vai dizer.",
+      "review": "g-toori"
+    },
+    {
+      "id": "rv8",
+      "context": "Em casa",
+      "type": "gap",
+      "skills": [
+        "g-atode"
+      ],
+      "prompt": "Casa: complete com a forma た de します.",
+      "text": "{宿題|しゅくだい}を ___ あとで、ゲームを します。",
+      "answers": [
+        [
+          "した"
+        ]
+      ],
+      "explanation": "します → した → した あとで.",
+      "review": "g-atode"
+    }
+  ],
+  "game": {
+    "title": "カフェ・クエスト Café Quest",
+    "intro": "Você é o Lucas, intercambista em Tóquio. Entre na カフェ・さくら, leia o cardápio e faça seu pedido em japonês — do jeito que você quer!",
+    "npcLabel": "はるか — 店員 (atendente)",
+    "playerLabel": "あなた (você)",
+    "npcVoice": "はるか",
+    "playerVoice": "ルーカス",
+    "payLine": "これで おねがいします。",
+    "writePlaceholder": "日本語で 書いて ください…",
+    "doorSign": "OPEN",
+    "missions": [
+      {
+        "id": "m1",
+        "title": "Missão 1 — Sem açúcar, por favor",
+        "brief": "Peça uma ココア SEM açúcar e uma マフィン. Você vai comer na loja. Você tem 1000{円|えん}.",
+        "budget": 1000,
+        "ticket": [
+          "ココア ({砂糖|さとう}なし)",
+          "マフィン",
+          "{店内|てんない}"
+        ],
+        "steps": [
+          {
+            "id": "m1a",
+            "npc": "いらっしゃいませ。ご{注文|ちゅうもん}は？",
+            "npcPt": "Bem-vindo! O que vai pedir?",
+            "match": {
+              "all": [
+                "ココア"
+              ],
+              "any": [
+                "ください",
+                "下さい",
+                "おねがいします",
+                "お願いします"
+              ]
+            },
+            "choices": [
+              {
+                "text": "ココアを ください。",
+                "ok": true,
+                "fb": "Perfeito: N を ください."
+              },
+              {
+                "text": "ココアが ほしいです！",
+                "ok": false,
+                "fb": "Ela entende, mas soa como um desejo pessoal, não um pedido. No balcão, use 〜を ください／おねがいします."
+              },
+              {
+                "text": "ココアを {飲|の}みました。",
+                "ok": false,
+                "fb": "{飲|の}みました = eu bebi (passado). Você ainda vai pedir!"
+              }
+            ],
+            "ticketDone": 0
+          },
+          {
+            "id": "m1b",
+            "npc": "{砂糖|さとう}を {入|い}れますか。",
+            "npcPt": "Coloco açúcar?",
+            "match": {
+              "any": [
+                "{入|い}れないで",
+                "なしで"
+              ]
+            },
+            "choices": [
+              {
+                "text": "いいえ、{入|い}れないで ください。",
+                "ok": true,
+                "fb": "Isso! V-ないで ください = por favor, não coloque."
+              },
+              {
+                "text": "いいえ、{入|い}れなくて ください。",
+                "ok": false,
+                "fb": "〜なくて não forma pedidos. Use 〜ないで ください."
+              },
+              {
+                "text": "はい、{入|い}れて ください。",
+                "ok": false,
+                "fb": "Frase correta, mas a missão é SEM açúcar."
+              }
+            ]
+          },
+          {
+            "id": "m1c",
+            "npc": "ほかに {何|なに}か ありますか。",
+            "npcPt": "Mais alguma coisa?",
+            "match": {
+              "all": [
+                "マフィン"
+              ]
+            },
+            "choices": [
+              {
+                "text": "マフィンも ください。",
+                "ok": true,
+                "fb": "Ótimo! も = também."
+              },
+              {
+                "text": "いいえ、けっこうです。",
+                "ok": false,
+                "fb": "Ainda falta a マフィン da sua missão!"
+              },
+              {
+                "text": "マフィンを {食|た}べないで ください。",
+                "ok": false,
+                "fb": "Isso pediria para a atendente NÃO comer a マフィン 😄"
+              }
+            ],
+            "ticketDone": 1
+          },
+          {
+            "id": "m1d",
+            "npc": "{店内|てんない}で {食|た}べますか。",
+            "npcPt": "Vai comer aqui na loja?",
+            "match": {
+              "any": [
+                "ここで",
+                "{店内|てんない}",
+                "はい"
+              ]
+            },
+            "choices": [
+              {
+                "text": "はい、ここで {食|た}べます。",
+                "ok": true,
+                "fb": "Certo: {店内|てんない} = dentro da loja."
+              },
+              {
+                "text": "いいえ、{持|も}って {帰|かえ}ります。",
+                "ok": false,
+                "fb": "{持|も}って {帰|かえ}ります = levar para casa. A missão diz que você come na loja."
+              }
+            ],
+            "ticketDone": 2
+          },
+          {
+            "id": "m1e",
+            "npc": "ぜんぶで {七百五十円|ななひゃくごじゅうえん}です。",
+            "npcPt": "Ao todo são 750 ienes.",
+            "pay": {
+              "amount": 750,
+              "options": [
+                750,
+                570,
+                7500
+              ],
+              "hint": "Ouça de novo: ななひゃく = 700, ごじゅう = 50."
+            },
+            "prompt": "Escolha quanto pagar."
+          },
+          {
+            "id": "m1f",
+            "npc": "{二百五十円|にひゃくごじゅうえん}の おつりです。ありがとうございました。",
+            "npcPt": "Seu troco de 250 ienes. Obrigada.",
+            "match": {
+              "any": [
+                "ありがとう",
+                "どうも"
+              ]
+            },
+            "choices": [
+              {
+                "text": "どうも ありがとうございます。",
+                "ok": true,
+                "fb": "Missão cumprida!"
+              },
+              {
+                "text": "いらっしゃいませ。",
+                "ok": false,
+                "fb": "いらっしゃいませ é o que a loja diz para receber clientes."
+              }
+            ],
+            "end": true
+          }
+        ]
+      },
+      {
+        "id": "m2",
+        "title": "Missão 2 — Depois do sanduíche",
+        "brief": "Peça uma チーズサンド e uma オレンジジュース SEM gelo. Você quer o suco DEPOIS de comer o sanduíche. Você tem 1000{円|えん}.",
+        "budget": 1000,
+        "ticket": [
+          "チーズサンド",
+          "オレンジジュース ({氷|こおり}なし)",
+          "ジュースは あとで"
+        ],
+        "steps": [
+          {
+            "id": "m2a",
+            "npc": "ご{注文|ちゅうもん}は {何|なん}に しますか。",
+            "npcPt": "O que vai pedir?",
+            "match": {
+              "all": [
+                "チーズサンド",
+                "オレンジジュース"
+              ]
+            },
+            "choices": [
+              {
+                "text": "チーズサンドと オレンジジュースを ください。",
+                "ok": true,
+                "fb": "Perfeito: A と B を ください."
+              },
+              {
+                "text": "チーズサンドを ください。",
+                "ok": false,
+                "fb": "Falta a オレンジジュース!"
+              },
+              {
+                "text": "たまごサンドと オレンジジュースを ください。",
+                "ok": false,
+                "fb": "たまごサンド é de ovo. A missão é チーズサンド."
+              }
+            ],
+            "ticketDone": 0
+          },
+          {
+            "id": "m2b",
+            "npc": "ジュースに {氷|こおり}を {入|い}れますか。",
+            "npcPt": "Coloco gelo no suco?",
+            "match": {
+              "any": [
+                "{入|い}れないで",
+                "なしで"
+              ]
+            },
+            "choices": [
+              {
+                "text": "いいえ、{氷|こおり}は {入|い}れないで ください。",
+                "ok": true,
+                "fb": "Isso! Sem gelo."
+              },
+              {
+                "text": "はい、たくさん {入|い}れて ください。",
+                "ok": false,
+                "fb": "A missão pede SEM gelo."
+              },
+              {
+                "text": "いいえ、{入|い}れないです。",
+                "ok": false,
+                "fb": "Para pedir, use 〜ないで ください."
+              }
+            ],
+            "ticketDone": 1
+          },
+          {
+            "id": "m2c",
+            "npc": "ジュースは サンドと いっしょに {持|も}って いきますか。",
+            "npcPt": "Levo o suco junto com o sanduíche?",
+            "match": {
+              "any": [
+                "あとで"
+              ]
+            },
+            "choices": [
+              {
+                "text": "いいえ、サンドを {食|た}べた あとで おねがいします。",
+                "ok": true,
+                "fb": "Excelente: V-た あとで."
+              },
+              {
+                "text": "いいえ、サンドを {食|た}べる あとで おねがいします。",
+                "ok": false,
+                "fb": "Quase! Antes de あとで o verbo fica na forma た: {食|た}べた あとで."
+              },
+              {
+                "text": "はい、いっしょに おねがいします。",
+                "ok": false,
+                "fb": "A missão diz: o suco vem DEPOIS do sanduíche."
+              }
+            ],
+            "ticketDone": 2
+          },
+          {
+            "id": "m2d",
+            "npc": "ぜんぶで {八百三十円|はっぴゃくさんじゅうえん}です。",
+            "npcPt": "Ao todo são 830 ienes.",
+            "pay": {
+              "amount": 830,
+              "options": [
+                830,
+                803,
+                8300
+              ],
+              "hint": "Ouça de novo: はっぴゃく = 800, さんじゅう = 30."
+            },
+            "prompt": "Escolha quanto pagar."
+          },
+          {
+            "id": "m2e",
+            "npc": "ありがとうございました。ごゆっくり どうぞ。",
+            "npcPt": "Obrigada. Fique à vontade.",
+            "match": {
+              "any": [
+                "ありがとう",
+                "どうも"
+              ]
+            },
+            "choices": [
+              {
+                "text": "ありがとうございます。",
+                "ok": true,
+                "fb": "Missão cumprida!"
+              },
+              {
+                "text": "ごちそうさまでした。",
+                "ok": false,
+                "fb": "ごちそうさまでした se diz DEPOIS de comer. Você ainda vai comer!"
+              }
+            ],
+            "end": true
+          }
+        ]
+      },
+      {
+        "id": "m3",
+        "title": "Missão 3 — Como diz o bilhete",
+        "brief": "Sua amiga あおい pediu para você comprar o lanche dela. Leia o MEMO e peça exatamente como está escrito (メモの とおりに). Você tem 1000{円|えん}.",
+        "budget": 1000,
+        "memo": "アップルパイを {一|ひと}つ。{温|あたた}めないで ください。りんごジュースは パイを {食|た}べた あとで。— あおい",
+        "ticket": [
+          "アップルパイ ×1",
+          "{温|あたた}めない",
+          "りんごジュース (あとで)"
+        ],
+        "steps": [
+          {
+            "id": "m3a",
+            "npc": "いらっしゃいませ。",
+            "npcPt": "Bem-vindo!",
+            "prompt": "Peça como está no memo.",
+            "match": {
+              "all": [
+                "アップルパイ"
+              ]
+            },
+            "choices": [
+              {
+                "text": "アップルパイを {一|ひと}つ ください。",
+                "ok": true,
+                "fb": "Isso: {一|ひと}つ = um."
+              },
+              {
+                "text": "アップルパイを {二|ふた}つ ください。",
+                "ok": false,
+                "fb": "O memo diz {一|ひと}つ (um)."
+              },
+              {
+                "text": "クッキーを {一|ひと}つ ください。",
+                "ok": false,
+                "fb": "Releia o memo: é アップルパイ."
+              }
+            ],
+            "ticketDone": 0
+          },
+          {
+            "id": "m3b",
+            "npc": "パイは {温|あたた}めますか。",
+            "npcPt": "Esquento a torta?",
+            "match": {
+              "any": [
+                "{温|あたた}めないで"
+              ]
+            },
+            "choices": [
+              {
+                "text": "いいえ、{温|あたた}めないで ください。",
+                "ok": true,
+                "fb": "Exatamente como no memo!"
+              },
+              {
+                "text": "はい、{温|あたた}めて ください。",
+                "ok": false,
+                "fb": "O memo diz {温|あたた}めないで."
+              },
+              {
+                "text": "いいえ、{温|あたた}めなくて ください。",
+                "ok": false,
+                "fb": "Use 〜ないで ください para pedir que NÃO façam."
+              }
+            ],
+            "ticketDone": 1
+          },
+          {
+            "id": "m3c",
+            "npc": "お{飲|の}み{物|もの}は いかがですか。",
+            "npcPt": "Vai querer uma bebida?",
+            "match": {
+              "all": [
+                "りんごジュース"
+              ],
+              "any": [
+                "あとで"
+              ]
+            },
+            "choices": [
+              {
+                "text": "りんごジュースを ください。パイを {食|た}べた あとで おねがいします。",
+                "ok": true,
+                "fb": "Perfeito: メモの とおりに!"
+              },
+              {
+                "text": "りんごジュースを {先|さき}に ください。",
+                "ok": false,
+                "fb": "{先|さき}に = antes. O memo diz あとで."
+              },
+              {
+                "text": "オレンジジュースを ください。",
+                "ok": false,
+                "fb": "O memo pede りんごジュース."
+              }
+            ],
+            "ticketDone": 2
+          },
+          {
+            "id": "m3d",
+            "npc": "ぜんぶで {八百円|はっぴゃくえん}です。",
+            "npcPt": "Ao todo são 800 ienes.",
+            "pay": {
+              "amount": 800,
+              "options": [
+                800,
+                1800,
+                600
+              ],
+              "hint": "はっぴゃく = 800. ろっぴゃく seria 600."
+            },
+            "prompt": "Escolha quanto pagar."
+          },
+          {
+            "id": "m3e",
+            "npc": "メモの とおりですね。ありがとうございました。",
+            "npcPt": "Igualzinho ao bilhete, né? Obrigada.",
+            "match": {
+              "any": [
+                "ありがとう",
+                "どうも",
+                "はい"
+              ]
+            },
+            "choices": [
+              {
+                "text": "はい。ありがとうございます。",
+                "ok": true,
+                "fb": "Missão cumprida — あおい vai ficar feliz!"
+              },
+              {
+                "text": "いいえ、メモの とおりじゃ ありません。",
+                "ok": false,
+                "fb": "Mas foi exatamente como no memo! 😉"
+              }
+            ],
+            "end": true
+          }
+        ]
+      }
+    ],
+    "npcSorry": "はるか:「えっ？」",
+    "npcName": "はるか"
+  },
+  "speaking": {
+    "repeatSegments": [
+      "t1s2",
+      "t1s4",
+      "t1s6",
+      "t1s8",
+      "t1s10",
+      "t2s4"
+    ],
+    "shadowTrack": "t1",
+    "substitution": {
+      "intro": "Troque o item e escolha a forma certa do verbo conforme a situação (com → {入|い}れて, sem → {入|い}れないで). Depois diga a frase.",
+      "frame": "{item}は {choice} ください。",
+      "choiceLabel": "Escolha a forma do verbo",
+      "choices": [
+        "{入|い}れて",
+        "{入|い}れないで"
+      ],
+      "items": [
+        {
+          "item": "{砂糖|さとう}",
+          "choice": "{入|い}れないで",
+          "cue": "Você NÃO quer açúcar.",
+          "cueShort": " 🚫",
+          "hint": "A situação é SEM açúcar → 〜ないで."
+        },
+        {
+          "item": "ミルク",
+          "choice": "{入|い}れて",
+          "cue": "Você QUER leite.",
+          "cueShort": " ✅",
+          "hint": "A situação é COM leite → 〜て."
+        },
+        {
+          "item": "{氷|こおり}",
+          "choice": "{入|い}れないで",
+          "cue": "Você NÃO quer gelo.",
+          "cueShort": " 🚫",
+          "hint": "SEM gelo → 〜ないで."
+        },
+        {
+          "item": "レモン",
+          "choice": "{入|い}れて",
+          "cue": "Você QUER limão.",
+          "cueShort": " ✅",
+          "hint": "COM limão → 〜て."
+        },
+        {
+          "item": "はちみつ",
+          "choice": "{入|い}れないで",
+          "cue": "Você NÃO quer mel.",
+          "cueShort": " 🚫",
+          "hint": "SEM mel → 〜ないで."
+        }
+      ]
+    },
+    "respond": [
+      {
+        "id": "sr1",
+        "segment": "t1s1",
+        "hint": "Peça uma bebida.",
+        "match": {
+          "any": [
+            "ください",
+            "下さい",
+            "おねがいします",
+            "お願いします"
+          ]
+        },
+        "model": "ココアを ください。"
+      },
+      {
+        "id": "sr2",
+        "segment": "t1s3",
+        "hint": "Escolha um tamanho.",
+        "match": {
+          "any": [
+            "S",
+            "M",
+            "L",
+            "エス",
+            "エム",
+            "エル"
+          ]
+        },
+        "model": "Lで おねがいします。"
+      },
+      {
+        "id": "sr3",
+        "segment": "t1s5",
+        "hint": "Diga que quer DEPOIS de comer o bolo.",
+        "match": {
+          "any": [
+            "あとで"
+          ]
+        },
+        "model": "ケーキを {食|た}べた あとで おねがいします。"
+      },
+      {
+        "id": "sr4",
+        "segment": "t1s7",
+        "hint": "Diga se vai comer na loja.",
+        "match": {
+          "any": [
+            "ここで",
+            "{店内|てんない}",
+            "{持|も}って {帰|かえ}ります",
+            "{持|も}ち{帰|かえ}り"
+          ]
+        },
+        "model": "はい、ここで {食|た}べます。"
+      }
+    ],
+    "create": {
+      "prompt": "Agora é com você! Peça seu lanche favorito na カフェ・さくら em 3 a 4 falas: cumprimente, peça, diga como quer (〜ないで ou 〜て) e quando quer receber (〜あとで).",
+      "checklist": [
+        "Cumprimentei (こんにちは / すみません)",
+        "Fiz o pedido com 〜を ください／おねがいします",
+        "Usei 〜ないで ou 〜て para dizer como quero",
+        "Usei 〜あとで para dizer quando quero",
+        "Falei se vou comer na loja ou levar",
+        "Agradeci (ありがとうございます)"
+      ]
+    }
+  },
+  "writing": {
+    "prompt": "Escreva uma receita simples (5 a 6 passos) de uma bebida ou lanche de que você gosta, para um amigo japonês fazer “do jeito que você faz”. Use まず・それから・〜た あとで・〜ないで e termine com わたしが {書|か}いた とおりに {作|つく}って みて ください。",
+    "checklist": [
+      "Usei まず e それから",
+      "Usei 〜た あとで pelo menos uma vez",
+      "Usei 〜ないで (algo que NÃO se coloca/faz)",
+      "Terminei com 〜とおりに",
+      "Usei a forma ます nos passos",
+      "Escrevi o nome dos ingredientes em katakana/kanji quando sei"
+    ],
+    "teacherCriteria": "Critérios sugeridos (0–2 cada): adequação à tarefa (receita em passos); uso correto de 〜た あとで; uso de 〜ないで; uso de 〜とおりに; coesão (まず／それから); escrita (kana/kanji adequados ao N4)."
+  },
+  "flashcards": {
+    "title": "Flashcards 3D",
+    "model": "assets/3d/cafe-flashcards.glb",
+    "modelSource": "tools/blender/build_cafe_models.py",
+    "studyRound": 8,
+    "rushOrders": 10,
+    "kickerTarget": "日本語で",
+    "orderVoice": "あおい",
+    "cards": [
+      {
+        "vocab": "j2",
+        "model": "item-hot-chocolate",
+        "order": "ココアを ください。{砂糖|さとう}は {入|い}れないで ください。",
+        "bonus": {
+          "prompt": "A cliente quer açúcar?",
+          "options": [
+            "{砂糖|さとう}を {入|い}れて",
+            "{砂糖|さとう}を {入|い}れないで"
+          ],
+          "answer": 1,
+          "explain": "{入|い}れないで ください = por favor, NÃO coloque.",
+          "skills": [
+            "g-te-naide"
+          ]
+        }
+      },
+      {
+        "vocab": "j3",
+        "model": "item-orange-juice",
+        "order": "オレンジジュースを ください。{氷|こおり}を {入|い}れて ください。",
+        "bonus": {
+          "prompt": "E o gelo?",
+          "options": [
+            "{氷|こおり}を {入|い}れて",
+            "{氷|こおり}を {入|い}れないで"
+          ],
+          "answer": 0,
+          "explain": "{入|い}れて ください = por favor, coloque.",
+          "skills": [
+            "g-te-naide"
+          ]
+        }
+      },
+      {
+        "vocab": "j4",
+        "model": "item-apple-juice",
+        "order": "りんごジュースを おねがいします。ケーキを {食|た}べた あとで {持|も}って きて ください。",
+        "bonus": {
+          "prompt": "Quando levar o suco?",
+          "options": [
+            "ケーキを {食|た}べる まえに",
+            "ケーキを {食|た}べた あとで"
+          ],
+          "answer": 1,
+          "explain": "{食|た}べた あとで = depois de comer.",
+          "skills": [
+            "g-atode"
+          ]
+        }
+      },
+      {
+        "vocab": "j5",
+        "model": "item-milkshake",
+        "order": "ミルクシェイクを ください。{持|も}って {帰|かえ}ります。",
+        "bonus": {
+          "prompt": "O cliente vai…",
+          "options": [
+            "{店内|てんない}で {飲|の}む",
+            "{持|も}って {帰|かえ}る"
+          ],
+          "answer": 1,
+          "explain": "{持|も}って {帰|かえ}ります = vou levar.",
+          "skills": [
+            "listening-detail"
+          ]
+        }
+      },
+      {
+        "vocab": "j6",
+        "model": "item-water",
+        "order": "すみません、お{水|みず}を ください。{氷|こおり}は {入|い}れないで ください。",
+        "bonus": {
+          "prompt": "E o gelo?",
+          "options": [
+            "{氷|こおり}を {入|い}れて",
+            "{氷|こおり}を {入|い}れないで"
+          ],
+          "answer": 1,
+          "explain": "{入|い}れないで = sem colocar.",
+          "skills": [
+            "g-te-naide"
+          ]
+        }
+      },
+      {
+        "vocab": "j7",
+        "model": "item-cheese-sandwich",
+        "order": "チーズサンドを ください。{温|あたた}めて ください。",
+        "bonus": {
+          "prompt": "Esquentar o sanduíche?",
+          "options": [
+            "{温|あたた}めて",
+            "{温|あたた}めないで"
+          ],
+          "answer": 0,
+          "explain": "{温|あたた}めて ください = esquente, por favor.",
+          "skills": [
+            "g-te-naide"
+          ]
+        }
+      },
+      {
+        "vocab": "j8",
+        "model": "item-egg-sandwich",
+        "order": "たまごサンドを {一|ひと}つ。{温|あたた}めないで ください。",
+        "bonus": {
+          "prompt": "Esquentar o sanduíche?",
+          "options": [
+            "{温|あたた}めて",
+            "{温|あたた}めないで"
+          ],
+          "answer": 1,
+          "explain": "{温|あたた}めないで = sem esquentar.",
+          "skills": [
+            "g-te-naide"
+          ]
+        }
+      },
+      {
+        "vocab": "j9",
+        "model": "item-muffin",
+        "order": "マフィンを ください。コーヒーを {飲|の}んだ あとで {食|た}べます。",
+        "bonus": {
+          "prompt": "O que o cliente faz PRIMEIRO?",
+          "options": [
+            "マフィンを {食|た}べる",
+            "コーヒーを {飲|の}む"
+          ],
+          "answer": 1,
+          "explain": "{飲|の}んだ あとで {食|た}べます: primeiro bebe, depois come.",
+          "skills": [
+            "g-atode"
+          ]
+        }
+      },
+      {
+        "vocab": "j10",
+        "model": "item-cookie",
+        "order": "クッキーを {二|ふた}つ ください。ふくろに {入|い}れないで ください。",
+        "bonus": {
+          "prompt": "E a sacola?",
+          "options": [
+            "ふくろに {入|い}れて",
+            "ふくろに {入|い}れないで"
+          ],
+          "answer": 1,
+          "explain": "ふくろに {入|い}れないで = não precisa de sacola.",
+          "skills": [
+            "g-te-naide"
+          ]
+        }
+      },
+      {
+        "vocab": "j11",
+        "model": "item-apple-pie",
+        "order": "アップルパイを ください。{写真|しゃしん}の とおりに、アイスを のせて ください。",
+        "bonus": {
+          "prompt": "Como a torta deve vir?",
+          "options": [
+            "{写真|しゃしん}の とおりに (com sorvete)",
+            "アイスを のせないで (sem sorvete)"
+          ],
+          "answer": 0,
+          "explain": "{写真|しゃしん}の とおりに = igual à foto.",
+          "skills": [
+            "g-toori"
+          ]
+        }
+      },
+      {
+        "vocab": "j16",
+        "model": "item-sizes"
+      },
+      {
+        "vocab": "j17",
+        "model": "item-here-or-go"
+      },
+      {
+        "vocab": "j18",
+        "model": "item-price-tag"
+      },
+      {
+        "vocab": "j21",
+        "model": "item-here-you-are"
+      },
+      {
+        "vocab": "j19",
+        "model": "item-change"
+      },
+      {
+        "vocab": "j20",
+        "model": "item-anything-else"
+      }
+    ]
+  },
+  "references": [
+    "The Japan Foundation (2017). JF Standard for Japanese-Language Education. Tokyo: The Japan Foundation.",
+    "Japan Educational Exchanges and Services / The Japan Foundation. Japanese-Language Proficiency Test — N4 level summary and test sections (jlpt.jp).",
+    "スリーエーネットワーク (2013). 『みんなの日本語 初級Ⅱ 第2版 本冊』 第34課 — material de referência do professor (não reproduzido).",
+    "Krashen, S. (1982). Principles and Practice in Second Language Acquisition. Oxford: Pergamon.",
+    "Schmidt, R. (1990). The role of consciousness in second language learning. Applied Linguistics, 11(2), 129–158.",
+    "Swain, M. (1985). Communicative competence: Some roles of comprehensible input and comprehensible output in its development.",
+    "Field, J. (2008). Listening in the Language Classroom. Cambridge: Cambridge University Press.",
+    "Nation, I. S. P. (2013). Learning Vocabulary in Another Language (2nd ed.). Cambridge: Cambridge University Press.",
+    "Kang, S. H. K. (2016). Spaced repetition promotes efficient and effective learning. Policy Insights from the Behavioral and Brain Sciences, 3(1), 12–19."
+  ],
+  "lines": {
+    "c6a1ce5472": {
+      "text": "{抹茶|まっちゃ}ラテ",
+      "speaker": "Narrator",
+      "src": "audio/lines/c6a1ce5472.mp3"
+    },
+    "17b602cb7b": {
+      "text": "{抹茶|まっちゃ}ラテを ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/17b602cb7b.mp3"
+    },
+    "029bd1d9ca": {
+      "text": "ココア",
+      "speaker": "Narrator",
+      "src": "audio/lines/029bd1d9ca.mp3"
+    },
+    "d3dfb03273": {
+      "text": "ココアを {一|ひと}つ ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/d3dfb03273.mp3"
+    },
+    "c9058d5be0": {
+      "text": "オレンジジュース",
+      "speaker": "Narrator",
+      "src": "audio/lines/c9058d5be0.mp3"
+    },
+    "de0fedbea0": {
+      "text": "オレンジジュースに {氷|こおり}を {入|い}れて ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/de0fedbea0.mp3"
+    },
+    "4a2c94657e": {
+      "text": "りんごジュース",
+      "speaker": "Narrator",
+      "src": "audio/lines/4a2c94657e.mp3"
+    },
+    "c0cc76f4ad": {
+      "text": "りんごジュースは あとで おねがいします。",
+      "speaker": "Narrator",
+      "src": "audio/lines/c0cc76f4ad.mp3"
+    },
+    "5d0e484b27": {
+      "text": "ミルクシェイク",
+      "speaker": "Narrator",
+      "src": "audio/lines/5d0e484b27.mp3"
+    },
+    "6a56f7d2e9": {
+      "text": "ミルクシェイクを {持|も}って {帰|かえ}ります。",
+      "speaker": "Narrator",
+      "src": "audio/lines/6a56f7d2e9.mp3"
+    },
+    "f985513b7e": {
+      "text": "お{水|みず}",
+      "speaker": "Narrator",
+      "src": "audio/lines/f985513b7e.mp3"
+    },
+    "bb99f07ced": {
+      "text": "すみません、お{水|みず}を ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/bb99f07ced.mp3"
+    },
+    "6bb39db2e7": {
+      "text": "チーズサンド",
+      "speaker": "Narrator",
+      "src": "audio/lines/6bb39db2e7.mp3"
+    },
+    "8091fd828e": {
+      "text": "チーズサンドを {温|あたた}めて ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/8091fd828e.mp3"
+    },
+    "007875bd02": {
+      "text": "たまごサンド",
+      "speaker": "Narrator",
+      "src": "audio/lines/007875bd02.mp3"
+    },
+    "22a188708b": {
+      "text": "たまごサンドは {温|あたた}めないで ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/22a188708b.mp3"
+    },
+    "2df03c1320": {
+      "text": "マフィン",
+      "speaker": "Narrator",
+      "src": "audio/lines/2df03c1320.mp3"
+    },
+    "fb1ab21fef": {
+      "text": "コーヒーを {飲|の}んだ あとで、マフィンを {食|た}べます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/fb1ab21fef.mp3"
+    },
+    "3d76cfdf6e": {
+      "text": "クッキー",
+      "speaker": "Narrator",
+      "src": "audio/lines/3d76cfdf6e.mp3"
+    },
+    "54f1e7a81b": {
+      "text": "クッキーを {二|ふた}つ ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/54f1e7a81b.mp3"
+    },
+    "30a7d7118f": {
+      "text": "アップルパイ",
+      "speaker": "Narrator",
+      "src": "audio/lines/30a7d7118f.mp3"
+    },
+    "46abbe177a": {
+      "text": "{写真|しゃしん}の とおりに、アップルパイに アイスを のせます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/46abbe177a.mp3"
+    },
+    "81178d0538": {
+      "text": "チーズケーキ",
+      "speaker": "Narrator",
+      "src": "audio/lines/81178d0538.mp3"
+    },
+    "042aad27a9": {
+      "text": "チーズケーキを {食|た}べた あとで、ラテを {飲|の}みます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/042aad27a9.mp3"
+    },
+    "ef5f949fb4": {
+      "text": "{砂糖|さとう}",
+      "speaker": "Narrator",
+      "src": "audio/lines/ef5f949fb4.mp3"
+    },
+    "2bdaa878ec": {
+      "text": "{砂糖|さとう}を {入|い}れないで {飲|の}みます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/2bdaa878ec.mp3"
+    },
+    "fddc9a10c0": {
+      "text": "ミルク",
+      "speaker": "Narrator",
+      "src": "audio/lines/fddc9a10c0.mp3"
+    },
+    "2e733de2fd": {
+      "text": "{温|あたた}かい ミルクを {入|い}れます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/2e733de2fd.mp3"
+    },
+    "dd05b83324": {
+      "text": "{氷|こおり}",
+      "speaker": "Narrator",
+      "src": "audio/lines/dd05b83324.mp3"
+    },
+    "f54bf2857d": {
+      "text": "{氷|こおり}は {入|い}れないで ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/f54bf2857d.mp3"
+    },
+    "c4fb5d4472": {
+      "text": "サイズ",
+      "speaker": "Narrator",
+      "src": "audio/lines/c4fb5d4472.mp3"
+    },
+    "a5ac35c2a9": {
+      "text": "サイズ（S・M・L）",
+      "speaker": "Narrator",
+      "src": "audio/lines/a5ac35c2a9.mp3"
+    },
+    "b00d2b8a55": {
+      "text": "サイズは Mで おねがいします。",
+      "speaker": "Narrator",
+      "src": "audio/lines/b00d2b8a55.mp3"
+    },
+    "d6fc11b1a9": {
+      "text": "{店内|てんない}、{持|も}ち{帰|かえ}り",
+      "speaker": "Narrator",
+      "src": "audio/lines/d6fc11b1a9.mp3"
+    },
+    "ff795e5096": {
+      "text": "{店内|てんない}／{持|も}ち{帰|かえ}り",
+      "speaker": "Narrator",
+      "src": "audio/lines/ff795e5096.mp3"
+    },
+    "70986e6c44": {
+      "text": "{店内|てんない}で {食|た}べますか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/70986e6c44.mp3"
+    },
+    "02da3b6cb6": {
+      "text": "いくらですか",
+      "speaker": "Narrator",
+      "src": "audio/lines/02da3b6cb6.mp3"
+    },
+    "9c4b252ad9": {
+      "text": "この ケーキは いくらですか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/9c4b252ad9.mp3"
+    },
+    "a765a2b945": {
+      "text": "おつり",
+      "speaker": "Narrator",
+      "src": "audio/lines/a765a2b945.mp3"
+    },
+    "6f6c0f76ee": {
+      "text": "{百円|ひゃくえん}の おつりです。",
+      "speaker": "Narrator",
+      "src": "audio/lines/6f6c0f76ee.mp3"
+    },
+    "12b39fbb5f": {
+      "text": "ほかに {何|なに}か",
+      "speaker": "Narrator",
+      "src": "audio/lines/12b39fbb5f.mp3"
+    },
+    "cb54055b69": {
+      "text": "ほかに {何|なに}か ありますか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/cb54055b69.mp3"
+    },
+    "39b7a9b919": {
+      "text": "これで おねがいします",
+      "speaker": "Narrator",
+      "src": "audio/lines/39b7a9b919.mp3"
+    },
+    "f7f249e59e": {
+      "text": "{千円|せんえん}で おねがいします。",
+      "speaker": "Narrator",
+      "src": "audio/lines/f7f249e59e.mp3"
+    },
+    "9eb93604cb": {
+      "text": "{入|い}れます",
+      "speaker": "Narrator",
+      "src": "audio/lines/9eb93604cb.mp3"
+    },
+    "586739b01b": {
+      "text": "カップに {抹茶|まっちゃ}を {入|い}れます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/586739b01b.mp3"
+    },
+    "460166ec2d": {
+      "text": "まぜます",
+      "speaker": "Narrator",
+      "src": "audio/lines/460166ec2d.mp3"
+    },
+    "6fa95719d4": {
+      "text": "お{湯|ゆ}を {入|い}れた あとで、よく まぜます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/6fa95719d4.mp3"
+    },
+    "2591cff22b": {
+      "text": "{温|あたた}めます",
+      "speaker": "Narrator",
+      "src": "audio/lines/2591cff22b.mp3"
+    },
+    "cf5534c4d6": {
+      "text": "パイは {温|あたた}めないで ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/cf5534c4d6.mp3"
+    },
+    "31a1847506": {
+      "text": "{説明書|せつめいしょ}",
+      "speaker": "Narrator",
+      "src": "audio/lines/31a1847506.mp3"
+    },
+    "46e4265d71": {
+      "text": "{説明書|せつめいしょ}の とおりに {組|く}み{立|た}てます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/46e4265d71.mp3"
+    },
+    "4692593b2c": {
+      "text": "{組|く}み{立|た}てます",
+      "speaker": "Narrator",
+      "src": "audio/lines/4692593b2c.mp3"
+    },
+    "1cf02c7809": {
+      "text": "{本棚|ほんだな}を {自分|じぶん}で {組|く}み{立|た}てました。",
+      "speaker": "Narrator",
+      "src": "audio/lines/1cf02c7809.mp3"
+    },
+    "52de7fa087": {
+      "text": "ご{注文|ちゅうもん}",
+      "speaker": "Narrator",
+      "src": "audio/lines/52de7fa087.mp3"
+    },
+    "c96a16c440": {
+      "text": "ご{注文|ちゅうもん}は {何|なん}に しますか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/c96a16c440.mp3"
+    },
+    "e1f1b8d959": {
+      "text": "かしこまりました",
+      "speaker": "Narrator",
+      "src": "audio/lines/e1f1b8d959.mp3"
+    },
+    "dbcdd34f98": {
+      "text": "はい、かしこまりました。",
+      "speaker": "Narrator",
+      "src": "audio/lines/dbcdd34f98.mp3"
+    },
+    "780981c0ed": {
+      "text": "{苦|にが}い",
+      "speaker": "Narrator",
+      "src": "audio/lines/780981c0ed.mp3"
+    },
+    "451d0681ce": {
+      "text": "{抹茶|まっちゃ}は {少|すこ}し {苦|にが}いです。",
+      "speaker": "Narrator",
+      "src": "audio/lines/451d0681ce.mp3"
+    },
+    "14441548c0": {
+      "text": "お{湯|ゆ}",
+      "speaker": "Narrator",
+      "src": "audio/lines/14441548c0.mp3"
+    },
+    "f7ad8c5ed8": {
+      "text": "お{湯|ゆ}を {少|すこ}し {入|い}れます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/f7ad8c5ed8.mp3"
+    },
+    "97868660d4": {
+      "text": "いらっしゃいませ。ご{注文|ちゅうもん}は？",
+      "speaker": "はるか",
+      "src": "audio/lines/97868660d4.mp3"
+    },
+    "5e4a3131f0": {
+      "text": "ココアを ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/5e4a3131f0.mp3"
+    },
+    "ffbbbced88": {
+      "text": "{砂糖|さとう}を {入|い}れますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/ffbbbced88.mp3"
+    },
+    "ca16e336ff": {
+      "text": "いいえ、{入|い}れないで ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/ca16e336ff.mp3"
+    },
+    "737d174c5d": {
+      "text": "ほかに {何|なに}か ありますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/737d174c5d.mp3"
+    },
+    "1c7e6d6f03": {
+      "text": "マフィンも ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/1c7e6d6f03.mp3"
+    },
+    "cc5ada041c": {
+      "text": "{店内|てんない}で {食|た}べますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/cc5ada041c.mp3"
+    },
+    "6f2cff105e": {
+      "text": "はい、ここで {食|た}べます。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/6f2cff105e.mp3"
+    },
+    "1c29d0b0de": {
+      "text": "ぜんぶで {七百五十円|ななひゃくごじゅうえん}です。",
+      "speaker": "はるか",
+      "src": "audio/lines/1c29d0b0de.mp3"
+    },
+    "10a8a67f56": {
+      "text": "{二百五十円|にひゃくごじゅうえん}の おつりです。ありがとうございました。",
+      "speaker": "はるか",
+      "src": "audio/lines/10a8a67f56.mp3"
+    },
+    "59463d2c31": {
+      "text": "どうも ありがとうございます。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/59463d2c31.mp3"
+    },
+    "7334fb66a3": {
+      "text": "ご{注文|ちゅうもん}は {何|なん}に しますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/7334fb66a3.mp3"
+    },
+    "5c7b4d2797": {
+      "text": "チーズサンドと オレンジジュースを ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/5c7b4d2797.mp3"
+    },
+    "1df67de4a4": {
+      "text": "ジュースに {氷|こおり}を {入|い}れますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/1df67de4a4.mp3"
+    },
+    "cea14dcbae": {
+      "text": "いいえ、{氷|こおり}は {入|い}れないで ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/cea14dcbae.mp3"
+    },
+    "f9cb3dba8b": {
+      "text": "ジュースは サンドと いっしょに {持|も}って いきますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/f9cb3dba8b.mp3"
+    },
+    "2e60963c56": {
+      "text": "いいえ、サンドを {食|た}べた あとで おねがいします。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/2e60963c56.mp3"
+    },
+    "ac302d3708": {
+      "text": "ぜんぶで {八百三十円|はっぴゃくさんじゅうえん}です。",
+      "speaker": "はるか",
+      "src": "audio/lines/ac302d3708.mp3"
+    },
+    "6719433a8c": {
+      "text": "ありがとうございました。ごゆっくり どうぞ。",
+      "speaker": "はるか",
+      "src": "audio/lines/6719433a8c.mp3"
+    },
+    "b59d244853": {
+      "text": "ありがとうございます。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/b59d244853.mp3"
+    },
+    "8fabfe66b6": {
+      "text": "いらっしゃいませ。",
+      "speaker": "はるか",
+      "src": "audio/lines/8fabfe66b6.mp3"
+    },
+    "b70517684d": {
+      "text": "アップルパイを {一|ひと}つ ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/b70517684d.mp3"
+    },
+    "084ec41ed7": {
+      "text": "パイは {温|あたた}めますか。",
+      "speaker": "はるか",
+      "src": "audio/lines/084ec41ed7.mp3"
+    },
+    "5601e9797e": {
+      "text": "いいえ、{温|あたた}めないで ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/5601e9797e.mp3"
+    },
+    "226e964cdf": {
+      "text": "お{飲|の}み{物|もの}は いかがですか。",
+      "speaker": "はるか",
+      "src": "audio/lines/226e964cdf.mp3"
+    },
+    "ca91a32aee": {
+      "text": "りんごジュースを ください。パイを {食|た}べた あとで おねがいします。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/ca91a32aee.mp3"
+    },
+    "b5b01f750a": {
+      "text": "ぜんぶで {八百円|はっぴゃくえん}です。",
+      "speaker": "はるか",
+      "src": "audio/lines/b5b01f750a.mp3"
+    },
+    "468e959b2e": {
+      "text": "メモの とおりですね。ありがとうございました。",
+      "speaker": "はるか",
+      "src": "audio/lines/468e959b2e.mp3"
+    },
+    "0215a9d160": {
+      "text": "はい。ありがとうございます。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/0215a9d160.mp3"
+    },
+    "172d0184d9": {
+      "text": "{砂糖|さとう}は {入|い}れないで ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/172d0184d9.mp3"
+    },
+    "e7dafc7aa9": {
+      "text": "ミルクは {入|い}れて ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/e7dafc7aa9.mp3"
+    },
+    "89b39d2d8f": {
+      "text": "{氷|こおり}は {入|い}れないで ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/89b39d2d8f.mp3"
+    },
+    "3f4a1652be": {
+      "text": "レモンは {入|い}れて ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/3f4a1652be.mp3"
+    },
+    "d8cbc6cc92": {
+      "text": "はちみつは {入|い}れないで ください。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/d8cbc6cc92.mp3"
+    },
+    "800744b406": {
+      "text": "Lで おねがいします。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/800744b406.mp3"
+    },
+    "f7f123d8f6": {
+      "text": "ケーキを {食|た}べた あとで おねがいします。",
+      "speaker": "ルーカス",
+      "src": "audio/lines/f7f123d8f6.mp3"
+    },
+    "ad6464d25e": {
+      "text": "わたしが やった とおりに、やって みて ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/ad6464d25e.mp3"
+    },
+    "7b0d4f6bc2": {
+      "text": "{地図|ちず}の とおりに {行|い}きましたが、{店|みせ}が ありませんでした。",
+      "speaker": "Narrator",
+      "src": "audio/lines/7b0d4f6bc2.mp3"
+    },
+    "206601cbdb": {
+      "text": "{説明書|せつめいしょ}の とおりに {組|く}み{立|た}てましたか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/206601cbdb.mp3"
+    },
+    "2d0562dcac": {
+      "text": "ケーキを {食|た}べた あとで、{持|も}って きて ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/2d0562dcac.mp3"
+    },
+    "8c2ab8d161": {
+      "text": "{部活|ぶかつ}の あとで、カフェに {行|い}きませんか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/8c2ab8d161.mp3"
+    },
+    "d20924b91e": {
+      "text": "{食|た}べた あとで、すぐ {寝|ね}ないで ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/d20924b91e.mp3"
+    },
+    "3b1c5070d5": {
+      "text": "{今日|きょう}は {砂糖|さとう}を {入|い}れないで {作|つく}りましょう。",
+      "speaker": "Narrator",
+      "src": "audio/lines/3b1c5070d5.mp3"
+    },
+    "41dc543b63": {
+      "text": "{音楽|おんがく}を {聞|き}いて {勉強|べんきょう}します。",
+      "speaker": "Narrator",
+      "src": "audio/lines/41dc543b63.mp3"
+    },
+    "e594697d9b": {
+      "text": "{朝|あさ}ごはんを {食|た}べないで {学校|がっこう}へ {行|い}きましたか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/e594697d9b.mp3"
+    },
+    "b7d5f40979": {
+      "text": "ぜんぶで {九百円|きゅうひゃくえん}です。",
+      "speaker": "Narrator",
+      "src": "audio/lines/b7d5f40979.mp3"
+    },
+    "c6c984a453": {
+      "text": "この クッキーは {高|たか}くないです。{二百円|にひゃくえん}です。",
+      "speaker": "Narrator",
+      "src": "audio/lines/c6c984a453.mp3"
+    },
+    "bead409a0f": {
+      "text": "チーズケーキは いくらですか。",
+      "speaker": "Narrator",
+      "src": "audio/lines/bead409a0f.mp3"
+    },
+    "c30999f109": {
+      "text": "わたしが {言|い}った とおりに、{書|か}いて ください。",
+      "speaker": "Narrator",
+      "src": "audio/lines/c30999f109.mp3"
+    },
+    "f09f18c759": {
+      "text": "{説明書|せつめいしょ}の とおりに、{組|く}み{立|た}てます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/f09f18c759.mp3"
+    },
+    "3592b6c697": {
+      "text": "ケーキを {食|た}べた あとで、ラテを {飲|の}みます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/3592b6c697.mp3"
+    },
+    "7f1033a436": {
+      "text": "{宿題|しゅくだい}の あとで、ゲームを します。",
+      "speaker": "Narrator",
+      "src": "audio/lines/7f1033a436.mp3"
+    },
+    "7134c41f25": {
+      "text": "バスに {乗|の}らないで、{歩|ある}いて {帰|かえ}ります。",
+      "speaker": "Narrator",
+      "src": "audio/lines/7134c41f25.mp3"
+    },
+    "70bc6fcb3a": {
+      "text": "{帽子|ぼうし}を かぶって {出|で}かけます。",
+      "speaker": "Narrator",
+      "src": "audio/lines/70bc6fcb3a.mp3"
+    },
+    "116a1beb3d": {
+      "text": "ココアを ください。{砂糖|さとう}は {入|い}れないで ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/116a1beb3d.mp3"
+    },
+    "51302a08ad": {
+      "text": "オレンジジュースを ください。{氷|こおり}を {入|い}れて ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/51302a08ad.mp3"
+    },
+    "b11b5a90e6": {
+      "text": "りんごジュースを おねがいします。ケーキを {食|た}べた あとで {持|も}って きて ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/b11b5a90e6.mp3"
+    },
+    "e282f33304": {
+      "text": "ミルクシェイクを ください。{持|も}って {帰|かえ}ります。",
+      "speaker": "あおい",
+      "src": "audio/lines/e282f33304.mp3"
+    },
+    "cfd203f52d": {
+      "text": "すみません、お{水|みず}を ください。{氷|こおり}は {入|い}れないで ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/cfd203f52d.mp3"
+    },
+    "32648bdde9": {
+      "text": "チーズサンドを ください。{温|あたた}めて ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/32648bdde9.mp3"
+    },
+    "9c597887a6": {
+      "text": "たまごサンドを {一|ひと}つ。{温|あたた}めないで ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/9c597887a6.mp3"
+    },
+    "769fad49f2": {
+      "text": "マフィンを ください。コーヒーを {飲|の}んだ あとで {食|た}べます。",
+      "speaker": "あおい",
+      "src": "audio/lines/769fad49f2.mp3"
+    },
+    "22c11c56c3": {
+      "text": "クッキーを {二|ふた}つ ください。ふくろに {入|い}れないで ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/22c11c56c3.mp3"
+    },
+    "81fff6ea9b": {
+      "text": "アップルパイを ください。{写真|しゃしん}の とおりに、アイスを のせて ください。",
+      "speaker": "あおい",
+      "src": "audio/lines/81fff6ea9b.mp3"
+    }
+  }
+}

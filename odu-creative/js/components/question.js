@@ -7,6 +7,7 @@
 import { h, clear, shuffle, announce } from '../core/dom.js';
 import { evaluateQuestion } from '../core/evaluate.js';
 import { success, gentleShake } from '../core/motion.js';
+import { tl, plainText, joiner } from '../core/text.js';
 
 const STAGE_LABEL = { A: 'Reconhecimento', B: 'Compreensão', C: 'Manipulação', D: 'Produção', exam: 'Avaliação', listening: 'Escuta' };
 
@@ -19,7 +20,9 @@ export function renderQuestion(q, ctx, { module = 'practice', onDone, number } =
   const head = h('div', { class: 'q-head' },
     h('span', { class: 'badge-tag' }, q.examPart || q.context || STAGE_LABEL[q.stage] || 'Questão'),
     number ? h('span', { class: 'small muted' }, number) : null);
-  const prompt = h('div', { class: 'q-prompt', id: `q-${q.id}-p` }, q.prompt);
+  const unit = ctx.unit;
+  // enunciado: mistura português e idioma-alvo; furigana pode ser ocultado (questões de leitura de kanji)
+  const prompt = h('div', { class: 'q-prompt', id: `q-${q.id}-p` }, tl(unit, q.prompt, { noRomaji: true, noFurigana: q.noFurigana }));
   const audioRow = q.audio ? audioButtons(q, ctx) : null;
   const body = h('div', { class: 'q-body' });
   const feedback = h('div', { 'aria-live': 'polite' });
@@ -31,11 +34,11 @@ export function renderQuestion(q, ctx, { module = 'practice', onDone, number } =
 
   function drawBody() {
     clear(body);
-    body.append(renderBody(q, state, (s) => { state = s; }));
+    body.append(renderBody(q, state, (s) => { state = s; }, unit));
   }
 
   function check() {
-    const response = responseOf(q, state);
+    const response = responseOf(q, state, joiner(unit));
     if (response === null) { announce('Responda antes de verificar.'); feedback.replaceChildren(h('p', { class: 'notice warn' }, 'Responda antes de verificar.')); return; }
     attempts += 1;
     const res = evaluateQuestion(q, response);
@@ -83,9 +86,9 @@ export function renderQuestion(q, ctx, { module = 'practice', onDone, number } =
   function correction() {
     const ans = correctAnswerText(q);
     return h('div', { class: 'card soft', style: { marginTop: '8px' } },
-      h('strong', {}, isModel() ? 'Modelo: ' : 'Resposta correta: '), h('span', { style: { whiteSpace: 'pre-line' } }, ans),
+      h('strong', {}, isModel() ? 'Modelo: ' : 'Resposta correta: '), h('div', { style: { whiteSpace: 'pre-line' } }, tl(unit, ans)),
       h('p', { class: 'small', style: { marginTop: '6px' } }, q.explanation || ''),
-      q.distractors ? h('ul', { class: 'small' }, Object.entries(q.distractors).map(([i, t]) => h('li', {}, `“${q.options[i]}”: ${t}`))) : null);
+      q.distractors ? h('ul', { class: 'small' }, Object.entries(q.distractors).map(([i, t]) => h('li', {}, `“${plainText(unit, q.options[i])}”: ${t}`))) : null);
   }
   function isModel() { return q.type === 'produce'; }
 }
@@ -118,11 +121,11 @@ function initialState(q) {
   }
 }
 
-function responseOf(q, s) {
+function responseOf(q, s, join = ' ') {
   switch (q.type) {
     case 'mcq': case 'tf': return s.choice;
     case 'gap': return s.values.some((v) => !v.trim()) ? null : s.values;
-    case 'order': return s.picked.length ? s.picked.map((p) => p.t).join(' ').replace(/\s+([?.!,])/g, '$1') : null;
+    case 'order': return s.picked.length ? s.picked.map((p) => p.t).join(join).replace(/\s+([?.!,])/g, '$1') : null;
     case 'transform': case 'produce': return s.text.trim() ? s.text : null;
     case 'match': return s.picks.some((p) => p === '') ? null : s.picks.map(Number);
     default: return null;
@@ -142,14 +145,14 @@ function correctAnswerText(q) {
 }
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-function renderBody(q, s, set) {
+function renderBody(q, s, set, unit) {
   switch (q.type) {
     case 'mcq': {
       const group = h('div', { class: 'options', role: 'radiogroup', 'aria-labelledby': `q-${q.id}-p` });
       const btns = q.options.map((opt, i) => h('button', {
         class: 'btn opt', role: 'radio', 'aria-checked': String(s.choice === i), dataset: { i },
         onClick: () => { s.choice = i; btns.forEach((b, j) => b.setAttribute('aria-checked', String(i === j))); set(s); },
-      }, opt));
+      }, tl(unit, opt, { noFurigana: q.noFurigana })));
       group.append(...btns);
       return group;
     }
@@ -165,9 +168,9 @@ function renderBody(q, s, set) {
     }
     case 'gap': {
       const parts = q.text.split('___');
-      const wrap = h('p', { class: 'gap-text' });
+      const wrap = h('div', { class: 'gap-text' });
       parts.forEach((part, i) => {
-        wrap.append(part);
+        wrap.append(tl(unit, part, { noRomaji: true }));
         if (i < parts.length - 1) wrap.append(h('input', {
           type: 'text', 'aria-label': `Lacuna ${i + 1}`, autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', value: s.values[i],
           onInput: (e) => { s.values[i] = e.target.value; set(s); },
@@ -181,26 +184,26 @@ function renderBody(q, s, set) {
       const draw = () => {
         clear(answer); clear(bank);
         if (!s.picked.length) answer.append(h('span', { class: 'muted small' }, 'Toque nos blocos na ordem certa…'));
-        s.picked.forEach((p, k) => answer.append(h('button', { class: 'tile', 'aria-label': `Remover “${p.t}”`, onClick: () => { s.picked.splice(k, 1); s.bank.push(p); draw(); set(s); } }, p.t)));
-        s.bank.forEach((p, k) => bank.append(h('button', { class: 'tile', 'aria-label': `Adicionar “${p.t}”`, onClick: () => { s.bank.splice(k, 1); s.picked.push(p); draw(); set(s); answer.lastElementChild?.focus(); } }, p.t)));
+        s.picked.forEach((p, k) => answer.append(h('button', { class: 'tile', 'aria-label': `Remover “${plainText(unit, p.t)}”`, onClick: () => { s.picked.splice(k, 1); s.bank.push(p); draw(); set(s); } }, tl(unit, p.t, { noRomaji: true }))));
+        s.bank.forEach((p, k) => bank.append(h('button', { class: 'tile', 'aria-label': `Adicionar “${plainText(unit, p.t)}”`, onClick: () => { s.bank.splice(k, 1); s.picked.push(p); draw(); set(s); answer.lastElementChild?.focus(); } }, tl(unit, p.t, { noRomaji: true }))));
       };
       draw();
       return h('div', { class: 'stack' }, answer, bank);
     }
     case 'transform':
       return h('div', { class: 'stack' },
-        h('p', {}, h('span', { class: 'muted' }, 'Frase original: '), h('strong', {}, q.source)),
-        h('input', { type: 'text', 'aria-label': 'Sua frase', autocomplete: 'off', spellcheck: 'false', value: s.text, onInput: (e) => { s.text = e.target.value; set(s); } }));
+        h('p', {}, h('span', { class: 'muted' }, 'Frase original: '), h('strong', {}, tl(unit, q.source))),
+        h('input', { type: 'text', lang: unit?.language?.bcp47, 'aria-label': 'Sua frase', autocomplete: 'off', spellcheck: 'false', value: s.text, onInput: (e) => { s.text = e.target.value; set(s); } }));
     case 'produce': {
-      const attrs = { 'aria-label': 'Sua resposta', spellcheck: 'false', onInput: (e) => { s.text = e.target.value; set(s); } };
-      return q.multiline ? h('textarea', { ...attrs, rows: 6, placeholder: 'Mia: Hi! What would you like?\nMe: ...' }) : h('input', { ...attrs, type: 'text', autocomplete: 'off' });
+      const attrs = { 'aria-label': 'Sua resposta', spellcheck: 'false', lang: unit?.language?.bcp47, onInput: (e) => { s.text = e.target.value; set(s); } };
+      return q.multiline ? h('textarea', { ...attrs, rows: 6, placeholder: q.placeholder || 'Mia: Hi! What would you like?\nMe: ...' }) : h('input', { ...attrs, type: 'text', autocomplete: 'off', placeholder: q.placeholder || '' });
     }
     case 'match': {
       const wrap = h('div', {});
       q.pairs.forEach((p, i) => {
-        const sel = h('select', { 'aria-label': `Resposta para: ${p[0]}`, onChange: (e) => { s.picks[i] = e.target.value; set(s); } },
-          h('option', { value: '' }, 'Escolha…'), s.rights.map((r) => h('option', { value: String(r.i) }, r.text)));
-        wrap.append(h('div', { class: 'match-row', dataset: { i } }, h('strong', {}, p[0]), sel));
+        const sel = h('select', { 'aria-label': `Resposta para: ${plainText(unit, p[0])}`, lang: unit?.language?.bcp47, onChange: (e) => { s.picks[i] = e.target.value; set(s); } },
+          h('option', { value: '' }, 'Escolha…'), s.rights.map((r) => h('option', { value: String(r.i) }, plainText(unit, r.text))));
+        wrap.append(h('div', { class: 'match-row', dataset: { i } }, h('strong', {}, tl(unit, p[0])), sel));
       });
       return wrap;
     }

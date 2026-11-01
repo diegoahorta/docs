@@ -20,7 +20,7 @@ const scene = new THREE.Scene(); scene.background = new THREE.Color('#f6f5fb');
 scene.add(new THREE.HemisphereLight('#ffffff', '#b9a8ff', 1.6));
 const sun = new THREE.DirectionalLight('#ffffff', 2.2); sun.position.set(3, 5, 4); scene.add(sun);
 const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 100);
-const gltf = await new GLTFLoader().loadAsync('../../units/en-a1-cafe/3d/cafe-flashcards.glb');
+const gltf = await new GLTFLoader().loadAsync('../../assets/3d/cafe-flashcards.glb');
 const byName = (n) => gltf.scene.getObjectByName(n);
 if (view === 'scene') {
   scene.add(gltf.scene);

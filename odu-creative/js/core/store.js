@@ -25,7 +25,7 @@ export function setJSON(key, value) { rawSet(key, JSON.stringify(value)); }
 export function remove(key) { try { localStorage.removeItem(PREFIX + key); } catch { delete memory[key]; } }
 
 /* ---------- Settings ---------- */
-export const defaultSettings = { theme: 'auto', contrast: false, reducedMotion: false, captions: true, textSize: '1', noMic: false, responseTime: null, srsFactor: 1 };
+export const defaultSettings = { theme: 'auto', contrast: false, reducedMotion: false, captions: true, furigana: true, romaji: false, textSize: '1', noMic: false, responseTime: null, srsFactor: 1 };
 export function getSettings() { return { ...defaultSettings, ...getJSON('settings', {}) }; }
 export function saveSettings(s) { setJSON('settings', s); }
 

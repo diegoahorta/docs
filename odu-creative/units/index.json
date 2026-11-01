@@ -1,3 +1,14 @@
 [
-  { "id": "en-a1-cafe", "title": "At the Café", "language": "Inglês", "level": "A1" }
+  {
+    "id": "en-a1-cafe",
+    "title": "At the Café",
+    "language": "Inglês",
+    "level": "A1"
+  },
+  {
+    "id": "ja-n4-34",
+    "title": "Na cafeteria: do jeito que eu fiz",
+    "language": "Japonês",
+    "level": "N4"
+  }
 ]

@@ -13,6 +13,7 @@ import { parseVTT, toVTT, validateTimings } from '../core/audio-sync.js';
 import { putMedia, getMedia, deleteMedia } from '../core/idb.js';
 import { classify, STATUS_LABELS } from '../core/srs.js';
 import { renderQuestion } from '../components/question.js';
+import { plain } from '../core/jp.js';
 
 const clone = (u) => { const c = JSON.parse(JSON.stringify(u)); delete c._base; delete c._edited; return c; };
 
@@ -156,7 +157,7 @@ export async function render(ctx) {
       tapBtn.addEventListener('keydown', keyHandler);
 
       wrap.append(h('section', { class: 'card' },
-        h('h3', {}, `Faixa ${ti + 1}: ${track.title}`), info,
+        h('h3', {}, `Faixa ${ti + 1}: ${plain(track.title)}`), info,
         h('div', { class: 'grid two' },
           h('label', { class: 'field' }, 'Importar áudio (MP3, OGG, WAV, M4A)', audioFile),
           h('label', { class: 'field' }, 'Importar tempos/transcrição (WebVTT, SRT ou JSON)', timingFile)),

@@ -13,6 +13,7 @@ import { playLine, Recorder, recorderAvailable, asrAvailable, listenOnce, stopAl
 import { wordDiff, matchUtterance, expectedArticle } from '../core/evaluate.js';
 import { award, addXP, XP } from '../core/gamify.js';
 import { success, gentleShake } from '../core/motion.js';
+import { tl, plainText, jaControls } from '../core/text.js';
 
 const STEPS = [
   ['listen', '1. Listen'], ['repeat', '2. Repeat'], ['shadow', '3. Shadow'],
@@ -23,6 +24,7 @@ export function render(ctx) {
   const { unit, progress } = ctx;
   const sp = (progress.speaking.steps ||= {});
   const lang = unit.language.bcp47;
+  const T = (text, o) => tl(unit, text, { noRomaji: true, ...o });
   const track = unit.tracks.find((t) => t.id === unit.speaking.shadowTrack) || unit.tracks[0];
   const seg = (id) => unit.tracks.flatMap((t) => t.segments.map((s, i) => ({ ...s, track: t, index: i }))).find((s) => s.id === id);
 
@@ -106,48 +108,58 @@ export function render(ctx) {
       const done = new Set();
       return h('div', {}, h('p', {}, 'Ouça cada frase curta, depois grave a sua versão. Repita quantas vezes quiser.'),
         lines.map((s) => h('div', { class: 'card' },
-          h('div', { class: 'row between' }, h('strong', { lang }, s.text), h('span', { class: 'small muted' }, s.pt)),
+          h('div', { class: 'row between' }, tl(unit, s.text, { tag: 'strong' }), h('span', { class: 'small muted' }, s.pt)),
           h('div', { class: 'row' }, h('button', { class: 'btn small', onClick: () => playSeg(s) }, '▶ Modelo'), h('button', { class: 'btn small', onClick: () => playSeg(s, 0.75) }, '🐢 Devagar')),
           practiceWidget(s.text, { onDone: () => { done.add(s.id); if (done.size >= Math.min(3, lines.length)) markStep('repeat'); } }))));
     },
     shadow() {
       const lines = unit.speaking.repeatSegments.map(seg).filter(Boolean);
       return h('div', {}, h('p', {}, 'Shadowing: fale AO MESMO TEMPO que o áudio, como uma sombra. Ao gravar, o modelo toca junto (use fones de ouvido para não gravar o modelo).'),
-        lines.map((s) => h('div', { class: 'card' }, h('strong', { lang }, s.text),
+        lines.map((s) => h('div', { class: 'card' }, tl(unit, s.text, { tag: 'strong' }),
           practiceWidget(s.text, { autoPlay: async () => { playSeg(s, 0.9); }, onDone: () => markStep('shadow') }))));
     },
     substitute() {
+      // Substituição genérica: frase-modelo com {item} e {choice} (inglês usa {article} com a/an).
       const sub = unit.speaking.substitution;
-      let item = null; let article = null;
-      const sentence = h('p', { style: { fontSize: '1.3rem', fontWeight: 700 }, lang, 'aria-live': 'polite' });
+      const choices = sub.choices || ['a', 'an'];
+      const keyOf = (it) => it.choice ?? it.article;
+      let item = null; let choice = null;
+      const sentence = h('div', { style: { fontSize: '1.3rem', fontWeight: 700 }, 'aria-live': 'polite' });
       const fb = h('div', { 'aria-live': 'polite' });
       const widget = h('div', {});
+      const fill = (c, it) => sub.frame.replace(/\{(choice|article)\}/, c).replace('{item}', it.item);
       const draw = () => {
-        const parts = sub.frame.split(/(\{article\}|\{item\})/);
-        clear(sentence).append(...parts.map((p) => p === '{article}' ? h('span', { class: 'chunk', style: { background: 'var(--accent-soft)' } }, article || '___') : p === '{item}' ? h('span', { class: 'chunk', style: { background: 'var(--mint-soft)' } }, item?.item || '______') : p));
+        const parts = sub.frame.split(/(\{choice\}|\{article\}|\{item\})/);
+        clear(sentence).append(...parts.map((p) => (/^\{(choice|article)\}$/.test(p)
+          ? h('span', { class: 'chunk', style: { background: 'var(--accent-soft)' } }, choice ? T(choice) : '___')
+          : p === '{item}' ? h('span', { class: 'chunk', style: { background: 'var(--mint-soft)' } }, item ? T(item.item) : '______') : T(p))));
+        if (item?.cue) sentence.append(h('div', { class: 'small muted', style: { fontWeight: 500 } }, `🎯 ${item.cue}`));
       };
-      const pickArticle = (a) => {
-        article = a;
+      const pick = (c) => {
+        choice = c;
         draw();
         if (!item) return;
-        if (a === item.article) {
-          const text = sub.frame.replace('{article}', a).replace('{item}', item.item);
+        if (c === keyOf(item)) {
+          const text = fill(c, item);
           clear(fb).append(h('div', { class: 'feedback' }, '✓ Isso! Agora ouça e diga a frase.', h('button', { class: 'btn small', style: { marginLeft: '8px' }, onClick: () => playLine(unit, text) }, '▶ Modelo')));
           clear(widget).append(practiceWidget(text, { onDone: () => markStep('substitute') }));
           success(fb);
         } else {
-          clear(fb).append(h('div', { class: 'feedback wrong' }, `Ouça o início de “${item.item}”: começa com som de ${expectedArticle(item.item) === 'an' ? 'vogal → an' : 'consoante → a'}.`));
+          const why = item.hint || (unit.language.code === 'en'
+            ? `Ouça o início de “${item.item}”: começa com som de ${expectedArticle(item.item) === 'an' ? 'vogal → an' : 'consoante → a'}.`
+            : 'Releia a situação e tente a outra forma.');
+          clear(fb).append(h('div', { class: 'feedback wrong' }, T(why)));
           clear(widget);
           gentleShake(fb);
         }
       };
       draw();
-      return h('div', {}, h('p', {}, 'Troque o item dentro do chunk. Escolha um item e o artigo correto, depois diga a frase.'),
+      return h('div', {}, h('p', {}, sub.intro || 'Troque o item dentro do chunk. Escolha um item e o artigo correto, depois diga a frase.'),
         h('div', { class: 'card' }, sentence,
           h('p', { class: 'small muted' }, '1) Escolha o item:'),
-          h('div', { class: 'vocab-chips' }, sub.items.map((it) => h('button', { class: 'chip', lang, onClick: () => { item = it; article = null; clear(fb); clear(widget); draw(); } }, it.item))),
-          h('p', { class: 'small muted' }, '2) Escolha o artigo:'),
-          h('div', { class: 'row' }, ['a', 'an'].map((a) => h('button', { class: 'btn', onClick: () => pickArticle(a) }, a))),
+          h('div', { class: 'vocab-chips' }, sub.items.map((it) => h('button', { class: 'chip', onClick: () => { item = it; choice = null; clear(fb); clear(widget); draw(); } }, T(it.item), it.cue ? h('small', {}, it.cueShort || '') : null))),
+          h('p', { class: 'small muted' }, `2) ${sub.choiceLabel || 'Escolha o artigo'}:`),
+          h('div', { class: 'row' }, choices.map((c) => h('button', { class: 'btn', onClick: () => pick(c) }, T(c)))),
           fb, widget));
     },
     respond() {
@@ -176,12 +188,12 @@ export function render(ctx) {
           if (ok) { answered.add(r.id); if (answered.size === unit.speaking.respond.length) markStep('respond'); }
           clear(fb).append(h('div', { class: `feedback ${ok ? '' : 'wrong'}` },
             ok ? '✓ Resposta adequada à pergunta!' : `Sua resposta não parece responder à pergunta${viaAsr ? ' (ou a transcrição automática errou)' : ''}. Dica: ${r.hint}`,
-            h('p', { class: 'small' }, 'Exemplo: ', h('span', { lang }, r.model), ' ', h('button', { class: 'btn small ghost', onClick: () => playLine(unit, r.model) }, '🔊'))));
+            h('p', { class: 'small' }, 'Exemplo: ', tl(unit, r.model), ' ', h('button', { class: 'btn small ghost', onClick: () => playLine(unit, r.model) }, '🔊'))));
         };
-        const inp = h('input', { type: 'text', lang, placeholder: 'Digite sua resposta (ou fale)', 'aria-label': `Resposta para: ${s.text}` });
+        const inp = h('input', { type: 'text', lang, placeholder: 'Digite sua resposta (ou fale)', 'aria-label': `Resposta para: ${plainText(unit, s.text)}` });
         inp.addEventListener('keydown', (e) => e.key === 'Enter' && evaluate(inp.value));
         el.append(h('div', { class: 'card' },
-          h('div', { class: 'row between' }, h('div', {}, h('strong', {}, 'Mia: '), h('span', { lang }, s.text)), count),
+          h('div', { class: 'row between' }, h('div', {}, h('strong', {}, `${s.speaker}: `), tl(unit, s.text)), count),
           h('div', { class: 'row' },
             h('button', { class: 'btn primary small', onClick: async () => { await playSeg(s); startTimer(); inp.focus(); } }, '▶ Ouvir a pergunta'),
             h('span', { class: 'small muted' }, r.hint)),
@@ -214,7 +226,7 @@ export function render(ctx) {
 
   function menuMini() {
     const items = unit.menu.sections.flatMap((s) => s.items.map((i) => i.name));
-    return h('p', { class: 'small', lang }, h('strong', {}, 'Menu: '), items.join(' · '));
+    return h('p', { class: 'small', lang }, h('strong', {}, 'Menu: '), items.map((x) => plainText(unit, x)).join(' · '));
   }
 
   /* ---------- Role-play com papéis alternados ---------- */
@@ -233,7 +245,7 @@ export function render(ctx) {
       clear(area);
       const els = track.segments.map((s) => {
         const mine = s.speaker === me;
-        const e = h('div', { class: `role-line ${mine ? 'mine' : ''}` }, h('strong', {}, `${s.speaker}: `), h('span', { lang, style: { filter: mine && hide ? 'blur(6px)' : 'none' } }, s.text));
+        const e = h('div', { class: `role-line ${mine ? 'mine' : ''}` }, h('strong', {}, `${s.speaker}: `), h('span', { lang, class: 'rp-text', style: { filter: mine && hide ? 'blur(6px)' : 'none' } }, tl(unit, s.text)));
         area.append(e);
         return e;
       });
@@ -251,7 +263,7 @@ export function render(ctx) {
           els[i].append(next);
           await new Promise((res) => { const t = setTimeout(res, wait); next.onclick = () => { clearTimeout(t); res(); }; });
           next.remove();
-          els[i].querySelector('span[lang]').style.filter = 'none';
+          els[i].querySelector('.rp-text').style.filter = 'none';
         } else await playSeg({ ...s, track, index: i });
       }
       if (my === token) { els.forEach((e) => e.classList.remove('current')); area.append(h('p', { class: 'feedback' }, '✓ Diálogo completo! Troque de papel e tente de novo.')); }
@@ -271,6 +283,7 @@ export function render(ctx) {
   return h('div', {},
     h('header', { class: 'page-head' }, h('div', { class: 'eyebrow' }, 'Módulo 5 · Output'), h('h1', {}, 'Speaking Studio'),
       h('p', {}, 'Ganhe confiança passo a passo. Sotaque não é erro: o objetivo é ser entendido na cafeteria.'),
+      jaControls(ctx),
       h('div', { class: 'notice' }, 'Suas gravações ficam apenas na memória deste navegador e somem ao sair da página. Pedimos permissão do microfone só quando você clica em Gravar.'),
       noMicToggle),
     t.el);

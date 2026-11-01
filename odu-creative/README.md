@@ -3,8 +3,16 @@
 Plataforma educacional HTML5 modular para o ensino de línguas, organizada no fluxo
 **INPUT → INTAKE → OUTPUT → FEEDBACK → REVIEW**.
 
-Unidade incluída: **Inglês · A1 · 13 anos · “At the Café”** — o aluno vai até uma cafeteria,
-lê o cardápio, entende a atendente e consegue pedir o que quer.
+Unidades incluídas:
+
+- **Inglês · A1 · 13 anos · “At the Café”** (`units/en-a1-cafe`) — o aluno vai até uma cafeteria,
+  lê o cardápio, entende a atendente e consegue pedir o que quer.
+- **Japonês · N4 · 13 a 17 anos · 「カフェ・さくらで」** (`units/ja-n4-34`) — alinhada aos objetivos da lição 34
+  de 『みんなの日本語 初級Ⅱ』 (〜とおりに, 〜あとで, 〜て／〜ないで), com textos, diálogos e exercícios
+  **originais**: pedido com instruções na cafeteria, oficina de matcha latte, missão “faça como diz o bilhete”,
+  furigana e romaji ligáveis, questões no formato das seções do JLPT N4 e áudio gerado com Open JTalk.
+
+Troque de unidade no seletor da página inicial.
 
 ## O que está implementado
 
@@ -36,8 +44,11 @@ teclado, ARIA/leitores de tela, layout mobile-first e PWA (funciona offline apó
   então não há armazenamento central de dados de alunos. O backend C# é opcional e está especificado
   em [`docs/BACKEND.md`](docs/BACKEND.md), mas **não foi implementado**.
 - **DOCX** não contém áudio incorporado: contém links (e QR codes, quando gerado via CLI com URL pública).
-- **Furigana/romaji, pinyin e níveis de formalidade** estão previstos no formato de unidade
-  (ver [`docs/ADICIONAR-UNIDADES.md`](docs/ADICIONAR-UNIDADES.md)), mas esta unidade é de inglês e não os exibe.
+- **Japonês**: furigana e romaji são gerados a partir da marcação `{漢字|かんじ}`; o romaji é automático
+  (Hepburn, separando partículas comuns) e pode errar em casos raros de segmentação. Pinyin (mandarim)
+  e níveis de formalidade (coreano) estão previstos no formato de unidade, mas ainda não há unidades nesses idiomas.
+- **Áudio japonês**: voz sintética do Open JTalk (uma voz masculina com tom ajustado para os personagens).
+  O áudio é gerado a partir da leitura do furigana, para que fale exatamente o que o aluno lê.
 
 ## Como executar
 
@@ -59,6 +70,7 @@ npm install
 npm run build:html
 ```
 
+**Só a unidade de japonês:** `dist/odu-japones-n4.html` (≈6,7 MB).
 **Só o jogo de flashcards:** `dist/odu-flashcards.html` (≈5 MB) abre direto no jogo 3D, sem menu lateral.
 
 ### Opção 2 — servidor local (desenvolvimento)
@@ -94,7 +106,7 @@ coerentes, jogo jogável, preços do cardápio) e geração dos DOCX.
 ### Regenerar áudio e apostilas
 
 ```bash
-sudo apt-get install espeak-ng mbrola mbrola-us1 mbrola-us2 ffmpeg
+sudo apt-get install espeak-ng mbrola mbrola-us1 mbrola-us2 ffmpeg open-jtalk open-jtalk-mecab-naist-jdic hts-voice-nitech-jp-atr503-m001
 ```
 
 ```bash
@@ -118,7 +130,7 @@ sudo apt-get install blender python3-numpy
 npm run build:models
 ```
 
-Saída: `units/en-a1-cafe/3d/cafe-flashcards.glb` (glTF binário). Para conferir os modelos,
+Saída: `assets/3d/cafe-flashcards.glb` (compartilhado pelas unidades) (glTF binário). Para conferir os modelos,
 abra http://localhost:8080/tools/blender/preview.html (`?view=scene` mostra o cenário).
 Para usar modelos feitos à mão no Blender, exporte em glTF mantendo os nomes `Card`,
 `item-<nome>` e `Customer`, e os materiais `CardFront`/`CardBack` da carta.

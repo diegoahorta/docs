@@ -1,13 +1,20 @@
 /**
  * Motor de correção (funções puras — testadas em tests/evaluate.test.mjs).
  * Não depende do DOM: pode ser usado no navegador, no Node ou num backend.
+ * Japonês: respostas são comparadas sem espaços/pontuação e aceitam kanji OU só kana
+ * (as respostas aceitas podem usar a marcação de furigana {漢字|かんじ}).
  */
+import { isJapanese, plain, reading, normalizeJa } from './jp.js';
+
+/** Formas aceitáveis de uma resposta com marcação: texto com kanji e leitura em kana. */
+const forms = (acc) => (/\{[^|{}]+\|[^|{}]+\}/.test(acc) ? [plain(acc), reading(acc)] : [acc]);
+const jaEqual = (answer, acc) => forms(acc).some((f) => normalizeJa(plain(answer)) === normalizeJa(f));
 
 /** Normaliza texto para comparação: minúsculas, apóstrofos/aspas tipográficos, espaços e pontuação final. */
 export function normalize(s) {
   return String(s ?? '')
     .toLowerCase()
-    .normalize('NFC')
+    .normalize('NFKC')
     .replace(/[‘’ʼ`´]/g, "'")
     .replace(/[“”]/g, '"')
     .replace(/\s+([,.!?])/g, '$1')
@@ -22,6 +29,7 @@ export function loose(s) {
 
 /** Compara uma resposta com a lista de respostas aceitas. Ignora pontuação final se strict=false. */
 export function checkText(answer, accepted, { strictPunctuation = false } = {}) {
+  if (isJapanese(answer) || accepted.some(isJapanese)) return accepted.some((acc) => jaEqual(answer, acc));
   const a = normalize(answer);
   const strip = (x) => x.replace(/[.!]+$/, '').trim();
   return accepted.some((acc) => {
@@ -32,7 +40,8 @@ export function checkText(answer, accepted, { strictPunctuation = false } = {}) 
 
 /** Lacunas: answers é uma lista (por lacuna) de alternativas aceitas. Retorna {correct, perGap[]} */
 export function checkGaps(values, answers) {
-  const perGap = answers.map((alts, i) => alts.some((alt) => normalize(values[i]) === normalize(alt)));
+  const same = (v, alt) => (isJapanese(alt) || isJapanese(v) ? jaEqual(v, alt) : normalize(v) === normalize(alt));
+  const perGap = answers.map((alts, i) => alts.some((alt) => same(values[i] ?? '', alt)));
   return { correct: perGap.every(Boolean), perGap };
 }
 
@@ -66,11 +75,13 @@ export function articleErrors(text) {
  * Não atribui "nota de qualidade": devolve quais critérios foram atendidos.
  */
 export function checkCriteria(text, criteria) {
-  const norm = normalize(text);
+  const ja = isJapanese(text);
+  // japonês: padrões são testados no texto sem marcação, espaços e pontuação, linha a linha
+  const norm = ja ? plain(String(text)).split('\n').map(normalizeJa).join('\n') : normalize(text);
   const results = criteria.map((c) => {
     let ok = false;
     let detail = '';
-    if (c.pattern) ok = new RegExp(c.pattern, 'im').test(norm.split('\n').map((l) => l.trim()).join('\n'));
+    if (c.pattern) ok = new RegExp(c.pattern, 'imu').test(norm.split('\n').map((l) => l.trim()).join('\n'));
     else if (c.check === 'articles') {
       const hasArticle = /\b(a|an)\s+\w/i.test(norm);
       const errs = articleErrors(norm);
@@ -90,6 +101,11 @@ export function checkCriteria(text, criteria) {
  * all: todos os termos precisam aparecer; any/anyPolite: pelo menos um de cada grupo.
  */
 export function matchUtterance(text, match = {}) {
+  if (isJapanese(text) || [...(match.all || []), ...(match.any || [])].some(isJapanese)) {
+    const t = normalizeJa(plain(text));
+    const has = (term) => forms(term).some((f) => t.includes(normalizeJa(f)));
+    return (match.all || []).every(has) && (!match.any || match.any.some(has)) && (!match.anyPolite || match.anyPolite.some(has));
+  }
   const t = ' ' + loose(text).replace(/\bi would\b/g, "i'd").replace(/\bid\b/g, "i'd") + ' ';
   const has = (term) => t.includes(' ' + loose(term).replace(/\bid\b/g, "i'd") + ' ') || t.includes(loose(term));
   const all = (match.all || []).every(has);
@@ -103,8 +119,10 @@ export function matchUtterance(text, match = {}) {
  * Retorna [{word, hit}] para a frase-alvo. Usado como AUXÍLIO visual, não como nota.
  */
 export function wordDiff(target, heard) {
-  const A = loose(target).split(' ').filter(Boolean);
-  const B = loose(heard).split(' ').filter(Boolean);
+  const ja = isJapanese(target);
+  // japonês não separa palavras por espaço: compara caractere a caractere (kana/kanji)
+  const A = ja ? [...normalizeJa(plain(target))] : loose(target).split(' ').filter(Boolean);
+  const B = ja ? [...normalizeJa(plain(heard))] : loose(heard).split(' ').filter(Boolean);
   const dp = Array.from({ length: A.length + 1 }, () => new Array(B.length + 1).fill(0));
   for (let i = A.length - 1; i >= 0; i--)
     for (let j = B.length - 1; j >= 0; j--)

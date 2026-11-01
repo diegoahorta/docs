@@ -38,6 +38,8 @@ export function applySettings(s = settings) {
   root.dataset.theme = theme;
   root.dataset.contrast = s.contrast ? 'high' : 'normal';
   root.dataset.motion = s.reducedMotion ? 'reduced' : 'full';
+  root.dataset.furigana = s.furigana === false ? 'off' : 'on';
+  root.dataset.romaji = s.romaji ? 'on' : 'off';
   root.style.setProperty('--text-scale', s.textSize || '1');
 }
 
@@ -49,11 +51,13 @@ function setupSettingsDialog() {
     form.contrast.checked = settings.contrast;
     form.reducedMotion.checked = settings.reducedMotion;
     form.captions.checked = settings.captions;
+    form.furigana.checked = settings.furigana !== false;
+    form.romaji.checked = !!settings.romaji;
     form.textSize.value = settings.textSize;
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
   });
   form.addEventListener('change', () => {
-    settings = { ...settings, theme: form.theme.value, contrast: form.contrast.checked, reducedMotion: form.reducedMotion.checked, captions: form.captions.checked, textSize: form.textSize.value };
+    settings = { ...settings, theme: form.theme.value, contrast: form.contrast.checked, reducedMotion: form.reducedMotion.checked, captions: form.captions.checked, furigana: form.furigana.checked, romaji: form.romaji.checked, textSize: form.textSize.value };
     store.saveSettings(settings);
     applySettings();
   });
@@ -172,12 +176,15 @@ async function boot() {
   matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => applySettings());
   setupSettingsDialog();
   const params = new URLSearchParams(location.search);
-  const unitId = params.get('unit') || store.getActiveUnitId('en-a1-cafe');
+  // Arquivo com uma só unidade embutida abre sempre nela; senão, a última unidade usada.
+  const embeddedIds = Object.keys(EMBED.units || {});
+  const fallbackId = EMBED.defaultUnit || embeddedIds[0] || 'en-a1-cafe';
+  const unitId = params.get('unit') || (embeddedIds.length === 1 ? embeddedIds[0] : store.getActiveUnitId(fallbackId));
   try {
     await ctx.reloadUnit(unitId);
   } catch (e) {
     console.warn(e);
-    await ctx.reloadUnit('en-a1-cafe');
+    await ctx.reloadUnit(fallbackId);
   }
   touchStreak(ctx.progress);
   ctx.save();

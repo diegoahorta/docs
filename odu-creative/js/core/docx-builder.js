@@ -8,6 +8,8 @@
  * arquivos hospedados. Sem URL pública, indica onde o áudio está na plataforma.
  */
 
+import { paren, romaji, plain } from './jp.js';
+
 const BRAND = '5B3DF5';
 const ACCENT = 'FF6B4A';
 const GREY = '6C6884';
@@ -24,7 +26,13 @@ export function buildApostila(docx, unit, opts = {}) {
   const L = 'abcdefgh';
 
   /* ---------- helpers ---------- */
-  const t = (text, o = {}) => new TextRun({ text: String(text ?? ''), ...o });
+  const ja = lang.code === 'ja';
+  // Japonês: o DOCX não usa ruby; o furigana vira leitura entre parênteses: 先生(せんせい)
+  const fmtText = (x) => (ja ? paren(String(x ?? '')) : String(x ?? ''));
+  const t = (text, o = {}) => new TextRun({ text: fmtText(text), ...o });
+  const money = (v) => (unit.menu.currencySuffix ? `${Number(v).toFixed(unit.menu.decimals ?? 0)}${unit.menu.currencySuffix}` : `${unit.menu.currency ?? '$'}${Number(v).toFixed(unit.menu.decimals ?? 2)}`);
+  const exText = (ex) => ex.text ?? ex.en;
+  const join = ja ? '' : ' ';
   const p = (children, o = {}) => new Paragraph({ spacing: { after: 120 }, ...o, children: (Array.isArray(children) ? children : [children]).map((c) => (typeof c === 'string' ? t(c) : c)) });
   const h1 = (text) => { sec++; return new Paragraph({ heading: HeadingLevel.HEADING_1, pageBreakBefore: sec > 1, spacing: { before: 120, after: 200 }, children: [t(`${sec}. ${text}`)] }); };
   const h2 = (text) => new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 240, after: 120 }, children: [t(text)] });
@@ -43,7 +51,7 @@ export function buildApostila(docx, unit, opts = {}) {
       width: { size: ws[i], type: WidthType.DXA },
       shading: head ? { type: ShadingType.CLEAR, color: 'auto', fill: 'ECE8FF' } : undefined,
       margins: { top: 60, bottom: 60, left: 100, right: 100 },
-      children: String(text ?? '').split('\n').map((line) => new Paragraph({ children: [t(line, { bold: head, size: 20 })] })),
+      children: fmtText(text).split('\n').map((line) => new Paragraph({ children: [new TextRun({ text: line, bold: head, size: 20 })] })),
     });
     return new Table({
       width: { size: W, type: WidthType.DXA }, columnWidths: ws,
@@ -104,8 +112,9 @@ export function buildApostila(docx, unit, opts = {}) {
   push(
     new Paragraph({ spacing: { before: 1800 }, alignment: AlignmentType.CENTER, children: [t('ODU', { bold: true, size: 72, color: BRAND }), t(' CREATIVE', { size: 72, color: '1D1A2B' })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 600 }, children: [t('Universal Language Learning Engine', { size: 24, color: GREY })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, children: [t(`UNIDADE ${unit.unitNumber || 1}`, { bold: true, size: 28, color: ACCENT })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 120 }, children: [t(unit.title, { bold: true, size: 64 })] }),
+    new Paragraph({ alignment: AlignmentType.CENTER, children: [t(`${ja ? 'LIÇÃO' : 'UNIDADE'} ${unit.unitNumber || 1}`, { bold: true, size: 28, color: ACCENT })] }),
+    ...(unit.titleNative ? [new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 80 }, children: [t(unit.titleNative, { bold: true, size: 56, color: BRAND })] })] : []),
+    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 120 }, children: [t(unit.title, { bold: true, size: unit.titleNative ? 44 : 64 })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 600 }, children: [t(unit.subtitle, { size: 28 })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, children: [t(`${lang.name} · Nível ${unit.level} (QECR) · ${unit.age} anos`, { size: 24 })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 1200 }, children: [t(teacher ? 'VERSÃO DO PROFESSOR — com gabarito e orientações' : 'VERSÃO DO ALUNO', { bold: true, size: 24, color: teacher ? ACCENT : BRAND })] }),
@@ -117,6 +126,8 @@ export function buildApostila(docx, unit, opts = {}) {
     ['Marca', unit.brand], ['Idioma-alvo', `${lang.name} (${lang.bcp47})`], ['Nível', unit.level], ['Faixa etária', `${unit.age} anos`],
     ['Habilidades', unit.skills.join(', ')], ['Objetivo comunicativo', unit.communicativeGoal], ['Idioma das explicações', 'Português brasileiro'],
     ['Fluxo pedagógico', 'INPUT → INTAKE → OUTPUT → FEEDBACK → REVIEW'], ['Avaliação de referência', unit.assessment.reference],
+    ...(unit.sourceNote ? [['Material de referência', unit.sourceNote]] : []),
+    ...(ja ? [['Leitura do japonês', 'Kanji com leitura entre parênteses (furigana) e romaji no vocabulário, na transcrição e nos exemplos.']] : []),
   ], [2600, 6400]));
   push(...teacherNote('Carga sugerida: 4 a 5 aulas de 50 min — (1) escuta + Café Quest, (2) descoberta e Grammar Lab, (3) prática A–C, (4) prática D + speaking, (5) avaliação e revisão. A plataforma digital registra o progresso no dispositivo do aluno; peça a exportação do progresso (JSON) para consolidar resultados no Painel do Professor.'));
 
@@ -125,9 +136,9 @@ export function buildApostila(docx, unit, opts = {}) {
 
   /* 4. VOCABULÁRIO */
   push(h1('Vocabulário contextualizado'), p('Leia as palavras e os exemplos. Na plataforma, toque em 🔊 para ouvir.'),
-    table(['Inglês', 'Pronúncia', 'Português', 'Exemplo em contexto'], unit.vocabulary.map((v) => [v.article && !v.term.includes('/') && !/[?.]$/.test(v.term) ? `${v.article} ${v.term}` : v.term, v.pron || '', v.pt, v.example || '']), [2000, 1900, 1800, 3300]),
+    table([lang.name, ja ? 'Leitura (romaji)' : 'Pronúncia', 'Português', 'Exemplo em contexto'], unit.vocabulary.map((v) => [v.article && !v.term.includes('/') && !/[?.]$/.test(v.term) ? `${v.article} ${v.term}` : v.term, ja ? romaji(v.term) : v.pron || '', v.pt, v.example || '']), [2000, 1900, 1800, 3300]),
     h2('Cardápio — ' + unit.menu.name),
-    table(['Item', 'Preço'], unit.menu.sections.flatMap((s) => s.items.map((i) => [`${i.article} ${i.name}`, i.sizes ? Object.entries(i.sizes).map(([k, v]) => `${k} $${v.toFixed(2)}`).join(' · ') : `$${i.price.toFixed(2)}`])), [5000, 4000]));
+    table(['Item', 'Preço'], unit.menu.sections.flatMap((s) => s.items.map((i) => [[i.article, i.name].filter(Boolean).join(' '), i.sizes ? Object.entries(i.sizes).map(([k, v]) => `${k} ${money(v)}`).join(' · ') : money(i.price)])), [5000, 4000]));
 
   /* 5. LISTENING */
   push(h1('Texto ou diálogo de listening'),
@@ -142,25 +153,25 @@ export function buildApostila(docx, unit, opts = {}) {
   /* 6. TRANSCRIÇÃO E TRADUÇÃO */
   push(h1('Transcrição e tradução'));
   unit.tracks.forEach((tr, i) => push(h2(`Faixa ${i + 1}: ${tr.title}`),
-    table(['#', 'Tempo', 'Fala (inglês)', 'Tradução'], tr.segments.map((s, k) => [String(k + 1), `${fmt(s.start)}–${fmt(s.end)}`, `${s.speaker}: ${s.text}`, s.pt]), [500, 1300, 3800, 3400])));
+    table(['#', 'Tempo', `Fala (${lang.name.toLowerCase()})`, 'Tradução'], tr.segments.map((s, k) => [String(k + 1), `${fmt(s.start)}–${fmt(s.end)}`, `${s.speaker}: ${s.text}${ja ? `\n${romaji(s.text)}` : ''}`, s.pt]), [500, 1300, 3800, 3400])));
 
   /* 7. GRAMÁTICA */
   push(h1('Explicação gramatical'), note('Sugestão: faça primeiro a Descoberta dos padrões (seção 8) e depois volte aqui para confirmar suas hipóteses.'));
   unit.grammar.forEach((g) => {
     push(h2(g.name), p([t('Função comunicativa: ', { bold: true }), t(g.function)]), p([t('Forma: ', { bold: true }), t(g.form, { bold: true, color: BRAND })]), p(g.explanation));
     if (g.table) push(table(g.table.headers, g.table.rows));
-    push(h3('Exemplos'), g.examples.map((ex) => bullet([t(ex.en, { bold: true }), t(` — ${ex.pt}`)])));
+    push(h3('Exemplos'), g.examples.map((ex) => bullet([t(exText(ex), { bold: true }), ...(ja ? [t(`  [${romaji(exText(ex))}]`, { italics: true, color: GREY })] : []), t(` — ${ex.pt}`)])));
     if (g.comparison) push(note(`${g.comparison.title}: ${g.comparison.text}`));
     push(h3('Erros frequentes'), g.commonErrors.map((e) => bullet([t('✗ ' + e.wrong, { strike: true, color: 'C93A2B' }), t('  →  '), t('✓ ' + e.right, { bold: true, color: '12A586' }), t(`  (${e.why})`)])));
     push(p([t('Uso: ', { bold: true }), t(g.usage)]));
-    if (g.pronunciation) push(p([t('Pronúncia: ', { bold: true }), t(g.pronunciation)]));
+    if (g.pronunciation) push(p([t(ja ? 'Leitura e pronúncia: ' : 'Pronúncia: ', { bold: true }), t(g.pronunciation)]));
     push(h3('Verificação rápida'), ...printQuestion({ ...g.check, type: 'mcq' }, 1));
   });
 
   /* 8. DESCOBERTA */
   const d = unit.discover;
   push(h1('Descoberta dos padrões'), p(d.intro),
-    h2('Observe'), d.sentences.map((s, i) => p(`${i + 1}. ${s.chunks.map((c) => c[0]).join(' ').replace(/\s+([,?.])/g, '$1').replace(/ '/g, "'")}`)),
+    h2('Observe'), d.sentences.map((s, i) => p(`${i + 1}. ${s.chunks.map((c) => c[0]).join(join).replace(/\s+([,?.])/g, '$1').replace(/ '/g, "'")}`)),
     h2('Compare e responda'), d.questions.flatMap((q, i) => printQuestion({ ...q, type: 'mcq' }, i + 1)),
     h2('Monte as frases'), d.reorder.flatMap((r, i) => [p([t(`${i + 1}. Blocos: `), t(r.tiles.slice().sort().join('  /  '), { bold: true })]), ...lines(1)]),
     h2('Minha hipótese'), p('Com suas palavras: como se faz um pedido? Quando usamos a e quando usamos an?'), ...lines(4),
@@ -192,15 +203,15 @@ export function buildApostila(docx, unit, opts = {}) {
   push(h1('Atividades de conversação'),
     h2('1. Listen e 2. Repeat'), p('Ouça e repita cada frase em voz alta:'), spk.repeatSegments.map((id) => { const s = unit.tracks.flatMap((x) => x.segments).find((x) => x.id === id); return bullet(s ? s.text : id); }),
     h2('3. Shadow'), p('Fale junto com o áudio da faixa 1, imitando ritmo e entonação.'),
-    h2('4. Substitute'), p(t(spk.substitution.frame.replace('{article}', 'a / an').replace('{item}', '______'), { bold: true })),
-    table(['Item', 'Artigo correto (escreva)'], spk.substitution.items.map((x) => [x.item, teacher ? x.article : '______']), [5000, 4000]),
-    h2('5. Respond'), spk.respond.map((r) => { const s = unit.tracks.flatMap((x) => x.segments).find((x) => x.id === r.segment); return bullet([t(`Mia: “${s?.text}” `, { bold: true }), t(`→ ${r.hint}`), ...(teacher ? [t(`  (ex.: ${r.model})`, { italics: true, color: GREY })] : [])]); }),
+    h2('4. Substitute'), p(t(spk.substitution.frame.replace(/\{(article|choice)\}/, (spk.substitution.choices || ['a', 'an']).map(plain).join(' / ')).replace('{item}', '______'), { bold: true })),
+    table(['Item / situação', `${spk.substitution.choiceLabel || 'Artigo correto'} (escreva)`], spk.substitution.items.map((x) => [x.cue ? `${x.item} — ${x.cue}` : x.item, teacher ? (x.choice ?? x.article) : '______']), [5000, 4000]),
+    h2('5. Respond'), spk.respond.map((r) => { const s = unit.tracks.flatMap((x) => x.segments).find((x) => x.id === r.segment); return bullet([t(`${s?.speaker || ''}: “${s?.text}” `, { bold: true }), t(`→ ${r.hint}`), ...(teacher ? [t(`  (ex.: ${r.model})`, { italics: true, color: GREY })] : [])]); }),
     h2('6. Create — role-play'), p(spk.create.prompt), h3('Autoavaliação'), spk.create.checklist.map((c) => p(`☐ ${c}`)));
   push(...teacherNote('Avalie a comunicação (a atendente entenderia o pedido?) e o uso das estruturas, não o sotaque. A transcrição automática da plataforma é apenas um apoio para o aluno e não deve ser usada como nota de pronúncia.'));
 
   /* 13. ESCRITA */
   push(h1('Produção escrita'), p(unit.writing.prompt), ...lines(8), h3('Checklist'), unit.writing.checklist.map((c) => p(`☐ ${c}`)));
-  push(...teacherNote('Critérios sugeridos (0–2 cada): adequação à tarefa; uso de I\'d like / Can I have; a/an; vocabulário do cardápio; coerência do preço total; cortesia.'));
+  push(...teacherNote(unit.writing.teacherCriteria || 'Critérios sugeridos (0–2 cada): adequação à tarefa; uso de I\'d like / Can I have; a/an; vocabulário do cardápio; coerência do preço total; cortesia.'));
 
   /* 14–15. GABARITO E DISTRATORES */
   const allQs = [
@@ -230,19 +241,19 @@ export function buildApostila(docx, unit, opts = {}) {
   const skillsByReview = (unit.reviewItems || []);
   push(h1('Plano de revisão'), p('Revisar em intervalos crescentes ajuda a guardar o conteúdo na memória de longo prazo. Marque a data de cada revisão.'),
     table(['Revisão', 'Quando', 'O que revisar', 'Data / ✓'], iv.map((dd, i) => [`${i + 1}ª`, `${dd} dia(s) depois da anterior`, [
-      'Vocabulário + escuta da faixa 1', 'a / an + Can I have...?', "I'd like + preços (How much)", 'Role-play completo sem olhar o texto', 'Desafio de revisão em novos contextos'][i] || 'Desafio de revisão', '']), [1200, 2400, 3800, 1600]),
+      ...(unit.revisionPlan || ['Vocabulário + escuta da faixa 1', unit.grammar.slice(0, 2).map((g) => plain(g.name)).join(' + '), unit.grammar.slice(2).map((g) => plain(g.name)).join(' + '), 'Role-play completo sem olhar o texto', 'Desafio de revisão em novos contextos'])][i] || 'Desafio de revisão', '']), [1200, 2400, 3800, 1600]),
     h2('Desafio de revisão — novos contextos'), skillsByReview.flatMap((q, i) => printQuestion(q, i + 1)),
     note('Na plataforma, o módulo Revisão espaçada reorganiza esse plano automaticamente conforme seus acertos e erros.'));
   if (teacher) push(h3('Gabarito — revisão'), skillsByReview.map((q, i) => bullet(`${i + 1}. ${answerText(q)} — ${q.explanation}`)));
 
   /* 17. REFERÊNCIAS */
   push(h1('Referências pedagógicas'), unit.references.map((r) => bullet(r)),
-    p(t('Textos, diálogos e exercícios originais produzidos para a ODU CREATIVE. Áudios gerados por síntese de voz (espeak-ng + MBROLA) quando não houver gravação humana.', { size: 18, color: GREY })));
+    p(t(`Textos, diálogos e exercícios originais produzidos para a ODU CREATIVE. Áudios gerados por síntese de voz (${unit.tracks.some((x) => x.audioSource === 'synthetic-openjtalk') ? 'Open JTalk' : 'espeak-ng + MBROLA'}) quando não houver gravação humana.`, { size: 18, color: GREY })));
 
   return new Document({
     creator: 'ODU CREATIVE', title: `${unit.title} — ${teacher ? 'Professor' : 'Aluno'}`, description: unit.subtitle,
     styles: {
-      default: { document: { run: { font: 'Calibri', size: 22 } } },
+      default: { document: { run: { font: { ascii: 'Calibri', hAnsi: 'Calibri', eastAsia: ja ? 'Yu Gothic' : 'Calibri' }, size: 22 } } },
       paragraphStyles: [
         { id: 'Heading1', name: 'Heading 1', basedOn: 'Normal', next: 'Normal', quickFormat: true, run: { size: 36, bold: true, color: BRAND } },
         { id: 'Heading2', name: 'Heading 2', basedOn: 'Normal', next: 'Normal', quickFormat: true, run: { size: 28, bold: true, color: '1D1A2B' } },

@@ -5,7 +5,8 @@
  *
  * Embute: CSS, JavaScript (módulos unidos com esbuild), GSAP, biblioteca docx,
  * as unidades de units/index.json, seus áudios (MP3 em base64) e as apostilas DOCX prontas.
- * Uso: node tools/build-standalone.mjs [saida.html] [--game flashcards]
+ * Uso: node tools/build-standalone.mjs [saida.html] [--game flashcards] [--unit ja-n4-34]
+ *   --unit <id>    embute só essa unidade (arquivo menor, abre direto nela).
  *   --game <rota>  gera um arquivo "somente jogo": abre direto na rota, sem menu lateral.
  */
 import { build } from 'esbuild';
@@ -16,8 +17,11 @@ const root = resolve(new URL('..', import.meta.url).pathname);
 const argv = process.argv.slice(2);
 const gi = argv.indexOf('--game');
 const game = gi >= 0 ? argv[gi + 1] : null;
-const positional = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--game');
-const out = resolve(positional[0] || join(root, 'dist', game ? `odu-${game}.html` : 'odu-creative.html'));
+const ui = argv.indexOf('--unit');
+const onlyUnit = ui >= 0 ? argv[ui + 1] : null;
+const positional = argv.filter((a, i) => !a.startsWith('--') && !['--game', '--unit'].includes(argv[i - 1]));
+const defaultName = onlyUnit ? `odu-${onlyUnit}${game ? `-${game}` : ''}.html` : game ? `odu-${game}.html` : 'odu-creative.html';
+const out = resolve(positional[0] || join(root, 'dist', defaultName));
 const read = (p) => readFileSync(join(root, p), 'utf8');
 const MIME = { '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.svg': 'image/svg+xml', '.png': 'image/png', '.glb': 'model/gltf-binary' };
 const dataUrl = (abs) => `data:${MIME[extname(abs)]};base64,${readFileSync(abs).toString('base64')}`;
@@ -29,7 +33,8 @@ function walk(dir) {
 }
 
 // 1. Unidades e mídias
-const index = JSON.parse(read('units/index.json'));
+const index = JSON.parse(read('units/index.json')).filter((u) => !onlyUnit || u.id === onlyUnit);
+if (!index.length) throw new Error(`Unidade não encontrada: ${onlyUnit}`);
 const units = {};
 const assets = {};
 for (const { id } of index) {
@@ -46,6 +51,9 @@ for (const { id } of index) {
     }
   }
 }
+
+// modelos 3D compartilhados entre unidades (assets/3d)
+for (const f of existsSync(join(root, 'assets/3d')) ? walk(join(root, 'assets/3d')) : []) if (MIME[extname(f)]) assets[relative(root, f).split('\\').join('/')] = dataUrl(f);
 
 // 2. JavaScript em um único script clássico (funciona em file://)
 const bundle = await build({
@@ -67,8 +75,9 @@ html = html
   .replace(/\s*<script type="module" src="js\/main\.js"><\/script>/, '')
   .replace(/\s*<script>\s*if \(location\.protocol === 'file:'\)[\s\S]*?<\/script>/, '');
 
-const embed = { index, units, assets, builtAt: new Date().toISOString(), ...(game ? { start: game, gameOnly: true } : {}) };
+const embed = { index, units, assets, defaultUnit: index[0].id, builtAt: new Date().toISOString(), ...(game ? { start: game, gameOnly: true } : {}) };
 if (game) html = html.replace(/<title>[^<]*<\/title>/, `<title>ODU CREATIVE — ${game === 'flashcards' ? 'Flashcards 3D' : game}</title>`);
+else if (onlyUnit) html = html.replace(/<title>[^<]*<\/title>/, `<title>ODU CREATIVE — ${units[onlyUnit].language.name} ${units[onlyUnit].level} · ${units[onlyUnit].titleNative || units[onlyUnit].title}</title>`).replace('<html lang="pt-BR"', '<html lang="pt-BR"');
 const tail = [
   `<script>window.__ODU_EMBED__=${safe(JSON.stringify(embed))};</script>`,
   `<script>${safe(read('vendor/docx.iife.js'))}\n;window.docx=docx;</script>`,

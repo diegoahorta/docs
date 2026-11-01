@@ -5,6 +5,7 @@
  * - Ocultar/revelar texto, tradução opcional, legenda ao vivo
  */
 import { h, clear, fmtTime, announce } from '../core/dom.js';
+import { tl, plainText } from '../core/text.js';
 
 const SOURCE_LABEL = {
   file: 'Áudio da unidade com trilha de tempo.',
@@ -15,7 +16,7 @@ const SOURCE_LABEL = {
 
 export async function createPlayerUI(ctx, track, { transcript = 'visible', translation = false, allowToggle = true, onEnded, onSegment } = {}) {
   const { player, source } = await ctx.trackPlayer(track.id);
-  const root = h('section', { class: 'card player', 'aria-label': `Player: ${track.title}` });
+  const root = h('section', { class: 'card player', 'aria-label': `Player: ${plainText(ctx.unit, track.title)}` });
   if (!player) {
     root.append(h('p', { class: 'notice warn' }, SOURCE_LABEL.none));
     return { el: root, player: null };
@@ -35,8 +36,8 @@ export async function createPlayerUI(ctx, track, { transcript = 'visible', trans
   const segEls = track.segments.map((s, i) => {
     const el = h('div', { class: 'seg', role: 'listitem', dataset: { i } },
       h('span', { class: `who ${s.speaker}` }, s.speaker),
-      h('span', {}, h('span', { class: 'txt', lang: ctx.unit.language.bcp47 }, s.text), h('span', { class: 'pt', lang: 'pt-BR', hidden: !translation }, s.pt)),
-      h('button', { class: 'btn small ghost', 'aria-label': `Ouvir a fala ${i + 1}: ${s.text}`, onClick: () => player.playRange(i) }, '▶'));
+      h('span', {}, tl(ctx.unit, s.text, { cls: 'txt' }), h('span', { class: 'pt', lang: 'pt-BR', hidden: !translation }, s.pt)),
+      h('button', { class: 'btn small ghost', 'aria-label': `Ouvir a fala ${i + 1}: ${plainText(ctx.unit, s.text)}`, onClick: () => player.playRange(i) }, '▶'));
     list.append(el);
     return el;
   });
@@ -65,7 +66,7 @@ export async function createPlayerUI(ctx, track, { transcript = 'visible', trans
     segEls.forEach((el, j) => el.classList.toggle('active', i === j));
     if (i >= 0) {
       const s = track.segments[i];
-      clear(caption).append(h('strong', {}, `${s.speaker}: `), mode === 'hidden' ? '…' : s.text);
+      clear(caption).append(h('strong', {}, `${s.speaker}: `), mode === 'hidden' ? '…' : tl(ctx.unit, s.text));
       if (mode === 'visible') segEls[i].scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
     }
     onSegment?.(i);
@@ -83,8 +84,8 @@ export async function createPlayerUI(ctx, track, { transcript = 'visible', trans
   player.on('error', () => root.prepend(h('p', { class: 'notice warn' }, 'Não foi possível reproduzir o áudio. Toque em ▶ novamente ou verifique o volume.')));
 
   root.append(
-    h('div', { class: 'row between' }, h('h3', { style: { margin: 0 } }, `🎧 ${track.title}`),
-      h('span', { class: 'small muted' }, SOURCE_LABEL[source], synthetic ? ' Voz sintética (espeak-ng + MBROLA).' : '')),
+    h('div', { class: 'row between' }, h('h3', { style: { margin: 0 } }, '🎧 ', tl(ctx.unit, track.title, { noRomaji: true })),
+      h('span', { class: 'small muted' }, SOURCE_LABEL[source], synthetic ? (track.audioSource === 'synthetic-openjtalk' ? ' Voz sintética (Open JTalk).' : ' Voz sintética (espeak-ng + MBROLA).') : '')),
     h('div', { class: 'controls' }, playBtn, back, speed, time),
     range,
     caption,
