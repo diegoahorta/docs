@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ODU CREATIVE — Language Engine</title>
+  <meta name="description" content="ODU CREATIVE: plataforma modular de aprendizagem de línguas — Input, Intake, Output, Feedback e Review.">
+  <meta name="theme-color" content="#5b3df5">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/app.css">
+  <!-- GSAP (vendor local, funciona offline). Se não carregar, o app funciona sem animações. -->
+  <script src="vendor/gsap.min.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+  <header class="app-header" role="banner">
+    <a class="brand" href="#/" aria-label="ODU CREATIVE — início">
+      <img src="assets/icon.svg" alt="" width="32" height="32">
+      <span class="brand-text"><strong>ODU</strong> CREATIVE</span>
+    </a>
+    <div class="header-unit" id="header-unit" aria-live="polite"></div>
+    <div class="header-actions">
+      <span class="xp-pill" id="xp-pill" title="Pontos de experiência">0 XP</span>
+      <button class="icon-btn" id="btn-settings" aria-haspopup="dialog" aria-controls="settings-dialog" title="Acessibilidade e aparência">
+        <span aria-hidden="true">⚙</span><span class="sr-only">Configurações de acessibilidade e aparência</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="side-nav" id="side-nav" aria-label="Módulos da unidade">
+      <ol class="flow-list" id="flow-list"></ol>
+    </nav>
+    <main id="main" tabindex="-1" class="main"></main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navegação rápida" id="bottom-nav"></nav>
+
+  <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
+    <form method="dialog" class="dialog-body" id="settings-form">
+      <h2 id="settings-title">Aparência e acessibilidade</h2>
+      <fieldset>
+        <legend>Tema</legend>
+        <label><input type="radio" name="theme" value="auto"> Automático (sistema)</label>
+        <label><input type="radio" name="theme" value="light"> Claro</label>
+        <label><input type="radio" name="theme" value="dark"> Escuro</label>
+      </fieldset>
+      <label class="switch"><input type="checkbox" name="contrast"> Alto contraste</label>
+      <label class="switch"><input type="checkbox" name="reducedMotion"> Reduzir movimento (desliga animações)</label>
+      <label class="switch"><input type="checkbox" name="captions"> Mostrar legenda das falas do áudio por padrão</label>
+      <label class="field">Tamanho do texto
+        <select name="textSize">
+          <option value="1">Normal</option>
+          <option value="1.125">Grande</option>
+          <option value="1.25">Muito grande</option>
+        </select>
+      </label>
+      <div class="row end">
+        <button class="btn primary" value="close">Fechar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toasts" role="status" aria-live="polite"></div>
+  <div class="sr-only" id="announcer" aria-live="assertive"></div>
+
+  <script>
+    if (location.protocol === 'file:') document.getElementById('main').innerHTML =
+      '<div class="card"><h2>Abra por um servidor local</h2><p>Navegadores bloqueiam módulos JavaScript abertos direto do disco. Na pasta odu-creative, rode <code>npm run serve</code> e acesse http://localhost:8080.</p></div>';
+  </script>
+  <noscript><p class="noscript">Esta plataforma precisa de JavaScript ativado.</p></noscript>
+</body>
+</html>

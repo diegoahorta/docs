@@ -1,0 +1,14 @@
+{
+  "name": "ODU CREATIVE — Language Engine",
+  "short_name": "ODU CREATIVE",
+  "description": "Plataforma modular de aprendizagem de línguas: Input, Intake, Output, Feedback e Review.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5fb",
+  "theme_color": "#5b3df5",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

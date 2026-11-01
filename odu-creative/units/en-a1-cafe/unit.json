@@ -1,0 +1,3118 @@
+{
+  "id": "en-a1-cafe",
+  "schemaVersion": 1,
+  "brand": "ODU CREATIVE",
+  "language": {
+    "code": "en",
+    "bcp47": "en-US",
+    "name": "Inglês"
+  },
+  "explanationLanguage": "pt-BR",
+  "level": "A1",
+  "age": 13,
+  "skills": [
+    "Listening",
+    "Speaking",
+    "Reading",
+    "Writing"
+  ],
+  "communicativeGoal": "Compreensão escrita e auditiva: entender e fazer um pedido simples em uma cafeteria.",
+  "unitNumber": 1,
+  "title": "At the Café",
+  "subtitle": "Pedindo comida e bebida em uma cafeteria",
+  "audioBaseUrl": "",
+  "labels": {
+    "discover": "DISCOVER THE PATTERN | Descubra a regra",
+    "rule": "THE RULE | A regra"
+  },
+  "objectives": [
+    "Compreender um diálogo curto de pedido em cafeteria (ideia geral e informações específicas).",
+    "Ler um cardápio simples e localizar itens e preços.",
+    "Fazer pedidos educados com I'd like... e Can I have...?",
+    "Usar a e an corretamente antes de comidas e bebidas.",
+    "Perguntar e entender preços (How much is it? / It's...).",
+    "Produzir um pequeno diálogo oral e escrito de pedido."
+  ],
+  "config": {
+    "passThreshold": 0.7,
+    "consolidateAfter": 3,
+    "srsIntervalsDays": [
+      1,
+      2,
+      4,
+      7,
+      14
+    ],
+    "responseTimeSeconds": 10
+  },
+  "assessment": {
+    "reference": "Cambridge English Qualifications for young learners — A1 Movers",
+    "note": "Questões originais inspiradas nos formatos e competências avaliadas (ler e escolher a resposta, completar diálogo, ouvir e escrever números/preços). Nenhuma questão oficial é reproduzida."
+  },
+  "voices": {
+    "Mia": {
+      "espeak": "mb-us1",
+      "pitch": 55,
+      "speed": 135,
+      "browserHint": "female"
+    },
+    "Leo": {
+      "espeak": "mb-us2",
+      "pitch": 60,
+      "speed": 135,
+      "browserHint": "male"
+    },
+    "Ana": {
+      "espeak": "mb-us1",
+      "pitch": 70,
+      "speed": 135,
+      "browserHint": "female"
+    },
+    "Narrator": {
+      "espeak": "mb-us2",
+      "pitch": 40,
+      "speed": 130,
+      "browserHint": "male"
+    }
+  },
+  "vocabulary": [
+    {
+      "id": "v1",
+      "term": "hot chocolate",
+      "article": "a",
+      "pron": "/hɒt ˈtʃɒklət/",
+      "pt": "chocolate quente",
+      "example": "I'd like a hot chocolate, please.",
+      "category": "drinks"
+    },
+    {
+      "id": "v2",
+      "term": "orange juice",
+      "article": "an",
+      "pron": "/ˈɒrɪndʒ dʒuːs/",
+      "pt": "suco de laranja",
+      "example": "Can I have an orange juice?",
+      "category": "drinks"
+    },
+    {
+      "id": "v3",
+      "term": "apple juice",
+      "article": "an",
+      "pron": "/ˈæpl dʒuːs/",
+      "pt": "suco de maçã",
+      "example": "I'd like an apple juice.",
+      "category": "drinks"
+    },
+    {
+      "id": "v4",
+      "term": "milkshake",
+      "article": "a",
+      "pron": "/ˈmɪlkʃeɪk/",
+      "pt": "milk-shake",
+      "example": "A milkshake is four dollars and fifty cents.",
+      "category": "drinks"
+    },
+    {
+      "id": "v5",
+      "term": "water",
+      "article": "a bottle of",
+      "pron": "/ˈwɔːtə/",
+      "pt": "água",
+      "example": "Can I have a bottle of water?",
+      "category": "drinks"
+    },
+    {
+      "id": "v6",
+      "term": "cheese sandwich",
+      "article": "a",
+      "pron": "/tʃiːz ˈsænwɪtʃ/",
+      "pt": "sanduíche de queijo",
+      "example": "Can I have a cheese sandwich?",
+      "category": "food"
+    },
+    {
+      "id": "v7",
+      "term": "egg sandwich",
+      "article": "an",
+      "pron": "/eɡ ˈsænwɪtʃ/",
+      "pt": "sanduíche de ovo",
+      "example": "I'd like an egg sandwich.",
+      "category": "food"
+    },
+    {
+      "id": "v8",
+      "term": "muffin",
+      "article": "a",
+      "pron": "/ˈmʌfɪn/",
+      "pt": "muffin (bolinho)",
+      "example": "Sorry, we don't have muffins today.",
+      "category": "food"
+    },
+    {
+      "id": "v9",
+      "term": "cookie",
+      "article": "a",
+      "pron": "/ˈkʊki/",
+      "pt": "biscoito / cookie",
+      "example": "A cookie is one dollar and fifty cents.",
+      "category": "food"
+    },
+    {
+      "id": "v10",
+      "term": "apple pie",
+      "article": "an",
+      "pron": "/ˈæpl paɪ/",
+      "pt": "torta de maçã",
+      "example": "Can I have an apple pie, then?",
+      "category": "food"
+    },
+    {
+      "id": "v11",
+      "term": "small / medium / large",
+      "pron": "/smɔːl/ /ˈmiːdiəm/ /lɑːdʒ/",
+      "pt": "pequeno / médio / grande",
+      "example": "Small, medium or large?",
+      "category": "sizes"
+    },
+    {
+      "id": "v12",
+      "term": "for here / to go",
+      "pron": "/fə hɪə/ /tə ɡəʊ/",
+      "pt": "para comer aqui / para viagem",
+      "example": "For here or to go?",
+      "category": "chunks"
+    },
+    {
+      "id": "v13",
+      "term": "How much is it?",
+      "pron": "/haʊ mʌtʃ ɪz ɪt/",
+      "pt": "Quanto custa?",
+      "example": "How much is it? — It's seven dollars and fifty cents.",
+      "category": "chunks"
+    },
+    {
+      "id": "v14",
+      "term": "Here you are.",
+      "pron": "/hɪə juː ɑː/",
+      "pt": "Aqui está.",
+      "example": "Here you are. — Thank you!",
+      "category": "chunks"
+    },
+    {
+      "id": "v15",
+      "term": "change",
+      "pron": "/tʃeɪndʒ/",
+      "pt": "troco",
+      "example": "Here's your change.",
+      "category": "chunks"
+    },
+    {
+      "id": "v16",
+      "term": "Anything else?",
+      "pron": "/ˈeniθɪŋ els/",
+      "pt": "Mais alguma coisa?",
+      "example": "Anything else? — No, thanks.",
+      "category": "chunks"
+    }
+  ],
+  "menu": {
+    "name": "Sunny Corner Café",
+    "currency": "$",
+    "sections": [
+      {
+        "title": "Drinks",
+        "items": [
+          {
+            "id": "hot-chocolate",
+            "name": "hot chocolate",
+            "article": "a",
+            "sizes": {
+              "small": 3,
+              "medium": 3.5,
+              "large": 4
+            }
+          },
+          {
+            "id": "orange-juice",
+            "name": "orange juice",
+            "article": "an",
+            "price": 2.5
+          },
+          {
+            "id": "apple-juice",
+            "name": "apple juice",
+            "article": "an",
+            "price": 2.5
+          },
+          {
+            "id": "milkshake",
+            "name": "milkshake",
+            "article": "a",
+            "price": 4.5
+          },
+          {
+            "id": "water",
+            "name": "bottle of water",
+            "article": "a",
+            "price": 1
+          }
+        ]
+      },
+      {
+        "title": "Food",
+        "items": [
+          {
+            "id": "cheese-sandwich",
+            "name": "cheese sandwich",
+            "article": "a",
+            "price": 4
+          },
+          {
+            "id": "egg-sandwich",
+            "name": "egg sandwich",
+            "article": "an",
+            "price": 4
+          },
+          {
+            "id": "muffin",
+            "name": "muffin",
+            "article": "a",
+            "price": 2
+          },
+          {
+            "id": "cookie",
+            "name": "cookie",
+            "article": "a",
+            "price": 1.5
+          },
+          {
+            "id": "apple-pie",
+            "name": "apple pie",
+            "article": "an",
+            "price": 3
+          }
+        ]
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "id": "t1",
+      "title": "Leo at the Sunny Corner Café",
+      "situation": "Leo, 13 anos, sai da escola com fome e entra na Sunny Corner Café. A atendente Mia está no balcão.",
+      "goal": "Descobrir O QUE Leo pede, de QUE tamanho, se ele come ali ou leva, e QUANTO ele paga.",
+      "audio": "audio/t1.mp3",
+      "segments": [
+        {
+          "id": "t1s1",
+          "speaker": "Mia",
+          "text": "Hi! Welcome to Sunny Corner Café. What would you like?",
+          "pt": "Oi! Bem-vindo à Sunny Corner Café. O que você gostaria?",
+          "start": 0.4,
+          "end": 4.392
+        },
+        {
+          "id": "t1s2",
+          "speaker": "Leo",
+          "text": "Hi! I'd like a hot chocolate, please.",
+          "pt": "Oi! Eu gostaria de um chocolate quente, por favor.",
+          "start": 4.992,
+          "end": 7.958
+        },
+        {
+          "id": "t1s3",
+          "speaker": "Mia",
+          "text": "Small, medium or large?",
+          "pt": "Pequeno, médio ou grande?",
+          "start": 8.558,
+          "end": 9.975
+        },
+        {
+          "id": "t1s4",
+          "speaker": "Leo",
+          "text": "Medium, please.",
+          "pt": "Médio, por favor.",
+          "start": 10.575,
+          "end": 11.696
+        },
+        {
+          "id": "t1s5",
+          "speaker": "Mia",
+          "text": "Anything else?",
+          "pt": "Mais alguma coisa?",
+          "start": 12.296,
+          "end": 13.082
+        },
+        {
+          "id": "t1s6",
+          "speaker": "Leo",
+          "text": "Yes. Can I have a cheese sandwich?",
+          "pt": "Sim. Posso pedir um sanduíche de queijo?",
+          "start": 13.682,
+          "end": 16.113
+        },
+        {
+          "id": "t1s7",
+          "speaker": "Mia",
+          "text": "Sure. For here or to go?",
+          "pt": "Claro. Para comer aqui ou para viagem?",
+          "start": 16.713,
+          "end": 18.777
+        },
+        {
+          "id": "t1s8",
+          "speaker": "Leo",
+          "text": "For here, please. How much is it?",
+          "pt": "Para comer aqui, por favor. Quanto custa?",
+          "start": 19.377,
+          "end": 21.763
+        },
+        {
+          "id": "t1s9",
+          "speaker": "Mia",
+          "text": "That's seven dollars and fifty cents.",
+          "pt": "São sete dólares e cinquenta centavos.",
+          "start": 22.363,
+          "end": 24.986
+        },
+        {
+          "id": "t1s10",
+          "speaker": "Leo",
+          "text": "Here you are.",
+          "pt": "Aqui está.",
+          "start": 25.586,
+          "end": 26.033
+        },
+        {
+          "id": "t1s11",
+          "speaker": "Mia",
+          "text": "Thank you! Here's your change. Enjoy!",
+          "pt": "Obrigada! Aqui está o seu troco. Aproveite!",
+          "start": 26.633,
+          "end": 29.655
+        },
+        {
+          "id": "t1s12",
+          "speaker": "Leo",
+          "text": "Thanks! Have a nice day!",
+          "pt": "Valeu! Tenha um bom dia!",
+          "start": 30.255,
+          "end": 32.273
+        }
+      ],
+      "gist": [
+        "l1g1",
+        "l1g2"
+      ],
+      "detail": [
+        "l1d1",
+        "l1d2",
+        "l1d3",
+        "l1d4"
+      ],
+      "duration": 32.94,
+      "audioSource": "synthetic-espeak-mbrola"
+    },
+    {
+      "id": "t2",
+      "title": "Ana orders for her brother",
+      "situation": "Ana está na mesma cafeteria de manhã. Ela quer algo para ela e para o irmão mais novo.",
+      "goal": "Descobrir o que Ana pede, o que a cafeteria NÃO tem hoje e quanto custa tudo.",
+      "audio": "audio/t2.mp3",
+      "segments": [
+        {
+          "id": "t2s1",
+          "speaker": "Mia",
+          "text": "Good morning! What can I get you?",
+          "pt": "Bom dia! O que eu posso trazer para você?",
+          "start": 0.4,
+          "end": 2.652
+        },
+        {
+          "id": "t2s2",
+          "speaker": "Ana",
+          "text": "Good morning. Can I have an orange juice, please?",
+          "pt": "Bom dia. Posso pedir um suco de laranja, por favor?",
+          "start": 3.252,
+          "end": 6.395
+        },
+        {
+          "id": "t2s3",
+          "speaker": "Mia",
+          "text": "Sure. Anything else?",
+          "pt": "Claro. Mais alguma coisa?",
+          "start": 6.995,
+          "end": 8.653
+        },
+        {
+          "id": "t2s4",
+          "speaker": "Ana",
+          "text": "Yes. I'd like a muffin for my brother.",
+          "pt": "Sim. Eu gostaria de um muffin para o meu irmão.",
+          "start": 9.253,
+          "end": 11.736
+        },
+        {
+          "id": "t2s5",
+          "speaker": "Mia",
+          "text": "Sorry, we don't have muffins today. We have cookies and apple pie.",
+          "pt": "Desculpe, não temos muffins hoje. Temos cookies e torta de maçã.",
+          "start": 12.336,
+          "end": 16.94
+        },
+        {
+          "id": "t2s6",
+          "speaker": "Ana",
+          "text": "OK. Can I have an apple pie, then?",
+          "pt": "Tudo bem. Posso pedir uma torta de maçã, então?",
+          "start": 17.54,
+          "end": 20.287
+        },
+        {
+          "id": "t2s7",
+          "speaker": "Mia",
+          "text": "Of course. Is that for here or to go?",
+          "pt": "Claro. É para comer aqui ou para viagem?",
+          "start": 20.887,
+          "end": 23.464
+        },
+        {
+          "id": "t2s8",
+          "speaker": "Ana",
+          "text": "To go, please. How much is it?",
+          "pt": "Para viagem, por favor. Quanto custa?",
+          "start": 24.064,
+          "end": 26.309
+        },
+        {
+          "id": "t2s9",
+          "speaker": "Mia",
+          "text": "It's five dollars and fifty cents.",
+          "pt": "São cinco dólares e cinquenta centavos.",
+          "start": 26.909,
+          "end": 29.347
+        },
+        {
+          "id": "t2s10",
+          "speaker": "Ana",
+          "text": "Here you are. Thank you!",
+          "pt": "Aqui está. Obrigada!",
+          "start": 29.947,
+          "end": 31.514
+        }
+      ],
+      "gist": [
+        "l2g1"
+      ],
+      "detail": [
+        "l2d1",
+        "l2d2",
+        "l2d3"
+      ],
+      "duration": 32.183,
+      "audioSource": "synthetic-espeak-mbrola"
+    }
+  ],
+  "discover": {
+    "intro": "Observe as frases que Leo e Ana disseram na cafeteria. Não procure a regra ainda: compare, encontre o que se repete e formule sua hipótese.",
+    "chunkLegend": [
+      {
+        "role": "subject",
+        "label": "SUJEITO",
+        "pt": "quem pede"
+      },
+      {
+        "role": "verb",
+        "label": "PEDIDO",
+        "pt": "fórmula de pedido"
+      },
+      {
+        "role": "article",
+        "label": "ARTIGO",
+        "pt": "a / an"
+      },
+      {
+        "role": "object",
+        "label": "ITEM",
+        "pt": "o que se pede"
+      },
+      {
+        "role": "polite",
+        "label": "CORTESIA",
+        "pt": "please"
+      }
+    ],
+    "sentences": [
+      {
+        "chunks": [
+          [
+            "I",
+            "subject"
+          ],
+          [
+            "'d like",
+            "verb"
+          ],
+          [
+            "a",
+            "article"
+          ],
+          [
+            "hot chocolate",
+            "object"
+          ],
+          [
+            ", please.",
+            "polite"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "I",
+            "subject"
+          ],
+          [
+            "'d like",
+            "verb"
+          ],
+          [
+            "a",
+            "article"
+          ],
+          [
+            "muffin",
+            "object"
+          ],
+          [
+            "for my brother.",
+            "extra"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "Can I have",
+            "verb"
+          ],
+          [
+            "an",
+            "article"
+          ],
+          [
+            "orange juice",
+            "object"
+          ],
+          [
+            ", please?",
+            "polite"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "Can I have",
+            "verb"
+          ],
+          [
+            "a",
+            "article"
+          ],
+          [
+            "cheese sandwich",
+            "object"
+          ],
+          [
+            "?",
+            "extra"
+          ]
+        ]
+      },
+      {
+        "chunks": [
+          [
+            "Can I have",
+            "verb"
+          ],
+          [
+            "an",
+            "article"
+          ],
+          [
+            "apple pie",
+            "object"
+          ],
+          [
+            ", then?",
+            "extra"
+          ]
+        ]
+      }
+    ],
+    "questions": [
+      {
+        "id": "dq1",
+        "prompt": "Nas frases 1 e 2, quais palavras se repetem logo no começo?",
+        "options": [
+          "I'd like",
+          "Can I have",
+          "please"
+        ],
+        "answer": 0,
+        "feedback": "Isso! I'd like aparece nas duas frases e introduz o pedido."
+      },
+      {
+        "id": "dq2",
+        "prompt": "Nas frases 3, 4 e 5, como o pedido começa? E que sinal aparece no final?",
+        "options": [
+          "Can I have ... ?",
+          "I'd like ... .",
+          "I want ... !"
+        ],
+        "answer": 0,
+        "feedback": "Isso! Can I have abre uma PERGUNTA, por isso termina com ponto de interrogação."
+      },
+      {
+        "id": "dq3",
+        "prompt": "Olhe para as palavras destacadas como ARTIGO. Antes de quais itens aparece AN?",
+        "options": [
+          "orange juice e apple pie",
+          "hot chocolate e muffin",
+          "cheese sandwich e muffin"
+        ],
+        "answer": 0,
+        "feedback": "Exato: an orange juice, an apple pie."
+      },
+      {
+        "id": "dq4",
+        "prompt": "O que orange e apple têm em comum no INÍCIO da palavra?",
+        "options": [
+          "Começam com som de vogal",
+          "São frutas",
+          "São palavras longas"
+        ],
+        "answer": 0,
+        "feedback": "Ótima observação! O que importa é o SOM inicial: /ɒ/ em orange, /æ/ em apple."
+      }
+    ],
+    "hypothesisKeywords": [
+      {
+        "label": "Mencionou o SOM de vogal (ou vogal) para usar an",
+        "any": [
+          "vogal",
+          "vowel",
+          "som"
+        ]
+      },
+      {
+        "label": "Mencionou I'd like ou Can I have como fórmulas de pedido",
+        "any": [
+          "i'd like",
+          "id like",
+          "can i have",
+          "would like",
+          "pedido",
+          "pedir"
+        ]
+      },
+      {
+        "label": "Mencionou a ordem: pedido + a/an + item",
+        "any": [
+          "antes",
+          "ordem",
+          "depois",
+          "+",
+          "seguido"
+        ]
+      }
+    ],
+    "pattern": [
+      "SUJEITO + 'D LIKE",
+      "A / AN",
+      "ITEM",
+      "(PLEASE)"
+    ],
+    "patternQuestion": [
+      "CAN I HAVE",
+      "A / AN",
+      "ITEM",
+      "?"
+    ],
+    "ruleSteps": [
+      "Para pedir algo de forma educada, use I'd like (= I would like, \"eu gostaria\") + o item.",
+      "Também pode perguntar: Can I have + o item + ? (\"Posso pedir...?\"). É uma pergunta, então termina com ?",
+      "Antes do item no singular vem a ou an: use AN quando a próxima palavra começa com SOM de vogal (an orange juice, an apple pie, an egg sandwich).",
+      "Use A antes de som de consoante (a hot chocolate, a muffin, a cheese sandwich). Please deixa o pedido ainda mais gentil."
+    ],
+    "reorder": [
+      {
+        "tiles": [
+          "I'd",
+          "like",
+          "an",
+          "apple juice,",
+          "please."
+        ],
+        "answer": "I'd like an apple juice, please."
+      },
+      {
+        "tiles": [
+          "Can",
+          "I",
+          "have",
+          "a",
+          "cookie?"
+        ],
+        "answer": "Can I have a cookie?"
+      },
+      {
+        "tiles": [
+          "I'd",
+          "like",
+          "a",
+          "large",
+          "hot chocolate."
+        ],
+        "answer": "I'd like a large hot chocolate."
+      }
+    ]
+  },
+  "grammar": [
+    {
+      "id": "g-would-like",
+      "name": "I'd like + item (would like)",
+      "function": "Fazer pedidos e expressar desejos de forma educada.",
+      "form": "Sujeito + would like ('d like) + a/an + item (+ please)",
+      "explanation": "I'd like é a forma contraída de I would like e significa \"eu gostaria\". É a forma mais comum e educada de pedir algo em lojas e restaurantes. Depois de would like vem diretamente o substantivo (a hot chocolate) — sem \"to\". Na pergunta, a cafeteria usa What would you like? (O que você gostaria?) e Would you like...? (Você gostaria de...?).",
+      "table": {
+        "headers": [
+          "Forma",
+          "Estrutura",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Afirmativa",
+            "I'd like + a/an + item",
+            "I'd like a muffin, please."
+          ],
+          [
+            "Negativa (resposta)",
+            "No, thanks. / No, thank you.",
+            "Would you like a cookie? — No, thanks."
+          ],
+          [
+            "Interrogativa",
+            "Would you like + a/an + item?",
+            "Would you like an apple pie?"
+          ],
+          [
+            "Pergunta aberta",
+            "What would you like?",
+            "What would you like? — I'd like a milkshake."
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "en": "I'd like a hot chocolate, please.",
+          "pt": "Eu gostaria de um chocolate quente, por favor.",
+          "type": "affirmative"
+        },
+        {
+          "en": "Would you like a cookie? — No, thanks.",
+          "pt": "Você gostaria de um cookie? — Não, obrigado.",
+          "type": "negative"
+        },
+        {
+          "en": "Would you like an orange juice?",
+          "pt": "Você gostaria de um suco de laranja?",
+          "type": "interrogative"
+        }
+      ],
+      "comparison": {
+        "title": "I'd like × I want",
+        "text": "I want a milkshake está gramaticalmente correto, mas soa direto demais (\"eu quero\") quando falamos com um atendente. I'd like a milkshake, please é a escolha natural e educada."
+      },
+      "commonErrors": [
+        {
+          "wrong": "I like a hot chocolate.",
+          "right": "I'd like a hot chocolate.",
+          "why": "I like = eu gosto (em geral). I'd like = eu gostaria (agora). O 'd é curto, mas muda o sentido!"
+        },
+        {
+          "wrong": "I'd like to a muffin.",
+          "right": "I'd like a muffin.",
+          "why": "Antes de substantivo não se usa to. (I'd like to + verbo: I'd like to order.)"
+        }
+      ],
+      "usage": "Em cafeterias, quase todo pedido começa com I'd like... ou Can I have...? Termine com please para soar gentil.",
+      "pronunciation": "I'd like soa /aɪd laɪk/: o d quase some e se junta ao l. Por isso muitos alunos ouvem só \"I like\". Escute com atenção o pequeno som de d.",
+      "check": {
+        "prompt": "Escolha o pedido educado:",
+        "options": [
+          "I'd like a cookie, please.",
+          "I like a cookie.",
+          "Give me cookie."
+        ],
+        "answer": 0,
+        "explanation": "I'd like + a + item + please é a forma educada de pedir."
+      }
+    },
+    {
+      "id": "g-can-i-have",
+      "name": "Can I have + item?",
+      "function": "Pedir algo em forma de pergunta.",
+      "form": "Can I have + a/an + item (+ please)?",
+      "explanation": "Can I have...? significa literalmente \"Posso ter...?\", mas em português dizemos \"Posso pedir...?\" ou \"Me vê...?\". É uma pergunta: o verbo can vem ANTES de I e a frase termina com ponto de interrogação. As respostas típicas do atendente são Sure. / Of course. ou Sorry, we don't have...",
+      "table": {
+        "headers": [
+          "Forma",
+          "Estrutura",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Pergunta",
+            "Can I have + a/an + item?",
+            "Can I have an apple juice?"
+          ],
+          [
+            "Resposta positiva",
+            "Sure. / Of course.",
+            "Sure. Anything else?"
+          ],
+          [
+            "Resposta negativa",
+            "Sorry, we don't have + plural.",
+            "Sorry, we don't have muffins today."
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "en": "Can I have a cheese sandwich?",
+          "pt": "Posso pedir um sanduíche de queijo?",
+          "type": "interrogative"
+        },
+        {
+          "en": "Sure. / Of course.",
+          "pt": "Claro.",
+          "type": "affirmative"
+        },
+        {
+          "en": "Sorry, we don't have muffins today.",
+          "pt": "Desculpe, não temos muffins hoje.",
+          "type": "negative"
+        }
+      ],
+      "comparison": {
+        "title": "Can I have...? × I'd like...",
+        "text": "As duas são educadas e servem para pedir. Can I have...? é uma pergunta (termina com ?). I'd like... é uma afirmação (termina com ponto)."
+      },
+      "commonErrors": [
+        {
+          "wrong": "I can have a cookie?",
+          "right": "Can I have a cookie?",
+          "why": "Na pergunta, can vem antes de I."
+        },
+        {
+          "wrong": "Can I have cheese sandwich?",
+          "right": "Can I have a cheese sandwich?",
+          "why": "Item contável no singular precisa de a/an."
+        }
+      ],
+      "usage": "Muito comum em balcões, lanchonetes e cantinas. Acrescente please no final: Can I have a cookie, please?",
+      "pronunciation": "Na fala rápida, Can I have soa /kənaɪ hæv/ — \"kenai-hév\". O can fica fraco.",
+      "check": {
+        "prompt": "Qual é a ordem correta?",
+        "options": [
+          "Can I have a water bottle?",
+          "Can I have a bottle of water?",
+          "I can have a bottle of water?"
+        ],
+        "answer": 1,
+        "explanation": "Can + I + have + a bottle of water? — e em inglês dizemos a bottle of water (uma garrafa de água)."
+      }
+    },
+    {
+      "id": "g-a-an",
+      "name": "Artigos a / an",
+      "function": "Indicar UM item (singular, contável) que ainda não foi mencionado.",
+      "form": "a + som de consoante | an + som de vogal",
+      "explanation": "A e an significam \"um/uma\". A escolha depende do SOM da palavra que vem logo depois — não da letra. Use an antes de som de vogal (an orange juice, an egg sandwich, an apple pie) e a antes de som de consoante (a muffin, a cookie, a hot chocolate). Se houver um adjetivo antes do item, olhe o adjetivo: a large orange juice (large começa com som de consoante).",
+      "table": {
+        "headers": [
+          "Som inicial",
+          "Artigo",
+          "Exemplos"
+        ],
+        "rows": [
+          [
+            "Consoante /m/ /k/ /h/ /tʃ/ /l/",
+            "a",
+            "a muffin, a cookie, a hot chocolate, a cheese sandwich, a large juice"
+          ],
+          [
+            "Vogal /ɒ/ /æ/ /e/",
+            "an",
+            "an orange juice, an apple pie, an egg sandwich"
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "en": "Can I have an egg sandwich?",
+          "pt": "Posso pedir um sanduíche de ovo?",
+          "type": "interrogative"
+        },
+        {
+          "en": "I'd like a small orange juice.",
+          "pt": "Eu gostaria de um suco de laranja pequeno.",
+          "type": "affirmative"
+        },
+        {
+          "en": "We don't have muffins today.",
+          "pt": "Não temos muffins hoje. (plural: sem a/an)",
+          "type": "negative"
+        }
+      ],
+      "comparison": {
+        "title": "a/an × plural",
+        "text": "a/an só aparecem no singular. No plural não usamos artigo indefinido: a cookie → cookies (We have cookies)."
+      },
+      "commonErrors": [
+        {
+          "wrong": "a orange juice",
+          "right": "an orange juice",
+          "why": "orange começa com som de vogal."
+        },
+        {
+          "wrong": "an large orange juice",
+          "right": "a large orange juice",
+          "why": "O artigo combina com a palavra logo depois dele: large (consoante)."
+        }
+      ],
+      "usage": "Use a/an quando a pessoa ainda não sabe de qual item você fala (primeira menção).",
+      "pronunciation": "Na fala, an se liga à palavra seguinte: an orange soa /ə ˈnɒrɪndʒ/ — \"a-NÓRindj\". A soa fraco: /ə/.",
+      "check": {
+        "prompt": "Complete: I'd like ___ egg sandwich.",
+        "options": [
+          "a",
+          "an"
+        ],
+        "answer": 1,
+        "explanation": "egg começa com som de vogal /e/ → an egg sandwich."
+      }
+    },
+    {
+      "id": "g-how-much",
+      "name": "How much is it? / It's ... dollars",
+      "function": "Perguntar e informar preços.",
+      "form": "How much is it? — It's / That's + número + dollars (and + número + cents).",
+      "explanation": "How much is it? = Quanto custa? A resposta usa It's ou That's (That is) + preço. Em inglês americano, $7.50 pode ser lido como seven dollars and fifty cents ou, informalmente, seven fifty. Para perguntar o preço de um item específico: How much is the milkshake?",
+      "table": {
+        "headers": [
+          "Escrito",
+          "Forma completa",
+          "Forma informal"
+        ],
+        "rows": [
+          [
+            "$2.50",
+            "two dollars and fifty cents",
+            "two fifty"
+          ],
+          [
+            "$4.00",
+            "four dollars",
+            "four dollars"
+          ],
+          [
+            "$5.50",
+            "five dollars and fifty cents",
+            "five fifty"
+          ],
+          [
+            "$7.50",
+            "seven dollars and fifty cents",
+            "seven fifty"
+          ]
+        ]
+      },
+      "examples": [
+        {
+          "en": "How much is it? — It's five dollars and fifty cents.",
+          "pt": "Quanto custa? — São cinco dólares e cinquenta centavos.",
+          "type": "interrogative"
+        },
+        {
+          "en": "How much is the milkshake?",
+          "pt": "Quanto custa o milk-shake?",
+          "type": "interrogative"
+        },
+        {
+          "en": "It isn't expensive. It's one dollar.",
+          "pt": "Não é caro. Custa um dólar.",
+          "type": "negative"
+        }
+      ],
+      "comparison": {
+        "title": "How much × How many",
+        "text": "How much pergunta preço (ou quantidade não contável). How many pergunta quantidade de coisas contáveis: How many cookies? (Quantos cookies?)"
+      },
+      "commonErrors": [
+        {
+          "wrong": "How much costs?",
+          "right": "How much is it?",
+          "why": "O padrão simples é How much + is + it/item."
+        },
+        {
+          "wrong": "It's seven dollars fifty cents.",
+          "right": "It's seven dollars and fifty cents.",
+          "why": "Na forma completa, use and entre dólares e centavos."
+        }
+      ],
+      "usage": "Em lojas, o atendente costuma dizer That's... ao somar o total do pedido.",
+      "pronunciation": "Atenção aos pares fifteen /fɪfˈtiːn/ × fifty /ˈfɪfti/: em fifteen o acento é no final; em fifty, no começo.",
+      "check": {
+        "prompt": "Como se lê $4.50?",
+        "options": [
+          "four dollars and fifty cents",
+          "four dollars and fifteen cents",
+          "fourteen dollars and fifty cents"
+        ],
+        "answer": 0,
+        "explanation": "$4.50 = four dollars and fifty cents (four fifty)."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "l1g1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-gist"
+      ],
+      "prompt": "Onde Leo está?",
+      "options": [
+        "Em uma cafeteria",
+        "Em um supermercado",
+        "Na escola"
+      ],
+      "answer": 0,
+      "explanation": "Mia diz: Welcome to Sunny Corner Café.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "l1g2",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-gist"
+      ],
+      "prompt": "O que acontece no diálogo, de forma geral?",
+      "options": [
+        "Leo faz um pedido e paga",
+        "Leo procura um amigo",
+        "Leo reclama do preço"
+      ],
+      "answer": 0,
+      "explanation": "Leo pede uma bebida e um lanche, pergunta o preço e paga (Here you are).",
+      "review": "g-how-much"
+    },
+    {
+      "id": "l1d1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "vocab-cafe"
+      ],
+      "prompt": "Que bebida Leo pede?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s2"
+        ]
+      },
+      "options": [
+        "A hot chocolate",
+        "An orange juice",
+        "A milkshake"
+      ],
+      "answer": 0,
+      "explanation": "I'd like a hot chocolate, please.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "l1d2",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "vocab-cafe"
+      ],
+      "prompt": "Qual tamanho ele escolhe?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s3",
+          "t1s4"
+        ]
+      },
+      "options": [
+        "Small",
+        "Medium",
+        "Large"
+      ],
+      "answer": 1,
+      "explanation": "Medium, please.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "l1d3",
+      "stage": "listening",
+      "type": "tf",
+      "skills": [
+        "listening-detail"
+      ],
+      "prompt": "Leo vai levar o pedido para viagem (to go).",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s7",
+          "t1s8"
+        ]
+      },
+      "answer": false,
+      "explanation": "Ele diz For here, please — vai comer na cafeteria.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "l1d4",
+      "stage": "listening",
+      "type": "gap",
+      "skills": [
+        "listening-numbers",
+        "g-how-much"
+      ],
+      "prompt": "Ouça e escreva o preço total em números.",
+      "text": "Total: $___",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s9"
+        ]
+      },
+      "answers": [
+        [
+          "7.50",
+          "7,50",
+          "7.5",
+          "7,5"
+        ]
+      ],
+      "explanation": "That's seven dollars and fifty cents = $7.50 (3.50 + 4.00).",
+      "review": "g-how-much"
+    },
+    {
+      "id": "l2g1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-gist"
+      ],
+      "prompt": "Qual é o problema neste diálogo?",
+      "options": [
+        "A cafeteria não tem um item",
+        "Ana não tem dinheiro",
+        "A cafeteria está fechada"
+      ],
+      "answer": 0,
+      "explanation": "Sorry, we don't have muffins today.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "l2d1",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "g-a-an"
+      ],
+      "prompt": "O que Ana pede para ela?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s2"
+        ]
+      },
+      "options": [
+        "An orange juice",
+        "An apple juice",
+        "A hot chocolate"
+      ],
+      "answer": 0,
+      "explanation": "Can I have an orange juice, please?",
+      "review": "g-a-an"
+    },
+    {
+      "id": "l2d2",
+      "stage": "listening",
+      "type": "mcq",
+      "skills": [
+        "listening-detail",
+        "vocab-cafe"
+      ],
+      "prompt": "O que o irmão de Ana recebe no final?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s5",
+          "t2s6"
+        ]
+      },
+      "options": [
+        "A muffin",
+        "An apple pie",
+        "A cookie"
+      ],
+      "answer": 1,
+      "explanation": "Não há muffins, então ela pede an apple pie.",
+      "review": "g-a-an"
+    },
+    {
+      "id": "l2d3",
+      "stage": "listening",
+      "type": "gap",
+      "skills": [
+        "listening-numbers",
+        "g-how-much"
+      ],
+      "prompt": "Ouça e escreva o preço.",
+      "text": "Total: $___",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s9"
+        ]
+      },
+      "answers": [
+        [
+          "5.50",
+          "5,50",
+          "5.5",
+          "5,5"
+        ]
+      ],
+      "explanation": "It's five dollars and fifty cents = $5.50.",
+      "review": "g-how-much"
+    },
+    {
+      "id": "pa1",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-a-an"
+      ],
+      "prompt": "Escolha o artigo: ___ apple pie",
+      "options": [
+        "a",
+        "an"
+      ],
+      "answer": 1,
+      "explanation": "apple começa com som de vogal /æ/ → an apple pie.",
+      "distractors": {
+        "0": "a é usado antes de som de consoante."
+      },
+      "review": "g-a-an"
+    },
+    {
+      "id": "pa2",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-a-an"
+      ],
+      "prompt": "Escolha o artigo: ___ cheese sandwich",
+      "options": [
+        "a",
+        "an"
+      ],
+      "answer": 0,
+      "explanation": "cheese começa com som de consoante /tʃ/ → a cheese sandwich.",
+      "distractors": {
+        "1": "an só antes de som de vogal."
+      },
+      "review": "g-a-an"
+    },
+    {
+      "id": "pa3",
+      "stage": "A",
+      "type": "tf",
+      "skills": [
+        "g-would-like"
+      ],
+      "prompt": "\"I'd like\" significa \"eu gosto\".",
+      "answer": false,
+      "explanation": "I'd like = I would like = eu gostaria. \"Eu gosto\" é I like.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "pa4",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "vocab-cafe"
+      ],
+      "prompt": "Qual é a tradução de \"For here or to go?\"",
+      "options": [
+        "Para comer aqui ou para viagem?",
+        "Daqui ou de lá?",
+        "Você vai ficar ou ir?"
+      ],
+      "answer": 0,
+      "explanation": "for here = comer no local; to go = levar.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pa5",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "g-can-i-have"
+      ],
+      "prompt": "Que estrutura aparece em \"Can I have a cookie?\"",
+      "options": [
+        "Pedido em forma de pergunta",
+        "Frase negativa",
+        "Pergunta sobre preço"
+      ],
+      "answer": 0,
+      "explanation": "Can I have + item + ? é um pedido em forma de pergunta.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pa6",
+      "stage": "A",
+      "type": "mcq",
+      "skills": [
+        "vocab-cafe"
+      ],
+      "prompt": "Qual é a tradução de \"Here's your change\"?",
+      "options": [
+        "Aqui está o seu troco",
+        "Aqui está a sua mudança",
+        "Aqui está o seu pedido"
+      ],
+      "answer": 0,
+      "explanation": "Em uma loja, change = troco.",
+      "distractors": {
+        "1": "change também significa mudança, mas no contexto de pagamento é troco."
+      },
+      "review": "g-how-much"
+    },
+    {
+      "id": "pb1",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-detail"
+      ],
+      "prompt": "Ouça. O que Mia pergunta?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s5"
+        ]
+      },
+      "options": [
+        "Se Leo quer mais alguma coisa",
+        "O nome de Leo",
+        "Se Leo quer pagar"
+      ],
+      "answer": 0,
+      "explanation": "Anything else? = Mais alguma coisa?",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pb2",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-detail"
+      ],
+      "prompt": "Ouça. Qual é a melhor resposta para a pergunta de Mia?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s7"
+        ]
+      },
+      "options": [
+        "To go, please.",
+        "Yes, I am.",
+        "Two dollars."
+      ],
+      "answer": 0,
+      "explanation": "A pergunta é for here or to go? — a resposta adequada escolhe uma das opções.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pb3",
+      "stage": "B",
+      "type": "tf",
+      "skills": [
+        "listening-detail"
+      ],
+      "prompt": "Ouça. A cafeteria tem cookies e torta de maçã.",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s5"
+        ]
+      },
+      "answer": true,
+      "explanation": "We have cookies and apple pie.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pb4",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-detail"
+      ],
+      "prompt": "Ouça a primeira fala. Qual é a melhor resposta?",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s1"
+        ]
+      },
+      "options": [
+        "Hi! I'd like a milkshake, please.",
+        "Hi! I'm thirteen.",
+        "Hi! It's four dollars."
+      ],
+      "answer": 0,
+      "explanation": "What would you like? pede um pedido: I'd like + item.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "pb5",
+      "stage": "B",
+      "type": "mcq",
+      "skills": [
+        "listening-numbers",
+        "g-how-much"
+      ],
+      "prompt": "Ouça. Quanto Ana paga?",
+      "audio": {
+        "track": "t2",
+        "segments": [
+          "t2s9"
+        ]
+      },
+      "options": [
+        "$5.50",
+        "$15.50",
+        "$5.15"
+      ],
+      "answer": 0,
+      "explanation": "five dollars and fifty cents = $5.50.",
+      "distractors": {
+        "1": "fifteen seria 15.",
+        "2": "fifteen cents seria 0.15."
+      },
+      "review": "g-how-much"
+    },
+    {
+      "id": "pc1",
+      "stage": "C",
+      "type": "gap",
+      "skills": [
+        "g-a-an"
+      ],
+      "prompt": "Complete com a ou an.",
+      "text": "Can I have ___ egg sandwich and ___ cookie?",
+      "answers": [
+        [
+          "an"
+        ],
+        [
+          "a"
+        ]
+      ],
+      "explanation": "an egg (som de vogal) / a cookie (som de consoante).",
+      "review": "g-a-an"
+    },
+    {
+      "id": "pc2",
+      "stage": "C",
+      "type": "gap",
+      "skills": [
+        "g-would-like"
+      ],
+      "prompt": "Complete o pedido.",
+      "text": "I'___ like a large milkshake, please.",
+      "answers": [
+        [
+          "d"
+        ]
+      ],
+      "explanation": "I'd like = I would like.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "pc3",
+      "stage": "C",
+      "type": "order",
+      "skills": [
+        "g-can-i-have"
+      ],
+      "prompt": "Organize os blocos para formar um pedido.",
+      "tiles": [
+        "have",
+        "Can",
+        "an",
+        "I",
+        "orange juice?"
+      ],
+      "answers": [
+        "Can I have an orange juice?"
+      ],
+      "explanation": "Can + I + have + an + item + ?",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pc4",
+      "stage": "C",
+      "type": "order",
+      "skills": [
+        "g-how-much"
+      ],
+      "prompt": "Organize a pergunta.",
+      "tiles": [
+        "is",
+        "How",
+        "it?",
+        "much"
+      ],
+      "answers": [
+        "How much is it?"
+      ],
+      "explanation": "How much + is + it?",
+      "review": "g-how-much"
+    },
+    {
+      "id": "pc5",
+      "stage": "C",
+      "type": "transform",
+      "skills": [
+        "g-can-i-have",
+        "g-would-like"
+      ],
+      "prompt": "Transforme em pergunta com Can I have...?",
+      "source": "I'd like an apple juice.",
+      "answers": [
+        "can i have an apple juice?",
+        "can i have an apple juice, please?",
+        "can i have an apple juice please?"
+      ],
+      "explanation": "I'd like + item → Can I have + item + ?",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pc6",
+      "stage": "C",
+      "type": "transform",
+      "skills": [
+        "g-would-like"
+      ],
+      "prompt": "Deixe o pedido educado usando I'd like.",
+      "source": "I want a cookie.",
+      "answers": [
+        "i'd like a cookie, please.",
+        "i'd like a cookie please.",
+        "i'd like a cookie.",
+        "i would like a cookie, please.",
+        "i would like a cookie.",
+        "i would like a cookie please."
+      ],
+      "explanation": "Troque I want por I'd like (e acrescente please).",
+      "review": "g-would-like"
+    },
+    {
+      "id": "pc7",
+      "stage": "C",
+      "type": "match",
+      "skills": [
+        "vocab-cafe",
+        "g-can-i-have"
+      ],
+      "prompt": "Associe cada pergunta à resposta adequada.",
+      "pairs": [
+        [
+          "What would you like?",
+          "A hot chocolate, please."
+        ],
+        [
+          "Small, medium or large?",
+          "Large, please."
+        ],
+        [
+          "For here or to go?",
+          "To go, please."
+        ],
+        [
+          "How much is it?",
+          "It's three dollars."
+        ]
+      ],
+      "explanation": "Cada pergunta de atendente tem uma resposta típica.",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pd1",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-would-like",
+        "g-a-an"
+      ],
+      "prompt": "Mia pergunta: \"What would you like?\" Peça UMA bebida do cardápio de forma educada.",
+      "criteria": [
+        {
+          "label": "Usou I'd like ou Can I have",
+          "pattern": "\\b(i'?d like|i would like|can i have|could i have)\\b"
+        },
+        {
+          "label": "Usou a/an antes do item",
+          "pattern": "\\b(a|an)\\s+(small |medium |large )?(hot chocolate|orange juice|apple juice|milkshake|bottle of water)\\b"
+        },
+        {
+          "label": "Artigo correto (an + som de vogal)",
+          "check": "articles"
+        },
+        {
+          "label": "Usou please",
+          "pattern": "\\bplease\\b",
+          "optional": true
+        }
+      ],
+      "model": "I'd like a large hot chocolate, please.",
+      "explanation": "Fórmula de pedido + a/an + item + please.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "pd2",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-how-much"
+      ],
+      "prompt": "Você quer saber o preço do milkshake. Escreva a pergunta.",
+      "criteria": [
+        {
+          "label": "Começou com How much",
+          "pattern": "^how much\\b"
+        },
+        {
+          "label": "Usou is",
+          "pattern": "\\bis\\b"
+        },
+        {
+          "label": "Mencionou o item ou it",
+          "pattern": "\\b(milkshake|it)\\b"
+        }
+      ],
+      "model": "How much is the milkshake?",
+      "explanation": "How much is + the + item?",
+      "review": "g-how-much"
+    },
+    {
+      "id": "pd3",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-can-i-have",
+        "g-a-an"
+      ],
+      "prompt": "Mia diz: \"Sorry, we don't have muffins today.\" Peça outra comida usando Can I have...?",
+      "criteria": [
+        {
+          "label": "Usou Can I have",
+          "pattern": "\\bcan i have\\b"
+        },
+        {
+          "label": "Escolheu outra comida do cardápio",
+          "pattern": "\\b(cheese sandwich|egg sandwich|cookie|apple pie)\\b"
+        },
+        {
+          "label": "Artigo correto (an + som de vogal)",
+          "check": "articles"
+        },
+        {
+          "label": "Terminou com ?",
+          "pattern": "\\?\\s*$"
+        }
+      ],
+      "model": "OK. Can I have an apple pie, please?",
+      "explanation": "Can I have + a/an + item + ?",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "pd4",
+      "stage": "D",
+      "type": "produce",
+      "skills": [
+        "g-would-like",
+        "g-how-much",
+        "g-can-i-have"
+      ],
+      "prompt": "Escreva um mini diálogo (3 a 6 linhas) entre você e a atendente: peça algo, responda sobre o tamanho ou local, pergunte o preço.",
+      "multiline": true,
+      "criteria": [
+        {
+          "label": "Tem um pedido (I'd like / Can I have)",
+          "pattern": "\\b(i'?d like|i would like|can i have)\\b"
+        },
+        {
+          "label": "Pergunta o preço (How much)",
+          "pattern": "\\bhow much\\b"
+        },
+        {
+          "label": "Usa for here / to go ou um tamanho",
+          "pattern": "\\b(for here|to go|small|medium|large)\\b"
+        },
+        {
+          "label": "Artigos corretos",
+          "check": "articles"
+        },
+        {
+          "label": "Tem pelo menos 3 linhas",
+          "check": "lines3"
+        }
+      ],
+      "model": "Mia: Hi! What would you like?\nMe: I'd like an orange juice, please.\nMia: For here or to go?\nMe: To go, please. How much is it?\nMia: It's two dollars and fifty cents.\nMe: Here you are. Thank you!",
+      "explanation": "Um diálogo completo tem pedido, detalhe (tamanho/local), preço e agradecimento.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "ex1",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-would-like"
+      ],
+      "examPart": "Reading & Writing — Part 2 (diálogo)",
+      "prompt": "Read the text and choose the best answer.\nMia: What would you like?\nYou: ___",
+      "options": [
+        "I'd like an apple juice, please.",
+        "I like apples.",
+        "Yes, I would."
+      ],
+      "answer": 0,
+      "explanation": "A pergunta pede o seu pedido agora: I'd like + item.",
+      "distractors": {
+        "1": "I like apples = eu gosto de maçãs (gosto geral), não é um pedido.",
+        "2": "Yes, I would responde a Would you like...?, não a What would you like?"
+      },
+      "review": "g-would-like"
+    },
+    {
+      "id": "ex2",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-can-i-have"
+      ],
+      "examPart": "Reading & Writing — Part 2 (diálogo)",
+      "prompt": "Read the text and choose the best answer.\nYou: Can I have a cookie, please?\nMia: ___",
+      "options": [
+        "Sure. Anything else?",
+        "Yes, I can.",
+        "It's a cookie."
+      ],
+      "answer": 0,
+      "explanation": "O atendente confirma (Sure / Of course) e pergunta se quer mais algo.",
+      "distractors": {
+        "1": "Yes, I can fala de habilidade do atendente, não responde ao pedido.",
+        "2": "Apenas repete o item, não responde ao pedido."
+      },
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "ex3",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "vocab-cafe"
+      ],
+      "examPart": "Reading & Writing — Part 1 (definições)",
+      "prompt": "Read the definition and choose the word: \"You drink this. It is made from oranges.\"",
+      "options": [
+        "orange juice",
+        "apple pie",
+        "cheese sandwich"
+      ],
+      "answer": 0,
+      "explanation": "made from oranges = feito de laranjas.",
+      "review": "g-a-an"
+    },
+    {
+      "id": "ex4",
+      "stage": "exam",
+      "type": "mcq",
+      "skills": [
+        "g-how-much",
+        "reading-menu"
+      ],
+      "examPart": "Reading — cardápio",
+      "prompt": "Look at the menu. How much is a medium hot chocolate and a cookie?",
+      "options": [
+        "$5.00",
+        "$4.50",
+        "$5.50"
+      ],
+      "answer": 0,
+      "explanation": "medium hot chocolate $3.50 + cookie $1.50 = $5.00.",
+      "distractors": {
+        "1": "Usou o small hot chocolate ($3.00).",
+        "2": "Usou o large hot chocolate ($4.00)."
+      },
+      "review": "g-how-much"
+    },
+    {
+      "id": "ex5",
+      "stage": "exam",
+      "type": "gap",
+      "skills": [
+        "listening-numbers"
+      ],
+      "examPart": "Listening — Part 2 (ouvir e escrever)",
+      "prompt": "Listen and write. Quanto Leo paga?",
+      "text": "Leo pays $___",
+      "audio": {
+        "track": "t1",
+        "segments": [
+          "t1s9"
+        ]
+      },
+      "answers": [
+        [
+          "7.50",
+          "7,50",
+          "7.5",
+          "7,5"
+        ]
+      ],
+      "explanation": "seven dollars and fifty cents.",
+      "review": "g-how-much"
+    },
+    {
+      "id": "ex6",
+      "stage": "exam",
+      "type": "gap",
+      "skills": [
+        "g-a-an",
+        "g-would-like"
+      ],
+      "examPart": "Reading & Writing — Part 4 (completar texto)",
+      "prompt": "Read and complete with ONE word.",
+      "text": "Ana goes to the café. She would ___ an orange juice. The café doesn't have muffins, so she has ___ apple pie.",
+      "answers": [
+        [
+          "like"
+        ],
+        [
+          "an"
+        ]
+      ],
+      "explanation": "would like + item; an + apple (som de vogal).",
+      "review": "g-a-an"
+    }
+  ],
+  "reviewItems": [
+    {
+      "id": "rv1",
+      "context": "Na barraca de sucos da praia",
+      "type": "mcq",
+      "skills": [
+        "g-a-an"
+      ],
+      "prompt": "Beach juice bar: \"I'd like ___ ice cream, please.\"",
+      "options": [
+        "a",
+        "an"
+      ],
+      "answer": 1,
+      "explanation": "ice começa com som de vogal /aɪ/ → an ice cream.",
+      "review": "g-a-an"
+    },
+    {
+      "id": "rv2",
+      "context": "No cinema",
+      "type": "mcq",
+      "skills": [
+        "g-a-an"
+      ],
+      "prompt": "Cinema snack bar: \"Can I have ___ popcorn and ___ lemonade?\"",
+      "options": [
+        "a / a",
+        "an / a",
+        "a / an"
+      ],
+      "answer": 0,
+      "explanation": "popcorn e lemonade começam com som de consoante.",
+      "review": "g-a-an"
+    },
+    {
+      "id": "rv3",
+      "context": "Na cantina da escola",
+      "type": "transform",
+      "skills": [
+        "g-would-like"
+      ],
+      "prompt": "School cafeteria: torne o pedido educado com I'd like.",
+      "source": "Give me a banana.",
+      "answers": [
+        "i'd like a banana, please.",
+        "i'd like a banana please.",
+        "i'd like a banana.",
+        "i would like a banana, please.",
+        "i would like a banana."
+      ],
+      "explanation": "Give me... soa rude. Use I'd like + a + item + please.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "rv4",
+      "context": "Na sorveteria",
+      "type": "order",
+      "skills": [
+        "g-can-i-have"
+      ],
+      "prompt": "Ice cream shop: organize o pedido.",
+      "tiles": [
+        "Can",
+        "a",
+        "I",
+        "have",
+        "small",
+        "cone?"
+      ],
+      "answers": [
+        "Can I have a small cone?"
+      ],
+      "explanation": "Can + I + have + a + tamanho + item + ?",
+      "review": "g-can-i-have"
+    },
+    {
+      "id": "rv5",
+      "context": "Na livraria",
+      "type": "mcq",
+      "skills": [
+        "g-how-much"
+      ],
+      "prompt": "Bookshop: Você quer saber o preço do livro. O que você diz?",
+      "options": [
+        "How much is the book?",
+        "How many is the book?",
+        "How much book?"
+      ],
+      "answer": 0,
+      "explanation": "How much is + the + item?",
+      "review": "g-how-much"
+    },
+    {
+      "id": "rv6",
+      "context": "Na cantina da escola",
+      "type": "gap",
+      "skills": [
+        "listening-numbers",
+        "g-how-much"
+      ],
+      "prompt": "Escreva em números: \"It's three dollars and twenty-five cents.\"",
+      "text": "$___",
+      "answers": [
+        [
+          "3.25",
+          "3,25"
+        ]
+      ],
+      "explanation": "three dollars and twenty-five cents = $3.25.",
+      "review": "g-how-much"
+    },
+    {
+      "id": "rv7",
+      "context": "Na padaria",
+      "type": "mcq",
+      "skills": [
+        "vocab-cafe"
+      ],
+      "prompt": "Bakery: A atendente pergunta \"Anything else?\". Você não quer mais nada.",
+      "options": [
+        "No, thanks. That's all.",
+        "Yes, anything.",
+        "Else, please."
+      ],
+      "answer": 0,
+      "explanation": "No, thanks. That's all. = Não, obrigado. É só isso.",
+      "review": "g-would-like"
+    },
+    {
+      "id": "rv8",
+      "context": "No food truck",
+      "type": "gap",
+      "skills": [
+        "g-a-an"
+      ],
+      "prompt": "Food truck: complete com a ou an.",
+      "text": "I'd like ___ hot dog and ___ orange soda.",
+      "answers": [
+        [
+          "a"
+        ],
+        [
+          "an"
+        ]
+      ],
+      "explanation": "a hot dog (consoante /h/); an orange soda (vogal).",
+      "review": "g-a-an"
+    }
+  ],
+  "game": {
+    "title": "Café Quest",
+    "intro": "Você está com fome depois da aula. Entre na Sunny Corner Café, leia o cardápio e faça o seu pedido em inglês!",
+    "missions": [
+      {
+        "id": "m1",
+        "title": "Missão 1 — O primeiro pedido",
+        "brief": "Peça um chocolate quente MÉDIO e um sanduíche de queijo. Você vai comer na cafeteria. Você tem $10.",
+        "budget": 10,
+        "ticket": [
+          "medium hot chocolate",
+          "cheese sandwich",
+          "for here"
+        ],
+        "steps": [
+          {
+            "id": "m1a",
+            "npc": "Hi! Welcome to Sunny Corner Café. What would you like?",
+            "npcPt": "Oi! Bem-vindo! O que você gostaria?",
+            "match": {
+              "all": [
+                "hot chocolate"
+              ],
+              "any": [
+                "i'd like",
+                "id like",
+                "i would like",
+                "can i have",
+                "could i have"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Hi! I'd like a hot chocolate, please.",
+                "ok": true,
+                "fb": "Perfeito! Pedido educado com I'd like + a + item + please."
+              },
+              {
+                "text": "Hot chocolate. Now.",
+                "ok": false,
+                "fb": "A atendente entende, mas soa rude. Tente com I'd like... please."
+              },
+              {
+                "text": "I like a hot chocolate.",
+                "ok": false,
+                "fb": "I like = eu gosto. Para pedir, use I'd like (eu gostaria)."
+              }
+            ],
+            "ticketDone": 0
+          },
+          {
+            "id": "m1b",
+            "npc": "Small, medium or large?",
+            "npcPt": "Pequeno, médio ou grande?",
+            "match": {
+              "all": [
+                "medium"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Medium, please.",
+                "ok": true,
+                "fb": "Isso! A missão pedia médio."
+              },
+              {
+                "text": "Large, please.",
+                "ok": false,
+                "fb": "A frase está ótima, mas a missão pede MEDIUM (médio)."
+              },
+              {
+                "text": "Yes, please.",
+                "ok": false,
+                "fb": "A pergunta oferece opções. Escolha uma: small, medium ou large."
+              }
+            ]
+          },
+          {
+            "id": "m1c",
+            "npc": "Anything else?",
+            "npcPt": "Mais alguma coisa?",
+            "match": {
+              "all": [
+                "cheese sandwich"
+              ],
+              "any": [
+                "can i have",
+                "i'd like",
+                "id like",
+                "i would like",
+                "yes"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Yes. Can I have a cheese sandwich?",
+                "ok": true,
+                "fb": "Excelente! Can I have + a + item + ?"
+              },
+              {
+                "text": "Yes. Can I have an cheese sandwich?",
+                "ok": false,
+                "fb": "Quase! cheese começa com som de consoante → a cheese sandwich."
+              },
+              {
+                "text": "No, thanks.",
+                "ok": false,
+                "fb": "Ainda falta o sanduíche de queijo da sua missão!"
+              }
+            ],
+            "ticketDone": 1
+          },
+          {
+            "id": "m1d",
+            "npc": "Sure. For here or to go?",
+            "npcPt": "Claro. Para comer aqui ou para viagem?",
+            "match": {
+              "all": [
+                "for here"
+              ]
+            },
+            "choices": [
+              {
+                "text": "For here, please.",
+                "ok": true,
+                "fb": "Certo! Você vai comer na cafeteria."
+              },
+              {
+                "text": "To go, please.",
+                "ok": false,
+                "fb": "To go = para viagem. A missão diz que você vai comer aqui: for here."
+              },
+              {
+                "text": "Here go, please.",
+                "ok": false,
+                "fb": "As opções são for here ou to go."
+              }
+            ],
+            "ticketDone": 2
+          },
+          {
+            "id": "m1e",
+            "npc": "OK!",
+            "npcPt": "Ok!",
+            "player": true,
+            "match": {
+              "all": [
+                "how much"
+              ]
+            },
+            "prompt": "Pergunte o preço.",
+            "choices": [
+              {
+                "text": "How much is it?",
+                "ok": true,
+                "fb": "Isso! How much is it? = Quanto custa?"
+              },
+              {
+                "text": "How many is it?",
+                "ok": false,
+                "fb": "How many é para quantidade. Para preço: How much."
+              },
+              {
+                "text": "What is it?",
+                "ok": false,
+                "fb": "What is it? = O que é isso? Para preço, How much is it?"
+              }
+            ]
+          },
+          {
+            "id": "m1f",
+            "npc": "That's seven dollars and fifty cents.",
+            "npcPt": "São sete dólares e cinquenta centavos.",
+            "pay": {
+              "amount": 7.5,
+              "options": [
+                7.5,
+                17.5,
+                7.15
+              ]
+            },
+            "prompt": "Escolha quanto pagar."
+          },
+          {
+            "id": "m1g",
+            "npc": "Thank you! Here's your change. Enjoy!",
+            "npcPt": "Obrigada! Aqui está seu troco. Aproveite!",
+            "match": {
+              "any": [
+                "thank",
+                "thanks",
+                "nice day",
+                "bye"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Thanks! Have a nice day!",
+                "ok": true,
+                "fb": "Simpático! Missão cumprida."
+              },
+              {
+                "text": "Change? No.",
+                "ok": false,
+                "fb": "Change aqui é troco. Agradeça: Thanks!"
+              }
+            ],
+            "end": true
+          }
+        ]
+      },
+      {
+        "id": "m2",
+        "title": "Missão 2 — Lanche para levar",
+        "brief": "Peça um suco de laranja e um cookie PARA VIAGEM. Você tem $5. Use Can I have...?",
+        "budget": 5,
+        "ticket": [
+          "orange juice",
+          "cookie",
+          "to go"
+        ],
+        "steps": [
+          {
+            "id": "m2a",
+            "npc": "Good afternoon! What can I get you?",
+            "npcPt": "Boa tarde! O que posso trazer para você?",
+            "match": {
+              "all": [
+                "orange juice"
+              ],
+              "any": [
+                "can i have",
+                "i'd like",
+                "id like",
+                "i would like",
+                "could i have"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Can I have an orange juice, please?",
+                "ok": true,
+                "fb": "Ótimo! an + orange (som de vogal)."
+              },
+              {
+                "text": "Can I have a orange juice, please?",
+                "ok": false,
+                "fb": "orange começa com som de vogal → an orange juice."
+              },
+              {
+                "text": "I can have orange juice?",
+                "ok": false,
+                "fb": "Na pergunta, can vem antes de I: Can I have...?"
+              }
+            ],
+            "ticketDone": 0
+          },
+          {
+            "id": "m2b",
+            "npc": "Sure. Anything else?",
+            "npcPt": "Claro. Mais alguma coisa?",
+            "match": {
+              "all": [
+                "cookie"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Yes. Can I have a cookie, too?",
+                "ok": true,
+                "fb": "Perfeito! too = também."
+              },
+              {
+                "text": "Yes. Can I have an cookie?",
+                "ok": false,
+                "fb": "cookie começa com som de consoante /k/ → a cookie."
+              },
+              {
+                "text": "Yes. A milkshake, please.",
+                "ok": false,
+                "fb": "Boa frase, mas o milkshake custa $4.50 e a missão é um cookie."
+              }
+            ],
+            "ticketDone": 1
+          },
+          {
+            "id": "m2c",
+            "npc": "For here or to go?",
+            "npcPt": "Para comer aqui ou para viagem?",
+            "match": {
+              "all": [
+                "to go"
+              ]
+            },
+            "choices": [
+              {
+                "text": "To go, please.",
+                "ok": true,
+                "fb": "Isso! To go = para viagem."
+              },
+              {
+                "text": "For here, please.",
+                "ok": false,
+                "fb": "For here = comer aqui. A missão é para viagem: to go."
+              }
+            ],
+            "ticketDone": 2
+          },
+          {
+            "id": "m2d",
+            "npc": "That's four dollars.",
+            "npcPt": "São quatro dólares.",
+            "pay": {
+              "amount": 4,
+              "options": [
+                4,
+                14,
+                40
+              ]
+            },
+            "prompt": "Escolha quanto pagar."
+          },
+          {
+            "id": "m2e",
+            "npc": "Thank you! Have a good day!",
+            "npcPt": "Obrigada! Tenha um bom dia!",
+            "match": {
+              "any": [
+                "thank",
+                "thanks",
+                "you too",
+                "bye"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Thank you! You too!",
+                "ok": true,
+                "fb": "You too = você também. Missão cumprida!"
+              },
+              {
+                "text": "Yes, I have.",
+                "ok": false,
+                "fb": "Responda ao bom-dia: Thank you! You too!"
+              }
+            ],
+            "end": true
+          }
+        ]
+      },
+      {
+        "id": "m3",
+        "title": "Missão 3 — Plano B",
+        "brief": "Você quer um milkshake, mas só tem $4. Leia o cardápio! Se não der, peça outra bebida até $4 e diga para comer aqui.",
+        "budget": 4,
+        "ticket": [
+          "bebida até $4",
+          "for here"
+        ],
+        "steps": [
+          {
+            "id": "m3a",
+            "npc": "Hi there! What would you like?",
+            "npcPt": "Olá! O que você gostaria?",
+            "player": true,
+            "prompt": "Primeiro, pergunte o preço do milkshake.",
+            "match": {
+              "all": [
+                "how much",
+                "milkshake"
+              ]
+            },
+            "choices": [
+              {
+                "text": "How much is the milkshake?",
+                "ok": true,
+                "fb": "Boa estratégia: perguntar antes de pedir!"
+              },
+              {
+                "text": "How much milkshake?",
+                "ok": false,
+                "fb": "Falta o verbo: How much IS the milkshake?"
+              }
+            ]
+          },
+          {
+            "id": "m3b",
+            "npc": "It's four dollars and fifty cents.",
+            "npcPt": "Custa quatro dólares e cinquenta centavos.",
+            "prompt": "Você tem $4. O que pede agora?",
+            "match": {
+              "any": [
+                "orange juice",
+                "apple juice",
+                "hot chocolate",
+                "water"
+              ],
+              "anyPolite": [
+                "i'd like",
+                "id like",
+                "i would like",
+                "can i have",
+                "could i have"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Oh. Can I have an apple juice, then?",
+                "ok": true,
+                "fb": "Ótimo! apple juice custa $2.50 — cabe no orçamento."
+              },
+              {
+                "text": "OK. I'd like a milkshake, please.",
+                "ok": false,
+                "fb": "O milkshake custa $4.50 e você tem só $4."
+              },
+              {
+                "text": "Oh. Can I have a apple juice?",
+                "ok": false,
+                "fb": "apple → an apple juice."
+              }
+            ],
+            "ticketDone": 0
+          },
+          {
+            "id": "m3c",
+            "npc": "Sure. For here or to go?",
+            "npcPt": "Claro. Para comer aqui ou para viagem?",
+            "match": {
+              "all": [
+                "for here"
+              ]
+            },
+            "choices": [
+              {
+                "text": "For here, please.",
+                "ok": true,
+                "fb": "Isso!"
+              },
+              {
+                "text": "To go, please.",
+                "ok": false,
+                "fb": "A missão pede for here."
+              }
+            ],
+            "ticketDone": 1
+          },
+          {
+            "id": "m3d",
+            "npc": "That's two dollars and fifty cents.",
+            "npcPt": "São dois dólares e cinquenta centavos.",
+            "pay": {
+              "amount": 2.5,
+              "options": [
+                2.5,
+                2.15,
+                12.5
+              ]
+            },
+            "prompt": "Escolha quanto pagar."
+          },
+          {
+            "id": "m3e",
+            "npc": "Here you are. Enjoy!",
+            "npcPt": "Aqui está. Aproveite!",
+            "match": {
+              "any": [
+                "thank",
+                "thanks"
+              ]
+            },
+            "choices": [
+              {
+                "text": "Thanks a lot!",
+                "ok": true,
+                "fb": "Missão cumprida com plano B!"
+              },
+              {
+                "text": "Enjoy!",
+                "ok": false,
+                "fb": "Quem deseja \"aproveite\" é a atendente. Agradeça: Thanks!"
+              }
+            ],
+            "end": true
+          }
+        ]
+      }
+    ]
+  },
+  "speaking": {
+    "repeatSegments": [
+      "t1s2",
+      "t1s4",
+      "t1s6",
+      "t1s8",
+      "t1s10",
+      "t1s12"
+    ],
+    "shadowTrack": "t1",
+    "substitution": {
+      "frame": "I'd like {article} {item}, please.",
+      "items": [
+        {
+          "item": "hot chocolate",
+          "article": "a"
+        },
+        {
+          "item": "orange juice",
+          "article": "an"
+        },
+        {
+          "item": "cheese sandwich",
+          "article": "a"
+        },
+        {
+          "item": "apple pie",
+          "article": "an"
+        },
+        {
+          "item": "egg sandwich",
+          "article": "an"
+        },
+        {
+          "item": "cookie",
+          "article": "a"
+        }
+      ]
+    },
+    "respond": [
+      {
+        "id": "sr1",
+        "segment": "t1s1",
+        "hint": "Peça uma bebida.",
+        "match": {
+          "any": [
+            "i'd like",
+            "id like",
+            "i would like",
+            "can i have"
+          ]
+        },
+        "model": "I'd like an orange juice, please."
+      },
+      {
+        "id": "sr2",
+        "segment": "t1s3",
+        "hint": "Escolha um tamanho.",
+        "match": {
+          "any": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "model": "Large, please."
+      },
+      {
+        "id": "sr3",
+        "segment": "t1s7",
+        "hint": "Diga onde vai comer.",
+        "match": {
+          "any": [
+            "for here",
+            "to go"
+          ]
+        },
+        "model": "To go, please."
+      },
+      {
+        "id": "sr4",
+        "segment": "t1s9",
+        "hint": "Entregue o dinheiro.",
+        "match": {
+          "any": [
+            "here you are",
+            "here you go"
+          ]
+        },
+        "model": "Here you are."
+      }
+    ],
+    "create": {
+      "prompt": "Agora é com você! Peça seu lanche favorito do cardápio em 3 a 4 falas: cumprimente, faça o pedido, responda sobre tamanho ou local e pergunte o preço.",
+      "checklist": [
+        "Cumprimentei (Hi / Good morning)",
+        "Fiz o pedido com I'd like ou Can I have",
+        "Usei a/an corretamente",
+        "Falei o tamanho ou for here / to go",
+        "Perguntei How much is it?",
+        "Agradeci (Thank you / Thanks)"
+      ]
+    }
+  },
+  "writing": {
+    "prompt": "Escreva um diálogo de 6 linhas entre você e Mia, a atendente da Sunny Corner Café. Peça uma bebida e uma comida do cardápio, responda sobre o tamanho e o local, pergunte o preço e pague.",
+    "checklist": [
+      "Usei I'd like e/ou Can I have",
+      "Usei a/an corretamente",
+      "Usei pelo menos 2 itens do cardápio",
+      "Perguntei How much is it?",
+      "O preço total está correto segundo o cardápio",
+      "Usei please e thank you"
+    ]
+  },
+  "references": [
+    "Council of Europe (2020). Common European Framework of Reference for Languages: Companion Volume. Strasbourg: Council of Europe.",
+    "Krashen, S. (1982). Principles and Practice in Second Language Acquisition. Oxford: Pergamon.",
+    "Schmidt, R. (1990). The role of consciousness in second language learning. Applied Linguistics, 11(2), 129–158.",
+    "Swain, M. (1985). Communicative competence: Some roles of comprehensible input and comprehensible output in its development.",
+    "Lewis, M. (1993). The Lexical Approach. Hove: Language Teaching Publications.",
+    "Field, J. (2008). Listening in the Language Classroom. Cambridge: Cambridge University Press.",
+    "Ellis, R. (2003). Task-based Language Learning and Teaching. Oxford: Oxford University Press.",
+    "Kang, S. H. K. (2016). Spaced repetition promotes efficient and effective learning. Policy Insights from the Behavioral and Brain Sciences, 3(1), 12–19.",
+    "BRASIL. Ministério da Educação. Base Nacional Comum Curricular (BNCC) — Língua Inglesa, Anos Finais do Ensino Fundamental."
+  ],
+  "lines": {
+    "ad35b7f25b": {
+      "text": "hot chocolate",
+      "speaker": "Narrator",
+      "src": "audio/lines/ad35b7f25b.mp3"
+    },
+    "7e6b018ae4": {
+      "text": "I'd like a hot chocolate, please.",
+      "speaker": "Narrator",
+      "src": "audio/lines/7e6b018ae4.mp3"
+    },
+    "0bc56a5146": {
+      "text": "orange juice",
+      "speaker": "Narrator",
+      "src": "audio/lines/0bc56a5146.mp3"
+    },
+    "2bc24fb284": {
+      "text": "Can I have an orange juice?",
+      "speaker": "Narrator",
+      "src": "audio/lines/2bc24fb284.mp3"
+    },
+    "1e3f0d062b": {
+      "text": "apple juice",
+      "speaker": "Narrator",
+      "src": "audio/lines/1e3f0d062b.mp3"
+    },
+    "6af8a0b520": {
+      "text": "I'd like an apple juice.",
+      "speaker": "Narrator",
+      "src": "audio/lines/6af8a0b520.mp3"
+    },
+    "41796519e6": {
+      "text": "milkshake",
+      "speaker": "Narrator",
+      "src": "audio/lines/41796519e6.mp3"
+    },
+    "5e7da1ee88": {
+      "text": "A milkshake is four dollars and fifty cents.",
+      "speaker": "Narrator",
+      "src": "audio/lines/5e7da1ee88.mp3"
+    },
+    "89fce4bf8a": {
+      "text": "water",
+      "speaker": "Narrator",
+      "src": "audio/lines/89fce4bf8a.mp3"
+    },
+    "0bfc51d6f3": {
+      "text": "Can I have a bottle of water?",
+      "speaker": "Narrator",
+      "src": "audio/lines/0bfc51d6f3.mp3"
+    },
+    "e3c7fd04d9": {
+      "text": "cheese sandwich",
+      "speaker": "Narrator",
+      "src": "audio/lines/e3c7fd04d9.mp3"
+    },
+    "857f76abe0": {
+      "text": "Can I have a cheese sandwich?",
+      "speaker": "Narrator",
+      "src": "audio/lines/857f76abe0.mp3"
+    },
+    "d875be9aec": {
+      "text": "egg sandwich",
+      "speaker": "Narrator",
+      "src": "audio/lines/d875be9aec.mp3"
+    },
+    "6e1ebaf393": {
+      "text": "I'd like an egg sandwich.",
+      "speaker": "Narrator",
+      "src": "audio/lines/6e1ebaf393.mp3"
+    },
+    "59e8e7ef0f": {
+      "text": "muffin",
+      "speaker": "Narrator",
+      "src": "audio/lines/59e8e7ef0f.mp3"
+    },
+    "f906d2b943": {
+      "text": "Sorry, we don't have muffins today.",
+      "speaker": "Narrator",
+      "src": "audio/lines/f906d2b943.mp3"
+    },
+    "4afaa575eb": {
+      "text": "cookie",
+      "speaker": "Narrator",
+      "src": "audio/lines/4afaa575eb.mp3"
+    },
+    "fa6b14ee89": {
+      "text": "A cookie is one dollar and fifty cents.",
+      "speaker": "Narrator",
+      "src": "audio/lines/fa6b14ee89.mp3"
+    },
+    "62c51fdc68": {
+      "text": "apple pie",
+      "speaker": "Narrator",
+      "src": "audio/lines/62c51fdc68.mp3"
+    },
+    "171277f02c": {
+      "text": "Can I have an apple pie, then?",
+      "speaker": "Narrator",
+      "src": "audio/lines/171277f02c.mp3"
+    },
+    "bbab69b0ea": {
+      "text": "small",
+      "speaker": "Narrator",
+      "src": "audio/lines/bbab69b0ea.mp3"
+    },
+    "26dd3ae0b0": {
+      "text": "small, medium, large",
+      "speaker": "Narrator",
+      "src": "audio/lines/26dd3ae0b0.mp3"
+    },
+    "8a244ad5be": {
+      "text": "Small, medium or large?",
+      "speaker": "Narrator",
+      "src": "audio/lines/8a244ad5be.mp3"
+    },
+    "5f85d55307": {
+      "text": "for here",
+      "speaker": "Narrator",
+      "src": "audio/lines/5f85d55307.mp3"
+    },
+    "799e5f1372": {
+      "text": "for here, to go",
+      "speaker": "Narrator",
+      "src": "audio/lines/799e5f1372.mp3"
+    },
+    "9c655c7302": {
+      "text": "For here or to go?",
+      "speaker": "Narrator",
+      "src": "audio/lines/9c655c7302.mp3"
+    },
+    "bbfc4d4fc6": {
+      "text": "How much is it",
+      "speaker": "Narrator",
+      "src": "audio/lines/bbfc4d4fc6.mp3"
+    },
+    "af929c445b": {
+      "text": "How much is it? — It's seven dollars and fifty cents.",
+      "speaker": "Narrator",
+      "src": "audio/lines/af929c445b.mp3"
+    },
+    "62d0ad5142": {
+      "text": "Here you are",
+      "speaker": "Narrator",
+      "src": "audio/lines/62d0ad5142.mp3"
+    },
+    "b1882376c1": {
+      "text": "Here you are. — Thank you!",
+      "speaker": "Narrator",
+      "src": "audio/lines/b1882376c1.mp3"
+    },
+    "2c879b3303": {
+      "text": "change",
+      "speaker": "Narrator",
+      "src": "audio/lines/2c879b3303.mp3"
+    },
+    "e73a3c8a49": {
+      "text": "Here's your change.",
+      "speaker": "Narrator",
+      "src": "audio/lines/e73a3c8a49.mp3"
+    },
+    "368898e77a": {
+      "text": "Anything else",
+      "speaker": "Narrator",
+      "src": "audio/lines/368898e77a.mp3"
+    },
+    "fc5280c563": {
+      "text": "Anything else? — No, thanks.",
+      "speaker": "Narrator",
+      "src": "audio/lines/fc5280c563.mp3"
+    },
+    "7870fc25d0": {
+      "text": "Hi! Welcome to Sunny Corner Café. What would you like?",
+      "speaker": "Mia",
+      "src": "audio/lines/7870fc25d0.mp3"
+    },
+    "f564fd11f3": {
+      "text": "Hi! I'd like a hot chocolate, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/f564fd11f3.mp3"
+    },
+    "08b70e229f": {
+      "text": "Small, medium or large?",
+      "speaker": "Mia",
+      "src": "audio/lines/08b70e229f.mp3"
+    },
+    "0dc695cb95": {
+      "text": "Medium, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/0dc695cb95.mp3"
+    },
+    "1d04ea8bce": {
+      "text": "Anything else?",
+      "speaker": "Mia",
+      "src": "audio/lines/1d04ea8bce.mp3"
+    },
+    "50ecf5f15b": {
+      "text": "Yes. Can I have a cheese sandwich?",
+      "speaker": "Leo",
+      "src": "audio/lines/50ecf5f15b.mp3"
+    },
+    "a79f9e3568": {
+      "text": "Sure. For here or to go?",
+      "speaker": "Mia",
+      "src": "audio/lines/a79f9e3568.mp3"
+    },
+    "c39164ea90": {
+      "text": "For here, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/c39164ea90.mp3"
+    },
+    "ed5398efa5": {
+      "text": "OK!",
+      "speaker": "Mia",
+      "src": "audio/lines/ed5398efa5.mp3"
+    },
+    "9fbfb1a118": {
+      "text": "How much is it?",
+      "speaker": "Leo",
+      "src": "audio/lines/9fbfb1a118.mp3"
+    },
+    "b37745607e": {
+      "text": "That's seven dollars and fifty cents.",
+      "speaker": "Mia",
+      "src": "audio/lines/b37745607e.mp3"
+    },
+    "af0a689dc2": {
+      "text": "Thank you! Here's your change. Enjoy!",
+      "speaker": "Mia",
+      "src": "audio/lines/af0a689dc2.mp3"
+    },
+    "cb2ca1eae3": {
+      "text": "Thanks! Have a nice day!",
+      "speaker": "Leo",
+      "src": "audio/lines/cb2ca1eae3.mp3"
+    },
+    "8bea0f47c1": {
+      "text": "Good afternoon! What can I get you?",
+      "speaker": "Mia",
+      "src": "audio/lines/8bea0f47c1.mp3"
+    },
+    "52398b4f9f": {
+      "text": "Can I have an orange juice, please?",
+      "speaker": "Leo",
+      "src": "audio/lines/52398b4f9f.mp3"
+    },
+    "ba91a1cb66": {
+      "text": "Sure. Anything else?",
+      "speaker": "Mia",
+      "src": "audio/lines/ba91a1cb66.mp3"
+    },
+    "a2803786ea": {
+      "text": "Yes. Can I have a cookie, too?",
+      "speaker": "Leo",
+      "src": "audio/lines/a2803786ea.mp3"
+    },
+    "8c6c966a8b": {
+      "text": "For here or to go?",
+      "speaker": "Mia",
+      "src": "audio/lines/8c6c966a8b.mp3"
+    },
+    "bb8f8bdce7": {
+      "text": "To go, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/bb8f8bdce7.mp3"
+    },
+    "0094193c25": {
+      "text": "That's four dollars.",
+      "speaker": "Mia",
+      "src": "audio/lines/0094193c25.mp3"
+    },
+    "8db498abfc": {
+      "text": "Thank you! Have a good day!",
+      "speaker": "Mia",
+      "src": "audio/lines/8db498abfc.mp3"
+    },
+    "c85bf06ae6": {
+      "text": "Thank you! You too!",
+      "speaker": "Leo",
+      "src": "audio/lines/c85bf06ae6.mp3"
+    },
+    "99e0c7d729": {
+      "text": "Hi there! What would you like?",
+      "speaker": "Mia",
+      "src": "audio/lines/99e0c7d729.mp3"
+    },
+    "477a868d6c": {
+      "text": "How much is the milkshake?",
+      "speaker": "Leo",
+      "src": "audio/lines/477a868d6c.mp3"
+    },
+    "6e25ba60d2": {
+      "text": "It's four dollars and fifty cents.",
+      "speaker": "Mia",
+      "src": "audio/lines/6e25ba60d2.mp3"
+    },
+    "d372cf7fe8": {
+      "text": "Oh. Can I have an apple juice, then?",
+      "speaker": "Leo",
+      "src": "audio/lines/d372cf7fe8.mp3"
+    },
+    "05c9fe6434": {
+      "text": "That's two dollars and fifty cents.",
+      "speaker": "Mia",
+      "src": "audio/lines/05c9fe6434.mp3"
+    },
+    "2e40a8b0db": {
+      "text": "Here you are. Enjoy!",
+      "speaker": "Mia",
+      "src": "audio/lines/2e40a8b0db.mp3"
+    },
+    "cf91d0151c": {
+      "text": "Thanks a lot!",
+      "speaker": "Leo",
+      "src": "audio/lines/cf91d0151c.mp3"
+    },
+    "c56bf52cfa": {
+      "text": "I'd like a hot chocolate, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/c56bf52cfa.mp3"
+    },
+    "abb4222430": {
+      "text": "I'd like an orange juice, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/abb4222430.mp3"
+    },
+    "6e3b839ddc": {
+      "text": "I'd like a cheese sandwich, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/6e3b839ddc.mp3"
+    },
+    "3d077b8434": {
+      "text": "I'd like an apple pie, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/3d077b8434.mp3"
+    },
+    "39963b158d": {
+      "text": "I'd like an egg sandwich, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/39963b158d.mp3"
+    },
+    "067471f889": {
+      "text": "I'd like a cookie, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/067471f889.mp3"
+    },
+    "428b62dacd": {
+      "text": "Large, please.",
+      "speaker": "Leo",
+      "src": "audio/lines/428b62dacd.mp3"
+    },
+    "e8b71fdd07": {
+      "text": "Here you are.",
+      "speaker": "Leo",
+      "src": "audio/lines/e8b71fdd07.mp3"
+    },
+    "9c2ce8b495": {
+      "text": "Would you like a cookie? — No, thanks.",
+      "speaker": "Narrator",
+      "src": "audio/lines/9c2ce8b495.mp3"
+    },
+    "53af0f84a5": {
+      "text": "Would you like an orange juice?",
+      "speaker": "Narrator",
+      "src": "audio/lines/53af0f84a5.mp3"
+    },
+    "07ca202413": {
+      "text": "Sure. / Of course.",
+      "speaker": "Narrator",
+      "src": "audio/lines/07ca202413.mp3"
+    },
+    "8d29ebd1c2": {
+      "text": "Can I have an egg sandwich?",
+      "speaker": "Narrator",
+      "src": "audio/lines/8d29ebd1c2.mp3"
+    },
+    "53c3296e67": {
+      "text": "I'd like a small orange juice.",
+      "speaker": "Narrator",
+      "src": "audio/lines/53c3296e67.mp3"
+    },
+    "c500b0e61f": {
+      "text": "We don't have muffins today.",
+      "speaker": "Narrator",
+      "src": "audio/lines/c500b0e61f.mp3"
+    },
+    "ddbdd443eb": {
+      "text": "How much is it? — It's five dollars and fifty cents.",
+      "speaker": "Narrator",
+      "src": "audio/lines/ddbdd443eb.mp3"
+    },
+    "6bd6208e0d": {
+      "text": "How much is the milkshake?",
+      "speaker": "Narrator",
+      "src": "audio/lines/6bd6208e0d.mp3"
+    },
+    "e57a58c745": {
+      "text": "It isn't expensive. It's one dollar.",
+      "speaker": "Narrator",
+      "src": "audio/lines/e57a58c745.mp3"
+    },
+    "c30556f620": {
+      "text": "I'd like a muffin for my brother.",
+      "speaker": "Narrator",
+      "src": "audio/lines/c30556f620.mp3"
+    },
+    "9c4a86460b": {
+      "text": "Can I have an orange juice, please?",
+      "speaker": "Narrator",
+      "src": "audio/lines/9c4a86460b.mp3"
+    }
+  }
+}

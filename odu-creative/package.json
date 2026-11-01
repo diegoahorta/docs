@@ -1,0 +1,22 @@
+{
+  "name": "odu-creative-language-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ODU CREATIVE — Universal Language Learning Engine (HTML5)",
+  "type": "module",
+  "scripts": {
+    "serve": "node tools/serve.mjs",
+    "build:audio": "node tools/build-audio.mjs units/en-a1-cafe",
+    "build:docx": "node tools/build-docx.mjs units/en-a1-cafe",
+    "vendor": "node tools/vendor.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "docx": "^9.5.1",
+    "gsap": "^3.13.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "jszip": "^3.10.1"
+  }
+}

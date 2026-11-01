@@ -1,0 +1,109 @@
+/* ODU CREATIVE — design tokens. Personalize a marca alterando apenas este arquivo. */
+:root {
+  --brand: #5b3df5;
+  --brand-ink: #ffffff;
+  --brand-soft: #ece8ff;
+  --accent: #ff6b4a;
+  --accent-soft: #ffe7e1;
+  --sun: #ffc93c;
+  --mint: #12a586;
+  --mint-soft: #dcf6ef;
+  --danger: #c93a2b;
+  --danger-soft: #fde6e3;
+
+  --bg: #f6f5fb;
+  --surface: #ffffff;
+  --surface-2: #f0eef8;
+  --ink: #1d1a2b;
+  --ink-2: #4b4762;
+  --muted: #6c6884;
+  --line: #dedbea;
+  --focus: #ff9f1c;
+
+  /* chunks gramaticais */
+  --c-subject: #2f6fde;
+  --c-verb: #9b3dd6;
+  --c-article: #d9480f;
+  --c-object: #0f8a6c;
+  --c-polite: #b5850a;
+  --c-extra: #6c6884;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 6px 24px rgb(40 30 90 / 0.08);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial,
+    "Noto Sans JP", "Hiragino Sans", "Noto Sans KR", "Apple SD Gothic Neo", "Noto Sans SC", "PingFang SC", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --text-scale: 1;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand: #8c76ff;
+    --brand-ink: #120c2e;
+    --brand-soft: #2a2350;
+    --accent: #ff8a6e;
+    --accent-soft: #432520;
+    --mint: #3ed3ad;
+    --mint-soft: #133a32;
+    --danger: #ff7b6b;
+    --danger-soft: #45201c;
+    --bg: #121019;
+    --surface: #1c1928;
+    --surface-2: #26223a;
+    --ink: #f2f0fa;
+    --ink-2: #cdc8e4;
+    --muted: #a39fbd;
+    --line: #37314f;
+    --c-subject: #7fb0ff;
+    --c-verb: #d39bff;
+    --c-article: #ff9f6e;
+    --c-object: #5fe0bd;
+    --c-polite: #f3cd5a;
+    --c-extra: #a39fbd;
+    --shadow: 0 6px 24px rgb(0 0 0 / 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --brand: #8c76ff;
+  --brand-ink: #120c2e;
+  --brand-soft: #2a2350;
+  --accent: #ff8a6e;
+  --accent-soft: #432520;
+  --mint: #3ed3ad;
+  --mint-soft: #133a32;
+  --danger: #ff7b6b;
+  --danger-soft: #45201c;
+  --bg: #121019;
+  --surface: #1c1928;
+  --surface-2: #26223a;
+  --ink: #f2f0fa;
+  --ink-2: #cdc8e4;
+  --muted: #a39fbd;
+  --line: #37314f;
+  --c-subject: #7fb0ff;
+  --c-verb: #d39bff;
+  --c-article: #ff9f6e;
+  --c-object: #5fe0bd;
+  --c-polite: #f3cd5a;
+  --c-extra: #a39fbd;
+  --shadow: 0 6px 24px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+/* Alto contraste: aplicado por cima do tema atual */
+:root[data-contrast="high"] {
+  --line: currentColor;
+  --muted: var(--ink);
+  --ink-2: var(--ink);
+  --shadow: none;
+}
+:root[data-contrast="high"][data-theme="light"],
+:root[data-contrast="high"]:not([data-theme="dark"]) {
+  --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff; --ink: #000000; --brand: #3a1fd1; --mint: #006b52; --danger: #a01b0e;
+}
+:root[data-contrast="high"][data-theme="dark"] {
+  --bg: #000000; --surface: #000000; --surface-2: #000000; --ink: #ffffff; --brand: #b9a8ff; --mint: #6dffd9; --danger: #ffa194;
+}
