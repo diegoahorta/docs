@@ -91,6 +91,54 @@ function tone(dest, t, freq, dur, { type = 'sine', gain = 0.3, attack = 0.005, r
 
 const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
 
+/**
+ * Flauta suave (estilo dizi 笛子): senoide com harmônicos leves, vibrato lento,
+ * sopro de ar filtrado e ataque macio. `setFreq(param, mul)` agenda a altura
+ * (permite seguir o contorno do tom); ou passe um número fixo em Hz.
+ */
+function flute(dest, t, dur, freq, { gain = 0.28, vibrato = 0.006, breath = 0.05 } = {}) {
+  const base = typeof freq === 'number' ? freq : freq.base;
+  const setFreq = typeof freq === 'number' ? (p, m) => p.setValueAtTime(freq * m, t) : freq.set;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0.0001, t);
+  env.gain.exponentialRampToValueAtTime(gain, t + Math.min(0.08, dur * 0.3));
+  env.gain.setValueAtTime(gain, t + Math.max(0.09, dur - 0.1));
+  env.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.12);
+  const lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 3400;
+  env.connect(lp).connect(dest);
+  const lfo = ctx.createOscillator();
+  lfo.frequency.value = 5.2;
+  const stop = t + dur + 0.2;
+  for (const [mul, g] of [[1, 1], [2, 0.16], [3, 0.05]]) {
+    const o = ctx.createOscillator();
+    o.type = 'sine';
+    setFreq(o.frequency, mul);
+    const vg = ctx.createGain();
+    vg.gain.value = base * mul * vibrato;
+    lfo.connect(vg).connect(o.frequency);
+    const og = ctx.createGain();
+    og.gain.value = g;
+    o.connect(og).connect(env);
+    o.start(t);
+    o.stop(stop);
+  }
+  lfo.start(t);
+  lfo.stop(stop);
+  // sopro: um "chiff" de ar no ataque e um fio de ar contínuo
+  if (breath) {
+    noise(dest, t, 0.09, { type: 'bandpass', freq: base * 2.5, q: 1.5, gain: breath * 1.6, attack: 0.01 });
+    noise(dest, t, dur, { type: 'bandpass', freq: base * 2, q: 2.5, gain: breath * 0.5, attack: 0.08 });
+  }
+}
+
+/** Sino suave (parciais de sino de vento). */
+function bell(dest, t, f, dur = 1.6, gain = 0.12) {
+  [[1, 1], [2.76, 0.35], [5.4, 0.12]].forEach(([r, g]) =>
+    tone(dest, t, f * r, dur / (r > 1 ? r * 0.7 : 1), { type: 'sine', gain: gain * g, attack: 0.004 }));
+}
+
 // ---------------------------------------------------------------- trilha lofi
 
 // Ré pentatônica (D E F# A B) — o "sabor chinês" vem da escala de 5 notas (宫商角徵羽)
@@ -257,16 +305,15 @@ export function sfxCorrect(combo = 1) {
   const base = 74 + Math.min(combo, 6) * 2;
   [0, 4, 7, 12].forEach((iv, i) => tone(sfxBus, t + i * 0.06, midi(base + iv), 0.35, { type: 'triangle', gain: 0.22 }));
   tone(sfxBus, t + 0.22, midi(base + 24), 0.5, { type: 'sine', gain: 0.12 });
-  // moedinha
-  tone(sfxBus, t, 988, 0.08, { type: 'square', gain: 0.06 });
-  tone(sfxBus, t + 0.08, 1319, 0.3, { type: 'square', gain: 0.06 });
+  // sininho
+  bell(sfxBus, t + 0.05, midi(base + 12), 1.2, 0.1);
 }
 
 export function sfxWrong() {
   if (!ctx) return;
   const t = ctx.currentTime;
-  const o = tone(sfxBus, t, 110, 0.45, { type: 'sawtooth', gain: 0.12, bendFrom: 240, bendTime: 0.35 });
-  tone(sfxBus, t + 0.12, 92, 0.4, { type: 'square', gain: 0.06 });
+  flute(sfxBus, t, 0.22, midi(66), { gain: 0.18, breath: 0.03 });
+  flute(sfxBus, t + 0.24, 0.42, midi(62), { gain: 0.16, breath: 0.03 });
 }
 
 export function sfxGong(t0 = null, vol = 0.5) {
@@ -281,8 +328,9 @@ export function sfxGate() {
   if (!ctx) return;
   const t = ctx.currentTime;
   sfxGong(t, 0.45);
-  // rangido da porta
-  tone(sfxBus, t + 0.1, 70, 1.0, { type: 'sawtooth', gain: 0.05, bendFrom: 140, bendTime: 0.9 });
+  // porta de madeira se abrindo e sinos de vento
+  tone(sfxBus, t + 0.1, 95, 0.25, { type: 'sine', gain: 0.18, attack: 0.005 });
+  [74, 78, 81, 83, 86].forEach((n, i) => bell(sfxBus, t + 0.3 + i * 0.11, midi(n + 12), 1.4, 0.06));
 }
 
 export function sfxStep() {
@@ -312,31 +360,27 @@ export function sfxCelebrate(intensity = 2) {
     const tt = t + 0.15 + Math.random() * (0.9 + intensity * 0.8);
     noise(sfxBus, tt, 0.03 + Math.random() * 0.04, { type: 'bandpass', freq: 1500 + Math.random() * 4500, q: 1.2, gain: 0.25 + Math.random() * 0.35, attack: 0.001 });
   }
-  // fanfarra pentatônica (metais sintéticos)
-  const fan = [62, 66, 69, 74, 78, 81, 86];
-  fan.forEach((n2, i) => {
-    tone(sfxBus, t + 0.1 + i * 0.09, midi(n2), 0.5, { type: 'sawtooth', gain: 0.1, attack: 0.02 });
-    tone(sfxBus, t + 0.1 + i * 0.09, midi(n2 - 12), 0.5, { type: 'square', gain: 0.05, attack: 0.02 });
-  });
-  const end = t + 0.1 + fan.length * 0.09;
-  [62, 66, 69, 74].forEach((n2) => tone(sfxBus, end, midi(n2 + 12), 1.4, { type: 'sawtooth', gain: 0.07, attack: 0.03 }));
+  // melodia pentatônica de flauta, fechando num acorde de sinos
+  const fan = [74, 76, 78, 81, 83, 86];
+  fan.forEach((n2, i) => flute(sfxBus, t + 0.1 + i * 0.1, 0.16, midi(n2), { gain: 0.16, breath: 0.03 }));
+  const end = t + 0.1 + fan.length * 0.1;
+  flute(sfxBus, end, 0.9, midi(86), { gain: 0.18, vibrato: 0.01 });
+  [74, 78, 81, 86].forEach((n2, i) => bell(sfxBus, end + i * 0.04, midi(n2), 2.2, 0.08));
   if (intensity >= 2) {
     sfxGong(t + 0.05, 0.6);
-    // buzina de estádio
-    for (let k = 0; k < 3; k++) {
-      [466, 587, 698].forEach((f) => tone(sfxBus, t + 0.9 + k * 0.32, f, 0.24, { type: 'sawtooth', gain: 0.06, attack: 0.01 }));
-    }
-    // apito subindo
-    tone(sfxBus, t + 0.3, 2400, 0.6, { type: 'sine', gain: 0.08, bendFrom: 600, bendTime: 0.55 });
+    // sinos de vento
+    for (let k = 0; k < 10; k++) bell(sfxBus, t + 0.9 + Math.random() * 1.4, midi(pentaNote(5 + Math.floor(Math.random() * 6)) + 12), 1.5, 0.05);
+    // trinado de flauta
+    for (let k = 0; k < 6; k++) flute(sfxBus, t + 1.0 + k * 0.08, 0.07, midi(k % 2 ? 88 : 86), { gain: 0.1, breath: 0.015 });
     // torcida
-    noise(sfxBus, t + 0.2, 2.6, { type: 'bandpass', freq: 1100, q: 0.5, gain: 0.25, attack: 0.4 });
+    noise(sfxBus, t + 0.2, 2.6, { type: 'bandpass', freq: 1100, q: 0.5, gain: 0.18, attack: 0.4 });
   }
   if (intensity >= 3) {
     // segunda onda de fogos
     for (let k = 0; k < 6; k++) {
       const tt = t + 1.6 + k * 0.35;
-      tone(sfxBus, tt, 3000, 0.3, { type: 'sine', gain: 0.05, bendFrom: 400, bendTime: 0.28 });
-      noise(sfxBus, tt + 0.3, 0.9, { type: 'lowpass', freq: 6000, sweepTo: 200, gain: 0.45, attack: 0.001 });
+      noise(sfxBus, tt, 0.6, { type: 'lowpass', freq: 3000, sweepTo: 200, gain: 0.3, attack: 0.001 });
+      for (let j = 0; j < 3; j++) bell(sfxBus, tt + 0.05 + j * 0.07, midi(pentaNote(8 + Math.floor(Math.random() * 5)) + 12), 1.0, 0.04);
     }
   }
 }
@@ -347,7 +391,8 @@ export function sfxCelebrate(intensity = 2) {
 export function playToneContour(tones, { sandhi = true } = {}) {
   if (!ctx) return;
   duck(0.2, 1.2 + tones.length * 0.5);
-  const lv = (L) => 150 * Math.pow(2, (L - 1) / 4.5);
+  // altura da flauta: nível 1 de Chao ≈ mi4 (330 Hz), nível 5 ≈ ré5
+  const lv = (L) => 330 * Math.pow(2, (L - 1) / 4.5);
   let t = ctx.currentTime + 0.05;
   const seq = tones.map((tn, i) => {
     let tt = tn;
@@ -356,33 +401,18 @@ export function playToneContour(tones, { sandhi = true } = {}) {
     return { tn: tt, half: tt === 3 && !last }; // 3º tom no meio da frase = "meio terceiro" (21)
   });
   for (const { tn, half } of seq) {
-    const dur = tn === 0 ? 0.18 : tn === 4 ? 0.32 : tn === 3 && !half ? 0.55 : 0.42;
+    const dur = tn === 0 ? 0.2 : tn === 4 ? 0.36 : tn === 3 && !half ? 0.6 : 0.46;
     const pts = tn === 1 ? [5, 5] : tn === 2 ? [3, 5] : tn === 3 ? (half ? [2, 1] : [2, 1, 4]) : tn === 4 ? [5, 1] : [3, 2.6];
-    const voice = ctx.createGain();
-    // fonte vocal: dente-de-serra filtrada por formantes do "a"
-    const o = ctx.createOscillator();
-    o.type = 'sawtooth';
-    pts.forEach((L, k) => {
-      const tk = t + (dur * k) / (pts.length - 1 || 1);
-      if (k === 0) o.frequency.setValueAtTime(lv(L), tk);
-      else o.frequency.linearRampToValueAtTime(lv(L), tk);
-    });
-    const f1 = ctx.createBiquadFilter();
-    f1.type = 'bandpass'; f1.frequency.value = 800; f1.Q.value = 5;
-    const f2 = ctx.createBiquadFilter();
-    f2.type = 'bandpass'; f2.frequency.value = 1200; f2.Q.value = 6;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(tn === 0 ? 0.35 : 0.6, t + 0.03);
-    g.gain.setValueAtTime(tn === 0 ? 0.35 : 0.6, t + dur - 0.06);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(f1).connect(g);
-    o.connect(f2).connect(g);
-    g.connect(voice).connect(sfxBus);
-    voice.gain.value = 1.4;
-    o.start(t);
-    o.stop(t + dur + 0.05);
-    t += dur + 0.08;
+    const t0 = t;
+    flute(sfxBus, t0, dur, {
+      base: lv(pts[0]),
+      set: (param, mul) => pts.forEach((L, k) => {
+        const tk = t0 + (dur * k) / (pts.length - 1 || 1);
+        if (k === 0) param.setValueAtTime(lv(L) * mul, tk);
+        else param.linearRampToValueAtTime(lv(L) * mul, tk);
+      }),
+    }, { gain: tn === 0 ? 0.2 : 0.32, vibrato: 0.004, breath: 0.04 });
+    t += dur + 0.14;
   }
 }
 
