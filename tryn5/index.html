@@ -52,29 +52,23 @@
         background: #0f0f1a; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em;
       }
     </style>
+    <link rel="stylesheet" href="./src/style.css" />
     <script>
       // Mostra uma mensagem útil em vez de "carregando" infinito
       // quando o script principal não carrega ou falha ao iniciar.
       window.__bootFail = function (detail) {
         var app = document.getElementById('app');
         if (!app || !app.querySelector('.loading')) return; // app já montou
-        var isFile = location.protocol === 'file:';
         app.innerHTML =
           '<div class="boot-error" role="alert">' +
           '<h1>Não foi possível iniciar o jogo</h1>' +
-          (isFile
-            ? '<p>A página foi aberta direto do disco (<code>file://</code>). ' +
-              'Navegadores bloqueiam scripts <code>type="module"</code> nesse modo.</p>' +
-              '<p>Rode um servidor local na pasta do projeto, por exemplo ' +
-              '<code>npm run dev</code> (Vite) ou <code>npx vite</code>.</p>'
-            : '<p>O arquivo <code>src/main.js</code> não foi encontrado ou gerou um erro.</p>' +
-              '<p>Confira se ele existe ao lado deste <code>index.html</code> e se o servidor ' +
-              'está rodando na raiz do projeto.</p>') +
+          '<p>Os arquivos da pasta <code>src/</code> (<code>data.js</code>, <code>main.js</code>, ' +
+          '<code>style.css</code>) precisam estar ao lado deste <code>index.html</code>.</p>' +
           (detail ? '<p><small>Detalhe: ' + String(detail).replace(/</g, '&lt;') + '</small></p>' : '') +
           '</div>';
       };
       window.addEventListener('error', function (e) {
-        if (e.target && e.target.tagName === 'SCRIPT') return; // tratado no onerror
+        if (!(e instanceof ErrorEvent)) return; // falhas de <script>/<link> tratadas no onerror
         window.__bootFail(e.message);
       }, true);
       window.addEventListener('unhandledrejection', function (e) {
@@ -91,10 +85,7 @@
     <noscript>
       <p style="text-align:center">Ative o JavaScript para jogar.</p>
     </noscript>
-    <script
-      type="module"
-      src="./src/main.js"
-      onerror="window.__bootFail('falha ao carregar ./src/main.js')"
-    ></script>
+    <script src="./src/data.js" onerror="window.__bootFail('falha ao carregar ./src/data.js')"></script>
+    <script src="./src/main.js" onerror="window.__bootFail('falha ao carregar ./src/main.js')"></script>
   </body>
 </html>
