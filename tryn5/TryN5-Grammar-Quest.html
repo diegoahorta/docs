@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Try! N5 Grammar Quest</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Lexend:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #0f0f1a;
+        color: #e0e0e0;
+        font-family: 'Lexend', 'Noto Sans JP', sans-serif;
+        overflow: hidden;
+      }
+      #app {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+      .loading {
+        color: #e0e0e0;
+        font-size: 1.2rem;
+        letter-spacing: 0.02em;
+      }
+      .boot-error {
+        max-width: 32rem;
+        margin: 0 16px;
+        padding: 1.25rem 1.5rem;
+        border: 1px solid #ff6b6b55;
+        border-radius: 12px;
+        background: #1a1a2b;
+        line-height: 1.5;
+      }
+      .boot-error h1 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #ff8787; }
+      .boot-error p { margin: 0.4rem 0; font-size: 0.95rem; }
+      .boot-error code {
+        background: #0f0f1a; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em;
+      }
+    </style>
+    <style>
+:root {
+  --bg: #0f0f1a; --card: #1a1a2b; --card2: #232339; --line: #2f2f4a;
+  --text: #e8e8f0; --muted: #9a9ab5; --accent: #ff7aa2; --accent2: #7ac7ff;
+  --ok: #4ade80; --bad: #ff6b6b; --gold: #ffd166;
+}
+* { box-sizing: border-box; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.screen {
+  width: 100%; max-width: 640px; height: 100%; margin: 0 auto;
+  padding: 20px 16px 24px; display: flex; flex-direction: column; gap: 16px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.center { justify-content: center; align-items: center; text-align: center; }
+.title-jp { font-family: 'Noto Sans JP', sans-serif; font-size: 3rem; font-weight: 700; margin: 0; color: var(--accent); }
+.title { font-size: 1.6rem; font-weight: 700; margin: 0; }
+.muted { color: var(--muted); }
+.btn {
+  border: 0; border-radius: 12px; padding: 14px 20px; font-weight: 600;
+  background: var(--accent); color: #1a0f16; transition: transform .1s, filter .15s;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: scale(.97); }
+.btn.ghost { background: var(--card2); color: var(--text); }
+.btn:focus-visible, .opt:focus-visible, .stage:focus-visible { outline: 3px solid var(--accent2); outline-offset: 2px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pill { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: .9rem; white-space: nowrap; }
+.stages { display: grid; gap: 10px; }
+.stage {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+}
+.stage[disabled] { opacity: .45; cursor: not-allowed; }
+.stage .ic { font-size: 1.8rem; width: 2.2rem; text-align: center; }
+.stage .nm { font-weight: 600; }
+.stage .sb { font-size: .85rem; color: var(--muted); font-family: 'Noto Sans JP', sans-serif; }
+.stage .st { margin-left: auto; color: var(--gold); letter-spacing: 2px; white-space: nowrap; }
+.bar { height: 8px; background: var(--card2); border-radius: 99px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .3s; }
+.qcard { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 18px; }
+.q { font-family: 'Noto Sans JP', sans-serif; font-size: 1.35rem; line-height: 1.8; margin: 0; word-break: break-word; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opt {
+  font-family: 'Noto Sans JP', sans-serif; font-size: 1.15rem; padding: 16px 10px;
+  background: var(--card2); border: 2px solid var(--line); border-radius: 12px; position: relative;
+}
+.opt .k { position: absolute; top: 6px; left: 8px; font-size: .7rem; color: var(--muted); font-family: 'Lexend', sans-serif; }
+.opt.ok { border-color: var(--ok); background: #163323; }
+.opt.bad { border-color: var(--bad); background: #3a1a1f; }
+.opt[disabled] { cursor: default; }
+.fb { border-radius: 14px; padding: 14px 16px; line-height: 1.5; }
+.fb.ok { background: #163323; border: 1px solid var(--ok); }
+.fb.bad { background: #3a1a1f; border: 1px solid var(--bad); }
+.fb h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.fb p { margin: 4px 0; }
+.big-stars { font-size: 3rem; color: var(--gold); letter-spacing: 6px; }
+.shake { animation: shake .35s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@media (max-width: 380px) { .opts { grid-template-columns: 1fr; } .q { font-size: 1.2rem; } }
+</style>
+    <script>
+      // Mostra uma mensagem útil em vez de "carregando" infinito
+      // quando o script principal não carrega ou falha ao iniciar.
+      window.__bootFail = function (detail) {
+        var app = document.getElementById('app');
+        if (!app || !app.querySelector('.loading')) return; // app já montou
+        app.innerHTML =
+          '<div class="boot-error" role="alert">' +
+          '<h1>Não foi possível iniciar o jogo</h1>' +
+          '<p>Tente recarregar a página.</p>' +
+          (detail ? '<p><small>Detalhe: ' + String(detail).replace(/</g, '&lt;') + '</small></p>' : '') +
+          '</div>';
+      };
+      window.addEventListener('error', function (e) {
+        if (!(e instanceof ErrorEvent)) return; // falhas de <script>/<link> tratadas no onerror
+        window.__bootFail(e.message);
+      }, true);
+      window.addEventListener('unhandledrejection', function (e) {
+        window.__bootFail(e.reason && (e.reason.message || e.reason));
+      });
+      // Rede de segurança: se nada montou em 10 s, avisa.
+      setTimeout(function () { window.__bootFail('tempo de carregamento esgotado'); }, 10000);
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <p class="loading" lang="ja">読み込み中…</p>
+    </div>
+    <noscript>
+      <p style="text-align:center">Ative o JavaScript para jogar.</p>
+    </noscript>
+<script>
+// Banco de questões — gramática JLPT N5.
+// q: frase com （　） no lugar da lacuna · o: opções (a primeira é a correta)
+// pt: tradução · why: explicação curta
+window.N5_STAGES = [
+  {
+    id: 'p1', title: 'Partículas I', sub: 'は・が・を・の・も', icon: '🌸',
+    qs: [
+      { q: 'わたし（　）がくせいです。', o: ['は', 'を', 'に', 'で'], pt: 'Eu sou estudante.', why: 'は marca o tema da frase: “quanto a mim…”.' },
+      { q: 'これは わたし（　）ほんです。', o: ['の', 'は', 'を', 'に'], pt: 'Este é o meu livro.', why: 'の liga dois substantivos e indica posse: わたしの本 = meu livro.' },
+      { q: '毎朝（まいあさ） コーヒー（　）飲みます。', o: ['を', 'が', 'に', 'へ'], pt: 'Bebo café toda manhã.', why: 'を marca o objeto direto do verbo (飲みます).' },
+      { q: '田中さんは 先生です。山田さん（　）先生です。', o: ['も', 'は', 'の', 'を'], pt: 'O Tanaka é professor. O Yamada também é professor.', why: 'も = “também”; substitui は quando a informação se repete.' },
+      { q: 'あそこに ねこ（　）います。', o: ['が', 'を', 'で', 'の'], pt: 'Tem um gato ali.', why: 'Com います/あります (existência), quem existe é marcado com が.' },
+      { q: 'だれ（　）来ましたか。', o: ['が', 'は', 'を', 'も'], pt: 'Quem veio?', why: 'Palavra interrogativa como sujeito leva が, nunca は.' },
+      { q: 'わたしは すし（　）好きです。', o: ['が', 'を', 'に', 'で'], pt: 'Eu gosto de sushi.', why: '好き・きらい・じょうず・わかる usam が para o objeto.' },
+    ],
+  },
+  {
+    id: 'p2', title: 'Partículas II', sub: 'に・で・へ・と・から・まで', icon: '🗺️',
+    qs: [
+      { q: '7時（しちじ）（　）起きます。', o: ['に', 'で', 'を', 'へ'], pt: 'Acordo às 7 horas.', why: 'Horário específico leva に.' },
+      { q: '図書館（としょかん）（　）べんきょうします。', o: ['で', 'に', 'を', 'へ'], pt: 'Estudo na biblioteca.', why: 'で marca o lugar onde uma ação acontece.' },
+      { q: '来週（らいしゅう） 日本（　）行きます。', o: ['へ', 'を', 'で', 'と'], pt: 'Semana que vem vou ao Japão.', why: 'へ (ou に) indica a direção/destino de verbos de movimento.' },
+      { q: '友だち（　）えいがを 見ました。', o: ['と', 'を', 'へ', 'が'], pt: 'Vi um filme com um amigo.', why: 'と = “com (alguém)”.' },
+      { q: '銀行（ぎんこう）は 9時（　）3時までです。', o: ['から', 'まで', 'に', 'で'], pt: 'O banco funciona das 9 às 3.', why: '〜から〜まで = “de… até…”.' },
+      { q: 'はし（　）ごはんを 食べます。', o: ['で', 'を', 'に', 'と'], pt: 'Como arroz com hashi.', why: 'で também indica o meio/instrumento.' },
+      { q: 'つくえの 上（　）本が あります。', o: ['に', 'で', 'を', 'へ'], pt: 'Há um livro em cima da mesa.', why: 'Lugar de existência (あります/います) leva に, não で.' },
+    ],
+  },
+  {
+    id: 'v1', title: 'Verbos ます', sub: 'presente・passado・convite', icon: '⏳',
+    qs: [
+      { q: 'きのう テレビを（　）。', o: ['見ました', '見ます', '見ません', '見ましょう'], pt: 'Ontem assisti TV.', why: 'きのう (ontem) pede o passado: 〜ました.' },
+      { q: 'あした 学校へ（　）。', o: ['行きます', '行きました', '行きませんでした', '行った'], pt: 'Amanhã vou à escola.', why: 'Futuro em japonês usa a forma 〜ます (não-passado).' },
+      { q: '先週（せんしゅう）は いそがしかったです。だから、パーティーに（　）。', o: ['行きませんでした', '行きません', '行きました', '行きましょう'], pt: 'Semana passada eu estava ocupado. Por isso não fui à festa.', why: 'Passado negativo: 〜ませんでした.' },
+      { q: 'いっしょに 昼（ひる）ごはんを（　）か。', o: ['食べません', '食べました', '食べない', '食べて'], pt: 'Não quer almoçar comigo?', why: '〜ませんか é um convite educado.' },
+      { q: 'つかれましたね。ちょっと（　）。', o: ['休みましょう', '休みました', '休みません', '休む'], pt: 'Cansamos, né? Vamos descansar um pouco.', why: '〜ましょう = “vamos…”.' },
+      { q: '今朝（けさ） 何を 食べましたか。…パンを（　）。', o: ['食べました', '食べます', '食べません', '食べましょう'], pt: 'O que você comeu hoje de manhã? …Comi pão.', why: 'Responda no mesmo tempo da pergunta: passado.' },
+    ],
+  },
+  {
+    id: 'a1', title: 'Adjetivos', sub: 'い・な', icon: '🎨',
+    qs: [
+      { q: 'この へやは あまり（　）。', o: ['ひろくないです', 'ひろいです', 'ひろいじゃありません', 'ひろくです'], pt: 'Este quarto não é muito espaçoso.', why: 'あまり pede negativa. Adjetivo い: troque い por くない.' },
+      { q: '田中さんは（　）人です。', o: ['しんせつな', 'しんせつ', 'しんせつの', 'しんせつい'], pt: 'O Tanaka é uma pessoa gentil.', why: 'Adjetivo な antes de substantivo leva な.' },
+      { q: 'きのうの テストは（　）。', o: ['むずかしかったです', 'むずかしいでした', 'むずかしくでした', 'むずかしいだった'], pt: 'A prova de ontem foi difícil.', why: 'Passado de adjetivo い: troque い por かった + です.' },
+      { q: 'ここは（　）、きれいな 町です。', o: ['しずかで', 'しずかくて', 'しずかな', 'しずかに'], pt: 'Aqui é uma cidade tranquila e bonita.', why: 'Para ligar adjetivos な use で (しずかで…).' },
+      { q: 'この りんごは 安くて（　）です。', o: ['おいしい', 'おいしいな', 'おいしく', 'おいしかっ'], pt: 'Esta maçã é barata e gostosa.', why: 'Adjetivo い vai direto antes de です.' },
+      { q: 'きのうは 天気（てんき）が（　）。', o: ['よかったです', 'いかったです', 'いいでした', 'よいだった'], pt: 'Ontem o tempo estava bom.', why: 'いい é irregular: o passado é よかった.' },
+      { q: 'この 町は 前は（　）。', o: ['にぎやかでした', 'にぎやかかったです', 'にぎやかだでした', 'にぎやかくなかった'], pt: 'Esta cidade antes era movimentada.', why: 'Passado de adjetivo な: 〜でした.' },
+    ],
+  },
+  {
+    id: 't1', title: 'Forma て', sub: 'ください・います・もいい・はいけない', icon: '🔗',
+    qs: [
+      { q: 'ここに 名前（なまえ）を（　）ください。', o: ['書いて', '書きて', '書くて', '書いた'], pt: 'Escreva seu nome aqui, por favor.', why: 'Verbos em く → いて: 書く → 書いて.' },
+      { q: '今 ごはんを（　）います。', o: ['食べて', '食べた', '食べる', '食べ'], pt: 'Agora estou comendo.', why: '〜ています = ação em andamento.' },
+      { q: '写真（しゃしん）を（　）も いいですか。', o: ['とって', 'とりて', 'とった', 'とる'], pt: 'Posso tirar uma foto?', why: '〜てもいいですか = pedir permissão. る(grupo 1) → って.' },
+      { q: 'ここは きんえんです。たばこを すって（　）。', o: ['はいけません', 'もいいです', 'ください', 'います'], pt: 'Aqui é proibido fumar. Não pode fumar.', why: '〜てはいけません = proibição.' },
+      { q: '兄（あに）は 東京に（　）います。', o: ['住んで', '住みて', '住って', '住むで'], pt: 'Meu irmão mais velho mora em Tóquio.', why: 'む → んで: 住む → 住んで. 住んでいます = morar (estado).' },
+      { q: '朝 シャワーを（　）、学校へ 行きます。', o: ['あびて', 'あびって', 'あびた', 'あびる'], pt: 'De manhã tomo banho e vou à escola.', why: 'A forma て liga ações em sequência. Grupo 2: tire る, ponha て.' },
+      { q: 'ちょっと（　）ください。', o: ['待って', '待ちて', '待て', '待った'], pt: 'Espere um pouco, por favor.', why: 'つ → って: 待つ → 待って.' },
+    ],
+  },
+  {
+    id: 'n1', title: 'Formas ない・た', sub: 'ないで・たことがある・たい', icon: '🧭',
+    qs: [
+      { q: 'ここで 写真を（　）ください。', o: ['とらないで', 'とらなくて', 'とりないで', 'とるないで'], pt: 'Não tire fotos aqui, por favor.', why: '〜ないでください = pedido para não fazer algo.' },
+      { q: '富士山（ふじさん）に（　）ことが あります。', o: ['のぼった', 'のぼって', 'のぼる', 'のぼり'], pt: 'Já subi o Monte Fuji.', why: 'Forma た + ことがあります = experiência (“já fiz”).' },
+      { q: '日本へ（　）たいです。', o: ['行き', '行く', '行って', '行った'], pt: 'Quero ir ao Japão.', why: '〜たい junta-se à raiz da forma ます: 行きます → 行きたい.' },
+      { q: '冬休（ふゆやす）みに 何が（　）か。', o: ['したいです', 'しますたい', 'したくです', 'するたい'], pt: 'O que você quer fazer nas férias de inverno?', why: 'します → したい + です.' },
+      { q: 'かぜですから、きょうは おふろに（　）ください。', o: ['はいらないで', 'はいらなくて', 'はいりないで', 'はいるないで'], pt: 'Como você está resfriado, não tome banho de ofurô hoje.', why: '入る é grupo 1: はいる → はいらない.' },
+      { q: 'まだ すしを（　）ことが ありません。', o: ['食べた', '食べて', '食べる', '食べない'], pt: 'Ainda nunca comi sushi.', why: '〜たことがありません = “nunca fiz”.' },
+    ],
+  },
+  {
+    id: 'c1', title: 'Ligando frases', sub: 'から・が・前に・あとで・とき・ながら', icon: '🌉',
+    qs: [
+      { q: '雨（あめ）が ふっています（　）、かさを もって 行きます。', o: ['から', 'が', 'と', 'まで'], pt: 'Como está chovendo, vou levar guarda-chuva.', why: 'から = “porque / como” (motivo).' },
+      { q: 'この 店は 安いです（　）、おいしくないです。', o: ['が', 'から', 'と', 'を'], pt: 'Esta loja é barata, mas não é gostosa.', why: 'が entre frases = “mas”.' },
+      { q: 'ねる（　）、はを みがきます。', o: ['まえに', 'あとで', 'ながら', 'でも'], pt: 'Escovo os dentes antes de dormir.', why: 'Forma de dicionário + まえに = “antes de”.' },
+      { q: 'しごとが 終（お）わった（　）、飲みに 行きましょう。', o: ['あとで', 'まえに', 'ながら', 'でも'], pt: 'Depois que o trabalho acabar, vamos beber.', why: 'Forma た + あとで = “depois de”.' },
+      { q: '音楽（おんがく）を（　）ながら、べんきょうします。', o: ['聞き', '聞いて', '聞く', '聞いた'], pt: 'Estudo ouvindo música.', why: 'Raiz da forma ます + ながら = duas ações ao mesmo tempo.' },
+      { q: 'ひまな（　）、本を 読みます。', o: ['とき', 'まえに', 'ながら', 'あとで'], pt: 'Quando estou livre, leio livros.', why: 'Adjetivo な + な + とき = “quando”.' },
+    ],
+  },
+  {
+    id: 'e1', title: 'Existência e comparação', sub: 'ある・いる・より・ほう・いちばん', icon: '⚖️',
+    qs: [
+      { q: '教室（きょうしつ）に 学生が 3人（　）。', o: ['います', 'あります', 'です', 'いります'], pt: 'Há 3 alunos na sala.', why: 'Seres vivos (pessoas, animais) usam います.' },
+      { q: 'つくえの 上に かぎが（　）。', o: ['あります', 'います', 'です', 'なります'], pt: 'Há uma chave em cima da mesa.', why: 'Coisas e objetos usam あります.' },
+      { q: '東京は 大阪（おおさか）（　）大きいです。', o: ['より', 'ほう', 'から', 'で'], pt: 'Tóquio é maior que Osaka.', why: 'A より B = “A é mais … que B”.' },
+      { q: '犬と ねこと どちらが 好きですか。…ねこの（　）が 好きです。', o: ['ほう', 'より', 'いちばん', 'もっと'], pt: 'Gosta mais de cachorro ou gato? …Gosto mais de gato.', why: '〜のほうが = “o/a … (é mais)”, resposta a どちら.' },
+      { q: 'くだもので 何が（　）好きですか。', o: ['いちばん', 'より', 'ほう', 'ずつ'], pt: 'Qual fruta você gosta mais?', why: 'いちばん = “o mais” (superlativo).' },
+      { q: 'れいぞうこに 何も（　）。', o: ['ありません', 'あります', 'いません', 'です'], pt: 'Não há nada na geladeira.', why: '何も + negativa = “nada”. Objetos → ありません.' },
+    ],
+  },
+  {
+    id: 'w1', title: 'Interrogativos', sub: 'いつ・どこ・いくら・どうして', icon: '❓',
+    qs: [
+      { q: '誕生日（たんじょうび）は（　）ですか。…5月10日です。', o: ['いつ', 'どこ', 'だれ', 'いくら'], pt: 'Quando é seu aniversário? …Dia 10 de maio.', why: 'いつ = quando.' },
+      { q: 'この かさは（　）ですか。…1,000円です。', o: ['いくら', 'いくつ', 'いつ', 'どれ'], pt: 'Quanto custa este guarda-chuva? …1.000 ienes.', why: 'いくら = quanto (preço).' },
+      { q: '駅（えき）まで（　）で 行きますか。…バスで 行きます。', o: ['なん', 'どこ', 'いつ', 'だれ'], pt: 'Como (com o quê) você vai até a estação? …De ônibus.', why: '何（なん）で = “com o quê / por qual meio”.' },
+      { q: 'トイレは（　）ですか。…あそこです。', o: ['どこ', 'なに', 'どれ', 'いつ'], pt: 'Onde fica o banheiro? …Ali.', why: 'どこ = onde.' },
+      { q: '（　）日本語を べんきょうしていますか。…しごとで つかいますから。', o: ['どうして', 'どこで', 'いつ', 'どんな'], pt: 'Por que você estuda japonês? …Porque uso no trabalho.', why: 'どうして = por quê. A resposta termina em から.' },
+      { q: 'りんごを（　）買いましたか。…3つ 買いました。', o: ['いくつ', 'いくら', 'なんじ', 'どれ'], pt: 'Quantas maçãs você comprou? …Comprei 3.', why: 'いくつ = quantos (contagem com 〜つ).' },
+    ],
+  },
+];
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var STAGES = (window.N5_STAGES || []).slice();
+  var ALL = [];
+  STAGES.forEach(function (s) { ALL = ALL.concat(s.qs); });
+  STAGES.push({ id: 'final', title: 'Desafio final', sub: 'まとめ・10 questões misturadas', icon: '🏯', final: true, qs: [] });
+
+  var MAX_HEARTS = 3;
+  var SAVE_KEY = 'tryn5-quest-v1';
+  var app = document.getElementById('app');
+
+  // ---------- progresso salvo ----------
+  function load() {
+    try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || { stars: {}, xp: 0 }; }
+    catch (e) { return { stars: {}, xp: 0 }; }
+  }
+  function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); } catch (e) {} }
+  var progress = load();
+
+  // ---------- utilitários ----------
+  function h(tag, attrs, kids) {
+    var el = document.createElement(tag);
+    for (var k in attrs || {}) {
+      if (k === 'class') el.className = attrs[k];
+      else if (k === 'text') el.textContent = attrs[k];
+      else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), attrs[k]);
+      else if (attrs[k] !== false && attrs[k] != null) el.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return el;
+  }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function starsText(n) { return '★★★'.slice(0, n) + '☆☆☆'.slice(0, 3 - n); }
+  function unlocked(i) { return i === 0 || (progress.stars[STAGES[i - 1].id] || 0) > 0; }
+  var keyHandler = null;
+  function onKey(fn) { keyHandler = fn; }
+  document.addEventListener('keydown', function (e) { if (keyHandler) keyHandler(e); });
+  function mount(screen) { app.innerHTML = ''; app.appendChild(screen); onKey(null); var f = screen.querySelector('[autofocus]'); if (f) f.focus(); }
+
+  // ---------- telas ----------
+  function titleScreen() {
+    var total = Object.keys(progress.stars).reduce(function (s, k) { return s + progress.stars[k]; }, 0);
+    mount(h('div', { class: 'screen center' }, [
+      h('p', { class: 'title-jp', lang: 'ja', text: '文法クエスト' }),
+      h('h1', { class: 'title', text: 'Try! N5 Grammar Quest' }),
+      h('p', { class: 'muted', text: 'Complete as fases de gramática do JLPT N5. Errou 3 vezes, recomeça a fase!' }),
+      total ? h('p', { class: 'muted', text: '★ ' + total + ' estrelas · ' + progress.xp + ' XP' }) : null,
+      h('div', { class: 'row' }, [
+        h('button', { class: 'btn', autofocus: '', text: total ? 'Continuar' : 'Começar', onclick: mapScreen }),
+      ]),
+    ]));
+  }
+
+  function mapScreen() {
+    var list = h('div', { class: 'stages' });
+    STAGES.forEach(function (s, i) {
+      var open = s.final ? STAGES.slice(0, -1).every(function (x) { return progress.stars[x.id] > 0; }) : unlocked(i);
+      var st = progress.stars[s.id] || 0;
+      list.appendChild(h('button', {
+        class: 'stage', disabled: open ? false : '', onclick: function () { startStage(s); },
+        'aria-label': s.title + (open ? '' : ' (bloqueada)'),
+      }, [
+        h('span', { class: 'ic', text: open ? s.icon : '🔒' }),
+        h('span', {}, [h('div', { class: 'nm', text: (i + 1) + '. ' + s.title }), h('div', { class: 'sb', lang: 'ja', text: s.sub })]),
+        h('span', { class: 'st', text: st ? starsText(st) : '' }),
+      ]));
+    });
+    mount(h('div', { class: 'screen' }, [
+      h('div', { class: 'top' }, [
+        h('button', { class: 'btn ghost', text: '← Início', onclick: titleScreen }),
+        h('span', { class: 'pill', text: '⭐ ' + progress.xp + ' XP' }),
+      ]),
+      h('h2', { class: 'title', text: 'Mapa da jornada' }),
+      list,
+    ]));
+  }
+
+  function startStage(stage) {
+    var qs = stage.final ? shuffle(ALL).slice(0, 10) : shuffle(stage.qs);
+    var st = { stage: stage, qs: qs, i: 0, hearts: MAX_HEARTS, mistakes: 0, streak: 0, xp: 0 };
+    question(st);
+  }
+
+  function question(st) {
+    var item = st.qs[st.i];
+    var opts = shuffle(item.o.map(function (t, idx) { return { t: t, ok: idx === 0 }; }));
+    var answered = false;
+    var optsBox = h('div', { class: 'opts' });
+    var fbBox = h('div');
+    var card = h('div', { class: 'qcard' }, [h('p', { class: 'q', lang: 'ja', text: item.q })]);
+
+    function choose(o, btn) {
+      if (answered) return;
+      answered = true;
+      Array.prototype.forEach.call(optsBox.children, function (b, k) {
+        b.disabled = true;
+        if (opts[k].ok) b.classList.add('ok');
+      });
+      if (o.ok) {
+        st.streak++;
+        var gain = 10 + Math.min(st.streak - 1, 5) * 2;
+        st.xp += gain;
+      } else {
+        btn.classList.add('bad');
+        card.classList.add('shake');
+        st.hearts--; st.mistakes++; st.streak = 0;
+      }
+      hearts.textContent = heartText();
+      var correct = item.o[0];
+      var last = st.hearts <= 0 || st.i === st.qs.length - 1;
+      var next = h('button', { class: 'btn', autofocus: '', text: last ? 'Ver resultado' : 'Próxima →', onclick: advance });
+      fbBox.appendChild(h('div', { class: 'fb ' + (o.ok ? 'ok' : 'bad'), role: 'status' }, [
+        h('h3', { text: o.ok ? (st.streak > 1 ? 'せいかい！ ' + st.streak + ' seguidas 🔥' : 'せいかい！ Correto!') : 'ざんねん… Resposta: ' + correct }),
+        h('p', { lang: 'ja', text: item.q.replace('（　）', correct) }),
+        h('p', { class: 'muted', text: '🇧🇷 ' + item.pt }),
+        h('p', { text: '💡 ' + item.why }),
+      ]));
+      fbBox.appendChild(h('div', { class: 'row', style: 'margin-top:12px' }, [next]));
+      next.focus();
+      onKey(function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); advance(); } });
+    }
+    function advance() {
+      if (st.hearts <= 0) return result(st, false);
+      st.i++;
+      if (st.i >= st.qs.length) return result(st, true);
+      question(st);
+    }
+    function heartText() { return '❤️'.repeat(Math.max(st.hearts, 0)) + '🖤'.repeat(MAX_HEARTS - Math.max(st.hearts, 0)); }
+
+    opts.forEach(function (o, k) {
+      var b = h('button', { class: 'opt', lang: 'ja', onclick: function () { choose(o, b); } }, [h('span', { class: 'k', text: String(k + 1) }), o.t]);
+      optsBox.appendChild(b);
+    });
+    var hearts = h('span', { class: 'pill', 'aria-label': 'vidas', text: heartText() });
+
+    mount(h('div', { class: 'screen' }, [
+      h('div', { class: 'top' }, [
+        h('button', { class: 'btn ghost', text: '✕', 'aria-label': 'Sair da fase', onclick: mapScreen }),
+        h('span', { class: 'pill', text: st.stage.icon + ' ' + st.stage.title }),
+        hearts,
+      ]),
+      h('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': st.qs.length, 'aria-valuenow': st.i }, [
+        h('i', { style: 'width:' + (st.i / st.qs.length * 100) + '%' }),
+      ]),
+      h('p', { class: 'muted', style: 'margin:0', text: 'Questão ' + (st.i + 1) + ' de ' + st.qs.length + ' · escolha a opção que completa a frase' }),
+      card, optsBox, fbBox,
+    ]));
+    onKey(function (e) {
+      var n = parseInt(e.key, 10);
+      if (n >= 1 && n <= opts.length) choose(opts[n - 1], optsBox.children[n - 1]);
+    });
+  }
+
+  function result(st, cleared) {
+    var stars = cleared ? Math.max(1, 3 - st.mistakes) : 0;
+    var id = st.stage.id;
+    var best = progress.stars[id] || 0;
+    if (cleared) {
+      progress.xp += st.xp;
+      if (stars > best) progress.stars[id] = stars;
+      save();
+    }
+    var idx = STAGES.indexOf(st.stage);
+    var nextStage = STAGES[idx + 1];
+    var canNext = cleared && nextStage && (!nextStage.final || STAGES.slice(0, -1).every(function (x) { return progress.stars[x.id] > 0; }));
+    mount(h('div', { class: 'screen center' }, [
+      h('p', { class: 'title-jp', lang: 'ja', text: cleared ? (stars === 3 ? 'かんぺき！' : 'クリア！') : 'ゲームオーバー' }),
+      cleared ? h('div', { class: 'big-stars', 'aria-label': stars + ' de 3 estrelas', text: starsText(stars) }) : null,
+      h('p', { text: cleared
+        ? st.stage.title + ' concluída com ' + st.mistakes + ' erro(s). +' + st.xp + ' XP'
+        : 'Os corações acabaram. Revise as explicações e tente de novo — がんばって！' }),
+      h('div', { class: 'row' }, [
+        canNext ? h('button', { class: 'btn', autofocus: '', text: 'Próxima fase →', onclick: function () { startStage(nextStage); } }) : null,
+        h('button', { class: canNext ? 'btn ghost' : 'btn', autofocus: canNext ? false : '', text: 'Jogar de novo', onclick: function () { startStage(st.stage); } }),
+        h('button', { class: 'btn ghost', text: 'Mapa', onclick: mapScreen }),
+      ]),
+    ]));
+  }
+
+  if (!STAGES.length || !ALL.length) throw new Error('dados das fases não carregaram (src/data.js)');
+  titleScreen();
+})();
+</script>
+  </body>
+</html>
