@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Try! N5 Grammar Quest</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Lexend:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #0f0f1a;
+        color: #e0e0e0;
+        font-family: 'Lexend', 'Noto Sans JP', sans-serif;
+        overflow: hidden;
+      }
+      #app {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+      .loading {
+        color: #e0e0e0;
+        font-size: 1.2rem;
+        letter-spacing: 0.02em;
+      }
+      .boot-error {
+        max-width: 32rem;
+        margin: 0 16px;
+        padding: 1.25rem 1.5rem;
+        border: 1px solid #ff6b6b55;
+        border-radius: 12px;
+        background: #1a1a2b;
+        line-height: 1.5;
+      }
+      .boot-error h1 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #ff8787; }
+      .boot-error p { margin: 0.4rem 0; font-size: 0.95rem; }
+      .boot-error code {
+        background: #0f0f1a; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em;
+      }
+    </style>
+    <script>
+      // Mostra uma mensagem útil em vez de "carregando" infinito
+      // quando o script principal não carrega ou falha ao iniciar.
+      window.__bootFail = function (detail) {
+        var app = document.getElementById('app');
+        if (!app || !app.querySelector('.loading')) return; // app já montou
+        var isFile = location.protocol === 'file:';
+        app.innerHTML =
+          '<div class="boot-error" role="alert">' +
+          '<h1>Não foi possível iniciar o jogo</h1>' +
+          (isFile
+            ? '<p>A página foi aberta direto do disco (<code>file://</code>). ' +
+              'Navegadores bloqueiam scripts <code>type="module"</code> nesse modo.</p>' +
+              '<p>Rode um servidor local na pasta do projeto, por exemplo ' +
+              '<code>npm run dev</code> (Vite) ou <code>npx vite</code>.</p>'
+            : '<p>O arquivo <code>src/main.js</code> não foi encontrado ou gerou um erro.</p>' +
+              '<p>Confira se ele existe ao lado deste <code>index.html</code> e se o servidor ' +
+              'está rodando na raiz do projeto.</p>') +
+          (detail ? '<p><small>Detalhe: ' + String(detail).replace(/</g, '&lt;') + '</small></p>' : '') +
+          '</div>';
+      };
+      window.addEventListener('error', function (e) {
+        if (e.target && e.target.tagName === 'SCRIPT') return; // tratado no onerror
+        window.__bootFail(e.message);
+      }, true);
+      window.addEventListener('unhandledrejection', function (e) {
+        window.__bootFail(e.reason && (e.reason.message || e.reason));
+      });
+      // Rede de segurança: se nada montou em 10 s, avisa.
+      setTimeout(function () { window.__bootFail('tempo de carregamento esgotado'); }, 10000);
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <p class="loading" lang="ja">読み込み中…</p>
+    </div>
+    <noscript>
+      <p style="text-align:center">Ative o JavaScript para jogar.</p>
+    </noscript>
+    <script
+      type="module"
+      src="./src/main.js"
+      onerror="window.__bootFail('falha ao carregar ./src/main.js')"
+    ></script>
+  </body>
+</html>
