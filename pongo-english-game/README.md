@@ -137,6 +137,23 @@ Adaptação para o francês da mesma aula da versão em japonês (**dias da sema
 - **Erros comuns** de brasileiros viraram desafios: « à la école », « à le parc », « à bus », « À demain » no lugar de « Demain », « à tous les jours ».
 - **Voz:** voz francesa (fr-FR) do aparelho.
 
+## Pongo and the Prepositions (preposições em inglês, A1)
+
+Jogo do Pongo dedicado às preposições em inglês para o nível A1, com o tema "Where's Pongo?".
+
+- **Arquivos únicos:** `pongo-preposicoes-2d.html` (2D cartoon) e `pongo-preposicoes.html` (3D). Versões em pastas: `preposicoes-2d.html` e `preposicoes.html`.
+- **Conteúdo:** `js/levels-prep.js`, com 7 paradas e 63 desafios:
+  1. in, on, under
+  2. next to, between, behind, in front of
+  3. at, on, in de tempo (at 7 o'clock, on Monday, in July, at night)
+  4. to, from, into, out of (e "go home" sem to)
+  5. at home, at school, in the garden, on the bus, in the car
+  6. with, without, for, by bus, on foot, about
+  7. Revisão "Where's Pongo?"
+- **Blocos:** a preposição tem bloco próprio, em laranja, e os distratores são outras preposições. Assim, o aluno precisa escolher a certa.
+- **Desafios de cena:** o aluno olha a cena (🐶📦) e escolhe a frase certa ("Pongo is in the box").
+- **Erros comuns:** "in front the TV", "next the park", "on the morning", "go to home", "by foot", "in work".
+
 ## Versão 2D (cartoon)
 
 Mesmo jogo, com o jardim desenhado em 2D no traço dos sprites do Pongo, sem Three.js. Os arquivos ficam 5× menores (cerca de 1 MB) e rodam bem em celulares mais simples.
