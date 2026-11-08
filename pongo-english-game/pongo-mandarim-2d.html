@@ -1053,40 +1053,53 @@ body.lang-ja {
     sfx((t, bus) => osc('triangle', 440, t, 0.4, 0.25, bus, { slideTo: 110, slideTime: 0.35 }));
 
   // ------------------------------------------------------------ speech (TTS)
-  // The language comes from the content pack (en-US for English, ko-KR for Korean).
-  let voice = null;
+  // O idioma vem do pacote de conteúdo (en-US, ko-KR, zh-CN, ja-JP, fr-FR).
+  // A voz é escolhida na hora de falar, pelo idioma do jogo aberto: o pacote
+  // carrega depois deste arquivo, então escolher antes prendia a voz em inglês.
+  // Nunca usamos voz de outro idioma (seria o texto lido com sotaque errado).
   const lang = () => (window.PongoPack && window.PongoPack.lang) || 'en-US';
+  // vozes de melhor qualidade, por idioma
+  const PREFERRED = {
+    en: /Google US English|Samantha|Aria|Jenny|Natural|Premium|Enhanced/i,
+    fr: /Google fran|Am[ée]lie|Thomas|Audrey|Marie|Denise|Henri|Eloise|Vivienne|Natural|Premium|Enhanced/i,
+    ko: /Google 한국|Yuna|SunHi|Heami|InJoon|Natural|Premium/i,
+    zh: /Google 普通话|Tingting|Ting-Ting|Xiaoxiao|Yunxi|Huihui|Natural|Premium/i,
+    ja: /Google 日本語|Kyoko|Otoya|Nanami|Keita|Haruka|Natural|Premium/i,
+  };
+  let voice = null, voiceFor = '';
   function pickVoice() {
-    if (!('speechSynthesis' in window)) return;
+    if (!('speechSynthesis' in window)) return null;
     const vs = speechSynthesis.getVoices();
     const full = lang();
-    const base = full.split('-')[0];
-    const exact = new RegExp('^' + full.replace('-', '[-_]'), 'i');
+    const base = full.split('-')[0].toLowerCase();
+    const norm = (v) => (v.lang || '').replace('_', '-').toLowerCase();
+    const same = vs.filter((v) => norm(v).split('-')[0] === base);
+    const exact = same.filter((v) => norm(v) === full.toLowerCase());
+    const good = PREFERRED[base] || /Natural|Premium|Enhanced/i;
     voice =
-      vs.find((v) => exact.test(v.lang) && /Google|Samantha|Aria|Jenny|Natural|Yuna|SunHi|Heami/i.test(v.name)) ||
-      vs.find((v) => exact.test(v.lang)) ||
-      vs.find((v) => new RegExp('^' + base, 'i').test(v.lang)) ||
-      null;
+      exact.find((v) => good.test(v.name)) || same.find((v) => good.test(v.name)) ||
+      exact.find((v) => v.localService) || exact[0] || same[0] || null;
+    voiceFor = full;
+    return voice;
   }
+  const currentVoice = () => (voice && voiceFor === lang() ? voice : pickVoice());
   if ('speechSynthesis' in window) {
-    pickVoice();
-    speechSynthesis.onvoiceschanged = pickVoice;
+    speechSynthesis.onvoiceschanged = () => { voice = null; pickVoice(); };
   }
   A.canSpeak = () => 'speechSynthesis' in window;
-  /** true when the device has a voice for the pack's language */
-  A.hasVoice = () => {
-    if (!A.canSpeak()) return false;
-    if (!voice) pickVoice();
-    return !!voice;
-  };
+  /** true quando o aparelho tem uma voz no idioma do jogo */
+  A.hasVoice = () => A.canSpeak() && !!currentVoice();
+  A.voiceName = () => { const v = A.canSpeak() && currentVoice(); return v ? `${v.name} (${v.lang})` : ''; };
   A.speak = function (text, slow) {
     if (!A.canSpeak()) return;
     try {
-      if (!voice) pickVoice();
+      const v = currentVoice();
+      // há vozes no aparelho, mas nenhuma neste idioma: melhor calar do que ler com sotaque errado
+      if (!v && speechSynthesis.getVoices().length) return;
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang();
-      if (voice) u.voice = voice;
+      u.lang = v ? v.lang : lang();
+      if (v) u.voice = v;
       u.rate = slow ? 0.6 : 0.92;
       u.pitch = 1.1;
       duck(0.35, 1.5 + text.length * 0.06);
@@ -3909,10 +3922,17 @@ window.PongoSprites = {"walk": "data:image/webp;base64,UklGRgSwAQBXRUJQVlA4WAoAA
   setToggle($('btn-music'), save.music);
   setToggle($('btn-sfx'), save.sfx);
 
+  const LANG_NAME = { en: 'inglês', ko: 'coreano', zh: 'mandarim', ja: 'japonês', fr: 'francês' };
   function ready(msg) {
     $('btn-play').disabled = false;
     $('btn-play').textContent = save.xp ? 'Continuar' : 'Jogar';
     $('load-status').textContent = msg;
+    // avisa se o aparelho não tem voz no idioma do jogo (as vozes chegam depois de alguns instantes)
+    setTimeout(() => {
+      if (!Audio.canSpeak() || Audio.hasVoice() || !speechSynthesis.getVoices().length) return;
+      $('load-status').textContent = `${msg} Este aparelho não tem voz em ${LANG_NAME[P.id] || 'neste idioma'}: a pronúncia aparece escrita. ` +
+        'Para ouvir, instale a voz nas configurações de idioma e fala do aparelho.';
+    }, 1500);
   }
 
   if (Map3D) {

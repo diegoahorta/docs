@@ -180,10 +180,17 @@
   setToggle($('btn-music'), save.music);
   setToggle($('btn-sfx'), save.sfx);
 
+  const LANG_NAME = { en: 'inglês', ko: 'coreano', zh: 'mandarim', ja: 'japonês', fr: 'francês' };
   function ready(msg) {
     $('btn-play').disabled = false;
     $('btn-play').textContent = save.xp ? 'Continuar' : 'Jogar';
     $('load-status').textContent = msg;
+    // avisa se o aparelho não tem voz no idioma do jogo (as vozes chegam depois de alguns instantes)
+    setTimeout(() => {
+      if (!Audio.canSpeak() || Audio.hasVoice() || !speechSynthesis.getVoices().length) return;
+      $('load-status').textContent = `${msg} Este aparelho não tem voz em ${LANG_NAME[P.id] || 'neste idioma'}: a pronúncia aparece escrita. ` +
+        'Para ouvir, instale a voz nas configurações de idioma e fala do aparelho.';
+    }, 1500);
   }
 
   if (Map3D) {
