@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pongo Learns English</title>
+<meta name="description" content="Jogo de inglês com o Pongo: have / have got, perguntas com do/does, present continuous × present simple. ODU Creative.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fff5df; --paper:#fffdf7; --ink:#1d1b2f; --muted:#5b5872;
+  --red:#d63c55; --teal:#2f86a6; --yellow:#f4b324; --navy:#1f2a5a; --green:#2f9e63;
+  --a:#d63c55; --b:#2f86a6; --c:#e59a12;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--cream);
+  background-image:radial-gradient(rgba(29,27,47,.06) 1.5px, transparent 1.6px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:"Nunito",system-ui,sans-serif; font-size:17px; line-height:1.45;
+  -webkit-tap-highlight-color:transparent;
+}
+#app{max-width:1000px;margin:0 auto;padding:10px 16px 40px}
+h1,h2,h3,.baloo{font-family:"Baloo 2","Nunito",system-ui,sans-serif;line-height:1.1;margin:0}
+.screen{display:none}
+.screen.on{display:block;animation:pop .25s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fr{font-family:"Baloo 2",system-ui,sans-serif;font-weight:700}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px;min-height:48px}
+.top .logo{height:40px;width:auto;cursor:pointer}
+.top .grow{flex:1}
+.iconbtn{border:2.5px solid var(--ink);background:var(--paper);border-radius:12px;width:42px;height:42px;font-size:20px;cursor:pointer;box-shadow:0 3px 0 var(--ink);display:grid;place-items:center;padding:0}
+.iconbtn[aria-pressed="false"]{opacity:.45}
+.iconbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+
+/* buttons */
+.btn{font:800 19px/1 "Baloo 2",system-ui,sans-serif;border:3px solid var(--ink);border-radius:14px;padding:12px 20px 10px;background:var(--yellow);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn.alt{background:var(--paper)}
+.btn.red{background:var(--red);color:#fff}
+.btn.teal{background:var(--teal);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.center{justify-content:center;text-align:center}
+
+.card{background:var(--paper);border:3px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink);padding:18px}
+
+/* title */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center}
+.hero h1{font-size:clamp(38px,7vw,64px);color:var(--red);-webkit-text-stroke:2px var(--ink);text-shadow:0 4px 0 var(--ink);letter-spacing:.5px}
+.hero h1 span{color:var(--teal)}
+.hero .tag{display:inline-block;background:var(--navy);color:#fff;border-radius:10px;padding:4px 10px;font-weight:800;font-size:14px;margin-bottom:10px}
+.hero p{color:var(--muted);margin:12px 0 18px}
+.hero .capa{width:100%;max-width:380px;border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);transform:rotate(2deg);display:block;margin:0 auto}
+.spr{background-repeat:no-repeat;background-size:auto 100%;image-rendering:auto}
+.credit{margin-top:26px;color:var(--muted);font-size:14px;display:flex;align-items:center;gap:10px;justify-content:center}
+.credit img{height:28px}
+
+/* map */
+.maphead{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
+.maphead h2{font-size:32px}
+.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.lvl{position:relative;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.lvl:hover{transform:translateY(-2px)}
+.lvl .n{font:800 15px "Baloo 2";color:#fff;background:var(--teal);border-radius:8px;padding:2px 8px;display:inline-block}
+.lvl h3{font-size:24px;margin:8px 0 2px}
+.lvl .sub{color:var(--muted);font-size:15px}
+.lvl .stars{font-size:22px;letter-spacing:2px;margin-top:8px;color:var(--yellow);-webkit-text-stroke:1px var(--ink)}
+.lvl.locked{filter:grayscale(1);opacity:.6;cursor:not-allowed}
+.lvl.locked::after{content:"🔒";position:absolute;right:14px;top:12px;font-size:26px}
+.lvl .thumb{position:absolute;right:10px;bottom:10px;width:64px;height:64px;border-radius:12px;border:2px solid var(--ink);object-fit:cover}
+
+/* intro (mini-aula) */
+.intro h2{font-size:34px;color:var(--navy)}
+.intro .story{background:#fff1c9;border:2px dashed var(--ink);border-radius:14px;padding:10px 14px;margin:12px 0}
+.conj{width:100%;border-collapse:separate;border-spacing:0 6px;margin:6px 0}
+.conj td{padding:6px 10px;background:#fff;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.conj td:first-child{border-left:2px solid var(--ink);border-radius:10px 0 0 10px;color:var(--muted);width:34%}
+.conj td:last-child{border-right:2px solid var(--ink);border-radius:0 10px 10px 0;width:48px;text-align:center}
+.conj b{color:var(--red)}
+.say{border:2px solid var(--ink);background:var(--yellow);border-radius:10px;cursor:pointer;font-size:16px;width:38px;height:34px;padding:0}
+.tips{margin:10px 0 0;padding-left:20px}
+.tips li{margin:4px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* play */
+.hud{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.hud .ttl{font:800 20px "Baloo 2";flex:1;min-width:160px}
+.hud .pill{background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;padding:3px 12px;font-weight:800;white-space:nowrap}
+.prog{height:12px;border:2.5px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden;margin-bottom:10px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--teal));transition:width .4s}
+.stage{position:relative;border:3px solid var(--ink);border-radius:20px;overflow:hidden;box-shadow:0 6px 0 var(--ink);background:#bfe6f5}
+canvas{display:block;width:100%;height:auto;aspect-ratio:960/360}
+.toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:800 24px "Baloo 2";background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:6px 16px;box-shadow:0 4px 0 var(--ink);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(4px)}
+.qcard{margin-top:14px;display:flex;gap:12px;align-items:flex-start}
+.avatar{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font:800 22px "Baloo 2";color:#fff;background:var(--navy);overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.bubble{flex:1;position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;min-height:52px}
+.bubble::before{content:"";position:absolute;left:-12px;top:16px;border:9px solid transparent;border-right-color:var(--ink)}
+.bubble .who{font:800 14px "Baloo 2";color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.bubble .q{font:700 clamp(20px,3.2vw,27px)/1.25 "Baloo 2";margin:2px 0}
+.bubble .q .gap{display:inline-block;min-width:70px;border-bottom:3px solid var(--red);color:var(--red);text-align:center}
+.bubble .pt{color:var(--muted);font-size:15px}
+.bubble .say{position:absolute;right:10px;top:10px}
+.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.ans{font:700 clamp(17px,2.4vw,21px)/1.15 "Baloo 2";border:3px solid var(--ink);border-radius:14px;padding:12px 10px 10px;color:#fff;cursor:pointer;box-shadow:0 4px 0 var(--ink);display:flex;align-items:center;gap:8px;text-align:left;min-height:58px}
+.ans .k{flex:none;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:8px;width:28px;height:28px;display:grid;place-items:center;font-size:17px}
+.ans[data-i="0"]{background:var(--a)}
+.ans[data-i="1"]{background:var(--b)}
+.ans[data-i="2"]{background:var(--c)}
+.ans.sel{outline:4px solid var(--ink);outline-offset:2px}
+.ans.good{background:var(--green)!important}
+.ans.bad{background:#8a8796!important;text-decoration:line-through}
+.ans:disabled{cursor:default}
+.ans:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.hint{color:var(--muted);font-size:14px;margin-top:8px;text-align:center}
+.feedback{margin-top:12px;border-radius:16px;border:3px solid var(--ink);padding:12px 14px;display:none;gap:12px;align-items:center}
+.feedback.on{display:flex}
+.feedback.ok{background:#dff5e8}
+.feedback.ko{background:#ffe1e4}
+.feedback .big{font:800 22px "Baloo 2"}
+.feedback .full{font:700 21px "Baloo 2";color:var(--navy)}
+.feedback .tip{font-size:15px;color:var(--ink)}
+.feedback .grow{flex:1}
+
+/* builder */
+.slots{min-height:64px;border:3px dashed var(--ink);border-radius:14px;background:#fff;padding:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.slots:empty::before{content:"Toque nas palavras para montar a frase…";color:var(--muted);padding:6px}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center}
+.tile{font:700 21px/1 "Baloo 2";border:3px solid var(--ink);border-radius:12px;padding:10px 14px 8px;background:var(--paper);cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.tile.used{visibility:hidden}
+.slots .tile{background:#fff1c9}
+
+/* end */
+.end{text-align:center}
+.end h2{font-size:40px;color:var(--red);-webkit-text-stroke:1.5px var(--ink)}
+.end .stars{font-size:54px;letter-spacing:6px;color:var(--yellow);-webkit-text-stroke:2px var(--ink)}
+.end .stars .off{color:#ddd}
+.reward{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.sticker{width:170px;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px;box-shadow:0 5px 0 var(--ink);animation:spin .6s ease-out both}
+.sticker img{width:100%;border-radius:10px;display:block}
+.sticker b{display:block;font:800 15px "Baloo 2";margin-top:6px}
+@keyframes spin{from{transform:scale(.3) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+
+/* album */
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.slot{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px;text-align:center;box-shadow:0 4px 0 var(--ink)}
+.slot img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;display:block}
+.slot.lock img{filter:grayscale(1) blur(5px) brightness(1.15);opacity:.5}
+.slot b{display:block;font:800 15px "Baloo 2";margin-top:6px}
+.slot small{color:var(--muted);font-size:12.5px;display:block;line-height:1.25}
+
+/* caderno */
+.cad h2{font-size:32px;margin-bottom:10px}
+.cad h3{font-size:24px;color:var(--teal);margin:6px 0}
+.cad .card{margin-bottom:16px}
+.err{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:15px}
+.err .x{color:var(--red);text-decoration:line-through}
+.err .v{color:var(--green);font-weight:800}
+
+@media (max-width:700px){
+  .hero{grid-template-columns:1fr}
+  .hero .capa{max-width:260px}
+  .cols{grid-template-columns:1fr}
+  .answers{grid-template-columns:1fr}
+  .ans{min-height:50px}
+  .bubble .say{position:static;float:right;margin-left:6px}
+  .top .logo{height:32px}
+  .hud{gap:8px}
+  .hud .ttl{flex-basis:100%;font-size:18px}
+  .hud .pill{font-size:15px;padding:2px 10px}
+  .hud .iconbtn{margin-left:auto;width:36px;height:36px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="top">
+    <img class="logo" src="../pongo-francais/assets/logo.png" alt="ODU Creative" id="homeLogo">
+    <div class="grow"></div>
+    <button class="iconbtn" id="btnCad" title="Caderno (gramática)" aria-label="Caderno">📒</button>
+    <button class="iconbtn" id="btnAlbum" title="Álbum de figurinhas" aria-label="Álbum">🖼️</button>
+    <button class="iconbtn" id="btnVoice" title="Voz em francês automática" aria-pressed="true" aria-label="Voz">🗣️</button>
+    <button class="iconbtn" id="btnSfx" title="Efeitos sonoros" aria-pressed="true" aria-label="Efeitos">🔊</button>
+  </header>
+
+  <!-- TÍTULO -->
+  <section class="screen on" id="scr-title">
+    <div class="hero">
+      <div>
+        <span class="tag">Inglês · Units 7, 8 e 9</span>
+        <h1>Pongo <span>learns</span> English</h1>
+        <p>O <b>Senhor Tromba</b>, o elefantinho de pelúcia do Pongo, sumiu durante a aula de inglês da teacher Kate! Para encontrá-lo, o Pongo precisa fazer perguntas e responder a todo mundo. Ajude o Pongo com <span class="fr">have / have got</span>, <span class="fr">Do you…?</span> e <span class="fr">I am doing × I do</span>!</p>
+        <div class="row">
+          <button class="btn red" id="btnStart">▶ Play!</button>
+          <button class="btn alt" id="btnCad2">📒 Caderno</button>
+        </div>
+        <div style="margin-top:18px;height:150px;display:flex;align-items:flex-end;gap:6px">
+          <div class="spr" id="titleDog" style="height:150px"></div>
+        </div>
+      </div>
+      <img class="capa" src="../pongo-francais/assets/st_capa.webp" alt="Pongo e Senhor Tromba">
+    </div>
+    <div class="credit"><img src="../pongo-francais/assets/logo.png" alt="">Caderno de Inglês · ODU Creative</div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="screen" id="scr-map">
+    <div class="maphead">
+      <h2>Pongo’s Adventure</h2>
+      <div class="pill hud"><span class="pill" id="totalStars">⭐ 0/15</span><span class="pill" id="totalStickers">🖼️ 0</span></div>
+    </div>
+    <div class="levels" id="levels"></div>
+  </section>
+
+  <!-- MINI-AULA -->
+  <section class="screen intro" id="scr-intro">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <span class="n" id="inN" style="font:800 15px 'Baloo 2';color:#fff;background:var(--teal);border-radius:8px;padding:2px 8px">Fase 1</span>
+          <h2 id="inTitle" style="margin-top:6px"></h2>
+          <div class="sub" id="inSub" style="color:var(--muted)"></div>
+        </div>
+        <div class="spr" id="introDog" style="height:120px"></div>
+      </div>
+      <div class="story" id="inStory"></div>
+      <div id="inBody"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn red" id="btnPlay">▶ Let’s go!</button>
+        <button class="btn alt" id="btnBack1">← Mapa</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOGO -->
+  <section class="screen" id="scr-play">
+    <div class="hud">
+      <div class="ttl" id="pTitle"></div>
+      <span class="pill" id="pLives">🥐🥐🥐</span>
+      <span class="pill" id="pCombo">🔥 0</span>
+      <span class="pill" id="pScore">0 pts</span>
+      <button class="iconbtn" id="btnQuit" title="Voltar ao mapa" aria-label="Sair">✖</button>
+    </div>
+    <div class="prog"><i id="pProg"></i></div>
+    <div class="stage">
+      <canvas id="cv" width="960" height="360"></canvas>
+      <div class="toast" id="toast"></div>
+    </div>
+    <div class="qcard">
+      <div class="avatar" id="qAv">C</div>
+      <div class="bubble">
+        <button class="say" id="qSay" title="Ouvir">🔊</button>
+        <div class="who" id="qWho"></div>
+        <div class="q" id="qText"></div>
+        <div class="pt" id="qPt"></div>
+      </div>
+    </div>
+    <div id="mcArea">
+      <div class="answers" id="answers"></div>
+      <div class="hint">Escolha a placa certa antes que ela chegue ao Pongo · teclas <b>1 2 3</b></div>
+    </div>
+    <div id="buildArea" style="display:none">
+      <div class="slots" id="slots"></div>
+      <div class="pool" id="pool"></div>
+      <div class="row center" style="margin-top:12px">
+        <button class="btn alt" id="btnClear">↺ Limpar</button>
+        <button class="btn teal" id="btnCheck">✔ Check</button>
+      </div>
+    </div>
+    <div class="feedback" id="fb">
+      <div class="grow">
+        <div class="big" id="fbBig"></div>
+        <div class="full fr" id="fbFull"></div>
+        <div class="tip" id="fbTip"></div>
+      </div>
+      <button class="say" id="fbSay" title="Ouvir">🔊</button>
+      <button class="btn" id="btnNext">Continue ▶</button>
+    </div>
+  </section>
+
+  <!-- FIM DE FASE -->
+  <section class="screen end" id="scr-end">
+    <div class="card">
+      <h2 id="endTitle">Well done!</h2>
+      <div class="stars" id="endStars"></div>
+      <p id="endText"></p>
+      <div class="reward" id="endReward"></div>
+      <div class="row center">
+        <button class="btn red" id="btnNextLvl">Próxima fase ▶</button>
+        <button class="btn alt" id="btnRetry">↺ Jogar de novo</button>
+        <button class="btn alt" id="btnMap">🗺️ Mapa</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÁLBUM -->
+  <section class="screen" id="scr-album">
+    <div class="maphead"><h2 class="baloo" style="font-size:32px">Álbum: Pongo &amp; Senhor Tromba</h2><button class="btn alt" data-go="map">🗺️ Mapa</button></div>
+    <div class="album" id="album"></div>
+  </section>
+
+  <!-- CADERNO -->
+  <section class="screen cad" id="scr-cad">
+    <div class="maphead"><h2>📒 Caderno do Pongo</h2><button class="btn alt" id="btnCadBack">← Voltar</button></div>
+    <div id="cadBody"></div>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   DADOS DA AULA — Inglês · Units 7, 8 e 9
+   Foco: s'appeler e habiter (+ à / au / en)
+   ============================================================ */
+const PEOPLE = {
+  Kate:{name:"Kate · teacher", color:"#d63c55"},
+  Ben:{name:"Ben · classmate", color:"#2f86a6"},
+  Lily:{name:"Lily · Ben’s sister", color:"#8b4fb3"},
+  Sam:{name:"Sam · neighbour", color:"#1f2a5a"},
+  Pongo:{name:"Pongo", img:"../pongo-francais/assets/st_feliz.webp"},
+  Tromba:{name:"Senhor Tromba", img:"../pongo-francais/assets/st_juntos.webp"},
+  Caderno:{name:"Caderno", color:"#e59a12", ch:"📒"}
+};
+
+const T_HAVE = `
+<table class="conj">
+<tr><td>I / you / we / they</td><td class="fr"><b>have</b> · <b>have got</b> (’ve got)</td><td><button class="say" data-say="I have a dog. I've got a dog.">🔊</button></td></tr>
+<tr><td>he / she / it</td><td class="fr"><b>has</b> · <b>has got</b> (’s got)</td><td><button class="say" data-say="She has a cat. She's got a cat.">🔊</button></td></tr>
+</table>`;
+const T_HAVE_NEG = `
+<table class="conj">
+<tr><td>negativa</td><td class="fr">I <b>don’t have</b> · I <b>haven’t got</b></td><td><button class="say" data-say="I don't have a car. I haven't got a car.">🔊</button></td></tr>
+<tr><td>negativa (he/she/it)</td><td class="fr">he <b>doesn’t have</b> · he <b>hasn’t got</b></td><td><button class="say" data-say="He doesn't have a car. He hasn't got a car.">🔊</button></td></tr>
+<tr><td>pergunta</td><td class="fr"><b>Do</b> you <b>have</b>…? · <b>Have</b> you <b>got</b>…?</td><td><button class="say" data-say="Do you have a dog? Have you got a dog?">🔊</button></td></tr>
+<tr><td>pergunta (he/she/it)</td><td class="fr"><b>Does</b> she <b>have</b>…? · <b>Has</b> she <b>got</b>…?</td><td><button class="say" data-say="Does she have a cat? Has she got a cat?">🔊</button></td></tr>
+</table>`;
+const T_DO = `
+<table class="conj">
+<tr><td>I / you / we / they</td><td class="fr"><b>Do</b> you <b>play</b> the guitar?</td><td><button class="say" data-say="Do you play the guitar?">🔊</button></td></tr>
+<tr><td>he / she / it</td><td class="fr"><b>Does</b> Pongo <b>like</b> cats?</td><td><button class="say" data-say="Does Pongo like cats?">🔊</button></td></tr>
+<tr><td>palavra interrogativa</td><td class="fr">Where <b>do</b> you <b>live</b>?</td><td><button class="say" data-say="Where do you live?">🔊</button></td></tr>
+<tr><td>resposta curta +</td><td class="fr">Yes, I <b>do</b>. · Yes, she <b>does</b>.</td><td><button class="say" data-say="Yes, I do. Yes, she does.">🔊</button></td></tr>
+<tr><td>resposta curta −</td><td class="fr">No, I <b>don’t</b>. · No, he <b>doesn’t</b>.</td><td><button class="say" data-say="No, I don't. No, he doesn't.">🔊</button></td></tr>
+</table>`;
+const T_CONT = `
+<table class="conj">
+<tr><td>present continuous<br><small>agora, neste momento</small></td><td class="fr">Pongo <b>is sleeping</b> now.</td><td><button class="say" data-say="Pongo is sleeping now.">🔊</button></td></tr>
+<tr><td>present simple<br><small>sempre, em geral, às vezes</small></td><td class="fr">Pongo <b>sleeps</b> every afternoon.</td><td><button class="say" data-say="Pongo sleeps every afternoon.">🔊</button></td></tr>
+<tr><td>pergunta (agora)</td><td class="fr"><b>Is</b> he <b>playing</b>? — No, he <b>isn’t</b>.</td><td><button class="say" data-say="Is he playing? No, he isn't.">🔊</button></td></tr>
+<tr><td>pergunta (em geral)</td><td class="fr"><b>Does</b> he <b>play</b>? — Yes, he <b>does</b>.</td><td><button class="say" data-say="Does he play? Yes, he does.">🔊</button></td></tr>
+</table>`;
+const STATIVE = `<p style="margin:8px 0 0">Verbos que normalmente <b>não</b> vão para o <i>-ing</i>:
+<span class="fr">like · want · know · understand · remember · prefer · need · mean · believe · forget</span></p>`;
+
+const LEVELS = [
+{
+  id:"have", n:1, type:"mc", count:8, theme:"classe",
+  title:"Have you got a bone?", sub:"Unit 9 · have / have got",
+  sticker:"feliz", bonus:"carinhoso",
+  story:"O <b>Senhor Tromba</b> sumiu! O Pongo vai à escola de inglês da teacher Kate e começa a perguntar quem tem o quê. <b>Escolha a placa certa</b> e o Pongo pula para pegá-la!",
+  lesson: T_HAVE + T_HAVE_NEG + `<ul class="tips">
+    <li><b>have</b> e <b>have got</b> significam a mesma coisa: <span class="fr">I have blue eyes = I’ve got blue eyes.</span></li>
+    <li>he / she / it → <b>has</b> / <b>has got</b> (’s got).</li>
+    <li>Resposta curta: <span class="fr">Have you got…? — Yes, I have. / No, I haven’t.</span> · <span class="fr">Do you have…? — Yes, I do. / No, I don’t.</span></li></ul>`,
+  qs:[
+    {who:"Ben", q:"I ___ a new bike. Do you want to see it?", o:["have got","has got","having"], pt:"Eu tenho uma bicicleta nova.", tip:"I / you / we / they → <b>have got</b> (curto: I’ve got)."},
+    {who:"Kate", q:"Pongo ___ a toy elephant.", o:["has got","have got","is got"], pt:"O Pongo tem um elefante de brinquedo.", tip:"he / she / it → <b>has got</b> (curto: he’s got)."},
+    {who:"Ben", q:"My sister Lily ___ two cats.", o:["has","have","haves"], pt:"Minha irmã Lily tem dois gatos.", tip:"he / she / it → <b>has</b>."},
+    {who:"Caderno", q:"Qual é a forma curta de “They have got a dog”?", o:["They’ve got a dog.","They’s got a dog.","They’ve a got dog."], pt:"Eles têm um cachorro.", say:"They've got a dog.", tip:"they have got → <b>they’ve got</b>."},
+    {who:"Sam", q:"Pongo ___ a bed. He sleeps on the sofa!", o:["doesn’t have","don’t have","hasn’t have"], pt:"O Pongo não tem cama. Ele dorme no sofá!", tip:"he / she / it → <b>doesn’t have</b> (ou <i>hasn’t got</i>)."},
+    {who:"Lily", q:"I ___ any brothers. I’ve only got a sister.", o:["haven’t got","hasn’t got","don’t got"], pt:"Eu não tenho irmãos.", tip:"I → <b>haven’t got</b> (ou <i>don’t have</i>). Nunca “don’t got”."},
+    {who:"Kate", q:"___ you got a pen, Ben?", o:["Have","Do","Has"], pt:"Você tem uma caneta, Ben?", tip:"Pergunta com got: <b>Have</b> you <b>got</b>…?"},
+    {who:"Ben", q:"___ Lily have a car?", o:["Does","Has","Do"], pt:"A Lily tem carro?", tip:"Pergunta com have: <b>Does</b> she <b>have</b>…? (ou <i>Has she got…?</i>)"},
+    {who:"Kate", q:"“Have you got a dog?” — “Yes, I ___.”", o:["have","do","got"], pt:"Você tem um cachorro? — Tenho.", tip:"Have you got…? → <b>Yes, I have.</b> / No, I haven’t."},
+    {who:"Sam", q:"“Does Ben have a camera?” — “No, he ___.”", o:["doesn’t","hasn’t","don’t"], pt:"O Ben tem uma câmera? — Não.", tip:"Does he have…? → <b>No, he doesn’t.</b>"},
+    {who:"Caderno", q:"Correct it: “She have got blue eyes.”", o:["She has got blue eyes.","She haves got blue eyes.","She has get blue eyes."], pt:"Corrija a frase.", tip:"she → <b>has got</b>."}
+  ]
+},
+{
+  id:"doyou", n:2, type:"mc", count:8, theme:"saopaulo",
+  title:"Do you like bones?", sub:"Unit 7 · perguntas com do / does",
+  sticker:"brincando", bonus:"cabo",
+  story:"O Pongo sai pela cidade fazendo perguntas a todo mundo. Será que alguém viu o Senhor Tromba? Lembre: <b>do</b> com I/you/we/they e <b>does</b> com he/she/it.",
+  lesson: T_DO + `<ul class="tips">
+    <li>Ordem: <b>(palavra interrogativa) + do/does + sujeito + verbo</b>: <span class="fr">How often do you wash your hair?</span></li>
+    <li>Depois de <b>does</b> o verbo fica na forma base: <span class="fr">Does she work?</span> (não “Does she works”).</li>
+    <li><span class="fr">What do you do?</span> = Qual é a sua profissão? (<span class="fr">What’s your job?</span>)</li>
+    <li>Com always / usually: <span class="fr">What do you usually do at weekends?</span></li></ul>`,
+  qs:[
+    {who:"Ben", q:"___ you play the guitar, Pongo?", o:["Do","Does","Are"], pt:"Você toca violão, Pongo?", tip:"you → <b>Do</b> you play…?"},
+    {who:"Kate", q:"___ Sam live near here?", o:["Does","Do","Is"], pt:"O Sam mora aqui perto?", tip:"he / she / it → <b>Does</b> Sam live…?"},
+    {who:"Lily", q:"Where ___ your parents live?", o:["do","does","are"], pt:"Onde seus pais moram?", tip:"your parents = they → where <b>do</b>…"},
+    {who:"Ben", q:"What ___ this word mean?", o:["does","do","is"], pt:"O que esta palavra significa?", tip:"this word = it → <b>does</b>."},
+    {who:"Caderno", q:"Como perguntar “Com que frequência você lava o cabelo?”", o:["How often do you wash your hair?","How often you wash your hair?","How often does you wash your hair?"], pt:"palavra interrogativa + do + sujeito + verbo", tip:"Ordem: <b>How often + do + you + wash</b>…"},
+    {who:"Sam", q:"Does Lily ___ on Sundays?", o:["work","works","working"], pt:"A Lily trabalha aos domingos?", tip:"Depois de <b>does</b>: verbo na forma base (work)."},
+    {who:"Kate", q:"“Do your friends speak English?” — “Yes, they ___.”", o:["do","does","speak"], pt:"Seus amigos falam inglês? — Falam.", tip:"Resposta curta: <b>Yes, they do.</b>"},
+    {who:"Lily", q:"“Does Pongo like cats?” — “No, he ___.”", o:["doesn’t","don’t","isn’t"], pt:"O Pongo gosta de gatos? — Não.", tip:"he → <b>No, he doesn’t.</b>"},
+    {who:"Caderno", q:"O que significa “What do you do?”", o:["What’s your job?","What are you doing now?","Do you do it?"], pt:"Pergunta muito comum!", say:"What do you do? What's your job?", tip:"<i>What do you do?</i> = <b>What’s your job?</b> (Qual é a sua profissão?)"},
+    {who:"Ben", q:"What ___ you usually do at weekends?", o:["do","does","are"], pt:"O que você costuma fazer nos fins de semana?", tip:"<b>What do you usually do</b>…? (usually fica depois do sujeito)."},
+    {who:"Sam", q:"How much ___ it cost to fly to London?", o:["does","do","is"], pt:"Quanto custa voar para Londres?", tip:"it → <b>does</b> it cost."}
+  ]
+},
+{
+  id:"doing", n:3, type:"mc", count:9, theme:"monde",
+  title:"Is Pongo running?", sub:"Unit 8 · I am doing × I do",
+  sticker:"curioso", bonus:"surpreso",
+  story:"Uma pista! O Pongo segue o rastro do Senhor Tromba. Ele precisa saber a diferença entre o que acontece <b>agora</b> (am/is/are + -ing) e o que acontece <b>sempre</b> (present simple).",
+  lesson: T_CONT + STATIVE + `<ul class="tips">
+    <li><b>Agora / neste momento</b> (now, at the moment, Look!, Listen!) → <span class="fr">am / is / are + -ing</span>.</li>
+    <li><b>Em geral / sempre / às vezes</b> (every day, often, usually, in winter) → present simple.</li></ul>`,
+  qs:[
+    {who:"Lily", q:"Be quiet! Pongo ___.", o:["is sleeping","sleeps","sleep"], pt:"Silêncio! O Pongo está dormindo.", tip:"Agora, neste momento → <b>is sleeping</b>."},
+    {who:"Lily", q:"Pongo ___ every afternoon after lunch.", o:["sleeps","is sleeping","sleep"], pt:"O Pongo dorme toda tarde depois do almoço.", tip:"Hábito (every afternoon) → present simple: <b>sleeps</b>."},
+    {who:"Kate", q:"Take an umbrella with you. It ___.", o:["is raining","rains","rain"], pt:"Leve um guarda-chuva. Está chovendo.", tip:"Agora → <b>is raining</b>."},
+    {who:"Kate", q:"It ___ a lot in London in winter.", o:["rains","is raining","rain"], pt:"Chove muito em Londres no inverno.", tip:"Em geral → <b>rains</b>."},
+    {who:"Sam", q:"Look! Ben ___ with Pongo in the garden.", o:["is playing","plays","play"], pt:"Olha! O Ben está brincando com o Pongo no jardim.", tip:"<i>Look!</i> = agora → <b>is playing</b>."},
+    {who:"Ben", q:"Sorry, I ___ what you mean.", o:["don’t understand","am not understanding","not understand"], pt:"Desculpe, eu não entendo o que você quer dizer.", tip:"<b>understand</b> não vai para o -ing → I don’t understand."},
+    {who:"Pongo", q:"I’m tired. I ___ to go home.", o:["want","am wanting","wants"], pt:"Estou cansado. Quero ir para casa.", tip:"<b>want</b> não vai para o -ing → I want."},
+    {who:"Lily", q:"Ben ___ TV very often. He prefers books.", o:["doesn’t watch","isn’t watching","don’t watch"], pt:"O Ben não assiste TV com frequência.", tip:"Em geral (very often) → <b>doesn’t watch</b>."},
+    {who:"Kate", q:"“What are you doing, Pongo?” — “I ___ for Senhor Tromba!”", o:["am looking","look","looks"], pt:"O que você está fazendo? — Estou procurando o Senhor Tromba!", tip:"Agora → <b>I am looking</b> (I’m looking)."},
+    {who:"Sam", q:"“___ that girl?” — “Yes, but I don’t remember her name.”", o:["Do you know","Are you knowing","Does you know"], pt:"Você conhece aquela menina?", tip:"<b>know</b> não vai para o -ing → Do you know…?"},
+    {who:"Kate", q:"Why ___ under the table, Pongo?", o:["are you","do you","you are"], pt:"Por que você está embaixo da mesa, Pongo?", tip:"Agora: Why <b>are you</b> under the table? / What are you doing?"},
+    {who:"Caderno", q:"Qual verbo normalmente NÃO vai para o -ing?", o:["remember","play","watch"], pt:"like · want · know · understand · remember · prefer · need · mean · believe · forget", say:"I remember. I don't remember.", tip:"<b>remember</b> está na lista: I remember (não “I’m remembering”)."}
+  ]
+},
+{
+  id:"phrase", n:4, type:"build", count:6, theme:"lyon",
+  title:"Make the sentence!", sub:"Monte frases e perguntas",
+  sticker:"orgulhoso", bonus:"pensativo",
+  story:"Um bilhete do Senhor Tromba, mas as palavras estão embaralhadas! <b>Toque nas palavras na ordem certa</b>. Cuidado: há uma palavra intrusa em cada frase!",
+  lesson: `<div class="cols"><div>${T_DO}</div><div>${T_HAVE}${T_CONT}</div></div>
+    <ul class="tips"><li>Pergunta: <b>do/does + sujeito + verbo</b> · <b>have/has + sujeito + got</b>.</li></ul>`,
+  qs:[
+    {pt:"Você tem um cachorro?", w:["Do","you","have","a","dog","?"], x:["Does"]},
+    {pt:"Ela tem olhos azuis?", w:["Has","she","got","blue","eyes","?"], x:["have"]},
+    {pt:"Onde seus pais moram?", w:["Where","do","your","parents","live","?"], x:["does"]},
+    {pt:"O Pongo está dormindo agora.", w:["Pongo","is","sleeping","now","."], x:["sleeps"]},
+    {pt:"Ele não tem carro.", w:["He","doesn’t","have","a","car","."], x:["has"]},
+    {pt:"O que você costuma fazer nos fins de semana?", w:["What","do","you","usually","do","at","weekends","?"], x:["are"]},
+    {pt:"Nós não temos irmãos.", w:["We","haven’t","got","any","brothers","."], x:["hasn’t"]},
+    {pt:"Eu não entendo.", w:["I","don’t","understand","."], x:["am"]}
+  ]
+},
+{
+  id:"dialogue", n:5, type:"mc", count:8, ordered:true, theme:"parc",
+  title:"Where is Senhor Tromba?", sub:"Diálogo final: responda como o Pongo",
+  sticker:"juntos", bonus:"companhia",
+  story:"Última etapa! Todos querem ajudar o Pongo a achar o Senhor Tromba. <b>Responda às perguntas</b> como o Pongo — com a frase certinha!",
+  lesson: `<div class="cols"><div>${T_DO}</div><div>${T_HAVE_NEG}</div></div>${STATIVE}
+    <ul class="tips"><li>Responda com o mesmo auxiliar da pergunta: <span class="fr">Do…? → Yes, I do.</span> · <span class="fr">Have… got? → Yes, I have.</span> · <span class="fr">Is…? → Yes, he is.</span></li></ul>`,
+  qs:[
+    {who:"Kate", q:"Hi, Pongo! Have you got a best friend?", o:["Yes, I have. His name is Senhor Tromba.","Yes, I do got.","Yes, I has."], pt:"Oi, Pongo! Você tem um melhor amigo?", tip:"Have you got…? → <b>Yes, I have.</b>"},
+    {who:"Ben", q:"Does Senhor Tromba have big ears?", o:["Yes, he does.","Yes, he has got.","Yes, he do."], pt:"O Senhor Tromba tem orelhas grandes?", tip:"Does he have…? → <b>Yes, he does.</b>"},
+    {who:"Lily", q:"What are you doing, Pongo?", o:["I’m looking for Senhor Tromba.","I look for Senhor Tromba now.","I am look for Senhor Tromba."], pt:"O que você está fazendo, Pongo?", tip:"Agora → <b>I’m looking</b>."},
+    {who:"Kate", q:"Do you know where he is?", o:["No, I don’t.","No, I’m not knowing.","No, I doesn’t."], pt:"Você sabe onde ele está?", tip:"Do you know…? → <b>No, I don’t.</b> (know não vai para -ing)"},
+    {who:"Sam", q:"Does he usually sleep in your bed?", o:["Yes, he does. He sleeps there every night.","Yes, he is. He is sleeping there every night.","Yes, he do. He sleep there every night."], pt:"Ele costuma dormir na sua cama?", tip:"Hábito (every night) → <b>he sleeps</b>; Does…? → <b>Yes, he does.</b>"},
+    {who:"Ben", q:"Have you got a photo of him?", o:["Yes, I have. Look!","Yes, I do have got.","Yes, I’ve."], pt:"Você tem uma foto dele?", tip:"Resposta curta: <b>Yes, I have.</b> (não se contrai: nunca “Yes, I’ve”)."},
+    {who:"Lily", q:"Look! Who is sitting on the sofa?", o:["Senhor Tromba is sitting on the sofa!","Senhor Tromba sits on the sofa now!","Senhor Tromba sitting on the sofa!"], pt:"Olha! Quem está sentado no sofá?", tip:"Agora (Look!) → <b>is sitting</b>."},
+    {who:"Tromba", q:"Pongo! I’m here! Do you remember me?", o:["Of course I remember you!","Of course I’m remembering you!","Of course I remembers you!"], pt:"Pongo! Estou aqui! Você se lembra de mim?", tip:"<b>remember</b> não vai para o -ing: I remember you!"}
+  ]
+}
+];
+
+const STICKERS = [
+  {id:"feliz", name:"Feliz", how:"Complete a fase 1"},
+  {id:"carinhoso", name:"Carinhoso", how:"Fase 1 com 3 estrelas"},
+  {id:"brincando", name:"Brincando", how:"Complete a fase 2"},
+  {id:"cabo", name:"Cabo de guerra", how:"Fase 2 com 3 estrelas"},
+  {id:"curioso", name:"Curioso", how:"Complete a fase 3"},
+  {id:"surpreso", name:"Surpreso", how:"Fase 3 com 3 estrelas"},
+  {id:"orgulhoso", name:"Orgulhoso", how:"Complete a fase 4"},
+  {id:"pensativo", name:"Pensativo", how:"Fase 4 com 3 estrelas"},
+  {id:"juntos", name:"Sempre juntos!", how:"Encontre o Senhor Tromba (fase 5)"},
+  {id:"companhia", name:"Melhor companhia", how:"Fase 5 com 3 estrelas"},
+  {id:"predador", name:"Predador de tromba", how:"Faça um combo de 8 acertos"},
+  {id:"barriga", name:"De barriga pra cima", how:"Abra o Caderno do Pongo"},
+  {id:"sonolento", name:"Sonolento", how:"Perca todos os croissants uma vez"},
+  {id:"mordida", name:"Hora da mordida carinhosa", how:"Junte 600 pontos no total"},
+  {id:"naosolto", name:"Não solto!", how:"Ganhe 3 estrelas em todas as fases"}
+];
+
+/* ============================================================
+   ESTADO SALVO
+   ============================================================ */
+const SAVE_KEY = "pongo-en-u7-9";
+let save = {stars:{}, stickers:[], total:0, voice:true, sfx:true};
+try{ const s = JSON.parse(localStorage.getItem(SAVE_KEY)||"null"); if(s) save = Object.assign(save,s); }catch(e){}
+function persist(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){} }
+function hasSticker(id){ return save.stickers.includes(id); }
+function giveSticker(id){ if(!hasSticker(id)){ save.stickers.push(id); persist(); return true; } return false; }
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; };
+const nb = s => s;
+const esc = s => s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const plain = s => s.replace(/<[^>]+>/g,"");
+function joinWords(w){ return w.join(" ").replace(/ ([.,?!])/g,"$1"); }
+
+/* ---------- voz (fr-FR) ---------- */
+let frVoice = null;
+function pickVoice(){
+  if(!("speechSynthesis" in window)) return;
+  const vs = speechSynthesis.getVoices();
+  frVoice = vs.find(v=>/en[-_](GB|US)/i.test(v.lang) && /google|samantha|daniel|serena|libby|sonia|aria|jenny/i.test(v.name))
+         || vs.find(v=>/en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(txt, force){
+  if(!("speechSynthesis" in window)) return;
+  if(!force && !save.voice) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt.replace(/[«»]/g,"").replace(/’/g,"'"));
+    u.lang = frVoice ? frVoice.lang : "en-GB"; if(frVoice) u.voice = frVoice; u.rate = .88; u.pitch = 1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- efeitos (WebAudio) ---------- */
+let actx = null;
+function ac(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
+function tone(f, d, type="sine", v=.18, when=0, slide=0){
+  if(!save.sfx) return; const a = ac(); if(!a) return;
+  const t = a.currentTime + when, o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(f,t); if(slide) o.frequency.exponentialRampToValueAtTime(slide,t+d);
+  g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+d+.02);
+}
+const sfx = {
+  good(){ tone(660,.12,"triangle"); tone(880,.14,"triangle",.18,.1); tone(1320,.2,"triangle",.14,.2); },
+  bad(){ tone(220,.25,"sawtooth",.12,0,140); },
+  woof(){ tone(300,.09,"square",.12,0,150); tone(320,.1,"square",.12,.16,160); },
+  tap(){ tone(520,.06,"triangle",.1); },
+  jump(){ tone(380,.18,"sine",.12,0,760); },
+  win(){ [523,659,784,1047].forEach((f,i)=>tone(f,.22,"triangle",.16,i*.12)); }
+};
+
+/* ============================================================
+   SPRITES DO PONGO
+   ============================================================ */
+const SPR = {
+  walk:{src:"../pongo-francais/assets/walk.webp", n:8, frames:[0,1,2,3,4,5], fps:12, scale:1.0, loop:true},
+  jump:{src:"../pongo-francais/assets/jump.webp", n:8, frames:[0,1,2,3,4,5,6,7], fps:10, scale:1.32},
+  bark:{src:"../pongo-francais/assets/bark.webp", n:6, frames:[0,1,2,3,4,3,4,5], fps:9, scale:1.0},
+  happy:{src:"../pongo-francais/assets/happy.webp", n:6, frames:[0,1,2,3,4,5], fps:9, scale:1.0},
+  sit:{src:"../pongo-francais/assets/sit.webp", n:6, frames:[0,1,2,3,4,5], fps:8, scale:1.0}
+};
+for(const k in SPR){ const im = new Image(); im.src = SPR[k].src; SPR[k].img = im; }
+function cssSprite(el, key, h, dur){
+  const s = SPR[key], go = () => {
+    const sc = h / s.img.naturalHeight, fw = s.img.naturalWidth / s.n * sc;
+    el.style.width = fw + "px"; el.style.height = h + "px";
+    el.style.backgroundImage = `url(${s.src})`;
+    el.style.backgroundSize = `${s.img.naturalWidth*sc}px ${h}px`;
+    clearInterval(el._spr); let k = 0;
+    const seq = s.frames.concat(s.frames.slice(1,-1).reverse());
+    el._spr = setInterval(()=>{ el.style.backgroundPosition = `${-seq[k++ % seq.length]*fw}px 0`; }, dur*1000/s.frames.length);
+  };
+  if(s.img.complete && s.img.naturalWidth) go(); else s.img.addEventListener("load", go, {once:true});
+}
+
+/* ============================================================
+   TELAS
+   ============================================================ */
+let current = "title", prevScreen = "title";
+function show(id){
+  prevScreen = current; current = id;
+  $$(".screen").forEach(s=>s.classList.toggle("on", s.id==="scr-"+id));
+  if(id!=="play") running = false;
+  window.scrollTo(0,0);
+  if(id==="map") renderMap();
+  if(id==="album") renderAlbum();
+  if(id==="cad") renderCad();
+}
+cssSprite($("#titleDog"), "happy", 150, 1.1);
+
+function totalStars(){ return LEVELS.reduce((s,l)=>s+(save.stars[l.id]||0),0); }
+function unlocked(i){ return i===0 || (save.stars[LEVELS[i-1].id]||0) > 0; }
+function renderMap(){
+  $("#totalStars").textContent = `⭐ ${totalStars()}/15`;
+  $("#totalStickers").textContent = `🖼️ ${save.stickers.length}/${STICKERS.length}`;
+  const box = $("#levels"); box.innerHTML = "";
+  LEVELS.forEach((L,i)=>{
+    const b = document.createElement("button");
+    const s = save.stars[L.id]||0, ok = unlocked(i);
+    b.className = "card lvl" + (ok?"":" locked");
+    b.innerHTML = `<span class="n">Fase ${L.n}</span><h3 class="fr">${nb(L.title)}</h3><div class="sub">${L.sub}</div>
+      <div class="stars">${"★".repeat(s)}<span style="color:#ddd">${"★".repeat(3-s)}</span></div>
+      ${hasSticker(L.sticker)?`<img class="thumb" src="../pongo-francais/assets/st_${L.sticker}.webp" alt="">`:""}`;
+    b.onclick = () => { if(ok) openIntro(i); else { sfx.bad(); } };
+    box.appendChild(b);
+  });
+}
+
+function renderAlbum(){
+  const box = $("#album"); box.innerHTML = "";
+  STICKERS.forEach(S=>{
+    const have = hasSticker(S.id), d = document.createElement("div");
+    d.className = "slot" + (have?"":" lock");
+    d.innerHTML = `<img src="../pongo-francais/assets/st_${S.id}.webp" alt="${have?S.name:"bloqueada"}"><b>${have?S.name:"???"}</b><small>${S.how}</small>`;
+    box.appendChild(d);
+  });
+}
+
+function renderCad(){
+  $("#cadBody").innerHTML = `
+  <div class="cols">
+    <div class="card"><h3 class="fr">Unit 9 · have / have got</h3>${T_HAVE}${T_HAVE_NEG}
+      <ul class="tips"><li><span class="fr">I have blue eyes = I’ve got blue eyes.</span></li>
+      <li>Resposta curta: <span class="fr">Yes, I have. / No, I haven’t.</span> · <span class="fr">Yes, I do. / No, I don’t.</span></li></ul></div>
+    <div class="card"><h3 class="fr">Unit 7 · Do you…? / Does he…?</h3>${T_DO}
+      <ul class="tips"><li>Ordem: <b>(Where/What/How often…) + do/does + sujeito + verbo</b>.</li>
+      <li><span class="fr">What do you do?</span> = <span class="fr">What’s your job?</span></li></ul></div>
+  </div>
+  <div class="card"><h3 class="fr">Unit 8 · I am doing × I do</h3>${T_CONT}${STATIVE}</div>
+  <div class="card"><h3>Erros que o Pongo não comete mais</h3>
+    <div class="err">
+      <span class="x fr">She have got blue eyes.</span><span class="v fr">She has got blue eyes.</span>
+      <span class="x fr">I don’t got a car.</span><span class="v fr">I haven’t got a car. / I don’t have a car.</span>
+      <span class="x fr">Does she works on Sundays?</span><span class="v fr">Does she work on Sundays?</span>
+      <span class="x fr">Where you live?</span><span class="v fr">Where do you live?</span>
+      <span class="x fr">Look! Pongo plays in the garden.</span><span class="v fr">Look! Pongo is playing in the garden.</span>
+      <span class="x fr">I’m wanting to go home.</span><span class="v fr">I want to go home.</span>
+      <span class="x fr">Yes, I’ve.</span><span class="v fr">Yes, I have.</span>
+    </div></div>`;
+  if(giveSticker("barriga")) toastMsg("🖼️ Nova figurinha!");
+}
+
+/* ---------- mini-aula ---------- */
+let LI = 0;
+function openIntro(i){
+  LI = i; const L = LEVELS[i];
+  $("#inN").textContent = "Fase " + L.n;
+  $("#inTitle").innerHTML = `<span class="fr">${nb(L.title)}</span>`;
+  $("#inSub").textContent = L.sub;
+  $("#inStory").innerHTML = L.story;
+  $("#inBody").innerHTML = L.lesson;
+  cssSprite($("#introDog"), i===3?"sit":"happy", 120, 1.0);
+  show("intro");
+}
+
+/* delegação: botões 🔊 com data-say */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("[data-say]"); if(b){ speak(b.dataset.say, true); }
+  const g = e.target.closest("[data-go]"); if(g){ show(g.dataset.go); }
+});
+
+/* ============================================================
+   JOGO
+   ============================================================ */
+const cv = $("#cv"), ctx = cv.getContext("2d");
+const W = 960, H = 360, GROUND = 318, PX = 190;
+let DPR = 1;
+function fitCanvas(){
+  DPR = Math.min(2, window.devicePixelRatio||1);
+  cv.width = W*DPR; cv.height = H*DPR;
+}
+fitCanvas(); addEventListener("resize", fitCanvas);
+
+let G = null, running = false, lastT = 0;
+const LANE_Y = [92, 160, 228];          // altura das placas A, B, C
+const LETTERS = ["1","2","3"];
+const LANE_COL = ["#d63c55","#2f86a6","#e59a12"];
+
+function startLevel(i){
+  LI = i; const L = LEVELS[i];
+  let qs = L.ordered ? L.qs.slice(0, L.count) : shuffle(L.qs).slice(0, L.count);
+  G = {
+    L, qs, qi:0, lives:3, score:0, combo:0, maxCombo:0, errors:0,
+    phase:"idle", sel:null, gateX:W+120, gateV:0, startX:W+120, t:0,
+    anim:{k:"walk", t:0}, jumpLane:1, particles:[], floats:[], bg:0, speed:150,
+    opts:[], ans:0, shake:0, built:[], pool:[]
+  };
+  $("#pTitle").innerHTML = `<span class="fr">Fase ${L.n} · ${nb(L.title)}</span>`;
+  $("#mcArea").style.display = L.type==="mc" ? "" : "none";
+  $("#buildArea").style.display = L.type==="build" ? "" : "none";
+  show("play");
+  updHud();
+  running = true; lastT = performance.now(); requestAnimationFrame(loop);
+  nextQ();
+}
+
+function updHud(){
+  $("#pLives").textContent = "🥐".repeat(G.lives) + "🤍".repeat(3-G.lives);
+  $("#pCombo").textContent = "🔥 " + G.combo;
+  $("#pScore").textContent = G.score + " pts";
+  $("#pProg").style.width = (G.qi / G.qs.length * 100) + "%";
+}
+
+function setAnim(k){ G.anim = {k, t:0}; }
+
+function nextQ(){
+  $("#fb").classList.remove("on");
+  if(G.qi >= G.qs.length){ return finishLevel(true); }
+  const q = G.qs[G.qi];
+  G.sel = null; G.popped = false;
+  const who = PEOPLE[q.who||"Caderno"] || PEOPLE.Caderno;
+  const av = $("#qAv");
+  av.style.background = who.color || "#fff";
+  av.innerHTML = who.img ? `<img src="${who.img}" alt="">` : (who.ch || (q.who||"?")[0]);
+  $("#qWho").textContent = G.L.type==="build" ? "Bilhete embaralhado" : who.name;
+
+  if(G.L.type === "mc"){
+    const idx = q.o.map((t,i)=>({t, ok: i === (q.a ?? 0)}));
+    G.opts = G.L.fixed ? idx : shuffle(idx);
+    G.ans = G.opts.findIndex(o=>o.ok);
+    $("#qText").innerHTML = esc(nb(q.q)).replace("___", `<span class="gap">?</span>`);
+    $("#qPt").textContent = q.pt || "";
+    const box = $("#answers"); box.innerHTML = "";
+    G.opts.forEach((o,i)=>{
+      const b = document.createElement("button");
+      b.className = "ans"; b.dataset.i = i;
+      b.innerHTML = `<span class="k">${LETTERS[i]}</span><span class="fr">${esc(nb(o.t))}</span>`;
+      b.onclick = () => choose(i);
+      box.appendChild(b);
+    });
+    // a placa entra pela direita
+    const T = Math.max(6.5, 11 - G.combo*.45);
+    G.startX = W + 90; G.gateX = G.startX; G.gateV = (G.startX - (PX+70)) / T;
+    G.phase = "run"; setAnim("walk");
+    // fala a pergunta (apenas se for francês)
+    if(!/^(Qual|Como|O que significa|Correct it)/.test(q.q)) speak(q.q.replace("___","…"));
+  } else {
+    // montar frase
+    $("#qText").innerHTML = "Monte: " + esc(q.pt);
+    $("#qPt").textContent = "Uma palavra é intrusa — deixe-a de fora!";
+    G.built = []; G.pool = shuffle(q.w.concat(q.x).map((t,i)=>({t,i,used:false})));
+    renderBuild();
+    G.phase = "build"; setAnim("sit");
+  }
+  updHud();
+}
+
+function fullSentence(q){
+  if(q.say) return q.say;
+  if(G.L.type==="build") return joinWords(q.w);
+  const right = q.o[q.a ?? 0];
+  return q.q.includes("___") ? q.q.replace("___", right) : right;
+}
+function shownSentence(q){
+  if(G.L.type==="build") return joinWords(q.w);
+  const right = q.o[q.a ?? 0];
+  return q.q.includes("___") ? q.q.replace("___", right) : right;
+}
+
+function choose(i){
+  if(!G || G.phase !== "run" || G.sel !== null) return;
+  ac(); sfx.tap();
+  G.sel = i; G.gateV *= 6;          // a placa corre até o Pongo
+  $$(".ans").forEach(b=>{ b.disabled = true; b.classList.toggle("sel", +b.dataset.i===i); });
+}
+
+function resolveMC(){
+  const q = G.qs[G.qi];
+  const ok = G.sel === G.ans;
+  G.jumpLane = G.sel ?? 1;
+  $$(".ans").forEach(b=>{
+    b.disabled = true; const i = +b.dataset.i;
+    if(i===G.ans) b.classList.add("good"); else if(i===G.sel) b.classList.add("bad");
+  });
+  if(ok){
+    setAnim("jump"); sfx.jump(); G.phase = "jump"; G.t = 0;
+  } else {
+    setAnim("bark"); G.phase = "fail"; G.t = 0;
+  }
+  afterAnswer(ok, q, G.sel===null);
+}
+
+function afterAnswer(ok, q, timeout){
+  const fb = $("#fb");
+  if(ok){
+    G.combo++; G.maxCombo = Math.max(G.maxCombo, G.combo);
+    const pts = 10 + Math.min(G.combo,10)*2;
+    G.score += pts;
+    G.floats.push({x:PX+40, y:120, t:0, txt:"+"+pts});
+    setTimeout(()=>sfx.good(), 250);
+    toastMsg(["Great job!","Well done!","Super!","Perfect!","Excellent!"][Math.random()*5|0]);
+    $("#fbBig").textContent = "✔ " + (G.combo>=3 ? `Combo ×${G.combo}!` : "Correto!");
+    $("#fbTip").innerHTML = "";
+    fb.className = "feedback on ok";
+    if(G.combo === 8 && giveSticker("predador")) setTimeout(()=>toastMsg("🖼️ Figurinha: Predador de tromba!"),900);
+  } else {
+    G.combo = 0; G.errors++; G.lives--; G.shake = .4;
+    sfx.bad(); setTimeout(()=>sfx.woof(), 200);
+    toastMsg(timeout ? "⏰ Time’s up!" : "Oops!");
+    $("#fbBig").textContent = timeout ? "⏰ O tempo acabou! A resposta certa é:" : "✘ Quase! A resposta certa é:";
+    $("#fbTip").innerHTML = "💡 " + (q.tip || "");
+    fb.className = "feedback on ko";
+  }
+  $("#fbFull").textContent = nb(shownSentence(q));
+  $("#fbSay").onclick = () => speak(fullSentence(q), true);
+  setTimeout(()=>speak(fullSentence(q)), ok ? 350 : 650);
+  G.qi++; updHud();
+  G.waitOk = ok;
+  if(ok){ G.autoNext = setTimeout(goNext, 2100); }
+}
+
+function goNext(){
+  if(!G) return;
+  clearTimeout(G.autoNext);
+  if(G.lives <= 0) return finishLevel(false);
+  nextQ();
+}
+$("#btnNext").onclick = goNext;
+
+/* ---------- montar frase ---------- */
+function renderBuild(){
+  const slots = $("#slots"), pool = $("#pool");
+  slots.innerHTML = ""; pool.innerHTML = "";
+  G.built.forEach((p,k)=>{
+    const b = document.createElement("button"); b.className = "tile fr"; b.textContent = p.t;
+    b.onclick = () => { if(G.phase!=="build") return; sfx.tap(); p.used=false; G.built.splice(k,1); renderBuild(); };
+    slots.appendChild(b);
+  });
+  G.pool.forEach(p=>{
+    const b = document.createElement("button"); b.className = "tile fr" + (p.used?" used":""); b.textContent = p.t;
+    b.onclick = () => { if(G.phase!=="build" || p.used) return; ac(); sfx.tap(); p.used=true; G.built.push(p); renderBuild(); };
+    pool.appendChild(b);
+  });
+  $("#btnCheck").disabled = G.built.length === 0;
+}
+$("#btnClear").onclick = () => { if(G.phase!=="build") return; G.pool.forEach(p=>p.used=false); G.built=[]; renderBuild(); };
+$("#btnCheck").onclick = () => {
+  if(G.phase!=="build") return;
+  const q = G.qs[G.qi];
+  const ok = G.built.map(p=>p.t).join("|") === q.w.join("|");
+  G.phase = ok ? "jump" : "fail"; G.t = 0; G.jumpLane = 1;
+  setAnim(ok ? "jump" : "bark"); if(ok) sfx.jump();
+  if(!ok) q.tip = q.tip || `Ordem certa: <b>${esc(nb(joinWords(q.w)))}</b> — a palavra intrusa era “${esc(q.x.join(", "))}”.`;
+  afterAnswer(ok, q, false);
+};
+
+/* ---------- fim da fase ---------- */
+function finishLevel(win){
+  running = false;
+  const L = G.L, out = $("#endReward"); out.innerHTML = "";
+  const addSticker = id => { const S = STICKERS.find(s=>s.id===id); out.insertAdjacentHTML("beforeend",
+      `<div class="sticker" style="animation-delay:${out.children.length*.15}s"><img src="../pongo-francais/assets/st_${id}.webp" alt=""><b>Nova figurinha: ${S.name}</b></div>`); };
+  save.total = (save.total||0) + G.score;
+  if(win){
+    const stars = G.errors===0 ? 3 : G.errors<=2 ? 2 : 1;
+    save.stars[L.id] = Math.max(save.stars[L.id]||0, stars);
+    $("#endTitle").textContent = L.id==="dialogue" ? "You found Senhor Tromba!" : ["Good job!","Very good!","Super, Pongo!"][stars-1];
+    $("#endStars").innerHTML = "★".repeat(stars) + `<span class="off">${"★".repeat(3-stars)}</span>`;
+    $("#endText").innerHTML = (L.id==="dialogue"
+      ? "O Pongo encontrou o <b>Senhor Tromba</b>! Agora ele sabe usar have got, do/does e o present continuous. <span class='fr'>See you next class!</span>"
+      : `Você fez <b>${G.score} pontos</b> com ${G.errors} erro${G.errors===1?"":"s"} · maior combo: ${G.maxCombo}.`);
+    if(giveSticker(L.sticker)) addSticker(L.sticker);
+    if(stars===3 && giveSticker(L.bonus)) addSticker(L.bonus);
+    sfx.win(); speak(L.id==="dialogue" ? "Well done, Pongo! See you next class!" : "Well done!");
+  } else {
+    $("#endTitle").textContent = "Oh no…";
+    $("#endStars").innerHTML = `<span class="off">★★★</span>`;
+    $("#endText").innerHTML = "Os croissants acabaram e o Pongo ficou com sono… Revise a mini-aula e tente de novo!";
+    if(giveSticker("sonolento")) addSticker("sonolento");
+  }
+  if(G.maxCombo>=8 && giveSticker("predador")) {}
+  if(save.total >= 600 && giveSticker("mordida")) addSticker("mordida");
+  if(LEVELS.every(l=>(save.stars[l.id]||0)===3) && giveSticker("naosolto")) addSticker("naosolto");
+  persist();
+  const hasNext = win && LI < LEVELS.length-1;
+  $("#btnNextLvl").style.display = hasNext ? "" : "none";
+  show("end");
+}
+$("#btnNextLvl").onclick = () => openIntro(LI+1);
+$("#btnRetry").onclick = () => startLevel(LI);
+$("#btnMap").onclick = () => show("map");
+
+/* ============================================================
+   LOOP / DESENHO
+   ============================================================ */
+function loop(now){
+  if(!running) return;
+  const dt = Math.min(.05, (now-lastT)/1000); lastT = now;
+  update(dt); draw();
+  requestAnimationFrame(loop);
+}
+
+function update(dt){
+  const a = G.anim; a.t += dt;
+  const moving = G.phase==="run" || G.phase==="jump";
+  G.bg += (moving ? G.speed : 0) * dt;
+  G.shake = Math.max(0, G.shake - dt);
+
+  if(G.phase === "run"){
+    G.gateX -= G.gateV * dt;
+    if(G.gateX <= PX + 70){ G.gateX = PX + 70; resolveMC(); }
+  } else if(G.phase === "jump" || G.phase === "fail"){
+    G.t += dt;
+    if(G.L.type==="mc") G.gateX -= (G.phase==="jump" ? G.speed : 0) * dt;
+    if(G.phase==="jump" && G.t > .42 && !G.popped){
+      G.popped = true; burst(PX+70, G.L.type==="mc" ? LANE_Y[G.jumpLane] : 120, true);
+    }
+    if(G.phase==="fail" && !G.popped){ G.popped = true; burst(PX+80, G.L.type==="mc" ? LANE_Y[G.jumpLane] : 150, false); }
+    const sp = SPR[a.k], dur = sp.frames.length / sp.fps;
+    if(a.t >= dur){ setAnim(G.phase==="jump" ? (G.L.type==="build" ? "happy":"walk") : (G.L.type==="build"?"sit":"walk")); G.phase = "after"; G.popped=false; }
+  } else if(G.phase === "after"){
+    if(G.L.type==="mc"){ G.gateX -= G.speed*dt; G.bg += G.speed*dt; }
+  }
+  G.particles.forEach(p=>{ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=500*dt; p.r+=p.vr*dt; });
+  G.particles = G.particles.filter(p=>p.t<1.4);
+  G.floats.forEach(f=>{ f.t+=dt; f.y-=40*dt; });
+  G.floats = G.floats.filter(f=>f.t<1.2);
+}
+
+function burst(x,y,good){
+  const cols = good ? ["#d63c55","#2f86a6","#f4b324","#2f9e63","#fff"] : ["#8a8796","#b9b6c6","#5b5872"];
+  for(let i=0;i<(good?36:16);i++){
+    const ang = Math.random()*Math.PI*2, v = 120+Math.random()*260;
+    G.particles.push({x,y,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v-150,t:0,r:Math.random()*6,vr:(Math.random()-.5)*12,c:cols[i%cols.length],s:4+Math.random()*6,good});
+  }
+}
+
+/* ---------- cenários ---------- */
+const THEMES = {
+  classe:{sky:["#bfe6f5","#eaf7ff"], far:"#9cc7dc", near:"#7fb0c8", ground:"#c9a26b", line:"#a07d4d", land:"bigben"},
+  saopaulo:{sky:["#ffd9a8","#fff3dc"], far:"#d9a98c", near:"#b98a73", ground:"#8f8f9a", line:"#6d6d78", land:"bus"},
+  monde:{sky:["#a8e0ff","#e9f8ff"], far:"#9fd3b0", near:"#79b98e", ground:"#7cc06e", line:"#5c9a50", land:"plane"},
+  lyon:{sky:["#ffc9c2","#fff0e5"], far:"#e3a7a0", near:"#c98b84", ground:"#c48b5a", line:"#9b6a40", land:"basilique"},
+  parc:{sky:["#c6b8ff","#fbe9ff"], far:"#a99be0", near:"#8d7fc8", ground:"#69b46a", line:"#4d924f", land:"bigben"}
+};
+function rnd(seed){ const x = Math.sin(seed*999.13)*43758.5453; return x - Math.floor(x); }
+
+function drawBG(){
+  const th = THEMES[G.L.theme] || THEMES.classe;
+  const g = ctx.createLinearGradient(0,0,0,GROUND);
+  g.addColorStop(0, th.sky[0]); g.addColorStop(1, th.sky[1]);
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  // sol
+  ctx.fillStyle = "rgba(255,255,255,.7)"; ctx.beginPath(); ctx.arc(820,70,38,0,7); ctx.fill();
+  // nuvens
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  for(let i=0;i<6;i++){
+    const span = 1400, x = ((i*260 - G.bg*.12) % span + span) % span - 120, y = 40 + rnd(i)*70;
+    cloud(x,y, .7+rnd(i+3)*.6);
+  }
+  // prédios distantes
+  layer(th.far, .25, 150, 70, 2);
+  // marco (landmark)
+  const span = 1500, lx = ((900 - G.bg*.35) % span + span) % span - 200;
+  landmark(th.land, lx, GROUND-8, th.near);
+  // prédios próximos
+  layer(th.near, .45, 95, 45, 7);
+  // chão
+  ctx.fillStyle = th.ground; ctx.fillRect(0,GROUND,W,H-GROUND);
+  ctx.fillStyle = "rgba(0,0,0,.12)"; ctx.fillRect(0,GROUND,W,5);
+  ctx.strokeStyle = th.line; ctx.lineWidth = 3;
+  const tw = 64, off = G.bg % tw;
+  for(let x=-off; x<W; x+=tw){ ctx.beginPath(); ctx.moveTo(x,GROUND+5); ctx.lineTo(x-18,H); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(0,GROUND+22); ctx.lineTo(W,GROUND+22); ctx.stroke();
+  // postes
+  const ps = 520, po = G.bg % ps;
+  for(let x=-po+260; x<W+60; x+=ps) lamp(x);
+}
+function cloud(x,y,s){ ctx.beginPath(); ctx.arc(x,y,18*s,0,7); ctx.arc(x+22*s,y-10*s,22*s,0,7); ctx.arc(x+46*s,y,18*s,0,7); ctx.rect(x,y,46*s,18*s); ctx.fill(); }
+function layer(col, par, maxH, minH, seed){
+  ctx.fillStyle = col;
+  const bw = 70, span = bw*24, off = (G.bg*par) % span;
+  for(let i=0;i<24;i++){
+    let x = i*bw - off; if(x < -bw) x += span;
+    if(x > W) continue;
+    const h = minH + rnd(i+seed*31)*(maxH-minH), w = bw - 6 - rnd(i+seed)*14;
+    ctx.fillRect(x, GROUND-h, w, h);
+    if(rnd(i*7+seed)>.5){ ctx.beginPath(); ctx.moveTo(x,GROUND-h); ctx.lineTo(x+w/2,GROUND-h-18); ctx.lineTo(x+w,GROUND-h); ctx.fill(); }
+    ctx.fillStyle = "rgba(255,255,255,.25)";
+    for(let wy=GROUND-h+12; wy<GROUND-12; wy+=18) for(let wx=x+8; wx<x+w-10; wx+=16) ctx.fillRect(wx,wy,7,9);
+    ctx.fillStyle = col;
+  }
+}
+function landmark(type,x,base,col){
+  ctx.save(); ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = 5;
+  if(type==="eiffel"){
+    ctx.beginPath(); ctx.moveTo(x-55,base); ctx.quadraticCurveTo(x-12,base-90,x-6,base-230); ctx.lineTo(x+6,base-230);
+    ctx.quadraticCurveTo(x+12,base-90,x+55,base); ctx.lineTo(x+32,base); ctx.quadraticCurveTo(x,base-55,x-32,base); ctx.closePath(); ctx.fill();
+    ctx.fillRect(x-36,base-80,72,8); ctx.fillRect(x-20,base-150,40,7); ctx.fillRect(x-2,base-262,4,34);
+  } else if(type==="masp"){
+    ctx.fillRect(x-110,base-120,220,58); ctx.fillRect(x-110,base-120,16,120); ctx.fillRect(x+94,base-120,16,120);
+    ctx.fillStyle = "rgba(214,60,85,.75)"; ctx.fillRect(x-110,base-128,220,10); ctx.fillRect(x-110,base-62,220,8);
+  } else if(type==="basilique"){
+    ctx.fillRect(x-80,base-110,160,110); ctx.fillRect(x-80,base-150,26,40); ctx.fillRect(x+54,base-150,26,40);
+    ctx.beginPath(); ctx.arc(x,base-110,40,Math.PI,0); ctx.fill();
+  } else if(type==="bigben"){
+    ctx.fillRect(x-22,base-210,44,210); ctx.fillRect(x-28,base-220,56,14);
+    ctx.beginPath(); ctx.moveTo(x-26,base-220); ctx.lineTo(x,base-285); ctx.lineTo(x+26,base-220); ctx.fill();
+    ctx.fillRect(x-110,base-90,90,90); ctx.fillRect(x+20,base-70,110,70);
+    ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.beginPath(); ctx.arc(x,base-175,15,0,7); ctx.fill();
+    ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x,base-175); ctx.lineTo(x,base-186); ctx.moveTo(x,base-175); ctx.lineTo(x+8,base-175); ctx.stroke();
+  } else if(type==="bus"){
+    const bx = x, by = base;
+    ctx.fillStyle = "#d63c55"; ctx.strokeStyle = "#1d1b2f"; ctx.lineWidth = 3;
+    rrect(bx-90,by-120,180,108,14); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e8f4fb";
+    for(let i=0;i<4;i++){ ctx.fillRect(bx-78+i*42,by-108,34,24); ctx.fillRect(bx-78+i*42,by-66,34,24); }
+    ctx.fillStyle = "#1d1b2f"; ctx.beginPath(); ctx.arc(bx-52,by-10,13,0,7); ctx.arc(bx+52,by-10,13,0,7); ctx.fill();
+    ctx.fillStyle = "#f4b324"; ctx.fillRect(bx-60,by-80,120,8);
+  } else if(type==="plane"){
+    const px = x, py = 90 + Math.sin(G.bg/120)*8;
+    ctx.fillStyle = "#fff"; ctx.strokeStyle = "#1d1b2f"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.ellipse(px,py,60,13,0,0,7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px-5,py); ctx.lineTo(px-30,py+34); ctx.lineTo(px-14,py+34); ctx.lineTo(px+18,py); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px-50,py-6); ctx.lineTo(px-64,py-30); ctx.lineTo(px-52,py-30); ctx.lineTo(px-38,py-8); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#d63c55"; ctx.fillRect(px-20,py-4,50,4);
+    // faixa
+    ctx.strokeStyle = "#1d1b2f"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px-60,py); ctx.lineTo(px-90,py); ctx.stroke();
+    ctx.fillStyle = "#fffdf7"; ctx.fillRect(px-230,py-14,140,28); ctx.strokeRect(px-230,py-14,140,28);
+    ctx.fillStyle = "#1d1b2f"; ctx.font = "700 16px 'Baloo 2', sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("Have a nice trip!", px-160, py+1);
+  }
+  ctx.restore();
+}
+function lamp(x){
+  ctx.fillStyle = "#1f2a5a"; ctx.fillRect(x-3,GROUND-110,6,110); ctx.fillRect(x-12,GROUND-6,24,6);
+  ctx.beginPath(); ctx.arc(x,GROUND-114,10,0,7); ctx.fill();
+  ctx.fillStyle = "#ffe9a8"; ctx.beginPath(); ctx.arc(x,GROUND-114,6,0,7); ctx.fill();
+}
+
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+function drawGate(){
+  if(G.L.type !== "mc" || G.gateX > W+200 || G.gateX < -200) return;
+  const x = G.gateX;
+  ctx.fillStyle = "#5a3d22"; ctx.fillRect(x+60,LANE_Y[0]-30,10,GROUND-LANE_Y[0]+30);
+  ctx.fillRect(x+48,GROUND-8,34,8);
+  ctx.font = "700 17px 'Baloo 2', sans-serif"; ctx.textBaseline = "middle";
+  G.opts.forEach((o,i)=>{
+    const y = LANE_Y[i];
+    if(G.popped && i===G.sel && G.phase!=="run") return;
+    let label = o.t; ctx.textAlign = "left";
+    const maxW = 150;
+    while(ctx.measureText(label).width > maxW && label.length > 4) label = label.slice(0,-2);
+    if(label !== o.t) label = label.trimEnd() + "…";
+    const w = Math.max(70, ctx.measureText(label).width + 52), bx = x - w + 66, by = y - 20;
+    ctx.fillStyle = "#1d1b2f"; rrect(bx+3,by+4,w,40,12); ctx.fill();
+    ctx.fillStyle = (G.phase!=="run" && i===G.ans) ? "#2f9e63" : (G.phase!=="run" && i===G.sel) ? "#8a8796" : LANE_COL[i];
+    rrect(bx,by,w,40,12); ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#1d1b2f"; ctx.stroke();
+    ctx.fillStyle = "#fff"; rrect(bx+7,by+8,24,24,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#1d1b2f"; ctx.textAlign = "center"; ctx.fillText(LETTERS[i], bx+19, by+21);
+    ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(label, bx+38, by+21);
+    if(G.sel === i && G.phase==="run"){ ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; rrect(bx-5,by-5,w+10,50,15); ctx.stroke(); }
+  });
+}
+
+function drawPongo(){
+  const a = G.anim, sp = SPR[a.k];
+  if(!sp.img.complete || !sp.img.naturalWidth) return;
+  let fi;
+  const f = Math.floor(a.t * sp.fps);
+  if(sp.loop) fi = sp.frames[f % sp.frames.length];
+  else fi = sp.frames[Math.min(f, sp.frames.length-1)];
+  const fw = sp.img.naturalWidth / sp.n, fh = sp.img.naturalHeight;
+  const dh = 168 * sp.scale, dw = fw * dh / fh;
+  let y = GROUND + 4 - dh, x = PX - dw/2;
+  if(a.k === "jump"){
+    const dur = sp.frames.length / sp.fps, p = Math.min(1, a.t/dur);
+    const peak = G.L.type==="mc" ? [150, 95, 55][G.jumpLane] : 70;
+    y -= Math.sin(Math.PI*p) * peak;
+    x += Math.sin(Math.PI*p) * 20;
+  }
+  if(a.k === "walk") y += Math.abs(Math.sin(a.t*12))*-3;
+  if(G.shake > 0) x += Math.sin(G.shake*80)*6;
+  // sombra
+  ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(PX, GROUND+3, 58, 9, 0, 0, 7); ctx.fill();
+  ctx.drawImage(sp.img, fi*fw, 0, fw, fh, x, y, dw, dh);
+}
+
+function draw(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  drawBG();
+  if(G.L.type==="build"){
+    // placa com bilhete
+    ctx.save(); ctx.translate(600,150); ctx.rotate(-.04);
+    ctx.fillStyle="#1d1b2f"; rrect(-150+4,-70+5,300,140,14); ctx.fill();
+    ctx.fillStyle="#fffdf7"; rrect(-150,-70,300,140,14); ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle="#1d1b2f"; ctx.stroke();
+    ctx.fillStyle="#d63c55"; ctx.font="800 22px 'Baloo 2',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText("A message from", 0, -36); ctx.fillText("Senhor Tromba 🐘", 0, -8);
+    ctx.fillStyle="#5b5872"; ctx.font="700 17px 'Baloo 2',sans-serif";
+    ctx.fillText(`Frase ${Math.min(G.qi+1,G.qs.length)} / ${G.qs.length}`, 0, 30);
+    ctx.restore();
+  }
+  drawGate();
+  drawPongo();
+  G.particles.forEach(p=>{
+    ctx.save(); ctx.globalAlpha = Math.max(0,1-p.t/1.4); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+    ctx.fillStyle = p.c; if(p.good) ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.6); else { ctx.beginPath(); ctx.arc(0,0,p.s,0,7); ctx.fill(); }
+    ctx.restore();
+  });
+  ctx.font = "800 30px 'Baloo 2',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  G.floats.forEach(f=>{ ctx.globalAlpha = 1-f.t/1.2; ctx.lineWidth=5; ctx.strokeStyle="#1d1b2f"; ctx.strokeText(f.txt,f.x,f.y); ctx.fillStyle="#f4b324"; ctx.fillText(f.txt,f.x,f.y); ctx.globalAlpha=1; });
+  // barra de tempo
+  if(G.phase==="run" && G.L.type==="mc"){
+    const p = (G.gateX-(PX+70)) / (G.startX-(PX+70));
+    ctx.fillStyle="rgba(29,27,47,.25)"; rrect(20,16,200,14,7); ctx.fill();
+    ctx.fillStyle = p>.35 ? "#2f9e63" : "#d63c55"; rrect(20,16,Math.max(8,200*p),14,7); ctx.fill();
+    ctx.font="700 14px 'Baloo 2',sans-serif"; ctx.fillStyle="#1d1b2f"; ctx.textAlign="left"; ctx.fillText("⏱", 228, 24);
+  }
+}
+
+/* ---------- toast ---------- */
+let toastT = 0;
+function toastMsg(m){ const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("on"), 1300); }
+
+/* ============================================================
+   CONTROLES
+   ============================================================ */
+addEventListener("keydown", e=>{
+  if(current !== "play" || !G) return;
+  if(["1","2","3"].includes(e.key) && G.L.type==="mc"){ choose(+e.key-1); e.preventDefault(); }
+  if((e.key==="Enter" || e.key===" ") && $("#fb").classList.contains("on")){ goNext(); e.preventDefault(); }
+});
+$("#qSay").onclick = () => {
+  if(!G) return; const q = G.qs[Math.min(G.qi, G.qs.length-1)];
+  if(G.L.type==="build") speak(joinWords(q.w), true);
+  else speak(q.q.replace("___","…"), true);
+};
+$("#btnStart").onclick = () => { ac(); show("map"); };
+$("#btnPlay").onclick = () => { ac(); startLevel(LI); };
+$("#btnBack1").onclick = () => show("map");
+$("#btnQuit").onclick = () => { if(G) clearTimeout(G.autoNext); if(window.speechSynthesis) speechSynthesis.cancel(); show("map"); };
+$("#homeLogo").onclick = () => show("title");
+$("#btnCad").onclick = $("#btnCad2").onclick = () => show("cad");
+$("#btnCadBack").onclick = () => show(prevScreen==="play" ? "map" : prevScreen);
+$("#btnAlbum").onclick = () => show("album");
+function syncToggles(){
+  $("#btnVoice").setAttribute("aria-pressed", save.voice); $("#btnSfx").setAttribute("aria-pressed", save.sfx);
+  $("#btnSfx").textContent = save.sfx ? "🔊" : "🔇";
+}
+$("#btnVoice").onclick = () => { save.voice = !save.voice; persist(); syncToggles(); toastMsg(save.voice?"Voz ligada":"Voz desligada"); };
+$("#btnSfx").onclick = () => { save.sfx = !save.sfx; persist(); syncToggles(); };
+syncToggles();
+</script>
+</body>
+</html>
