@@ -633,7 +633,7 @@
         const r = (sel || btn).getBoundingClientRect();
         FX.pop(r.left + r.width / 2, r.top + r.height / 2);
         if (ex.type === 'fill' || ex.type === 'choice') {
-          const sayIt = ex.type === 'fill' ? res.right : ex.options[ex.answer];
+          const sayIt = (ex.type === 'fill' ? res.right : ex.options[ex.answer]).replace(/\s*[(（][^)）]*[)）]\s*$/, '');
           if (P.isTarget(sayIt)) setTimeout(() => Audio.speak(sayIt), 400);
         }
       }

@@ -2,7 +2,7 @@
 troca o mapa 3D (Three.js + GLB do Blender) pelo mapa 2D com os sprites do Pongo."""
 import os, re
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-for src, dst in [("index.html", "index-2d.html"), ("coreano.html", "coreano-2d.html"), ("mandarim.html", "mandarim-2d.html"), ("japones.html", "japones-2d.html")]:
+for src, dst in [("index.html", "index-2d.html"), ("coreano.html", "coreano-2d.html"), ("mandarim.html", "mandarim-2d.html"), ("japones.html", "japones-2d.html"), ("frances.html", "frances-2d.html")]:
     s = open(os.path.join(root, src), encoding="utf-8").read()
     for js in ["js/vendor/three.min.js", "js/vendor/GLTFLoader.js", "js/vendor/OrbitControls.js", "js/world-data.js"]:
         s = s.replace(f'<script defer src="{js}"></script>\n', "")

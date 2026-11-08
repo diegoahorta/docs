@@ -119,6 +119,24 @@ Baseada na aula ODU Creative **"Dias da semana e movimento em japonês — tempo
 - **Exercícios da aula:** as atividades de completar com に/で, de corrigir o erro e de escolher o conector viraram desafios do jogo.
 - **Voz:** voz japonesa (ja-JP) do aparelho; sem ela, aparece a leitura em kana e rōmaji.
 
+## Versão em francês: Pongo Apprend le Français
+
+Adaptação para o francês da mesma aula da versão em japonês (**dias da semana e movimento: quando, onde e como você vai**), nível A1.
+
+- **Arquivos únicos:** `pongo-frances-2d.html` (2D cartoon) e `pongo-frances.html` (3D). Versões em pastas: `frances-2d.html` e `frances.html`.
+- **Conteúdo:** `js/levels-fr.js`, com 7 paradas e 63 desafios. As partes da aula de japonês viraram estas equivalências em francês:
+
+| Aula de japonês | Em francês |
+| --- | --- |
+| に de destino | à / au / à la / à l' / chez (à + le = au) |
+| に de horário | à sept heures; demain, aujourd'hui e tous les jours sem preposição; « le lundi » = toda segunda |
+| で de local da ação | também à / au: J'étudie à l'école, Je cours au parc |
+| で de transporte | en bus, en train, en voiture, en avion × à pied, à vélo |
+| Conectores | et, puis, mais, donc |
+
+- **Erros comuns** de brasileiros viraram desafios: « à la école », « à le parc », « à bus », « À demain » no lugar de « Demain », « à tous les jours ».
+- **Voz:** voz francesa (fr-FR) do aparelho.
+
 ## Versão 2D (cartoon)
 
 Mesmo jogo, com o jardim desenhado em 2D no traço dos sprites do Pongo, sem Three.js. Os arquivos ficam 5× menores (cerca de 1 MB) e rodam bem em celulares mais simples.

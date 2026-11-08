@@ -580,6 +580,9 @@ body.lang-ja {
 .lang-ja .block { font-size: 1.2rem; }
 .lang-ja .fb-text { font-size: 1.2rem; }
 
+/* ---------------------------------------------------------------- French pack (français) */
+.lang-fr .start-title .fr { color: var(--odu-red); font-style: italic; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
