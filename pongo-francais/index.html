@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pongo apprend le français</title>
+<meta name="description" content="Jogo de francês A1 (Encontro 01 · Bonjour !) com o Pongo: verbos s'appeler e habiter. ODU Creative.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fff5df; --paper:#fffdf7; --ink:#1d1b2f; --muted:#5b5872;
+  --red:#d63c55; --teal:#2f86a6; --yellow:#f4b324; --navy:#1f2a5a; --green:#2f9e63;
+  --a:#d63c55; --b:#2f86a6; --c:#e59a12;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--cream);
+  background-image:radial-gradient(rgba(29,27,47,.06) 1.5px, transparent 1.6px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:"Nunito",system-ui,sans-serif; font-size:17px; line-height:1.45;
+  -webkit-tap-highlight-color:transparent;
+}
+#app{max-width:1000px;margin:0 auto;padding:10px 16px 40px}
+h1,h2,h3,.baloo{font-family:"Baloo 2","Nunito",system-ui,sans-serif;line-height:1.1;margin:0}
+.screen{display:none}
+.screen.on{display:block;animation:pop .25s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fr{font-family:"Baloo 2",system-ui,sans-serif;font-weight:700}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px;min-height:48px}
+.top .logo{height:40px;width:auto;cursor:pointer}
+.top .grow{flex:1}
+.iconbtn{border:2.5px solid var(--ink);background:var(--paper);border-radius:12px;width:42px;height:42px;font-size:20px;cursor:pointer;box-shadow:0 3px 0 var(--ink);display:grid;place-items:center;padding:0}
+.iconbtn[aria-pressed="false"]{opacity:.45}
+.iconbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+
+/* buttons */
+.btn{font:800 19px/1 "Baloo 2",system-ui,sans-serif;border:3px solid var(--ink);border-radius:14px;padding:12px 20px 10px;background:var(--yellow);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn.alt{background:var(--paper)}
+.btn.red{background:var(--red);color:#fff}
+.btn.teal{background:var(--teal);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.center{justify-content:center;text-align:center}
+
+.card{background:var(--paper);border:3px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink);padding:18px}
+
+/* title */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center}
+.hero h1{font-size:clamp(38px,7vw,64px);color:var(--red);-webkit-text-stroke:2px var(--ink);text-shadow:0 4px 0 var(--ink);letter-spacing:.5px}
+.hero h1 span{color:var(--teal)}
+.hero .tag{display:inline-block;background:var(--navy);color:#fff;border-radius:10px;padding:4px 10px;font-weight:800;font-size:14px;margin-bottom:10px}
+.hero p{color:var(--muted);margin:12px 0 18px}
+.hero .capa{width:100%;max-width:380px;border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);transform:rotate(2deg);display:block;margin:0 auto}
+.spr{background-repeat:no-repeat;background-size:auto 100%;image-rendering:auto}
+.credit{margin-top:26px;color:var(--muted);font-size:14px;display:flex;align-items:center;gap:10px;justify-content:center}
+.credit img{height:28px}
+
+/* map */
+.maphead{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
+.maphead h2{font-size:32px}
+.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.lvl{position:relative;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.lvl:hover{transform:translateY(-2px)}
+.lvl .n{font:800 15px "Baloo 2";color:#fff;background:var(--teal);border-radius:8px;padding:2px 8px;display:inline-block}
+.lvl h3{font-size:24px;margin:8px 0 2px}
+.lvl .sub{color:var(--muted);font-size:15px}
+.lvl .stars{font-size:22px;letter-spacing:2px;margin-top:8px;color:var(--yellow);-webkit-text-stroke:1px var(--ink)}
+.lvl.locked{filter:grayscale(1);opacity:.6;cursor:not-allowed}
+.lvl.locked::after{content:"🔒";position:absolute;right:14px;top:12px;font-size:26px}
+.lvl .thumb{position:absolute;right:10px;bottom:10px;width:64px;height:64px;border-radius:12px;border:2px solid var(--ink);object-fit:cover}
+
+/* intro (mini-aula) */
+.intro h2{font-size:34px;color:var(--navy)}
+.intro .story{background:#fff1c9;border:2px dashed var(--ink);border-radius:14px;padding:10px 14px;margin:12px 0}
+.conj{width:100%;border-collapse:separate;border-spacing:0 6px;margin:6px 0}
+.conj td{padding:6px 10px;background:#fff;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.conj td:first-child{border-left:2px solid var(--ink);border-radius:10px 0 0 10px;color:var(--muted);width:34%}
+.conj td:last-child{border-right:2px solid var(--ink);border-radius:0 10px 10px 0;width:48px;text-align:center}
+.conj b{color:var(--red)}
+.say{border:2px solid var(--ink);background:var(--yellow);border-radius:10px;cursor:pointer;font-size:16px;width:38px;height:34px;padding:0}
+.tips{margin:10px 0 0;padding-left:20px}
+.tips li{margin:4px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* play */
+.hud{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.hud .ttl{font:800 20px "Baloo 2";flex:1;min-width:160px}
+.hud .pill{background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;padding:3px 12px;font-weight:800;white-space:nowrap}
+.prog{height:12px;border:2.5px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden;margin-bottom:10px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--teal));transition:width .4s}
+.stage{position:relative;border:3px solid var(--ink);border-radius:20px;overflow:hidden;box-shadow:0 6px 0 var(--ink);background:#bfe6f5}
+canvas{display:block;width:100%;height:auto;aspect-ratio:960/360}
+.toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:800 24px "Baloo 2";background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:6px 16px;box-shadow:0 4px 0 var(--ink);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(4px)}
+.qcard{margin-top:14px;display:flex;gap:12px;align-items:flex-start}
+.avatar{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font:800 22px "Baloo 2";color:#fff;background:var(--navy);overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.bubble{flex:1;position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;min-height:52px}
+.bubble::before{content:"";position:absolute;left:-12px;top:16px;border:9px solid transparent;border-right-color:var(--ink)}
+.bubble .who{font:800 14px "Baloo 2";color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.bubble .q{font:700 clamp(20px,3.2vw,27px)/1.25 "Baloo 2";margin:2px 0}
+.bubble .q .gap{display:inline-block;min-width:70px;border-bottom:3px solid var(--red);color:var(--red);text-align:center}
+.bubble .pt{color:var(--muted);font-size:15px}
+.bubble .say{position:absolute;right:10px;top:10px}
+.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.ans{font:700 clamp(17px,2.4vw,21px)/1.15 "Baloo 2";border:3px solid var(--ink);border-radius:14px;padding:12px 10px 10px;color:#fff;cursor:pointer;box-shadow:0 4px 0 var(--ink);display:flex;align-items:center;gap:8px;text-align:left;min-height:58px}
+.ans .k{flex:none;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:8px;width:28px;height:28px;display:grid;place-items:center;font-size:17px}
+.ans[data-i="0"]{background:var(--a)}
+.ans[data-i="1"]{background:var(--b)}
+.ans[data-i="2"]{background:var(--c)}
+.ans.sel{outline:4px solid var(--ink);outline-offset:2px}
+.ans.good{background:var(--green)!important}
+.ans.bad{background:#8a8796!important;text-decoration:line-through}
+.ans:disabled{cursor:default}
+.ans:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.hint{color:var(--muted);font-size:14px;margin-top:8px;text-align:center}
+.feedback{margin-top:12px;border-radius:16px;border:3px solid var(--ink);padding:12px 14px;display:none;gap:12px;align-items:center}
+.feedback.on{display:flex}
+.feedback.ok{background:#dff5e8}
+.feedback.ko{background:#ffe1e4}
+.feedback .big{font:800 22px "Baloo 2"}
+.feedback .full{font:700 21px "Baloo 2";color:var(--navy)}
+.feedback .tip{font-size:15px;color:var(--ink)}
+.feedback .grow{flex:1}
+
+/* builder */
+.slots{min-height:64px;border:3px dashed var(--ink);border-radius:14px;background:#fff;padding:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.slots:empty::before{content:"Toque nas palavras para montar a frase…";color:var(--muted);padding:6px}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center}
+.tile{font:700 21px/1 "Baloo 2";border:3px solid var(--ink);border-radius:12px;padding:10px 14px 8px;background:var(--paper);cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.tile.used{visibility:hidden}
+.slots .tile{background:#fff1c9}
+
+/* end */
+.end{text-align:center}
+.end h2{font-size:40px;color:var(--red);-webkit-text-stroke:1.5px var(--ink)}
+.end .stars{font-size:54px;letter-spacing:6px;color:var(--yellow);-webkit-text-stroke:2px var(--ink)}
+.end .stars .off{color:#ddd}
+.reward{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.sticker{width:170px;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px;box-shadow:0 5px 0 var(--ink);animation:spin .6s ease-out both}
+.sticker img{width:100%;border-radius:10px;display:block}
+.sticker b{display:block;font:800 15px "Baloo 2";margin-top:6px}
+@keyframes spin{from{transform:scale(.3) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+
+/* album */
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.slot{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px;text-align:center;box-shadow:0 4px 0 var(--ink)}
+.slot img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;display:block}
+.slot.lock img{filter:grayscale(1) blur(5px) brightness(1.15);opacity:.5}
+.slot b{display:block;font:800 15px "Baloo 2";margin-top:6px}
+.slot small{color:var(--muted);font-size:12.5px;display:block;line-height:1.25}
+
+/* caderno */
+.cad h2{font-size:32px;margin-bottom:10px}
+.cad h3{font-size:24px;color:var(--teal);margin:6px 0}
+.cad .card{margin-bottom:16px}
+.err{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:15px}
+.err .x{color:var(--red);text-decoration:line-through}
+.err .v{color:var(--green);font-weight:800}
+
+@media (max-width:700px){
+  .hero{grid-template-columns:1fr}
+  .hero .capa{max-width:260px}
+  .cols{grid-template-columns:1fr}
+  .answers{grid-template-columns:1fr}
+  .ans{min-height:50px}
+  .bubble .say{position:static;float:right;margin-left:6px}
+  .top .logo{height:32px}
+  .hud{gap:8px}
+  .hud .ttl{flex-basis:100%;font-size:18px}
+  .hud .pill{font-size:15px;padding:2px 10px}
+  .hud .iconbtn{margin-left:auto;width:36px;height:36px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="top">
+    <img class="logo" src="assets/logo.png" alt="ODU Creative" id="homeLogo">
+    <div class="grow"></div>
+    <button class="iconbtn" id="btnCad" title="Caderno (gramática)" aria-label="Caderno">📒</button>
+    <button class="iconbtn" id="btnAlbum" title="Álbum de figurinhas" aria-label="Álbum">🖼️</button>
+    <button class="iconbtn" id="btnVoice" title="Voz em francês automática" aria-pressed="true" aria-label="Voz">🗣️</button>
+    <button class="iconbtn" id="btnSfx" title="Efeitos sonoros" aria-pressed="true" aria-label="Efeitos">🔊</button>
+  </header>
+
+  <!-- TÍTULO -->
+  <section class="screen on" id="scr-title">
+    <div class="hero">
+      <div>
+        <span class="tag">Francês A1 · Encontro 01 · Bonjour !</span>
+        <h1>Pongo <span>apprend</span> le français</h1>
+        <p>O <b>Senhor Tromba</b>, o elefantinho de pelúcia do Pongo, sumiu durante a aula de francês da professora Claire! Para encontrá-lo, o Pongo precisa se apresentar e perguntar a todo mundo <b>onde mora</b>. Ajude o Pongo com os verbos <span class="fr">s’appeler</span> e <span class="fr">habiter</span>!</p>
+        <div class="row">
+          <button class="btn red" id="btnStart">▶ Jouer !</button>
+          <button class="btn alt" id="btnCad2">📒 Caderno</button>
+        </div>
+        <div style="margin-top:18px;height:150px;display:flex;align-items:flex-end;gap:6px">
+          <div class="spr" id="titleDog" style="height:150px"></div>
+        </div>
+      </div>
+      <img class="capa" src="assets/st_capa.webp" alt="Pongo e Senhor Tromba">
+    </div>
+    <div class="credit"><img src="assets/logo.png" alt="">Caderno de Francês A1 · ODU Creative</div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="screen" id="scr-map">
+    <div class="maphead">
+      <h2>Le voyage de Pongo</h2>
+      <div class="pill hud"><span class="pill" id="totalStars">⭐ 0/15</span><span class="pill" id="totalStickers">🖼️ 0</span></div>
+    </div>
+    <div class="levels" id="levels"></div>
+  </section>
+
+  <!-- MINI-AULA -->
+  <section class="screen intro" id="scr-intro">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <span class="n" id="inN" style="font:800 15px 'Baloo 2';color:#fff;background:var(--teal);border-radius:8px;padding:2px 8px">Fase 1</span>
+          <h2 id="inTitle" style="margin-top:6px"></h2>
+          <div class="sub" id="inSub" style="color:var(--muted)"></div>
+        </div>
+        <div class="spr" id="introDog" style="height:120px"></div>
+      </div>
+      <div class="story" id="inStory"></div>
+      <div id="inBody"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn red" id="btnPlay">▶ C’est parti !</button>
+        <button class="btn alt" id="btnBack1">← Mapa</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOGO -->
+  <section class="screen" id="scr-play">
+    <div class="hud">
+      <div class="ttl" id="pTitle"></div>
+      <span class="pill" id="pLives">🥐🥐🥐</span>
+      <span class="pill" id="pCombo">🔥 0</span>
+      <span class="pill" id="pScore">0 pts</span>
+      <button class="iconbtn" id="btnQuit" title="Voltar ao mapa" aria-label="Sair">✖</button>
+    </div>
+    <div class="prog"><i id="pProg"></i></div>
+    <div class="stage">
+      <canvas id="cv" width="960" height="360"></canvas>
+      <div class="toast" id="toast"></div>
+    </div>
+    <div class="qcard">
+      <div class="avatar" id="qAv">C</div>
+      <div class="bubble">
+        <button class="say" id="qSay" title="Ouvir">🔊</button>
+        <div class="who" id="qWho"></div>
+        <div class="q" id="qText"></div>
+        <div class="pt" id="qPt"></div>
+      </div>
+    </div>
+    <div id="mcArea">
+      <div class="answers" id="answers"></div>
+      <div class="hint">Escolha a placa certa antes que ela chegue ao Pongo · teclas <b>1 2 3</b></div>
+    </div>
+    <div id="buildArea" style="display:none">
+      <div class="slots" id="slots"></div>
+      <div class="pool" id="pool"></div>
+      <div class="row center" style="margin-top:12px">
+        <button class="btn alt" id="btnClear">↺ Limpar</button>
+        <button class="btn teal" id="btnCheck">✔ Vérifier</button>
+      </div>
+    </div>
+    <div class="feedback" id="fb">
+      <div class="grow">
+        <div class="big" id="fbBig"></div>
+        <div class="full fr" id="fbFull"></div>
+        <div class="tip" id="fbTip"></div>
+      </div>
+      <button class="say" id="fbSay" title="Ouvir">🔊</button>
+      <button class="btn" id="btnNext">Continuer ▶</button>
+    </div>
+  </section>
+
+  <!-- FIM DE FASE -->
+  <section class="screen end" id="scr-end">
+    <div class="card">
+      <h2 id="endTitle">Bravo !</h2>
+      <div class="stars" id="endStars"></div>
+      <p id="endText"></p>
+      <div class="reward" id="endReward"></div>
+      <div class="row center">
+        <button class="btn red" id="btnNextLvl">Próxima fase ▶</button>
+        <button class="btn alt" id="btnRetry">↺ Jogar de novo</button>
+        <button class="btn alt" id="btnMap">🗺️ Mapa</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÁLBUM -->
+  <section class="screen" id="scr-album">
+    <div class="maphead"><h2 class="baloo" style="font-size:32px">Álbum: Pongo &amp; Senhor Tromba</h2><button class="btn alt" data-go="map">🗺️ Mapa</button></div>
+    <div class="album" id="album"></div>
+  </section>
+
+  <!-- CADERNO -->
+  <section class="screen cad" id="scr-cad">
+    <div class="maphead"><h2>📒 Caderno do Pongo</h2><button class="btn alt" id="btnCadBack">← Voltar</button></div>
+    <div id="cadBody"></div>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   DADOS DA AULA — Francês A1 · Encontro 01 · Bonjour !
+   Foco: s'appeler e habiter (+ à / au / en)
+   ============================================================ */
+const PEOPLE = {
+  Claire:{name:"Claire · professeure", color:"#d63c55"},
+  Ana:{name:"Ana · étudiante brésilienne", color:"#2f86a6"},
+  Lucas:{name:"Lucas · assistant français", color:"#1f2a5a"},
+  Julie:{name:"Julie · sœur de Lucas", color:"#8b4fb3"},
+  Pongo:{name:"Pongo", img:"assets/st_feliz.webp"},
+  Tromba:{name:"Senhor Tromba", img:"assets/st_juntos.webp"},
+  Caderno:{name:"Caderno", color:"#e59a12", ch:"📒"}
+};
+
+const T_APPELER = `
+<table class="conj">
+<tr><td>je</td><td class="fr">je <b>m’appelle</b></td><td><button class="say" data-say="je m'appelle">🔊</button></td></tr>
+<tr><td>tu</td><td class="fr">tu <b>t’appelles</b></td><td><button class="say" data-say="tu t'appelles">🔊</button></td></tr>
+<tr><td>il / elle</td><td class="fr">il / elle <b>s’appelle</b></td><td><button class="say" data-say="il s'appelle. elle s'appelle">🔊</button></td></tr>
+<tr><td>vous</td><td class="fr">vous <b>vous appelez</b></td><td><button class="say" data-say="vous vous appelez">🔊</button></td></tr>
+</table>`;
+const T_APPELER_BONUS = `
+<table class="conj">
+<tr><td>nous <small>(bônus)</small></td><td class="fr">nous <b>nous appelons</b></td><td><button class="say" data-say="nous nous appelons">🔊</button></td></tr>
+<tr><td>ils / elles <small>(bônus)</small></td><td class="fr">ils / elles <b>s’appellent</b></td><td><button class="say" data-say="ils s'appellent">🔊</button></td></tr>
+</table>`;
+const T_HABITER = `
+<table class="conj">
+<tr><td>je / j’</td><td class="fr"><b>j’habite</b></td><td><button class="say" data-say="j'habite">🔊</button></td></tr>
+<tr><td>tu</td><td class="fr">tu <b>habites</b></td><td><button class="say" data-say="tu habites">🔊</button></td></tr>
+<tr><td>il / elle / on</td><td class="fr">il / elle <b>habite</b></td><td><button class="say" data-say="il habite. elle habite">🔊</button></td></tr>
+<tr><td>nous</td><td class="fr">nous‿<b>habitons</b></td><td><button class="say" data-say="nous habitons">🔊</button></td></tr>
+<tr><td>vous</td><td class="fr">vous‿<b>habitez</b></td><td><button class="say" data-say="vous habitez">🔊</button></td></tr>
+<tr><td>ils / elles</td><td class="fr">ils / elles <b>habitent</b></td><td><button class="say" data-say="ils habitent">🔊</button></td></tr>
+</table>`;
+const T_PREP = `
+<table class="conj">
+<tr><td>cidade → <b>à</b></td><td class="fr">J’habite <b>à</b> São Paulo.</td><td><button class="say" data-say="J'habite à São Paulo.">🔊</button></td></tr>
+<tr><td>país masculino → <b>au</b></td><td class="fr">J’habite <b>au</b> Brésil.</td><td><button class="say" data-say="J'habite au Brésil.">🔊</button></td></tr>
+<tr><td>país feminino → <b>en</b></td><td class="fr">Julie habite <b>en</b> France.</td><td><button class="say" data-say="Julie habite en France.">🔊</button></td></tr>
+</table>`;
+
+const LEVELS = [
+{
+  id:"appeler", n:1, type:"mc", count:8, theme:"classe",
+  title:"Je m’appelle Pongo !", sub:"Verbo s’appeler (chamar-se)",
+  sticker:"feliz", bonus:"carinhoso",
+  story:"Primeiro dia de aula! A professora Claire pergunta o nome de todo mundo. O Pongo precisa se apresentar e descobrir o nome dos colegas. <b>Escolha a placa certa</b> e o Pongo pula para pegá-la!",
+  lesson: T_APPELER + `<ul class="tips">
+    <li>O pronome (<span class="fr">me, te, se, vous</span>) vem <b>antes</b> do verbo e vira <span class="fr">m’, t’, s’</span> antes de vogal.</li>
+    <li>Pronúncia: <span class="fr">appelle, appelles</span> [apɛl] (LL, é aberto) × <span class="fr">appelez</span> [aple] (um L só, é fechado).</li>
+    <li>Com o professor ou um desconhecido: <b>vous</b>. Com colegas e amigos: <b>tu</b>.</li></ul>`,
+  qs:[
+    {who:"Claire", q:"Bonjour à tous ! Je ___ Claire.", o:["m’appelle","me appelle","t’appelles"], pt:"Bom dia a todos! Eu me chamo Claire.", tip:"je + appelle → <b>je m’appelle</b>: o <i>me</i> vira <i>m’</i> antes de vogal."},
+    {who:"Claire", q:"Et vous, madame, comment ___ ?", o:["vous vous appelez","tu t’appelles","vous vous appelles"], pt:"E a senhora, como se chama?", tip:"Com uma pessoa desconhecida usamos <b>vous</b>: <i>vous vous appelez</i> (terminação -ez)."},
+    {who:"Lucas", q:"Salut, Ana ! Comment tu ___ ?", o:["t’appelles","t’appelez","s’appelle"], pt:"Oi, Ana! Como você se chama?", tip:"tu → <b>t’appelles</b> (com -s no final)."},
+    {who:"Lucas", q:"C’est ma sœur. Elle ___ Julie.", o:["s’appelle","m’appelle","t’appelles"], pt:"É minha irmã. Ela se chama Julie.", tip:"il / elle → <b>s’appelle</b>."},
+    {who:"Claire", q:"Voici l’assistant. Il ___ Lucas.", o:["s’appelle","s’appelles","vous appelez"], pt:"Este é o assistente. Ele se chama Lucas.", tip:"il / elle → <b>s’appelle</b> (sem -s)."},
+    {who:"Pongo", q:"Mon meilleur ami ___ Senhor Tromba !", o:["s’appelle","m’appelle","s’appelez"], pt:"Meu melhor amigo se chama Senhor Tromba!", tip:"Ele (o amigo) → <b>il s’appelle</b>."},
+    {who:"Caderno", q:"Qual é o jeito preferido de dizer o nome em francês?", o:["Je m’appelle Pongo.","Je suis appelle Pongo.","Je me appelle Pongo."], pt:"Eu me chamo Pongo.", tip:"Para dar o nome o francês prefere <b>s’appeler</b>: <i>Je m’appelle Pongo.</i>"},
+    {who:"Caderno", q:"Lucas fala com um colega da turma (informal). O que ele pergunta?", o:["Comment tu t’appelles ?","Comment vous t’appelles ?","Comment tu vous appelez ?"], pt:"Como você se chama?", tip:"Com colegas e amigos: <b>tu</b> → <i>Comment tu t’appelles ?</i>"},
+    {who:"Caderno", q:"Qual forma se pronuncia [aple] — um L só e “é” fechado?", o:["vous vous appelez","je m’appelle","tu t’appelles"], pt:"appelle / appelles = [apɛl] · appelez = [aple]", say:"je m'appelle. vous vous appelez.", tip:"<i>appelle, appelles</i> = [apɛl] (LL, é aberto). <i>appelez</i> = [aple] (um L só, é fechado)."},
+    {who:"Caderno", q:"Corrigez : « Comment tu t’appelez ? »", o:["Comment tu t’appelles ?","Comment tu t’appelle ?","Comment tu s’appelles ?"], pt:"Corrija a frase.", tip:"tu → <b>appelles</b> (com -s)."}
+  ]
+},
+{
+  id:"habiter", n:2, type:"mc", count:8, theme:"saopaulo",
+  title:"Tu habites où ?", sub:"Verbo habiter (morar) · h mudo",
+  sticker:"brincando", bonus:"cabo",
+  story:"Na saída da aula, o Pongo pergunta a todos onde eles moram — talvez alguém tenha visto o Senhor Tromba! Atenção ao <b>h mudo</b>: <span class='fr'>je + habite → j’habite</span>.",
+  lesson: T_HABITER + `<ul class="tips">
+    <li><b>h mudo</b>: <span class="fr">je + habite → j’habite</span> (elisão).</li>
+    <li>Liaison: <span class="fr">nous‿habitons, vous‿habitez</span> — o <i>s</i> soa [z].</li>
+    <li>O <i>-ent</i> de <span class="fr">ils habitent</span> não se pronuncia.</li>
+    <li>Pergunta: <span class="fr">Tu habites où ? / Vous habitez où ?</span></li></ul>`,
+  qs:[
+    {who:"Ana", q:"Je suis brésilienne. ___ à São Paulo.", o:["J’habite","Je habite","J’habites"], pt:"Sou brasileira. Moro em São Paulo.", tip:"h mudo: je + habite → <b>j’habite</b> (elisão)."},
+    {who:"Ana", q:"Et toi, tu ___ où ?", o:["habites","habite","habitez"], pt:"E você, mora onde?", tip:"tu → habit<b>es</b>."},
+    {who:"Lucas", q:"Ma sœur Julie ___ à Paris.", o:["habite","habites","habitent"], pt:"Minha irmã Julie mora em Paris.", tip:"il / elle → habit<b>e</b>."},
+    {who:"Ana", q:"Nous ___ à São Paulo.", o:["habitons","habitez","habite"], pt:"Nós moramos em São Paulo.", tip:"nous → habit<b>ons</b> (nous‿habitons, liaison [z])."},
+    {who:"Claire", q:"Vous ___ où, madame ?", o:["habitez","habitons","habites"], pt:"Onde a senhora mora?", tip:"vous → habit<b>ez</b> (vous‿habitez)."},
+    {who:"Caderno", q:"Lucas et Claire ___ à São Paulo.", o:["habitent","habite","habitons"], pt:"Lucas e Claire moram em São Paulo.", tip:"ils / elles → habit<b>ent</b> (o -ent não se pronuncia!)."},
+    {who:"Caderno", q:"Ils ___ à Lyon.", o:["habitent","habitez","habites"], pt:"Eles moram em Lyon.", tip:"ils → habit<b>ent</b>."},
+    {who:"Caderno", q:"Corrigez : « Je habite au Brésil. »", o:["J’habite au Brésil.","Je habites au Brésil.","J’habite en Brésil."], pt:"Corrija a frase.", tip:"je + vogal ou h mudo → <b>j’</b>."},
+    {who:"Caderno", q:"Como perguntar a um amigo onde ele mora?", o:["Tu habites où ?","Vous habites où ?","Tu habitez où ?"], pt:"Onde você mora?", tip:"Informal: <i>Tu habites où ?</i> · Formal: <i>Vous habitez où ?</i>"},
+    {who:"Caderno", q:"Em qual expressão há liaison (som de [z])?", o:["vous habitez","tu habites","il habite"], pt:"Ouça: vous‿habitez [vuzabite]", say:"vous habitez. nous habitons.", tip:"<i>nous‿habitons</i> e <i>vous‿habitez</i>: o s final soa [z] antes do h mudo."},
+    {who:"Pongo", q:"Senhor Tromba et moi, nous ___ ensemble !", o:["habitons","habitent","habitez"], pt:"Senhor Tromba e eu moramos juntos!", tip:"nous → habit<b>ons</b>."}
+  ]
+},
+{
+  id:"prep", n:3, type:"mc", count:9, theme:"monde", fixed:true,
+  title:"À, au ou en ?", sub:"habiter + cidade / país",
+  sticker:"curioso", bonus:"surpreso",
+  story:"O Pongo descobriu que o Senhor Tromba pode ter viajado! Para seguir a pista, ele precisa dizer certinho <b>onde</b> cada um mora: cidade, país masculino ou feminino?",
+  lesson: T_PREP + `<ul class="tips">
+    <li>Cidade → <b>à</b>: <span class="fr">à Paris, à Lyon, à São Paulo</span>.</li>
+    <li>País masculino → <b>au</b>: <span class="fr">au Brésil, au Japon, au Canada, au Portugal</span>.</li>
+    <li>País feminino → <b>en</b>: <span class="fr">en France, en Italie, en Allemagne, en Suisse</span>.</li>
+    <li>Dica: países terminados em <i>-e</i> costumam ser femininos (<i>la France</i>), mas <i>le Brésil</i> é masculino!</li></ul>`,
+  qs:[
+    {who:"Ana", q:"J’habite ___ São Paulo.", o:["à","au","en"], a:0, pt:"São Paulo = cidade", tip:"Cidade → <b>à</b>."},
+    {who:"Ana", q:"J’habite ___ Brésil.", o:["à","au","en"], a:1, pt:"le Brésil = país masculino", tip:"<i>le Brésil</i> é masculino → <b>au</b> Brésil."},
+    {who:"Lucas", q:"Julie habite ___ France.", o:["à","au","en"], a:2, pt:"la France = país feminino", tip:"<i>la France</i> é feminino → <b>en</b> France."},
+    {who:"Lucas", q:"Je suis de Lyon, ___ France.", o:["à","au","en"], a:2, pt:"Sou de Lyon, na França.", tip:"<i>la France</i> → <b>en</b> France."},
+    {who:"Lucas", q:"Elle est étudiante ___ Paris.", o:["à","au","en"], a:0, pt:"Paris = cidade", tip:"Cidade → <b>à</b> Paris."},
+    {who:"Claire", q:"Tu habites ___ Japon ?", o:["à","au","en"], a:1, pt:"le Japon = país masculino", tip:"<i>le Japon</i> → <b>au</b> Japon."},
+    {who:"Claire", q:"Nous habitons ___ Italie.", o:["à","au","en"], a:2, pt:"l’Italie = país feminino", tip:"<i>l’Italie</i> é feminino → <b>en</b> Italie."},
+    {who:"Julie", q:"Il habite ___ Canada.", o:["à","au","en"], a:1, pt:"le Canada = país masculino", tip:"<i>le Canada</i> → <b>au</b> Canada."},
+    {who:"Julie", q:"Vous habitez ___ Lyon ?", o:["à","au","en"], a:0, pt:"Lyon = cidade", tip:"Cidade → <b>à</b> Lyon."},
+    {who:"Caderno", q:"Ils habitent ___ Portugal.", o:["à","au","en"], a:1, pt:"le Portugal = país masculino", tip:"<i>le Portugal</i> → <b>au</b> Portugal."},
+    {who:"Caderno", q:"Elle habite ___ Allemagne.", o:["à","au","en"], a:2, pt:"l’Allemagne = país feminino", tip:"<i>l’Allemagne</i> → <b>en</b> Allemagne."},
+    {who:"Caderno", q:"J’habite ___ Suisse.", o:["à","au","en"], a:2, pt:"la Suisse = país feminino", tip:"<i>la Suisse</i> → <b>en</b> Suisse."}
+  ]
+},
+{
+  id:"phrase", n:4, type:"build", count:6, theme:"lyon",
+  title:"Fais la phrase !", sub:"Monte frases com s’appeler e habiter",
+  sticker:"orgulhoso", bonus:"pensativo",
+  story:"Uma pista! Um bilhete do Senhor Tromba, mas as palavras estão embaralhadas. <b>Toque nas palavras na ordem certa</b>. Cuidado: há uma palavra intrusa em cada frase!",
+  lesson: `<div class="cols"><div>${T_APPELER}</div><div>${T_HABITER}</div></div>
+    <ul class="tips"><li>O sujeito nunca cai: <span class="fr">Je m’appelle…</span>, não <span class="fr">M’appelle…</span></li>
+    <li>Em francês há espaço antes do ponto de interrogação: <span class="fr">Tu habites où ?</span></li></ul>`,
+  qs:[
+    {pt:"Como a senhora se chama?", w:["Comment","vous","vous","appelez","?"], x:["t’appelles"]},
+    {pt:"Como você se chama? (informal)", w:["Comment","tu","t’appelles","?"], x:["appelez"]},
+    {pt:"Onde você mora? (informal)", w:["Tu","habites","où","?"], x:["habitez"]},
+    {pt:"Eu me chamo Pongo.", w:["Je","m’appelle","Pongo","."], x:["me"]},
+    {pt:"Eu moro em São Paulo.", w:["J’habite","à","São Paulo","."], x:["en"]},
+    {pt:"Ela se chama Julie e mora em Paris.", w:["Elle","s’appelle","Julie","et","elle","habite","à","Paris","."], x:["au"]},
+    {pt:"Nós moramos no Brasil.", w:["Nous","habitons","au","Brésil","."], x:["en"]},
+    {pt:"Ele se chama Lucas e mora em São Paulo.", w:["Il","s’appelle","Lucas","et","il","habite","à","São Paulo","."], x:["habites"]}
+  ]
+},
+{
+  id:"dialogue", n:5, type:"mc", count:8, ordered:true, theme:"parc",
+  title:"Où est Senhor Tromba ?", sub:"Diálogo final: responda como o Pongo",
+  sticker:"juntos", bonus:"companhia",
+  story:"Última etapa! Todos querem ajudar o Pongo a achar o Senhor Tromba. <b>Responda às perguntas</b> como o Pongo — com a frase certinha!",
+  lesson: `<div class="cols"><div>${T_APPELER}</div><div>${T_PREP}</div></div>
+    <ul class="tips"><li>Pergunta com <b>vous</b> (formal) → resposta com <b>je</b>.</li>
+    <li>Pergunta sobre <b>vous</b> (Ana e você) → resposta com <b>nous</b>.</li></ul>`,
+  qs:[
+    {who:"Claire", q:"Bonjour ! Comment vous vous appelez ?", o:["Je m’appelle Pongo.","Je me appelle Pongo.","J’habite Pongo."], pt:"Responda como o Pongo.", tip:"<i>Je m’appelle…</i> é a forma de dizer o nome."},
+    {who:"Lucas", q:"Salut, Pongo ! Tu habites où ?", o:["J’habite à São Paulo.","J’habite en São Paulo.","Je habite à São Paulo."], pt:"Oi, Pongo! Onde você mora?", tip:"<i>j’habite</i> (elisão) + <b>à</b> + cidade."},
+    {who:"Ana", q:"Tu habites en France ?", o:["Non, j’habite au Brésil.","Non, j’habite en Brésil.","Non, je m’appelle Brésil."], pt:"Você mora na França?", tip:"<i>le Brésil</i> é masculino → <b>au</b> Brésil."},
+    {who:"Julie", q:"Ton ami, comment il s’appelle ?", o:["Il s’appelle Senhor Tromba.","Il m’appelle Senhor Tromba.","Il habite Senhor Tromba."], pt:"Seu amigo, como ele se chama?", tip:"il → <b>s’appelle</b>."},
+    {who:"Ana", q:"Pongo, ça s’écrit comment ?", o:["P, O, N, G, O.","Je m’appelle P.","J’habite à P."], pt:"Pongo, como se escreve?", say:"P. O. N. G. O.", tip:"<i>Ça s’écrit comment ?</i> pede para soletrar: P, O, N, G, O."},
+    {who:"Claire", q:"Et Julie, elle habite où ?", o:["Elle habite à Paris.","Elle habite en Paris.","Elle habites à Paris."], pt:"E a Julie, onde ela mora?", tip:"elle → habit<b>e</b> + <b>à</b> Paris (cidade)."},
+    {who:"Lucas", q:"Vous habitez où, Ana et toi ?", o:["Nous habitons à São Paulo.","Nous habitez à São Paulo.","Nous habitent à São Paulo."], pt:"Onde vocês moram, a Ana e você?", tip:"Ana e eu = <b>nous habitons</b>."},
+    {who:"Tromba", q:"Pongo ! C’est moi ! Tu te souviens ? Je m’appelle comment ?", o:["Tu t’appelles Senhor Tromba !","Vous vous appelles Senhor Tromba !","Tu s’appelle Senhor Tromba !"], pt:"Pongo! Sou eu! Você lembra? Como eu me chamo?", tip:"Falando com o amigo: tu → <b>tu t’appelles</b>."}
+  ]
+}
+];
+
+const STICKERS = [
+  {id:"feliz", name:"Feliz", how:"Complete a fase 1"},
+  {id:"carinhoso", name:"Carinhoso", how:"Fase 1 com 3 estrelas"},
+  {id:"brincando", name:"Brincando", how:"Complete a fase 2"},
+  {id:"cabo", name:"Cabo de guerra", how:"Fase 2 com 3 estrelas"},
+  {id:"curioso", name:"Curioso", how:"Complete a fase 3"},
+  {id:"surpreso", name:"Surpreso", how:"Fase 3 com 3 estrelas"},
+  {id:"orgulhoso", name:"Orgulhoso", how:"Complete a fase 4"},
+  {id:"pensativo", name:"Pensativo", how:"Fase 4 com 3 estrelas"},
+  {id:"juntos", name:"Sempre juntos!", how:"Encontre o Senhor Tromba (fase 5)"},
+  {id:"companhia", name:"Melhor companhia", how:"Fase 5 com 3 estrelas"},
+  {id:"predador", name:"Predador de tromba", how:"Faça um combo de 8 acertos"},
+  {id:"barriga", name:"De barriga pra cima", how:"Abra o Caderno do Pongo"},
+  {id:"sonolento", name:"Sonolento", how:"Perca todos os croissants uma vez"},
+  {id:"mordida", name:"Hora da mordida carinhosa", how:"Junte 600 pontos no total"},
+  {id:"naosolto", name:"Não solto!", how:"Ganhe 3 estrelas em todas as fases"}
+];
+
+/* ============================================================
+   ESTADO SALVO
+   ============================================================ */
+const SAVE_KEY = "pongo-fr-a1-e01";
+let save = {stars:{}, stickers:[], total:0, voice:true, sfx:true};
+try{ const s = JSON.parse(localStorage.getItem(SAVE_KEY)||"null"); if(s) save = Object.assign(save,s); }catch(e){}
+function persist(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){} }
+function hasSticker(id){ return save.stickers.includes(id); }
+function giveSticker(id){ if(!hasSticker(id)){ save.stickers.push(id); persist(); return true; } return false; }
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; };
+const nb = s => s.replace(/ ([?!:;»])/g," $1").replace(/« /g,"« ");
+const esc = s => s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const plain = s => s.replace(/<[^>]+>/g,"");
+function joinWords(w){ return w.join(" ").replace(/ \./g,".").replace(/ ,/g,","); }
+
+/* ---------- voz (fr-FR) ---------- */
+let frVoice = null;
+function pickVoice(){
+  if(!("speechSynthesis" in window)) return;
+  const vs = speechSynthesis.getVoices();
+  frVoice = vs.find(v=>/fr[-_]FR/i.test(v.lang) && /google|amélie|amelie|thomas|audrey|marie/i.test(v.name))
+         || vs.find(v=>/fr[-_]FR/i.test(v.lang)) || vs.find(v=>/^fr/i.test(v.lang)) || null;
+}
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(txt, force){
+  if(!("speechSynthesis" in window)) return;
+  if(!force && !save.voice) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt.replace(/[«»]/g,"").replace(/’/g,"'"));
+    u.lang = "fr-FR"; if(frVoice) u.voice = frVoice; u.rate = .88; u.pitch = 1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- efeitos (WebAudio) ---------- */
+let actx = null;
+function ac(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
+function tone(f, d, type="sine", v=.18, when=0, slide=0){
+  if(!save.sfx) return; const a = ac(); if(!a) return;
+  const t = a.currentTime + when, o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(f,t); if(slide) o.frequency.exponentialRampToValueAtTime(slide,t+d);
+  g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+d+.02);
+}
+const sfx = {
+  good(){ tone(660,.12,"triangle"); tone(880,.14,"triangle",.18,.1); tone(1320,.2,"triangle",.14,.2); },
+  bad(){ tone(220,.25,"sawtooth",.12,0,140); },
+  woof(){ tone(300,.09,"square",.12,0,150); tone(320,.1,"square",.12,.16,160); },
+  tap(){ tone(520,.06,"triangle",.1); },
+  jump(){ tone(380,.18,"sine",.12,0,760); },
+  win(){ [523,659,784,1047].forEach((f,i)=>tone(f,.22,"triangle",.16,i*.12)); }
+};
+
+/* ============================================================
+   SPRITES DO PONGO
+   ============================================================ */
+const SPR = {
+  walk:{src:"assets/walk.webp", n:8, frames:[0,1,2,3,4,5], fps:12, scale:1.0, loop:true},
+  jump:{src:"assets/jump.webp", n:8, frames:[0,1,2,3,4,5,6,7], fps:10, scale:1.32},
+  bark:{src:"assets/bark.webp", n:6, frames:[0,1,2,3,4,3,4,5], fps:9, scale:1.0},
+  happy:{src:"assets/happy.webp", n:6, frames:[0,1,2,3,4,5], fps:9, scale:1.0},
+  sit:{src:"assets/sit.webp", n:6, frames:[0,1,2,3,4,5], fps:8, scale:1.0}
+};
+for(const k in SPR){ const im = new Image(); im.src = SPR[k].src; SPR[k].img = im; }
+function cssSprite(el, key, h, dur){
+  const s = SPR[key], go = () => {
+    const sc = h / s.img.naturalHeight, fw = s.img.naturalWidth / s.n * sc;
+    el.style.width = fw + "px"; el.style.height = h + "px";
+    el.style.backgroundImage = `url(${s.src})`;
+    el.style.backgroundSize = `${s.img.naturalWidth*sc}px ${h}px`;
+    clearInterval(el._spr); let k = 0;
+    const seq = s.frames.concat(s.frames.slice(1,-1).reverse());
+    el._spr = setInterval(()=>{ el.style.backgroundPosition = `${-seq[k++ % seq.length]*fw}px 0`; }, dur*1000/s.frames.length);
+  };
+  if(s.img.complete && s.img.naturalWidth) go(); else s.img.addEventListener("load", go, {once:true});
+}
+
+/* ============================================================
+   TELAS
+   ============================================================ */
+let current = "title", prevScreen = "title";
+function show(id){
+  prevScreen = current; current = id;
+  $$(".screen").forEach(s=>s.classList.toggle("on", s.id==="scr-"+id));
+  if(id!=="play") running = false;
+  window.scrollTo(0,0);
+  if(id==="map") renderMap();
+  if(id==="album") renderAlbum();
+  if(id==="cad") renderCad();
+}
+cssSprite($("#titleDog"), "happy", 150, 1.1);
+
+function totalStars(){ return LEVELS.reduce((s,l)=>s+(save.stars[l.id]||0),0); }
+function unlocked(i){ return i===0 || (save.stars[LEVELS[i-1].id]||0) > 0; }
+function renderMap(){
+  $("#totalStars").textContent = `⭐ ${totalStars()}/15`;
+  $("#totalStickers").textContent = `🖼️ ${save.stickers.length}/${STICKERS.length}`;
+  const box = $("#levels"); box.innerHTML = "";
+  LEVELS.forEach((L,i)=>{
+    const b = document.createElement("button");
+    const s = save.stars[L.id]||0, ok = unlocked(i);
+    b.className = "card lvl" + (ok?"":" locked");
+    b.innerHTML = `<span class="n">Fase ${L.n}</span><h3 class="fr">${nb(L.title)}</h3><div class="sub">${L.sub}</div>
+      <div class="stars">${"★".repeat(s)}<span style="color:#ddd">${"★".repeat(3-s)}</span></div>
+      ${hasSticker(L.sticker)?`<img class="thumb" src="assets/st_${L.sticker}.webp" alt="">`:""}`;
+    b.onclick = () => { if(ok) openIntro(i); else { sfx.bad(); } };
+    box.appendChild(b);
+  });
+}
+
+function renderAlbum(){
+  const box = $("#album"); box.innerHTML = "";
+  STICKERS.forEach(S=>{
+    const have = hasSticker(S.id), d = document.createElement("div");
+    d.className = "slot" + (have?"":" lock");
+    d.innerHTML = `<img src="assets/st_${S.id}.webp" alt="${have?S.name:"bloqueada"}"><b>${have?S.name:"???"}</b><small>${S.how}</small>`;
+    box.appendChild(d);
+  });
+}
+
+function renderCad(){
+  $("#cadBody").innerHTML = `
+  <div class="cols">
+    <div class="card"><h3 class="fr">S’appeler — dizer o nome</h3>${T_APPELER}${T_APPELER_BONUS}
+      <ul class="tips">
+        <li><span class="fr">Comment vous vous appelez ?</span> (formal) · <span class="fr">Comment tu t’appelles ?</span> (informal)</li>
+        <li><span class="fr">Comment il / elle s’appelle ?</span> — <span class="fr">Il s’appelle Lucas. Elle s’appelle Julie.</span></li>
+        <li><i>appelle(s)</i> [apɛl] com LL × <i>appelez</i> [aple] com um L.</li>
+      </ul></div>
+    <div class="card"><h3 class="fr">Habiter — dizer onde mora</h3>${T_HABITER}
+      <ul class="tips">
+        <li>Verbo regular em <b>-er</b>, como <span class="fr">parler</span>.</li>
+        <li>h mudo: <span class="fr">j’habite</span>, <span class="fr">nous‿habitons</span>, <span class="fr">vous‿habitez</span>.</li>
+        <li>Pergunta: <span class="fr">Tu habites où ? — J’habite à São Paulo.</span></li>
+      </ul></div>
+  </div>
+  <div class="card"><h3 class="fr">Habiter + à / au / en</h3>${T_PREP}</div>
+  <div class="card"><h3>Erros que o Pongo não comete mais</h3>
+    <div class="err">
+      <span class="x fr">Je me appelle Ana.</span><span class="v fr">Je m’appelle Ana.</span>
+      <span class="x fr">Comment tu t’appelez ?</span><span class="v fr">Comment tu t’appelles ?</span>
+      <span class="x fr">Je suis Ana.</span><span class="v fr">Je m’appelle Ana. <small style="font-weight:500;color:var(--muted)">(preferível)</small></span>
+      <span class="x fr">Je habite au Brésil.</span><span class="v fr">J’habite au Brésil.</span>
+      <span class="x fr">J’habite en São Paulo.</span><span class="v fr">J’habite à São Paulo.</span>
+      <span class="x fr">J’habite en Brésil.</span><span class="v fr">J’habite au Brésil.</span>
+    </div></div>`;
+  if(giveSticker("barriga")) toastMsg("🖼️ Nova figurinha!");
+}
+
+/* ---------- mini-aula ---------- */
+let LI = 0;
+function openIntro(i){
+  LI = i; const L = LEVELS[i];
+  $("#inN").textContent = "Fase " + L.n;
+  $("#inTitle").innerHTML = `<span class="fr">${nb(L.title)}</span>`;
+  $("#inSub").textContent = L.sub;
+  $("#inStory").innerHTML = L.story;
+  $("#inBody").innerHTML = L.lesson;
+  cssSprite($("#introDog"), i===3?"sit":"happy", 120, 1.0);
+  show("intro");
+}
+
+/* delegação: botões 🔊 com data-say */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("[data-say]"); if(b){ speak(b.dataset.say, true); }
+  const g = e.target.closest("[data-go]"); if(g){ show(g.dataset.go); }
+});
+
+/* ============================================================
+   JOGO
+   ============================================================ */
+const cv = $("#cv"), ctx = cv.getContext("2d");
+const W = 960, H = 360, GROUND = 318, PX = 190;
+let DPR = 1;
+function fitCanvas(){
+  DPR = Math.min(2, window.devicePixelRatio||1);
+  cv.width = W*DPR; cv.height = H*DPR;
+}
+fitCanvas(); addEventListener("resize", fitCanvas);
+
+let G = null, running = false, lastT = 0;
+const LANE_Y = [92, 160, 228];          // altura das placas A, B, C
+const LETTERS = ["1","2","3"];
+const LANE_COL = ["#d63c55","#2f86a6","#e59a12"];
+
+function startLevel(i){
+  LI = i; const L = LEVELS[i];
+  let qs = L.ordered ? L.qs.slice(0, L.count) : shuffle(L.qs).slice(0, L.count);
+  G = {
+    L, qs, qi:0, lives:3, score:0, combo:0, maxCombo:0, errors:0,
+    phase:"idle", sel:null, gateX:W+120, gateV:0, startX:W+120, t:0,
+    anim:{k:"walk", t:0}, jumpLane:1, particles:[], floats:[], bg:0, speed:150,
+    opts:[], ans:0, shake:0, built:[], pool:[]
+  };
+  $("#pTitle").innerHTML = `<span class="fr">Fase ${L.n} · ${nb(L.title)}</span>`;
+  $("#mcArea").style.display = L.type==="mc" ? "" : "none";
+  $("#buildArea").style.display = L.type==="build" ? "" : "none";
+  show("play");
+  updHud();
+  running = true; lastT = performance.now(); requestAnimationFrame(loop);
+  nextQ();
+}
+
+function updHud(){
+  $("#pLives").textContent = "🥐".repeat(G.lives) + "🤍".repeat(3-G.lives);
+  $("#pCombo").textContent = "🔥 " + G.combo;
+  $("#pScore").textContent = G.score + " pts";
+  $("#pProg").style.width = (G.qi / G.qs.length * 100) + "%";
+}
+
+function setAnim(k){ G.anim = {k, t:0}; }
+
+function nextQ(){
+  $("#fb").classList.remove("on");
+  if(G.qi >= G.qs.length){ return finishLevel(true); }
+  const q = G.qs[G.qi];
+  G.sel = null; G.popped = false;
+  const who = PEOPLE[q.who||"Caderno"] || PEOPLE.Caderno;
+  const av = $("#qAv");
+  av.style.background = who.color || "#fff";
+  av.innerHTML = who.img ? `<img src="${who.img}" alt="">` : (who.ch || (q.who||"?")[0]);
+  $("#qWho").textContent = G.L.type==="build" ? "Bilhete embaralhado" : who.name;
+
+  if(G.L.type === "mc"){
+    const idx = q.o.map((t,i)=>({t, ok: i === (q.a ?? 0)}));
+    G.opts = G.L.fixed ? idx : shuffle(idx);
+    G.ans = G.opts.findIndex(o=>o.ok);
+    $("#qText").innerHTML = esc(nb(q.q)).replace("___", `<span class="gap">?</span>`);
+    $("#qPt").textContent = q.pt || "";
+    const box = $("#answers"); box.innerHTML = "";
+    G.opts.forEach((o,i)=>{
+      const b = document.createElement("button");
+      b.className = "ans"; b.dataset.i = i;
+      b.innerHTML = `<span class="k">${LETTERS[i]}</span><span class="fr">${esc(nb(o.t))}</span>`;
+      b.onclick = () => choose(i);
+      box.appendChild(b);
+    });
+    // a placa entra pela direita
+    const T = Math.max(6.5, 11 - G.combo*.45);
+    G.startX = W + 90; G.gateX = G.startX; G.gateV = (G.startX - (PX+70)) / T;
+    G.phase = "run"; setAnim("walk");
+    // fala a pergunta (apenas se for francês)
+    if(!/^(Qual|Como|Em qual|Lucas fala|Corrigez)/.test(q.q)) speak(q.q.replace("___","…"));
+  } else {
+    // montar frase
+    $("#qText").innerHTML = "Monte: " + esc(q.pt);
+    $("#qPt").textContent = "Uma palavra é intrusa — deixe-a de fora!";
+    G.built = []; G.pool = shuffle(q.w.concat(q.x).map((t,i)=>({t,i,used:false})));
+    renderBuild();
+    G.phase = "build"; setAnim("sit");
+  }
+  updHud();
+}
+
+function fullSentence(q){
+  if(q.say) return q.say;
+  if(G.L.type==="build") return joinWords(q.w);
+  const right = q.o[q.a ?? 0];
+  return q.q.includes("___") ? q.q.replace("___", right) : right;
+}
+function shownSentence(q){
+  if(G.L.type==="build") return joinWords(q.w);
+  const right = q.o[q.a ?? 0];
+  return q.q.includes("___") ? q.q.replace("___", right) : right;
+}
+
+function choose(i){
+  if(!G || G.phase !== "run" || G.sel !== null) return;
+  ac(); sfx.tap();
+  G.sel = i; G.gateV *= 6;          // a placa corre até o Pongo
+  $$(".ans").forEach(b=>{ b.disabled = true; b.classList.toggle("sel", +b.dataset.i===i); });
+}
+
+function resolveMC(){
+  const q = G.qs[G.qi];
+  const ok = G.sel === G.ans;
+  G.jumpLane = G.sel ?? 1;
+  $$(".ans").forEach(b=>{
+    b.disabled = true; const i = +b.dataset.i;
+    if(i===G.ans) b.classList.add("good"); else if(i===G.sel) b.classList.add("bad");
+  });
+  if(ok){
+    setAnim("jump"); sfx.jump(); G.phase = "jump"; G.t = 0;
+  } else {
+    setAnim("bark"); G.phase = "fail"; G.t = 0;
+  }
+  afterAnswer(ok, q, G.sel===null);
+}
+
+function afterAnswer(ok, q, timeout){
+  const fb = $("#fb");
+  if(ok){
+    G.combo++; G.maxCombo = Math.max(G.maxCombo, G.combo);
+    const pts = 10 + Math.min(G.combo,10)*2;
+    G.score += pts;
+    G.floats.push({x:PX+40, y:120, t:0, txt:"+"+pts});
+    setTimeout(()=>sfx.good(), 250);
+    toastMsg(["Très bien !","Bravo !","Super !","Parfait !","Excellent !"][Math.random()*5|0]);
+    $("#fbBig").textContent = "✔ " + (G.combo>=3 ? `Combo ×${G.combo}!` : "Correto!");
+    $("#fbTip").innerHTML = "";
+    fb.className = "feedback on ok";
+    if(G.combo === 8 && giveSticker("predador")) setTimeout(()=>toastMsg("🖼️ Figurinha: Predador de tromba!"),900);
+  } else {
+    G.combo = 0; G.errors++; G.lives--; G.shake = .4;
+    sfx.bad(); setTimeout(()=>sfx.woof(), 200);
+    toastMsg(timeout ? "⏰ Tempo esgotado !" : "Oups !");
+    $("#fbBig").textContent = timeout ? "⏰ O tempo acabou! A resposta certa é:" : "✘ Quase! A resposta certa é:";
+    $("#fbTip").innerHTML = "💡 " + (q.tip || "");
+    fb.className = "feedback on ko";
+  }
+  $("#fbFull").textContent = nb(shownSentence(q));
+  $("#fbSay").onclick = () => speak(fullSentence(q), true);
+  setTimeout(()=>speak(fullSentence(q)), ok ? 350 : 650);
+  G.qi++; updHud();
+  G.waitOk = ok;
+  if(ok){ G.autoNext = setTimeout(goNext, 2100); }
+}
+
+function goNext(){
+  if(!G) return;
+  clearTimeout(G.autoNext);
+  if(G.lives <= 0) return finishLevel(false);
+  nextQ();
+}
+$("#btnNext").onclick = goNext;
+
+/* ---------- montar frase ---------- */
+function renderBuild(){
+  const slots = $("#slots"), pool = $("#pool");
+  slots.innerHTML = ""; pool.innerHTML = "";
+  G.built.forEach((p,k)=>{
+    const b = document.createElement("button"); b.className = "tile fr"; b.textContent = p.t;
+    b.onclick = () => { if(G.phase!=="build") return; sfx.tap(); p.used=false; G.built.splice(k,1); renderBuild(); };
+    slots.appendChild(b);
+  });
+  G.pool.forEach(p=>{
+    const b = document.createElement("button"); b.className = "tile fr" + (p.used?" used":""); b.textContent = p.t;
+    b.onclick = () => { if(G.phase!=="build" || p.used) return; ac(); sfx.tap(); p.used=true; G.built.push(p); renderBuild(); };
+    pool.appendChild(b);
+  });
+  $("#btnCheck").disabled = G.built.length === 0;
+}
+$("#btnClear").onclick = () => { if(G.phase!=="build") return; G.pool.forEach(p=>p.used=false); G.built=[]; renderBuild(); };
+$("#btnCheck").onclick = () => {
+  if(G.phase!=="build") return;
+  const q = G.qs[G.qi];
+  const ok = G.built.map(p=>p.t).join("|") === q.w.join("|");
+  G.phase = ok ? "jump" : "fail"; G.t = 0; G.jumpLane = 1;
+  setAnim(ok ? "jump" : "bark"); if(ok) sfx.jump();
+  if(!ok) q.tip = q.tip || `Ordem certa: <b>${esc(nb(joinWords(q.w)))}</b> — a palavra intrusa era “${esc(q.x.join(", "))}”.`;
+  afterAnswer(ok, q, false);
+};
+
+/* ---------- fim da fase ---------- */
+function finishLevel(win){
+  running = false;
+  const L = G.L, out = $("#endReward"); out.innerHTML = "";
+  const addSticker = id => { const S = STICKERS.find(s=>s.id===id); out.insertAdjacentHTML("beforeend",
+      `<div class="sticker" style="animation-delay:${out.children.length*.15}s"><img src="assets/st_${id}.webp" alt=""><b>Nova figurinha: ${S.name}</b></div>`); };
+  save.total = (save.total||0) + G.score;
+  if(win){
+    const stars = G.errors===0 ? 3 : G.errors<=2 ? 2 : 1;
+    save.stars[L.id] = Math.max(save.stars[L.id]||0, stars);
+    $("#endTitle").textContent = L.id==="dialogue" ? "Senhor Tromba retrouvé !" : ["Bravo !","Très bien !","Super, Pongo !"][stars-1];
+    $("#endStars").innerHTML = "★".repeat(stars) + `<span class="off">${"★".repeat(3-stars)}</span>`;
+    $("#endText").innerHTML = (L.id==="dialogue"
+      ? "O Pongo encontrou o <b>Senhor Tromba</b>! Agora ele sabe dizer o nome e onde mora em francês. <span class='fr'>Au revoir et à vendredi !</span>"
+      : `Você fez <b>${G.score} pontos</b> com ${G.errors} erro${G.errors===1?"":"s"} · maior combo: ${G.maxCombo}.`);
+    if(giveSticker(L.sticker)) addSticker(L.sticker);
+    if(stars===3 && giveSticker(L.bonus)) addSticker(L.bonus);
+    sfx.win(); speak(L.id==="dialogue" ? "Bravo Pongo ! Au revoir et à vendredi !" : "Bravo !");
+  } else {
+    $("#endTitle").textContent = "Oh là là…";
+    $("#endStars").innerHTML = `<span class="off">★★★</span>`;
+    $("#endText").innerHTML = "Os croissants acabaram e o Pongo ficou com sono… Revise a mini-aula e tente de novo!";
+    if(giveSticker("sonolento")) addSticker("sonolento");
+  }
+  if(G.maxCombo>=8 && giveSticker("predador")) {}
+  if(save.total >= 600 && giveSticker("mordida")) addSticker("mordida");
+  if(LEVELS.every(l=>(save.stars[l.id]||0)===3) && giveSticker("naosolto")) addSticker("naosolto");
+  persist();
+  const hasNext = win && LI < LEVELS.length-1;
+  $("#btnNextLvl").style.display = hasNext ? "" : "none";
+  show("end");
+}
+$("#btnNextLvl").onclick = () => openIntro(LI+1);
+$("#btnRetry").onclick = () => startLevel(LI);
+$("#btnMap").onclick = () => show("map");
+
+/* ============================================================
+   LOOP / DESENHO
+   ============================================================ */
+function loop(now){
+  if(!running) return;
+  const dt = Math.min(.05, (now-lastT)/1000); lastT = now;
+  update(dt); draw();
+  requestAnimationFrame(loop);
+}
+
+function update(dt){
+  const a = G.anim; a.t += dt;
+  const moving = G.phase==="run" || G.phase==="jump";
+  G.bg += (moving ? G.speed : 0) * dt;
+  G.shake = Math.max(0, G.shake - dt);
+
+  if(G.phase === "run"){
+    G.gateX -= G.gateV * dt;
+    if(G.gateX <= PX + 70){ G.gateX = PX + 70; resolveMC(); }
+  } else if(G.phase === "jump" || G.phase === "fail"){
+    G.t += dt;
+    if(G.L.type==="mc") G.gateX -= (G.phase==="jump" ? G.speed : 0) * dt;
+    if(G.phase==="jump" && G.t > .42 && !G.popped){
+      G.popped = true; burst(PX+70, G.L.type==="mc" ? LANE_Y[G.jumpLane] : 120, true);
+    }
+    if(G.phase==="fail" && !G.popped){ G.popped = true; burst(PX+80, G.L.type==="mc" ? LANE_Y[G.jumpLane] : 150, false); }
+    const sp = SPR[a.k], dur = sp.frames.length / sp.fps;
+    if(a.t >= dur){ setAnim(G.phase==="jump" ? (G.L.type==="build" ? "happy":"walk") : (G.L.type==="build"?"sit":"walk")); G.phase = "after"; G.popped=false; }
+  } else if(G.phase === "after"){
+    if(G.L.type==="mc"){ G.gateX -= G.speed*dt; G.bg += G.speed*dt; }
+  }
+  G.particles.forEach(p=>{ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=500*dt; p.r+=p.vr*dt; });
+  G.particles = G.particles.filter(p=>p.t<1.4);
+  G.floats.forEach(f=>{ f.t+=dt; f.y-=40*dt; });
+  G.floats = G.floats.filter(f=>f.t<1.2);
+}
+
+function burst(x,y,good){
+  const cols = good ? ["#d63c55","#2f86a6","#f4b324","#2f9e63","#fff"] : ["#8a8796","#b9b6c6","#5b5872"];
+  for(let i=0;i<(good?36:16);i++){
+    const ang = Math.random()*Math.PI*2, v = 120+Math.random()*260;
+    G.particles.push({x,y,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v-150,t:0,r:Math.random()*6,vr:(Math.random()-.5)*12,c:cols[i%cols.length],s:4+Math.random()*6,good});
+  }
+}
+
+/* ---------- cenários ---------- */
+const THEMES = {
+  classe:{sky:["#bfe6f5","#eaf7ff"], far:"#9cc7dc", near:"#7fb0c8", ground:"#c9a26b", line:"#a07d4d", land:"eiffel"},
+  saopaulo:{sky:["#ffd9a8","#fff3dc"], far:"#d9a98c", near:"#b98a73", ground:"#8f8f9a", line:"#6d6d78", land:"masp"},
+  monde:{sky:["#a8e0ff","#e9f8ff"], far:"#9fd3b0", near:"#79b98e", ground:"#7cc06e", line:"#5c9a50", land:"plane"},
+  lyon:{sky:["#ffc9c2","#fff0e5"], far:"#e3a7a0", near:"#c98b84", ground:"#c48b5a", line:"#9b6a40", land:"basilique"},
+  parc:{sky:["#c6b8ff","#fbe9ff"], far:"#a99be0", near:"#8d7fc8", ground:"#69b46a", line:"#4d924f", land:"eiffel"}
+};
+function rnd(seed){ const x = Math.sin(seed*999.13)*43758.5453; return x - Math.floor(x); }
+
+function drawBG(){
+  const th = THEMES[G.L.theme] || THEMES.classe;
+  const g = ctx.createLinearGradient(0,0,0,GROUND);
+  g.addColorStop(0, th.sky[0]); g.addColorStop(1, th.sky[1]);
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  // sol
+  ctx.fillStyle = "rgba(255,255,255,.7)"; ctx.beginPath(); ctx.arc(820,70,38,0,7); ctx.fill();
+  // nuvens
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  for(let i=0;i<6;i++){
+    const span = 1400, x = ((i*260 - G.bg*.12) % span + span) % span - 120, y = 40 + rnd(i)*70;
+    cloud(x,y, .7+rnd(i+3)*.6);
+  }
+  // prédios distantes
+  layer(th.far, .25, 150, 70, 2);
+  // marco (landmark)
+  const span = 1500, lx = ((900 - G.bg*.35) % span + span) % span - 200;
+  landmark(th.land, lx, GROUND-8, th.near);
+  // prédios próximos
+  layer(th.near, .45, 95, 45, 7);
+  // chão
+  ctx.fillStyle = th.ground; ctx.fillRect(0,GROUND,W,H-GROUND);
+  ctx.fillStyle = "rgba(0,0,0,.12)"; ctx.fillRect(0,GROUND,W,5);
+  ctx.strokeStyle = th.line; ctx.lineWidth = 3;
+  const tw = 64, off = G.bg % tw;
+  for(let x=-off; x<W; x+=tw){ ctx.beginPath(); ctx.moveTo(x,GROUND+5); ctx.lineTo(x-18,H); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(0,GROUND+22); ctx.lineTo(W,GROUND+22); ctx.stroke();
+  // postes
+  const ps = 520, po = G.bg % ps;
+  for(let x=-po+260; x<W+60; x+=ps) lamp(x);
+}
+function cloud(x,y,s){ ctx.beginPath(); ctx.arc(x,y,18*s,0,7); ctx.arc(x+22*s,y-10*s,22*s,0,7); ctx.arc(x+46*s,y,18*s,0,7); ctx.rect(x,y,46*s,18*s); ctx.fill(); }
+function layer(col, par, maxH, minH, seed){
+  ctx.fillStyle = col;
+  const bw = 70, span = bw*24, off = (G.bg*par) % span;
+  for(let i=0;i<24;i++){
+    let x = i*bw - off; if(x < -bw) x += span;
+    if(x > W) continue;
+    const h = minH + rnd(i+seed*31)*(maxH-minH), w = bw - 6 - rnd(i+seed)*14;
+    ctx.fillRect(x, GROUND-h, w, h);
+    if(rnd(i*7+seed)>.5){ ctx.beginPath(); ctx.moveTo(x,GROUND-h); ctx.lineTo(x+w/2,GROUND-h-18); ctx.lineTo(x+w,GROUND-h); ctx.fill(); }
+    ctx.fillStyle = "rgba(255,255,255,.25)";
+    for(let wy=GROUND-h+12; wy<GROUND-12; wy+=18) for(let wx=x+8; wx<x+w-10; wx+=16) ctx.fillRect(wx,wy,7,9);
+    ctx.fillStyle = col;
+  }
+}
+function landmark(type,x,base,col){
+  ctx.save(); ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = 5;
+  if(type==="eiffel"){
+    ctx.beginPath(); ctx.moveTo(x-55,base); ctx.quadraticCurveTo(x-12,base-90,x-6,base-230); ctx.lineTo(x+6,base-230);
+    ctx.quadraticCurveTo(x+12,base-90,x+55,base); ctx.lineTo(x+32,base); ctx.quadraticCurveTo(x,base-55,x-32,base); ctx.closePath(); ctx.fill();
+    ctx.fillRect(x-36,base-80,72,8); ctx.fillRect(x-20,base-150,40,7); ctx.fillRect(x-2,base-262,4,34);
+  } else if(type==="masp"){
+    ctx.fillRect(x-110,base-120,220,58); ctx.fillRect(x-110,base-120,16,120); ctx.fillRect(x+94,base-120,16,120);
+    ctx.fillStyle = "rgba(214,60,85,.75)"; ctx.fillRect(x-110,base-128,220,10); ctx.fillRect(x-110,base-62,220,8);
+  } else if(type==="basilique"){
+    ctx.fillRect(x-80,base-110,160,110); ctx.fillRect(x-80,base-150,26,40); ctx.fillRect(x+54,base-150,26,40);
+    ctx.beginPath(); ctx.arc(x,base-110,40,Math.PI,0); ctx.fill();
+  } else if(type==="plane"){
+    const px = x, py = 90 + Math.sin(G.bg/120)*8;
+    ctx.fillStyle = "#fff"; ctx.strokeStyle = "#1d1b2f"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.ellipse(px,py,60,13,0,0,7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px-5,py); ctx.lineTo(px-30,py+34); ctx.lineTo(px-14,py+34); ctx.lineTo(px+18,py); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px-50,py-6); ctx.lineTo(px-64,py-30); ctx.lineTo(px-52,py-30); ctx.lineTo(px-38,py-8); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#d63c55"; ctx.fillRect(px-20,py-4,50,4);
+    // faixa
+    ctx.strokeStyle = "#1d1b2f"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px-60,py); ctx.lineTo(px-90,py); ctx.stroke();
+    ctx.fillStyle = "#fffdf7"; ctx.fillRect(px-200,py-14,110,28); ctx.strokeRect(px-200,py-14,110,28);
+    ctx.fillStyle = "#1d1b2f"; ctx.font = "700 16px 'Baloo 2', sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("Bon voyage !", px-145, py+1);
+  }
+  ctx.restore();
+}
+function lamp(x){
+  ctx.fillStyle = "#1f2a5a"; ctx.fillRect(x-3,GROUND-110,6,110); ctx.fillRect(x-12,GROUND-6,24,6);
+  ctx.beginPath(); ctx.arc(x,GROUND-114,10,0,7); ctx.fill();
+  ctx.fillStyle = "#ffe9a8"; ctx.beginPath(); ctx.arc(x,GROUND-114,6,0,7); ctx.fill();
+}
+
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+function drawGate(){
+  if(G.L.type !== "mc" || G.gateX > W+200 || G.gateX < -200) return;
+  const x = G.gateX;
+  ctx.fillStyle = "#5a3d22"; ctx.fillRect(x+60,LANE_Y[0]-30,10,GROUND-LANE_Y[0]+30);
+  ctx.fillRect(x+48,GROUND-8,34,8);
+  ctx.font = "700 17px 'Baloo 2', sans-serif"; ctx.textBaseline = "middle";
+  G.opts.forEach((o,i)=>{
+    const y = LANE_Y[i];
+    if(G.popped && i===G.sel && G.phase!=="run") return;
+    let label = o.t; ctx.textAlign = "left";
+    const maxW = 150;
+    while(ctx.measureText(label).width > maxW && label.length > 4) label = label.slice(0,-2);
+    if(label !== o.t) label = label.trimEnd() + "…";
+    const w = Math.max(70, ctx.measureText(label).width + 52), bx = x - w + 66, by = y - 20;
+    ctx.fillStyle = "#1d1b2f"; rrect(bx+3,by+4,w,40,12); ctx.fill();
+    ctx.fillStyle = (G.phase!=="run" && i===G.ans) ? "#2f9e63" : (G.phase!=="run" && i===G.sel) ? "#8a8796" : LANE_COL[i];
+    rrect(bx,by,w,40,12); ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#1d1b2f"; ctx.stroke();
+    ctx.fillStyle = "#fff"; rrect(bx+7,by+8,24,24,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#1d1b2f"; ctx.textAlign = "center"; ctx.fillText(LETTERS[i], bx+19, by+21);
+    ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(label, bx+38, by+21);
+    if(G.sel === i && G.phase==="run"){ ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; rrect(bx-5,by-5,w+10,50,15); ctx.stroke(); }
+  });
+}
+
+function drawPongo(){
+  const a = G.anim, sp = SPR[a.k];
+  if(!sp.img.complete || !sp.img.naturalWidth) return;
+  let fi;
+  const f = Math.floor(a.t * sp.fps);
+  if(sp.loop) fi = sp.frames[f % sp.frames.length];
+  else fi = sp.frames[Math.min(f, sp.frames.length-1)];
+  const fw = sp.img.naturalWidth / sp.n, fh = sp.img.naturalHeight;
+  const dh = 168 * sp.scale, dw = fw * dh / fh;
+  let y = GROUND + 4 - dh, x = PX - dw/2;
+  if(a.k === "jump"){
+    const dur = sp.frames.length / sp.fps, p = Math.min(1, a.t/dur);
+    const peak = G.L.type==="mc" ? [150, 95, 55][G.jumpLane] : 70;
+    y -= Math.sin(Math.PI*p) * peak;
+    x += Math.sin(Math.PI*p) * 20;
+  }
+  if(a.k === "walk") y += Math.abs(Math.sin(a.t*12))*-3;
+  if(G.shake > 0) x += Math.sin(G.shake*80)*6;
+  // sombra
+  ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(PX, GROUND+3, 58, 9, 0, 0, 7); ctx.fill();
+  ctx.drawImage(sp.img, fi*fw, 0, fw, fh, x, y, dw, dh);
+}
+
+function draw(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  drawBG();
+  if(G.L.type==="build"){
+    // placa com bilhete
+    ctx.save(); ctx.translate(600,150); ctx.rotate(-.04);
+    ctx.fillStyle="#1d1b2f"; rrect(-150+4,-70+5,300,140,14); ctx.fill();
+    ctx.fillStyle="#fffdf7"; rrect(-150,-70,300,140,14); ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle="#1d1b2f"; ctx.stroke();
+    ctx.fillStyle="#d63c55"; ctx.font="800 22px 'Baloo 2',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText("Un message de", 0, -36); ctx.fillText("Senhor Tromba 🐘", 0, -8);
+    ctx.fillStyle="#5b5872"; ctx.font="700 17px 'Baloo 2',sans-serif";
+    ctx.fillText(`Frase ${Math.min(G.qi+1,G.qs.length)} / ${G.qs.length}`, 0, 30);
+    ctx.restore();
+  }
+  drawGate();
+  drawPongo();
+  G.particles.forEach(p=>{
+    ctx.save(); ctx.globalAlpha = Math.max(0,1-p.t/1.4); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+    ctx.fillStyle = p.c; if(p.good) ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.6); else { ctx.beginPath(); ctx.arc(0,0,p.s,0,7); ctx.fill(); }
+    ctx.restore();
+  });
+  ctx.font = "800 30px 'Baloo 2',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  G.floats.forEach(f=>{ ctx.globalAlpha = 1-f.t/1.2; ctx.lineWidth=5; ctx.strokeStyle="#1d1b2f"; ctx.strokeText(f.txt,f.x,f.y); ctx.fillStyle="#f4b324"; ctx.fillText(f.txt,f.x,f.y); ctx.globalAlpha=1; });
+  // barra de tempo
+  if(G.phase==="run" && G.L.type==="mc"){
+    const p = (G.gateX-(PX+70)) / (G.startX-(PX+70));
+    ctx.fillStyle="rgba(29,27,47,.25)"; rrect(20,16,200,14,7); ctx.fill();
+    ctx.fillStyle = p>.35 ? "#2f9e63" : "#d63c55"; rrect(20,16,Math.max(8,200*p),14,7); ctx.fill();
+    ctx.font="700 14px 'Baloo 2',sans-serif"; ctx.fillStyle="#1d1b2f"; ctx.textAlign="left"; ctx.fillText("⏱", 228, 24);
+  }
+}
+
+/* ---------- toast ---------- */
+let toastT = 0;
+function toastMsg(m){ const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("on"), 1300); }
+
+/* ============================================================
+   CONTROLES
+   ============================================================ */
+addEventListener("keydown", e=>{
+  if(current !== "play" || !G) return;
+  if(["1","2","3"].includes(e.key) && G.L.type==="mc"){ choose(+e.key-1); e.preventDefault(); }
+  if((e.key==="Enter" || e.key===" ") && $("#fb").classList.contains("on")){ goNext(); e.preventDefault(); }
+});
+$("#qSay").onclick = () => {
+  if(!G) return; const q = G.qs[Math.min(G.qi, G.qs.length-1)];
+  if(G.L.type==="build") speak(joinWords(q.w), true);
+  else speak(q.q.replace("___","…"), true);
+};
+$("#btnStart").onclick = () => { ac(); show("map"); };
+$("#btnPlay").onclick = () => { ac(); startLevel(LI); };
+$("#btnBack1").onclick = () => show("map");
+$("#btnQuit").onclick = () => { if(G) clearTimeout(G.autoNext); if(window.speechSynthesis) speechSynthesis.cancel(); show("map"); };
+$("#homeLogo").onclick = () => show("title");
+$("#btnCad").onclick = $("#btnCad2").onclick = () => show("cad");
+$("#btnCadBack").onclick = () => show(prevScreen==="play" ? "map" : prevScreen);
+$("#btnAlbum").onclick = () => show("album");
+function syncToggles(){
+  $("#btnVoice").setAttribute("aria-pressed", save.voice); $("#btnSfx").setAttribute("aria-pressed", save.sfx);
+  $("#btnSfx").textContent = save.sfx ? "🔊" : "🔇";
+}
+$("#btnVoice").onclick = () => { save.voice = !save.voice; persist(); syncToggles(); toastMsg(save.voice?"Voz ligada":"Voz desligada"); };
+$("#btnSfx").onclick = () => { save.sfx = !save.sfx; persist(); syncToggles(); };
+syncToggles();
+</script>
+</body>
+</html>
