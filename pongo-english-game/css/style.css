@@ -567,6 +567,19 @@ body.lang-zh {
 .lang-zh .fb-text { font-size: 1.2rem; font-weight: 400; }
 .lang-zh .fb-tip { font-style: normal; }
 
+/* ---------------------------------------------------------------- Japanese pack (日本語) */
+body.lang-ja {
+  --kana: 'Zen Maru Gothic', 'Noto Sans JP', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', var(--body);
+}
+.lang-ja .block, .lang-ja .choice, .lang-ja .bubble, .lang-ja .tip-en, .lang-ja .cel-main,
+.lang-ja .result-title, .lang-ja .start-bubble, .lang-ja .start-title .ja, .lang-ja #pop-title, .lang-ja .fb-text {
+  font-family: var(--kana);
+  font-weight: 700;
+}
+.lang-ja .start-title .ja { color: var(--odu-red); }
+.lang-ja .block { font-size: 1.2rem; }
+.lang-ja .fb-text { font-size: 1.2rem; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

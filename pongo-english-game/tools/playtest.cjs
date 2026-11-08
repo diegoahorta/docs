@@ -27,8 +27,9 @@ const shots = process.argv[3];
       const tag = ex.type + (ex.compose ? '-compose' : ex.joined ? '-joined' : '') + (ex.say && ex.type === 'choice' ? '-say' : '');
       if (ex.type === 'match') {
         for (const [a, c] of ex.pairs) {
-          await p.locator('.match .col').nth(0).locator('.choice:not(.gone)', { hasText: a }).first().click();
-          await p.locator('.match .col').nth(1).locator('.choice:not(.gone)', { hasText: c }).first().click();
+          const exact = (t) => new RegExp('^\\s*' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*$');
+          await p.locator('.match .col').nth(0).locator('.choice:not(.gone)', { hasText: exact(a) }).first().click();
+          await p.locator('.match .col').nth(1).locator('.choice:not(.gone)', { hasText: exact(c) }).first().click();
           await p.waitForTimeout(380);
         }
         await p.waitForTimeout(600);

@@ -97,6 +97,28 @@ Tudo fica em `js/levels.js`. Exemplo de frase em blocos:
 - Voz em chinês (zh-CN) do aparelho; sem voz, aparece o pinyin.
 - Para mudar o conteúdo: edite o manual (`odu-mandarim/content_*.py`), gere o `content.json` e rode `python3 tools/gen_levels_zh.py` e `python3 tools/build_single_html.py`.
 
+## Versão em japonês: Pongo Aprende Japonês (日本語)
+
+Baseada na aula ODU Creative **"Dias da semana e movimento em japonês — tempo e lugar com に e で e conectores"** (nível N5): quando, onde e como você vai.
+
+- **Arquivos únicos:** `pongo-japones-2d.html` (2D cartoon, cerca de 1 MB) e `pongo-japones.html` (3D). Versões em pastas: `japones-2d.html` e `japones.html`.
+- **Conteúdo:** `js/levels-ja.js`, com 7 paradas e 63 desafios, que seguem as seções da aula:
+  1. Dias da semana (今日は何曜日ですか)
+  2. Verbos de movimento (行きます・来ます・帰ります)
+  3. に de destino
+  4. に de tempo (e o que fica sem に: 今日、明日、毎日…)
+  5. で de local da ação
+  6. で de transporte (e 歩いて)
+  7. Conectores (そして・それから・でも・だから) e o diálogo da aula
+- **Blocos:** cada bloco já traz a sua partícula, como na aula: ［月曜日に］＋［バスで］＋［学校に］＋［行きます］. As cores são:
+  - laranja = tempo ou conector;
+  - azul = tópico ou objeto;
+  - lilás = local ou meio com で;
+  - amarelo = destino com に;
+  - verde = verbo.
+- **Exercícios da aula:** as atividades de completar com に/で, de corrigir o erro e de escolher o conector viraram desafios do jogo.
+- **Voz:** voz japonesa (ja-JP) do aparelho; sem ela, aparece a leitura em kana e rōmaji.
+
 ## Versão 2D (cartoon)
 
 Mesmo jogo, com o jardim desenhado em 2D no traço dos sprites do Pongo, sem Three.js. Os arquivos ficam 5× menores (cerca de 1 MB) e rodam bem em celulares mais simples.
