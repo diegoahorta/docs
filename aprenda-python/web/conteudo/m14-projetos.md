@@ -499,16 +499,18 @@ Dicionários aninhados, `json.dump` / `json.load`, `with open(...)`, tratamento 
 ```python
 import json
 
-ARQUIVO = "agenda.json"
+ARQUIVO = "agenda_contatos.json"
 
 
 def carregar(caminho=ARQUIVO):
     """Lê a agenda do arquivo; devolve {} se ele ainda não existir."""
     try:
         with open(caminho, encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
+            dados = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
         return {}
+    # se o arquivo tiver outro formato (não é um dicionário), começa do zero
+    return dados if isinstance(dados, dict) else {}
 
 
 def salvar(agenda, caminho=ARQUIVO):

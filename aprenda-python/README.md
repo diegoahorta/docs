@@ -10,6 +10,7 @@ referência rápida, glossário, busca e acompanhamento de progresso. O código 
 ## Instalar no celular
 
 1. Baixe o `AprendaPython.apk`:
+   - direto do repositório: [`aprenda-python/apk/AprendaPython.apk`](apk/AprendaPython.apk) (botão *Download raw file*), ou
    - na aba **Actions** do GitHub → execução mais recente de *Aprenda Python — APK* → artefato `AprendaPython-apk`, ou
    - na página **Releases** (quando houver uma tag `apk-v*`).
 2. No Android, abra o arquivo e permita "instalar apps desconhecidos" para o navegador/gerenciador de arquivos.
@@ -18,6 +19,9 @@ referência rápida, glossário, busca e acompanhamento de progresso. O código 
 O app não pede nenhuma permissão e bloqueia qualquer acesso à rede.
 
 ## A trilha
+
+**14 módulos · 131 lições · 563 exemplos executáveis · 123 exercícios corrigidos automaticamente · 134 perguntas de quiz**
++ plano de estudos de 16 semanas, referência rápida (cheatsheet) e glossário com 93 termos.
 
 | Nível | Módulo | Conteúdo |
 |---|---|---|

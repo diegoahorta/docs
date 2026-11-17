@@ -1,5 +1,18 @@
 {
   "modulos": [
-    "m01-primeiros-passos.md"
+    "m01-primeiros-passos.md",
+    "m02-variaveis-operadores.md",
+    "m03-strings.md",
+    "m04-decisoes.md",
+    "m05-repeticao.md",
+    "m06-colecoes.md",
+    "m07-funcoes.md",
+    "m08-erros-depuracao.md",
+    "m09-arquivos-modulos.md",
+    "m10-poo.md",
+    "m11-python-avancado.md",
+    "m12-algoritmos.md",
+    "m13-pratica-profissional.md",
+    "m14-projetos.md"
   ]
 }

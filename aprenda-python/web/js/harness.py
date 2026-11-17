@@ -35,6 +35,9 @@ DICAS = {
 
 
 class _Saida:
+    encoding = "utf-8"
+    errors = "strict"
+
     def __init__(self, escrever, guardar, tipo):
         self._escrever = escrever
         self._guardar = guardar

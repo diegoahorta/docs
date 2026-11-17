@@ -16,22 +16,22 @@ Cada módulo foi pensado para ser estudado em um ciclo de cinco passos. Repita o
 
 | Semana | Módulo | Meta da semana |
 |---|---|---|
-| 1 | Primeiros passos; Variáveis e operadores | Usar `print`, variáveis, tipos numéricos e operadores; entender mensagens de erro |
+| 1 | Primeiros passos; Variáveis, tipos e operadores | Usar `print`, variáveis, tipos numéricos e operadores; entender mensagens de erro |
 | 2 | Strings | Fatiar, formatar com f-strings e usar os principais métodos de string |
-| 3 | Decisões | Escrever `if/elif/else` com condições compostas (`and`, `or`, `not`) |
-| 4 | Repetição | Dominar `for`, `while`, `range`, `break` e `continue`; resolver problemas com acumuladores |
+| 3 | Estruturas de decisão | Escrever `if/elif/else` com condições compostas (`and`, `or`, `not`) |
+| 4 | Estruturas de repetição | Dominar `for`, `while`, `range`, `break` e `continue`; resolver problemas com acumuladores |
 | 5 | Coleções (listas e tuplas) | Criar, percorrer, ordenar e modificar listas; entender mutabilidade |
 | 6 | Coleções (dicionários e conjuntos) | Usar dicionários como contadores e índices; operações de conjuntos. Revisar semanas 1–5 |
 | 7 | Funções | Criar funções com parâmetros, valores padrão e retorno; escrever docstrings |
-| 8 | Funções (escopo e recursão) + Projetos 1 e 2 | Decompor um problema em funções; concluir o jogo de adivinhação e a calculadora |
-| 9 | Erros e depuração | Tratar exceções com `try/except`, lançar erros com `raise`, depurar com método |
+| 8 | Funções (escopo e recursão) + Projetos práticos 1 e 2 | Decompor um problema em funções; concluir o jogo de adivinhação e a calculadora |
+| 9 | Erros, exceções e depuração | Tratar exceções com `try/except`, lançar erros com `raise`, depurar com método |
 | 10 | Arquivos e módulos + Projeto 5 | Ler e gravar arquivos texto e JSON; importar módulos; concluir a agenda de contatos |
-| 11 | Orientação a objetos | Criar classes com atributos, métodos e `__str__` |
-| 12 | Orientação a objetos (herança) + Projetos 6 e 7 | Usar herança, `super()` e exceções próprias; concluir tarefas e conta bancária |
+| 11 | Programação orientada a objetos | Criar classes com atributos, métodos e `__str__` |
+| 12 | Programação orientada a objetos (herança) + Projetos 6 e 7 | Usar herança, `super()` e exceções próprias; concluir tarefas e conta bancária |
 | 13 | Python avançado | Compreensões, geradores, decoradores, `lambda` e gerenciadores de contexto |
 | 14 | Algoritmos e estruturas de dados | Busca, ordenação, complexidade (Big O), pilhas, filas e recursão |
 | 15 | Prática profissional | PEP 8, testes com unittest, logging, venv/pip, Git e profiling |
-| 16 | Projetos 3, 4 e 8 + projeto próprio | Concluir os projetos restantes e começar um projeto pessoal para o portfólio |
+| 16 | Projetos práticos (3, 4 e 8) + projeto próprio | Concluir os projetos restantes e começar um projeto pessoal para o portfólio |
 
 > 💡 Atrasou? Tudo bem. O cronograma é uma sugestão: o importante é a constância. Se um módulo ficou difícil, gaste mais uma semana nele antes de seguir.
 

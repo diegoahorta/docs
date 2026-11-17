@@ -208,3 +208,6 @@ mark { background: rgba(242, 194, 48, .45); color: inherit; border-radius: 3px; 
 .rodape { text-align: center; font-size: .8rem; color: var(--txt2); margin: 30px 0 10px; }
 .vazio { color: var(--txt2); text-align: center; padding: 24px 0; }
 @media (min-width: 700px) { main { padding: 24px; } h1 { font-size: 1.85rem; } }
+/* tabelas largas: colunas com largura mínima legível + rolagem horizontal */
+.tabela th, .tabela td { min-width: 7.5em; }
+.tabela td code { white-space: nowrap; }
