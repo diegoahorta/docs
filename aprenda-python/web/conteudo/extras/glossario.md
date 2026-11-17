@@ -1,0 +1,95 @@
+# Glossário
+
+- **algoritmo**: sequência finita de passos bem definidos para resolver um problema ou realizar uma tarefa.
+- **ambiente virtual (venv)**: pasta isolada com um interpretador Python e pacotes próprios de um projeto, criada com `python -m venv`.
+- **argumento**: valor passado para uma função no momento da chamada. Em `len("oi")`, o argumento é `"oi"`.
+- **argumento nomeado**: argumento passado com o nome do parâmetro, como `print("a", end="")`.
+- **atribuição**: instrução que associa um valor a uma variável, usando `=`. Ex.: `idade = 30`.
+- **atributo**: valor associado a um objeto, acessado com ponto: `conta.saldo`.
+- **biblioteca padrão**: conjunto de módulos que já vem com o Python, como `math`, `random`, `json` e `datetime`.
+- **bloco**: grupo de instruções com a mesma indentação, que pertence a um `if`, `for`, `def`, `class` etc.
+- **booleano (bool)**: tipo com apenas dois valores, `True` (verdadeiro) e `False` (falso).
+- **break**: instrução que interrompe imediatamente o laço `for` ou `while` em que está.
+- **bug**: erro em um programa que faz com que ele falhe ou se comporte de forma inesperada.
+- **caso base**: em uma função recursiva, a condição que encerra a recursão sem nova chamada.
+- **chave**: valor usado para acessar um item em um dicionário. Em `{"nome": "Ana"}`, a chave é `"nome"`.
+- **classe**: modelo que define os atributos e métodos de um tipo de objeto. Criada com `class`.
+- **código-fonte**: o texto do programa escrito em uma linguagem de programação, como um arquivo `.py`.
+- **comentário**: texto ignorado pelo interpretador, iniciado por `#`, usado para explicar o código.
+- **compilador**: programa que traduz todo o código-fonte para outra linguagem (geralmente de máquina) antes da execução.
+- **compreensão de lista**: forma concisa de criar uma lista a partir de outra sequência: `[x * 2 for x in nums]`.
+- **concatenação**: junção de sequências com `+`, como `"Olá, " + nome`.
+- **condicional**: instrução que executa um bloco apenas se uma condição for verdadeira (`if`, `elif`, `else`).
+- **conjunto (set)**: coleção não ordenada de elementos únicos, como `{1, 2, 3}`.
+- **constante**: variável cujo valor não deve mudar; por convenção, escrita em maiúsculas (`PI = 3.14159`).
+- **construtor**: método especial `__init__`, executado ao criar um objeto, que inicializa seus atributos.
+- **continue**: instrução que pula para a próxima repetição do laço, ignorando o resto do bloco.
+- **decorador**: função que recebe outra função e devolve uma versão modificada dela, aplicada com `@nome`.
+- **depuração (debugging)**: processo de encontrar e corrigir bugs em um programa.
+- **dicionário**: coleção de pares chave-valor, como `{"maçã": 3, "pera": 5}`.
+- **docstring**: string entre aspas triplas na primeira linha de uma função, classe ou módulo, que o documenta.
+- **elemento**: cada um dos valores guardados em uma lista, tupla ou outra coleção. Também chamado de item.
+- **encapsulamento**: princípio de esconder os detalhes internos de um objeto e expor apenas uma interface.
+- **erro de sintaxe**: erro na escrita do código que impede o programa de começar a executar (`SyntaxError`).
+- **erro semântico**: erro de lógica: o programa roda sem mensagens, mas faz algo diferente do desejado.
+- **escopo**: região do programa em que um nome (variável, função) é visível. Pode ser local ou global.
+- **exceção**: erro detectado durante a execução, como `ZeroDivisionError`, que pode ser tratado com `try/except`.
+- **expressão**: combinação de valores, variáveis e operadores que resulta em um valor, como `2 * x + 1`.
+- **f-string**: string precedida por `f` que permite inserir expressões entre chaves: `f"Total: {total:.2f}"`.
+- **fatia (slice)**: parte de uma sequência obtida com `[início:fim:passo]`, como `texto[0:3]`.
+- **float**: tipo numérico de ponto flutuante, para números com parte decimal, como `3.14`.
+- **função**: bloco de código nomeado e reutilizável, definido com `def`, que pode receber parâmetros e devolver um valor.
+- **função embutida**: função disponível sem importar nada, como `print`, `len`, `range` e `sorted`.
+- **gerador**: função que usa `yield` para produzir valores um de cada vez, sob demanda, economizando memória.
+- **Git**: sistema de controle de versões que registra o histórico de mudanças de um projeto.
+- **GitHub**: plataforma online que hospeda repositórios Git e facilita a colaboração.
+- **herança**: mecanismo em que uma classe (filha) reaproveita e estende atributos e métodos de outra (mãe).
+- **IDE**: ambiente integrado de desenvolvimento, editor com ferramentas para escrever, executar e depurar código (ex.: PyCharm, VS Code).
+- **import**: instrução que carrega um módulo para usar seus nomes: `import math`.
+- **imutável**: objeto que não pode ser alterado depois de criado, como strings, tuplas e números.
+- **indentação**: espaços no início da linha que, em Python, definem os blocos de código (padrão: 4 espaços).
+- **índice**: posição de um elemento em uma sequência, começando em 0. Índices negativos contam do fim.
+- **instância**: objeto criado a partir de uma classe. `ana = Pessoa("Ana")` cria uma instância de `Pessoa`.
+- **int**: tipo numérico para números inteiros, como `42` ou `-7`.
+- **interpretador**: programa que lê e executa o código-fonte instrução por instrução, como o Python.
+- **iteração**: cada repetição de um laço; também o ato de percorrer os elementos de uma coleção.
+- **iterador**: objeto que fornece os elementos de um iterável um de cada vez, com `next()`.
+- **iterável**: objeto que pode ser percorrido com `for`, como listas, strings, dicionários e arquivos.
+- **JSON**: formato de texto para troca de dados, parecido com dicionários e listas do Python; lido com o módulo `json`.
+- **laço (loop)**: estrutura que repete um bloco de código, como `for` e `while`.
+- **laço infinito**: laço cuja condição de parada nunca é atingida.
+- **lambda**: função anônima de uma única expressão: `lambda x: x * 2`.
+- **linguagem formal**: linguagem projetada com regras exatas e sem ambiguidade, como as de programação.
+- **lista**: sequência ordenada e mutável de elementos, escrita entre colchetes: `[1, "dois", 3.0]`.
+- **logging**: registro de mensagens sobre a execução de um programa, com níveis como INFO e ERROR.
+- **método**: função definida dentro de uma classe e chamada a partir de um objeto: `texto.upper()`.
+- **módulo**: arquivo `.py` com definições (funções, classes, variáveis) que pode ser importado por outros programas.
+- **mutável**: objeto que pode ser alterado depois de criado, como listas, dicionários e conjuntos.
+- **None**: valor especial que representa "nenhum valor"; é o que uma função sem `return` devolve.
+- **objeto**: qualquer valor em Python (números, strings, listas, funções...); tem tipo, valor e identidade.
+- **operador**: símbolo que representa uma operação, como `+`, `*`, `==`, `and`.
+- **pacote**: pasta que agrupa módulos relacionados, geralmente com um arquivo `__init__.py`.
+- **parâmetro**: nome, na definição da função, que recebe o valor de um argumento. Em `def dobro(x):`, `x` é o parâmetro.
+- **PEP 8**: guia oficial de estilo para código Python (nomes, espaços, tamanho de linha, imports).
+- **pip**: gerenciador de pacotes do Python, usado para instalar bibliotecas do PyPI: `pip install requests`.
+- **polimorfismo**: capacidade de objetos de tipos diferentes responderem à mesma operação ou método, cada um à sua maneira.
+- **programa**: sequência de instruções que especifica como realizar uma tarefa.
+- **prompt**: sinal que indica que o interpretador espera uma entrada, como `>>>`; também o texto mostrado por `input()`.
+- **PyPI**: *Python Package Index* (pypi.org), repositório público com centenas de milhares de pacotes Python.
+- **recursão**: técnica em que uma função chama a si mesma para resolver versões menores do problema.
+- **refatorar**: melhorar a estrutura do código (nomes, organização) sem mudar o que ele faz.
+- **REPL**: modo interativo do interpretador (*Read-Eval-Print Loop*): lê, avalia, mostra o resultado e repete.
+- **repositório**: pasta de um projeto controlada pelo Git, com todo o seu histórico de versões.
+- **return**: instrução que encerra uma função e devolve um valor a quem a chamou.
+- **script**: programa salvo em um arquivo (`.py`) e executado de uma vez pelo interpretador.
+- **sintaxe**: conjunto de regras que definem como o código deve ser escrito em uma linguagem.
+- **string (str)**: sequência imutável de caracteres, escrita entre aspas: `"Python"`.
+- **teste automatizado**: código que verifica automaticamente se outra parte do código funciona como esperado.
+- **traceback**: relatório mostrado quando ocorre uma exceção, com as linhas e funções envolvidas no erro.
+- **tupla**: sequência ordenada e imutável de elementos, escrita entre parênteses: `(10, 20)`.
+- **type hint (dica de tipo)**: anotação opcional que indica o tipo esperado: `def soma(a: int, b: int) -> int:`.
+- **valor de retorno**: resultado que uma função devolve com `return`.
+- **variável**: nome que se refere a um valor guardado na memória.
+- **variável global**: variável definida fora de qualquer função, visível em todo o módulo.
+- **variável local**: variável criada dentro de uma função, que só existe durante a execução dela.
+- **venv**: módulo da biblioteca padrão que cria ambientes virtuais (`python -m venv .venv`); veja *ambiente virtual*.

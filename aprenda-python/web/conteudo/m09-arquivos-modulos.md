@@ -1236,6 +1236,24 @@ print(df.groupby("produto")["quantidade"].sum())
 
 Ferramentas mais novas, como o **uv**, fazem o papel de `pip` + `venv` de forma muito mais rápida (`uv venv`, `uv pip install`), mas os conceitos são os mesmos.
 
+### Lidando com pacotes que podem não estar instalados
+
+Se o seu programa usa um pacote opcional, trate a ausência dele com `ModuleNotFoundError` e dê uma mensagem útil (ou use uma alternativa da biblioteca padrão). Também é possível apenas **verificar** se um módulo existe com `importlib.util.find_spec`:
+
+```python
+import importlib.util
+
+for nome in ["json", "csv", "pandas", "requests"]:
+    disponivel = importlib.util.find_spec(nome) is not None
+    print(f"{nome:<9} {'instalado' if disponivel else 'não instalado'}")
+
+try:
+    import pandas as pd
+except ModuleNotFoundError:
+    pd = None
+    print("pandas não encontrado: instale com  python -m pip install pandas")
+```
+
 Mesmo sem internet, você pode conferir o que a biblioteca padrão oferece. Por exemplo, quais módulos já estão carregados e a versão do Python:
 
 ```python
