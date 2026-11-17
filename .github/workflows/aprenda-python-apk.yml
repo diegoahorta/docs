@@ -1,4 +1,4 @@
-name: Aprenda Python — APK
+name: Aprenda Python — APK e Debian
 
 # Compila o APK offline a cada alteração em aprenda-python/ e publica uma
 # Release quando uma tag "apk-v*" é enviada (ex.: git tag apk-v1.0.0 && git push --tags).
@@ -60,16 +60,31 @@ jobs:
           if [[ "$GITHUB_REF" == refs/tags/apk-v* ]]; then export VERSAO_NOME="${GITHUB_REF#refs/tags/apk-v}"; fi
           bash tools/build-apk.sh
 
+      - name: Compilar pacote Debian (.deb)
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/apk-v* ]]; then export VERSAO_NOME="${GITHUB_REF#refs/tags/apk-v}"; fi
+          PULAR_VALIDACAO=1 bash tools/build-deb.sh
+          sudo apt-get install -y -qq lintian
+          lintian --no-tag-display-limit build/*.deb || true
+
       - uses: actions/upload-artifact@v4
         with:
           name: AprendaPython-apk
           path: aprenda-python/build/AprendaPython.apk
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AprendaPython-debian
+          path: aprenda-python/build/*.deb
+
       - name: Publicar Release
         if: startsWith(github.ref, 'refs/tags/apk-v')
         uses: softprops/action-gh-release@v2
         with:
-          files: aprenda-python/build/AprendaPython.apk
+          files: |
+            aprenda-python/build/AprendaPython.apk
+            aprenda-python/build/*.deb
           body: |
             APK do **Aprenda Python** — curso de Python do zero ao avançado, 100% offline.
-            Baixe `AprendaPython.apk` no celular Android (7.0+) e permita a instalação de fontes desconhecidas.
+            - **Android (7.0+):** baixe `AprendaPython.apk` e permita a instalação de fontes desconhecidas.
+            - **Debian/Ubuntu:** baixe o `.deb` e rode `sudo apt install ./aprenda-python_*_all.deb`.

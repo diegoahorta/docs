@@ -555,5 +555,12 @@
     // pré-carrega o Python em segundo plano para a primeira execução ser rápida
     setTimeout(function () { Python.carregar().catch(function () {}); }, 600);
   }
+  // Versão Linux: avisa o lançador local que o app continua aberto
+  if (location.hostname === '127.0.0.1') {
+    const ping = function () { fetch('/__aprenda-python/ping', { cache: 'no-store' }).catch(function () {}); };
+    ping();
+    setInterval(ping, 15000);
+  }
+
   iniciar();
 })();

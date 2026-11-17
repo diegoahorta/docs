@@ -25,7 +25,7 @@ echo "==> 2/7 Validando o conteúdo (executa todos os exemplos e exercícios)"
 if [ "${PULAR_VALIDACAO:-0}" != "1" ]; then node "$RAIZ/tools/validar.js"; fi
 
 echo "==> 3/7 Preparando assets"
-rm -rf "$SAIDA"
+rm -rf "$SAIDA/assets" "$SAIDA/gen" "$SAIDA/classes" "$SAIDA/AndroidManifest.xml"
 mkdir -p "$SAIDA/assets/www" "$SAIDA/gen" "$SAIDA/classes"
 ( cd "$RAIZ/web" && tar cf - --exclude='conteudo/FORMATO.md' --exclude='*.map' . ) | ( cd "$SAIDA/assets/www" && tar xf - )
 MANIFESTO="$SAIDA/AndroidManifest.xml"

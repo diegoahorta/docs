@@ -1,4 +1,4 @@
-# Aprenda Python: do zero ao avançado (offline, Android)
+# Aprenda Python: do zero ao avançado (offline, Android e Linux)
 
 Um sistema completo para aprender Python e programação **sem internet**: trilha de módulos
 do nível iniciante ao avançado, lições com código **executável e editável**, exercícios
@@ -17,6 +17,34 @@ referência rápida, glossário, busca e acompanhamento de progresso. O código 
 3. Requisitos: Android 7.0+ com o **Android System WebView** (ou Chrome) atualizado pela Play Store.
 
 O app não pede nenhuma permissão e bloqueia qualquer acesso à rede.
+
+## Instalar no Linux (Debian, Ubuntu, Mint e derivados)
+
+1. Baixe [`deb/aprenda-python_1.0.0_all.deb`](deb/aprenda-python_1.0.0_all.deb) (ou o artefato `AprendaPython-debian` do GitHub Actions).
+2. Instale (o `apt` resolve as dependências sozinho):
+
+   ```bash
+   sudo apt install ./aprenda-python_1.0.0_all.deb
+   ```
+
+3. Abra **Aprenda Python** no menu de aplicativos (categoria *Educação*), ou rode `aprenda-python` no terminal.
+
+Como funciona: o pacote instala o mesmo app em `/usr/share/aprenda-python/web`, e o comando
+`aprenda-python` (um script Python 3, sem dependências além do `python3`) sobe um servidor
+local em `127.0.0.1:48765` e abre o app numa **janela própria** do Chromium/Chrome. Se
+não houver Chromium, ele abre no navegador padrão (ex.: Firefox). Ao fechar a janela, o
+servidor encerra sozinho. Nada é acessado na internet.
+
+- Requisitos: Debian 11+ / Ubuntu 20.04+ com `python3` e um navegador recente
+  (Chromium 120+ ou Firefox 120+, que é o padrão nessas versões). Para a melhor
+  experiência, instale `sudo apt install chromium`.
+- Seu progresso fica no perfil do navegador, associado ao endereço `127.0.0.1:48765`
+  (a porta escolhida fica salva em `~/.local/share/aprenda-python/porta`).
+- Opções: `aprenda-python --sem-navegador` (só o servidor; abra o endereço onde quiser),
+  `--porta N`, e a variável `APRENDA_PYTHON_NAVEGADOR=firefox` para escolher o navegador.
+- Desinstalar: `sudo apt remove aprenda-python`.
+
+Para gerar o `.deb` a partir do código: `bash tools/build-deb.sh` (requer `dpkg-deb`, `node` e `npm`).
 
 ## A trilha
 
@@ -67,10 +95,13 @@ aprenda-python/
 │   ├── conteudo/           módulos .md + indice.json + extras/ (plano, referência, glossário)
 │   └── pyodide/            (baixado pelo build; não versionado)
 ├── android/                app nativo mínimo: WebView servindo os assets offline
+├── linux/                  lançador `aprenda-python` e atalho .desktop (pacote Debian)
+├── apk/, deb/              pacotes prontos para baixar
 ├── tools/
 │   ├── baixar-pyodide.sh   baixa o Pyodide do npm
 │   ├── validar.js          executa TODOS os exemplos e exercícios no Python real
 │   ├── build-apk.sh        compila o APK sem Gradle (aapt + javac + dx + apksigner)
+│   ├── build-deb.sh        gera o pacote Debian (.deb)
 │   └── gerar-icones.cjs    gera os ícones PNG a partir do SVG
 └── README.md
 ```

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Aprenda Python
+GenericName=Curso de Python
+Comment=Aprenda Python do zero ao avançado, offline
+Exec=aprenda-python
+Icon=aprenda-python
+Terminal=false
+Categories=Education;Development;ComputerScience;
+Keywords=python;programação;curso;aprender;estudo;
+StartupWMClass=aprenda-python
