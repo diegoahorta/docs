@@ -1,0 +1,6 @@
+# gerados pelo build
+build/
+web/pyodide/
+# chave de assinatura local (nunca versionar)
+*.keystore
+*.jks

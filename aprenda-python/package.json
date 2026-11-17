@@ -1,0 +1,10 @@
+{
+  "name": "aprenda-python",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "pyodide": "bash tools/baixar-pyodide.sh",
+    "validar": "node tools/validar.js",
+    "apk": "bash tools/build-apk.sh"
+  }
+}
