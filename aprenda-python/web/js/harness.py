@@ -6,6 +6,7 @@
 import sys
 import time
 import builtins
+import traceback
 
 ARQ = "<seu código>"
 
@@ -80,7 +81,14 @@ def _formatar(e):
     if isinstance(e, _Tempo):
         nome = "TimeoutError"
     cab = "Traceback (chamadas mais recentes por último):"
-    texto = cab + "\n" + "\n".join(linhas) + "\n" + nome + (": " + msg if msg else "")
+    ultima = nome + (": " + msg if msg else "")
+    if not isinstance(e, (SyntaxError, _Tempo)):
+        try:
+            # inclui as sugestões do Python ("Did you mean: 'nome'?")
+            ultima = "".join(traceback.format_exception_only(e)).strip() or ultima
+        except Exception:
+            pass
+    texto = cab + "\n" + "\n".join(linhas) + "\n" + ultima
     dica = DICAS.get(nome)
     if dica is None:
         for base in type(e).__mro__:

@@ -51,7 +51,7 @@ assert soma(2, 3) == 5, "soma(2, 3) deveria dar 5"
 
 - `### Subtítulo` e `#### Sub-subtítulo` (não use `#`/`##` dentro de lições)
 - parágrafos, `**negrito**`, `*itálico*`, `` `código` ``, links `[texto](https://...)`
-- listas `- item` e `1. item`, tabelas `| a | b |`
+- listas `- item` e `1. item`, tabelas `| a | b |` (para um `|` dentro de uma célula, escreva `\|`)
 - `> 💡 dica` (caixa de dica) e `> ⚠️ atenção` (caixa de alerta)
 - blocos de código: ```` ```python ```` (executável), ```` ```python erro ```` (executável e
   **deve** gerar erro — para mostrar mensagens de erro), ```` ```python nao-executar ````

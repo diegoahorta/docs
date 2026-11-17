@@ -189,7 +189,7 @@
       if (l.startsWith('|')) {
         const rows = [];
         while (i < linhas.length && linhas[i].startsWith('|')) { rows.push(linhas[i]); i++; }
-        const cel = function (r) { return r.replace(/^\||\|$/g, '').split('|').map(function (c) { return c.trim(); }); };
+        const cel = function (r) { return r.replace(/^\||\|$/g, '').split(/(?<!\\)\|/).map(function (c) { return c.replace(/\\\|/g, '|').trim(); }); };
         let html = '<div class="tabela"><table>';
         const cab = cel(rows[0]);
         let inicio = 1;
