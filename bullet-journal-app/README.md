@@ -125,3 +125,13 @@ sudo apt install aapt dalvik-exchange zipalign apksigner openjdk-17-jdk python3-
 O script usa `aapt`, `javac --release 8`, `dx`, `zipalign` e `apksigner`. Na primeira execução ele baixa um `android.jar` (API 33).
 
 > A keystore está no repositório para que versões futuras possam **atualizar** o app instalado sem perder os dados. Se for distribuir publicamente, gere uma chave própria (`KEYSTORE=... KS_PASS=... ./build.sh`).
+
+## 5. Telas
+
+| Hoje (daily log) | Mês (monthly log) | Future log | Migração |
+|---|---|---|---|
+| ![](screenshots/daily.png) | ![](screenshots/monthly.png) | ![](screenshots/future.png) | ![](screenshots/migration.png) |
+
+| Coleção | Tracker de hábitos | Exportar e backup |
+|---|---|---|
+| ![](screenshots/collection.png) | ![](screenshots/tracker.png) | ![](screenshots/export.png) |
