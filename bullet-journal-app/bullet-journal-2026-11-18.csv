@@ -1,0 +1,13 @@
+﻿data,mes,dia,pagina,colecao,tipo,status,simbolo,significador,cor,texto,criado_em
+,,,Coleção,Livros a ler,Tarefa,Aberta,•,,,O guia definitivo da caligrafia,2026-11-18T02:11:28.058Z
+,,,Coleção,Livros a ler,Tarefa,Aberta,•,,,Ateliês de lettering,2026-11-18T02:11:28.071Z
+,2026-11,24,Monthly log,,Evento,Aberta,○,,,Hortibroc,2026-11-18T02:11:28.158Z
+,2026-11,,Monthly log,,Tarefa,Aberta,•,,,Pintar parede da sala,2026-11-18T02:11:28.175Z
+,2026-11,,Future log,,Evento,Aberta,○,,,Aniversário do Ludo,2026-11-18T02:11:28.244Z
+2026-11-17,2026-11,,Daily log,,Tarefa,Migrada (>),>,,,Tarefa de ontem,2026-11-18T02:11:29.100Z
+2026-11-18,2026-11,,Daily log,,Tarefa,Concluída,×,,,Ligar para o banco,2026-11-18T02:11:27.255Z
+2026-11-18,2026-11,,Daily log,,Evento,Aberta,○,,,Dentista às 10h,2026-11-18T02:11:27.271Z
+2026-11-18,2026-11,,Daily log,,Nota,Aberta,–,,,Ideia: lettering,2026-11-18T02:11:27.285Z
+2026-11-18,2026-11,,Daily log,,Tarefa,Agendada (<),<,Prioridade,,Entregar relatório,2026-11-18T02:11:27.295Z
+2026-11-18,2026-11,,Daily log,,Tarefa,Aberta,•,,,Tarefa de ontem,2026-11-18T02:11:29.231Z
+,2026-12,,Future log,,Tarefa,Aberta,•,Prioridade,,Entregar relatório,2026-11-18T02:11:27.665Z

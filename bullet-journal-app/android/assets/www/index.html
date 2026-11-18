@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; connect-src 'none'">
+  <title>Bullet Journal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="top">
+      <button class="icon-btn" id="btn-back" aria-label="Voltar" hidden>‹</button>
+      <div class="titles">
+        <div id="page-kicker" class="kicker"></div>
+        <h1 id="page-title">Bullet Journal</h1>
+      </div>
+      <div id="top-actions"></div>
+    </header>
+    <main id="view" tabindex="-1"></main>
+    <form id="composer" autocomplete="off" hidden>
+      <div class="composer-opts" id="composer-opts"></div>
+      <div class="composer-row">
+        <button type="button" class="chip type-btn" id="c-type" aria-label="Tipo de entrada">•</button>
+        <input id="c-text" type="text" enterkeyhint="done" placeholder="Anotar rapidamente…" maxlength="500">
+        <button type="submit" class="add-btn" aria-label="Adicionar">+</button>
+      </div>
+    </form>
+    <nav id="tabs">
+      <button data-tab="daily"><span class="ti">•</span><span>Hoje</span></button>
+      <button data-tab="monthly"><span class="ti">▦</span><span>Mês</span></button>
+      <button data-tab="future"><span class="ti">◷</span><span>Futuro</span></button>
+      <button data-tab="collections"><span class="ti">❏</span><span>Coleções</span></button>
+      <button data-tab="more"><span class="ti">≡</span><span>Mais</span><i class="badge" id="badge" hidden></i></button>
+    </nav>
+  </div>
+  <div id="sheet-wrap" hidden><div class="scrim"></div><div id="sheet" role="dialog" aria-modal="true"></div></div>
+  <div id="toast" hidden></div>
+  <script src="core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
