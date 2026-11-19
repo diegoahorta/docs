@@ -25,7 +25,7 @@ import time
 import urllib.request
 import webbrowser
 
-VERSAO = "1.0.0"
+VERSAO = "1.0.1"
 PORTA_PADRAO = 48765
 IDENT = "aprenda-python"
 PASTA_WEB = os.environ.get("APRENDA_PYTHON_WEB", "/usr/share/aprenda-python/web")

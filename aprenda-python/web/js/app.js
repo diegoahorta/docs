@@ -123,8 +123,9 @@
       const botoes = caixa.querySelectorAll('.barra-editor .btn');
       botoes.forEach(function (b) { b.disabled = true; });
       ed.marcarErro(null);
-      info(Python.estado === 'pronto' ? 'Executando…' : 'Preparando o Python (só na primeira vez)…');
-      await new Promise(function (r) { setTimeout(r, 30); });
+      info(Python.estado === 'pronto' ? 'Executando…' : '⏳ Preparando o Python… Só acontece na primeira execução e pode levar alguns segundos (a tela fica parada enquanto isso).');
+      // garante que a mensagem seja desenhada antes do trabalho pesado começar
+      await new Promise(function (r) { requestAnimationFrame(function () { requestAnimationFrame(function () { setTimeout(r, 0); }); }); });
       let r;
       try {
         saida.innerHTML = '';
@@ -133,7 +134,7 @@
         else if (!saida.textContent) info(teste ? '(o programa não imprimiu nada)' : '✓ Executado sem erros (nada foi impresso — use print() para ver valores)');
         registrarDia();
       } catch (e) {
-        info('Não foi possível iniciar o Python: ' + (e && e.message || e));
+        info('Não foi possível iniciar o Python: ' + (e && e.message || e) + ' — Atualize o "Android System WebView" e o Chrome pela Play Store e tente de novo.');
       } finally {
         botoes.forEach(function (b) { b.disabled = false; });
       }
@@ -482,8 +483,9 @@
       '<li>PEP 8 — Guia de estilo para código Python; PEP 20 — O Zen do Python.</li>' +
       '<li>Projeto Pyodide — pyodide.org (licença MPL-2.0).</li></ul>' +
       '<p>As lições são textos originais, escritos a partir dessas fontes. Cada lição indica as páginas/capítulos de referência para aprofundamento.</p>' +
-      '<h3>Interpretador</h3><p id="versao-py">' + esc(Python.estado === 'pronto' ? 'Python carregado.' : 'O Python é carregado em segundo plano ao abrir o app.') + '</p></div>';
-    Python.carregar().then(function (api) { const p = $('#versao-py'); if (p) p.textContent = 'Python ' + api.versao + ' (Pyodide), biblioteca padrão completa.'; }).catch(function () {});
+      '<h3>Interpretador</h3><p id="versao-py"></p><p style="font-size:.85rem;color:var(--txt2)">Navegador/WebView: ' + esc(navigator.userAgent) + '</p></div>';
+    if (Python.estado === 'pronto') Python.carregar().then(function (api) { const p = $('#versao-py'); if (p) p.textContent = 'Python ' + api.versao + ' (Pyodide), biblioteca padrão completa.'; });
+    else { const p = $('#versao-py'); if (p) p.textContent = 'O Python 3.14 (Pyodide) é iniciado na primeira vez que você executa um código.'; }
   }
 
   function telaNaoEncontrada() {
@@ -528,7 +530,7 @@
   Python.aoMudarEstado(function (estado, det) {
     const s = $('#status-py');
     s.className = 'status-py' + (estado === 'pronto' ? ' pronto' : estado === 'erro' ? ' erro' : '');
-    s.textContent = estado === 'pronto' ? 'Python ' + det + ' ✓' : estado === 'erro' ? 'Python: erro' : 'Python…';
+    s.textContent = estado === 'pronto' ? 'Python ' + det + ' ✓' : estado === 'erro' ? 'Python: erro' : estado === 'carregando' ? 'Python ⏳' : 'Python';
     if (estado === 'erro') s.title = det;
   });
 
@@ -552,8 +554,8 @@
     }
     window.addEventListener('hashchange', rotear);
     rotear();
-    // pré-carrega o Python em segundo plano para a primeira execução ser rápida
-    setTimeout(function () { Python.carregar().catch(function () {}); }, 600);
+    // O Python NÃO é pré-carregado: iniciar o interpretador ocupa a tela por vários
+    // segundos em celulares, o que travava a navegação. Ele inicia no primeiro ▶ Executar.
   }
   // Versão Linux: avisa o lançador local que o app continua aberto
   if (location.hostname === '127.0.0.1') {

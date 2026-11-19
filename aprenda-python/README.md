@@ -20,11 +20,11 @@ O app não pede nenhuma permissão e bloqueia qualquer acesso à rede.
 
 ## Instalar no Linux (Debian, Ubuntu, Mint e derivados)
 
-1. Baixe [`deb/aprenda-python_1.0.0_all.deb`](deb/aprenda-python_1.0.0_all.deb) (ou o artefato `AprendaPython-debian` do GitHub Actions).
+1. Baixe [`deb/aprenda-python_1.0.1_all.deb`](deb/aprenda-python_1.0.1_all.deb) (ou o artefato `AprendaPython-debian` do GitHub Actions).
 2. Instale (o `apt` resolve as dependências sozinho):
 
    ```bash
-   sudo apt install ./aprenda-python_1.0.0_all.deb
+   sudo apt install ./aprenda-python_1.0.1_all.deb
    ```
 
 3. Abra **Aprenda Python** no menu de aplicativos (categoria *Educação*), ou rode `aprenda-python` no terminal.
