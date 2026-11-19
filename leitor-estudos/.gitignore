@@ -1,0 +1,10 @@
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/keystore/
+*.iml
+.idea/
+
+# o APK pronto é versionado de propósito
+!dist/

@@ -1,0 +1,47 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'br.leitor.estudos'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'br.leitor.estudos'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            // Chave gerada localmente por build-apk.sh (keystore/leitor.jks).
+            def ks = rootProject.file('keystore/leitor.jks')
+            if (ks.exists()) {
+                storeFile ks
+                storePassword System.getenv('LEITOR_KS_PASS') ?: 'leitor123'
+                keyAlias 'leitor'
+                keyPassword System.getenv('LEITOR_KS_PASS') ?: 'leitor123'
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig rootProject.file('keystore/leitor.jks').exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    androidResources {
+        // cmaps do pdf.js (.bcmap) não devem ser comprimidos/ignorados
+        noCompress 'bcmap', 'pfb', 'ttf'
+        ignoreAssetsPattern '!.svn:!.git:.*:!CVS:!thumbs.db:!picasa.ini:!*.scc:*~'
+    }
+}

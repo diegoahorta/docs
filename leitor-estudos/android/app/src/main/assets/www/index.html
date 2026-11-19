@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' data: blob:; font-src 'self' data: blob:; object-src 'none'; base-uri 'none'" />
+  <title>Leitor &amp; Estudos</title>
+  <link rel="stylesheet" href="css/app.css" />
+  <script src="lib/pdfjs/pdf.min.js"></script>
+  <script src="lib/mammoth.browser.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Cabeçalho das telas principais -->
+    <header id="topbar" class="topbar">
+      <h1 id="topTitle">Biblioteca</h1>
+      <div class="top-actions" id="topActions"></div>
+    </header>
+
+    <main id="views">
+      <section id="view-library" class="view active"></section>
+      <section id="view-excerpts" class="view"></section>
+      <section id="view-maps" class="view"></section>
+      <section id="view-studies" class="view"></section>
+      <section id="view-more" class="view"></section>
+    </main>
+
+    <nav id="bottomnav" class="bottomnav">
+      <button data-view="library" class="active"><span class="ic">📚</span><span>Biblioteca</span></button>
+      <button data-view="excerpts"><span class="ic">✂️</span><span>Trechos</span></button>
+      <button data-view="maps"><span class="ic">🧠</span><span>Mapas</span></button>
+      <button data-view="studies"><span class="ic">🎓</span><span>Estudos</span></button>
+      <button data-view="more"><span class="ic">⚙️</span><span>Mais</span></button>
+    </nav>
+
+    <!-- Leitor (tela cheia) -->
+    <section id="reader" class="reader hidden"></section>
+
+    <!-- Editor de mapa mental (tela cheia) -->
+    <section id="mapEditor" class="fullscreen hidden"></section>
+
+    <!-- Estudo (tela cheia) -->
+    <section id="studyView" class="fullscreen hidden"></section>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toast" class="toast"></div>
+  <input type="file" id="fileInput" multiple accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+  <input type="file" id="backupInput" accept=".leitorbak,application/octet-stream,*/*" hidden />
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
