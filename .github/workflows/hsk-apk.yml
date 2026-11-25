@@ -1,9 +1,10 @@
-name: HSK Estudos APK
+name: Apps de estudo (APK)
 
 on:
   push:
     paths:
       - "hsk-app/**"
+      - "topik-app/**"
       - ".github/workflows/hsk-apk.yml"
   workflow_dispatch:
 
@@ -13,40 +14,69 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dir: hsk-app
+            apk: HSK-Estudos.apk
+            tag: hsk
+            title: HSK Estudos (mandarim)
+          - dir: topik-app
+            apk: TOPIK-Estudos.apk
+            tag: topik
+            title: TOPIK Estudos (coreano)
     defaults:
       run:
-        working-directory: hsk-app
+        working-directory: ${{ matrix.dir }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Mudou?
+        id: changed
+        working-directory: .
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || \
+             git diff --name-only HEAD~1 HEAD | grep -qE "^(${{ matrix.dir }}/|\.github/workflows/hsk-apk\.yml)"; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-java@v4
+        if: steps.changed.outputs.build == 'true'
         with:
           distribution: temurin
           java-version: "17"
 
       - uses: gradle/actions/setup-gradle@v4
+        if: steps.changed.outputs.build == 'true'
         with:
           gradle-version: "8.9"
 
       - name: Compilar APK
-        run: gradle --no-daemon assembleRelease
-
-      - name: Renomear
-        run: cp app/build/outputs/apk/release/app-release.apk HSK-Estudos.apk
+        if: steps.changed.outputs.build == 'true'
+        run: |
+          gradle --no-daemon assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk "${{ matrix.apk }}"
 
       - uses: actions/upload-artifact@v4
+        if: steps.changed.outputs.build == 'true'
         with:
-          name: HSK-Estudos-apk
-          path: hsk-app/HSK-Estudos.apk
+          name: ${{ matrix.tag }}-apk
+          path: ${{ matrix.dir }}/${{ matrix.apk }}
 
       - name: Publicar release
+        if: steps.changed.outputs.build == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="hsk-v1.0-${{ github.run_number }}"
-          gh release create "$TAG" HSK-Estudos.apk \
+          TAG="${{ matrix.tag }}-v1.0-${{ github.run_number }}"
+          gh release create "$TAG" "${{ matrix.apk }}" \
             --repo "${{ github.repository }}" \
             --target "${{ github.sha }}" \
-            --title "HSK Estudos (build ${{ github.run_number }})" \
-            --notes "APK offline para Android 5.0+. Baixe HSK-Estudos.apk no celular e instale." \
+            --title "${{ matrix.title }} (build ${{ github.run_number }})" \
+            --notes "APK offline para Android 5.0+. Baixe ${{ matrix.apk }} no celular e instale." \
             --prerelease

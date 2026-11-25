@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TOPIK Estudos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="top">
+  <button id="back" class="icon-btn" aria-label="Voltar" hidden>‹</button>
+  <h1 id="title">TOPIK Estudos</h1>
+  <span id="streak" class="chip" title="Dias seguidos"></span>
+</header>
+<main id="view"></main>
+<nav id="tabs">
+  <button data-tab="hoje" class="on"><span>오늘</span>Hoje</button>
+  <button data-tab="cartoes"><span>카드</span>Cartões</button>
+  <button data-tab="treinar"><span>연습</span>Treinar</button>
+  <button data-tab="gramatica"><span>문법</span>Gramática</button>
+  <button data-tab="mais"><span>더</span>Mais</button>
+</nav>
+<div id="toast" hidden></div>
+<script src="data.js"></script>
+<script src="extra.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
