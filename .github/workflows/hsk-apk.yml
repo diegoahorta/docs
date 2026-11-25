@@ -1,0 +1,52 @@
+name: HSK Estudos APK
+
+on:
+  push:
+    paths:
+      - "hsk-app/**"
+      - ".github/workflows/hsk-apk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hsk-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Compilar APK
+        run: gradle --no-daemon assembleRelease
+
+      - name: Renomear
+        run: cp app/build/outputs/apk/release/app-release.apk HSK-Estudos.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HSK-Estudos-apk
+          path: hsk-app/HSK-Estudos.apk
+
+      - name: Publicar release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="hsk-v1.0-${{ github.run_number }}"
+          gh release create "$TAG" HSK-Estudos.apk \
+            --repo "${{ github.repository }}" \
+            --target "${{ github.sha }}" \
+            --title "HSK Estudos (build ${{ github.run_number }})" \
+            --notes "APK offline para Android 5.0+. Baixe HSK-Estudos.apk no celular e instale." \
+            --prerelease

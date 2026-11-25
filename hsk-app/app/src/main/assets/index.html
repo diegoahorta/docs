@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HSK Estudos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="top">
+  <button id="back" class="icon-btn" aria-label="Voltar" hidden>‹</button>
+  <h1 id="title">HSK Estudos</h1>
+  <span id="streak" class="chip" title="Dias seguidos"></span>
+</header>
+<main id="view"></main>
+<nav id="tabs">
+  <button data-tab="hoje" class="on"><span>今</span>Hoje</button>
+  <button data-tab="cartoes"><span>卡</span>Cartões</button>
+  <button data-tab="treinar"><span>练</span>Treinar</button>
+  <button data-tab="gramatica"><span>语</span>Gramática</button>
+  <button data-tab="mais"><span>多</span>Mais</button>
+</nav>
+<div id="toast" hidden></div>
+<script src="data.js"></script>
+<script src="extra.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

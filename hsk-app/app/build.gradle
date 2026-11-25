@@ -1,0 +1,42 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.estudos.hsk"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.estudos.hsk"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        // Chave fixa para que as atualizações instalem por cima sem perder o progresso.
+        // É uma chave de uso pessoal (sideload), não serve para a Play Store.
+        estudos {
+            storeFile file("../keystore/hsk-estudos.jks")
+            storePassword "hskestudos"
+            keyAlias "hsk"
+            keyPassword "hskestudos"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.estudos
+        }
+        debug {
+            signingConfig signingConfigs.estudos
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
