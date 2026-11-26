@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>TOPIK I 1671</title>
+<style>
+:root{--bg:#F4F6FA;--card:#fff;--ink:#1B2433;--mute:#6B7588;--line:#E2E6EE;--pri:#1F3A5F;--acc:#2F7DE1;--ok:#1E9E62;--bad:#D9483B;--warn:#E8A317}
+@media (prefers-color-scheme:dark){:root{--bg:#10151D;--card:#1A212C;--ink:#E8ECF2;--mute:#99A3B5;--line:#2A3342;--pri:#0E1B2C;--acc:#5A9BEF;--ok:#3CC487;--bad:#F06A5E}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR","Noto Sans CJK KR",Roboto,sans-serif}
+body{display:flex;flex-direction:column}
+header{background:var(--pri);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+header h1{font-size:18px;margin:0;font-weight:700}
+header small{opacity:.8;font-size:12px}
+main{flex:1;overflow-y:auto;padding:14px 16px 90px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex}
+nav button{flex:1;border:0;background:none;color:var(--mute);padding:9px 0 11px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button b{font-size:20px;font-weight:400}
+nav button.on{color:var(--acc);font-weight:700}
+.view{display:none}.view.on{display:block}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input[type=search]{font:inherit;font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);flex:1;min-width:0}
+.btn{font:inherit;font-size:16px;border:0;border-radius:12px;padding:14px 10px;flex:1;font-weight:700;color:#fff;background:var(--acc)}
+.btn.ok{background:var(--ok)}.btn.bad{background:var(--bad)}.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.flash{background:var(--card);border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,.08);min-height:300px;margin:14px 0;padding:22px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;user-select:none}
+.flash .num{position:absolute;top:12px;left:14px;color:var(--mute);font-size:13px}
+.flash .ico{position:absolute;top:6px;right:8px;display:flex;gap:2px}
+.ico button{border:0;background:none;font-size:24px;padding:6px;color:var(--mute)}
+.ico button.fav{color:var(--warn)}
+.big{font-size:46px;font-weight:700;line-height:1.2;word-break:keep-all}
+.pt{font-size:24px;font-weight:600;margin-top:16px;color:var(--acc)}
+.en{font-size:15px;color:var(--mute);margin-top:8px}
+.hint{color:var(--mute);font-size:13px;margin-top:20px}
+.hidden{visibility:hidden}
+.bar{height:8px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.meta{color:var(--mute);font-size:13px;margin:6px 0}
+.opt{display:block;width:100%;text-align:left;font:inherit;font-size:17px;padding:14px;margin:8px 0;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.opt.right{background:var(--ok);color:#fff;border-color:var(--ok)}.opt.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
+.list .it{background:var(--card);border-radius:12px;padding:10px 12px;margin:6px 0;display:flex;align-items:center;gap:10px}
+.it .n{color:var(--mute);font-size:12px;width:36px}
+.it .k{font-size:20px;font-weight:700}
+.it .t{flex:1;min-width:0}
+.it .p{color:var(--acc);font-size:15px}
+.it .e{color:var(--mute);font-size:12px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}
+.dot.s1{background:var(--warn)}.dot.s2{background:var(--ok)}
+.it button{border:0;background:none;font-size:20px;color:var(--mute);padding:4px}
+.it button.fav{color:var(--warn)}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.stat div{background:var(--card);border-radius:12px;padding:12px;text-align:center}
+.stat b{display:block;font-size:24px}
+.blk{background:var(--card);border-radius:12px;padding:10px 12px;margin:6px 0}
+.blk .row{justify-content:space-between;font-size:14px;margin-bottom:6px}
+label.chk{display:flex;align-items:center;gap:8px;font-size:15px;margin:8px 0}
+h2{font-size:17px;margin:18px 0 8px}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#000c;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;display:none;z-index:9}
+</style>
+</head>
+<body>
+<header><div><h1>TOPIK I · 1671 palavras</h1><small id="hsub">Coreano · Português · Inglês</small></div></header>
+<main>
+  <!-- ESTUDAR -->
+  <section id="v-study" class="view on">
+    <div class="row">
+      <select id="s-range"></select>
+      <select id="s-filter">
+        <option value="all">Todas</option>
+        <option value="new">Novas</option>
+        <option value="learn">Não sei / revisar</option>
+        <option value="notknown">Novas + revisar</option>
+        <option value="fav">Favoritas ★</option>
+      </select>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <select id="s-dir">
+        <option value="ko">Coreano → Português</option>
+        <option value="pt">Português → Coreano</option>
+      </select>
+      <select id="s-order">
+        <option value="seq">Em ordem</option>
+        <option value="rand">Embaralhar</option>
+      </select>
+    </div>
+    <div class="meta" id="s-meta"></div>
+    <div class="bar"><i id="s-bar" style="width:0"></i></div>
+    <div class="flash" id="card">
+      <div class="num" id="c-num"></div>
+      <div class="ico"><button id="c-fav">☆</button><button id="c-say">🔊</button></div>
+      <div class="big" id="c-front"></div>
+      <div id="c-back" class="hidden">
+        <div class="big" id="c-ko2" style="font-size:34px;margin-top:14px"></div>
+        <div class="pt" id="c-pt"></div>
+        <div class="en" id="c-en"></div>
+      </div>
+      <div class="hint" id="c-hint">Toque no cartão para ver a resposta</div>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="b-prev" style="flex:.5">◀</button>
+      <button class="btn bad" id="b-no">Não sei</button>
+      <button class="btn ok" id="b-yes">Sei ✓</button>
+      <button class="btn ghost" id="b-next" style="flex:.5">▶</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="v-quiz" class="view">
+    <div class="row">
+      <select id="q-range"></select>
+      <select id="q-dir">
+        <option value="ko">Coreano → Português</option>
+        <option value="pt">Português → Coreano</option>
+      </select>
+    </div>
+    <div class="meta" id="q-score">Acertos: 0 / 0</div>
+    <div class="flash" style="min-height:170px">
+      <div class="ico"><button id="q-say">🔊</button></div>
+      <div class="big" id="q-word"></div>
+      <div class="en" id="q-sub"></div>
+    </div>
+    <div id="q-opts"></div>
+    <button class="btn" id="q-next" style="width:100%;margin-top:6px;display:none">Próxima ▶</button>
+  </section>
+
+  <!-- LISTA -->
+  <section id="v-list" class="view">
+    <input type="search" id="l-q" placeholder="Buscar em coreano, português ou inglês…" style="width:100%">
+    <div class="row" style="margin-top:8px">
+      <select id="l-filter">
+        <option value="all">Todas</option>
+        <option value="new">Novas</option>
+        <option value="learn">Revisar</option>
+        <option value="known">Já sei</option>
+        <option value="fav">Favoritas ★</option>
+      </select>
+    </div>
+    <div class="meta" id="l-meta"></div>
+    <div class="list" id="l-items"></div>
+    <button class="btn ghost" id="l-more" style="width:100%;display:none">Mostrar mais</button>
+  </section>
+
+  <!-- PROGRESSO -->
+  <section id="v-prog" class="view">
+    <div class="stat">
+      <div><b id="p-known" style="color:var(--ok)">0</b>Já sei</div>
+      <div><b id="p-learn" style="color:var(--warn)">0</b>Revisar</div>
+      <div><b id="p-new">0</b>Novas</div>
+    </div>
+    <div class="bar"><i id="p-bar"></i></div>
+    <div class="meta" id="p-pct"></div>
+    <h2>Opções</h2>
+    <label class="chk"><input type="checkbox" id="o-en" checked> Mostrar tradução em inglês</label>
+    <label class="chk"><input type="checkbox" id="o-auto"> Pronunciar automaticamente (coreano)</label>
+    <div class="meta" id="o-tts"></div>
+    <h2>Progresso por bloco</h2>
+    <div id="p-blocks"></div>
+    <h2>Dados</h2>
+    <button class="btn bad" id="p-reset" style="width:100%">Zerar progresso</button>
+    <p class="meta">Funciona 100% off-line. O progresso fica salvo no próprio aparelho.</p>
+  </section>
+</main>
+<nav>
+  <button data-v="study" class="on"><b>🃏</b>Estudar</button>
+  <button data-v="quiz"><b>❓</b>Quiz</button>
+  <button data-v="list"><b>📖</b>Lista</button>
+  <button data-v="prog"><b>📊</b>Progresso</button>
+</nav>
+<div class="toast" id="toast"></div>
+<script src="words.js"></script>
+<script>
+(function(){
+var W = WORDS.map(function(w){return {n:w[0],ko:w[1],en:w[2],pt:w[3]||w[2]};});
+var $ = function(id){return document.getElementById(id);};
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+var st = load('status',{});   // n -> 1 revisar, 2 sei
+var fav = load('fav',{});
+var opt = load('opt',{en:true,auto:false});
+var ui = load('ui',{});
+
+function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none';},1400);}
+function say(t){
+  var ok=false;
+  try{ if(window.Android) ok=Android.speak(t); }catch(e){}
+  if(!ok && window.speechSynthesis){
+    try{var u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);ok=true;}catch(e){}
+  }
+  if(!ok) toast('Voz coreana não instalada no aparelho');
+}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function enHtml(w){return opt.en? w.en : '';}
+
+// faixas
+function fillRange(sel){
+  var h='<option value="0-0">Todas (1–1671)</option>';
+  for(var a=1;a<=1671;a+=100){var b=Math.min(a+99,1671);h+='<option value="'+a+'-'+b+'">'+a+' – '+b+'</option>';}
+  sel.innerHTML=h;
+}
+fillRange($('s-range'));fillRange($('q-range'));
+function inRange(w,r){var p=r.split('-');var a=+p[0],b=+p[1];return a===0||(w.n>=a&&w.n<=b);}
+
+// ===== ESTUDAR =====
+var deck=[],pos=0,flipped=false;
+['s-range','s-filter','s-dir','s-order'].forEach(function(id){ if(ui[id]) $(id).value=ui[id]; $(id).onchange=function(){ui[id]=this.value;save('ui',ui);ui.spos=0;buildDeck();}; });
+function passFilter(w,f){
+  var s=st[w.n]||0;
+  if(f==='new')return s===0; if(f==='learn')return s===1; if(f==='notknown')return s!==2;
+  if(f==='known')return s===2; if(f==='fav')return !!fav[w.n]; return true;
+}
+function buildDeck(keep){
+  var r=$('s-range').value,f=$('s-filter').value;
+  deck=W.filter(function(w){return inRange(w,r)&&passFilter(w,f);});
+  if($('s-order').value==='rand')shuffle(deck);
+  pos=keep&&ui.spos<deck.length?ui.spos:0;
+  show();
+}
+function show(){
+  flipped=false;
+  var c=deck[pos];
+  $('c-back').classList.add('hidden');$('c-hint').style.display='';
+  if(!c){$('c-num').textContent='';$('c-front').innerHTML='<span style="font-size:20px;color:var(--mute)">Nenhuma palavra neste filtro 🎉</span>';$('s-meta').textContent='0 cartões';$('s-bar').style.width='0';$('c-fav').style.visibility='hidden';$('c-say').style.visibility='hidden';return;}
+  $('c-fav').style.visibility='';$('c-say').style.visibility='';
+  var dir=$('s-dir').value;
+  $('c-num').textContent='#'+c.n;
+  $('c-front').textContent= dir==='ko'?c.ko:c.pt;
+  $('c-front').style.fontSize= dir==='ko'?'46px':'28px';
+  $('c-ko2').textContent= dir==='ko'?'':c.ko;
+  $('c-pt').textContent= dir==='ko'?c.pt:'';
+  $('c-en').textContent= enHtml(c);
+  $('c-fav').textContent=fav[c.n]?'★':'☆';$('c-fav').className=fav[c.n]?'fav':'';
+  $('s-meta').textContent='Cartão '+(pos+1)+' de '+deck.length+(st[c.n]===2?' · já sei ✓':st[c.n]===1?' · revisar':'');
+  $('s-bar').style.width=((pos+1)/deck.length*100)+'%';
+  ui.spos=pos;save('ui',ui);
+  if(opt.auto&&dir==='ko')say(c.ko);
+}
+function flip(){
+  if(!deck[pos])return;
+  flipped=!flipped;
+  $('c-back').classList.toggle('hidden',!flipped);$('c-hint').style.display=flipped?'none':'';
+  if(flipped&&opt.auto&&$('s-dir').value==='pt')say(deck[pos].ko);
+}
+$('card').onclick=function(e){if(e.target.tagName!=='BUTTON')flip();};
+$('c-say').onclick=function(){if(deck[pos])say(deck[pos].ko);};
+$('c-fav').onclick=function(){var c=deck[pos];if(!c)return;if(fav[c.n])delete fav[c.n];else fav[c.n]=1;save('fav',fav);show();};
+function mark(v){
+  var c=deck[pos];if(!c)return;
+  st[c.n]=v;save('status',st);
+  var f=$('s-filter').value;
+  if((f==='new')||(f==='learn'&&v===2)||(f==='notknown'&&v===2)){deck.splice(pos,1);if(pos>=deck.length)pos=0;}
+  else{pos=(pos+1)%deck.length;}
+  show();
+}
+$('b-yes').onclick=function(){mark(2);};
+$('b-no').onclick=function(){mark(1);};
+$('b-next').onclick=function(){if(deck.length){pos=(pos+1)%deck.length;show();}};
+$('b-prev').onclick=function(){if(deck.length){pos=(pos-1+deck.length)%deck.length;show();}};
+// deslizar
+var sx=null;
+$('card').addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+$('card').addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>70){e.preventDefault();(dx<0?$('b-next'):$('b-prev')).onclick();}});
+
+// ===== QUIZ =====
+var qd={ok:0,tot:0,cur:null,done:false};
+['q-range','q-dir'].forEach(function(id){if(ui[id])$(id).value=ui[id];$(id).onchange=function(){ui[id]=this.value;save('ui',ui);qd.ok=0;qd.tot=0;nextQ();};});
+function nextQ(){
+  var r=$('q-range').value,dir=$('q-dir').value;
+  var pool=W.filter(function(w){return inRange(w,r);});
+  // prioriza palavras que ainda não sei
+  var weak=pool.filter(function(w){return st[w.n]!==2;});
+  var src=(weak.length&&Math.random()<.75)?weak:pool;
+  var c=src[Math.floor(Math.random()*src.length)];
+  var opts=[c],guard=0;
+  while(opts.length<4&&guard++<200){var o=pool[Math.floor(Math.random()*pool.length)];
+    if(opts.every(function(x){return x.n!==o.n&&x.pt!==o.pt&&x.ko!==o.ko;}))opts.push(o);}
+  shuffle(opts);
+  qd.cur=c;qd.done=false;
+  $('q-word').textContent=dir==='ko'?c.ko:c.pt;
+  $('q-word').style.fontSize=dir==='ko'?'42px':'26px';
+  $('q-sub').textContent='';
+  $('q-say').style.visibility=dir==='ko'?'':'hidden';
+  $('q-opts').innerHTML='';
+  opts.forEach(function(o){
+    var b=document.createElement('button');b.className='opt';
+    b.textContent=dir==='ko'?o.pt:o.ko;
+    b.onclick=function(){answer(b,o);};
+    $('q-opts').appendChild(b);
+  });
+  $('q-next').style.display='none';
+  $('q-score').textContent='Acertos: '+qd.ok+' / '+qd.tot;
+  if(opt.auto&&dir==='ko')say(c.ko);
+}
+function answer(b,o){
+  if(qd.done)return;qd.done=true;qd.tot++;
+  var c=qd.cur,dir=$('q-dir').value;
+  var right=o.n===c.n;
+  if(right){qd.ok++;b.classList.add('right');}
+  else{b.classList.add('wrong');
+    [].forEach.call($('q-opts').children,function(x){if(x.textContent===(dir==='ko'?c.pt:c.ko))x.classList.add('right');});
+    st[c.n]=1;save('status',st);}
+  $('q-sub').textContent=(dir==='ko'?c.pt:c.ko)+(opt.en?' · '+c.en:'');
+  if(dir==='pt')say(c.ko);
+  $('q-score').textContent='Acertos: '+qd.ok+' / '+qd.tot;
+  $('q-next').style.display='block';
+}
+$('q-next').onclick=nextQ;
+$('q-say').onclick=function(){if(qd.cur)say(qd.cur.ko);};
+
+// ===== LISTA =====
+var lres=[],lshown=0;
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+function buildList(){
+  var q=norm($('l-q').value.trim()),f=$('l-filter').value;
+  lres=W.filter(function(w){
+    if(!passFilter(w,f))return false;
+    if(!q)return true;
+    return w.ko.indexOf(q)>=0||norm(w.pt).indexOf(q)>=0||norm(w.en).indexOf(q)>=0||String(w.n)===q;
+  });
+  lshown=0;$('l-items').innerHTML='';
+  $('l-meta').textContent=lres.length+' palavra(s)';
+  moreList();
+}
+function moreList(){
+  var frag=document.createDocumentFragment();
+  lres.slice(lshown,lshown+80).forEach(function(w){
+    var d=document.createElement('div');d.className='it';
+    var s=st[w.n]||0;
+    d.innerHTML='<span class="n">'+w.n+'</span><span class="dot s'+s+'"></span><div class="t"><div class="k"></div><div class="p"></div><div class="e"></div></div><button class="say">🔊</button><button class="st'+(fav[w.n]?' fav':'')+'">'+(fav[w.n]?'★':'☆')+'</button>';
+    d.querySelector('.k').textContent=w.ko;d.querySelector('.p').textContent=w.pt;d.querySelector('.e').textContent=opt.en?w.en:'';
+    d.querySelector('.say').onclick=function(){say(w.ko);};
+    var sb=d.querySelector('.st');
+    sb.onclick=function(){if(fav[w.n])delete fav[w.n];else fav[w.n]=1;save('fav',fav);sb.textContent=fav[w.n]?'★':'☆';sb.className='st'+(fav[w.n]?' fav':'');};
+    var dot=d.querySelector('.dot');
+    dot.onclick=function(){var v=((st[w.n]||0)+1)%3;if(v)st[w.n]=v;else delete st[w.n];save('status',st);dot.className='dot s'+v;};
+    frag.appendChild(d);
+  });
+  lshown+=80;$('l-items').appendChild(frag);
+  $('l-more').style.display=lshown<lres.length?'block':'none';
+}
+var lt;$('l-q').oninput=function(){clearTimeout(lt);lt=setTimeout(buildList,200);};
+$('l-filter').onchange=buildList;$('l-more').onclick=moreList;
+
+// ===== PROGRESSO =====
+function prog(){
+  var k=0,l=0;W.forEach(function(w){if(st[w.n]===2)k++;else if(st[w.n]===1)l++;});
+  $('p-known').textContent=k;$('p-learn').textContent=l;$('p-new').textContent=W.length-k-l;
+  $('p-bar').style.width=(k/W.length*100)+'%';
+  $('p-pct').textContent=(k/W.length*100).toFixed(1)+'% do vocabulário dominado';
+  var h='';
+  for(var a=1;a<=1671;a+=100){var b=Math.min(a+99,1671),kk=0;for(var i=a;i<=b;i++)if(st[i]===2)kk++;
+    h+='<div class="blk"><div class="row"><span>'+a+' – '+b+'</span><span>'+kk+' / '+(b-a+1)+'</span></div><div class="bar"><i style="width:'+(kk/(b-a+1)*100)+'%"></i></div></div>';}
+  $('p-blocks').innerHTML=h;
+  var tts=false;try{tts=window.Android&&Android.ttsAvailable();}catch(e){}
+  $('o-tts').textContent=tts?'Voz coreana disponível ✓':'Para ouvir a pronúncia, instale a voz "Coreano" em Configurações › Sistema › Idioma › Saída de texto para voz (Google). Ela também funciona off-line.';
+}
+$('o-en').checked=opt.en;$('o-auto').checked=opt.auto;
+$('o-en').onchange=function(){opt.en=this.checked;save('opt',opt);};
+$('o-auto').onchange=function(){opt.auto=this.checked;save('opt',opt);};
+$('p-reset').onclick=function(){if(confirm('Apagar todo o progresso e favoritos?')){st={};fav={};save('status',st);save('fav',fav);prog();toast('Progresso zerado');}};
+
+// ===== NAVEGAÇÃO =====
+var cur='study';
+function go(v){
+  cur=v;
+  [].forEach.call(document.querySelectorAll('nav button'),function(b){b.classList.toggle('on',b.dataset.v===v);});
+  [].forEach.call(document.querySelectorAll('.view'),function(s){s.classList.toggle('on',s.id==='v-'+v);});
+  if(v==='study')buildDeck(true);
+  if(v==='quiz'&&!qd.cur)nextQ();
+  if(v==='list')buildList();
+  if(v==='prog')prog();
+  document.querySelector('main').scrollTop=0;
+}
+[].forEach.call(document.querySelectorAll('nav button'),function(b){b.onclick=function(){go(b.dataset.v);};});
+window.handleBack=function(){if(cur!=='study'){go('study');return true;}return false;};
+buildDeck(true);
+})();
+</script>
+</body>
+</html>
