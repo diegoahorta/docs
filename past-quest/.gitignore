@@ -1,0 +1,4 @@
+build/classes/
+server/*.sqlite3
+server/__pycache__/
+dist/*.fragment.html

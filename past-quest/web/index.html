@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pongo Past Quest</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ===================== HOME ===================== -->
+  <section id="screen-home" class="screen">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">P</span><span class="brand-name">Past Quest</span></div>
+      <div class="stats">
+        <button class="stat" id="stat-streak" title="Sequência de dias"><span class="ico" data-ico="flame"></span><b id="v-streak">0</b></button>
+        <button class="stat" id="stat-gems" title="Gemas"><span class="ico" data-ico="gem"></span><b id="v-gems">0</b></button>
+        <button class="stat" id="stat-hearts" title="Vidas"><span class="ico" data-ico="heart"></span><b id="v-hearts">5</b></button>
+      </div>
+    </header>
+
+    <div class="tabpanes">
+      <!-- LEARN -->
+      <div class="pane" id="pane-learn">
+        <div class="hero">
+          <div class="pongo-stage" id="stage-home"></div>
+          <div class="hero-side">
+            <div class="bubble" id="pongo-bubble">Dica do Pongo: was/were = estado. Ação = past simple.</div>
+            <div class="goal">
+              <svg class="ring" viewBox="0 0 44 44" aria-hidden="true">
+                <circle cx="22" cy="22" r="18" class="ring-bg"></circle>
+                <circle cx="22" cy="22" r="18" class="ring-fg" id="goal-ring"></circle>
+              </svg>
+              <div>
+                <div class="eyebrow">Meta do dia</div>
+                <div class="goal-num"><b id="v-today">0</b> / <span id="v-goal">60</span> XP</div>
+                <div class="level-line"><span id="v-level-name">Starter</span> · nível <span id="v-level">1</span></div>
+                <div class="lvlbar"><i id="v-lvlbar"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ol class="path" id="path"></ol>
+        <p class="credit">Conteúdo: Inglês A1/A2 · was / were e past simple (Essential Grammar in Use, Units 10–11).</p>
+      </div>
+
+      <!-- REVIEW -->
+      <div class="pane" id="pane-review" hidden>
+        <h2 class="pane-title">Revisão espaçada</h2>
+        <p class="pane-lead">Os cartões voltam nos dias 1, 2, 4, 8 e 16. Revisar não gasta vidas e devolve 1 vida no fim.</p>
+        <div class="boxes" id="srs-boxes"></div>
+        <button class="btn btn-primary btn-wide" id="btn-review">Revisar agora</button>
+        <h3 class="sub-title">Verbos da aula</h3>
+        <div class="verb-filter" role="tablist">
+          <button class="chip is-on" data-vf="all">Todos</button>
+          <button class="chip" data-vf="regular">Regulares</button>
+          <button class="chip" data-vf="irregular">Irregulares</button>
+        </div>
+        <div class="verbs" id="verbs"></div>
+      </div>
+
+      <!-- LEAGUE -->
+      <div class="pane" id="pane-league" hidden>
+        <h2 class="pane-title">Liga <span id="v-league-name">Bronze</span></h2>
+        <p class="pane-lead" id="league-lead">Os 3 primeiros da semana sobem de liga. Semana termina domingo à meia-noite.</p>
+        <ol class="league" id="league"></ol>
+        <div id="class-board" hidden>
+          <h3 class="sub-title">Ranking da turma (servidor)</h3>
+          <ol class="league" id="class-league"></ol>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="pane" id="pane-profile" hidden>
+        <div class="profile-head">
+          <div class="avatar" id="avatar">V</div>
+          <div>
+            <h2 class="pane-title" id="v-name">Você</h2>
+            <div class="muted" id="v-since"></div>
+          </div>
+        </div>
+        <div class="kpis" id="kpis"></div>
+        <h3 class="sub-title">Medalhas</h3>
+        <div class="medals" id="medals"></div>
+        <h3 class="sub-title">Loja</h3>
+        <div class="shop" id="shop"></div>
+        <h3 class="sub-title">Ajustes</h3>
+        <form class="settings" id="settings">
+          <label for="set-name">Nome no ranking</label>
+          <input id="set-name" maxlength="24" autocomplete="nickname">
+          <label for="set-goal">Meta diária</label>
+          <select id="set-goal">
+            <option value="30">Leve · 30 XP</option>
+            <option value="60">Normal · 60 XP</option>
+            <option value="100">Puxado · 100 XP</option>
+            <option value="150">Intenso · 150 XP</option>
+          </select>
+          <label for="set-rate">Velocidade do áudio</label>
+          <select id="set-rate">
+            <option value="0.75">Devagar</option>
+            <option value="0.9">Normal</option>
+            <option value="1.05">Rápido</option>
+          </select>
+          <label class="check"><input type="checkbox" id="set-sound"> Efeitos sonoros</label>
+          <label class="check"><input type="checkbox" id="set-motion"> Animações 3D</label>
+          <div class="settings-actions">
+            <button class="btn btn-ghost" type="button" id="btn-reset">Apagar progresso</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <nav class="tabbar" aria-label="Seções">
+      <button class="tab is-on" data-tab="learn"><span class="ico" data-ico="map"></span><span>Aprender</span></button>
+      <button class="tab" data-tab="review"><span class="ico" data-ico="cards"></span><span>Revisar</span><i class="dot" id="due-dot" hidden></i></button>
+      <button class="tab" data-tab="league"><span class="ico" data-ico="trophy"></span><span>Liga</span></button>
+      <button class="tab" data-tab="profile"><span class="ico" data-ico="user"></span><span>Perfil</span></button>
+    </nav>
+  </section>
+
+  <!-- ===================== LESSON ===================== -->
+  <section id="screen-lesson" class="screen" hidden>
+    <header class="lesson-top">
+      <button class="icon-btn" id="btn-quit" aria-label="Sair da lição"><span class="ico" data-ico="close"></span></button>
+      <div class="progress"><i id="lesson-progress"></i></div>
+      <div class="stat stat-flat" id="lesson-hearts"><span class="ico" data-ico="heart"></span><b id="v-lhearts">5</b></div>
+    </header>
+    <div class="combo" id="combo" hidden></div>
+    <main class="lesson-body">
+      <div class="ex-head">
+        <div class="pongo-mini" id="stage-lesson"></div>
+        <div>
+          <div class="eyebrow" id="ex-kind">Escolha</div>
+          <h2 class="ex-title" id="ex-title">Complete a frase</h2>
+        </div>
+      </div>
+      <div class="ex" id="ex"></div>
+    </main>
+    <footer class="checkbar" id="checkbar">
+      <div class="feedback" id="feedback" hidden>
+        <div class="fb-icon" id="fb-icon"></div>
+        <div class="fb-text">
+          <b id="fb-title">Muito bem!</b>
+          <div id="fb-body"></div>
+        </div>
+      </div>
+      <div class="checkbar-actions">
+        <button class="btn btn-ghost" id="btn-skip">Pular</button>
+        <button class="btn btn-primary" id="btn-check" disabled>Verificar</button>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ===================== RESULT ===================== -->
+  <section id="screen-result" class="screen" hidden>
+    <div class="result">
+      <div class="pongo-stage pongo-stage-lg" id="stage-result"></div>
+      <h2 class="result-title" id="res-title">Lição completa!</h2>
+      <p class="result-sub" id="res-sub"></p>
+      <div class="res-cards">
+        <div class="res-card res-xp"><span class="eyebrow">XP</span><b id="res-xp">0</b></div>
+        <div class="res-card res-acc"><span class="eyebrow">Precisão</span><b id="res-acc">0%</b></div>
+        <div class="res-card res-time"><span class="eyebrow">Tempo</span><b id="res-time">0:00</b></div>
+      </div>
+      <div class="res-new" id="res-new"></div>
+      <button class="btn btn-primary btn-wide" id="btn-continue">Continuar</button>
+    </div>
+  </section>
+
+  <!-- ===================== DIALOGS ===================== -->
+  <div class="scrim" id="scrim" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <h3 id="sheet-title"></h3>
+      <div id="sheet-body"></div>
+      <div class="sheet-actions" id="sheet-actions"></div>
+    </div>
+  </div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/scene3d.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
